@@ -33,9 +33,9 @@
     "model": "A5 / S5",
     "kind": "model",
     "date": "2026-11-04",
-    "summary": "Analýza aktuálnych inzerátov Audi A5 / S5 (kupé, Sportback aj kabriolet, generácie B8 a B9 vrátane športovej S5) od 3 000 € na bazoši a autobazar.eu. Na oboch portáloch je spolu 430 inzerátov (279 na bazoši, 151 na autobazar.eu) – prezreli sme všetky. Po zlúčení áut ponúkaných na oboch portáloch a vynechaní ponúk z Česka ostáva 353 rôznych áut zo Slovenska.",
-    "ads": 353,
-    "median": "12 990 €",
+    "summary": "Analýza aktuálnych inzerátov Audi A5 / S5 (kupé, Sportback aj kabriolet, generácie B8 a B9 vrátane športovej S5) od 3 000 € na bazoši a autobazar.eu. Na oboch portáloch je spolu 430 inzerátov (279 na bazoši, 151 na autobazar.eu) – prezreli sme všetky. Po zlúčení áut ponúkaných na oboch portáloch a vynechaní ponúk z Česka ostáva 354 rôznych áut zo Slovenska.",
+    "ads": 354,
+    "median": "12 500 €",
     "r2": "91 %"
   },
   {
@@ -374,6 +374,19 @@
     "summary": "Analýza aktuálnych inzerátov VW Tiguan (generácie 5N a AD1, roky 2012–2024) na bazoši a autobazar.eu. Na trhu je okolo 1 833 inzerátov (959 na bazoši, 874 na autobazar.eu) – prezreli sme všetky. Veľa áut je na oboch portáloch, takže po zlúčení a bez ponúk z Česka ostáva 1 177 rôznych áut.",
     "ads": 1177,
     "median": "19 500 €",
+    "r2": "93 %"
+  },
+  {
+    "slug": "vw-touran",
+    "file": "vw-touran-analyza.html",
+    "name": "VW Touran",
+    "brand": "VW",
+    "model": "Touran",
+    "kind": "model",
+    "date": "2026-11-04",
+    "summary": "Analýza aktuálnych inzerátov VW Touran (Touran I aj II, 5- aj 7-miestne, všetky motory vrátane CNG EcoFuel) od 1 500 € na bazoši a autobazar.eu. Na oboch portáloch je spolu 968 inzerátov (568 na bazoši, 400 na autobazar.eu) – prezreli sme všetky. Po zlúčení áut ponúkaných na oboch portáloch a vynechaní ponúk z Česka ostáva 625 rôznych áut zo Slovenska.",
+    "ads": 625,
+    "median": "7 690 €",
     "r2": "93 %"
   }
 ]

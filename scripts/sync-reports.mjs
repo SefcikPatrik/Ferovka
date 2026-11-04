@@ -61,12 +61,13 @@ try {
   const f = path.join(root, "src", "data", "images.json");
   if (fs.existsSync(f)) images = JSON.parse(fs.readFileSync(f, "utf8"));
 }
-// a comparison shows the photos of the models it compares
+// a comparison shows the photos of the models it compares (whole words: BMW "3" is not in "i30")
+const wordIn = (text, word) => text.toLowerCase().split(/[^\p{L}\p{N}]+/u).includes(word.toLowerCase());
 const photosFor = (r) =>
   r.kind === "model"
     ? [images[r.slug]].filter((i) => i?.src)
     : reports
-        .filter((m) => m.kind === "model" && r.name.toLowerCase().includes(m.model.split(" ")[0].toLowerCase()))
+        .filter((m) => m.kind === "model" && wordIn(r.name, m.model.split(" ")[0]))
         .map((m) => images[m.slug])
         .filter((i) => i?.src);
 
