@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import { formatDate, formatNum, type Report } from "@/lib/reports";
+import { formatDate, formatNum, photosFor, type Report } from "@/lib/reports";
 
 const DAY = 86_400_000;
 const FRESH_DAYS = 7; // "Nová"
@@ -21,18 +21,16 @@ function ageLabel(days: number) {
   return m === 1 ? "pred mesiacom" : `pred ${m} mesiacmi`;
 }
 
-function Status({ date, now }: { date: string; now: number | null }) {
-  if (now === null) return <span>{formatDate(date)}</span>;
+function Freshness({ date, now }: { date: string; now: number | null }) {
+  if (now === null) return <span className="date">{formatDate(date)}</span>;
   const d = ageDays(date, now);
   const cls = d <= FRESH_DAYS ? "fresh" : d > STALE_DAYS ? "stale" : "mid";
   const text = d <= FRESH_DAYS ? "Nová" : d > STALE_DAYS ? "Staršie údaje" : "Aktuálna";
   return (
-    <>
-      <span className={`pill ${cls}`}>{text}</span>
-      <span>
-        {formatDate(date)} ({ageLabel(d)})
-      </span>
-    </>
+    <span className="date" title={`Analýza z ${formatDate(date)}`}>
+      <span className={`badge ${cls}`}>{text}</span>
+      {formatDate(date)} · {ageLabel(d)}
+    </span>
   );
 }
 
@@ -79,15 +77,19 @@ export default function ReportGrid({ reports }: { reports: Report[] }) {
 
   return (
     <>
-      <h2>Analýzy</h2>
-      <p className="lead-in">Každá analýza obsahuje odporúčané ponuky, porovnanie motorov a zoznam všetkých inzerátov.</p>
+      <div className="section-head" data-reveal>
+        <div>
+          <h2>Analýzy trhu</h2>
+          <p>Každá analýza obsahuje odporúčané ponuky, porovnanie motorov a kompletný rebríček inzerátov.</p>
+        </div>
+      </div>
 
-      <div className="filters" role="search" aria-label="Filtrovanie analýz">
-        <label>
-          Kedy bola spravená
+      <div className="filterbar" data-reveal role="search" aria-label="Filtrovanie analýz">
+        <label className="field">
+          <span>Kedy bola spravená</span>
           <select value={period} onChange={(e) => setPeriod(e.target.value as Period)}>
             <option value="">Kedykoľvek</option>
-            <option value="7">Posledných 7 dní</option>
+            <option value="7">Nové – posledných 7 dní</option>
             <option value="30">Posledných 30 dní</option>
             <option value="old">Staršie ako 30 dní</option>
             <optgroup label="Konkrétny deň">
@@ -99,8 +101,8 @@ export default function ReportGrid({ reports }: { reports: Report[] }) {
             </optgroup>
           </select>
         </label>
-        <label>
-          Značka
+        <label className="field">
+          <span>Značka</span>
           <select
             value={brand}
             onChange={(e) => {
@@ -116,10 +118,10 @@ export default function ReportGrid({ reports }: { reports: Report[] }) {
             ))}
           </select>
         </label>
-        <label>
-          Model
+        <label className="field">
+          <span>Model</span>
           <select value={model} onChange={(e) => setModel(e.target.value)}>
-            <option value="">Všetky modely</option>
+            <option value="">{brand ? `Všetky modely (${brand})` : "Všetky modely"}</option>
             {models.map((m) => (
               <option key={m} value={m}>
                 {m}
@@ -127,24 +129,24 @@ export default function ReportGrid({ reports }: { reports: Report[] }) {
             ))}
           </select>
         </label>
-        <label>
-          Zoradiť
+        <label className="field">
+          <span>Zoradiť</span>
           <select value={sort} onChange={(e) => setSort(e.target.value as Sort)}>
-            <option value="new">Od najnovších</option>
-            <option value="old">Od najstarších</option>
+            <option value="new">Najnovšie hore</option>
+            <option value="old">Najstaršie hore</option>
             <option value="name">Podľa názvu</option>
           </select>
         </label>
-      </div>
-      <div className="result-line" aria-live="polite">
-        <span>
-          Zobrazené: <b>{shown.length}</b> z {reports.length}
-        </span>
-        {active && (
-          <button type="button" className="linkbtn" onClick={reset}>
-            Zrušiť filtre
-          </button>
-        )}
+        <div className="filter-meta">
+          <span>
+            {shown.length} z {reports.length}
+          </span>
+          {active && (
+            <button type="button" className="linkbtn" onClick={reset}>
+              Zrušiť filtre
+            </button>
+          )}
+        </div>
       </div>
 
       {shown.length === 0 ? (
@@ -155,34 +157,48 @@ export default function ReportGrid({ reports }: { reports: Report[] }) {
           </button>
         </div>
       ) : (
-        <ul className="list">
-          {shown.map((r) => (
-            <li key={r.slug}>
-              <Link href={`/analyza/${r.slug}/`} className="item">
-                <div>
-                  <div className="top">
-                    {r.kind === "comparison" && <span className="pill kind">Porovnanie</span>}
-                    <Status date={r.date} now={now} />
-                  </div>
+        <div className="grid">
+          {shown.map((r, i) => {
+            const photos = photosFor(r);
+            return (
+              <Link
+                key={`${r.slug}|${period}|${brand}|${model}|${sort}`} // new key = replay the entrance animation after filtering
+                href={`/analyza/${r.slug}/`}
+                className={`rcard${r.kind === "comparison" ? " feature" : ""}`}
+                style={{ animationDelay: `${Math.min(i, 8) * 70}ms` }}
+              >
+                <div className={`rimg${photos.length > 1 ? " collage" : ""}`}>
+                  {photos.map((p) => (
+                    <img key={p.src} src={p.src} alt="" loading="lazy" />
+                  ))}
+                  <span className="rimg-brand">{r.kind === "comparison" ? "Porovnanie modelov" : r.brand}</span>
+                </div>
+                <div className="rbody">
+                  <Freshness date={r.date} now={now} />
                   <h3>{r.name}</h3>
                   <p>{r.summary}</p>
-                </div>
-                <div className="stats">
-                  <div>
-                    <b>{r.ads ? formatNum(r.ads) : "–"}</b>
-                    <span>inzerátov</span>
-                  </div>
-                  {r.median && (
+                  <div className="meta">
                     <div>
-                      <b>{r.median}</b>
-                      <span>stredná cena</span>
+                      <div className="v">{r.ads ? formatNum(r.ads) : "–"}</div>
+                      <div className="l">inzerátov</div>
                     </div>
-                  )}
+                    <div>
+                      <div className="v">{r.median ?? "3 modely"}</div>
+                      <div className="l">{r.median ? "medián ceny" : "v porovnaní"}</div>
+                    </div>
+                    <div>
+                      <div className="v">{r.r2 ?? "✓"}</div>
+                      <div className="l">{r.r2 ? "presnosť modelu" : "odporúčanie"}</div>
+                    </div>
+                  </div>
+                  <span className="go">
+                    Otvoriť analýzu <span className="arrow">→</span>
+                  </span>
                 </div>
               </Link>
-            </li>
-          ))}
-        </ul>
+            );
+          })}
+        </div>
       )}
     </>
   );

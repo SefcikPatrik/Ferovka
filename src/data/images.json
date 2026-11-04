@@ -1,0 +1,37 @@
+{
+  "cupra-formentor": {
+    "src": "/img/cupra-formentor.jpg",
+    "file": "File:Cupra Formentor Facelift IMG 0435.jpg",
+    "author": "Alexander-93",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Cupra_Formentor_Facelift_IMG_0435.jpg"
+  },
+  "hyundai-i30-kombi": {
+    "src": "/img/hyundai-i30-kombi.jpg",
+    "file": "File:Hyundai i30 Kombi Yes! (III) – h 05062025.jpg",
+    "author": "© M 93",
+    "license": "CC BY-SA 3.0 de",
+    "source": "https://commons.wikimedia.org/wiki/File:Hyundai_i30_Kombi_Yes!_(III)_%E2%80%93_h_05062025.jpg"
+  },
+  "kia-ceed-sw": {
+    "src": "/img/kia-ceed-sw.jpg",
+    "file": "File:Kia Ceed Sportswagon en Finspång.jpg",
+    "author": "Bene Riobó",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Kia_Ceed_Sportswagon_en_Finsp%C3%A5ng.jpg"
+  },
+  "octavia-combi": {
+    "src": "/img/octavia-combi.jpg",
+    "file": "File:Skoda Octavia IV Combi RS 1X7A0352.jpg",
+    "author": "Alexander Migl",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Skoda_Octavia_IV_Combi_RS_1X7A0352.jpg"
+  },
+  "skoda-superb": {
+    "src": "/img/skoda-superb.jpg",
+    "file": "File:Skoda Superb Combi 2.0 TDI 4x4 Sportline (III) – f 06062021.jpg",
+    "author": "© M 93",
+    "license": "CC BY-SA 3.0 de",
+    "source": "https://commons.wikimedia.org/wiki/File:Skoda_Superb_Combi_2.0_TDI_4x4_Sportline_(III)_%E2%80%93_f_06062021.jpg"
+  }
+}

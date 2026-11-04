@@ -29,6 +29,8 @@ export default function ReportFrame({ src, title }: { src: string; title: string
       applyTheme();
       // the report's own theme button is replaced by the one in the top bar
       doc.getElementById("themeBtn")?.remove();
+      // the viewer shows the photo above the frame, so the report's own photo header goes
+      doc.querySelector(".fv-hero")?.remove();
       // links to ads open in a new tab, not inside the frame
       doc.querySelectorAll("a[href^='http']").forEach((a) => a.setAttribute("target", "_blank"));
       fit();
