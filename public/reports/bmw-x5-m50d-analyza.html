@@ -737,7 +737,7 @@ renderTable();
 </script><script id="ferovka-filters">/* Férovka – filters for the whole report, injected into every model report by sync-reports.mjs.
  *
  * The reports render the chart (drawChart) and the full ranking (renderTable) from the global DATA array; their own
- * filter bar only filters the table. Here the filter bar moves above the chart, gets more filters (year, price from/to,
+ * filter bar only filters the table. Here the filter bar (kept in its place above the ranking) gets more filters (year, price from/to,
  * km, fuel, discount, picks only, text search) and every filter applies to the chart and the ranking together: DATA is
  * refilled in place with the matching ads and both are drawn again. "</script" can't occur inside this file.
  */
@@ -798,22 +798,17 @@ renderTable();
   if (count) count.insertAdjacentHTML("beforebegin", more);
   else bar.insertAdjacentHTML("beforeend", more);
 
-  // the bar moves above the chart, so one set of filters drives the chart and the ranking
+  // the bar stays where it was – right above the ranking – and also drives the chart; the chart gets a pointer to it
   const chart = $("chartWrap");
-  let anchorH2 = chart;
-  while (anchorH2 && anchorH2.tagName !== "H2") anchorH2 = anchorH2.previousElementSibling;
-  const box = document.createElement("section");
+  const box = document.createElement("div");
   box.className = "fv-filters";
   box.id = "filtre";
-  box.innerHTML = `<div class="fv-head"><b>Filtre</b><span>platia pre graf aj kompletný rebríček</span></div>`;
+  bar.before(box);
+  box.innerHTML = `<div class="fv-head"><b>Filtre</b><span>platia pre rebríček aj graf vyššie</span></div>`;
   box.appendChild(bar);
-  if (anchorH2) anchorH2.before(box);
-  else (chart || document.querySelector("#tbl"))?.before(box);
-  const tbl = document.querySelector("#tbl");
   const note = document.createElement("div");
   note.className = "fv-note";
-  const tableHost = tbl && (tbl.closest(".table-scroll") || tbl);
-  tableHost?.before(note);
+  chart?.before(note);
 
   document.head.insertAdjacentHTML("beforeend", `<style id="fv-filters-css">
 .fv-filters{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 14px 4px;margin:24px 0 8px}
@@ -882,8 +877,8 @@ renderTable();
     const n = active();
     if (count) count.textContent = `Zobrazených ${fmt(rows.length)} z ${fmt(ALL.length)} inzerátov` + (n ? ` · aktívne filtre: ${n}` : "");
     note.innerHTML = n
-      ? `Zobrazených ${fmt(rows.length)} z ${fmt(ALL.length)} inzerátov podľa <a href="#filtre">filtrov nad grafom</a>.`
-      : `Filtre (rok, cena, nájazd, palivo…) nájdeš <a href="#filtre">nad grafom</a>.`;
+      ? `Zobrazených ${fmt(rows.length)} z ${fmt(ALL.length)} inzerátov podľa <a href="#filtre">filtrov pri rebríčku</a>.`
+      : `Filtre (rok, cena, nájazd, palivo…) nájdeš <a href="#filtre">pri kompletnom rebríčku</a> – platia aj pre tento graf.`;
     drawing = false;
   }
   box.querySelectorAll("select, input").forEach((el) => el.addEventListener("input", apply));
