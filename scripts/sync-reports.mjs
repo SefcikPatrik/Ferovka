@@ -12,7 +12,7 @@ fs.mkdirSync(path.join(root, "src", "data"), { recursive: true });
 // the shared Férovka look, injected into every report after its own <style> (generators stay untouched)
 const FONTS =
   '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>' +
-  '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&family=Newsreader:ital,opsz,wght@0,6..72,500;0,6..72,600;1,6..72,500&display=swap">';
+  '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;600;700;800&display=swap">';
 const THEME = fs.readFileSync(path.join(root, "scripts", "report-theme.css"), "utf8");
 const themed = (html) =>
   html.replace(/<!-- ferovka-theme -->[\s\S]*?<!-- \/ferovka-theme -->/, "").replace(

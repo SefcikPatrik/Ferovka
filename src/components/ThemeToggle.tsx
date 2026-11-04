@@ -15,8 +15,8 @@ export default function ThemeToggle() {
     window.dispatchEvent(new CustomEvent("themechange", { detail: next }));
   };
   return (
-    <button className="textbtn" type="button" onClick={toggle} title="Prepnúť svetlý / tmavý režim">
-      Svetlý / tmavý
+    <button type="button" onClick={toggle}>
+      Svetlý / tmavý režim
     </button>
   );
 }

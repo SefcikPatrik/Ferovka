@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import ReportFrame from "@/components/ReportFrame";
+import SiteHeader from "@/components/SiteHeader";
 import ThemeToggle from "@/components/ThemeToggle";
 import { formatDate, formatNum, getReport, reports } from "@/lib/reports";
 
@@ -24,29 +25,26 @@ export default async function ReportPage({ params }: Props) {
   const src = `/reports/${r.file}`;
   return (
     <>
-      <header className="viewer-bar">
-        <div className="inner">
-          <Link href="/#analyzy" className="home" title="Späť na všetky analýzy">
-            Férovka<span className="dot">.</span>
-          </Link>
-          <div className="t">
+      <div className="viewer-bar">
+        <SiteHeader>
+          <div className="title">
             <b>{r.name}</b>
             <span>
-              {formatDate(r.date)}
+              Analýza z {formatDate(r.date)}
               {r.ads ? ` · ${formatNum(r.ads)} inzerátov` : ""}
             </span>
           </div>
-          <div className="actions">
+          <nav className="nav" aria-label="Navigácia analýzy">
             <Link href="/#analyzy" className="hide-sm">
               ← Všetky analýzy
             </Link>
             <a href={src} target="_blank" rel="noopener" className="hide-sm">
-              Samostatne ↗
+              Otvoriť samostatne
             </a>
             <ThemeToggle />
-          </div>
-        </div>
-      </header>
+          </nav>
+        </SiteHeader>
+      </div>
       <ReportFrame src={src} title={`Analýza ${r.name}`} />
     </>
   );
