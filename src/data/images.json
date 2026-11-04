@@ -61,5 +61,33 @@
     "author": "Alexander Migl",
     "license": "CC BY-SA 4.0",
     "source": "https://commons.wikimedia.org/wiki/File:Volvo_XC60_(SPA)_FL_1X7A0185.jpg"
+  },
+  "skoda-fabia": {
+    "src": "/img/skoda-fabia.jpg",
+    "file": "File:Škoda Fabia IV 1X7A7108 (cropped).jpg",
+    "author": "Alexander-93",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:%C5%A0koda_Fabia_IV_1X7A7108_(cropped).jpg"
+  },
+  "skoda-kodiaq": {
+    "src": "/img/skoda-kodiaq.jpg",
+    "file": "File:Škoda Kodiaq II IMG 9433.jpg",
+    "author": "Alexander-93",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:%C5%A0koda_Kodiaq_II_IMG_9433.jpg"
+  },
+  "vw-golf": {
+    "src": "/img/vw-golf.jpg",
+    "file": "File:2020 Volkswagen Golf Style 1.5 Front.jpg",
+    "author": "Vauxford",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:2020_Volkswagen_Golf_Style_1.5_Front.jpg"
+  },
+  "vw-passat": {
+    "src": "/img/vw-passat.jpg",
+    "file": "File:Volkswagen Passat Variant B9 IAA 2023 1X7A0654.jpg",
+    "author": "Alexander-93",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Volkswagen_Passat_Variant_B9_IAA_2023_1X7A0654.jpg"
   }
 }

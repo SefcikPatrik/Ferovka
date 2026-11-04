@@ -78,6 +78,32 @@
     "r2": "96 %"
   },
   {
+    "slug": "skoda-fabia",
+    "file": "skoda-fabia-analyza.html",
+    "name": "Škoda Fabia",
+    "brand": "Škoda",
+    "model": "Fabia",
+    "kind": "model",
+    "date": "2026-11-04",
+    "summary": "Analýza aktuálnych inzerátov Škoda Fabia (hatchback aj combi, všetky generácie) od 1 500 € na bazoši a autobazar.eu. Na oboch portáloch je spolu 2 225 inzerátov (915 na bazoši, 1 310 na autobazar.eu) – prezreli sme všetky. Po zlúčení áut ponúkaných na oboch portáloch a vynechaní ponúk z Česka ostáva 1 244 rôznych áut zo Slovenska.",
+    "ads": 1244,
+    "median": "5 300 €",
+    "r2": "94 %"
+  },
+  {
+    "slug": "skoda-kodiaq",
+    "file": "skoda-kodiaq-analyza.html",
+    "name": "Škoda Kodiaq",
+    "brand": "Škoda",
+    "model": "Kodiaq",
+    "kind": "model",
+    "date": "2026-11-04",
+    "summary": "Analýza aktuálnych inzerátov Škoda Kodiaq (prvá aj druhá generácia, vrátane RS) od 4 000 € na bazoši a autobazar.eu. Na oboch portáloch je spolu 2 193 inzerátov (975 na bazoši, 1 218 na autobazar.eu) – prezreli sme všetky. Po zlúčení áut ponúkaných na oboch portáloch a vynechaní ponúk z Česka ostáva 1 298 rôznych áut zo Slovenska.",
+    "ads": 1298,
+    "median": "24 545 €",
+    "r2": "88 %"
+  },
+  {
     "slug": "octavia-combi",
     "file": "octavia-combi-analyza.html",
     "name": "Škoda Octavia combi",
@@ -114,6 +140,32 @@
     "summary": "Analýza aktuálnych inzerátov Škoda Superb (liftback aj combi) od 4 000 € na bazoši a autobazar.eu. Superbov je na trhu takmer 3 400 inzerátov (približne polovica na každom portáli). Z autobazar.eu sme prezreli takmer všetky, z bazoša najnovších ~1 000.",
     "ads": 1737,
     "median": "16 990 €",
+    "r2": "94 %"
+  },
+  {
+    "slug": "vw-golf",
+    "file": "vw-golf-analyza.html",
+    "name": "Volkswagen Golf",
+    "brand": "Volkswagen",
+    "model": "Golf",
+    "kind": "model",
+    "date": "2026-11-04",
+    "summary": "Analýza aktuálnych inzerátov Volkswagen Golf (hatchback aj Variant, generácie IV až VIII vrátane GTI, GTD a R) od 2 000 € na bazoši a autobazar.eu. Na oboch portáloch je spolu 3 217 inzerátov (1 855 na bazoši, 1 362 na autobazar.eu) – prezreli sme všetky. Po zlúčení áut ponúkaných na oboch portáloch a vynechaní ponúk z Česka ostáva 2 282 rôznych áut zo Slovenska.",
+    "ads": 2282,
+    "median": "10 200 €",
+    "r2": "93 %"
+  },
+  {
+    "slug": "vw-passat",
+    "file": "vw-passat-analyza.html",
+    "name": "Volkswagen Passat",
+    "brand": "Volkswagen",
+    "model": "Passat",
+    "kind": "model",
+    "date": "2026-11-04",
+    "summary": "Analýza aktuálnych inzerátov Volkswagen Passat (sedan aj Variant, generácie B5 až B9 vrátane Alltrack a GTE) od 2 000 € na bazoši a autobazar.eu. Na oboch portáloch je spolu 2 593 inzerátov (1 514 na bazoši, 1 079 na autobazar.eu) – prezreli sme všetky. Po zlúčení áut ponúkaných na oboch portáloch a vynechaní ponúk z Česka ostáva 1 884 rôznych áut zo Slovenska.",
+    "ads": 1884,
+    "median": "12 200 €",
     "r2": "94 %"
   },
   {
