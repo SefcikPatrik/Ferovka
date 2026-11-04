@@ -20,13 +20,6 @@
     "license": "CC BY-SA 4.0",
     "source": "https://commons.wikimedia.org/wiki/File:Kia_Ceed_Sportswagon_en_Finsp%C3%A5ng.jpg"
   },
-  "octavia-combi": {
-    "src": "/img/octavia-combi.jpg",
-    "file": "File:Skoda Octavia IV Combi RS 1X7A0352.jpg",
-    "author": "Alexander Migl",
-    "license": "CC BY-SA 4.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Skoda_Octavia_IV_Combi_RS_1X7A0352.jpg"
-  },
   "skoda-superb": {
     "src": "/img/skoda-superb.jpg",
     "file": "File:Skoda Superb Combi 2.0 TDI 4x4 Sportline (III) – f 06062021.jpg",
@@ -159,5 +152,26 @@
     "author": "Vauxford",
     "license": "CC BY-SA 4.0",
     "source": "https://commons.wikimedia.org/wiki/File:2019_BMW_X5_M50d_3.0_Front.jpg"
+  },
+  "seat-leon": {
+    "src": "/img/seat-leon.jpg",
+    "file": "File:SEAT Leon Mk4 1X7A5844.jpg",
+    "author": "Alexander Migl",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:SEAT_Leon_Mk4_1X7A5844.jpg"
+  },
+  "seat-ateca": {
+    "src": "/img/seat-ateca.jpg",
+    "file": "File:SEAT Ateca facelift IMG 3858.jpg",
+    "author": "Alexander-93",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:SEAT_Ateca_facelift_IMG_3858.jpg"
+  },
+  "skoda-octavia": {
+    "src": "/img/skoda-octavia.jpg",
+    "file": "File:Skoda Octavia IV 1X7A6024.jpg",
+    "author": "Alexander Migl",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Skoda_Octavia_IV_1X7A6024.jpg"
   }
 }

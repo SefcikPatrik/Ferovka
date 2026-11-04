@@ -77,6 +77,8 @@ const FONTS =
 const THEME = fs.readFileSync(path.join(root, "scripts", "report-theme.css"), "utf8");
 // nearest-point chart → ad links (see the file); "</script" can't occur inside it
 const CHART_JS = fs.readFileSync(path.join(root, "scripts", "report-chart.js"), "utf8");
+// one filter bar (year, price from/to, km, fuel…) for the chart and the ranking of every model report (see the file)
+const FILTERS_JS = fs.readFileSync(path.join(root, "scripts", "report-filters.js"), "utf8");
 for (const r of reports) {
   const photos = photosFor(r);
   const hero = photos.length
@@ -88,7 +90,10 @@ for (const r of reports) {
     .replace(/<!-- ferovka-theme -->[\s\S]*?<!-- \/ferovka-theme -->/g, "")
     .replace("</head>", `<!-- ferovka-theme -->${FONTS}<style id="ferovka-theme">${THEME}</style><!-- /ferovka-theme -->\n</head>`)
     .replace(/<main>/, `<main><!-- ferovka-theme -->${hero}<!-- /ferovka-theme -->`)
-    .replace(/<\/body>(?![\s\S]*<\/body>)/, `<!-- ferovka-theme --><script id="ferovka-chart">${CHART_JS}</script><!-- /ferovka-theme -->\n</body>`);
+    .replace(/<\/body>(?![\s\S]*<\/body>)/, () =>
+      `<!-- ferovka-theme --><script id="ferovka-chart">${CHART_JS}</script>` +
+      (r.kind === "model" ? `<script id="ferovka-filters">${FILTERS_JS}</script>` : "") +
+      `<!-- /ferovka-theme -->\n</body>`);
   fs.writeFileSync(path.join(dst, r.file), html);
 }
 console.log(`synced ${reports.length} reports from ${src}`);
