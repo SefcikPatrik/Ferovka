@@ -1,0 +1,402 @@
+<!doctype html>
+<html lang="sk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ceed vs i30 vs Octavia</title>
+<style>
+:root {
+  color-scheme: light;
+  --bg: #f6f6f4; --surface: #fcfcfb; --surface-2: #f0efec; --border: #e2e1dc;
+  --text: #0b0b0b; --text-2: #52514e; --muted: #7a7974;
+  --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a;
+  --accent: #2a78d6; --good: #1d7f4e; --bad: #b4332f; --grid: #e8e7e3; --win: #e8f1fb;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #121211; --surface: #1a1a19; --surface-2: #232321; --border: #33332f;
+    --text: #f0efec; --text-2: #c3c2b7; --muted: #8f8e86;
+    --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+    --accent: #5598e7; --good: #4cc38a; --bad: #f07a76; --grid: #2a2a27; --win: #172a40;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #121211; --surface: #1a1a19; --surface-2: #232321; --border: #33332f;
+  --text: #f0efec; --text-2: #c3c2b7; --muted: #8f8e86;
+  --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+  --accent: #5598e7; --good: #4cc38a; --bad: #f07a76; --grid: #2a2a27; --win: #172a40;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+main { max-width: 1120px; margin: 0 auto; padding: 32px 16px 64px; }
+a { color: var(--accent); text-decoration: none; } a:hover { text-decoration: underline; }
+h1 { font-size: 30px; margin: 0 0 4px; letter-spacing: -.01em; }
+h2 { font-size: 21px; margin: 48px 0 6px; }
+h3 { font-size: 15px; margin: 6px 0 4px; line-height: 1.35; }
+.lead { color: var(--text-2); margin: 0 0 20px; max-width: 780px; }
+.section-lead { color: var(--text-2); margin: 0 0 16px; max-width: 820px; }
+.verdict { background: var(--win); border: 1px solid var(--border); border-left: 4px solid var(--s1); border-radius: 12px; padding: 18px 20px; margin: 8px 0 24px; }
+.verdict h2 { margin: 0 0 8px; font-size: 19px; }
+.verdict p { margin: 8px 0; } .verdict ol { margin: 8px 0 0; padding-left: 22px; } .verdict li { margin: 6px 0; }
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+.kpi { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+.kpi .v { font-size: 26px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.kpi .l { color: var(--text-2); font-size: 13px; }
+.dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; }
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; }
+.card-head { display: flex; justify-content: space-between; gap: 8px; font-size: 12px; flex-wrap: wrap; }
+.brand { font-weight: 600; } .loc { color: var(--muted); }
+.facts { color: var(--text-2); font-size: 13px; }
+.prices { display: grid; grid-template-columns: 1.2fr 1fr .8fr; gap: 8px; margin: 12px 0 8px; }
+.lbl { display: block; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+.big { font-size: 22px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.mid { font-size: 16px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.good { color: var(--good); }
+.note { font-size: 12.5px; background: var(--surface-2); border-radius: 6px; padding: 6px 8px; margin-top: 8px; color: var(--text-2); }
+.pc { list-style: none; padding: 0; margin: 10px 0 0; font-size: 13.5px; }
+.pc li { padding-left: 20px; position: relative; margin: 3px 0; }
+.pc li.pro::before { content: "+"; position: absolute; left: 4px; color: var(--good); font-weight: 700; }
+.pc li.con::before { content: "–"; position: absolute; left: 4px; color: var(--bad); font-weight: 700; }
+.subhead { font-size: 16px; margin: 28px 0 4px; }
+.tbl-wrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; }
+table { border-collapse: collapse; width: 100%; font-size: 13.5px; }
+th, td { padding: 8px 12px; text-align: left; border-bottom: 1px solid var(--border); vertical-align: top; }
+tr:last-child td { border-bottom: 0; }
+th { font-size: 12px; color: var(--text-2); font-weight: 600; background: var(--surface-2); white-space: nowrap; }
+td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+td.best { background: var(--win); font-weight: 600; }
+.stars { color: #c98500; letter-spacing: 1px; white-space: nowrap; } .stars .off { color: var(--border); }
+.chart-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 14px 8px; position: relative; margin-bottom: 12px; }
+.legend { display: flex; flex-wrap: wrap; gap: 16px; font-size: 13px; color: var(--text-2); margin: 0 0 6px 4px; }
+svg text { fill: var(--muted); font-size: 11px; }
+svg text.val { fill: var(--text-2); font-size: 11px; font-variant-numeric: tabular-nums; }
+.tip { position: absolute; pointer-events: none; background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+  padding: 8px 10px; font-size: 12.5px; box-shadow: 0 6px 20px rgba(0,0,0,.15); display: none; z-index: 5; }
+.grid3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; }
+.box { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; }
+.box h3 { margin-top: 0; } .box ul { margin: 6px 0 0; padding-left: 18px; color: var(--text-2); } .box li { margin: 4px 0; }
+footer { color: var(--muted); font-size: 12.5px; margin-top: 48px; border-top: 1px solid var(--border); padding-top: 14px; }
+.theme-btn { float: right; background: var(--surface); color: var(--text-2); border: 1px solid var(--border); border-radius: 8px; padding: 5px 10px; cursor: pointer; font: inherit; font-size: 13px; }
+</style>
+</head>
+<body>
+<main>
+<button class="theme-btn" id="themeBtn">Svetlý / tmavý</button>
+<h1>Ceed SW vs. i30 kombi vs. Octavia combi</h1>
+<p class="lead">Porovnanie 1 381 aktuálnych inzerátov z auto.bazos.sk a www.autobazar.eu (4. 11. 2026)
+pre mladého vodiča: nízka spotreba, spoľahlivosť a čo najnižšie náklady na údržbu.</p>
+
+<section class="verdict">
+<h2>Odporúčanie: Kia Ceed SW alebo Hyundai i30 kombi s motorom 1.6 CRDi a manuálom</h2>
+<p>Za rovnaké peniaze dostaneš <b>o 3–5 rokov mladšie auto</b> než Octaviu. Rovnako staré auto s rovnakým nájazdom je totiž
+Octavia na našom trhu o <b>24–28 % drahšia</b>, hoci kufor majú všetky tri podobný (Ceed SW 625 l, i30 602 l, Octavia 610–640 l).</p>
+<ol>
+<li><b>Jazdíš viac ako ~15 tis. km ročne (aj diaľnica):</b> Kia Ceed SW 1.6 CRDi z rokov 2021–2023. Spotreba okolo 5 l, a autá do
+150 tis. km majú ešte <b>7-ročnú továrenskú záruku Kia</b> – opravy ťa v prvých rokoch nestoja nič.
+Lacnejšia alternatíva je technické dvojča <b>Hyundai i30 1.6 CRDi 85 kW</b> (o ~6 % lacnejšie).</li>
+<li><b>Jazdíš hlavne po meste a menej:</b> Hyundai i30 alebo Ceed s benzínom <b>1.5 / 1.4 bez turba</b> a manuálom.
+Spotreba ~6,5 l, ale žiadny filter pevných častíc, AdBlue ani turbo – to je najmenej vecí, ktoré sa môžu pokaziť.</li>
+<li><b>Octavia</b> má zmysel, keď nájdeš 2.0 TDI s manuálom od súkromníka s úplnou históriou za jasne podpriemernú cenu.
+Má najlacnejšie a najdostupnejšie diely a opraví ju každý servis, a neskôr ju predáš drahšie – ale na začiatku za to zaplatíš viac.</li>
+</ol>
+<p><b>Vyhni sa</b> automatom s dvojspojkou (DCT/DSG) pri slabších motoroch a výkonným verziám (GT, RS, 1.6 T-GDi): drahšie opravy a
+pre mladého vodiča aj citeľne drahšie povinné zmluvné poistenie (PZP sa počíta podľa kW). Ideálne je 81–100 kW.</p>
+</section>
+
+<div class="kpis"><div class="kpi"><div class="l"><i class="dot" style="background:var(--s1)"></i>Kia Ceed SW</div>
+<div class="v">175</div><div class="l">ponúk · medián 12 900 € · 2021 · 132 000 km</div></div><div class="kpi"><div class="l"><i class="dot" style="background:var(--s2)"></i>Hyundai i30 kombi</div>
+<div class="v">274</div><div class="l">ponúk · medián 11 700 € · 2021 · 119 572 km</div></div><div class="kpi"><div class="l"><i class="dot" style="background:var(--s3)"></i>Škoda Octavia combi</div>
+<div class="v">932</div><div class="l">ponúk · medián 10 000 € · 2017 · 201 000 km</div></div></div>
+
+<h2>Rovnaké auto, iná cena</h2>
+<p class="section-lead">Odhad trhovej ceny pre rovnaký vek, nájazd a prevodovku podľa spoločného modelu zo všetkých troch značiek
+(1 228 áut od roku 2013, R² 0.79). Octavia je najdrahšia v každom veku – platíš za značku a zostatkovú hodnotu.</p>
+<div class="chart-wrap" id="chart">
+<div class="legend"><span><i class='dot' style='background:var(--s1)'></i>Kia Ceed SW</span><span><i class='dot' style='background:var(--s2)'></i>Hyundai i30 kombi</span><span><i class='dot' style='background:var(--s3)'></i>Škoda Octavia combi</span></div>
+<svg id="bars" width="100%" height="300" role="img" aria-label="Trhová cena rovnakého auta podľa značky"></svg>
+<div class="tip" id="tip"></div>
+</div>
+<div class="tbl-wrap"><table>
+<thead><tr><th>Profil auta</th><th class='n'>Ceed SW</th><th class='n'>i30 kombi</th><th class='n'>Octavia</th><th class='n'>Octavia vs. Ceed</th><th class='n'>i30 vs. Ceed</th></tr></thead>
+<tbody><tr><td>2-ročné, 40 tis. km, benzín, manuál</td><td class='n'>18 460 €</td><td class='n'>17 280 €</td><td class='n'>22 830 €</td><td class='n'>+24 %</td><td class='n'>-6 %</td></tr><tr><td>5-ročné, 100 tis. km, diesel, manuál</td><td class='n'>13 130 €</td><td class='n'>12 350 €</td><td class='n'>16 490 €</td><td class='n'>+26 %</td><td class='n'>-6 %</td></tr><tr><td>5-ročné, 100 tis. km, diesel, automat</td><td class='n'>14 920 €</td><td class='n'>14 040 €</td><td class='n'>18 750 €</td><td class='n'>+26 %</td><td class='n'>-6 %</td></tr><tr><td>8-ročné, 160 tis. km, diesel, manuál</td><td class='n'>9 120 €</td><td class='n'>8 620 €</td><td class='n'>11 630 €</td><td class='n'>+28 %</td><td class='n'>-5 %</td></tr></tbody></table></div>
+
+<h2>Prevádzka a údržba</h2>
+<p class="section-lead">Orientačné porovnanie podľa skúseností z praxe – nie sú to ceny konkrétneho servisu.</p>
+<div class="tbl-wrap"><table>
+<thead><tr><th></th><th>Kia Ceed SW</th><th>Hyundai i30 kombi</th><th>Škoda Octavia combi</th></tr></thead>
+<tbody>
+<tr><td>Továrenská záruka</td><td class="best">7 rokov / 150 tis. km, prenosná na ďalšieho majiteľa</td><td>5 rokov bez limitu km</td><td>2 roky (+ voliteľná predĺžená)</td></tr>
+<tr><td>Najúspornejší motor</td><td>1.6 CRDi – ~5 l</td><td>1.6 CRDi – ~5 l</td><td class="best">1.6 TDI ~4,8 l / 2.0 TDI ~5,3 l</td></tr>
+<tr><td>Najjednoduchší motor</td><td>1.4 MPI / 1.5 DPI bez turba</td><td class="best">1.5 DPI bez turba (2020+)</td><td>– (všetky benzíny majú turbo)</td></tr>
+<tr><td>Diely a servis</td><td>Bežne dostupné, mierne drahšie</td><td>Bežne dostupné, mierne drahšie</td><td class="best">Najlacnejšie, opraví ju každý servis</td></tr>
+<tr><td>Slabé miesta</td><td>Suchá 7DCT pri benzínoch, DPF pri krátkych jazdách</td><td>Suchá 7DCT, DPF pri krátkych jazdách</td><td>Suchá DSG (1.0/1.5 TSI, 1.6 TDI), DPF a AdBlue, rozvodový remeň 2.0 TDI</td></tr>
+<tr><td>Cena rovnakého auta</td><td>základ</td><td class="best">~6 % lacnejšia</td><td>o 24–28 % drahšia</td></tr>
+<tr><td>Typický inzerát</td><td>2021, 132 000 km, 12 900 €</td>
+<td>2021, 119 572 km, 11 700 €</td>
+<td>2017, 201 000 km, 10 000 €</td></tr>
+</tbody></table></div>
+
+<div class="grid3" style="margin-top:12px">
+<div class="box"><h3>Diesel alebo benzín?</h3><ul>
+<li>Diesel sa oplatí od ~15 tis. km ročne a keď jazdíš aj dlhšie trasy.</li>
+<li>Pri krátkych mestských jazdách sa upcháva filter pevných častíc (DPF) – oprava stojí stovky eur.</li>
+<li>Benzín bez turba je najlacnejší na údržbu, ale minie o ~1,5 l viac.</li></ul></div>
+<div class="box"><h3>Manuál alebo automat?</h3><ul>
+<li>Manuál je lacnejší pri kúpe aj údržbe.</li>
+<li>Dvojspojkové automaty so suchou spojkou (7DCT, DSG DQ200) sú pri vyššom nájazde rizikom drahej opravy.</li>
+<li>Ak chceš automat, Octavia 2.0 TDI má mokrú DSG – odolnejšiu, ale s výmenou oleja každých 60 tis. km.</li></ul></div>
+<div class="box"><h3>Poistenie pre mladého vodiča</h3><ul>
+<li>PZP sa počíta podľa výkonu motora a veku vodiča.</li>
+<li>81–85 kW (i30 1.6 CRDi, i30 1.5 DPI, Octavia 1.6 TDI) je pre mladého vodiča citeľne lacnejšie než 110–118 kW.</li>
+<li>Pred kúpou si vypýtaj ponuku PZP na konkrétne auto.</li></ul></div>
+</div>
+
+<h2>Motory – čo sa oplatí</h2>
+<p class="section-lead">Hodnotenie z pohľadu mladého vodiča: spotreba, jednoduchosť a riziko drahých opráv. Spotreba je reálny priemer, nie údaj z technického preukazu.</p>
+<div class="tbl-wrap"><table>
+<thead><tr><th>Značka</th><th>Motor</th><th>Hodnotenie</th><th class="n">Spotreba</th><th class="n">Ponúk</th><th class="n">Medián ceny</th></tr></thead>
+<tbody><tr><td><i class='dot' style='background:var(--s2)'></i>i30 kombi</td><td>1.6 CRDi</td><td><span class='stars'>★★★★★<span class='off'></span></span></td><td class='n'>~5.0 l</td><td class='n'>104</td><td class='n'>8 200 €</td></tr><tr><td><i class='dot' style='background:var(--s1)'></i>Ceed SW</td><td>1.6 CRDi</td><td><span class='stars'>★★★★★<span class='off'></span></span></td><td class='n'>~5.0 l</td><td class='n'>66</td><td class='n'>10 500 €</td></tr><tr><td><i class='dot' style='background:var(--s1)'></i>Ceed SW</td><td>1.6 CRDi (mHEV)</td><td><span class='stars'>★★★★★<span class='off'></span></span></td><td class='n'>~5.0 l</td><td class='n'>18</td><td class='n'>13 500 €</td></tr><tr><td><i class='dot' style='background:var(--s3)'></i>Octavia</td><td>2.0 TDI</td><td><span class='stars'>★★★★<span class='off'>★</span></span></td><td class='n'>~5.3 l</td><td class='n'>498</td><td class='n'>12 490 €</td></tr><tr><td><i class='dot' style='background:var(--s3)'></i>Octavia</td><td>1.6 TDI</td><td><span class='stars'>★★★★<span class='off'>★</span></span></td><td class='n'>~4.8 l</td><td class='n'>235</td><td class='n'>8 000 €</td></tr><tr><td><i class='dot' style='background:var(--s2)'></i>i30 kombi</td><td>1.0 T-GDi</td><td><span class='stars'>★★★★<span class='off'>★</span></span></td><td class='n'>~6.2 l</td><td class='n'>19</td><td class='n'>12 500 €</td></tr><tr><td><i class='dot' style='background:var(--s2)'></i>i30 kombi</td><td>1.5 T-GDi</td><td><span class='stars'>★★★★<span class='off'>★</span></span></td><td class='n'>~6.0 l</td><td class='n'>16</td><td class='n'>13 999 €</td></tr><tr><td><i class='dot' style='background:var(--s3)'></i>Octavia</td><td>1.5 TSI</td><td><span class='stars'>★★★★<span class='off'>★</span></span></td><td class='n'>~6.0 l</td><td class='n'>16</td><td class='n'>11 999 €</td></tr><tr><td><i class='dot' style='background:var(--s2)'></i>i30 kombi</td><td>1.5 MPI/DPI/GDI (bez turba)</td><td><span class='stars'>★★★★<span class='off'>★</span></span></td><td class='n'>~6.6 l</td><td class='n'>15</td><td class='n'>14 500 €</td></tr><tr><td><i class='dot' style='background:var(--s2)'></i>i30 kombi</td><td>1.6 MPI/DPI/GDI (bez turba)</td><td><span class='stars'>★★★★<span class='off'>★</span></span></td><td class='n'>~6.6 l</td><td class='n'>11</td><td class='n'>7 490 €</td></tr><tr><td><i class='dot' style='background:var(--s1)'></i>Ceed SW</td><td>1.4 MPI/DPI/GDI (bez turba)</td><td><span class='stars'>★★★★<span class='off'>★</span></span></td><td class='n'>~6.6 l</td><td class='n'>9</td><td class='n'>6 490 €</td></tr><tr><td><i class='dot' style='background:var(--s1)'></i>Ceed SW</td><td>1.6 MPI/DPI/GDI (bez turba)</td><td><span class='stars'>★★★★<span class='off'>★</span></span></td><td class='n'>~6.6 l</td><td class='n'>8</td><td class='n'>5 900 €</td></tr><tr><td><i class='dot' style='background:var(--s2)'></i>i30 kombi</td><td>1.4 MPI/DPI/GDI (bez turba)</td><td><span class='stars'>★★★★<span class='off'>★</span></span></td><td class='n'>~6.6 l</td><td class='n'>8</td><td class='n'>8 990 €</td></tr><tr><td><i class='dot' style='background:var(--s1)'></i>Ceed SW</td><td>1.5 T-GDi</td><td><span class='stars'>★★★<span class='off'>★★</span></span></td><td class='n'>~6.0 l</td><td class='n'>45</td><td class='n'>18 200 €</td></tr><tr><td><i class='dot' style='background:var(--s2)'></i>i30 kombi</td><td>1.5 T-GDi mHEV</td><td><span class='stars'>★★★<span class='off'>★★</span></span></td><td class='n'>~6.0 l</td><td class='n'>42</td><td class='n'>16 400 €</td></tr><tr><td><i class='dot' style='background:var(--s2)'></i>i30 kombi</td><td>1.4 T-GDi</td><td><span class='stars'>★★★<span class='off'>★★</span></span></td><td class='n'>~6.5 l</td><td class='n'>17</td><td class='n'>11 700 €</td></tr><tr><td><i class='dot' style='background:var(--s3)'></i>Octavia</td><td>1.5 TSI e-TEC</td><td><span class='stars'>★★★<span class='off'>★★</span></span></td><td class='n'>~6.0 l</td><td class='n'>12</td><td class='n'>29 590 €</td></tr><tr><td><i class='dot' style='background:var(--s3)'></i>Octavia</td><td>1.0 TSI</td><td><span class='stars'>★★★<span class='off'>★★</span></span></td><td class='n'>~5.8 l</td><td class='n'>7</td><td class='n'>11 890 €</td></tr><tr><td><i class='dot' style='background:var(--s3)'></i>Octavia</td><td>1.4 TSI</td><td><span class='stars'>★★<span class='off'>★★★</span></span></td><td class='n'>~6.3 l</td><td class='n'>12</td><td class='n'>9 700 €</td></tr><tr><td><i class='dot' style='background:var(--s1)'></i>Ceed SW</td><td>1.4 T-GDi</td><td><span class='stars'>★★<span class='off'>★★★</span></span></td><td class='n'>~6.5 l</td><td class='n'>11</td><td class='n'>12 900 €</td></tr><tr><td><i class='dot' style='background:var(--s3)'></i>Octavia</td><td>CNG / LPG</td><td><span class='stars'>★★<span class='off'>★★★</span></span></td><td class='n'>–</td><td class='n'>9</td><td class='n'>8 890 €</td></tr><tr><td><i class='dot' style='background:var(--s2)'></i>i30 kombi</td><td>1.6 T-GDi (GT/N-line)</td><td><span class='stars'>★★<span class='off'>★★★</span></span></td><td class='n'>~7.5 l</td><td class='n'>7</td><td class='n'>23 390 €</td></tr><tr><td><i class='dot' style='background:var(--s3)'></i>Octavia</td><td>plug-in hybrid</td><td><span class='stars'>★★<span class='off'>★★★</span></span></td><td class='n'>–</td><td class='n'>6</td><td class='n'>19 350 €</td></tr><tr><td><i class='dot' style='background:var(--s3)'></i>Octavia</td><td>1.9/2.0 TDI (Octavia II)</td><td><span class='stars'>★<span class='off'>★★★★</span></span></td><td class='n'>~5.8 l</td><td class='n'>86</td><td class='n'>4 999 €</td></tr><tr><td><i class='dot' style='background:var(--s3)'></i>Octavia</td><td>2.0 TSI</td><td><span class='stars'>★<span class='off'>★★★★</span></span></td><td class='n'>~7.5 l</td><td class='n'>21</td><td class='n'>8 400 €</td></tr><tr><td><i class='dot' style='background:var(--s3)'></i>Octavia</td><td>1.8 TSI</td><td><span class='stars'>★<span class='off'>★★★★</span></span></td><td class='n'>~7.5 l</td><td class='n'>14</td><td class='n'>8 000 €</td></tr><tr><td><i class='dot' style='background:var(--s3)'></i>Octavia</td><td>1.2 TSI</td><td><span class='stars'>★<span class='off'>★★★★</span></span></td><td class='n'>~7.5 l</td><td class='n'>7</td><td class='n'>5 490 €</td></tr></tbody></table></div>
+
+<h2>Najvýhodnejšie ponuky pre mladého vodiča</h2>
+<p class="section-lead">Vybrané z 141 áut, ktoré prešli filtrom: rok 2015+, do 220 tis. km, úsporný a jednoduchý motor,
+aspoň 5 % pod férovou cenou, bez znakov poškodenia. Popis každého auta sme prečítali. Férová cena je odhad pre danú značku
+z modelu ceny podľa veku, km, motora a výbavy.</p>
+<h3 class='subhead'>Do 8 000 € – lacný a úsporný diesel</h3><p class='section-lead'>Autá s 140–200 tis. km. Tu rozhoduje história a stav, nie značka – všetky tri sú v tomto veku spoľahlivé.</p><div class='cards'><article class="card">
+  <div class="card-head"><span class="brand"><i class="dot" style="background:var(--s1)"></i>Ceed SW</span>
+  <span class="loc">Ružomberok · firma / autobazár · bazoš</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/196914077/kia-ceed-sporty-wagon-16-crdi-silver.php" target="_blank" rel="noopener">1. majiteľ, kúpené v SR</a></h3>
+  <div class="facts">Kia Cee’d Sporty Wagon 1.6 CRDi Silver</div>
+  <div class="prices"><div><span class="lbl">Cena</span><span class="big">6 900 €</span></div>
+  <div><span class="lbl">Férová cena</span><span class="mid">9 260 €</span></div>
+  <div><span class="lbl">Pod trhom</span><span class="mid good">−26 %</span></div></div>
+  <div class="facts">2017 · 136 822 km · 1.6 CRDi · manuál
+   · ~5.0 l/100 km</div>
+  
+  <ul class="pc"><li class='pro'>1/2017, 1.6 CRDi 100 kW, manuál, 137 tis. km</li><li class='pro'>1. majiteľ, ako nové kúpené v SR, servisná knižka, nehavarované</li><li class='pro'>Najlepší pomer cena / nájazd v tejto kategórii</li><li class='con'>EK platí len do 12/2026 – počítaj s novou STK/EK</li><li class='con'>Predáva autobazár – vyjednávaj</li></ul>
+</article><article class="card">
+  <div class="card-head"><span class="brand"><i class="dot" style="background:var(--s1)"></i>Ceed SW</span>
+  <span class="loc">Zvolen · firma / autobazár · bazoš</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/196185937/ceed-sw-16crdi-100kw-159km-sk-auto.php" target="_blank" rel="noopener">Servis len v Kia, STK do 2028</a></h3>
+  <div class="facts">CEED SW 1.6CRDI 100kW 160km SK auto</div>
+  <div class="prices"><div><span class="lbl">Cena</span><span class="big">6 700 €</span></div>
+  <div><span class="lbl">Férová cena</span><span class="mid">8 880 €</span></div>
+  <div><span class="lbl">Pod trhom</span><span class="mid good">−25 %</span></div></div>
+  <div class="facts">2018 · 160 000 km · 1.6 CRDi · manuál
+   · ~5.0 l/100 km</div>
+  
+  <ul class="pc"><li class='pro'>6/2018, 1.6 CRDi 100 kW, manuál, 160 tis. km</li><li class='pro'>1. majiteľ, SR, servisované len v Kia, garantované km</li><li class='pro'>Nová STK/EK do 06/2028, cúvacia kamera, vyhrievaný volant</li><li class='con'>Predajca so zmiešanými signálmi (skôr priekupník)</li></ul>
+</article><article class="card">
+  <div class="card-head"><span class="brand"><i class="dot" style="background:var(--s1)"></i>Ceed SW</span>
+  <span class="loc">Banská Bystrica · nejasný predajca · bazoš</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/195647011/kia-ceed-sw-16-crdi-136k-100kw-gold-m6-parkovacia-kamera.php" target="_blank" rel="noopener">Bohatá výbava Gold</a></h3>
+  <div class="facts">Kia Ceed SW 1.6 CRDi 136k 100kW Gold, M6, Parkovacia kamera,</div>
+  <div class="prices"><div><span class="lbl">Cena</span><span class="big">5 990 €</span></div>
+  <div><span class="lbl">Férová cena</span><span class="mid">7 850 €</span></div>
+  <div><span class="lbl">Pod trhom</span><span class="mid good">−24 %</span></div></div>
+  <div class="facts">2018 · 194 670 km · 1.6 CRDi · manuál
+   · ~5.0 l/100 km</div>
+  
+  <ul class="pc"><li class='pro'>5/2018, 1.6 CRDi 100 kW, manuál, 195 tis. km</li><li class='pro'>Kúpené v SR, nehavarované, servisná história od 1. majiteľa</li><li class='pro'>STK/EK do 04/2028</li><li class='con'>Vyšší nájazd – po operatívnom lízingu (veľa diaľnice)</li></ul>
+</article><article class="card">
+  <div class="card-head"><span class="brand"><i class="dot" style="background:var(--s2)"></i>i30 kombi</span>
+  <span class="loc">Levice · nejasný predajca · bazoš</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/196726910/hjundaj-i30-combi-sw-2017.php" target="_blank" rel="noopener">Najlacnejší: i30 za 5 000 €</a></h3>
+  <div class="facts">Hjundaj i30 SW 1.6 CRDI  2017</div>
+  <div class="prices"><div><span class="lbl">Cena</span><span class="big">4 999 €</span></div>
+  <div><span class="lbl">Férová cena</span><span class="mid">7 340 €</span></div>
+  <div><span class="lbl">Pod trhom</span><span class="mid good">−32 %</span></div></div>
+  <div class="facts">2017 · 172 632 km · 1.6 CRDi · manuál
+   · ~5.0 l/100 km</div>
+  
+  <ul class="pc"><li class='pro'>2/2017, 1.6 CRDi 81 kW (110 k), manuál, 173 tis. km</li><li class='pro'>Slabší motor = lacnejšie PZP pre mladého vodiča</li><li class='pro'>Dvojzónová klíma, kamera, vyhrievaný volant</li><li class='con'>Inzerát neuvádza históriu ani pôvod – pýtaj servisnú knižku</li><li class='con'>32 % pod trhom – over prečo (Cebia, VIN)</li></ul>
+</article></div><h3 class='subhead'>8 000 – 12 000 € – mladšie auto, nízka spotreba</h3><p class='section-lead'>Najlepší pomer pre mladého vodiča: 2020–2023, 1.6 CRDi s manuálom, spotreba okolo 5 l.</p><div class='cards'><article class="card">
+  <div class="card-head"><span class="brand"><i class="dot" style="background:var(--s1)"></i>Ceed SW</span>
+  <span class="loc">Hlohovec · firma / autobazár · bazoš</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/196133903/kia-ceed-sw-16-crdi-mhev-silver-odpocet-dph.php" target="_blank" rel="noopener">Najlepšia voľba: Ceed so zárukou do 2030</a></h3>
+  <div class="facts">Kia Ceed SW 1.6 CRDi mHEV Silver ODPOČET DPH</div>
+  <div class="prices"><div><span class="lbl">Cena</span><span class="big">11 985 €</span></div>
+  <div><span class="lbl">Férová cena</span><span class="mid">13 710 €</span></div>
+  <div><span class="lbl">Pod trhom</span><span class="mid good">−13 %</span></div></div>
+  <div class="facts">2023 · 77 865 km · 1.6 CRDi (mHEV) · manuál
+   · ~5.0 l/100 km</div>
+  <div class='note'>🛡 záruka Kia do ~2030 (do 150 tis. km)</div>
+  <ul class="pc"><li class='pro'>6/2023, 1.6 CRDi mHEV 100 kW, manuál, 78 tis. km</li><li class='pro'>Továrenská záruka Kia 7 rokov / 150 tis. km – do 2030</li><li class='pro'>1. majiteľ, kúpené v SR, úplná servisná história, garantované km</li><li class='con'>Z operatívneho lízingu (veľa km za krátky čas)</li><li class='con'>Predáva firma – cena s DPH</li></ul>
+</article><article class="card">
+  <div class="card-head"><span class="brand"><i class="dot" style="background:var(--s2)"></i>i30 kombi</span>
+  <span class="loc">Bratislava · firma / autobazár · bazoš</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/196100585/hyundai-i30-cw-16-crdi-comfort-85kw-m6-dph-1-majitelsk.php" target="_blank" rel="noopener">i30 po 1. majiteľovi z SR</a></h3>
+  <div class="facts">Hyundai i30 CW 1.6 CRDi Comfort 85kW, M6, 1.majiteľ SK pôvod</div>
+  <div class="prices"><div><span class="lbl">Cena</span><span class="big">9 999 €</span></div>
+  <div><span class="lbl">Férová cena</span><span class="mid">11 970 €</span></div>
+  <div><span class="lbl">Pod trhom</span><span class="mid good">−16 %</span></div></div>
+  <div class="facts">2021 · 124 000 km · 1.6 CRDi · manuál
+   · ~5.0 l/100 km</div>
+  
+  <ul class="pc"><li class='pro'>10/2021, 1.6 CRDi 85 kW, manuál, 124 tis. km</li><li class='pro'>Kúpené v SR, úplná servisná história, nehavarované, garážované</li><li class='pro'>85 kW – rozumné PZP</li><li class='con'>Záruka Hyundai skončila (5 rokov)</li><li class='con'>Predáva firma (odpočet DPH)</li></ul>
+</article><article class="card">
+  <div class="card-head"><span class="brand"><i class="dot" style="background:var(--s2)"></i>i30 kombi</span>
+  <span class="loc">Prešov · súkromník · autobazar.eu</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/hyundai-i30-cw-i30-kombi-16-crdi-comfort-85kw116hp-m6/AeCD2k9zGAf/" target="_blank" rel="noopener">Súkromník: i30 s nízkym nájazdom</a></h3>
+  <div class="facts">Hyundai i30 CW i30 kombi 1.6 CRDi Comfort 85kW116HP M6</div>
+  <div class="prices"><div><span class="lbl">Cena</span><span class="big">10 999 €</span></div>
+  <div><span class="lbl">Férová cena</span><span class="mid">11 590 €</span></div>
+  <div><span class="lbl">Pod trhom</span><span class="mid good">−5 %</span></div></div>
+  <div class="facts">2020 · 93 128 km · 1.6 CRDi · manuál
+   · ~5.0 l/100 km</div>
+  
+  <ul class="pc"><li class='pro'>2020, 1.6 CRDi 85 kW, manuál, 93 tis. km</li><li class='pro'>Kúpené v SR, súkromný predajca</li><li class='pro'>Vyhrievaný volant, tempomat</li><li class='con'>Inzerát bez popisu – históriu over na obhliadke</li></ul>
+</article><article class="card">
+  <div class="card-head"><span class="brand"><i class="dot" style="background:var(--s2)"></i>i30 kombi</span>
+  <span class="loc">Partizánske · firma / autobazár · bazoš</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197112491/hyundai-i30-combi.php" target="_blank" rel="noopener">i30 facelift, garancia km</a></h3>
+  <div class="facts">Hyundai I30 combi</div>
+  <div class="prices"><div><span class="lbl">Cena</span><span class="big">10 999 €</span></div>
+  <div><span class="lbl">Férová cena</span><span class="mid">12 560 €</span></div>
+  <div><span class="lbl">Pod trhom</span><span class="mid good">−12 %</span></div></div>
+  <div class="facts">2021 · 97 749 km · 1.6 CRDi · manuál
+   · ~5.0 l/100 km</div>
+  
+  <ul class="pc"><li class='pro'>10/2021, 1.6 CRDi 85 kW, manuál, 98 tis. km</li><li class='pro'>Kúpené v SR, garancia km, zimné pneumatiky zdarma</li><li class='con'>Predáva firma</li><li class='con'>História servisu v inzeráte chýba</li></ul>
+</article><article class="card">
+  <div class="card-head"><span class="brand"><i class="dot" style="background:var(--s3)"></i>Octavia</span>
+  <span class="loc">Tvrdošovce · súkromník · autobazar.eu</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/skoda-octavia-combi-16-tdi-115k-ambition-eu6-85kw116hp-m5/AedwLTsDOJ3/" target="_blank" rel="noopener">Octavia od súkromníka</a></h3>
+  <div class="facts">Škoda Octavia Combi 1.6 TDI 115k Ambition EU6 85kW116HP M5</div>
+  <div class="prices"><div><span class="lbl">Cena</span><span class="big">8 400 €</span></div>
+  <div><span class="lbl">Férová cena</span><span class="mid">10 370 €</span></div>
+  <div><span class="lbl">Pod trhom</span><span class="mid good">−19 %</span></div></div>
+  <div class="facts">2018 · 141 346 km · 1.6 TDI · manuál
+   · ~4.8 l/100 km</div>
+  
+  <ul class="pc"><li class='pro'>2018, 1.6 TDI 85 kW, manuál, 141 tis. km</li><li class='pro'>1. majiteľ, SR, garážované, úplná servisná história, ODO-Pass</li><li class='con'>O 3–6 rokov staršia než Kia / Hyundai za podobné peniaze</li></ul>
+</article></div><h3 class='subhead'>12 000 – 16 000 € – takmer nové, ešte v záruke</h3><p class='section-lead'>Za tieto peniaze už dostaneš Kiu alebo Hyundai v továrenskej záruke – najnižšie riziko neplánovaných opráv.</p><div class='cards'><article class="card">
+  <div class="card-head"><span class="brand"><i class="dot" style="background:var(--s1)"></i>Ceed SW</span>
+  <span class="loc">Trnava · firma / autobazár · bazoš</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/196536000/kia-ceed-sw-16-crdi-mhev-servisna-kniha-p-kamera.php" target="_blank" rel="noopener">Ceed s nízkym nájazdom, záruka do 2028</a></h3>
+  <div class="facts">Kia Ceed SW 1.6 CRDi MHEV / SERVISNÁ KNIHA, P. KAMERA</div>
+  <div class="prices"><div><span class="lbl">Cena</span><span class="big">12 490 €</span></div>
+  <div><span class="lbl">Férová cena</span><span class="mid">14 460 €</span></div>
+  <div><span class="lbl">Pod trhom</span><span class="mid good">−14 %</span></div></div>
+  <div class="facts">2021 · 55 560 km · 1.6 CRDi (mHEV) · manuál
+   · ~5.0 l/100 km</div>
+  <div class='note'>🛡 záruka Kia do ~2028 (do 150 tis. km)</div>
+  <ul class="pc"><li class='pro'>2021, 1.6 CRDi mHEV, manuál, 56 tis. km</li><li class='pro'>Servisná knižka, posledný servis pri 43,5 tis. km</li><li class='pro'>Záruka Kia do ~2028</li><li class='con'>Predáva autobazár – pýtaj doklady k servisu</li></ul>
+</article><article class="card">
+  <div class="card-head"><span class="brand"><i class="dot" style="background:var(--s2)"></i>i30 kombi</span>
+  <span class="loc">Bardejov · firma / autobazár · bazoš</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197172697/hyundai-i30-kombi-15-81-kw-2024-67-626-km.php" target="_blank" rel="noopener">Najjednoduchšie auto: benzín bez turba</a></h3>
+  <div class="facts">Hyundai i30 Kombi 1.5i 81 kW |2024 67 626 KM|</div>
+  <div class="prices"><div><span class="lbl">Cena</span><span class="big">13 990 €</span></div>
+  <div><span class="lbl">Férová cena</span><span class="mid">16 110 €</span></div>
+  <div><span class="lbl">Pod trhom</span><span class="mid good">−13 %</span></div></div>
+  <div class="facts">2024 · 67 626 km · 1.5 MPI/DPI/GDI (bez turba) · manuál
+   · ~6.6 l/100 km</div>
+  <div class='note'>🛡 záruka Hyundai do ~2029 (bez limitu km)</div>
+  <ul class="pc"><li class='pro'>2024, i30 1.5 benzín 81 kW, manuál, 68 tis. km</li><li class='pro'>Bez turba, DPF a AdBlue – ideálne do mesta a na krátke jazdy</li><li class='pro'>Záruka Hyundai do ~2029 bez limitu km, 81 kW = lacné PZP</li><li class='con'>Spotreba okolo 6,5 l (o ~1,5 l viac než diesel)</li><li class='con'>Predáva firma</li></ul>
+</article><article class="card">
+  <div class="card-head"><span class="brand"><i class="dot" style="background:var(--s3)"></i>Octavia</span>
+  <span class="loc">Prešov · nejasný predajca · bazoš</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197107389/skoda-octavia-combi-20tdi-110kw-2020.php" target="_blank" rel="noopener">Octavia 2.0 TDI od súkromníka</a></h3>
+  <div class="facts">Skoda octavia combi 2.0tdi, 110kw, 2020</div>
+  <div class="prices"><div><span class="lbl">Cena</span><span class="big">13 690 €</span></div>
+  <div><span class="lbl">Férová cena</span><span class="mid">15 790 €</span></div>
+  <div><span class="lbl">Pod trhom</span><span class="mid good">−13 %</span></div></div>
+  <div class="facts">2020 · 113 900 km · 2.0 TDI · manuál
+   · ~5.3 l/100 km</div>
+  
+  <ul class="pc"><li class='pro'>Koniec 2019, 2.0 TDI 110 kW, manuál, 114 tis. km</li><li class='pro'>Kúpené v SR, úplná servisná história v autorizovanom servise</li><li class='pro'>Nedávno menené brzdy, sezónne prezutie</li><li class='con'>Už bez záruky</li><li class='con'>110 kW – drahšie PZP pre mladého vodiča</li></ul>
+</article><article class="card">
+  <div class="card-head"><span class="brand"><i class="dot" style="background:var(--s3)"></i>Octavia</span>
+  <span class="loc">Galanta · nejasný predajca · bazoš</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197040870/skoda-octavia-kombi-4-20-tdi-39000km.php" target="_blank" rel="noopener">Octavia IV s 39 tis. km</a></h3>
+  <div class="facts">Škoda Octavia kombi IV 2.0 TDI 39000km 8/2023</div>
+  <div class="prices"><div><span class="lbl">Cena</span><span class="big">15 500 €</span></div>
+  <div><span class="lbl">Férová cena</span><span class="mid">20 770 €</span></div>
+  <div><span class="lbl">Pod trhom</span><span class="mid good">−25 %</span></div></div>
+  <div class="facts">2023 · 39 000 km · 2.0 TDI · manuál
+   · ~5.3 l/100 km</div>
+  
+  <ul class="pc"><li class='pro'>8/2023, 2.0 TDI 85 kW, manuál, 39 tis. km</li><li class='pro'>Úplná servisná história v Škoda, nebúrané</li><li class='con'>Záruka Škoda (2 roky) už skončila</li><li class='con'>Krátky inzerát – over VIN</li></ul>
+</article></div>
+
+<h2>Pred kúpou over</h2>
+<div class="grid3">
+<div class="box"><h3>Doklady</h3><ul>
+<li>Servisná knižka a faktúry – pri Kii podmienka platnosti záruky</li>
+<li>Pôvod a nájazd cez Cebiu alebo históriu podľa VIN u autorizovaného dealera</li>
+<li>Platnosť STK/EK a počet majiteľov v technickom preukaze</li></ul></div>
+<div class="box"><h3>Skúšobná jazda</h3><ul>
+<li>Studený štart (bez dymu, klepania)</li>
+<li>Spojka: nepreklzáva pri zrýchlení na 4. – 5. prevodový stupeň</li>
+<li>Diesel: žiadne hlásenie DPF / motora, plynulý ťah bez výpadkov</li></ul></div>
+<div class="box"><h3>Vyjednávanie</h3><ul>
+<li>Autobazáre majú rezervu 5–10 %</li>
+<li>Argumentuj blížiacou sa STK, opotrebenými pneumatikami či brzdami</li>
+<li>Pri „cene pri financovaní“ porovnávaj vždy cenu za hotové</li></ul></div>
+</div>
+
+<footer>
+Dáta: auto.bazos.sk a www.autobazar.eu, 4. 11. 2026. Kia Ceed SW a Hyundai i30 kombi od 3 000 € (prehľadaný celý trh),
+Škoda Octavia combi od 4 000 € (najnovšie ponuky, asi 40 % trhu). Rovnaké auto na oboch portáloch je započítané raz.
+Férová cena je odhad z regresného modelu (vek, km, motor, prevodovka, predajca, pôvod); typická odchýlka je ±13–14 %.
+Porovnanie značiek používa spoločný model pre autá od roku 2013 od 4 000 €. Spotreba, záruky a odporúčania k motorom
+sú orientačné – vždy over konkrétne auto.
+</footer>
+</main>
+<script>
+(function () {
+  const root = document.documentElement, btn = document.getElementById("themeBtn");
+  btn.addEventListener("click", () => {
+    const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+    root.dataset.theme = dark ? "light" : "dark";
+  });
+  const DATA = [{"label": "2-ročné, 40 tis. km, benzín, manuál", "ceed": 18460.0, "i30": 17280.0, "octavia": 22830.0}, {"label": "5-ročné, 100 tis. km, diesel, manuál", "ceed": 13130.0, "i30": 12350.0, "octavia": 16490.0}, {"label": "5-ročné, 100 tis. km, diesel, automat", "ceed": 14920.0, "i30": 14040.0, "octavia": 18750.0}, {"label": "8-ročné, 160 tis. km, diesel, manuál", "ceed": 9120.0, "i30": 8620.0, "octavia": 11630.0}];
+  const KEYS = ["ceed", "i30", "octavia"], NAMES = {"ceed": "Kia Ceed SW", "i30": "Hyundai i30 kombi", "octavia": "Škoda Octavia combi"}, COL = {"ceed": "s1", "i30": "s2", "octavia": "s3"};
+  const svg = document.getElementById("bars"), tip = document.getElementById("tip"), wrap = document.getElementById("chart");
+  const NS = "http://www.w3.org/2000/svg";
+  const fmt = v => Math.round(v).toLocaleString("sk-SK").replace(/\u00a0/g, " ") + " €";
+  function el(n, a, p) { const e = document.createElementNS(NS, n); for (const k in a) e.setAttribute(k, a[k]); (p || svg).appendChild(e); return e; }
+  function draw() {
+    svg.innerHTML = "";
+    const W = svg.clientWidth || 800, H = 300, m = {l: 52, r: 8, t: 18, b: 44};
+    const iw = W - m.l - m.r, ih = H - m.t - m.b;
+    const max = Math.ceil(Math.max(...DATA.flatMap(d => KEYS.map(k => d[k]))) / 5000) * 5000;
+    const y = v => m.t + ih - v / max * ih;
+    for (let v = 0; v <= max; v += 5000) {
+      el("line", {x1: m.l, x2: W - m.r, y1: y(v), y2: y(v), stroke: "var(--grid)"});
+      el("text", {x: m.l - 6, y: y(v) + 4, "text-anchor": "end"}).textContent = (v / 1000) + " tis.";
+    }
+    const gw = iw / DATA.length, bw = Math.min(34, (gw - 24) / 3);
+    DATA.forEach((d, i) => {
+      const cx = m.l + gw * i + gw / 2;
+      const lab = el("text", {x: cx, y: H - m.b + 16, "text-anchor": "middle"});
+      const parts = d.label.split(", ");
+      lab.textContent = parts.slice(0, 2).join(", ");
+      el("text", {x: cx, y: H - m.b + 30, "text-anchor": "middle"}).textContent = parts.slice(2).join(", ");
+      KEYS.forEach((k, j) => {
+        const x = cx - (bw * 3 + 4) / 2 + j * (bw + 2), h = m.t + ih - y(d[k]);
+        const r = el("path", {d: `M${x},${m.t + ih} V${y(d[k]) + 4} q0,-4 4,-4 h${bw - 8} q4,0 4,4 V${m.t + ih} Z`, fill: `var(--${COL[k]})`});
+        if (k === "octavia") {
+          el("text", {x: x + bw / 2, y: y(d[k]) - 5, "text-anchor": "middle", class: "val"}).textContent = "+" + Math.round((d.octavia / d.ceed - 1) * 100) + " %";
+        }
+        const hit = el("rect", {x: x - 1, y: m.t, width: bw + 2, height: ih, fill: "transparent"});
+        hit.addEventListener("mousemove", ev => {
+          const b = wrap.getBoundingClientRect();
+          tip.innerHTML = `<b>${NAMES[k]}</b>${d.label}<br>Trhová cena: <b style="display:inline">${fmt(d[k])}</b>`;
+          tip.style.display = "block";
+          tip.style.left = Math.min(ev.clientX - b.left + 12, b.width - 230) + "px";
+          tip.style.top = (ev.clientY - b.top + 12) + "px";
+          r.setAttribute("opacity", ".8");
+        });
+        hit.addEventListener("mouseleave", () => { tip.style.display = "none"; r.removeAttribute("opacity"); });
+      });
+    });
+  }
+  draw(); addEventListener("resize", draw);
+})();
+</script>
+</body>
+</html>

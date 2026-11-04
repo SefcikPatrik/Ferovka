@@ -1,0 +1,80 @@
+[
+  {
+    "slug": "porovnanie-ceed-i30-octavia",
+    "file": "porovnanie-ceed-i30-octavia.html",
+    "name": "Ceed vs i30 vs Octavia",
+    "brand": "Porovnanie",
+    "model": "Ceed vs i30 vs Octavia",
+    "kind": "comparison",
+    "date": "2026-11-04",
+    "summary": "Porovnanie 1 381 aktuálnych inzerátov z bazoša a autobazar.eu pre mladého vodiča: nízka spotreba, spoľahlivosť a čo najnižšie náklady na údržbu.",
+    "ads": 1381,
+    "median": null,
+    "r2": null
+  },
+  {
+    "slug": "cupra-formentor",
+    "file": "cupra-formentor-analyza.html",
+    "name": "Cupra Formentor",
+    "brand": "Cupra",
+    "model": "Formentor",
+    "kind": "model",
+    "date": "2026-11-04",
+    "summary": "Analýza aktuálnych inzerátov Cupra Formentor (všetky motory vrátane VZ a e-Hybrid) na bazoši a autobazar.eu. Formentorov je na trhu okolo 380 inzerátov (282 na autobazar.eu, 100 na bazoši) – prezreli sme všetky.",
+    "ads": 297,
+    "median": "25 495 €",
+    "r2": "91 %"
+  },
+  {
+    "slug": "hyundai-i30-kombi",
+    "file": "hyundai-i30-kombi-analyza.html",
+    "name": "Hyundai i30 kombi",
+    "brand": "Hyundai",
+    "model": "i30 kombi",
+    "kind": "model",
+    "date": "2026-11-04",
+    "summary": "Analýza všetkých aktuálnych inzerátov Hyundai i30 kombi (CW / Wagon) na bazoši a autobazar.eu.",
+    "ads": 336,
+    "median": "11 550 €",
+    "r2": "94 %"
+  },
+  {
+    "slug": "kia-ceed-sw",
+    "file": "kia-ceed-sw-analyza.html",
+    "name": "Kia Ceed SW",
+    "brand": "Kia",
+    "model": "Ceed SW",
+    "kind": "model",
+    "date": "2026-11-04",
+    "summary": "Analýza všetkých aktuálnych inzerátov Kia Ceed kombi na bazoši a autobazar.eu.",
+    "ads": 209,
+    "median": "12 850 €",
+    "r2": "94 %"
+  },
+  {
+    "slug": "octavia-combi",
+    "file": "octavia-combi-analyza.html",
+    "name": "Škoda Octavia combi",
+    "brand": "Škoda",
+    "model": "Octavia combi",
+    "kind": "model",
+    "date": "2026-11-04",
+    "summary": "Analýza aktuálnych inzerátov Škoda Octavia combi od 4 000 € na bazoši a autobazar.eu. Octavií je na trhu toľko, že sme prezreli vždy najnovšie ponuky (asi polovicu trhu).",
+    "ads": 1083,
+    "median": "10 000 €",
+    "r2": "92 %"
+  },
+  {
+    "slug": "skoda-superb",
+    "file": "skoda-superb-analyza.html",
+    "name": "Škoda Superb",
+    "brand": "Škoda",
+    "model": "Superb",
+    "kind": "model",
+    "date": "2026-11-04",
+    "summary": "Analýza aktuálnych inzerátov Škoda Superb (liftback aj combi) od 4 000 € na bazoši a autobazar.eu. Superbov je na trhu takmer 3 400 inzerátov (približne polovica na každom portáli). Z autobazar.eu sme prezreli takmer všetky, z bazoša najnovších ~1 000.",
+    "ads": 1737,
+    "median": "16 990 €",
+    "r2": "94 %"
+  }
+]
