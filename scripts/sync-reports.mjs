@@ -9,6 +9,18 @@ const dst = path.join(root, "public", "reports");
 fs.mkdirSync(dst, { recursive: true });
 fs.mkdirSync(path.join(root, "src", "data"), { recursive: true });
 
+// the shared Férovka look, injected into every report after its own <style> (generators stay untouched)
+const FONTS =
+  '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>' +
+  '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&family=Newsreader:ital,opsz,wght@0,6..72,500;0,6..72,600;1,6..72,500&display=swap">';
+const THEME = fs.readFileSync(path.join(root, "scripts", "report-theme.css"), "utf8");
+const themed = (html) =>
+  html.replace(/<!-- ferovka-theme -->[\s\S]*?<!-- \/ferovka-theme -->/, "").replace(
+    "</head>",
+    `<!-- ferovka-theme -->${FONTS}<style id="ferovka-theme">${THEME}</style><!-- /ferovka-theme -->
+</head>`,
+  );
+
 const strip = (s) => s.replace(/<[^>]+>/g, "").replace(/&amp;/g, "&").replace(/\s+/g, " ").trim();
 const num = (s) => Number(String(s).replace(/[^\d]/g, "")) || null;
 
@@ -42,7 +54,7 @@ for (const file of fs.readdirSync(src).filter((f) => f.endsWith(".html"))) {
     median: kpi(/medián ceny/),
     r2: kpi(/vysvetlí model/),
   });
-  fs.copyFileSync(path.join(src, file), path.join(dst, file));
+  fs.writeFileSync(path.join(dst, file), themed(html));
 }
 reports.sort((a, b) => (a.kind === b.kind ? 0 : a.kind === "comparison" ? -1 : 1) || b.date.localeCompare(a.date) || a.name.localeCompare(b.name, "sk"));
 fs.writeFileSync(path.join(root, "src", "data", "reports.json"), JSON.stringify(reports, null, 2));

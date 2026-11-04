@@ -1,11 +1,13 @@
 import type { Metadata, Viewport } from "next";
-import { Manrope } from "next/font/google";
+import { Instrument_Sans, JetBrains_Mono, Newsreader } from "next/font/google";
 import "./globals.css";
 
-const sans = Manrope({ subsets: ["latin", "latin-ext"], variable: "--font-sans", display: "swap" });
+const sans = Instrument_Sans({ subsets: ["latin", "latin-ext"], variable: "--font-sans", display: "swap" });
+const serif = Newsreader({ subsets: ["latin", "latin-ext"], variable: "--font-serif", display: "swap", style: ["normal", "italic"] });
+const mono = JetBrains_Mono({ subsets: ["latin", "latin-ext"], variable: "--font-mono", display: "swap" });
 
 export const metadata: Metadata = {
-  title: { default: "Férovka – férová cena každej ojazdenky", template: "%s · Férovka" },
+  title: { default: "Férovka – cenník ojazdených áut", template: "%s · Férovka" },
   description:
     "Férovka porovná každý inzerát ojazdeného auta s celým slovenským trhom a ukáže, ktoré ponuky sú pod cenou – a ktoré sú podozrivo lacné.",
   icons: { icon: "/icon.svg" },
@@ -13,8 +15,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f5f4ef" },
-    { media: "(prefers-color-scheme: dark)", color: "#0d110f" },
+    { media: "(prefers-color-scheme: light)", color: "#f4f1ea" },
+    { media: "(prefers-color-scheme: dark)", color: "#161512" },
   ],
 };
 
@@ -23,7 +25,7 @@ const themeScript = `try{var t=localStorage.getItem("theme");if(t)document.docum
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="sk" className={sans.variable} suppressHydrationWarning>
+    <html lang="sk" className={`${sans.variable} ${serif.variable} ${mono.variable}`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>

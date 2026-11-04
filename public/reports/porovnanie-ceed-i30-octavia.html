@@ -81,6 +81,106 @@ svg text.val { fill: var(--text-2); font-size: 11px; font-variant-numeric: tabul
 footer { color: var(--muted); font-size: 12.5px; margin-top: 48px; border-top: 1px solid var(--border); padding-top: 14px; }
 .theme-btn { float: right; background: var(--surface); color: var(--text-2); border: 1px solid var(--border); border-radius: 8px; padding: 5px 10px; cursor: pointer; font: inherit; font-size: 13px; }
 </style>
+<!-- ferovka-theme --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&family=Newsreader:ital,opsz,wght@0,6..72,500;0,6..72,600;1,6..72,500&display=swap"><style id="ferovka-theme">/* Férovka theme for the generated analyses – injected by sync-reports.mjs after each report's own <style>,
+   so it overrides tokens and components without touching the generators. Charts keep validated colours. */
+:root {
+  --bg: #f4f1ea; --surface: #faf8f3; --surface-2: #ebe7dd; --border: #d9d4c7;
+  --text: #1a1814; --text-2: #4a463e; --muted: #7d776b; --ink: #1a1814;
+  --s1: #3567c9; --s2: #d9531e; --s3: #2a9d6e;
+  --pos: #3567c9; --neg: #d9531e; --accent: #c2461a;
+  --good: #2a7d55; --bad: #b3361b; --grid: #e2ddd1; --win: #efe6d2;
+  --serif: "Newsreader", Georgia, serif;
+  --sans: "Instrument Sans", system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #161512; --surface: #1d1b18; --surface-2: #26231f; --border: #3a362f;
+    --text: #efebe2; --text-2: #c2bcae; --muted: #8d8678; --ink: #efebe2;
+    --s1: #4f86dc; --s2: #d9662f; --s3: #22a080;
+    --pos: #4f86dc; --neg: #d9662f; --accent: #e8743f;
+    --good: #4fb985; --bad: #ec7a5c; --grid: #2c2925; --win: #2a241a;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #161512; --surface: #1d1b18; --surface-2: #26231f; --border: #3a362f;
+  --text: #efebe2; --text-2: #c2bcae; --muted: #8d8678; --ink: #efebe2;
+  --s1: #4f86dc; --s2: #d9662f; --s3: #22a080;
+  --pos: #4f86dc; --neg: #d9662f; --accent: #e8743f;
+  --good: #4fb985; --bad: #ec7a5c; --grid: #2c2925; --win: #2a241a;
+}
+
+body { font-family: var(--sans); font-size: 15.5px; }
+main { max-width: 1080px; padding: 28px 20px 64px; }
+a { color: var(--accent); }
+a:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+h1 {
+  font-family: var(--serif); font-weight: 600; font-size: clamp(32px, 5vw, 46px); line-height: 1.05;
+  letter-spacing: -0.02em; margin: 6px 0 14px; padding-bottom: 14px; border-bottom: 3px double var(--ink);
+}
+h2 {
+  font-family: var(--serif); font-weight: 600; font-size: 28px; letter-spacing: -0.01em;
+  margin: 52px 0 12px; padding-bottom: 8px; border-bottom: 1px solid var(--ink);
+}
+h3 { font-family: var(--serif); font-weight: 600; font-size: 19px; line-height: 1.25; }
+h3 a { color: var(--text); }
+.lead { font-size: 17px; max-width: 780px; }
+.section-lead { font-size: 15px; }
+
+/* numbers set like a price list */
+.kpis { gap: 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.kpi { background: transparent; border: 0; border-radius: 0; padding: 14px 18px 14px 0; }
+.kpi + .kpi { border-left: 1px solid var(--border); padding-left: 18px; }
+.kpi .v { font-family: var(--mono); font-size: 25px; font-weight: 600; letter-spacing: -0.02em; }
+.kpi .l { font-size: 12.5px; color: var(--muted); }
+.big, .mid, td.num, .tip .row span:last-child { font-family: var(--mono); letter-spacing: -0.01em; }
+.big { font-size: 21px; }
+
+/* flat panels, ruled instead of boxed */
+.explain, .box, .warn, .check, .chart-wrap, .verdict, .tbl-wrap, table, .table-scroll {
+  border-radius: 2px; box-shadow: none;
+}
+.explain, .box { background: var(--surface); border: 1px solid var(--border); }
+.warn { border-left: 3px solid var(--accent); background: var(--surface); }
+.verdict { border-left: 3px solid var(--accent); background: var(--win); }
+.verdict h2 { border: 0; margin: 0 0 8px; padding: 0; font-size: 24px; }
+
+.cards { gap: 0; border-top: 1px solid var(--ink); }
+.card {
+  background: transparent; border: 0; border-radius: 0; border-bottom: 1px solid var(--border);
+  padding: 18px 18px 20px; border-right: 1px solid var(--border);
+}
+.cards { border-left: 1px solid var(--border); }
+.card-head { font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase; }
+.tag { color: var(--accent); font-weight: 700; }
+.prices { border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 10px 0; }
+.lbl { letter-spacing: 0.08em; }
+.meter, .meter span, .cellbar, .cellbar span, .dbar, .dbar span { border-radius: 0; }
+.meter { height: 4px; }
+.note { border-radius: 0; border-left: 2px solid var(--border); background: transparent; padding: 4px 10px; }
+.subhead { font-family: var(--serif); font-style: italic; font-weight: 500; font-size: 20px; color: var(--text); margin: 30px 0 10px; }
+
+table { background: transparent; border: 0; border-top: 1px solid var(--ink); }
+th { background: transparent; color: var(--muted); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; border-bottom: 1px solid var(--ink); }
+tr:hover td { background: var(--surface); }
+.badge { border-radius: 0; font-size: 10.5px; letter-spacing: 0.05em; text-transform: uppercase; font-weight: 700; }
+.badge.pick { background: var(--accent); }
+.stars { color: var(--accent); }
+
+.filters select, .filters input { border-radius: 0; border: 0; border-bottom: 1.5px solid var(--ink); background: transparent; padding: 5px 4px; font-size: 14px; }
+.legend i { border-radius: 0; }
+.tip { border-radius: 2px; box-shadow: 0 8px 24px rgb(0 0 0 / 0.12); }
+.theme-btn { border-radius: 0; border: 0; border-bottom: 1px solid var(--ink); background: transparent; padding: 2px 0; }
+footer { border-top: 3px double var(--ink); }
+
+@media (max-width: 700px) {
+  .cards { border-left: 0; }
+  .cards .card { border-right: 0; padding-left: 0; padding-right: 0; }
+  .kpi + .kpi { border-left: 0; padding-left: 0; }
+  .kpi { border-bottom: 1px solid var(--border); }
+}
+</style><!-- /ferovka-theme -->
 </head>
 <body>
 <main>

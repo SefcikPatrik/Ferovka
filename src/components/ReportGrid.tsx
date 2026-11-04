@@ -21,15 +21,17 @@ function ageLabel(days: number) {
   return m === 1 ? "pred mesiacom" : `pred ${m} mesiacmi`;
 }
 
-function Freshness({ date, now }: { date: string; now: number | null }) {
-  if (now === null) return <span className="date">{formatDate(date)}</span>;
+function When({ date, now }: { date: string; now: number | null }) {
+  if (now === null) return <span className="when">{formatDate(date)}</span>;
   const d = ageDays(date, now);
   const cls = d <= FRESH_DAYS ? "fresh" : d > STALE_DAYS ? "stale" : "mid";
   const text = d <= FRESH_DAYS ? "Nová" : d > STALE_DAYS ? "Staršie údaje" : "Aktuálna";
   return (
-    <span className="date" title={`Analýza z ${formatDate(date)}`}>
-      <span className={`badge ${cls}`}>{text}</span>
-      {formatDate(date)} · {ageLabel(d)}
+    <span className="when">
+      <span className={`status ${cls}`}>{text}</span>
+      <span>
+        {formatDate(date)} · {ageLabel(d)}
+      </span>
     </span>
   );
 }
@@ -77,15 +79,13 @@ export default function ReportGrid({ reports }: { reports: Report[] }) {
 
   return (
     <>
-      <div className="section-head">
-        <div>
-          <h2>Analýzy trhu</h2>
-          <p>Každá analýza obsahuje odporúčané ponuky, porovnanie motorov a kompletný rebríček inzerátov.</p>
-        </div>
+      <div className="sec-title">
+        <h2>Analýzy</h2>
+        <p>Odporúčané ponuky, porovnanie motorov a rebríček všetkých inzerátov.</p>
       </div>
 
-      <div className="filterbar" role="search" aria-label="Filtrovanie analýz">
-        <label className="field">
+      <div className="filters" role="search" aria-label="Filtrovanie analýz">
+        <label>
           <span>Kedy bola spravená</span>
           <select value={period} onChange={(e) => setPeriod(e.target.value as Period)}>
             <option value="">Kedykoľvek</option>
@@ -101,7 +101,7 @@ export default function ReportGrid({ reports }: { reports: Report[] }) {
             </optgroup>
           </select>
         </label>
-        <label className="field">
+        <label>
           <span>Značka</span>
           <select
             value={brand}
@@ -110,7 +110,7 @@ export default function ReportGrid({ reports }: { reports: Report[] }) {
               setModel("");
             }}
           >
-            <option value="">Všetky značky</option>
+            <option value="">Všetky</option>
             {brands.map((b) => (
               <option key={b} value={b}>
                 {b === "Porovnanie" ? "Porovnania modelov" : b}
@@ -118,10 +118,10 @@ export default function ReportGrid({ reports }: { reports: Report[] }) {
             ))}
           </select>
         </label>
-        <label className="field">
+        <label>
           <span>Model</span>
           <select value={model} onChange={(e) => setModel(e.target.value)}>
-            <option value="">{brand ? `Všetky modely (${brand})` : "Všetky modely"}</option>
+            <option value="">Všetky</option>
             {models.map((m) => (
               <option key={m} value={m}>
                 {m}
@@ -129,20 +129,20 @@ export default function ReportGrid({ reports }: { reports: Report[] }) {
             ))}
           </select>
         </label>
-        <label className="field">
+        <label>
           <span>Zoradiť</span>
           <select value={sort} onChange={(e) => setSort(e.target.value as Sort)}>
-            <option value="new">Najnovšie hore</option>
-            <option value="old">Najstaršie hore</option>
+            <option value="new">Najnovšie</option>
+            <option value="old">Najstaršie</option>
             <option value="name">Podľa názvu</option>
           </select>
         </label>
-        <div className="filter-meta">
+        <div className="count">
           <span>
-            {shown.length} z {reports.length}
+            <b>{shown.length}</b> z {reports.length}
           </span>
           {active && (
-            <button type="button" className="linkbtn" onClick={reset}>
+            <button type="button" className="textbtn" onClick={reset}>
               Zrušiť filtre
             </button>
           )}
@@ -152,36 +152,36 @@ export default function ReportGrid({ reports }: { reports: Report[] }) {
       {shown.length === 0 ? (
         <div className="empty">
           Pre tento výber nemáme žiadnu analýzu.{" "}
-          <button type="button" className="linkbtn" onClick={reset}>
+          <button type="button" className="textbtn" style={{ color: "var(--accent)", fontWeight: 600 }} onClick={reset}>
             Zobraziť všetky
           </button>
         </div>
       ) : (
-        <div className="grid">
+        <ul className="index">
           {shown.map((r) => (
-            <Link key={r.slug} href={`/analyza/${r.slug}/`} className={`rcard${r.kind === "comparison" ? " feature" : ""}`}>
-              <Freshness date={r.date} now={now} />
-              <span className="brand">{r.kind === "comparison" ? "Porovnanie modelov" : r.brand}</span>
-              <h3>{r.name}</h3>
-              <p>{r.summary}</p>
-              <div className="meta">
-                <div>
-                  <div className="v">{r.ads ? formatNum(r.ads) : "–"}</div>
-                  <div className="l">inzerátov</div>
+            <li key={r.slug}>
+              <Link href={`/analyza/${r.slug}/`} className="row">
+                <When date={r.date} now={now} />
+                <div className="main">
+                  <span className="brand">{r.kind === "comparison" ? "Porovnanie modelov" : r.brand}</span>
+                  <div className="name">{r.kind === "comparison" ? r.name : r.model}</div>
+                  <p className="sum">{r.summary}</p>
                 </div>
-                <div>
-                  <div className="v">{r.median ?? "3 modely"}</div>
-                  <div className="l">{r.median ? "medián ceny" : "v porovnaní"}</div>
+                <div className="num">
+                  <span className="v">{r.ads ? formatNum(r.ads) : "–"}</span>
+                  <span className="l">inzerátov</span>
                 </div>
-                <div>
-                  <div className="v">{r.r2 ?? "✓"}</div>
-                  <div className="l">{r.r2 ? "presnosť modelu" : "odporúčanie"}</div>
+                <div className="num">
+                  <span className="v">{r.median ?? "3 modely"}</span>
+                  <span className="l">{r.median ? "medián ceny" : "odporúčanie"}</span>
                 </div>
-              </div>
-              <span className="go">Otvoriť analýzu →</span>
-            </Link>
+                <span className="arrow" aria-hidden="true">
+                  →
+                </span>
+              </Link>
+            </li>
           ))}
-        </div>
+        </ul>
       )}
     </>
   );

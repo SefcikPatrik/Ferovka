@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Mark } from "@/components/Logo";
 import ReportFrame from "@/components/ReportFrame";
 import ThemeToggle from "@/components/ThemeToggle";
 import { formatDate, formatNum, getReport, reports } from "@/lib/reports";
@@ -25,25 +24,24 @@ export default async function ReportPage({ params }: Props) {
   const src = `/reports/${r.file}`;
   return (
     <>
-      <header className="topbar viewer-bar">
-        <div className="wrap">
-          <Link href="/#analyzy" className="logo" aria-label="Späť na všetky analýzy">
-            <Mark />
+      <header className="viewer-bar">
+        <div className="inner">
+          <Link href="/#analyzy" className="home" title="Späť na všetky analýzy">
+            Férovka<span className="dot">.</span>
           </Link>
-          <span className="sep" />
-          <div className="viewer-title">
+          <div className="t">
             <b>{r.name}</b>
             <span>
               {formatDate(r.date)}
               {r.ads ? ` · ${formatNum(r.ads)} inzerátov` : ""}
             </span>
           </div>
-          <div className="viewer-actions">
-            <Link className="btn ghost hide-sm" href="/#analyzy">
+          <div className="actions">
+            <Link href="/#analyzy" className="hide-sm">
               ← Všetky analýzy
             </Link>
-            <a className="btn ghost hide-sm" href={src} target="_blank" rel="noopener">
-              Na celú obrazovku ↗
+            <a href={src} target="_blank" rel="noopener" className="hide-sm">
+              Samostatne ↗
             </a>
             <ThemeToggle />
           </div>
