@@ -89,5 +89,75 @@
     "author": "Alexander-93",
     "license": "CC BY-SA 4.0",
     "source": "https://commons.wikimedia.org/wiki/File:Volkswagen_Passat_Variant_B9_IAA_2023_1X7A0654.jpg"
+  },
+  "audi-a6": {
+    "src": "/img/audi-a6.jpg",
+    "file": "File:Audi A6 Avant e-tron DSC 7425.jpg",
+    "author": "Alexander Migl",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Audi_A6_Avant_e-tron_DSC_7425.jpg"
+  },
+  "bmw-3": {
+    "src": "/img/bmw-3.jpg",
+    "file": "File:Dülmen, Kirchspiel, Börnste, BMW Mini -- 2019 -- 7207-13.jpg",
+    "author": "Dietmar Rabich",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:D%C3%BClmen,_Kirchspiel,_B%C3%B6rnste,_BMW_Mini_--_2019_--_7207-13.jpg"
+  },
+  "bmw-5": {
+    "src": "/img/bmw-5.jpg",
+    "file": "File:BPol BMW F11, Hamburg-Altona (155914).jpg",
+    "author": "Matti Blume",
+    "license": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:BPol_BMW_F11,_Hamburg-Altona_(155914).jpg"
+  },
+  "hyundai-tucson": {
+    "src": "/img/hyundai-tucson.jpg",
+    "file": "File:Hyundai Tucson (NX4, SWB) PHEV 1X7A1858.jpg",
+    "author": "Alexander-93",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Hyundai_Tucson_(NX4,_SWB)_PHEV_1X7A1858.jpg"
+  },
+  "kia-sportage": {
+    "src": "/img/kia-sportage.jpg",
+    "file": "File:Kia Sportage Plug-in-Hybrid (NQ5) 1X7A0317.jpg",
+    "author": "Alexander Migl",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Kia_Sportage_Plug-in-Hybrid_(NQ5)_1X7A0317.jpg"
+  },
+  "mercedes-gle-ml": {
+    "src": "/img/mercedes-gle-ml.jpg",
+    "file": "File:Mercedes-Benz GLE W166 Sanming 01 2022-08-02.jpg",
+    "author": "JamesYoung8167",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Mercedes-Benz_GLE_W166_Sanming_01_2022-08-02.jpg"
+  },
+  "skoda-karoq": {
+    "src": "/img/skoda-karoq.jpg",
+    "file": "File:Skoda Karoq Facelift 1X7A0318.jpg",
+    "author": "Alexander Migl",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Skoda_Karoq_Facelift_1X7A0318.jpg"
+  },
+  "vw-tiguan": {
+    "src": "/img/vw-tiguan.jpg",
+    "file": "File:Volkswagen Tiguan R 1X7A0362.jpg",
+    "author": "Alexander Migl",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Volkswagen_Tiguan_R_1X7A0362.jpg"
+  },
+  "audi-a4": {
+    "src": "/img/audi-a4.jpg",
+    "file": "File:2018 Audi A4 Avant S Line TDi S-A 2.0 Front.jpg",
+    "author": "Vauxford",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:2018_Audi_A4_Avant_S_Line_TDi_S-A_2.0_Front.jpg"
+  },
+  "bmw-x5-m50d": {
+    "src": "/img/bmw-x5-m50d.jpg",
+    "file": "File:2019 BMW X5 M50d 3.0 Front.jpg",
+    "author": "Vauxford",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:2019_BMW_X5_M50d_3.0_Front.jpg"
   }
 }

@@ -75,6 +75,8 @@ const FONTS =
   '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>' +
   '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap">';
 const THEME = fs.readFileSync(path.join(root, "scripts", "report-theme.css"), "utf8");
+// nearest-point chart → ad links (see the file); "</script" can't occur inside it
+const CHART_JS = fs.readFileSync(path.join(root, "scripts", "report-chart.js"), "utf8");
 for (const r of reports) {
   const photos = photosFor(r);
   const hero = photos.length
@@ -85,7 +87,8 @@ for (const r of reports) {
   const html = sources[r.file]
     .replace(/<!-- ferovka-theme -->[\s\S]*?<!-- \/ferovka-theme -->/g, "")
     .replace("</head>", `<!-- ferovka-theme -->${FONTS}<style id="ferovka-theme">${THEME}</style><!-- /ferovka-theme -->\n</head>`)
-    .replace(/<main>/, `<main><!-- ferovka-theme -->${hero}<!-- /ferovka-theme -->`);
+    .replace(/<main>/, `<main><!-- ferovka-theme -->${hero}<!-- /ferovka-theme -->`)
+    .replace(/<\/body>(?![\s\S]*<\/body>)/, `<!-- ferovka-theme --><script id="ferovka-chart">${CHART_JS}</script><!-- /ferovka-theme -->\n</body>`);
   fs.writeFileSync(path.join(dst, r.file), html);
 }
 console.log(`synced ${reports.length} reports from ${src}`);

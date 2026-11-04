@@ -13,6 +13,19 @@
     "r2": null
   },
   {
+    "slug": "audi-a4",
+    "file": "audi-a4-analyza.html",
+    "name": "Audi A4",
+    "brand": "Audi",
+    "model": "A4",
+    "kind": "model",
+    "date": "2026-11-04",
+    "summary": "Analýza aktuálnych inzerátov Audi A4 (generácie B8 a B9, od roku 2012) na bazoši a autobazar.eu. Na trhu je okolo 1 096 inzerátov (744 na bazoši, 352 na autobazar.eu) – prezreli sme všetky. Veľa áut je na oboch portáloch, takže po zlúčení a bez ponúk z Česka ostáva 739 rôznych áut.",
+    "ads": 739,
+    "median": "14 800 €",
+    "r2": "90 %"
+  },
+  {
     "slug": "bmw-x5",
     "file": "bmw-x5-analyza.html",
     "name": "BMW X5",
@@ -23,6 +36,19 @@
     "summary": "Analýza aktuálnych inzerátov BMW X5 (generácie F15 a G05, od roku 2014) na bazoši a autobazar.eu. Na trhu je okolo 877 inzerátov (449 na bazoši, 428 na autobazar.eu) – prezreli sme všetky. Veľa áut je na oboch portáloch, takže po zlúčení a bez ponúk z Česka ostáva 563 rôznych áut.",
     "ads": 563,
     "median": "39 600 €",
+    "r2": "95 %"
+  },
+  {
+    "slug": "bmw-x5-m50d",
+    "file": "bmw-x5-m50d-analyza.html",
+    "name": "BMW X5 M50d",
+    "brand": "BMW",
+    "model": "X5 M50d",
+    "kind": "model",
+    "date": "2026-11-04",
+    "summary": "Analýza aktuálnych inzerátov BMW X5 M50d (F15 a G05, od roku 2014) na bazoši a autobazar.eu. Z približne 430 inzerátov BMW X5 zo Slovenska je M50d 35 áut (33 má rok aj kilometre). Férovú cenu počíta model natrénovaný na celom trhu X5, v ktorom má M50d vlastný príplatok – samotných M50d je na štatistiku príliš málo.",
+    "ads": 35,
+    "median": "37 000 €",
     "r2": "95 %"
   },
   {
