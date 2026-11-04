@@ -78,6 +78,32 @@
     "r2": "94 %"
   },
   {
+    "slug": "bmw-3",
+    "file": "bmw-3-analyza.html",
+    "name": "BMW 3",
+    "brand": "BMW",
+    "model": "3",
+    "kind": "model",
+    "date": "2026-11-04",
+    "summary": "Analýza aktuálnych inzerátov BMW 3 (F30/F31 a G20/G21, od roku 2012) na bazoši a autobazar.eu. Na trhu je okolo 4 614 inzerátov (4 186 na bazoši, 428 na autobazar.eu) – prezreli sme 1 224 najnovších. Veľa áut je na oboch portáloch, takže po zlúčení a bez ponúk z Česka ostáva 700 rôznych áut.",
+    "ads": 700,
+    "median": "16 945 €",
+    "r2": "91 %"
+  },
+  {
+    "slug": "bmw-5",
+    "file": "bmw-5-analyza.html",
+    "name": "BMW 5",
+    "brand": "BMW",
+    "model": "5",
+    "kind": "model",
+    "date": "2026-11-04",
+    "summary": "Analýza aktuálnych inzerátov BMW 5 (F10/F11 a G30/G31, roky 2012–2023) na bazoši a autobazar.eu. Na trhu je okolo 4 653 inzerátov (4 186 na bazoši, 467 na autobazar.eu) – prezreli sme 1 244 najnovších. Veľa áut je na oboch portáloch, takže po zlúčení a bez ponúk z Česka ostáva 793 rôznych áut.",
+    "ads": 793,
+    "median": "18 900 €",
+    "r2": "93 %"
+  },
+  {
     "slug": "bmw-x5",
     "file": "bmw-x5-analyza.html",
     "name": "BMW X5",
@@ -130,6 +156,19 @@
     "r2": "94 %"
   },
   {
+    "slug": "hyundai-tucson",
+    "file": "hyundai-tucson-analyza.html",
+    "name": "Hyundai Tucson",
+    "brand": "Hyundai",
+    "model": "Tucson",
+    "kind": "model",
+    "date": "2026-11-04",
+    "summary": "Analýza aktuálnych inzerátov Hyundai Tucson (generácie TL a NX4, od roku 2015) na bazoši a autobazar.eu. Na trhu je okolo 1 053 inzerátov (365 na bazoši, 688 na autobazar.eu) – prezreli sme všetky. Veľa áut je na oboch portáloch, takže po zlúčení a bez ponúk z Česka ostáva 666 rôznych áut.",
+    "ads": 666,
+    "median": "17 990 €",
+    "r2": "89 %"
+  },
+  {
     "slug": "kia-ceed-sw",
     "file": "kia-ceed-sw-analyza.html",
     "name": "Kia Ceed SW",
@@ -143,6 +182,19 @@
     "r2": "94 %"
   },
   {
+    "slug": "kia-sportage",
+    "file": "kia-sportage-analyza.html",
+    "name": "Kia Sportage",
+    "brand": "Kia",
+    "model": "Sportage",
+    "kind": "model",
+    "date": "2026-11-04",
+    "summary": "Analýza aktuálnych inzerátov Kia Sportage (generácie SL, QL a NQ5, od roku 2012) na bazoši a autobazar.eu. Na trhu je okolo 1 138 inzerátov (419 na bazoši, 719 na autobazar.eu) – prezreli sme všetky. Veľa áut je na oboch portáloch, takže po zlúčení a bez ponúk z Česka ostáva 843 rôznych áut.",
+    "ads": 843,
+    "median": "15 990 €",
+    "r2": "96 %"
+  },
+  {
     "slug": "mercedes-glc",
     "file": "mercedes-glc-analyza.html",
     "name": "Mercedes GLC",
@@ -153,6 +205,19 @@
     "summary": "Analýza aktuálnych inzerátov Mercedes GLC (SUV aj kupé, obe generácie) na bazoši a autobazar.eu. Na trhu je okolo 667 inzerátov (191 na bazoši, 476 na autobazar.eu) – prezreli sme všetky. Veľa áut je na oboch portáloch, takže po zlúčení a bez ponúk z Česka ostáva 519 rôznych áut.",
     "ads": 519,
     "median": "39 900 €",
+    "r2": "96 %"
+  },
+  {
+    "slug": "mercedes-gle-ml",
+    "file": "mercedes-gle-ml-analyza.html",
+    "name": "Mercedes-Benz GLE",
+    "brand": "Mercedes-Benz",
+    "model": "GLE",
+    "kind": "model",
+    "date": "2026-11-04",
+    "summary": "Analýza aktuálnych inzerátov Mercedes-Benz GLE (W166 a V167, aj kupé, od roku 2015) na bazoši a autobazar.eu. Na trhu je okolo 758 inzerátov (226 na bazoši, 532 na autobazar.eu) – prezreli sme všetky. Veľa áut je na oboch portáloch, takže po zlúčení a bez ponúk z Česka ostáva 601 rôznych áut.",
+    "ads": 601,
+    "median": "41 994 €",
     "r2": "96 %"
   },
   {
@@ -193,6 +258,19 @@
     "ads": 1244,
     "median": "5 300 €",
     "r2": "94 %"
+  },
+  {
+    "slug": "skoda-karoq",
+    "file": "skoda-karoq-analyza.html",
+    "name": "Škoda Karoq",
+    "brand": "Škoda",
+    "model": "Karoq",
+    "kind": "model",
+    "date": "2026-11-04",
+    "summary": "Analýza aktuálnych inzerátov Škoda Karoq (2017–2026, len jazdené autá) na bazoši a autobazar.eu. Na trhu je okolo 1 197 inzerátov (481 na bazoši, 716 na autobazar.eu) – prezreli sme 1 120 najnovších. Veľa áut je na oboch portáloch, takže po zlúčení a bez ponúk z Česka ostáva 683 rôznych áut.",
+    "ads": 683,
+    "median": "19 634 €",
+    "r2": "88 %"
   },
   {
     "slug": "skoda-kodiaq",
@@ -284,5 +362,18 @@
     "ads": 295,
     "median": "35 895 €",
     "r2": "95 %"
+  },
+  {
+    "slug": "vw-tiguan",
+    "file": "vw-tiguan-analyza.html",
+    "name": "VW Tiguan",
+    "brand": "VW",
+    "model": "Tiguan",
+    "kind": "model",
+    "date": "2026-11-04",
+    "summary": "Analýza aktuálnych inzerátov VW Tiguan (generácie 5N a AD1, roky 2012–2024) na bazoši a autobazar.eu. Na trhu je okolo 1 833 inzerátov (959 na bazoši, 874 na autobazar.eu) – prezreli sme všetky. Veľa áut je na oboch portáloch, takže po zlúčení a bez ponúk z Česka ostáva 1 177 rôznych áut.",
+    "ads": 1177,
+    "median": "19 500 €",
+    "r2": "93 %"
   }
 ]
