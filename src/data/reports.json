@@ -13,6 +13,19 @@
     "r2": null
   },
   {
+    "slug": "bmw-x5",
+    "file": "bmw-x5-analyza.html",
+    "name": "BMW X5",
+    "brand": "BMW",
+    "model": "X5",
+    "kind": "model",
+    "date": "2026-11-04",
+    "summary": "Analýza aktuálnych inzerátov BMW X5 (generácie F15 a G05, od roku 2014) na bazoši a autobazar.eu. Na trhu je okolo 877 inzerátov (449 na bazoši, 428 na autobazar.eu) – prezreli sme všetky. Veľa áut je na oboch portáloch, takže po zlúčení a bez ponúk z Česka ostáva 563 rôznych áut.",
+    "ads": 563,
+    "median": "39 600 €",
+    "r2": "95 %"
+  },
+  {
     "slug": "cupra-formentor",
     "file": "cupra-formentor-analyza.html",
     "name": "Cupra Formentor",
@@ -52,6 +65,19 @@
     "r2": "94 %"
   },
   {
+    "slug": "mercedes-glc",
+    "file": "mercedes-glc-analyza.html",
+    "name": "Mercedes GLC",
+    "brand": "Mercedes",
+    "model": "GLC",
+    "kind": "model",
+    "date": "2026-11-04",
+    "summary": "Analýza aktuálnych inzerátov Mercedes GLC (SUV aj kupé, obe generácie) na bazoši a autobazar.eu. Na trhu je okolo 667 inzerátov (191 na bazoši, 476 na autobazar.eu) – prezreli sme všetky. Veľa áut je na oboch portáloch, takže po zlúčení a bez ponúk z Česka ostáva 519 rôznych áut.",
+    "ads": 519,
+    "median": "39 900 €",
+    "r2": "96 %"
+  },
+  {
     "slug": "octavia-combi",
     "file": "octavia-combi-analyza.html",
     "name": "Škoda Octavia combi",
@@ -60,8 +86,21 @@
     "kind": "model",
     "date": "2026-11-04",
     "summary": "Analýza aktuálnych inzerátov Škoda Octavia combi od 4 000 € na bazoši a autobazar.eu. Octavií je na trhu toľko, že sme prezreli vždy najnovšie ponuky (asi polovicu trhu).",
-    "ads": 1083,
+    "ads": 1081,
     "median": "10 000 €",
+    "r2": "92 %"
+  },
+  {
+    "slug": "skoda-scala",
+    "file": "skoda-scala-analyza.html",
+    "name": "Škoda Scala",
+    "brand": "Škoda",
+    "model": "Scala",
+    "kind": "model",
+    "date": "2026-11-04",
+    "summary": "Analýza aktuálnych inzerátov Škoda Scala (všetky motory, 2019–2026) na bazoši a autobazar.eu. Na trhu je okolo 616 inzerátov (140 na bazoši, 476 na autobazar.eu) – prezreli sme všetky. Veľa áut je na oboch portáloch, takže po zlúčení a bez ponúk z Česka ostáva 322 rôznych áut.",
+    "ads": 322,
+    "median": "16 990 €",
     "r2": "92 %"
   },
   {
@@ -76,5 +115,18 @@
     "ads": 1737,
     "median": "16 990 €",
     "r2": "94 %"
+  },
+  {
+    "slug": "volvo-xc60",
+    "file": "volvo-xc60-analyza.html",
+    "name": "Volvo XC60",
+    "brand": "Volvo",
+    "model": "XC60",
+    "kind": "model",
+    "date": "2026-11-04",
+    "summary": "Analýza aktuálnych inzerátov Volvo XC60 (druhá generácia, od roku 2018) na bazoši a autobazar.eu. Na trhu je okolo 538 inzerátov (192 na bazoši, 346 na autobazar.eu) – prezreli sme všetky. Veľa áut je na oboch portáloch, takže po zlúčení a bez ponúk z Česka ostáva 295 rôznych áut.",
+    "ads": 295,
+    "median": "35 895 €",
+    "r2": "95 %"
   }
 ]
