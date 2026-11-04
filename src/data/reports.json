@@ -26,6 +26,45 @@
     "r2": "90 %"
   },
   {
+    "slug": "audi-a6",
+    "file": "audi-a6-analyza.html",
+    "name": "Audi A6",
+    "brand": "Audi",
+    "model": "A6",
+    "kind": "model",
+    "date": "2026-11-04",
+    "summary": "Analýza aktuálnych inzerátov Audi A6 (generácie C7 a C8, roky 2011–2024) na bazoši a autobazar.eu. Na trhu je okolo 1 356 inzerátov (833 na bazoši, 523 na autobazar.eu) – prezreli sme všetky. Veľa áut je na oboch portáloch, takže po zlúčení a bez ponúk z Česka ostáva 981 rôznych áut.",
+    "ads": 981,
+    "median": "16 990 €",
+    "r2": "93 %"
+  },
+  {
+    "slug": "audi-q5",
+    "file": "audi-q5-analyza.html",
+    "name": "Audi Q5",
+    "brand": "Audi",
+    "model": "Q5",
+    "kind": "model",
+    "date": "2026-11-04",
+    "summary": "Analýza aktuálnych inzerátov Audi Q5 (generácie 8R a FY, roky 2012–2024) na bazoši a autobazar.eu. Na trhu je okolo 477 inzerátov (279 na bazoši, 198 na autobazar.eu) – prezreli sme všetky. Veľa áut je na oboch portáloch, takže po zlúčení a bez ponúk z Česka ostáva 311 rôznych áut.",
+    "ads": 311,
+    "median": "24 899 €",
+    "r2": "94 %"
+  },
+  {
+    "slug": "audi-q7",
+    "file": "audi-q7-analyza.html",
+    "name": "Audi Q7",
+    "brand": "Audi",
+    "model": "Q7",
+    "kind": "model",
+    "date": "2026-11-04",
+    "summary": "Analýza aktuálnych inzerátov Audi Q7 (generácie 4L a 4M, od roku 2010) na bazoši a autobazar.eu. Na trhu je okolo 510 inzerátov (288 na bazoši, 222 na autobazar.eu) – prezreli sme všetky. Veľa áut je na oboch portáloch, takže po zlúčení a bez ponúk z Česka ostáva 355 rôznych áut.",
+    "ads": 355,
+    "median": "26 000 €",
+    "r2": "94 %"
+  },
+  {
     "slug": "bmw-x5",
     "file": "bmw-x5-analyza.html",
     "name": "BMW X5",
