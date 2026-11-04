@@ -66,8 +66,16 @@ const wordIn = (text, word) => text.toLowerCase().split(/[^\p{L}\p{N}]+/u).inclu
 const photosFor = (r) =>
   r.kind === "model"
     ? [images[r.slug]].filter((i) => i?.src)
-    : reports
-        .filter((m) => m.kind === "model" && wordIn(r.name, m.model.split(" ")[0]))
+    : Object.values(
+        reports
+          .filter((m) => m.kind === "model" && wordIn(r.name, m.model.split(" ")[0]))
+          // one photo per model: "Octavia" and "Octavia combi" both match – keep the main report (shortest slug)
+          .reduce((best, m) => {
+            const k = m.model.split(" ")[0].toLowerCase();
+            if (!best[k] || m.slug.length < best[k].slug.length) best[k] = m;
+            return best;
+          }, {}),
+      )
         .map((m) => images[m.slug])
         .filter((i) => i?.src);
 
