@@ -87,7 +87,7 @@ export default function ReportGrid({ reports }: { reports: Report[] }) {
       <div className="filterbar" data-reveal role="search" aria-label="Filtrovanie analýz">
         <label className="field">
           <span>Kedy bola spravená</span>
-          <select value={period} onChange={(e) => setPeriod(e.target.value as Period)}>
+          <select data-analytics-filter="period" value={period} onChange={(e) => setPeriod(e.target.value as Period)}>
             <option value="">Kedykoľvek</option>
             <option value="7">Nové – posledných 7 dní</option>
             <option value="30">Posledných 30 dní</option>
@@ -104,6 +104,7 @@ export default function ReportGrid({ reports }: { reports: Report[] }) {
         <label className="field">
           <span>Značka</span>
           <select
+            data-analytics-filter="brand"
             value={brand}
             onChange={(e) => {
               setBrand(e.target.value);
@@ -120,7 +121,7 @@ export default function ReportGrid({ reports }: { reports: Report[] }) {
         </label>
         <label className="field">
           <span>Model</span>
-          <select value={model} onChange={(e) => setModel(e.target.value)}>
+          <select data-analytics-filter="model" value={model} onChange={(e) => setModel(e.target.value)}>
             <option value="">{brand ? `Všetky modely (${brand})` : "Všetky modely"}</option>
             {models.map((m) => (
               <option key={m} value={m}>
@@ -131,7 +132,7 @@ export default function ReportGrid({ reports }: { reports: Report[] }) {
         </label>
         <label className="field">
           <span>Zoradiť</span>
-          <select value={sort} onChange={(e) => setSort(e.target.value as Sort)}>
+          <select data-analytics-filter="sort" value={sort} onChange={(e) => setSort(e.target.value as Sort)}>
             <option value="new">Najnovšie hore</option>
             <option value="old">Najstaršie hore</option>
             <option value="name">Podľa názvu</option>
@@ -142,7 +143,7 @@ export default function ReportGrid({ reports }: { reports: Report[] }) {
             {shown.length} z {reports.length}
           </span>
           {active && (
-            <button type="button" className="linkbtn" onClick={reset}>
+            <button type="button" className="linkbtn" data-analytics-action="reset_filters" onClick={reset}>
               Zrušiť filtre
             </button>
           )}
@@ -152,7 +153,7 @@ export default function ReportGrid({ reports }: { reports: Report[] }) {
       {shown.length === 0 ? (
         <div className="empty">
           Pre tento výber nemáme žiadnu analýzu.{" "}
-          <button type="button" className="linkbtn" onClick={reset}>
+          <button type="button" className="linkbtn" data-analytics-action="reset_filters" onClick={reset}>
             Zobraziť všetky
           </button>
         </div>
@@ -175,6 +176,13 @@ export default function ReportGrid({ reports }: { reports: Report[] }) {
                 </div>
                 <div className="rbody">
                   <Freshness date={r.date} now={now} />
+                  {r.history && (
+                    <div className="sub">
+                      {r.history.active_count > 0
+                        ? `${r.history.active_count} ponúk videných ${formatDate(r.history.as_of)} · ${r.history.new_count} novo zachytených`
+                        : "Dostupnosť ponúk čaká na nové overenie"}
+                    </div>
+                  )}
                   <h3>{r.name}</h3>
                   <p>{r.summary}</p>
                   <div className="meta">

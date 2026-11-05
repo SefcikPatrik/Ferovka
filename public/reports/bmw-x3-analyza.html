@@ -106,7 +106,6 @@ footer { color: var(--muted); font-size: 12.5px; margin-top: 48px; border-top: 1
 .theme-btn { float: right; background: var(--surface); color: var(--text-2); border: 1px solid var(--border); border-radius: 8px; padding: 5px 10px; cursor: pointer; font: inherit; font-size: 13px; }
 @media (max-width: 640px) { h1 { font-size: 24px; } .prices { grid-template-columns: 1fr 1fr 1fr; } .big { font-size: 18px; } th, td { padding: 7px 6px; } }
 </style>
-
 <!-- ferovka-theme --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"><style id="ferovka-theme">/* Férovka look for the generated analyses – injected by sync-reports.mjs after each report's own <style>.
    Same palette and type as the site; chart colours (--s1..--s3) stay the validated set. */
 :root {
@@ -171,8 +170,18 @@ h1, .lead, .kpis, .cards .card { animation: fv-up .6s cubic-bezier(.2,.7,.2,1) b
 <main><!-- ferovka-theme --><figure class="fv-hero"><img src="/img/bmw-x3.jpg" alt=""><figcaption>Foto: <a href="https://commons.wikimedia.org/wiki/File:2018_BMW_X3_xDrive30d_M_Sport_Automatic_3.0_Front.jpg" target="_blank" rel="noopener">Vauxford</a>, CC BY-SA 4.0 (Wikimedia Commons)</figcaption></figure><!-- /ferovka-theme -->
 <button class="theme-btn" id="themeBtn" type="button">Svetlý / tmavý</button>
 <h1>BMW X3 – ktorá ponuka sa oplatí</h1>
-<p class="lead">Analýza aktuálnych inzerátov BMW X3 (generácie F25 a G01, roky 2014–2024) na auto.bazos.sk a www.autobazar.eu (5. 11. 2026). Na trhu je okolo 539 inzerátov (271 na bazoši, 268 na autobazar.eu) – prezreli sme všetky. Veľa áut je na oboch portáloch, takže po zlúčení a bez ponúk z Česka ostáva 341 rôznych áut. Každé auto sme porovnali
+<p class="lead">Základná analýza inzerátov BMW X3 (generácie F25 a G01, roky 2014–2024) na auto.bazos.sk a www.autobazar.eu (5. 11. 2026). Na trhu je okolo 539 inzerátov (271 na bazoši, 268 na autobazar.eu) – prezreli sme všetky. Veľa áut je na oboch portáloch, takže po zlúčení a bez ponúk z Česka ostáva 341 rôznych áut. Každé auto sme porovnali
 s <b>férovou cenou</b>: tú vypočítal model naučený na celom trhu podľa veku, nájazdu, motora, prevodovky a typu predajcu.</p>
+<!-- market-history:start -->
+<section class="fv-market-history" id="historia-trhu" data-history="/history/bmw-x3.json" data-history-date="2026-11-05">
+<h2>Aktualizácia ponúk a história cien · 5. 11. 2026</h2>
+<p class="section-lead">BMW X3: nové pozorovania pribúdajú k pôvodnej analýze z 5. 11. 2026. Historické autá nemažeme.</p>
+<div class="kpis"><div class="kpi fv-history-kpi"><div class="v">0</div><div class="l">novo zachytených od pôvodnej analýzy</div></div><div class="kpi fv-history-kpi"><div class="v">186</div><div class="l">videných v zbere z 5. 11. 2026</div></div><div class="kpi fv-history-kpi"><div class="v">0</div><div class="l">potvrdene nedostupných</div></div><div class="kpi fv-history-kpi"><div class="v">0</div><div class="l">s dostupnosťou zatiaľ neoverenou</div></div><div class="kpi fv-history-kpi"><div class="v">0</div><div class="l">zmien ceny na rovnakých inzerátoch</div></div></div>
+<div class="explain"><p><b>Rozsah kontroly:</b> ide o čiastočný zber z lokálnej databázy a doložených kontrol, nie o kompletnú kontrolu oboch portálov. „Neoverené“ neznamená predané ani zmazané. Nedostupnosť potvrdzujeme iba odpoveďou HTTP 404/410; ani tá nedokazuje predaj auta.</p><p><b>Čo zostáva historické:</b> pôvodné odporúčania, model férovej ceny, graf a štatistiky nižšie patria k pôvodnej analýze. Aktuálne pozorovania a zmeny cien sú v tejto sekcii. Nájdenie auta v dnešnom zbere neznamená, že sme dnes overili každú jeho kópiu alebo technický stav.</p><p><b>Porovnanie cien:</b> cenovú zmenu počítame na tom istom inzeráte a rovnakom základe ceny. Inzerované ceny a ceny s DPH sa v histórii zobrazujú osobitne. Zmenený medián pri inej skladbe áut nie je cenovým indexom.</p></div>
+<div class="fv-history-content"><p>Načítava sa prehľad histórie…</p></div>
+<noscript>Prehľad obsahuje 186 zachytených áut. Interaktívnu históriu zobrazíš so zapnutým JavaScriptom.</noscript>
+</section>
+<!-- market-history:end -->
 
 <div class="kpis">
   <div class="kpi"><div class="v">341</div><div class="l">inzerátov X3</div></div>
@@ -238,7 +247,7 @@ Zoradené podľa toho, ako ich odporúčame.</p>
   </div>
   <div class="meter" title="Zľava voči férovej cene (škála 0–25 %)"><span style="width:40%"></span></div>
   <ul class="pc"><li class="pro">2022, xDrive20d 190 k mild-hybrid, 8-st. automat, 53 tis. km</li><li class="pro">1. majiteľ, úplná servisná história (BMW Lamač), nehavarované</li><li class="pro">Laser, head-up, 3-zónová klíma, kamera</li><li class="con">Pýtaj VIN</li></ul>
-</article>
+<!-- history-card:start --><p class="note fv-history-card fv-history-active">Videné v zbere z 5. 11. 2026</p><!-- history-card:end --></article>
 <article class="card">
   <div class="card-head"><span class="tag">Facelift 2023 so zárukou do 2027</span><span class="loc">Košice</span></div>
   <h3><a href='https://auto.bazos.sk/inzerat/197183843/predam-bmw-x3-20-tdi-g01-2023.php' target='_blank' rel='noopener'>Predam BMW X3  2.0 TDI G01   2023</a></h3>
@@ -251,7 +260,7 @@ Zoradené podľa toho, ako ich odporúčame.</p>
   </div>
   <div class="meter" title="Zľava voči férovej cene (škála 0–25 %)"><span style="width:38%"></span></div>
   <ul class="pc"><li class="pro">2023, xDrive20d 190 k mild-hybrid, 43 tis. km</li><li class="pro">Záruka do 02/2027, nové zimné pneumatiky, ochranná fólia vpredu, VIN</li><li class="con">Auto je na leasingu – 37 000 € pri vyplatení, alebo prevzatie leasingu za 27 000 €; over zmluvu</li></ul>
-</article>
+<!-- history-card:start --><p class="note fv-history-card fv-history-active">Videné v zbere z 5. 11. 2026</p><!-- history-card:end --></article>
 <article class="card">
   <div class="card-head"><span class="tag">20d mild-hybrid zo Slovenska so 49 tis. km</span><span class="loc">Vranov nad Topľou</span></div>
   <h3><a href='https://www.autobazar.eu/detail/bmw-x3-20tdi-hev-140kw-8ap-xdrive/Amp1OVq8nRd/' target='_blank' rel='noopener'>BMW X3 2.0D + HEV 140kW 8AP xDrive</a></h3>
@@ -264,7 +273,7 @@ Zoradené podľa toho, ako ich odporúčame.</p>
   </div>
   <div class="meter" title="Zľava voči férovej cene (škála 0–25 %)"><span style="width:54%"></span></div>
   <ul class="pc"><li class="pro">2021, xDrive20d 190 k mild-hybrid, 8-st. automat, 49 tis. km</li><li class="pro">Kúpené v SR, koža, VIN v inzeráte</li><li class="con">Inzerát len so zoznamom výbavy – pýtaj servisnú históriu</li></ul>
-</article>
+<!-- history-card:start --><p class="note fv-history-card fv-history-active">Videné v zbere z 5. 11. 2026</p><!-- history-card:end --></article>
 <article class="card">
   <div class="card-head"><span class="tag">Šesťvalec 30d od 1. majiteľa</span><span class="loc">Martin</span></div>
   <h3><a href='https://auto.bazos.sk/inzerat/196889190/bmw-x3-30-xd-mhev-210-kw-x-drive-m-sport-line.php' target='_blank' rel='noopener'>BMW X3 3,0 XD + MHEV 210 kW X Drive M Sport Line</a></h3>
@@ -277,7 +286,7 @@ Zoradené podľa toho, ako ich odporúčame.</p>
   </div>
   <div class="meter" title="Zľava voči férovej cene (škála 0–25 %)"><span style="width:28%"></span></div>
   <ul class="pc"><li class="pro">5/2021, xDrive30d 286 k mild-hybrid, M Sport, 78 tis. km</li><li class="pro">1. majiteľ, servisované</li><li class="con">Pýtaj VIN</li><li class="con">Odpočet DPH nie je možný</li></ul>
-</article>
+<!-- history-card:start --><p class="note fv-history-card fv-history-active">Videné v zbere z 5. 11. 2026</p><!-- history-card:end --></article>
 <article class="card">
   <div class="card-head"><span class="tag">Slovenská G01 so 108 tis. km</span><span class="loc">Kapušany</span></div>
   <h3><a href='https://www.autobazar.eu/detail/bmw-x3/AmTGBqfdSeS/' target='_blank' rel='noopener'>BMW X3</a></h3>
@@ -290,7 +299,7 @@ Zoradené podľa toho, ako ich odporúčame.</p>
   </div>
   <div class="meter" title="Zľava voči férovej cene (škála 0–25 %)"><span style="width:67%"></span></div>
   <ul class="pc"><li class="pro">2020, X3 G01 (30d podľa VIN), 108 tis. km</li><li class="pro">Kúpené v SR, 2 kľúče, VIN v inzeráte</li><li class="con">Inzerát bez popisu – pýtaj motor, výbavu a servis</li></ul>
-</article>
+<!-- history-card:start --><p class="note fv-history-card fv-history-active">Videné v zbere z 5. 11. 2026</p><!-- history-card:end --></article>
 <article class="card">
   <div class="card-head"><span class="tag">30d s 12-mesačnou zárukou</span><span class="loc">Banská Bystrica</span></div>
   <h3><a href='https://www.autobazar.eu/detail/bmw-x3-xdrive30d-at/Ambyrzxxgdx/' target='_blank' rel='noopener'>BMW X3 xDrive30d A/T</a></h3>
@@ -303,7 +312,7 @@ Zoradené podľa toho, ako ich odporúčame.</p>
   </div>
   <div class="meter" title="Zľava voči férovej cene (škála 0–25 %)"><span style="width:79%"></span></div>
   <ul class="pc"><li class="pro">2020, xDrive30d 265 k, 8-st. automat, 166,5 tis. km</li><li class="pro">Záruka 12 mes. / 20 tis. km v cene (motor, prevodovka, 4x4)</li><li class="pro">Servis v autorizovanom servise, garancia km</li><li class="con">Pýtaj VIN</li></ul>
-</article>
+<!-- history-card:start --><p class="note fv-history-card fv-history-active">Videné v zbere z 5. 11. 2026</p><!-- history-card:end --></article>
 <article class="card">
   <div class="card-head"><span class="tag">20d s panorámou od súkromníka</span><span class="loc">Bratislava</span></div>
   <h3><a href='https://auto.bazos.sk/inzerat/196307091/predam-bmw-x3-20-diesel-4x4.php' target='_blank' rel='noopener'>Predam BMW X3, 2.0 diesel, 4x4</a></h3>
@@ -316,7 +325,7 @@ Zoradené podľa toho, ako ich odporúčame.</p>
   </div>
   <div class="meter" title="Zľava voči férovej cene (škála 0–25 %)"><span style="width:62%"></span></div>
   <ul class="pc"><li class="pro">2020, X3 2.0 diesel 4x4, 91 tis. km</li><li class="pro">Panoráma, pamäťové sedadlá, Distronic, všetky kľúče a doklady</li><li class="con">Pýtaj VIN a servisnú históriu</li></ul>
-</article>
+<!-- history-card:start --><p class="note fv-history-card fv-history-active">Videné v zbere z 5. 11. 2026</p><!-- history-card:end --></article>
 <article class="card">
   <div class="card-head"><span class="tag">Benzín 30i od 1. majiteľa z SR</span><span class="loc">Nové Mesto nad Váhom</span></div>
   <h3><a href='https://www.autobazar.eu/detail/bmw-x3-xdrive30i-at/AmFwDDnDXdO/' target='_blank' rel='noopener'>BMW X3 xDrive30i A/T</a></h3>
@@ -329,7 +338,7 @@ Zoradené podľa toho, ako ich odporúčame.</p>
   </div>
   <div class="meter" title="Zľava voči férovej cene (škála 0–25 %)"><span style="width:64%"></span></div>
   <ul class="pc"><li class="pro">2018, xDrive30i 252 k, 8-st. automat, 151 tis. km</li><li class="pro">1. majiteľ, kúpené v SR, servis len v BMW, VIN</li><li class="pro">Možné predĺženie záruky o 24 mes.</li><li class="con">Benzín – 8–9 l</li></ul>
-</article>
+<!-- history-card:start --><p class="note fv-history-card fv-history-active">Videné v zbere z 5. 11. 2026</p><!-- history-card:end --></article>
 <article class="card">
   <div class="card-head"><span class="tag">20d 2021 od 1. majiteľa za 20 tis.</span><span class="loc">Šaľa</span></div>
   <h3><a href='https://auto.bazos.sk/inzerat/196609994/bmw-x3-xdrive20d-atledelkuforvirtual.php' target='_blank' rel='noopener'>BMW X3 xDrive20d A/T/Led/El.kufor/Virtual</a></h3>
@@ -342,7 +351,7 @@ Zoradené podľa toho, ako ich odporúčame.</p>
   </div>
   <div class="meter" title="Zľava voči férovej cene (škála 0–25 %)"><span style="width:79%"></span></div>
   <ul class="pc"><li class="pro">7/2021, xDrive20d 190 k, 8-st. automat, 171,5 tis. km</li><li class="pro">1. majiteľ (dovoz z Talianska), čerstvý olej v motore aj prevodovke</li><li class="pro">Virtual cockpit, LED, el. kufor</li><li class="con">Vyšší nájazd</li><li class="con">Pýtaj VIN</li></ul>
-</article></div>
+<!-- history-card:start --><p class="note fv-history-card fv-history-active">Videné v zbere z 5. 11. 2026</p><!-- history-card:end --></article></div>
 <div class="subhead">Lacnejšie X3 do 17 000 €</div>
 <div class="cards">
 <article class="card">
@@ -357,7 +366,7 @@ Zoradené podľa toho, ako ich odporúčame.</p>
   </div>
   <div class="meter" title="Zľava voči férovej cene (škála 0–25 %)"><span style="width:56%"></span></div>
   <ul class="pc"><li class="pro">2016, xDrive20d 190 k, 8-st. automat ZF, 153 tis. km</li><li class="pro">Garážované, nebúrané, bez korózie; oleje v motore, prevodovke, diferenciáloch aj rozvodovke</li><li class="pro">Nová batéria, 2 sady kolies, ťažné, VIN</li><li class="con">Staršia generácia F25</li></ul>
-</article>
+<!-- history-card:start --><p class="note fv-history-card fv-history-active">Videné v zbere z 5. 11. 2026</p><!-- history-card:end --></article>
 <article class="card">
   <div class="card-head"><span class="tag">1. majiteľ z SR s plnou históriou</span><span class="loc">Bratislava-Podunajské Biskupice</span></div>
   <h3><a href='https://www.autobazar.eu/detail/bmw-x3-xdrive20d-advantage-at/AmvU8ErKjrZ/' target='_blank' rel='noopener'>BMW X3 xDrive Advantage 140kW AT8 SR 1Majiteľ Plná servisná hist.Top Stav</a></h3>
@@ -370,7 +379,7 @@ Zoradené podľa toho, ako ich odporúčame.</p>
   </div>
   <div class="meter" title="Zľava voči férovej cene (škála 0–25 %)"><span style="width:47%"></span></div>
   <ul class="pc"><li class="pro">2016, xDrive20d 190 k, 8-st. automat, 268 tis. km</li><li class="pro">Kúpené v SR, 1. majiteľ, plná servisná história, VIN</li><li class="con">Vysoký nájazd</li></ul>
-</article>
+<!-- history-card:start --><p class="note fv-history-card fv-history-active">Videné v zbere z 5. 11. 2026</p><!-- history-card:end --></article>
 <article class="card">
   <div class="card-head"><span class="tag">F25 s novým podvozkom</span><span class="loc">Bratislava-Rača</span></div>
   <h3><a href='https://www.autobazar.eu/detail/bmw-x3-xdrive20d-at/Am8ThnwadBq/' target='_blank' rel='noopener'>BMW X3 xDrive20d A/T</a></h3>
@@ -383,7 +392,7 @@ Zoradené podľa toho, ako ich odporúčame.</p>
   </div>
   <div class="meter" title="Zľava voči férovej cene (škála 0–25 %)"><span style="width:69%"></span></div>
   <ul class="pc"><li class="pro">2016, xDrive20d 190 k, 8-st. automat, 187 tis. km</li><li class="pro">Nové tlmiče, pružiny, ramená a silentbloky, olej a filtre, VIN</li><li class="con">Auto stojí v Košiciach, predajca v Bratislave</li></ul>
-</article>
+<!-- history-card:start --><p class="note fv-history-card fv-history-active">Videné v zbere z 5. 11. 2026</p><!-- history-card:end --></article>
 <article class="card">
   <div class="card-head"><span class="tag">Šesťvalec 30d F25 za 15 500 €</span><span class="loc">Nitra</span></div>
   <h3><a href='https://auto.bazos.sk/inzerat/196610997/bmw-x3-f25-facelift-2016-30d-190kw-m-sport.php' target='_blank' rel='noopener'>Bmw X3 F25 facelift 2016 3.0d 190kw M-sport.</a></h3>
@@ -396,7 +405,7 @@ Zoradené podľa toho, ako ich odporúčame.</p>
   </div>
   <div class="meter" title="Zľava voči férovej cene (škála 0–25 %)"><span style="width:25%"></span></div>
   <ul class="pc"><li class="pro">7/2016, xDrive30d 258 k, 8-st. automat, M Sport, 190 tis. km</li><li class="pro">Laser, koža, kamera, ťažné</li><li class="con">Pýtaj VIN a servisnú históriu</li></ul>
-</article>
+<!-- history-card:start --><p class="note fv-history-card fv-history-active">Videné v zbere z 5. 11. 2026</p><!-- history-card:end --></article>
 <article class="card">
   <div class="card-head"><span class="tag">Najlacnejšia X3 za 10 000 €</span><span class="loc">Galanta</span></div>
   <h3><a href='https://auto.bazos.sk/inzerat/197216182/predam-bmw-x3.php' target='_blank' rel='noopener'>Predám BMW X3</a></h3>
@@ -409,7 +418,7 @@ Zoradené podľa toho, ako ich odporúčame.</p>
   </div>
   <div class="meter" title="Zľava voči férovej cene (škála 0–25 %)"><span style="width:100%"></span></div>
   <ul class="pc"><li class="pro">2015, X3 2.0 diesel, 204 tis. km</li><li class="pro">Súkromník, po servise (filtre, olej, brzdy vpredu aj vzadu)</li><li class="con">„Chybičky krásy“ – pozri osobne</li><li class="con">Pýtaj VIN, prevodovku a pohon</li></ul>
-</article></div>
+<!-- history-card:start --><p class="note fv-history-card fv-history-active">Videné v zbere z 5. 11. 2026</p><!-- history-card:end --></article></div>
 <div class="subhead">Šesťvalce, M40d / M40i a plug-in hybrid</div>
 <div class="cards">
 <article class="card">
@@ -424,7 +433,7 @@ Zoradené podľa toho, ako ich odporúčame.</p>
   </div>
   <div class="meter" title="Zľava voči férovej cene (škála 0–25 %)"><span style="width:78%"></span></div>
   <ul class="pc"><li class="pro">2022, xDrive30e 292 k (plug-in), M paket, 118 tis. km</li><li class="pro">Laser, ťažné, koža, VIN v inzeráte; dojazd ~50 km na elektrinu</li><li class="con">Ten istý predajca inzeruje auto aj za 28 300 €</li><li class="con">Pýtaj stav batérie a nabíjací kábel</li></ul>
-</article>
+<!-- history-card:start --><p class="note fv-history-card fv-history-active">Videné v zbere z 5. 11. 2026</p><!-- history-card:end --></article>
 <article class="card">
   <div class="card-head"><span class="tag">M40d zo Slovenska za 30 tis.</span><span class="loc">Prešov</span></div>
   <h3><a href='https://www.autobazar.eu/detail/bmw-x3-m40d-at-250kw340hp-a8/AeWgOuJgQKY/' target='_blank' rel='noopener'>BMW X3 M40d AT 250kW340HP A8</a></h3>
@@ -437,7 +446,7 @@ Zoradené podľa toho, ako ich odporúčame.</p>
   </div>
   <div class="meter" title="Zľava voči férovej cene (škála 0–25 %)"><span style="width:21%"></span></div>
   <ul class="pc"><li class="pro">2021, M40d 340 k mild-hybrid, 150 tis. km</li><li class="pro">Kúpené v SR, 360° kamera, VIN v inzeráte</li><li class="con">Drahšie poistenie a pneumatiky</li><li class="con">Pýtaj servisnú históriu</li></ul>
-</article>
+<!-- history-card:start --><p class="note fv-history-card fv-history-active">Videné v zbere z 5. 11. 2026</p><!-- history-card:end --></article>
 <article class="card">
   <div class="card-head"><span class="tag">M40i s adaptívnym podvozkom</span><span class="loc">Sládkovičovo</span></div>
   <h3><a href='https://www.autobazar.eu/detail/bmw-x3-m40i-xdrive-360k-at8-steptronic-sport/AmtnNTgitgO/' target='_blank' rel='noopener'>BMW X3 M40i xDrive 360k AT8 Steptronic Sport</a></h3>
@@ -450,7 +459,7 @@ Zoradené podľa toho, ako ich odporúčame.</p>
   </div>
   <div class="meter" title="Zľava voči férovej cene (škála 0–25 %)"><span style="width:34%"></span></div>
   <ul class="pc"><li class="pro">2020, M40i 360 k, 8-st. Steptronic Sport, 84,5 tis. km</li><li class="pro">Kúpené v SR, adaptívny podvozok, VIN v inzeráte</li><li class="con">Benzín – 10–12 l</li></ul>
-</article></div>
+<!-- history-card:start --><p class="note fv-history-card fv-history-active">Videné v zbere z 5. 11. 2026</p><!-- history-card:end --></article></div>
 
 <h2>Cena vs. nájazd: celý trh na jednom grafe</h2>
 <p class="section-lead">Každý bod je jeden inzerát. Čím nižšie bod leží oproti ostatným s podobným nájazdom, tým je auto lacnejšie.
@@ -701,7 +710,6 @@ document.querySelectorAll("#tbl th.sortable").forEach(th => th.onclick = () => {
 ["fEngine", "fTrans", "fSeller", "fSource", "fBody", "fOrigin", "fMax"].forEach(id => document.getElementById(id).addEventListener("input", renderTable));
 renderTable();
 </script>
-
 <!-- ferovka-theme --><script defer src="/analytics-config.js"></script><script defer src="/analytics.js"></script><script id="ferovka-chart">/* Férovka – chart → ad links, injected into every report by sync-reports.mjs.
  *
  * The reports draw one invisible 11px "hit" circle per ad. In dense charts (and always on a narrow phone) those
@@ -947,6 +955,6 @@ renderTable();
   });
   apply();
 })();
-</script><!-- /ferovka-theme -->
+</script><script defer src="/report-history.js"></script><!-- /ferovka-theme -->
 </body>
 </html>

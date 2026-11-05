@@ -18,6 +18,8 @@ const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replac
 // 1) catalogue
 const reports = [];
 const sources = {};
+const historyFile = path.resolve(src, "../history/status.json");
+const histories = fs.existsSync(historyFile) ? JSON.parse(fs.readFileSync(historyFile, "utf8")) : {};
 for (const file of fs.readdirSync(src).filter((f) => f.endsWith(".html"))) {
   const html = fs.readFileSync(path.join(src, file), "utf8");
   const slug = file.replace(/(-analyza)?\.html$/, "");
@@ -46,6 +48,7 @@ for (const file of fs.readdirSync(src).filter((f) => f.endsWith(".html"))) {
     ads: num(kpis[0]?.value) ?? num(lead.match(/Porovnanie ([\d\s]+) /)?.[1]),
     median: kpi(/medián ceny/),
     r2: kpi(/vysvetlí model/),
+    ...(histories[slug] ? { history: histories[slug] } : {}),
   });
   sources[file] = html;
 }
@@ -102,6 +105,7 @@ for (const r of reports) {
     .replace(/<\/body>(?![\s\S]*<\/body>)/, () =>
       `<!-- ferovka-theme --><script defer src="/analytics-config.js"></script><script defer src="/analytics.js"></script><script id="ferovka-chart">${CHART_JS}</script>` +
       (r.kind === "model" ? `<script id="ferovka-filters">${FILTERS_JS}</script>` : "") +
+      (sources[r.file].includes('data-history="') ? '<script defer src="/report-history.js"></script>' : "") +
       `<!-- /ferovka-theme -->\n</body>`);
   fs.writeFileSync(path.join(dst, r.file), html);
 }

@@ -13,6 +13,18 @@ export type Report = {
   ads: number | null;
   median: string | null;
   r2: string | null;
+  history?: {
+    as_of: string;
+    updated_at: string;
+    last_observed_at: string | null;
+    active_count: number;
+    inactive_count: number;
+    unverified_count: number;
+    new_count: number;
+    price_changed_count: number;
+    total_count: number;
+    coverage: "partial";
+  };
 };
 
 export type Photo = { src: string; author: string; license: string; source: string; file?: string };
