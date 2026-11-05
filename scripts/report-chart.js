@@ -56,7 +56,10 @@
     };
     const open = (pt) => {
       const d = byId.get(pt.dataset.id);
-      if (d && d.url) window.open(d.url, "_blank", "noopener");
+      if (d && d.url) {
+        try { window.FerovkaAnalytics?.listingClick(d.url, "chart"); } catch { /* analytics must never block an ad */ }
+        window.open(d.url, "_blank", "noopener");
+      }
     };
 
     // the per-circle handlers of the report never see real mouse events – only our synthetic ones

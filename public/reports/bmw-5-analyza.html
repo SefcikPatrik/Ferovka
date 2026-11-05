@@ -726,7 +726,7 @@ document.querySelectorAll("#tbl th.sortable").forEach(th => th.onclick = () => {
 ["fEngine", "fTrans", "fSeller", "fSource", "fBody", "fOrigin", "fMax"].forEach(id => document.getElementById(id).addEventListener("input", renderTable));
 renderTable();
 </script>
-<!-- ferovka-theme --><script id="ferovka-chart">/* Férovka – chart → ad links, injected into every report by sync-reports.mjs.
+<!-- ferovka-theme --><script defer src="/analytics-config.js"></script><script defer src="/analytics.js"></script><script id="ferovka-chart">/* Férovka – chart → ad links, injected into every report by sync-reports.mjs.
  *
  * The reports draw one invisible 11px "hit" circle per ad. In dense charts (and always on a narrow phone) those
  * circles overlap and the one drawn last wins, so a click/tap often opened a neighbouring ad. Here the pointer is
@@ -784,7 +784,10 @@ renderTable();
     };
     const open = (pt) => {
       const d = byId.get(pt.dataset.id);
-      if (d && d.url) window.open(d.url, "_blank", "noopener");
+      if (d && d.url) {
+        try { window.FerovkaAnalytics?.listingClick(d.url, "chart"); } catch { /* analytics must never block an ad */ }
+        window.open(d.url, "_blank", "noopener");
+      }
     };
 
     // the per-circle handlers of the report never see real mouse events – only our synthetic ones

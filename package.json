@@ -4,8 +4,9 @@
   "version": "0.1.0",
   "scripts": {
     "sync": "node scripts/sync-reports.mjs",
-    "dev": "node scripts/sync-reports.mjs && next dev",
-    "build": "next build",
+    "dev": "node scripts/write-analytics-config.mjs && node scripts/sync-reports.mjs && next dev",
+    "build": "node scripts/write-analytics-config.mjs && next build",
+    "test:analytics": "node --test tests/analytics.test.mjs",
     "start": "npx serve out",
     "images": "node scripts/fetch-images.mjs"
   },

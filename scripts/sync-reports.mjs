@@ -100,7 +100,7 @@ for (const r of reports) {
     .replace("</head>", `<!-- ferovka-theme -->${FONTS}<style id="ferovka-theme">${THEME}</style><!-- /ferovka-theme -->\n</head>`)
     .replace(/<main>/, `<main><!-- ferovka-theme -->${hero}<!-- /ferovka-theme -->`)
     .replace(/<\/body>(?![\s\S]*<\/body>)/, () =>
-      `<!-- ferovka-theme --><script id="ferovka-chart">${CHART_JS}</script>` +
+      `<!-- ferovka-theme --><script defer src="/analytics-config.js"></script><script defer src="/analytics.js"></script><script id="ferovka-chart">${CHART_JS}</script>` +
       (r.kind === "model" ? `<script id="ferovka-filters">${FILTERS_JS}</script>` : "") +
       `<!-- /ferovka-theme -->\n</body>`);
   fs.writeFileSync(path.join(dst, r.file), html);

@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Manrope } from "next/font/google";
 import { RevealOnScroll } from "@/components/Motion";
+import AnalyticsNavigation from "@/components/AnalyticsNavigation";
 import "./globals.css";
 
 const sans = Manrope({ subsets: ["latin", "latin-ext"], variable: "--font-sans", display: "swap" });
@@ -27,10 +28,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="sk" className={sans.variable} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+        <script defer src="/analytics-config.js" />
+        <script defer src="/analytics.js" />
       </head>
       <body>
         {children}
         <RevealOnScroll />
+        <AnalyticsNavigation />
       </body>
     </html>
   );
