@@ -1,0 +1,822 @@
+<!doctype html>
+<html lang="sk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BMW M340i / M340d – analýza ponúk</title>
+<style>
+:root {
+  color-scheme: light;
+  --bg: #f6f6f4; --surface: #fcfcfb; --surface-2: #f0efec; --border: #e2e1dc;
+  --text: #0b0b0b; --text-2: #52514e; --muted: #7a7974;
+  --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a;
+  --pos: #2a78d6; --neg: #eb6834; --accent: #2a78d6;
+  --good: #1d7f4e; --bad: #b4332f; --grid: #e8e7e3;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #121211; --surface: #1a1a19; --surface-2: #232321; --border: #33332f;
+    --text: #f0efec; --text-2: #c3c2b7; --muted: #8f8e86;
+    --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+    --pos: #3987e5; --neg: #d95926; --accent: #5598e7;
+    --good: #4cc38a; --bad: #f07a76; --grid: #2a2a27;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #121211; --surface: #1a1a19; --surface-2: #232321; --border: #33332f;
+  --text: #f0efec; --text-2: #c3c2b7; --muted: #8f8e86;
+  --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+  --pos: #3987e5; --neg: #d95926; --accent: #5598e7;
+  --good: #4cc38a; --bad: #f07a76; --grid: #2a2a27;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text);
+  font: 15px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+main { max-width: 1120px; margin: 0 auto; padding: 32px 16px 64px; }
+a { color: var(--accent); text-decoration: none; } a:hover { text-decoration: underline; }
+h1 { font-size: 30px; margin: 0 0 4px; letter-spacing: -.01em; }
+h2 { font-size: 21px; margin: 48px 0 6px; }
+h3 { font-size: 15px; margin: 6px 0 4px; line-height: 1.35; }
+.lead { color: var(--text-2); margin: 0 0 20px; max-width: 760px; }
+.section-lead { color: var(--text-2); margin: 0 0 16px; max-width: 800px; }
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
+.kpi { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+.kpi .v { font-size: 26px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.kpi .l { color: var(--text-2); font-size: 13px; }
+.explain { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; margin-top: 12px; }
+.explain p { margin: 6px 0; color: var(--text-2); }
+.explain b { color: var(--text); }
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; }
+.card-head { display: flex; justify-content: space-between; gap: 8px; font-size: 12px; }
+.tag { font-weight: 600; color: var(--accent); }
+.loc { color: var(--muted); }
+.facts { color: var(--text-2); font-size: 13px; }
+.prices { display: grid; grid-template-columns: 1.2fr 1fr .8fr; gap: 8px; margin: 12px 0 8px; }
+.lbl { display: block; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+.big { font-size: 22px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.mid { font-size: 16px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.good { color: var(--good); }
+.meter { height: 6px; background: var(--surface-2); border-radius: 4px; overflow: hidden; }
+.meter span { display: block; height: 100%; background: var(--s1); border-radius: 4px; }
+.news ul { margin: 6px 0 0; padding-left: 20px; } .news li { margin: 4px 0; } .news .down { color: var(--good, #1baf7a); font-weight: 600; }
+.note { font-size: 12.5px; background: var(--surface-2); border-radius: 6px; padding: 6px 8px; margin-top: 8px; color: var(--text-2); }
+.pc { list-style: none; padding: 0; margin: 10px 0 0; font-size: 13.5px; }
+.pc li { padding-left: 20px; position: relative; margin: 3px 0; }
+.pc li.pro::before { content: "+"; position: absolute; left: 4px; color: var(--good); font-weight: 700; }
+.pc li.con::before { content: "–"; position: absolute; left: 4px; color: var(--bad); font-weight: 700; }
+.subhead { font-size: 15px; color: var(--text-2); margin: 22px 0 10px; font-weight: 600; }
+.chart-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 14px 8px; position: relative; }
+.legend { display: flex; flex-wrap: wrap; gap: 16px; font-size: 13px; color: var(--text-2); margin: 0 0 6px 4px; }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; }
+.legend .ring { background: transparent; border: 2px solid var(--text); width: 12px; height: 12px; }
+svg text { fill: var(--muted); font-size: 11px; }
+.tip { position: absolute; pointer-events: none; background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+  padding: 8px 10px; font-size: 12.5px; box-shadow: 0 6px 20px rgba(0,0,0,.15); max-width: 280px; display: none; z-index: 5; }
+.tip b { display: block; margin-bottom: 2px; }
+.tip .row { display: flex; justify-content: space-between; gap: 12px; color: var(--text-2); }
+.tip .row span:last-child { color: var(--text); font-variant-numeric: tabular-nums; }
+table { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; font-size: 13.5px; }
+th, td { padding: 9px 10px; border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; }
+th { font-size: 12px; color: var(--text-2); font-weight: 600; background: var(--surface-2); white-space: nowrap; }
+th.sortable { cursor: pointer; user-select: none; } th.sortable:hover { color: var(--text); }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+.sub { color: var(--text-2); font-size: 12.5px; margin-top: 2px; }
+.stars { color: #c98500; letter-spacing: 1px; white-space: nowrap; } .stars .off { color: var(--border); }
+.cellbar { height: 5px; background: var(--surface-2); border-radius: 3px; margin-bottom: 4px; }
+.cellbar span { display: block; height: 100%; background: var(--s1); border-radius: 3px; }
+.disc { display: inline-flex; align-items: center; gap: 6px; justify-content: flex-end; }
+.dbar { width: 54px; height: 6px; background: var(--surface-2); border-radius: 3px; position: relative; }
+.dbar span { position: absolute; top: 0; height: 100%; border-radius: 3px; }
+.filters { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 10px; align-items: center; }
+.filters select, .filters input { background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 6px 8px; font: inherit; font-size: 13px; }
+.filters .count { color: var(--muted); font-size: 13px; margin-left: auto; }
+.table-scroll { overflow-x: auto; border-radius: 12px; }
+.badge { font-size: 11px; padding: 1px 6px; border-radius: 10px; background: var(--surface-2); color: var(--text-2); white-space: nowrap; }
+.badge.pick { background: var(--s1); color: #fff; }
+.flag { color: var(--bad); font-size: 12px; }
+.warn { background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--neg); border-radius: 10px; padding: 12px 16px; }
+.warn li { margin: 4px 0; }
+.check { columns: 2 300px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px 14px 34px; margin: 0; }
+.check li { margin: 4px 0; break-inside: avoid; }
+footer { color: var(--muted); font-size: 12.5px; margin-top: 48px; border-top: 1px solid var(--border); padding-top: 14px; }
+.theme-btn { float: right; background: var(--surface); color: var(--text-2); border: 1px solid var(--border); border-radius: 8px; padding: 5px 10px; cursor: pointer; font: inherit; font-size: 13px; }
+@media (max-width: 640px) { h1 { font-size: 24px; } .prices { grid-template-columns: 1fr 1fr 1fr; } .big { font-size: 18px; } th, td { padding: 7px 6px; } }
+</style>
+<!-- ferovka-theme --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"><style id="ferovka-theme">/* Férovka look for the generated analyses – injected by sync-reports.mjs after each report's own <style>.
+   Same palette and type as the site; chart colours (--s1..--s3) stay the validated set. */
+:root {
+  --bg: #f5f4ef; --surface: #fdfdfb; --surface-2: #eeede6; --border: #e1dfd6;
+  --text: #0f1513; --text-2: #4f5551; --muted: #6f746f;
+  --accent: #0b8a56; --good: #0b7a4b; --grid: #e6e4dc; --win: #dff3e9;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d110f; --surface: #151a17; --surface-2: #1d2420; --border: #2a322d;
+    --text: #eef1ec; --text-2: #b6bdb6; --muted: #8f978f;
+    --accent: #2fc583; --good: #4cd08f; --grid: #1f2622; --win: #143223;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d110f; --surface: #151a17; --surface-2: #1d2420; --border: #2a322d;
+  --text: #eef1ec; --text-2: #b6bdb6; --muted: #8f978f;
+  --accent: #2fc583; --good: #4cd08f; --grid: #1f2622; --win: #143223;
+}
+
+body { font-family: "Manrope", system-ui, sans-serif; }
+h1, h2 { letter-spacing: -0.02em; font-weight: 800; }
+.tag { color: var(--accent); }
+
+/* photo header (removed by the site's viewer, which shows its own) */
+.fv-hero { position: relative; margin: 0 0 26px; border-radius: 20px; overflow: hidden; aspect-ratio: 21 / 8; background: #0d110f; display: flex; }
+.fv-hero img { flex: 1; min-width: 0; height: 100%; object-fit: cover; animation: fv-zoom 1.4s cubic-bezier(.2,.7,.2,1) both; }
+.fv-collage img + img { border-left: 3px solid #0d110f; }
+.fv-hero::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(180deg, transparent 55%, rgb(13 17 15 / .75)),
+    repeating-linear-gradient(90deg, rgb(47 197 131 / .06) 0 1px, transparent 1px 48px); }
+.fv-hero figcaption { position: absolute; right: 12px; bottom: 8px; z-index: 1; font-size: 11px; color: rgb(255 255 255 / .75); }
+.fv-hero figcaption a { color: inherit; }
+
+/* cards & panels: softer, lift on hover */
+.card, .kpi, .explain, .chart-wrap, .box { border-radius: 16px; }
+.card { transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease; }
+.card:hover { transform: translateY(-3px); border-color: var(--accent); box-shadow: 0 14px 30px -18px rgb(0 0 0 / .45); }
+.badge.pick { background: var(--accent); }
+
+/* entrance animation */
+@keyframes fv-up { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes fv-zoom { from { transform: scale(1.08); filter: brightness(.6); } to { transform: none; filter: none; } }
+h1, .lead, .kpis, .cards .card { animation: fv-up .6s cubic-bezier(.2,.7,.2,1) both; }
+.lead { animation-delay: .08s; }
+.kpis { animation-delay: .16s; }
+.cards .card:nth-child(2) { animation-delay: .06s; }
+.cards .card:nth-child(3) { animation-delay: .12s; }
+.cards .card:nth-child(4) { animation-delay: .18s; }
+.cards .card:nth-child(5) { animation-delay: .24s; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+@media (max-width: 640px) { .fv-hero { aspect-ratio: 16 / 9; border-radius: 14px; } }
+
+/* touch: hint under the chart tooltip (report-chart.js) */
+.fv-hint { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--border, rgba(127,127,127,.3)); font-weight: 700; color: var(--accent, #2fc583); }
+</style><!-- /ferovka-theme -->
+</head>
+<body>
+<main><!-- ferovka-theme --><figure class="fv-hero"><img src="/img/bmw-m340.jpg" alt=""><figcaption>Foto: <a href="https://commons.wikimedia.org/wiki/File:BMW_M340i_G21_xDrive_Touring_2023.jpg" target="_blank" rel="noopener">Ethan Llamas</a>, CC BY-SA 4.0 (Wikimedia Commons)</figcaption></figure><!-- /ferovka-theme -->
+<button class="theme-btn" id="themeBtn" type="button">Svetlý / tmavý</button>
+<h1>BMW M340i / M340d – ktorá ponuka sa oplatí</h1>
+<p class="lead">Analýza aktuálnych inzerátov BMW M340i / M340d (G20 sedan a G21 Touring, od roku 2019) na auto.bazos.sk a www.autobazar.eu (5. 11. 2026). Z približne 260 inzerátov BMW radu 3 od roku 2019 (bazoš aj autobazar.eu) je M340i alebo M340d 19 áut, z toho 2 sú duplicitné (to isté auto u dvoch predajcov) – hodnotíme 17. Férovú cenu počítame z týchto M340: pokles ceny za rok veku (7,1 %), za 10 tis. km (2,4 %) a rozdiel pri Touringu (3,2 %) berieme z celého trhu trojky, cenovú úroveň M340i a M340d zvlášť z áut samotných. Pri takto malej vzorke ber férovú cenu ako orientačnú (±10 %). Každé auto sme porovnali
+s <b>férovou cenou</b>: tú vypočítal model naučený na celom trhu podľa veku, nájazdu, motora, prevodovky a typu predajcu.</p>
+
+<div class="kpis">
+  <div class="kpi"><div class="v">18</div><div class="l">inzerátov M340</div></div>
+  <div class="kpi"><div class="v">17</div><div class="l">ohodnotených (majú rok aj km)</div></div>
+  <div class="kpi"><div class="v">41 999 €</div><div class="l">medián ceny s DPH</div></div>
+  <div class="kpi"><div class="v">85 %</div><div class="l">rozdielov v cenách vysvetlí model</div></div>
+</div>
+
+
+<h2>Odkiaľ sú dáta: bazoš + autobazar.eu</h2>
+<div class="kpis">
+  <div class="kpi"><div class="v">4</div><div class="l">ohodnotených z bazoša</div></div>
+  <div class="kpi"><div class="v">13</div><div class="l">ohodnotených z autobazar.eu</div></div>
+  <div class="kpi"><div class="v">5</div><div class="l">áut bolo na oboch portáloch – započítané raz</div></div>
+  <div class="kpi"><div class="v">5 / 1</div><div class="l">s uvedeným pôvodom SR / dovoz</div></div>
+</div>
+<div class="explain">
+  <p><b>Dva portály, jeden trh.</b> Bazoš prehľadal 473 inzerátov, autobazar.eu
+  242. Ponuky z Česka (na autobazar.eu ich je veľa) sme vynechali. Autobazáre často dávajú
+  to isté auto na oba portály. Takéto dvojice (3 v rebríčku) sme spojili podľa VIN alebo zhody roku, km a ceny,
+  aby sa v modeli nerátali dvakrát. Pri aute nájdeš odkaz na obe ponuky – niekedy sa líšia cenou.</p>
+  <p><b>Rozdiel medzi portálmi:</b> rovnaké auto je na autobazar.eu v priemere -0,8 %
+  oproti bazošu. Na autobazar.eu predávajú hlavne firmy (10 z 13 ohodnotených).</p>
+  <p><b>Kúpené v SR vs. dovoz:</b> autá s uvedeným pôvodom zo SR sú oproti autám bez uvedeného pôvodu
+  +3,8 %, dovezené -3,2 %
+  (pri rovnakom veku, nájazde a motore). Pôvod zo SR je výhoda pri overovaní histórie, trh zaň však nepripláca – väčšina
+  inzerátov pôvod jednoducho neuvádza. V tabulke dole si môžeš nechať zobraziť len autá kúpené v SR.</p>
+</div>
+
+<h2>Čo hýbe cenou M340</h2>
+<p class="section-lead">Toto sa model naučil z trhu. Keď porovnávaš dve autá, tieto čísla ti povedia, koľko má byť
+rozdiel v cene, aby to bolo fér.</p>
+<div class="kpis">
+  <div class="kpi"><div class="v">-2,4 %</div><div class="l">každých ďalších 10 000 km</div></div>
+  <div class="kpi"><div class="v">-7,1 %</div><div class="l">každý rok veku navyše</div></div>
+  <div class="kpi"><div class="v">+11 %</div><div class="l">príplatok za automat</div></div>
+  <div class="kpi"><div class="v">+0,6 %</div><div class="l">príplatok u predajcu / firmy</div></div>
+  <div class="kpi"><div class="v">+3,8 %</div><div class="l">príplatok za auto kúpené v SR (oproti neuvedenému pôvodu)</div></div>
+  <div class="kpi"><div class="v">-3,2 %</div><div class="l">dovoz zo zahraničia (oproti neuvedenému pôvodu)</div></div>
+</div>
+<div class="explain">
+  <p><b>Príklad:</b> dve M340i z roku 2020, jedna má 90 tis. km, druhá 150 tis. km. Druhá má byť približne o 14 % lacnejšia (6 × pokles 2,4 % za 10 tis. km) – pri 37 000 € je to ~5 000 €. Ak je lacnejšia len o 2 000 €, preplácaš kilometre.</p>
+  <p><b>Ako čítať „pod trhom“:</b> +15 % znamená, že auto stojí o 15 % menej, než by malo podľa trhu. Bežný rozptyl
+  cien je asi ±17 %, takže až zľava nad ~10–15 % je naozaj výnimočná. Pri takej zľave vždy zisti, prečo je auto lacné
+  (stav, história, nájazd).</p>
+  <p><b>DPH:</b> ceny uvedené bez DPH (napr. „10 300 € netto“) sme prepočítali na cenu s DPH, ktorú zaplatí súkromná osoba.</p>
+</div>
+
+<h2>Odporúčané ponuky</h2>
+<p class="section-lead">Kandidáti s najlepším pomerom cena / vek / nájazd, ktorých celý inzerát sme prečítali.
+Zoradené podľa toho, ako ich odporúčame.</p>
+<div class="subhead">Najlepšie ponuky M340i a M340d</div>
+<div class="cards">
+<article class="card">
+  <div class="card-head"><span class="tag">M340i s plnou M výbavou</span><span class="loc">Nové Mesto nad Váhom</span></div>
+  <h3><a href='https://www.autobazar.eu/detail/bmw-rad-3-m340i-xdrive-285kw-sedan/Aegneusr01Y/' target='_blank' rel='noopener'>BMW Rad 3 M340i xDrive 285kW sedan</a></h3>
+  <div class="facts">2020 · 88 809 km · M340i (374 k, benzín) · automat · neisté</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">36 900 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">38 610 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+4.4 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–25 %)"><span style="width:18%"></span></div>
+  <ul class="pc"><li class="pro">7/2020, M340i sedan 285 kW (387 k), xDrive, 8-st. automat, 88,9 tis. km</li><li class="pro">Adaptívny M podvozok, M športový diferenciál, variabilné riadenie, laser, Harman Kardon, 360° kamera</li><li class="pro">Na bazoši ten istý predajca s podrobným popisom (37 500 €)</li><li class="con">285 kW = mimoeurópska verzia bez mild-hybridu – pýtaj pôvod a VIN (na vyžiadanie)</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">M340d sedan s 58 tis. km</span><span class="loc">Bratislava-Rača</span></div>
+  <h3><a href='https://www.autobazar.eu/detail/bmw-rad-3-m340d-mhev-xdrive-at-250kw340hp-a8/AeBbwl-3YTO/' target='_blank' rel='noopener'>BMW Rad 3 M340d mHEV xDrive AT 250kW340HP A8</a></h3>
+  <div class="facts">2020 · 58 500 km · M340d (340 k, diesel) · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · kúpené v SR · aj na <a href='https://auto.bazos.sk/inzerat/196213403/m340d-mhev-xdrive-340hp-at8-1majitel-sr.php' target='_blank' rel='noopener'>bazoš</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">36 000 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">37 570 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+4.2 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–25 %)"><span style="width:17%"></span></div>
+  <ul class="pc"><li class="pro">2020, M340d 340 k mild-hybrid, xDrive, sedan, 58,5 tis. km</li><li class="pro">Kúpené v SR, VIN v inzeráte, 360° kamera</li><li class="con">To isté auto (rovnaké VIN) ponúka iný predajca s 67 tis. km – over nájazd v BMW servise</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">M340i Touring zo Slovenska</span><span class="loc">Žilina</span></div>
+  <h3><a href='https://www.autobazar.eu/detail/bmw-rad-3-touring-m340i-mhev-xdrive-at/Amk0N7EPsFF/' target='_blank' rel='noopener'>BMW Rad 3 Touring M340i mHEV  xDrive A/T</a></h3>
+  <div class="facts">2022 · 104 000 km · M340i (374 k, benzín) · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · kúpené v SR</div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">38 900 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">41 730 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+6.8 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–25 %)"><span style="width:27%"></span></div>
+  <ul class="pc"><li class="pro">2022, M340i 374 k mild-hybrid, xDrive, Touring, 104 tis. km</li><li class="pro">Kúpené v SR, adaptívny tempomat, kamera, VIN v inzeráte</li><li class="con">Pýtaj servisnú históriu (predajca Nissan)</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">Facelift M340i Touring s 65 tis. km</span><span class="loc">Bratislava</span></div>
+  <h3><a href='https://www.autobazar.eu/detail/bmw-rad-3-touring-m340i-mhev-xdrive-at/AmJMfE76lfs/' target='_blank' rel='noopener'>BMW Rad 3 Touring M340i mHEV  xDrive A/T</a></h3>
+  <div class="facts">2023 · 65 400 km · M340i (374 k, benzín) · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · aj na <a href='https://auto.bazos.sk/inzerat/195359582/bmw-m340i-g21-xdrive-mhev-touring-top-stav.php' target='_blank' rel='noopener'>bazoš</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">46 990 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">49 340 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+4.8 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–25 %)"><span style="width:19%"></span></div>
+  <ul class="pc"><li class="pro">2023, M340i 374 k mild-hybrid, xDrive, Touring, 65,4 tis. km</li><li class="pro">Facelift (zakrivený displej), VIN v inzeráte</li><li class="con">Autorro – pýtaj cenu za hotové a servisnú históriu</li></ul>
+</article></div>
+<div class="subhead">Najlacnejšie M340 do 40 000 €</div>
+<div class="cards">
+<article class="card">
+  <div class="card-head"><span class="tag">M340d Touring za 25 tis.</span><span class="loc">Bratislava</span></div>
+  <h3><a href='https://www.autobazar.eu/detail/bmw-rad-3-touring-m340d-xdrive-250kw-at8-2020-aj-na-splatky-protiucet/AmsU8ypctRR/' target='_blank' rel='noopener'>BMW Rad 3 Touring M340d xDrive 250kW AT/8 2020 / AJ NA SPLÁTKY / PROTIÚČET</a></h3>
+  <div class="facts">2020 · 159 038 km · M340d (340 k, diesel) · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">24 990 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">28 490 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+12.3 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–25 %)"><span style="width:49%"></span></div>
+  <ul class="pc"><li class="pro">2020, M340d 340 k mild-hybrid, xDrive, Touring, 159 tis. km</li><li class="pro">VIN v inzeráte</li><li class="con">Vyšší nájazd – pýtaj stav DPF a servisnú históriu</li><li class="con">Autorro – pýtaj cenu za hotové</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">M340i s odpočtom DPH</span><span class="loc">Trenčín</span></div>
+  <h3><a href='https://auto.bazos.sk/inzerat/195270580/bmw-m340i-odpocet-dph.php' target='_blank' rel='noopener'>BMW M340i - odpočet DPH</a></h3>
+  <div class="facts">2020 · 194 000 km · M340i (374 k, benzín) · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">29 900 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">29 900 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid ">+0.0 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–25 %)"><span style="width:0%"></span></div>
+  <ul class="pc"><li class="pro">2020, M340i 374 k, xDrive, automat, 194 tis. km</li><li class="pro">Nastaviteľný podvozok, nezávislé kúrenie, 360° kamera, koža, možný odpočet DPH</li><li class="con">Vysoký nájazd – pýtaj históriu prevodovky a úpravy výkonu</li><li class="con">Pýtaj VIN</li></ul>
+</article></div>
+<div class="subhead">Facelift a takmer nové autá</div>
+<div class="cards">
+<article class="card">
+  <div class="card-head"><span class="tag">M340d Touring so zárukou do 2030</span><span class="loc">Brezno</span></div>
+  <h3><a href='https://auto.bazos.sk/inzerat/196644100/bmw-m-340d-xdrive-touring-2025.php' target='_blank' rel='noopener'>BMW M340d xDrive Touring (2025)</a></h3>
+  <div class="facts">2025 · 15 000 km · M340d (340 k, diesel) · automat · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">56 000 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">58 420 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+4.1 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–25 %)"><span style="width:16%"></span></div>
+  <ul class="pc"><li class="pro">2025, M340d 340 k, xDrive, Touring, 15 tis. km</li><li class="pro">Fabrická záruka BMW do 2030, M diferenciál, M brzdy, panoráma</li><li class="pro">Portimao Blau, svetlá koža Vernasca</li><li class="con">Pýtaj VIN a doklad o záruke</li><li class="con">Predajca neuvádza pôvod</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">M340i 2023 s bezplatným servisom</span><span class="loc">Bratislava-Petržalka</span></div>
+  <h3><a href='https://www.autobazar.eu/detail/bmw-340-m340i-xdrive-m-sport-pro-harmankardon-adaptivny-m-podvozok-bezplatny-servis/Am2M-bjuUxx/' target='_blank' rel='noopener'>BMW 340 M340i xDrive | M Sport Pro | Harman/Kardon | Adaptívny M podvozok | Bezplatný servis</a></h3>
+  <div class="facts">2023 · 17 200 km · M340i (374 k, benzín) · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">55 900 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">57 300 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+2.4 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–25 %)"><span style="width:10%"></span></div>
+  <ul class="pc"><li class="pro">2023, M340i 285 kW, xDrive, sedan, M Sport Pro, 17,2 tis. km</li><li class="pro">Adaptívny M podvozok, Harman/Kardon, bezplatný servis BMW</li><li class="pro">VIN v inzeráte</li><li class="con">285 kW – over pôvod (mimoeurópska verzia)</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">Facelift M340i Touring od BMW predajcu</span><span class="loc">Bratislava - Vajnory</span></div>
+  <h3><a href='https://www.autobazar.eu/detail/bmw-m340i-xdrive-touring/AbeCm5T_gKl/' target='_blank' rel='noopener'>BMW M340i xDrive Touring</a></h3>
+  <div class="facts">2024 · 15 000 km · M340i (374 k, benzín) · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · kúpené v SR</div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">59 999 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">60 020 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid ">+0.0 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–25 %)"><span style="width:0%"></span></div>
+  <ul class="pc"><li class="pro">2024, M340i 374 k, xDrive, Touring, 15 tis. km</li><li class="pro">Autorizovaný predajca BMW (Auto Palace), VIN v inzeráte</li><li class="con">Takmer nové auto – porovnaj s cenou nového</li></ul>
+</article></div>
+
+<h2>Cena vs. nájazd: celý trh na jednom grafe</h2>
+<p class="section-lead">Každý bod je jeden inzerát. Čím nižšie bod leží oproti ostatným s podobným nájazdom, tým je auto lacnejšie.
+Krúžkom sú označené odporúčané ponuky. Prejdi myšou na bod a uvidíš detail.</p>
+<div class="chart-wrap" id="chartWrap">
+  <div class="legend" id="legend"></div>
+  <svg id="chart" width="100%" height="420" role="img" aria-label="Bodový graf ceny a nájazdu inzerátov"></svg>
+  <div class="tip" id="tip"></div>
+</div>
+
+<h2>Porovnanie motorov</h2>
+<p class="section-lead">Hodnotenie (hviezdičky) zohľadňuje spoľahlivosť, náklady na prevádzku a pomer cena/výkon.
+Číselné stĺpce sú mediány z ohodnotených inzerátov.</p>
+<div class="table-scroll">
+<table>
+  <thead><tr><th>Motor</th><th>Hodnotenie</th><th class="num">Ponúk</th><th class="num">Medián ceny</th><th class="num">Medián roku</th><th class="num">Medián km</th></tr></thead>
+  <tbody>
+<tr>
+  <td><b>M340i (374 k, benzín)</b><div class="sub">Benzínový šesťvalec B58, 374 k – rýchly a spoľahlivý, 8–10 l.</div></td>
+  <td><span class="stars" aria-label="4 z 5">★★★★<span class="off">★</span></span></td>
+  <td class="num">11</td>
+  <td class="num"><div class="cellbar"><span style="width:88%"></span></div>39 500 €</td>
+  <td class="num">2022</td>
+  <td class="num">88 809 km</td>
+</tr>
+<tr>
+  <td><b>M340d (340 k, diesel)</b><div class="sub">Naftový šesťvalec B57, 340 k a 700 Nm – na diaľnicu úspornejší (6–7 l).</div></td>
+  <td><span class="stars" aria-label="4 z 5">★★★★<span class="off">★</span></span></td>
+  <td class="num">6</td>
+  <td class="num"><div class="cellbar"><span style="width:100%"></span></div>44 994 €</td>
+  <td class="num">2022</td>
+  <td class="num">56 250 km</td>
+</tr></tbody>
+</table>
+</div>
+<div class="explain">
+  <p><b>Čo je M340.</b> Najsilnejšia trojka pod „plnokrvným“ M3 – verzia <b>M Performance</b> so športovým
+  podvozkom, M brzdami a pri xDrive s pohonom zadných kolies v nastavení. Predáva sa ako sedan (G20) aj Touring (G21),
+  na našom trhu takmer vždy s <b>xDrive</b> a 8-st. automatom ZF.</p>
+  <ul>
+  <li><b>M340i</b> (od 2019): benzínový šesťvalec <b>B58</b> 3.0 turbo, <b>275 kW / 374 k</b> (pri autách z Ázie a USA
+  285 kW), 0–100 km/h za 4,4 s, spotreba 8–10 l. Od 2020 v Európe s 48 V mild-hybridom.</li>
+  <li><b>M340d</b> (od 2020): naftový šesťvalec <b>B57</b> 3.0 s dvoma turbami a 48 V mild-hybridom,
+  <b>250 kW / 340 k</b>, 700 Nm, 0–100 km/h za 4,6–4,8 s, spotreba 6–7 l. Na diaľnicu a dlhé trasy úspornejší.</li>
+  </ul>
+  <p><b>Facelift (LCI) 2022:</b> zakrivený displej (iDrive 8), nové svetlá a nárazníky. Model ho počíta zvlášť – je o niečo drahší.</p>
+  <p><b>Na čo si dať pozor.</b></p>
+  <ul>
+  <li><b>Úpravy výkonu:</b> B58 sa ľahko „čipuje“ na 450+ k (stage 1–2) – over v BMW servise softvér a pri jazde
+  plynulý nástup bez chybových hlásení. Upravené auto má kratšiu životnosť prevodovky a spojok xDrive.</li>
+  <li><b>B58:</b> únik chladiacej kvapaliny (nádržka, plastové diely), únik oleja z veka ventilov a filtra oleja.</li>
+  <li><b>B57 (M340d):</b> DPF a EGR – auto jazdené len po meste má zanesený filter; AdBlue bez chýb.</li>
+  <li><b>Brzdy a pneumatiky</b> 19" (M Sport brzdy): kotúče a platne vpredu ~1 000 €, sada pneumatík 800–1 200 €.</li>
+  <li><b>Olej v automate ZF 8HP a v rozdeľovacej prevodovke xDrive</b> sa oplatí meniť okolo 80–100 tis. km.</li>
+  <li><b>Športový diferenciál M</b> (zadná náprava): hučanie alebo klepanie v zákrutách = drahá oprava.</li>
+  </ul>
+  <p><b>Predchodca</b> F30/F31 <b>340i</b> (2015–2019, B58, 326 k) je lacnejšia alternatíva s rovnakým motorom –
+  v tejto analýze ho nehodnotíme.</p>
+</div>
+
+<h2>Na čo si dať pozor</h2>
+<div class="warn">
+  <p><b>Lacné kvôli extrémnemu nájazdu</b> (viac ako 35 tis. km ročne, typicky flotila alebo taxi):</p>
+  <ul><li>Žiadne – žiadne auto nemá nápadne vysoký ročný nájazd.</li></ul>
+  <p><b>Čo sme v inzerátoch M340 našli:</b></p><ul><li>M340 je na Slovensku málo – 17 áut. Najviac ich ponúka autobazar.eu, na bazoši je ich len 5.</li><li>Dve autá ponúkajú dvaja predajcovia: M340d s rovnakým VIN raz s 58,5 tis. km a raz so 67 tis. km (over nájazd v BMW servise) a M340d Touring 2023 za 47 990 aj 47 999 €.</li><li>Rovnaký motor inzeráty opisujú rôzne (benzín / hybrid, 275 aj 285 kW). 285 kW má mimoeurópska verzia bez mild-hybridu – pýtaj pôvod auta a VIN.</li><li>M340 sa často upravuje (chip, výfuk) – v inzerátoch to väčšinou nie je, spýtaj sa priamo.</li><li>Staršie F30 <b>340i</b> (2015–2019, 326 k) do analýzy nepatria – majú rovnaký motor, ale sú výrazne lacnejšie.</li></ul>
+  <p>Ďalších <b>1</b> inzerátov nemá v texte rok alebo kilometre, takže ich nebolo možné ohodnotiť.
+  Ak ťa niektorý zaujme, predajcu sa na tieto údaje opýtaj.</p>
+</div>
+
+<h2>Kompletný rebríček</h2>
+<p class="section-lead">Všetky ohodnotené inzeráty. Kliknutím na hlavičku stĺpca zoraďuješ, filtrom zužuješ výber.</p>
+<div class="filters">
+  <select id="fEngine"><option value="">Všetky motory</option></select>
+  <select id="fTrans"><option value="">Každá prevodovka</option><option value="automatic">Automat</option><option value="manual">Manuál</option></select>
+  <select id="fSeller"><option value="">Všetci predajcovia</option><option value="nodealer">Bez autobazárov</option></select>
+  <select id="fSource"><option value="">Oba portály</option><option value="bazos">bazoš</option><option value="autobazar">autobazar.eu</option></select>
+  <select id="fBody"><option value="">Všetky karosérie</option><option value="touring">Touring</option><option value="sedan">Sedan</option><option value="gt">Gran Turismo</option></select>
+  <select id="fOrigin"><option value="">Akýkoľvek pôvod</option><option value="SR">Kúpené v SR</option><option value="dovoz">Dovoz</option></select>
+  <input id="fMax" type="number" placeholder="Max. cena €" step="500" min="0" style="width:120px">
+  <span class="count" id="count"></span>
+</div>
+<div class="table-scroll">
+<table id="tbl">
+  <thead><tr>
+    <th class="sortable" data-k="title">Inzerát</th>
+    <th class="sortable num" data-k="year">Rok</th>
+    <th class="sortable num" data-k="km">Km</th>
+    <th class="sortable num" data-k="price_gross">Cena</th>
+    <th class="sortable num" data-k="fair_price">Férová</th>
+    <th class="sortable num" data-k="discount_pct">Pod trhom ▾</th>
+  </tr></thead>
+  <tbody></tbody>
+</table>
+</div>
+
+<h2>Pred kúpou over</h2>
+<ul class="check">
+  <li>VIN cez Cebia / autoDNA (história km, havárie, leasing)</li>
+  <li>VIN cez Cebia / autoDNA a záznamy v autorizovanom servise BMW (história km, havárie, leasing)</li>
+  <li>Úprava výkonu (chip, downpipe): spýtaj sa a over v BMW servise – upravené auto má kratšiu životnosť prevodovky</li>
+  <li>M340i: únik chladiacej kvapaliny a oleja (veko ventilov, filter oleja)</li>
+  <li>M340d: diagnostika DPF, EGR a AdBlue bez chýb</li>
+  <li>Olej v automate ZF 8HP a v rozdeľovacej prevodovke xDrive – kedy bol menený</li>
+  <li>Športový diferenciál M: žiadne hučanie ani klepanie v zákrutách</li>
+  <li>Brzdy a pneumatiky (M Sport brzdy, 19") – pri zlom stave rátaj 1 500–2 000 € navyše</li>
+  <li>Cena s DPH alebo bez DPH, ak predáva firma – pri M340 častý odpočet DPH</li>
+  <li>Zhoda kľúčov (2 ks), zimné kolesá v cene</li>
+  <li>STK/EK protokol a dátum platnosti (zľava, ak končí čoskoro)</li>
+  <li>Cena s DPH alebo bez DPH, ak predáva firma</li>
+  <li>Zhoda kľúčov (2 ks), zimné kolesá v cene, stav pneumatík</li>
+</ul>
+
+<footer>
+  Zdroj: auto.bazos.sk a www.autobazar.eu (len ponuky zo Slovenska, to isté auto na oboch portáloch je započítané raz), sťahované cez lokálny MCP server bazos-mcp (nástroj <code>fair_price</code>), 5. 11. 2026.
+  Model: ridge regresia log(ceny s DPH) podľa veku, veku², km, km², prevodovky, typu predajcu, motora, motora (M340i / M340d), karosérie (sedan / Touring), faceliftu 2022, pohonu 4x4, pôvodu (SR / dovoz) a portálu. Vzorka 17
+  inzerátov, R² 85 %. Parametre sú vyťažené z textu inzerátov, a preto môžu obsahovať chyby. Odporúčané ponuky sme overili
+  prečítaním celého inzerátu. Hodnotenie motorov je odborný odhad, nie výsledok modelu.
+</footer>
+</main>
+
+<script>
+const DATA = [{"id": "ab-AmsU8ypctRR", "url": "https://www.autobazar.eu/detail/bmw-rad-3-touring-m340d-xdrive-250kw-at8-2020-aj-na-splatky-protiucet/AmsU8ypctRR/", "title": "BMW Rad 3 Touring M340d xDrive 250kW AT/8 2020 / AJ NA SPLÁTKY / PROTIÚČET", "price": 24990, "price_gross": 24990, "fair_price": 28490.0, "discount_pct": 12.3, "verdict": "pod trhom", "year": 2020, "km": 159038, "km_per_year": 25100.0, "eg": "M340d (340 k, diesel)", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": "budget", "source": "autobazar", "origin": null, "also_listed": [], "body": "touring"}, {"id": "196644100", "url": "https://auto.bazos.sk/inzerat/196644100/bmw-m-340d-xdrive-touring-2025.php", "title": "BMW M340d xDrive Touring (2025)", "price": 56000, "price_gross": 56000, "fair_price": 58420.0, "discount_pct": 4.1, "verdict": "férová cena", "year": 2025, "km": 15000, "km_per_year": 11300.0, "eg": "M340d (340 k, diesel)", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Brezno", "flags": [], "pick": "vat", "source": "bazos", "origin": null, "also_listed": [], "body": "touring"}, {"id": "ab-AeBbwl-3YTO", "url": "https://www.autobazar.eu/detail/bmw-rad-3-m340d-mhev-xdrive-at-250kw340hp-a8/AeBbwl-3YTO/", "title": "BMW Rad 3 M340d mHEV xDrive AT 250kW340HP A8", "price": 36000, "price_gross": 36000, "fair_price": 37570.0, "discount_pct": 4.2, "verdict": "férová cena", "year": 2020, "km": 58500, "km_per_year": 9200.0, "eg": "M340d (340 k, diesel)", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava-Rača", "flags": [], "pick": "top", "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "196213403", "url": "https://auto.bazos.sk/inzerat/196213403/m340d-mhev-xdrive-340hp-at8-1majitel-sr.php", "price": 36000}], "body": "sedan"}, {"id": "ab-Amk0N7EPsFF", "url": "https://www.autobazar.eu/detail/bmw-rad-3-touring-m340i-mhev-xdrive-at/Amk0N7EPsFF/", "title": "BMW Rad 3 Touring M340i mHEV  xDrive A/T", "price": 38900, "price_gross": 38900, "fair_price": 41730.0, "discount_pct": 6.8, "verdict": "férová cena", "year": 2022, "km": 104000, "km_per_year": 24000.0, "eg": "M340i (374 k, benzín)", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Žilina", "flags": [], "pick": "top", "source": "autobazar", "origin": "SR", "also_listed": [], "body": "touring"}, {"id": "ab-AmJMfE76lfs", "url": "https://www.autobazar.eu/detail/bmw-rad-3-touring-m340i-mhev-xdrive-at/AmJMfE76lfs/", "title": "BMW Rad 3 Touring M340i mHEV  xDrive A/T", "price": 46990, "price_gross": 46990, "fair_price": 49340.0, "discount_pct": 4.8, "verdict": "férová cena", "year": 2023, "km": 65400, "km_per_year": 19600.0, "eg": "M340i (374 k, benzín)", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": "top", "source": "autobazar", "origin": null, "also_listed": [{"source": "bazos", "id": "195359582", "url": "https://auto.bazos.sk/inzerat/195359582/bmw-m340i-g21-xdrive-mhev-touring-top-stav.php", "price": 46990}], "body": "touring"}, {"id": "ab-AbeCm5T_gKl", "url": "https://www.autobazar.eu/detail/bmw-m340i-xdrive-touring/AbeCm5T_gKl/", "title": "BMW M340i xDrive Touring", "price": 59999, "price_gross": 59999, "fair_price": 60020.0, "discount_pct": 0.0, "verdict": "férová cena", "year": 2024, "km": 15000, "km_per_year": 6400.0, "eg": "M340i (374 k, benzín)", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava - Vajnory", "flags": [], "pick": "vat", "source": "autobazar", "origin": "SR", "also_listed": [], "body": "touring"}, {"id": "ab-AmdW6ZrWe78", "url": "https://www.autobazar.eu/detail/bmw-rad-3-touring-m340d-mhev-xdrive-at/AmdW6ZrWe78/", "title": "BMW Rad 3 Touring M340d mHEV  xDrive A/T", "price": 47990, "price_gross": 47990, "fair_price": 45860.0, "discount_pct": -4.6, "verdict": "férová cena", "year": 2023, "km": 54000, "km_per_year": 16200.0, "eg": "M340d (340 k, diesel)", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Senec", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "touring"}, {"id": "ab-Am2M-bjuUxx", "url": "https://www.autobazar.eu/detail/bmw-340-m340i-xdrive-m-sport-pro-harmankardon-adaptivny-m-podvozok-bezplatny-servis/Am2M-bjuUxx/", "title": "BMW 340 M340i xDrive | M Sport Pro | Harman/Kardon | Adaptívny M podvozok | Bezplatný servis", "price": 55900, "price_gross": 55900, "fair_price": 57300.0, "discount_pct": 2.4, "verdict": "férová cena", "year": 2023, "km": 17200, "km_per_year": 5200.0, "eg": "M340i (374 k, benzín)", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava-Petržalka", "flags": [], "pick": "vat", "source": "autobazar", "origin": null, "also_listed": [], "body": "sedan"}, {"id": "ab-AezVAyG1hbQ", "url": "https://www.autobazar.eu/detail/bmw-rad-3-touring-m340i-mhev-touring-xdrive-at-275kw374hp-a8/AezVAyG1hbQ/", "title": "BMW Rad 3 Touring M340i mHEV Touring xDrive AT 275kW374HP A8", "price": 36900, "price_gross": 36900, "fair_price": 33650.0, "discount_pct": -9.7, "verdict": "nad trhom", "year": 2020, "km": 132000, "km_per_year": 20800.0, "eg": "M340i (374 k, benzín)", "cg": 0, "transmission": "automatic", "seller_type": "private", "location": "Martin", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "touring"}, {"id": "ab-AmmUa2dC24wy", "url": "https://www.autobazar.eu/detail/bmw-rad-3-m340d-mhev-xdrive-at/AmmUa2dC24wy/", "title": "BMW Rad 3 M340d mHEV xDrive A/T", "price": 41999, "price_gross": 41999, "fair_price": 40330.0, "discount_pct": -4.1, "verdict": "férová cena", "year": 2022, "km": 89990, "km_per_year": 20800.0, "eg": "M340d (340 k, diesel)", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Šamorín", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "sedan"}, {"id": "ab-Aegneusr01Y", "url": "https://www.autobazar.eu/detail/bmw-rad-3-m340i-xdrive-285kw-sedan/Aegneusr01Y/", "title": "BMW Rad 3 M340i xDrive 285kW sedan", "price": 36900, "price_gross": 36900, "fair_price": 38610.0, "discount_pct": 4.4, "verdict": "férová cena", "year": 2020, "km": 88809, "km_per_year": 14000.0, "eg": "M340i (374 k, benzín)", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Nové Mesto nad Váhom", "flags": [], "pick": "top", "source": "autobazar", "origin": null, "also_listed": [], "body": "sedan"}, {"id": "ab-AeemEv2nNTN", "url": "https://www.autobazar.eu/detail/bmw-rad-3-m340i-mhev-xdrive-at-275kw374hp-a8/AeemEv2nNTN/", "title": "BMW Rad 3 M340i mHEV xDrive AT 275kW374HP A8", "price": 39500, "price_gross": 39500, "fair_price": 36140.0, "discount_pct": -9.3, "verdict": "nad trhom", "year": 2020, "km": 116000, "km_per_year": 18300.0, "eg": "M340i (374 k, benzín)", "cg": 0, "transmission": "automatic", "seller_type": "private", "location": "Košice", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "sedan"}, {"id": "ab-AbbGSXAssnQ", "url": "https://www.autobazar.eu/detail/bmw-m340d-xdrive-touring/AbbGSXAssnQ/", "title": "BMW Rad 3 Touring M340d mHEV  xDrive A/T", "price": 65867, "price_gross": 65867, "fair_price": 54560.0, "discount_pct": -20.7, "verdict": "výrazne nad trhom", "year": 2024, "km": 12817, "km_per_year": 5500.0, "eg": "M340d (340 k, diesel)", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Banská Bystrica", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "touring"}, {"id": "197189286", "url": "https://auto.bazos.sk/inzerat/197189286/bmw-rad-3-m340i-xdrive-at-149000-km-2020.php", "title": "BMW Rad 3 M340i xDrive A/T - 149.000 km - 2020", "price": 36990, "price_gross": 36990, "fair_price": 33350.0, "discount_pct": -10.9, "verdict": "nad trhom", "year": 2020, "km": 149000, "km_per_year": 23500.0, "eg": "M340i (374 k, benzín)", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Ružomberok", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "sedan"}, {"id": "195270580", "url": "https://auto.bazos.sk/inzerat/195270580/bmw-m340i-odpocet-dph.php", "title": "BMW M340i - odpočet DPH", "price": 29900, "price_gross": 29900, "fair_price": 29900.0, "discount_pct": 0.0, "verdict": "férová cena", "year": 2020, "km": 194000, "km_per_year": 30600.0, "eg": "M340i (374 k, benzín)", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Trenčín", "flags": [], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [], "body": "sedan"}, {"id": "195795985", "url": "https://auto.bazos.sk/inzerat/195795985/bmw-m340i-xdrive-touring-2025.php", "title": "BMW M340i xDrive Touring 2025", "price": 65000, "price_gross": 65000, "fair_price": 60510.0, "discount_pct": -7.4, "verdict": "nad trhom", "year": 2025, "km": 42000, "km_per_year": 31500.0, "eg": "M340i (374 k, benzín)", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Trnava", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "touring"}, {"id": "ab-AmWGbT6y0kt", "url": "https://www.autobazar.eu/detail/bmw-rad-3-touring-m340i-mhev-xdrive-at-275kw-2023-aj-na-splatky-protiucet/AmWGbT6y0kt/", "title": "BMW Rad 3 Touring M340i mHEV  xDrive A/T, 275kW (2023) / AJ NA SPLÁTKY / PROTIÚČET /", "price": 59900, "price_gross": 59900, "fair_price": 47410.0, "discount_pct": -26.3, "verdict": "výrazne nad trhom", "year": 2023, "km": 81763, "km_per_year": 24500.0, "eg": "M340i (374 k, benzín)", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Košice-Pereš", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "197181131", "url": "https://auto.bazos.sk/inzerat/197181131/bmw-rad-3-touring-m340i-mhev-xdrive-at-275kw-2023.php", "price": 59900}], "body": "touring"}];
+const GROUPS = ["M340i (374 k, benzín)", "M340d (340 k, diesel)"];
+const fmt = n => Math.round(n).toLocaleString("sk-SK");
+const eur = n => fmt(n) + " €";
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const TRANS = {automatic: "automat", manual: "manuál"};
+const SRC = {bazos: "bazoš", autobazar: "autobazar.eu"};
+
+// --- theme toggle ---------------------------------------------------------
+document.getElementById("themeBtn").onclick = () => {
+  const root = document.documentElement;
+  const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  drawChart();
+};
+
+// --- scatter chart --------------------------------------------------------
+const legend = document.getElementById("legend");
+legend.innerHTML = GROUPS.map((g, i) => `<span><i style="background:var(--s${i+1})"></i>${g}</span>`).join("")
+  + `<span><i class="ring"></i>odporúčaná ponuka</span>`;
+
+function drawChart() {
+  const svg = document.getElementById("chart"), wrap = document.getElementById("chartWrap"), tip = document.getElementById("tip");
+  const W = svg.clientWidth, H = 420, m = {l: 56, r: 16, t: 10, b: 40};
+  const pts = DATA.filter(d => d.km && d.price_gross);
+  const xMax = Math.ceil(Math.max(...pts.map(d => d.km)) / 50000) * 50000;
+  const yStep = Math.max(...pts.map(d => d.price_gross)) > 60000 ? 10000 : 5000;
+  const yMax = Math.ceil(Math.max(...pts.map(d => d.price_gross)) / yStep) * yStep;
+  const x = v => m.l + v / xMax * (W - m.l - m.r), y = v => H - m.b - v / yMax * (H - m.t - m.b);
+  let s = "";
+  for (let v = 0; v <= yMax; v += yStep)
+    s += `<line x1="${m.l}" x2="${W-m.r}" y1="${y(v)}" y2="${y(v)}" stroke="var(--grid)"/><text x="${m.l-8}" y="${y(v)+4}" text-anchor="end">${v/1000} tis. €</text>`;
+  const step = (W < 520 ? 2 : 1) * (xMax > 400000 ? 100000 : 50000);
+  for (let v = 0; v <= xMax; v += step)
+    s += `<text x="${x(v)}" y="${H-m.b+18}" text-anchor="middle">${v/1000} tis.</text>`;
+  s += `<text x="${(W+m.l)/2}" y="${H-6}" text-anchor="middle">nájazd (km)</text>`;
+  const order = [...pts].sort((a, b) => (a.pick ? 1 : 0) - (b.pick ? 1 : 0));
+  order.forEach(d => {
+    const cx = x(d.km), cy = y(d.price_gross);
+    if (d.pick) s += `<circle cx="${cx}" cy="${cy}" r="9" fill="none" stroke="var(--text)" stroke-width="2"/>`;
+    s += `<circle class="pt" data-id="${d.id}" cx="${cx}" cy="${cy}" r="5" fill="var(--s${d.cg+1})" stroke="var(--surface)" stroke-width="2"/>`;
+  });
+  // invisible bigger hit targets
+  order.forEach(d => s += `<circle class="hit" data-id="${d.id}" cx="${x(d.km)}" cy="${y(d.price_gross)}" r="11" fill="transparent" style="cursor:pointer"/>`);
+  svg.innerHTML = s;
+  const byId = Object.fromEntries(pts.map(d => [d.id, d]));
+  svg.querySelectorAll(".hit").forEach(c => {
+    c.onmouseenter = c.onmousemove = ev => {
+      const d = byId[c.dataset.id];
+      tip.innerHTML = `<b>${esc(d.title)}</b>
+        <div class="row"><span>Cena</span><span>${eur(d.price_gross)}</span></div>
+        <div class="row"><span>Férová cena</span><span>${eur(d.fair_price)}</span></div>
+        <div class="row"><span>Pod trhom</span><span>${d.discount_pct > 0 ? "+" : ""}${d.discount_pct.toLocaleString("sk-SK")} %</span></div>
+        <div class="row"><span>Zdroj</span><span>${SRC[d.source]}${d.also_listed.length ? " + " + d.also_listed.map(a => SRC[a.source]).join(", ") : ""}</span></div>
+        <div class="row"><span>Rok · km</span><span>${d.year} · ${fmt(d.km)}</span></div>
+        <div class="row"><span>Motor</span><span>${esc(d.eg)} ${TRANS[d.transmission] || ""}</span></div>`;
+      tip.style.display = "block";
+      const r = wrap.getBoundingClientRect();
+      let lx = ev.clientX - r.left + 14, ly = ev.clientY - r.top + 14;
+      if (lx + 290 > r.width) lx = ev.clientX - r.left - 290;
+      tip.style.left = lx + "px"; tip.style.top = ly + "px";
+    };
+    c.onmouseleave = () => tip.style.display = "none";
+    c.onclick = () => window.open(byId[c.dataset.id].url, "_blank", "noopener");
+  });
+}
+drawChart();
+addEventListener("resize", drawChart);
+
+// --- full table -----------------------------------------------------------
+const fEngine = document.getElementById("fEngine");
+[...new Set(DATA.map(d => d.eg))].sort().forEach(g => fEngine.insertAdjacentHTML("beforeend", `<option>${esc(g)}</option>`));
+let sortK = "discount_pct", sortDir = -1;
+function discCell(v) {
+  const w = Math.min(Math.abs(v), 30) / 30 * 50;
+  const bar = v >= 0 ? `left:50%;width:${w}%;background:var(--pos)` : `right:50%;width:${w}%;background:var(--neg)`;
+  return `<span class="disc">${v > 0 ? "+" : ""}${v.toLocaleString("sk-SK")} %<span class="dbar"><span style="${bar}"></span></span></span>`;
+}
+function renderTable() {
+  const max = parseFloat(document.getElementById("fMax").value) || Infinity;
+  const tr = document.getElementById("fTrans").value, se = document.getElementById("fSeller").value, en = fEngine.value;
+  const so = document.getElementById("fSource").value, og = document.getElementById("fOrigin").value;
+  const bo = document.getElementById("fBody").value;
+  const rows = DATA.filter(d => (!en || d.eg === en) && (!tr || d.transmission === tr)
+    && (!se || d.seller_type !== "dealer") && d.price_gross <= max
+    && (!so || d.source === so || d.also_listed.some(a => a.source === so)) && (!og || d.origin === og) && (!bo || d.body === bo))
+    .sort((a, b) => { const A = a[sortK], B = b[sortK]; return (typeof A === "string" ? A.localeCompare(B) : A - B) * sortDir; });
+  document.getElementById("count").textContent = `${rows.length} z ${DATA.length} inzerátov`;
+  document.querySelector("#tbl tbody").innerHTML = rows.map(d => `<tr>
+    <td><a href="${d.url}" target="_blank" rel="noopener">${esc(d.title)}</a> ${d.pick ? '<span class="badge pick">odporúčané</span>' : ""}
+      <div class="sub">${esc(d.eg)} · ${TRANS[d.transmission] || "prevodovka ?"} · ${esc(d.location)} · ${d.seller_type === "dealer" ? "predajca/firma" : d.seller_type === "private" ? "súkromník" : "neisté"} · ${SRC[d.source]}${d.origin === "SR" ? " · kúpené v SR" : d.origin === "dovoz" ? " · dovoz" : ""}${d.also_listed.map(a => ` · <a href="${a.url}" target="_blank" rel="noopener">aj na ${SRC[a.source]}</a>`).join("")}</div>
+      ${d.flags.filter(f => !f.startsWith("prevodovka")).map(f => `<div class="flag">⚠ ${esc(f)}</div>`).join("")}</td>
+    <td class="num">${d.year}</td><td class="num">${fmt(d.km)}</td>
+    <td class="num">${eur(d.price_gross)}</td><td class="num">${eur(d.fair_price)}</td>
+    <td class="num">${discCell(d.discount_pct)}</td></tr>`).join("");
+  document.querySelectorAll("#tbl th.sortable").forEach(th => {
+    const base = th.textContent.replace(/ [▾▴]$/, "");
+    th.textContent = base + (th.dataset.k === sortK ? (sortDir < 0 ? " ▾" : " ▴") : "");
+  });
+}
+document.querySelectorAll("#tbl th.sortable").forEach(th => th.onclick = () => {
+  if (sortK === th.dataset.k) sortDir *= -1; else { sortK = th.dataset.k; sortDir = th.dataset.k === "title" ? 1 : -1; }
+  renderTable();
+});
+["fEngine", "fTrans", "fSeller", "fSource", "fBody", "fOrigin", "fMax"].forEach(id => document.getElementById(id).addEventListener("input", renderTable));
+renderTable();
+</script>
+<!-- ferovka-theme --><script id="ferovka-chart">/* Férovka – chart → ad links, injected into every report by sync-reports.mjs.
+ *
+ * The reports draw one invisible 11px "hit" circle per ad. In dense charts (and always on a narrow phone) those
+ * circles overlap and the one drawn last wins, so a click/tap often opened a neighbouring ad. Here the pointer is
+ * always resolved to the NEAREST point, the report's own tooltip is shown for that point, and a click opens its ad.
+ * Touch: the first tap shows the tooltip (with a hint), a second tap on the same point opens the ad.
+ */
+(() => {
+  let rows;
+  try { rows = DATA; } catch { return; } // eslint-disable-line no-undef
+  if (!Array.isArray(rows) || !rows.length || !("url" in rows[0])) return;
+  const byId = new Map(rows.map((d) => [String(d.id), d]));
+  const MOUSE = ["mouseover", "mouseout", "mouseenter", "mouseleave", "mousemove", "mousedown", "mouseup", "click"];
+  let lastPointer = "mouse", down = null;
+  // the finger position as it was – Chrome "snaps" the later click of a tap to the centre of a nearby clickable element
+  addEventListener("pointerdown", (e) => { lastPointer = e.pointerType || "mouse"; down = { clientX: e.clientX, clientY: e.clientY }; }, true);
+
+  // the old per-point hit circles must not be targets (they overlap, and touch snapping aims at them)
+  document.head.insertAdjacentHTML("beforeend", "<style>svg circle.hit[data-id],svg circle.pt[data-id]{pointer-events:none}</style>");
+
+  function nearest(svg, ev, radius) {
+    let best = null, bd = Infinity;
+    for (const c of svg.querySelectorAll("circle.pt[data-id]")) {
+      const r = c.getBoundingClientRect();
+      const dx = r.left + r.width / 2 - ev.clientX, dy = r.top + r.height / 2 - ev.clientY;
+      const d = dx * dx + dy * dy;
+      if (d <= bd) { bd = d; best = c; } // ties: the point drawn on top (later) wins – that is the one you see
+    }
+    return best && bd <= radius * radius ? best : null;
+  }
+
+  function bind(svg) {
+    if (svg.__fvLinks) return;
+    svg.__fvLinks = true;
+    let current = null, armed = null;
+    const hitOf = (pt) => pt && svg.querySelector(`circle.hit[data-id="${CSS.escape(pt.dataset.id)}"]`);
+    const fire = (el, type, ev) => {
+      if (!el) return;
+      const e = new MouseEvent(type, { clientX: ev.clientX, clientY: ev.clientY, bubbles: false });
+      e.__fv = true;
+      el.dispatchEvent(e);
+    };
+    const tip = () => (svg.parentElement && svg.parentElement.querySelector("#tip, .tip")) || document.getElementById("tip");
+    const mark = (pt) => {
+      if (current === pt) return;
+      if (current) current.setAttribute("r", current.__r || "5");
+      current = pt;
+      if (pt) { pt.__r = pt.__r || pt.getAttribute("r"); pt.setAttribute("r", String(+pt.__r + 2)); }
+    };
+    const show = (pt, ev, hint) => {
+      mark(pt);
+      if (!pt) { const t = tip(); if (t) t.style.display = "none"; return; }
+      fire(hitOf(pt), "mousemove", ev); // the report's own tooltip, for the nearest point
+      const t = tip();
+      if (t && hint) t.insertAdjacentHTML("beforeend", `<div class="fv-hint">Ťukni ešte raz – otvorí sa inzerát ↗</div>`);
+    };
+    const open = (pt) => {
+      const d = byId.get(pt.dataset.id);
+      if (d && d.url) window.open(d.url, "_blank", "noopener");
+    };
+
+    // the per-circle handlers of the report never see real mouse events – only our synthetic ones
+    for (const type of MOUSE) {
+      svg.addEventListener(type, (ev) => {
+        if (ev.__fv) return;
+        ev.stopImmediatePropagation();
+        if (type === "mousemove" && lastPointer === "mouse") {
+          show(nearest(svg, ev, 18), ev, false);
+          svg.style.cursor = current ? "pointer" : "";
+        } else if (type === "mouseleave" && ev.target === svg && lastPointer === "mouse") {
+          show(null, ev);
+        } else if (type === "click") {
+          const touch = lastPointer !== "mouse";
+          const at = touch && down ? down : ev;
+          const pt = nearest(svg, at, touch ? 26 : 18);
+          if (!pt) { armed = null; show(null, ev); return; }
+          if (!touch || armed === pt) { armed = null; open(pt); }
+          else { armed = pt; show(pt, at, true); }
+        }
+      }, true);
+    }
+  }
+
+  const scan = () => document.querySelectorAll("svg").forEach((s) => s.querySelector("circle.pt[data-id]") && bind(s));
+  scan();
+  new MutationObserver(scan).observe(document.body, { childList: true, subtree: true });
+})();
+</script><script id="ferovka-filters">/* Férovka – filters for the whole report, injected into every model report by sync-reports.mjs.
+ *
+ * The reports render the chart (drawChart) and the full ranking (renderTable) from the global DATA array; their own
+ * filter bar only filters the table. Here the filter bar (kept in its place above the ranking) gets more filters (year, price from/to,
+ * km, fuel, discount, picks only, text search) and every filter applies to the chart and the ranking together: DATA is
+ * refilled in place with the matching ads and both are drawn again. "</script" can't occur inside this file.
+ */
+(() => {
+  let data;
+  try { data = DATA; } catch { return; } // eslint-disable-line no-undef
+  if (!Array.isArray(data) || !data.length || typeof renderTable !== "function") return; // eslint-disable-line no-undef
+  const bar = document.querySelector(".filters");
+  if (!bar || bar.dataset.fv) return;
+  bar.dataset.fv = "1";
+  const ALL = data.slice();
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+  const fmt = (n) => Math.round(n).toLocaleString("sk-SK");
+  const norm = (s) => String(s ?? "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+  let groups = null;
+  try { groups = GROUPS; } catch { /* report without groups */ } // eslint-disable-line no-undef
+
+  const FUEL = { diesel: "Diesel", petrol: "Benzín", hybrid: "Hybrid", "plug-in hybrid": "Plug-in hybrid", electric: "Elektro", lpg: "LPG", cng: "CNG" };
+  const fuelOf = (d) => {
+    const e = norm(d.eg);
+    if (/tdi|crdi|dci|hdi|diesel|\bd\b|cdi|\d+d\b|blue/.test(e)) return "Diesel";
+    if (/plug-in|phev|e-hybrid|recharge|\bgte\b|\bt8\b|\b\d{2}e\b|\b\d{3} ?e\b/.test(e)) return "Plug-in hybrid";
+    if (/elektro|electric|\bev\b/.test(e)) return "Elektro";
+    if (/cng|lpg|g-tec|g-tron|tgi|ecofuel/.test(e)) return "Plyn (CNG/LPG)";
+    if (/mild|mhev/.test(e)) return "Benzín"; // mild-hybrid petrol (the diesel ones say TDI / d above)
+    if (/hybrid|hev/.test(e)) return "Hybrid";
+    if (/tsi|tfsi|mpi|fsi|benzin|gdi|dpi|htp|12v|\bt\d\b|\bb[56]\b|\d+i\b|turbo|tce|\bs4\b|rs ?\d|amg|competition|\bm\d{2,3}i?\b|gti|\bx5 m\b/.test(e)) return "Benzín";
+    return d.fuel ? FUEL[d.fuel] || String(d.fuel) : null;
+  };
+
+  // --- controls ---------------------------------------------------------------------------------------------------
+  const years = ALL.map((d) => d.year).filter(Boolean);
+  const yMin = Math.min(...years), yMax = Math.max(...years);
+  const yearOpts = (label) => `<option value="">${label}</option>` +
+    Array.from({ length: yMax - yMin + 1 }, (_, i) => yMax - i).map((y) => `<option>${y}</option>`).join("");
+  const kms = [30000, 50000, 75000, 100000, 150000, 200000, 250000, 300000];
+  const fuels = [...new Set(ALL.map(fuelOf).filter(Boolean))].sort((a, b) => a.localeCompare(b, "sk"));
+  const showGroups = Array.isArray(groups) && groups.length > 1 && ALL.some((d) => Number.isInteger(d.cg));
+
+  const maxInput = $("fMax");
+  if (maxInput) { maxInput.placeholder = "Cena do €"; maxInput.title = "Najvyššia cena (s DPH)"; }
+  const html =
+    `<select id="fvYearFrom" title="Rok výroby od">${yearOpts("Rok od")}</select>` +
+    `<select id="fvYearTo" title="Rok výroby do">${yearOpts("Rok do")}</select>` +
+    `<input id="fvPriceMin" type="number" placeholder="Cena od €" step="500" min="0" title="Najnižšia cena (s DPH)" style="width:110px">`;
+  if (maxInput) maxInput.insertAdjacentHTML("beforebegin", html);
+  else bar.insertAdjacentHTML("afterbegin", html);
+  const more =
+    `<select id="fvKm" title="Najviac najazdených km"><option value="">Nájazd – všetky</option>${kms.map((k) => `<option value="${k}">do ${fmt(k)} km</option>`).join("")}</select>` +
+    (fuels.length > 1 ? `<select id="fvFuel" title="Palivo"><option value="">Všetky palivá</option>${fuels.map((f) => `<option>${esc(f)}</option>`).join("")}</select>` : "") +
+    (showGroups ? `<select id="fvGroup" title="Skupina motorov (farba v grafe)"><option value="">Všetky skupiny</option>${groups.map((g, i) => `<option value="${i}">${esc(g)}</option>`).join("")}</select>` : "") +
+    `<select id="fvDisc" title="O koľko je auto lacnejšie ako férová cena"><option value="">Cena – všetky</option><option value="0">pod férovou cenou</option><option value="10">aspoň 10 % pod trhom</option><option value="20">aspoň 20 % pod trhom</option></select>` +
+    `<input id="fvText" type="search" placeholder="Hľadať (výbava, mesto…)" title="Hľadá v názve inzerátu, motore a lokalite" style="width:170px">` +
+    `<label class="fv-check"><input id="fvPick" type="checkbox"> len odporúčané</label>` +
+    `<button type="button" id="fvReset" class="fv-reset">Zrušiť filtre</button>`;
+  const count = $("count");
+  if (count) count.insertAdjacentHTML("beforebegin", more);
+  else bar.insertAdjacentHTML("beforeend", more);
+
+  // the bar stays where it was – right above the ranking – and also drives the chart; the chart gets a pointer to it
+  const chart = $("chartWrap");
+  const box = document.createElement("div");
+  box.className = "fv-filters";
+  box.id = "filtre";
+  bar.before(box);
+  box.innerHTML = `<div class="fv-head"><b>Filtre</b><span>platia pre rebríček aj graf vyššie</span></div>`;
+  box.appendChild(bar);
+  const note = document.createElement("div");
+  note.className = "fv-note";
+  chart?.before(note);
+
+  document.head.insertAdjacentHTML("beforeend", `<style id="fv-filters-css">
+.fv-filters{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 14px 4px;margin:24px 0 8px}
+.fv-filters .fv-head{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;margin-bottom:8px}
+.fv-filters .fv-head span{color:var(--muted);font-size:13px}
+.fv-filters .filters{margin-bottom:8px}
+.fv-filters .filters .count{flex-basis:100%;margin-left:0}
+.fv-check{display:inline-flex;gap:6px;align-items:center;font-size:13px;color:var(--text-2,var(--text));white-space:nowrap}
+.fv-reset{background:none;border:1px solid var(--border);color:var(--text);border-radius:8px;padding:6px 10px;font:inherit;font-size:13px;cursor:pointer}
+.fv-reset:hover{background:var(--surface-2,var(--surface))}
+.fv-note{color:var(--muted);font-size:13px;margin:0 0 8px}
+.fv-note a{color:inherit}
+.fv-empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:14px;pointer-events:none}
+@media (max-width:600px){.fv-filters .filters select,.fv-filters .filters input[type=number],.fv-filters .filters input[type=search]{flex:1 1 calc(50% - 8px);min-width:0;width:auto!important}}
+</style>`);
+
+  // --- filtering --------------------------------------------------------------------------------------------------
+  const val = (id) => ($(id) ? $(id).value : "");
+  const num = (id) => { const v = parseFloat(val(id)); return Number.isFinite(v) ? v : null; };
+  function matches(d) {
+    const yf = num("fvYearFrom"), yt = num("fvYearTo"), pmin = num("fvPriceMin"), pmax = num("fMax"), km = num("fvKm"), disc = num("fvDisc");
+    const fuel = val("fvFuel"), grp = val("fvGroup"), q = norm(val("fvText")).trim();
+    if (yf != null && !(d.year >= yf)) return false;
+    if (yt != null && !(d.year <= yt)) return false;
+    if (pmin != null && !(d.price_gross >= pmin)) return false;
+    if (pmax != null && !(d.price_gross <= pmax)) return false;
+    if (km != null && !(d.km <= km)) return false;
+    if (disc != null && !(d.discount_pct > disc || (disc > 0 && d.discount_pct >= disc))) return false;
+    if (fuel && fuelOf(d) !== fuel) return false;
+    if (grp !== "" && String(d.cg) !== grp) return false;
+    if ($("fvPick")?.checked && !d.pick) return false;
+    if (q && !q.split(/\s+/).every((w) => norm(`${d.title} ${d.eg ?? ""} ${d.engine ?? ""} ${d.location ?? ""}`).includes(w))) return false;
+    // the report's own filters (engine, gearbox, seller, portal, body, origin) – same rules as its renderTable
+    const en = val("fEngine"), tr = val("fTrans"), se = val("fSeller"), so = val("fSource"), og = val("fOrigin"), bo = val("fBody");
+    if (en && d.eg !== en) return false;
+    if (tr && d.transmission !== tr) return false;
+    if (se && d.seller_type === "dealer") return false;
+    if (so && !(d.source === so || (d.also_listed || []).some((a) => a.source === so))) return false;
+    if (og && d.origin !== og) return false;
+    if (bo && d.body !== bo) return false;
+    return true;
+  }
+  const active = () => [...box.querySelectorAll("select, input")].filter((el) => (el.type === "checkbox" ? el.checked : el.value !== "")).length;
+
+  let drawing = false;
+  function apply() {
+    if (drawing) return;
+    drawing = true;
+    const rows = ALL.filter(matches);
+    data.length = 0;
+    data.push(...rows);
+    const wrap = $("chartWrap");
+    wrap?.querySelector(".fv-empty")?.remove();
+    const plotted = rows.filter((d) => d.km && d.price_gross).length;
+    try {
+      if (typeof drawChart === "function") { // eslint-disable-line no-undef
+        if (plotted) drawChart(); // eslint-disable-line no-undef
+        else { const svg = $("chart"); if (svg) svg.innerHTML = ""; }
+      }
+    } catch (e) { console.warn("chart", e); }
+    if (wrap && !plotted) {
+      if (getComputedStyle(wrap).position === "static") wrap.style.position = "relative";
+      wrap.insertAdjacentHTML("beforeend", `<div class="fv-empty">Filtrom nezodpovedá žiadny inzerát</div>`);
+    }
+    try { renderTable(); } catch (e) { console.warn("table", e); } // eslint-disable-line no-undef
+    const n = active();
+    if (count) count.textContent = `Zobrazených ${fmt(rows.length)} z ${fmt(ALL.length)} inzerátov` + (n ? ` · aktívne filtre: ${n}` : "");
+    note.innerHTML = n
+      ? `Zobrazených ${fmt(rows.length)} z ${fmt(ALL.length)} inzerátov podľa <a href="#filtre">filtrov pri rebríčku</a>.`
+      : `Filtre (rok, cena, nájazd, palivo…) nájdeš <a href="#filtre">pri kompletnom rebríčku</a> – platia aj pre tento graf.`;
+    drawing = false;
+  }
+  box.querySelectorAll("select, input").forEach((el) => el.addEventListener("input", apply));
+  $("fvPick")?.addEventListener("change", apply);
+  $("fvReset").addEventListener("click", () => {
+    box.querySelectorAll("select, input").forEach((el) => { if (el.type === "checkbox") el.checked = false; else el.value = ""; });
+    apply();
+  });
+  apply();
+})();
+</script><!-- /ferovka-theme -->
+</body>
+</html>

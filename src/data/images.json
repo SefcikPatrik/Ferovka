@@ -208,5 +208,12 @@
     "author": "Alexander Migl",
     "license": "CC BY-SA 4.0",
     "source": "https://commons.wikimedia.org/wiki/File:Skoda_Octavia_IV_Combi_RS_1X7A0352.jpg"
+  },
+  "bmw-m340": {
+    "src": "/img/bmw-m340.jpg",
+    "file": "File:BMW M340i G21 xDrive Touring 2023.jpg",
+    "author": "Ethan Llamas",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:BMW_M340i_G21_xDrive_Touring_2023.jpg"
   }
 }

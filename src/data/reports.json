@@ -13,6 +13,19 @@
     "r2": null
   },
   {
+    "slug": "bmw-m340",
+    "file": "bmw-m340-analyza.html",
+    "name": "BMW M340i / M340d",
+    "brand": "BMW",
+    "model": "M340i / M340d",
+    "kind": "model",
+    "date": "2026-11-05",
+    "summary": "Analýza aktuálnych inzerátov BMW M340i / M340d (G20 sedan a G21 Touring, od roku 2019) na bazoši a autobazar.eu. Z približne 260 inzerátov BMW radu 3 od roku 2019 (bazoš aj autobazar.eu) je M340i alebo M340d 19 áut, z toho 2 sú duplicitné (to isté auto u dvoch predajcov) – hodnotíme 17. Férovú cenu počítame z týchto M340: pokles ceny za rok veku (7,1 %), za 10 tis. km (2,4 %) a rozdiel pri Touringu (3,2 %) berieme z celého trhu trojky, cenovú úroveň M340i a M340d zvlášť z áut samotných. Pri takto malej vzorke ber férovú cenu ako orientačnú (±10 %).",
+    "ads": 18,
+    "median": "41 999 €",
+    "r2": "85 %"
+  },
+  {
     "slug": "audi-a4",
     "file": "audi-a4-analyza.html",
     "name": "Audi A4",
