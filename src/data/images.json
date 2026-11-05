@@ -222,5 +222,12 @@
     "author": "Vauxford",
     "license": "CC BY-SA 4.0",
     "source": "https://commons.wikimedia.org/wiki/File:2018_BMW_X3_xDrive30d_M_Sport_Automatic_3.0_Front.jpg"
+  },
+  "bmw-x1": {
+    "src": "/img/bmw-x1.jpg",
+    "file": "File:2018 BMW X1 sDrive18i xLine 1.5 Front.jpg",
+    "author": "Vauxford",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:2018_BMW_X1_sDrive18i_xLine_1.5_Front.jpg"
   }
 }

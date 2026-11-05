@@ -26,6 +26,19 @@
     "r2": "85 %"
   },
   {
+    "slug": "bmw-x1",
+    "file": "bmw-x1-analyza.html",
+    "name": "BMW X1",
+    "brand": "BMW",
+    "model": "X1",
+    "kind": "model",
+    "date": "2026-11-05",
+    "summary": "Analýza aktuálnych inzerátov BMW X1 (generácie F48 a U11, od roku 2016) na bazoši a autobazar.eu. Na trhu je okolo 442 inzerátov (210 na bazoši, 232 na autobazar.eu) – prezreli sme všetky. Veľa áut je na oboch portáloch, takže po zlúčení a bez ponúk z Česka ostáva 281 rôznych áut.",
+    "ads": 281,
+    "median": "18 990 €",
+    "r2": "96 %"
+  },
+  {
     "slug": "bmw-x3",
     "file": "bmw-x3-analyza.html",
     "name": "BMW X3",
