@@ -215,5 +215,12 @@
     "author": "Ethan Llamas",
     "license": "CC BY-SA 4.0",
     "source": "https://commons.wikimedia.org/wiki/File:BMW_M340i_G21_xDrive_Touring_2023.jpg"
+  },
+  "bmw-x3": {
+    "src": "/img/bmw-x3.jpg",
+    "file": "File:2018 BMW X3 xDrive30d M Sport Automatic 3.0 Front.jpg",
+    "author": "Vauxford",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:2018_BMW_X3_xDrive30d_M_Sport_Automatic_3.0_Front.jpg"
   }
 }

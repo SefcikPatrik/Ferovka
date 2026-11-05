@@ -26,6 +26,19 @@
     "r2": "85 %"
   },
   {
+    "slug": "bmw-x3",
+    "file": "bmw-x3-analyza.html",
+    "name": "BMW X3",
+    "brand": "BMW",
+    "model": "X3",
+    "kind": "model",
+    "date": "2026-11-05",
+    "summary": "Analýza aktuálnych inzerátov BMW X3 (generácie F25 a G01, roky 2014–2024) na bazoši a autobazar.eu. Na trhu je okolo 539 inzerátov (271 na bazoši, 268 na autobazar.eu) – prezreli sme všetky. Veľa áut je na oboch portáloch, takže po zlúčení a bez ponúk z Česka ostáva 341 rôznych áut.",
+    "ads": 341,
+    "median": "26 945 €",
+    "r2": "96 %"
+  },
+  {
     "slug": "audi-a4",
     "file": "audi-a4-analyza.html",
     "name": "Audi A4",

@@ -1,0 +1,947 @@
+<!doctype html>
+<html lang="sk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BMW X3 – analýza ponúk</title>
+<style>
+:root {
+  color-scheme: light;
+  --bg: #f6f6f4; --surface: #fcfcfb; --surface-2: #f0efec; --border: #e2e1dc;
+  --text: #0b0b0b; --text-2: #52514e; --muted: #7a7974;
+  --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a;
+  --pos: #2a78d6; --neg: #eb6834; --accent: #2a78d6;
+  --good: #1d7f4e; --bad: #b4332f; --grid: #e8e7e3;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #121211; --surface: #1a1a19; --surface-2: #232321; --border: #33332f;
+    --text: #f0efec; --text-2: #c3c2b7; --muted: #8f8e86;
+    --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+    --pos: #3987e5; --neg: #d95926; --accent: #5598e7;
+    --good: #4cc38a; --bad: #f07a76; --grid: #2a2a27;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #121211; --surface: #1a1a19; --surface-2: #232321; --border: #33332f;
+  --text: #f0efec; --text-2: #c3c2b7; --muted: #8f8e86;
+  --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+  --pos: #3987e5; --neg: #d95926; --accent: #5598e7;
+  --good: #4cc38a; --bad: #f07a76; --grid: #2a2a27;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text);
+  font: 15px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+main { max-width: 1120px; margin: 0 auto; padding: 32px 16px 64px; }
+a { color: var(--accent); text-decoration: none; } a:hover { text-decoration: underline; }
+h1 { font-size: 30px; margin: 0 0 4px; letter-spacing: -.01em; }
+h2 { font-size: 21px; margin: 48px 0 6px; }
+h3 { font-size: 15px; margin: 6px 0 4px; line-height: 1.35; }
+.lead { color: var(--text-2); margin: 0 0 20px; max-width: 760px; }
+.section-lead { color: var(--text-2); margin: 0 0 16px; max-width: 800px; }
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
+.kpi { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+.kpi .v { font-size: 26px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.kpi .l { color: var(--text-2); font-size: 13px; }
+.explain { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; margin-top: 12px; }
+.explain p { margin: 6px 0; color: var(--text-2); }
+.explain b { color: var(--text); }
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; }
+.card-head { display: flex; justify-content: space-between; gap: 8px; font-size: 12px; }
+.tag { font-weight: 600; color: var(--accent); }
+.loc { color: var(--muted); }
+.facts { color: var(--text-2); font-size: 13px; }
+.prices { display: grid; grid-template-columns: 1.2fr 1fr .8fr; gap: 8px; margin: 12px 0 8px; }
+.lbl { display: block; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+.big { font-size: 22px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.mid { font-size: 16px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.good { color: var(--good); }
+.meter { height: 6px; background: var(--surface-2); border-radius: 4px; overflow: hidden; }
+.meter span { display: block; height: 100%; background: var(--s1); border-radius: 4px; }
+.news ul { margin: 6px 0 0; padding-left: 20px; } .news li { margin: 4px 0; } .news .down { color: var(--good, #1baf7a); font-weight: 600; }
+.note { font-size: 12.5px; background: var(--surface-2); border-radius: 6px; padding: 6px 8px; margin-top: 8px; color: var(--text-2); }
+.pc { list-style: none; padding: 0; margin: 10px 0 0; font-size: 13.5px; }
+.pc li { padding-left: 20px; position: relative; margin: 3px 0; }
+.pc li.pro::before { content: "+"; position: absolute; left: 4px; color: var(--good); font-weight: 700; }
+.pc li.con::before { content: "–"; position: absolute; left: 4px; color: var(--bad); font-weight: 700; }
+.subhead { font-size: 15px; color: var(--text-2); margin: 22px 0 10px; font-weight: 600; }
+.chart-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 14px 8px; position: relative; }
+.legend { display: flex; flex-wrap: wrap; gap: 16px; font-size: 13px; color: var(--text-2); margin: 0 0 6px 4px; }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; }
+.legend .ring { background: transparent; border: 2px solid var(--text); width: 12px; height: 12px; }
+svg text { fill: var(--muted); font-size: 11px; }
+.tip { position: absolute; pointer-events: none; background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+  padding: 8px 10px; font-size: 12.5px; box-shadow: 0 6px 20px rgba(0,0,0,.15); max-width: 280px; display: none; z-index: 5; }
+.tip b { display: block; margin-bottom: 2px; }
+.tip .row { display: flex; justify-content: space-between; gap: 12px; color: var(--text-2); }
+.tip .row span:last-child { color: var(--text); font-variant-numeric: tabular-nums; }
+table { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; font-size: 13.5px; }
+th, td { padding: 9px 10px; border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; }
+th { font-size: 12px; color: var(--text-2); font-weight: 600; background: var(--surface-2); white-space: nowrap; }
+th.sortable { cursor: pointer; user-select: none; } th.sortable:hover { color: var(--text); }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+.sub { color: var(--text-2); font-size: 12.5px; margin-top: 2px; }
+.stars { color: #c98500; letter-spacing: 1px; white-space: nowrap; } .stars .off { color: var(--border); }
+.cellbar { height: 5px; background: var(--surface-2); border-radius: 3px; margin-bottom: 4px; }
+.cellbar span { display: block; height: 100%; background: var(--s1); border-radius: 3px; }
+.disc { display: inline-flex; align-items: center; gap: 6px; justify-content: flex-end; }
+.dbar { width: 54px; height: 6px; background: var(--surface-2); border-radius: 3px; position: relative; }
+.dbar span { position: absolute; top: 0; height: 100%; border-radius: 3px; }
+.filters { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 10px; align-items: center; }
+.filters select, .filters input { background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 6px 8px; font: inherit; font-size: 13px; }
+.filters .count { color: var(--muted); font-size: 13px; margin-left: auto; }
+.table-scroll { overflow-x: auto; border-radius: 12px; }
+.badge { font-size: 11px; padding: 1px 6px; border-radius: 10px; background: var(--surface-2); color: var(--text-2); white-space: nowrap; }
+.badge.pick { background: var(--s1); color: #fff; }
+.flag { color: var(--bad); font-size: 12px; }
+.warn { background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--neg); border-radius: 10px; padding: 12px 16px; }
+.warn li { margin: 4px 0; }
+.check { columns: 2 300px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px 14px 34px; margin: 0; }
+.check li { margin: 4px 0; break-inside: avoid; }
+footer { color: var(--muted); font-size: 12.5px; margin-top: 48px; border-top: 1px solid var(--border); padding-top: 14px; }
+.theme-btn { float: right; background: var(--surface); color: var(--text-2); border: 1px solid var(--border); border-radius: 8px; padding: 5px 10px; cursor: pointer; font: inherit; font-size: 13px; }
+@media (max-width: 640px) { h1 { font-size: 24px; } .prices { grid-template-columns: 1fr 1fr 1fr; } .big { font-size: 18px; } th, td { padding: 7px 6px; } }
+</style>
+<!-- ferovka-theme --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"><style id="ferovka-theme">/* Férovka look for the generated analyses – injected by sync-reports.mjs after each report's own <style>.
+   Same palette and type as the site; chart colours (--s1..--s3) stay the validated set. */
+:root {
+  --bg: #f5f4ef; --surface: #fdfdfb; --surface-2: #eeede6; --border: #e1dfd6;
+  --text: #0f1513; --text-2: #4f5551; --muted: #6f746f;
+  --accent: #0b8a56; --good: #0b7a4b; --grid: #e6e4dc; --win: #dff3e9;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d110f; --surface: #151a17; --surface-2: #1d2420; --border: #2a322d;
+    --text: #eef1ec; --text-2: #b6bdb6; --muted: #8f978f;
+    --accent: #2fc583; --good: #4cd08f; --grid: #1f2622; --win: #143223;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d110f; --surface: #151a17; --surface-2: #1d2420; --border: #2a322d;
+  --text: #eef1ec; --text-2: #b6bdb6; --muted: #8f978f;
+  --accent: #2fc583; --good: #4cd08f; --grid: #1f2622; --win: #143223;
+}
+
+body { font-family: "Manrope", system-ui, sans-serif; }
+h1, h2 { letter-spacing: -0.02em; font-weight: 800; }
+.tag { color: var(--accent); }
+
+/* photo header (removed by the site's viewer, which shows its own) */
+.fv-hero { position: relative; margin: 0 0 26px; border-radius: 20px; overflow: hidden; aspect-ratio: 21 / 8; background: #0d110f; display: flex; }
+.fv-hero img { flex: 1; min-width: 0; height: 100%; object-fit: cover; animation: fv-zoom 1.4s cubic-bezier(.2,.7,.2,1) both; }
+.fv-collage img + img { border-left: 3px solid #0d110f; }
+.fv-hero::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(180deg, transparent 55%, rgb(13 17 15 / .75)),
+    repeating-linear-gradient(90deg, rgb(47 197 131 / .06) 0 1px, transparent 1px 48px); }
+.fv-hero figcaption { position: absolute; right: 12px; bottom: 8px; z-index: 1; font-size: 11px; color: rgb(255 255 255 / .75); }
+.fv-hero figcaption a { color: inherit; }
+
+/* cards & panels: softer, lift on hover */
+.card, .kpi, .explain, .chart-wrap, .box { border-radius: 16px; }
+.card { transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease; }
+.card:hover { transform: translateY(-3px); border-color: var(--accent); box-shadow: 0 14px 30px -18px rgb(0 0 0 / .45); }
+.badge.pick { background: var(--accent); }
+
+/* entrance animation */
+@keyframes fv-up { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes fv-zoom { from { transform: scale(1.08); filter: brightness(.6); } to { transform: none; filter: none; } }
+h1, .lead, .kpis, .cards .card { animation: fv-up .6s cubic-bezier(.2,.7,.2,1) both; }
+.lead { animation-delay: .08s; }
+.kpis { animation-delay: .16s; }
+.cards .card:nth-child(2) { animation-delay: .06s; }
+.cards .card:nth-child(3) { animation-delay: .12s; }
+.cards .card:nth-child(4) { animation-delay: .18s; }
+.cards .card:nth-child(5) { animation-delay: .24s; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+@media (max-width: 640px) { .fv-hero { aspect-ratio: 16 / 9; border-radius: 14px; } }
+
+/* touch: hint under the chart tooltip (report-chart.js) */
+.fv-hint { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--border, rgba(127,127,127,.3)); font-weight: 700; color: var(--accent, #2fc583); }
+</style><!-- /ferovka-theme -->
+</head>
+<body>
+<main><!-- ferovka-theme --><figure class="fv-hero"><img src="/img/bmw-x3.jpg" alt=""><figcaption>Foto: <a href="https://commons.wikimedia.org/wiki/File:2018_BMW_X3_xDrive30d_M_Sport_Automatic_3.0_Front.jpg" target="_blank" rel="noopener">Vauxford</a>, CC BY-SA 4.0 (Wikimedia Commons)</figcaption></figure><!-- /ferovka-theme -->
+<button class="theme-btn" id="themeBtn" type="button">Svetlý / tmavý</button>
+<h1>BMW X3 – ktorá ponuka sa oplatí</h1>
+<p class="lead">Analýza aktuálnych inzerátov BMW X3 (generácie F25 a G01, roky 2014–2024) na auto.bazos.sk a www.autobazar.eu (5. 11. 2026). Na trhu je okolo 539 inzerátov (271 na bazoši, 268 na autobazar.eu) – prezreli sme všetky. Veľa áut je na oboch portáloch, takže po zlúčení a bez ponúk z Česka ostáva 341 rôznych áut. Každé auto sme porovnali
+s <b>férovou cenou</b>: tú vypočítal model naučený na celom trhu podľa veku, nájazdu, motora, prevodovky a typu predajcu.</p>
+
+<div class="kpis">
+  <div class="kpi"><div class="v">341</div><div class="l">inzerátov X3</div></div>
+  <div class="kpi"><div class="v">186</div><div class="l">ohodnotených (majú rok aj km)</div></div>
+  <div class="kpi"><div class="v">26 945 €</div><div class="l">medián ceny s DPH</div></div>
+  <div class="kpi"><div class="v">96 %</div><div class="l">rozdielov v cenách vysvetlí model</div></div>
+</div>
+
+
+<h2>Odkiaľ sú dáta: bazoš + autobazar.eu</h2>
+<div class="kpis">
+  <div class="kpi"><div class="v">86</div><div class="l">ohodnotených z bazoša</div></div>
+  <div class="kpi"><div class="v">100</div><div class="l">ohodnotených z autobazar.eu</div></div>
+  <div class="kpi"><div class="v">63</div><div class="l">áut bolo na oboch portáloch – započítané raz</div></div>
+  <div class="kpi"><div class="v">66 / 24</div><div class="l">s uvedeným pôvodom SR / dovoz</div></div>
+</div>
+<div class="explain">
+  <p><b>Dva portály, jeden trh.</b> Bazoš prehľadal 266 inzerátov, autobazar.eu
+  268. Ponuky z Česka (na autobazar.eu ich je veľa) sme vynechali. Autobazáre často dávajú
+  to isté auto na oba portály. Takéto dvojice (52 v rebríčku) sme spojili podľa VIN alebo zhody roku, km a ceny,
+  aby sa v modeli nerátali dvakrát. Pri aute nájdeš odkaz na obe ponuky – niekedy sa líšia cenou.</p>
+  <p><b>Rozdiel medzi portálmi:</b> rovnaké auto je na autobazar.eu v priemere +0,9 %
+  oproti bazošu. Na autobazar.eu predávajú hlavne firmy (84 z 100 ohodnotených).</p>
+  <p><b>Kúpené v SR vs. dovoz:</b> autá s uvedeným pôvodom zo SR sú oproti autám bez uvedeného pôvodu
+  +1,8 %, dovezené -1,4 %
+  (pri rovnakom veku, nájazde a motore). Pôvod zo SR je výhoda pri overovaní histórie, trh zaň však nepripláca – väčšina
+  inzerátov pôvod jednoducho neuvádza. V tabulke dole si môžeš nechať zobraziť len autá kúpené v SR.</p>
+</div>
+
+<h2>Čo hýbe cenou X3</h2>
+<p class="section-lead">Toto sa model naučil z trhu. Keď porovnávaš dve autá, tieto čísla ti povedia, koľko má byť
+rozdiel v cene, aby to bolo fér.</p>
+<div class="kpis">
+  <div class="kpi"><div class="v">-2,5 %</div><div class="l">každých ďalších 10 000 km</div></div>
+  <div class="kpi"><div class="v">-7,6 %</div><div class="l">každý rok veku navyše</div></div>
+  <div class="kpi"><div class="v">+22 %</div><div class="l">príplatok za automat</div></div>
+  <div class="kpi"><div class="v">+1,4 %</div><div class="l">príplatok u predajcu / firmy</div></div>
+  <div class="kpi"><div class="v">+1,8 %</div><div class="l">príplatok za auto kúpené v SR (oproti neuvedenému pôvodu)</div></div>
+  <div class="kpi"><div class="v">-1,4 %</div><div class="l">dovoz zo zahraničia (oproti neuvedenému pôvodu)</div></div>
+</div>
+<div class="explain">
+  <p><b>Príklad:</b> dve rovnaké X3 xDrive20d z roku 2019, jedno má 100 tis. km, druhé 160 tis. km. Druhé má byť približne o 14 % lacnejšie (6 × pokles za 10 tis. km). Ak je lacnejšie len o 5 %, preplácaš kilometre.</p>
+  <p><b>Ako čítať „pod trhom“:</b> +15 % znamená, že auto stojí o 15 % menej, než by malo podľa trhu. Bežný rozptyl
+  cien je asi ±15 %, takže až zľava nad ~10–15 % je naozaj výnimočná. Pri takej zľave vždy zisti, prečo je auto lacné
+  (stav, história, nájazd).</p>
+  <p><b>DPH:</b> ceny uvedené bez DPH (napr. „10 300 € netto“) sme prepočítali na cenu s DPH, ktorú zaplatí súkromná osoba.</p>
+</div>
+
+<h2>Odporúčané ponuky</h2>
+<p class="section-lead">Kandidáti s najlepším pomerom cena / vek / nájazd, ktorých celý inzerát sme prečítali.
+Zoradené podľa toho, ako ich odporúčame.</p>
+<div class="subhead">Najlepšie ponuky na bežné jazdenie (G01, 2018–2023)</div>
+<div class="cards">
+<article class="card">
+  <div class="card-head"><span class="tag">1. majiteľ, servis len v BMW</span><span class="loc">Bratislava</span></div>
+  <h3><a href='https://auto.bazos.sk/inzerat/196136813/bmw-x3-xdrive20d-mhev-at-140kw190hp-a8.php' target='_blank' rel='noopener'>BMW X3 xDrive20d mHEV AT 140kW190HP A8</a></h3>
+  <div class="facts">2022 · 53 000 km · 18d / 20d (150–190 k) · prevodovka ? · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">38 500 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">42 740 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+9.9 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–25 %)"><span style="width:40%"></span></div>
+  <ul class="pc"><li class="pro">2022, xDrive20d 190 k mild-hybrid, 8-st. automat, 53 tis. km</li><li class="pro">1. majiteľ, úplná servisná história (BMW Lamač), nehavarované</li><li class="pro">Laser, head-up, 3-zónová klíma, kamera</li><li class="con">Pýtaj VIN</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">Facelift 2023 so zárukou do 2027</span><span class="loc">Košice</span></div>
+  <h3><a href='https://auto.bazos.sk/inzerat/197183843/predam-bmw-x3-20-tdi-g01-2023.php' target='_blank' rel='noopener'>Predam BMW X3  2.0 TDI G01   2023</a></h3>
+  <div class="facts">2023 · 43 000 km · 18d / 20d (150–190 k) · prevodovka ? · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">37 000 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">40 860 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+9.5 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–25 %)"><span style="width:38%"></span></div>
+  <ul class="pc"><li class="pro">2023, xDrive20d 190 k mild-hybrid, 43 tis. km</li><li class="pro">Záruka do 02/2027, nové zimné pneumatiky, ochranná fólia vpredu, VIN</li><li class="con">Auto je na leasingu – 37 000 € pri vyplatení, alebo prevzatie leasingu za 27 000 €; over zmluvu</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">20d mild-hybrid zo Slovenska so 49 tis. km</span><span class="loc">Vranov nad Topľou</span></div>
+  <h3><a href='https://www.autobazar.eu/detail/bmw-x3-20tdi-hev-140kw-8ap-xdrive/Amp1OVq8nRd/' target='_blank' rel='noopener'>BMW X3 2.0D + HEV 140kW 8AP xDrive</a></h3>
+  <div class="facts">2021 · 49 271 km · 18d / 20d (150–190 k) · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · kúpené v SR · aj na <a href='https://auto.bazos.sk/inzerat/196678308/bmw-x3-20d-hev-140kw-8ap-xdrive.php' target='_blank' rel='noopener'>bazoš</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">33 000 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">38 160 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+13.5 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–25 %)"><span style="width:54%"></span></div>
+  <ul class="pc"><li class="pro">2021, xDrive20d 190 k mild-hybrid, 8-st. automat, 49 tis. km</li><li class="pro">Kúpené v SR, koža, VIN v inzeráte</li><li class="con">Inzerát len so zoznamom výbavy – pýtaj servisnú históriu</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">Šesťvalec 30d od 1. majiteľa</span><span class="loc">Martin</span></div>
+  <h3><a href='https://auto.bazos.sk/inzerat/196889190/bmw-x3-30-xd-mhev-210-kw-x-drive-m-sport-line.php' target='_blank' rel='noopener'>BMW X3 3,0 XD + MHEV 210 kW X Drive M Sport Line</a></h3>
+  <div class="facts">2021 · 78 020 km · 30d / 35d (249–313 k) · prevodovka ? · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">34 990 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">37 630 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+7.0 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–25 %)"><span style="width:28%"></span></div>
+  <ul class="pc"><li class="pro">5/2021, xDrive30d 286 k mild-hybrid, M Sport, 78 tis. km</li><li class="pro">1. majiteľ, servisované</li><li class="con">Pýtaj VIN</li><li class="con">Odpočet DPH nie je možný</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">Slovenská G01 so 108 tis. km</span><span class="loc">Kapušany</span></div>
+  <h3><a href='https://www.autobazar.eu/detail/bmw-x3/AmTGBqfdSeS/' target='_blank' rel='noopener'>BMW X3</a></h3>
+  <div class="facts">2020 · 108 000 km · 30d / 35d (249–313 k) · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · kúpené v SR</div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">26 999 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">32 410 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+16.7 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–25 %)"><span style="width:67%"></span></div>
+  <ul class="pc"><li class="pro">2020, X3 G01 (30d podľa VIN), 108 tis. km</li><li class="pro">Kúpené v SR, 2 kľúče, VIN v inzeráte</li><li class="con">Inzerát bez popisu – pýtaj motor, výbavu a servis</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">30d s 12-mesačnou zárukou</span><span class="loc">Banská Bystrica</span></div>
+  <h3><a href='https://www.autobazar.eu/detail/bmw-x3-xdrive30d-at/Ambyrzxxgdx/' target='_blank' rel='noopener'>BMW X3 xDrive30d A/T</a></h3>
+  <div class="facts">2020 · 166 461 km · 30d / 35d (249–313 k) · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">22 490 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">28 040 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+19.8 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–25 %)"><span style="width:79%"></span></div>
+  <ul class="pc"><li class="pro">2020, xDrive30d 265 k, 8-st. automat, 166,5 tis. km</li><li class="pro">Záruka 12 mes. / 20 tis. km v cene (motor, prevodovka, 4x4)</li><li class="pro">Servis v autorizovanom servise, garancia km</li><li class="con">Pýtaj VIN</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">20d s panorámou od súkromníka</span><span class="loc">Bratislava</span></div>
+  <h3><a href='https://auto.bazos.sk/inzerat/196307091/predam-bmw-x3-20-diesel-4x4.php' target='_blank' rel='noopener'>Predam BMW X3, 2.0 diesel, 4x4</a></h3>
+  <div class="facts">2020 · 91 000 km · 18d / 20d (150–190 k) · prevodovka ? · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">22 900 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">27 120 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+15.6 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–25 %)"><span style="width:62%"></span></div>
+  <ul class="pc"><li class="pro">2020, X3 2.0 diesel 4x4, 91 tis. km</li><li class="pro">Panoráma, pamäťové sedadlá, Distronic, všetky kľúče a doklady</li><li class="con">Pýtaj VIN a servisnú históriu</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">Benzín 30i od 1. majiteľa z SR</span><span class="loc">Nové Mesto nad Váhom</span></div>
+  <h3><a href='https://www.autobazar.eu/detail/bmw-x3-xdrive30i-at/AmFwDDnDXdO/' target='_blank' rel='noopener'>BMW X3 xDrive30i A/T</a></h3>
+  <div class="facts">2018 · 150 884 km · Benzín 20i / 28i / 30i (184–252 k) · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · kúpené v SR · aj na <a href='https://auto.bazos.sk/inzerat/197011953/bmw-x3-xdrive30i-at.php' target='_blank' rel='noopener'>bazoš</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">20 490 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">24 430 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+16.1 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–25 %)"><span style="width:64%"></span></div>
+  <ul class="pc"><li class="pro">2018, xDrive30i 252 k, 8-st. automat, 151 tis. km</li><li class="pro">1. majiteľ, kúpené v SR, servis len v BMW, VIN</li><li class="pro">Možné predĺženie záruky o 24 mes.</li><li class="con">Benzín – 8–9 l</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">20d 2021 od 1. majiteľa za 20 tis.</span><span class="loc">Šaľa</span></div>
+  <h3><a href='https://auto.bazos.sk/inzerat/196609994/bmw-x3-xdrive20d-atledelkuforvirtual.php' target='_blank' rel='noopener'>BMW X3 xDrive20d A/T/Led/El.kufor/Virtual</a></h3>
+  <div class="facts">2021 · 171 489 km · 18d / 20d (150–190 k) · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazoš</b> · dovezené · aj na <a href='https://www.autobazar.eu/detail/bmw-x3-xdrive20d-at/AmuMcs51bo2/' target='_blank' rel='noopener'>autobazar.eu</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">19 990 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">24 900 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+19.7 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–25 %)"><span style="width:79%"></span></div>
+  <ul class="pc"><li class="pro">7/2021, xDrive20d 190 k, 8-st. automat, 171,5 tis. km</li><li class="pro">1. majiteľ (dovoz z Talianska), čerstvý olej v motore aj prevodovke</li><li class="pro">Virtual cockpit, LED, el. kufor</li><li class="con">Vyšší nájazd</li><li class="con">Pýtaj VIN</li></ul>
+</article></div>
+<div class="subhead">Lacnejšie X3 do 17 000 €</div>
+<div class="cards">
+<article class="card">
+  <div class="card-head"><span class="tag">F25 po výmene všetkých olejov</span><span class="loc">Námestovo</span></div>
+  <h3><a href='https://auto.bazos.sk/inzerat/196364682/bmw-x3-xdrive20d.php' target='_blank' rel='noopener'>BMW X3 xDrive20d</a></h3>
+  <div class="facts">2016 · 152 890 km · 18d / 20d (150–190 k) · automat · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">13 990 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">16 280 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+14.1 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–25 %)"><span style="width:56%"></span></div>
+  <ul class="pc"><li class="pro">2016, xDrive20d 190 k, 8-st. automat ZF, 153 tis. km</li><li class="pro">Garážované, nebúrané, bez korózie; oleje v motore, prevodovke, diferenciáloch aj rozvodovke</li><li class="pro">Nová batéria, 2 sady kolies, ťažné, VIN</li><li class="con">Staršia generácia F25</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">1. majiteľ z SR s plnou históriou</span><span class="loc">Bratislava-Podunajské Biskupice</span></div>
+  <h3><a href='https://www.autobazar.eu/detail/bmw-x3-xdrive20d-advantage-at/AmvU8ErKjrZ/' target='_blank' rel='noopener'>BMW X3 xDrive Advantage 140kW AT8 SR 1Majiteľ Plná servisná hist.Top Stav</a></h3>
+  <div class="facts">2016 · 268 000 km · 18d / 20d (150–190 k) · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · kúpené v SR</div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">11 977 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">13 570 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+11.7 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–25 %)"><span style="width:47%"></span></div>
+  <ul class="pc"><li class="pro">2016, xDrive20d 190 k, 8-st. automat, 268 tis. km</li><li class="pro">Kúpené v SR, 1. majiteľ, plná servisná história, VIN</li><li class="con">Vysoký nájazd</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">F25 s novým podvozkom</span><span class="loc">Bratislava-Rača</span></div>
+  <h3><a href='https://www.autobazar.eu/detail/bmw-x3-xdrive20d-at/Am8ThnwadBq/' target='_blank' rel='noopener'>BMW X3 xDrive20d A/T</a></h3>
+  <div class="facts">2016 · 187 000 km · 18d / 20d (150–190 k) · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · kúpené v SR · aj na <a href='https://auto.bazos.sk/inzerat/196606426/bmw-x3-xdrive20d-at.php' target='_blank' rel='noopener'>bazoš</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">12 999 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">15 720 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+17.3 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–25 %)"><span style="width:69%"></span></div>
+  <ul class="pc"><li class="pro">2016, xDrive20d 190 k, 8-st. automat, 187 tis. km</li><li class="pro">Nové tlmiče, pružiny, ramená a silentbloky, olej a filtre, VIN</li><li class="con">Auto stojí v Košiciach, predajca v Bratislave</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">Šesťvalec 30d F25 za 15 500 €</span><span class="loc">Nitra</span></div>
+  <h3><a href='https://auto.bazos.sk/inzerat/196610997/bmw-x3-f25-facelift-2016-30d-190kw-m-sport.php' target='_blank' rel='noopener'>Bmw X3 F25 facelift 2016 3.0d 190kw M-sport.</a></h3>
+  <div class="facts">2016 · 190 000 km · 30d / 35d (249–313 k) · automat · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">15 499 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">16 550 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+6.3 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–25 %)"><span style="width:25%"></span></div>
+  <ul class="pc"><li class="pro">7/2016, xDrive30d 258 k, 8-st. automat, M Sport, 190 tis. km</li><li class="pro">Laser, koža, kamera, ťažné</li><li class="con">Pýtaj VIN a servisnú históriu</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">Najlacnejšia X3 za 10 000 €</span><span class="loc">Galanta</span></div>
+  <h3><a href='https://auto.bazos.sk/inzerat/197216182/predam-bmw-x3.php' target='_blank' rel='noopener'>Predám BMW X3</a></h3>
+  <div class="facts">2015 · 204 000 km · 18d / 20d (150–190 k) · prevodovka ? · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">10 000 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">14 900 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+32.9 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–25 %)"><span style="width:100%"></span></div>
+  <ul class="pc"><li class="pro">2015, X3 2.0 diesel, 204 tis. km</li><li class="pro">Súkromník, po servise (filtre, olej, brzdy vpredu aj vzadu)</li><li class="con">„Chybičky krásy“ – pozri osobne</li><li class="con">Pýtaj VIN, prevodovku a pohon</li></ul>
+</article></div>
+<div class="subhead">Šesťvalce, M40d / M40i a plug-in hybrid</div>
+<div class="cards">
+<article class="card">
+  <div class="card-head"><span class="tag">Plug-in 30e s laserom</span><span class="loc">Bratislava</span></div>
+  <h3><a href='https://auto.bazos.sk/inzerat/196979711/bmw-x3-30e-m-package-2022-top-stav-117xxx-km.php' target='_blank' rel='noopener'>BMW X3 30E M-package | 2022 | Top Stav  | 117xxx km</a></h3>
+  <div class="facts">2022 · 118 000 km · 30e plug-in hybrid · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">27 400 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">34 070 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+19.6 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–25 %)"><span style="width:78%"></span></div>
+  <ul class="pc"><li class="pro">2022, xDrive30e 292 k (plug-in), M paket, 118 tis. km</li><li class="pro">Laser, ťažné, koža, VIN v inzeráte; dojazd ~50 km na elektrinu</li><li class="con">Ten istý predajca inzeruje auto aj za 28 300 €</li><li class="con">Pýtaj stav batérie a nabíjací kábel</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">M40d zo Slovenska za 30 tis.</span><span class="loc">Prešov</span></div>
+  <h3><a href='https://www.autobazar.eu/detail/bmw-x3-m40d-at-250kw340hp-a8/AeWgOuJgQKY/' target='_blank' rel='noopener'>BMW X3 M40d AT 250kW340HP A8</a></h3>
+  <div class="facts">2021 · 150 000 km · M40d (326–340 k) · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · kúpené v SR</div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">30 000 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">31 660 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+5.2 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–25 %)"><span style="width:21%"></span></div>
+  <ul class="pc"><li class="pro">2021, M40d 340 k mild-hybrid, 150 tis. km</li><li class="pro">Kúpené v SR, 360° kamera, VIN v inzeráte</li><li class="con">Drahšie poistenie a pneumatiky</li><li class="con">Pýtaj servisnú históriu</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">M40i s adaptívnym podvozkom</span><span class="loc">Sládkovičovo</span></div>
+  <h3><a href='https://www.autobazar.eu/detail/bmw-x3-m40i-xdrive-360k-at8-steptronic-sport/AmtnNTgitgO/' target='_blank' rel='noopener'>BMW X3 M40i xDrive 360k AT8 Steptronic Sport</a></h3>
+  <div class="facts">2020 · 84 552 km · M40i / X3 M (354–510 k) · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · kúpené v SR · aj na <a href='https://auto.bazos.sk/inzerat/196209237/bmw-x3-m40i-xdrive-360k-at8-steptronic-sport.php' target='_blank' rel='noopener'>bazoš</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">34 990 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">38 240 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+8.5 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–25 %)"><span style="width:34%"></span></div>
+  <ul class="pc"><li class="pro">2020, M40i 360 k, 8-st. Steptronic Sport, 84,5 tis. km</li><li class="pro">Kúpené v SR, adaptívny podvozok, VIN v inzeráte</li><li class="con">Benzín – 10–12 l</li></ul>
+</article></div>
+
+<h2>Cena vs. nájazd: celý trh na jednom grafe</h2>
+<p class="section-lead">Každý bod je jeden inzerát. Čím nižšie bod leží oproti ostatným s podobným nájazdom, tým je auto lacnejšie.
+Krúžkom sú označené odporúčané ponuky. Prejdi myšou na bod a uvidíš detail.</p>
+<div class="chart-wrap" id="chartWrap">
+  <div class="legend" id="legend"></div>
+  <svg id="chart" width="100%" height="420" role="img" aria-label="Bodový graf ceny a nájazdu inzerátov"></svg>
+  <div class="tip" id="tip"></div>
+</div>
+
+<h2>Porovnanie motorov</h2>
+<p class="section-lead">Hodnotenie (hviezdičky) zohľadňuje spoľahlivosť, náklady na prevádzku a pomer cena/výkon.
+Číselné stĺpce sú mediány z ohodnotených inzerátov.</p>
+<div class="table-scroll">
+<table>
+  <thead><tr><th>Motor</th><th>Hodnotenie</th><th class="num">Ponúk</th><th class="num">Medián ceny</th><th class="num">Medián roku</th><th class="num">Medián km</th></tr></thead>
+  <tbody>
+<tr>
+  <td><b>18d / 20d (150–190 k)</b><div class="sub">Najlepšia voľba: 20d – 6–7 l, najviac ponúk, dobrá predajnosť. 18d býva len so zadným pohonom.</div></td>
+  <td><span class="stars" aria-label="5 z 5">★★★★★<span class="off"></span></span></td>
+  <td class="num">92</td>
+  <td class="num"><div class="cellbar"><span style="width:57%"></span></div>19 200 €</td>
+  <td class="num">2018</td>
+  <td class="num">171 244 km</td>
+</tr>
+<tr>
+  <td><b>30d / 35d (249–313 k)</b><div class="sub">Šesťvalec – tichší a svižnejší, vhodný na príves; 7–8 l. Drahší servis.</div></td>
+  <td><span class="stars" aria-label="4 z 5">★★★★<span class="off">★</span></span></td>
+  <td class="num">45</td>
+  <td class="num"><div class="cellbar"><span style="width:86%"></span></div>28 990 €</td>
+  <td class="num">2020</td>
+  <td class="num">133 000 km</td>
+</tr>
+<tr>
+  <td><b>M40d (326–340 k)</b><div class="sub">Rýchly diesel s M podvozkom a bŕzdami – drahšie poistenie a pneumatiky.</div></td>
+  <td><span class="stars" aria-label="3 z 5">★★★<span class="off">★★</span></span></td>
+  <td class="num">9</td>
+  <td class="num"><div class="cellbar"><span style="width:89%"></span></div>30 000 €</td>
+  <td class="num">2021</td>
+  <td class="num">144 000 km</td>
+</tr>
+<tr>
+  <td><b>Benzín 20i / 28i / 30i (184–252 k)</b><div class="sub">Tichý benzín pri malom nájazde; 8–9 l.</div></td>
+  <td><span class="stars" aria-label="3 z 5">★★★<span class="off">★★</span></span></td>
+  <td class="num">19</td>
+  <td class="num"><div class="cellbar"><span style="width:86%"></span></div>28 900 €</td>
+  <td class="num">2020</td>
+  <td class="num">105 000 km</td>
+</tr>
+<tr>
+  <td><b>30e plug-in hybrid</b><div class="sub">40–50 km na elektrinu, s nabíjaním doma lacná prevádzka; menší kufor. Pýtaj stav batérie.</div></td>
+  <td><span class="stars" aria-label="3 z 5">★★★<span class="off">★★</span></span></td>
+  <td class="num">5</td>
+  <td class="num"><div class="cellbar"><span style="width:98%"></span></div>32 990 €</td>
+  <td class="num">2022</td>
+  <td class="num">118 000 km</td>
+</tr>
+<tr>
+  <td><b>M40i / X3 M (354–510 k)</b><div class="sub">Rýchle benzíny (M40i, X3 M) – 10–13 l, drahé poistenie a servis.</div></td>
+  <td><span class="stars" aria-label="2 z 5">★★<span class="off">★★★</span></span></td>
+  <td class="num">16</td>
+  <td class="num"><div class="cellbar"><span style="width:100%"></span></div>33 745 €</td>
+  <td class="num">2019</td>
+  <td class="num">135 466 km</td>
+</tr></tbody>
+</table>
+</div>
+<div class="explain">
+  <p><b>Dve generácie.</b> <b>F25</b> (2010–2017, facelift 2014) a <b>G01</b> (koniec 2017–2024) – G01 je väčšia,
+  ľahšia, s modernejším interiérom a asistentmi, v roku 2021 prešla faceliftom (väčšie „obličky“, mild-hybrid pri dieseloch).
+  Medzi generáciami je cenový skok, ktorý model počíta zvlášť. Nová <b>G45</b> (od konca 2024) a elektrická <b>iX3</b>
+  v analýze nie sú.</p>
+  <p><b>Ktorý motor zvoliť?</b> Najrozumnejší je <b>xDrive20d</b> (184–190 k): 6–7 l, najviac ponúk a dobrá predajnosť.
+  Šesťvalec <b>30d</b> (249–286 k) je tichší a svižnejší, vhodný na príves (2,4 t). <b>M40d</b> (326–340 k) je
+  rýchly diesel s M podvozkom. <b>sDrive18d</b> má len zadný pohon a pri plnom aute je pomalší.</p>
+  <p><b>Benzín 20i / 30i</b> (184–252 k) je tichý pri malom nájazde (8–9 l), <b>M40i</b> (354–360 k) je rýchly šesťvalec.
+  <b>xDrive30e</b> je plug-in hybrid s dojazdom 40–50 km na elektrinu – s nabíjaním doma lacná prevádzka, menší kufor
+  a nádrž. <b>X3 M</b> (480–510 k) je hobby auto.</p>
+</div>
+
+<h2>Na čo si dať pozor</h2>
+<div class="warn">
+  <p><b>Lacné kvôli extrémnemu nájazdu</b> (viac ako 35 tis. km ročne, typicky flotila alebo taxi):</p>
+  <ul><li><a href='https://www.autobazar.eu/detail/bmw-x3-xdrive30d-at-195kw265hp-a8/AePRAf4rdi8/' target='_blank' rel='noopener'>BMW X3 xDrive30d AT 195kW265HP A8</a>: 2019, 272 000 km → 37 000 km/rok. Lacné je kvôli nájazdu.</li><li><a href='https://www.autobazar.eu/detail/bmw-x3-2024-xdrive-210kw-m-sport-sk-dph-zaruka-zimne/AeTPhl_djMo/' target='_blank' rel='noopener'>BMW X3 2024 XDRIVE 210KW M-SPORT SK DPH ZARUKA zimne</a>: 2024, 120 000 km → 51 000 km/rok. Lacné je kvôli nájazdu.</li><li><a href='https://www.autobazar.eu/detail/bmw-x3-xdrive30d-zaruka-2027-sr-1majitel/AeyPMJSVvXx/' target='_blank' rel='noopener'>BMW X3 xDrive30d M-Sport, zár. 2027 - SR - 1.majiteľ</a>: 2024, 86 186 km → 37 000 km/rok. Lacné je kvôli nájazdu.</li><li><a href='https://www.autobazar.eu/detail/bmw-x3-xdrive20d-at/Amjw8GP_RRj/' target='_blank' rel='noopener'>BMW X3 xDrive20d A/T</a>: 2021, 197 200 km → 37 000 km/rok. Lacné je kvôli nájazdu.</li><li><a href='https://auto.bazos.sk/inzerat/196008076/bmw-x3-30xd-mhev-mpaket.php' target='_blank' rel='noopener'>Bmw x3 30xd mhev M paket panorama</a>: 2022, 190 600 km → 44 000 km/rok. Lacné je kvôli nájazdu.</li><li><a href='https://auto.bazos.sk/inzerat/197114433/bmw-x3-30d-xdrive-m-sport-210kw-2023-sk-spz-laser-webasto.php' target='_blank' rel='noopener'>BMW X3 30D XDRIVE M-SPORT 210KW 2023 /SK ŠPZ/ LASER, WEBASTO</a>: 2023, 120 254 km → 36 000 km/rok. Lacné je kvôli nájazdu.</li><li><a href='https://www.autobazar.eu/detail/bmw-x3-xdrive30d-at-195kw265hp-a8/AerVqRHKYia/' target='_blank' rel='noopener'>BMW X3 xDrive30d AT 195kW265HP A8</a>: 2019, 266 000 km → 36 000 km/rok. Lacné je kvôli nájazdu.</li></ul>
+  <p><b>Čo sme v inzerátoch X3 našli:</b></p><ul><li>Takmer 50 inzerátov sú nové X3 (G45, od konca 2024) alebo predvádzacie autá do 15 tis. km – do porovnania jazdených áut sme ich nezaradili. Elektrickú iX3 tiež nie.</li><li>Pri firmách čítaj, či je cena s DPH: X3 30d z 2022 „za 29 500 €“ stojí 35 400 € s DPH a má 176 tis. km, nie 17,6 tis.</li><li>Niektoré X3 majú úpravu výkonu (napr. 20i z 2019 s chiptuningom na 198 kW) – pýtaj sa a over v BMW servise.</li><li>Generáciu sme overovali podľa VIN: F25 = WBAW…, G01 = WBAT… / WBA… (po facelifte), z USA 5UXT….</li><li>Auto na leasingu (prevzatie leasingu) – over zmluvu a súhlas leasingovej spoločnosti.</li></ul><p><b>Vyradené z porovnania</b> (poškodené autá alebo nezmyselné údaje – model ich nehodnotí):</p><ul><li><a href='https://www.autobazar.eu/detail/bmw-x3-20d-xdrive/Ab0Mh8CH6ER/' target='_blank' rel='noopener'>BMW X3 20d xDrive</a> (54 975 €): 76000 km/rok je nereálne – skontroluj rok a km</li><li><a href='https://www.autobazar.eu/detail/bmw-x3-30-e-xdrive-m-sport-140kw-135kw/AmVkSx-KweA/' target='_blank' rel='noopener'>BMW X3 30 e xDrive M Sport 140kw +135kw</a> (22 400 €): cena je o 68 % pod trhom – havarované, na diely, záloha/splátka namiesto ceny alebo podvod</li><li><a href='https://auto.bazos.sk/inzerat/196888488/bmw-x3-40d-xdrive-m-sport-pro-moznost-odpoctu-dph.php' target='_blank' rel='noopener'>BMW X3 40d Xdrive M Sport Pro - možnosť odpočtu DPH</a> (66 297 €): 600000 km/rok je nereálne – skontroluj rok a km</li><li><a href='https://www.autobazar.eu/detail/bmw-x3-20d-xdrive-m-paket-steptronic-g45/AmCZmA7ZsxR/' target='_blank' rel='noopener'>BMW X3 20d xDrive &quot;M-paket&quot; Steptronic (G45)</a> (46 990 €): 76000 km/rok je nereálne – skontroluj rok a km</li><li><a href='https://auto.bazos.sk/inzerat/196276853/na-operativny-leasing-notarsku-zmluvu-bmw-x3-30e-xline.php' target='_blank' rel='noopener'>BMW X3 30e xLine - NA OPERATÍVNY LEASING / Notársku zmluvu</a> (7 500 €): cena je o 73 % pod trhom – havarované, na diely, záloha/splátka namiesto ceny alebo podvod</li><li><a href='https://www.autobazar.eu/detail/bmw-x3-xdrive20d-mhev-at/Amex74j3ABj/' target='_blank' rel='noopener'>BMW X3 xDrive20d mHEV A/T</a> (20 900 €): havarované / poškodené – cena nie je porovnateľná s trhom</li><li><a href='https://auto.bazos.sk/inzerat/196567341/bmw-x3-xdrive20d-at-135kw-kompletna-bmw-historia.php' target='_blank' rel='noopener'>BMW X3 xDrive20d AT 135kW - Kompletná BMW História</a> (10 490 €): 82000 km/rok je nereálne – skontroluj rok a km</li><li><a href='https://auto.bazos.sk/inzerat/195389964/bmw-x3-xdrive30d-2019.php' target='_blank' rel='noopener'>BMW X3 xDrive30d 2019</a> (27 500 €): havarované / poškodené – cena nie je porovnateľná s trhom</li><li><a href='https://www.autobazar.eu/detail/bmw-x3-xdrive20d-g45-m-sport-pano2025/Ae1WGQRVXZA/' target='_blank' rel='noopener'>BMW X3 xDrive20d g45 m sport pano2025</a> (34 440 €): 73000 km/rok je nereálne – skontroluj rok a km</li><li><a href='https://auto.bazos.sk/inzerat/196206433/bmw-x3-xdrive30e-business-edition-plus-2022.php' target='_blank' rel='noopener'>BMW X3 xDrive30e Business Edition Plus 2022</a> (28 300 €): duplicita 196979711 (rovnaké VIN, ten istý predajca, drahšie)</li></ul>
+  <p>Ďalších <b>47</b> inzerátov nemá v texte rok alebo kilometre, takže ich nebolo možné ohodnotiť.
+  Ak ťa niektorý zaujme, predajcu sa na tieto údaje opýtaj.</p>
+</div>
+
+<h2>Kompletný rebríček</h2>
+<p class="section-lead">Všetky ohodnotené inzeráty. Kliknutím na hlavičku stĺpca zoraďuješ, filtrom zužuješ výber.</p>
+<div class="filters">
+  <select id="fEngine"><option value="">Všetky motory</option></select>
+  <select id="fTrans"><option value="">Každá prevodovka</option><option value="automatic">Automat</option><option value="manual">Manuál</option></select>
+  <select id="fSeller"><option value="">Všetci predajcovia</option><option value="nodealer">Bez autobazárov</option></select>
+  <select id="fSource"><option value="">Oba portály</option><option value="bazos">bazoš</option><option value="autobazar">autobazar.eu</option></select>
+  <select id="fBody" hidden><option value=""></option></select>
+  <select id="fOrigin"><option value="">Akýkoľvek pôvod</option><option value="SR">Kúpené v SR</option><option value="dovoz">Dovoz</option></select>
+  <input id="fMax" type="number" placeholder="Max. cena €" step="500" min="0" style="width:120px">
+  <span class="count" id="count"></span>
+</div>
+<div class="table-scroll">
+<table id="tbl">
+  <thead><tr>
+    <th class="sortable" data-k="title">Inzerát</th>
+    <th class="sortable num" data-k="year">Rok</th>
+    <th class="sortable num" data-k="km">Km</th>
+    <th class="sortable num" data-k="price_gross">Cena</th>
+    <th class="sortable num" data-k="fair_price">Férová</th>
+    <th class="sortable num" data-k="discount_pct">Pod trhom ▾</th>
+  </tr></thead>
+  <tbody></tbody>
+</table>
+</div>
+
+<h2>Pred kúpou over</h2>
+<ul class="check">
+  <li>VIN cez Cebia / autoDNA (história km, havárie, leasing)</li>
+  <li>VIN cez Cebia / autoDNA (história km, havárie, leasing) – pri dovozových X3 časté stočené km</li>
+  <li>Servisná história v autorizovanom servise BMW (záznamy podľa VIN vie dať každý BMW servis)</li>
+  <li>Diesel 20d (B47 / N47): rozvodová reťaz – hrkot pri studenom štarte; DPF, EGR a pri G01 AdBlue bez chýb</li>
+  <li>Automat ZF 8HP: plynulé radenie, výmena oleja okolo 100–120 tis. km (BMW ju neuvádza)</li>
+  <li>xDrive: olej v rozdeľovacej prevodovke, žiadne škrípanie ani trhanie pri otáčaní na mieste</li>
+  <li>Únik oleja: veko ventilov, olejový filter (pri šesťvalcoch častejšie)</li>
+  <li>Plug-in 30e: stav batérie, nabíjací kábel v cene</li>
+  <li>Úpravy výkonu (chip) – pri BMW časté, pýtaj sa a over v BMW servise</li>
+  <li>STK/EK protokol, cena s DPH alebo bez DPH pri firme</li>
+  <li>Zhoda kľúčov (2 ks), zimné kolesá v cene</li>
+  <li>STK/EK protokol a dátum platnosti (zľava, ak končí čoskoro)</li>
+  <li>Cena s DPH alebo bez DPH, ak predáva firma</li>
+  <li>Zhoda kľúčov (2 ks), zimné kolesá v cene, stav pneumatík</li>
+</ul>
+
+<footer>
+  Zdroj: auto.bazos.sk a www.autobazar.eu (len ponuky zo Slovenska, to isté auto na oboch portáloch je započítané raz), sťahované cez lokálny MCP server bazos-mcp (nástroj <code>fair_price</code>), 5. 11. 2026.
+  Model: ridge regresia log(ceny s DPH) podľa veku, veku², km, km², prevodovky, typu predajcu, motora, generácie (F25 / G01), pohonu 4x4, pôvodu (SR / dovoz) a portálu. Vzorka 186
+  inzerátov, R² 96 %. Parametre sú vyťažené z textu inzerátov, a preto môžu obsahovať chyby. Odporúčané ponuky sme overili
+  prečítaním celého inzerátu. Hodnotenie motorov je odborný odhad, nie výsledok modelu.
+</footer>
+</main>
+
+<script>
+const DATA = [{"id": "197216182", "url": "https://auto.bazos.sk/inzerat/197216182/predam-bmw-x3.php", "title": "Predám BMW X3", "price": 10000, "price_gross": 10000, "fair_price": 14900.0, "discount_pct": 32.9, "verdict": "výrazne pod trhom – over prečo", "year": 2015, "km": 204000, "km_per_year": 18000.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Galanta", "flags": ["prevodovka nezistená"], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [], "body": null}, {"id": "196485078", "url": "https://auto.bazos.sk/inzerat/196485078/bmw-x3-xdriwe-30d-195kw-beam-ledodpocet-dph.php", "title": "Bmw X3 xDriwe 30d 210Kw Beam Led/Odpočet DPH", "price": 29500, "price_gross": 35400, "fair_price": 29420, "discount_pct": -20.3, "verdict": "výrazne nad trhom", "year": 2022, "km": 176000, "km_per_year": 4100.0, "eg": "30d / 35d (249–313 k)", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Kežmarok", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": null}, {"id": "196347751", "url": "https://auto.bazos.sk/inzerat/196347751/predam-bmw-x3-f25-2014-4x4.php", "title": "Predám BMW x3 f25 2014 4x4", "price": 8200, "price_gross": 8200, "fair_price": 11000.0, "discount_pct": 25.5, "verdict": "výrazne pod trhom – over prečo", "year": 2014, "km": 329000, "km_per_year": 26700.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Prešov", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": null}, {"id": "197213276", "url": "https://auto.bazos.sk/inzerat/197213276/bmw-x3-xdrive20d-mhev-at-mozny-leasing.php", "title": "BMW X3 xDrive20d mHEV A/T Možný Leasing", "price": 19990, "price_gross": 19990, "fair_price": 25610.0, "discount_pct": 21.9, "verdict": "výrazne pod trhom – over prečo", "year": 2021, "km": 176105, "km_per_year": 33000.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Komárno", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-Am-2SRkWTlt", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive20d-mhev-at/Am-2SRkWTlt/", "price": 19990}], "body": null}, {"id": "196835176", "url": "https://auto.bazos.sk/inzerat/196835176/bmw-x3-xdrive20i-g01-2019-xline-198kw-103000km.php", "title": "BMW x3 xDrive20i G01 (2019) - xLine - 198kW, 105000km", "price": 23700, "price_gross": 23700, "fair_price": 29790.0, "discount_pct": 20.4, "verdict": "výrazne pod trhom – over prečo", "year": 2019, "km": 105000, "km_per_year": 14300.0, "eg": "Benzín 20i / 28i / 30i (184–252 k)", "cg": 2, "transmission": "automatic", "seller_type": "uncertain", "location": "Košice-okolie", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AeRRq_FneGe", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive20i-xline-at-135kw184hp-a8/AeRRq_FneGe/", "price": 23700}], "body": null}, {"id": "ab-Ambyrzxxgdx", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive30d-at/Ambyrzxxgdx/", "title": "BMW X3 xDrive30d A/T", "price": 22490, "price_gross": 22490, "fair_price": 28040.0, "discount_pct": 19.8, "verdict": "výrazne pod trhom – over prečo", "year": 2020, "km": 166461, "km_per_year": 26300.0, "eg": "30d / 35d (249–313 k)", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Banská Bystrica", "flags": [], "pick": "top", "source": "autobazar", "origin": null, "also_listed": [], "body": null}, {"id": "196609994", "url": "https://auto.bazos.sk/inzerat/196609994/bmw-x3-xdrive20d-atledelkuforvirtual.php", "title": "BMW X3 xDrive20d A/T/Led/El.kufor/Virtual", "price": 19990, "price_gross": 19990, "fair_price": 24900.0, "discount_pct": 19.7, "verdict": "výrazne pod trhom – over prečo", "year": 2021, "km": 171489, "km_per_year": 32200.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Šaľa", "flags": [], "pick": "top", "source": "bazos", "origin": "dovoz", "also_listed": [{"source": "autobazar", "id": "ab-AmuMcs51bo2", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive20d-at/AmuMcs51bo2/", "price": 19990}], "body": null}, {"id": "196979711", "url": "https://auto.bazos.sk/inzerat/196979711/bmw-x3-30e-m-package-2022-top-stav-117xxx-km.php", "title": "BMW X3 30E M-package | 2022 | Top Stav  | 117xxx km", "price": 27400, "price_gross": 27400, "fair_price": 34070.0, "discount_pct": 19.6, "verdict": "výrazne pod trhom – over prečo", "year": 2022, "km": 118000, "km_per_year": 27200.0, "eg": "30e plug-in hybrid", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": "vat", "source": "bazos", "origin": null, "also_listed": [], "body": null}, {"id": "195690739", "url": "https://auto.bazos.sk/inzerat/195690739/bmw-x3-xdrive20d-advantage-at.php", "title": "BMW X3 xDrive20d Advantage A/T", "price": 17499, "price_gross": 17499, "fair_price": 21420.0, "discount_pct": 18.3, "verdict": "výrazne pod trhom – over prečo", "year": 2019, "km": 174300, "km_per_year": 23800.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Trenčín", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmG7VxnKxgc", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive20d-advantage-a-t/AmG7VxnKxgc/", "price": 17499}], "body": null}, {"id": "ab-Am8ThnwadBq", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive20d-at/Am8ThnwadBq/", "title": "BMW X3 xDrive20d A/T", "price": 12999, "price_gross": 12999, "fair_price": 15720.0, "discount_pct": 17.3, "verdict": "výrazne pod trhom – over prečo", "year": 2016, "km": 187000, "km_per_year": 18100.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava-Rača", "flags": [], "pick": "budget", "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "196606426", "url": "https://auto.bazos.sk/inzerat/196606426/bmw-x3-xdrive20d-at.php", "price": 12999}], "body": null}, {"id": "ab-AmTGBqfdSeS", "url": "https://www.autobazar.eu/detail/bmw-x3/AmTGBqfdSeS/", "title": "BMW X3", "price": 26999, "price_gross": 26999, "fair_price": 32410.0, "discount_pct": 16.7, "verdict": "výrazne pod trhom – over prečo", "year": 2020, "km": 108000, "km_per_year": 17100.0, "eg": "30d / 35d (249–313 k)", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Kapušany", "flags": [], "pick": "top", "source": "autobazar", "origin": "SR", "also_listed": [], "body": null}, {"id": "ab-AmFwDDnDXdO", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive30i-at/AmFwDDnDXdO/", "title": "BMW X3 xDrive30i A/T", "price": 20490, "price_gross": 20490, "fair_price": 24430.0, "discount_pct": 16.1, "verdict": "výrazne pod trhom – over prečo", "year": 2018, "km": 150884, "km_per_year": 18100.0, "eg": "Benzín 20i / 28i / 30i (184–252 k)", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Nové Mesto nad Váhom", "flags": [], "pick": "top", "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197011953", "url": "https://auto.bazos.sk/inzerat/197011953/bmw-x3-xdrive30i-at.php", "price": 20490}], "body": null}, {"id": "196307091", "url": "https://auto.bazos.sk/inzerat/196307091/predam-bmw-x3-20-diesel-4x4.php", "title": "Predam BMW X3, 2.0 diesel, 4x4", "price": 22900, "price_gross": 22900, "fair_price": 27120.0, "discount_pct": 15.6, "verdict": "výrazne pod trhom – over prečo", "year": 2020, "km": 91000, "km_per_year": 14400.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Bratislava", "flags": ["prevodovka nezistená"], "pick": "top", "source": "bazos", "origin": null, "also_listed": [], "body": null}, {"id": "196927970", "url": "https://auto.bazos.sk/inzerat/196927970/bmw-x3-xdrive20d-at-f25.php", "title": "BMW X3 XDrive20d A/T ( F25)", "price": 11499, "price_gross": 11499, "fair_price": 13600.0, "discount_pct": 15.4, "verdict": "výrazne pod trhom – over prečo", "year": 2016, "km": 242090, "km_per_year": 23400.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Martin", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": null}, {"id": "ab-AeTxcLjhL57", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive20d-automat/AeTxcLjhL57/", "title": "BMW X3 xDrive20d, 4X4, Automat, Koža", "price": 13000, "price_gross": 13000, "fair_price": 15270.0, "discount_pct": 14.9, "verdict": "pod trhom", "year": 2016, "km": 192625, "km_per_year": 18600.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Prešovský kraj", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": null}, {"id": "197182864", "url": "https://auto.bazos.sk/inzerat/197182864/predam-bmw-x3-xdrive20d-f25-lci-facelift-100-kw.php", "title": "Predám BMW X3 xDrive20d (F25 LCI Facelift) – 100 kW", "price": 11490, "price_gross": 11490, "fair_price": 13500.0, "discount_pct": 14.9, "verdict": "pod trhom", "year": 2017, "km": 215000, "km_per_year": 23000.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Trnava", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": null}, {"id": "ab-AmTDF7OEfQu", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive-30i-180kw/AmTDF7OEfQu/", "title": "BMW X3 xDrive 30i 180kW", "price": 29500, "price_gross": 29500, "fair_price": 34580.0, "discount_pct": 14.7, "verdict": "pod trhom", "year": 2022, "km": 146000, "km_per_year": 33700.0, "eg": "Benzín 20i / 28i / 30i (184–252 k)", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Košice-Vyšné Opátske", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazos", "id": "196070905", "url": "https://auto.bazos.sk/inzerat/196070905/bmw-x3-xdrive-30i-180kw.php", "price": 29500}], "body": null}, {"id": "195304534", "url": "https://auto.bazos.sk/inzerat/195304534/bmw-x3-20d-x-drive-at-m-sport-line.php", "title": "BMW X3 2.0d x-Drive A/T M-Sport line", "price": 14490, "price_gross": 14490, "fair_price": 16930.0, "discount_pct": 14.4, "verdict": "pod trhom", "year": 2016, "km": 139204, "km_per_year": 13500.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Rimavská Sobota", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmgqUzbH2hH", "url": "https://www.autobazar.eu/detail/bmw-x3-20d-x-drive-at-m-sport-line/AmgqUzbH2hH/", "price": 14490}], "body": null}, {"id": "196364682", "url": "https://auto.bazos.sk/inzerat/196364682/bmw-x3-xdrive20d.php", "title": "BMW X3 xDrive20d", "price": 13990, "price_gross": 13990, "fair_price": 16280.0, "discount_pct": 14.1, "verdict": "pod trhom", "year": 2016, "km": 152890, "km_per_year": 14800.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Námestovo", "flags": [], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [], "body": null}, {"id": "ab-AeCHY74swp0", "url": "https://www.autobazar.eu/detail/bmw-x3-bmw-x3/AeCHY74swp0/", "title": "BMW X3 BMW X3", "price": 13700, "price_gross": 13700, "fair_price": 15920.0, "discount_pct": 14.0, "verdict": "pod trhom", "year": 2016, "km": 187000, "km_per_year": 18100.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Tvrdošín", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": null}, {"id": "ab-AeSqEEVYSU6", "url": "https://www.autobazar.eu/detail/bmw-x3-m-sport-paket/AeSqEEVYSU6/", "title": "BMW X3 M -Sport paket", "price": 42900, "price_gross": 42900, "fair_price": 49570.0, "discount_pct": 13.5, "verdict": "pod trhom", "year": 2024, "km": 27100, "km_per_year": 11600.0, "eg": "Benzín 20i / 28i / 30i (184–252 k)", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava-Karlova Ves", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": null}, {"id": "ab-Amp1OVq8nRd", "url": "https://www.autobazar.eu/detail/bmw-x3-20tdi-hev-140kw-8ap-xdrive/Amp1OVq8nRd/", "title": "BMW X3 2.0D + HEV 140kW 8AP xDrive", "price": 33000, "price_gross": 33000, "fair_price": 38160.0, "discount_pct": 13.5, "verdict": "pod trhom", "year": 2021, "km": 49271, "km_per_year": 9200.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Vranov nad Topľou", "flags": [], "pick": "top", "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "196678308", "url": "https://auto.bazos.sk/inzerat/196678308/bmw-x3-20d-hev-140kw-8ap-xdrive.php", "price": 33000}], "body": null}, {"id": "ab-AbydtkSA658", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive20d/AbydtkSA658/", "title": "BMW X3 xDrive20d", "price": 19900, "price_gross": 19900, "fair_price": 22870.0, "discount_pct": 13.0, "verdict": "pod trhom", "year": 2020, "km": 192413, "km_per_year": 30400.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Trnava", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": null}, {"id": "ab-AmMceoay_z8", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive20d-xline-at/AmMceoay_z8/", "title": "BMW X3 xDrive20d xLine A/T", "price": 18350, "price_gross": 18350, "fair_price": 21070.0, "discount_pct": 12.9, "verdict": "pod trhom", "year": 2019, "km": 186309, "km_per_year": 25400.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Banská Bystrica", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": null}, {"id": "ab-AejCIinSNqs", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive20i-mhev-at-sport-packet/AejCIinSNqs/", "title": "BMW X3 xDrive20i mHEV AT SPORT PACKET", "price": 28900, "price_gross": 28900, "fair_price": 33130.0, "discount_pct": 12.8, "verdict": "pod trhom", "year": 2023, "km": 108900, "km_per_year": 32700.0, "eg": "Benzín 20i / 28i / 30i (184–252 k)", "cg": 2, "transmission": "automatic", "seller_type": "uncertain", "location": "Čadca", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "195890047", "url": "https://auto.bazos.sk/inzerat/195890047/mercedes-gle-300-d-4-matic-amg-packet.php", "price": 28900}], "body": null}, {"id": "ab-AmvU8ErKjrZ", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive20d-advantage-at/AmvU8ErKjrZ/", "title": "BMW X3 xDrive Advantage 140kW AT8 SR 1Majiteľ Plná servisná hist.Top Stav", "price": 11977, "price_gross": 11977, "fair_price": 13570.0, "discount_pct": 11.7, "verdict": "pod trhom", "year": 2016, "km": 268000, "km_per_year": 25900.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava-Podunajské Biskupice", "flags": [], "pick": "budget", "source": "autobazar", "origin": "SR", "also_listed": [], "body": null}, {"id": "197081168", "url": "https://auto.bazos.sk/inzerat/197081168/bmw-x3-20d-m-packet-2014.php", "title": "BMW X3 2.0d M-Packet 2014", "price": 14990, "price_gross": 14990, "fair_price": 16880.0, "discount_pct": 11.2, "verdict": "pod trhom", "year": 2014, "km": 163000, "km_per_year": 13200.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": null, "seller_type": "dealer", "location": "Košice", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": null}, {"id": "ab-AeEVyhPVtIR", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive20d-at-140kw190hp-a8/AeEVyhPVtIR/", "title": "BMW X3 xDrive20d AT 140kW190HP A8", "price": 10900, "price_gross": 10900, "fair_price": 12280.0, "discount_pct": 11.2, "verdict": "pod trhom", "year": 2014, "km": 253600, "km_per_year": 20600.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "automatic", "seller_type": "private", "location": "Bánovce nad Bebravou", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "196429818", "url": "https://auto.bazos.sk/inzerat/196429818/bmw-x3-xdrive-20d-at-f25-140kw.php", "price": 10900}], "body": null}, {"id": "ab-Aml1WZOcVWH", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive-20i-mhev-m-packet-at-led-kamera-mrtvy-uhol/Aml1WZOcVWH/", "title": "BMW X3 xDrive 20i mHEV M-packet A/T, LED, Kamera, Mŕtvy uhol", "price": 42990, "price_gross": 42990, "fair_price": 48190.0, "discount_pct": 10.8, "verdict": "pod trhom", "year": 2024, "km": 21998, "km_per_year": 9400.0, "eg": "Benzín 20i / 28i / 30i (184–252 k)", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Michalovce", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": null}, {"id": "195564612", "url": "https://auto.bazos.sk/inzerat/195564612/bmw-x3-xdrive20i-2019-135kw-xline.php", "title": "BMW X3 xDrive20i 2019 135kW xLine", "price": 23990, "price_gross": 23990, "fair_price": 26780.0, "discount_pct": 10.4, "verdict": "pod trhom", "year": 2019, "km": 86996, "km_per_year": 11900.0, "eg": "Benzín 20i / 28i / 30i (184–252 k)", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Spišská Nová Ves", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmnfPizRmgo", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive20i-2019-135kw-xline/AmnfPizRmgo/", "price": 23990}], "body": null}, {"id": "196136813", "url": "https://auto.bazos.sk/inzerat/196136813/bmw-x3-xdrive20d-mhev-at-140kw190hp-a8.php", "title": "BMW X3 xDrive20d mHEV AT 140kW190HP A8", "price": 38500, "price_gross": 38500, "fair_price": 42740.0, "discount_pct": 9.9, "verdict": "pod trhom", "year": 2022, "km": 53000, "km_per_year": 12200.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Bratislava", "flags": ["prevodovka nezistená"], "pick": "top", "source": "bazos", "origin": null, "also_listed": [], "body": null}, {"id": "ab-Aefy7OgRoig", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive20d-4x4-automat-servkniha/Aefy7OgRoig/", "title": "BMW X3 xDrive20d, 4X4, Automat, Serv.kniha", "price": 18500, "price_gross": 18500, "fair_price": 20500.0, "discount_pct": 9.8, "verdict": "pod trhom", "year": 2018, "km": 165678, "km_per_year": 19900.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Prešovský kraj", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": null}, {"id": "197071786", "url": "https://auto.bazos.sk/inzerat/197071786/x3.php", "title": "X3", "price": 11500, "price_gross": 11500, "fair_price": 12730.0, "discount_pct": 9.7, "verdict": "pod trhom", "year": 2015, "km": 191000, "km_per_year": 16900.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Galanta", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": null}, {"id": "196955234", "url": "https://auto.bazos.sk/inzerat/196955234/bmw-x3-xdrive20d-mhev-at.php", "title": "BMW X3 xDrive20d mHEV A/T", "price": 28390, "price_gross": 28390, "fair_price": 31440.0, "discount_pct": 9.7, "verdict": "pod trhom", "year": 2021, "km": 91738, "km_per_year": 17200.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Galanta", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmS9ZX0egIz", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive20d-mhev-at/AmS9ZX0egIz/", "price": 28390}], "body": null}, {"id": "197183843", "url": "https://auto.bazos.sk/inzerat/197183843/predam-bmw-x3-20-tdi-g01-2023.php", "title": "Predam BMW X3  2.0 TDI G01   2023", "price": 37000, "price_gross": 37000, "fair_price": 40860.0, "discount_pct": 9.5, "verdict": "pod trhom", "year": 2023, "km": 43000, "km_per_year": 12900.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Košice", "flags": ["prevodovka nezistená"], "pick": "top", "source": "bazos", "origin": null, "also_listed": [], "body": null}, {"id": "ab-AmJwY6TZDr0", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive20d-mhev-at/AmJwY6TZDr0/", "title": "BMW X3 xDrive20d mHEV A/T", "price": 29999, "price_gross": 29999, "fair_price": 33080.0, "discount_pct": 9.3, "verdict": "pod trhom", "year": 2021, "km": 82845, "km_per_year": 15500.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Trenčín", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": null}, {"id": "ab-Ae2Xqmbp1ji", "url": "https://www.autobazar.eu/detail/bmw-x3-2016/Ae2Xqmbp1ji/", "title": "BMW X3 xDrive20d Standard AT 140kW190HP A8", "price": 14500, "price_gross": 14500, "fair_price": 15940.0, "discount_pct": 9.1, "verdict": "pod trhom", "year": 2016, "km": 174000, "km_per_year": 16800.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "automatic", "seller_type": "private", "location": "Kobyly", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": null}, {"id": "196054930", "url": "https://auto.bazos.sk/inzerat/196054930/bmw-x3-xdrive20d-at-140kw.php", "title": "BMW X3 xDrive20d A/T 140kw", "price": 25999, "price_gross": 25999, "fair_price": 28550.0, "discount_pct": 8.9, "verdict": "pod trhom", "year": 2020, "km": 88391, "km_per_year": 14000.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Dunajská Streda", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": null}, {"id": "ab-AmeW-K2ZfmJ", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive20d-xline-at/AmeW-K2ZfmJ/", "title": "BMW X3 xDrive20d xLine A/T", "price": 16800, "price_gross": 16800, "fair_price": 18420.0, "discount_pct": 8.8, "verdict": "pod trhom", "year": 2017, "km": 130555, "km_per_year": 14000.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava-Lamač", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": null}, {"id": "ab-AmtnNTgitgO", "url": "https://www.autobazar.eu/detail/bmw-x3-m40i-xdrive-360k-at8-steptronic-sport/AmtnNTgitgO/", "title": "BMW X3 M40i xDrive 360k AT8 Steptronic Sport", "price": 34990, "price_gross": 34990, "fair_price": 38240.0, "discount_pct": 8.5, "verdict": "pod trhom", "year": 2020, "km": 84552, "km_per_year": 13400.0, "eg": "M40i / X3 M (354–510 k)", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Sládkovičovo", "flags": [], "pick": "vat", "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "196209237", "url": "https://auto.bazos.sk/inzerat/196209237/bmw-x3-m40i-xdrive-360k-at8-steptronic-sport.php", "price": 34990}], "body": null}, {"id": "ab-AmlsEDI9EVB", "url": "https://www.autobazar.eu/detail/bmw-x3-30d-xdrive-luxury/AmlsEDI9EVB/", "title": "BMW X3 30d xDrive Luxury", "price": 29990, "price_gross": 29990, "fair_price": 32450.0, "discount_pct": 7.6, "verdict": "pod trhom", "year": 2021, "km": 90000, "km_per_year": 16900.0, "eg": "30d / 35d (249–313 k)", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": null}, {"id": "196889190", "url": "https://auto.bazos.sk/inzerat/196889190/bmw-x3-30-xd-mhev-210-kw-x-drive-m-sport-line.php", "title": "BMW X3 3,0 XD + MHEV 210 kW X Drive M Sport Line", "price": 34990, "price_gross": 34990, "fair_price": 37630.0, "discount_pct": 7.0, "verdict": "pod trhom", "year": 2021, "km": 78020, "km_per_year": 14600.0, "eg": "30d / 35d (249–313 k)", "cg": 1, "transmission": null, "seller_type": "dealer", "location": "Martin", "flags": ["prevodovka nezistená"], "pick": "top", "source": "bazos", "origin": null, "also_listed": [], "body": null}, {"id": "196633081", "url": "https://auto.bazos.sk/inzerat/196633081/bmw-x3-f25-lci-facelift-20d-xdrive-140kw-170tis-km-b47.php", "title": "BMW X3 F25 LCI (facelift) 2.0d xDrive 140kw 170tis. km B47", "price": 11990, "price_gross": 11990, "fair_price": 12890.0, "discount_pct": 7.0, "verdict": "pod trhom", "year": 2014, "km": 171000, "km_per_year": 13900.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Žiar nad Hronom", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": null}, {"id": "195519935", "url": "https://auto.bazos.sk/inzerat/195519935/bmw-x3-xdrive20d-140kw-advantage-at8-022016.php", "title": "BMW X3 xDrive20d 140kW Advantage AT8 02/2016", "price": 16499, "price_gross": 16499, "fair_price": 17730.0, "discount_pct": 7.0, "verdict": "férová cena", "year": 2016, "km": 122985, "km_per_year": 11900.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Banská Bystrica", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmKc1jaIz8i", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive20d-advantage-at/AmKc1jaIz8i/", "price": 16499}], "body": null}, {"id": "ab-AmD0tOLYSrn", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive30d-luxury-line-a-t/AmD0tOLYSrn/", "title": "BMW X3 xDrive30d Luxury Line A/T", "price": 26490, "price_gross": 26490, "fair_price": 28320.0, "discount_pct": 6.5, "verdict": "férová cena", "year": 2019, "km": 123595, "km_per_year": 16900.0, "eg": "30d / 35d (249–313 k)", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava-Nové Mesto", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "196611443", "url": "https://auto.bazos.sk/inzerat/196611443/bmw-x3-xdrive30d-luxury-line-at-195kw-rv-072019.php", "price": 26490}], "body": null}, {"id": "196610997", "url": "https://auto.bazos.sk/inzerat/196610997/bmw-x3-f25-facelift-2016-30d-190kw-m-sport.php", "title": "Bmw X3 F25 facelift 2016 3.0d 190kw M-sport.", "price": 15499, "price_gross": 15499, "fair_price": 16550.0, "discount_pct": 6.3, "verdict": "férová cena", "year": 2016, "km": 190000, "km_per_year": 18400.0, "eg": "30d / 35d (249–313 k)", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Nitra", "flags": [], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [], "body": null}, {"id": "ab-Ae1j5oUKTJK", "url": "https://www.autobazar.eu/detail/bmw-x3-m40i-mhev-at-265kw360hp-a8/Ae1j5oUKTJK/", "title": "BMW X3 M40i AT 265kW360HP A8", "price": 56900, "price_gross": 56900, "fair_price": 60680.0, "discount_pct": 6.2, "verdict": "férová cena", "year": 2024, "km": 41335, "km_per_year": 17700.0, "eg": "M40i / X3 M (354–510 k)", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Žilina", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": null}, {"id": "ab-Ae8TqpqIRJ_", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive20d-line-model-m-sport-140kw-automat/Ae8TqpqIRJ_/", "title": "BMW X3 XDrive20d LINE Model M Sport 140kw Automat", "price": 25999, "price_gross": 25999, "fair_price": 27710.0, "discount_pct": 6.2, "verdict": "férová cena", "year": 2019, "km": 81000, "km_per_year": 11000.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Trenčín", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": null}, {"id": "ab-Ae7hdjpewwT", "url": "https://www.autobazar.eu/detail/bmw-x3-m40i-at-265kw360hp-a8/Ae7hdjpewwT/", "title": "BMW X3 M40i AT 265kW360HP A8", "price": 26990, "price_gross": 26990, "fair_price": 28670.0, "discount_pct": 5.9, "verdict": "férová cena", "year": 2019, "km": 155000, "km_per_year": 21100.0, "eg": "M40i / X3 M (354–510 k)", "cg": 2, "transmission": "automatic", "seller_type": "private", "location": "Bratislava-Dúbravka", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": null}, {"id": "196385951", "url": "https://auto.bazos.sk/inzerat/196385951/bmw-x3.php", "title": "BMW X3", "price": 30000, "price_gross": 30000, "fair_price": 31870.0, "discount_pct": 5.9, "verdict": "férová cena", "year": 2020, "km": 70000, "km_per_year": 11100.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Dolný Kubín", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": null}, {"id": "ab-AbY2yBrqiv0", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive20i/AbY2yBrqiv0/", "title": "BMW X3 xDrive20i", "price": 23900, "price_gross": 23900, "fair_price": 25340.0, "discount_pct": 5.7, "verdict": "férová cena", "year": 2019, "km": 118000, "km_per_year": 16100.0, "eg": "Benzín 20i / 28i / 30i (184–252 k)", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Nitra", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": null}, {"id": "197099101", "url": "https://auto.bazos.sk/inzerat/197099101/x3-xdrive-30d-mhev-at-led-360kam-ambient-el-kufor.php", "title": "X3 xDrive 30d mHEV A/T, LED, 360kam, Ambient, El. kufor", "price": 32990, "price_gross": 32990, "fair_price": 34830.0, "discount_pct": 5.3, "verdict": "férová cena", "year": 2021, "km": 86947, "km_per_year": 16300.0, "eg": "30d / 35d (249–313 k)", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Michalovce", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmxF5I5QoUx", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive-30d-mhev-at-led-360kam-ambient-el-kufor/AmxF5I5QoUx/", "price": 32990}], "body": null}, {"id": "ab-AeWgOuJgQKY", "url": "https://www.autobazar.eu/detail/bmw-x3-m40d-at-250kw340hp-a8/AeWgOuJgQKY/", "title": "BMW X3 M40d AT 250kW340HP A8", "price": 30000, "price_gross": 30000, "fair_price": 31660.0, "discount_pct": 5.2, "verdict": "férová cena", "year": 2021, "km": 150000, "km_per_year": 28100.0, "eg": "M40d (326–340 k)", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Prešov", "flags": [], "pick": "vat", "source": "autobazar", "origin": "SR", "also_listed": [], "body": null}, {"id": "ab-AeUdJg-CW4D", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive20i-xline-4x4-automat-sr/AeUdJg-CW4D/", "title": "BMW X3 xDrive20i, xLine, 4X4, Automat, SR", "price": 24000, "price_gross": 24000, "fair_price": 25260.0, "discount_pct": 5.0, "verdict": "férová cena", "year": 2019, "km": 112411, "km_per_year": 15300.0, "eg": "Benzín 20i / 28i / 30i (184–252 k)", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": null}, {"id": "ab-AmHesYOpcui", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive30d-mhev-at/AmHesYOpcui/", "title": "BMW X3 xDrive30d mHEV A/T", "price": 32490, "price_gross": 32490, "fair_price": 34010.0, "discount_pct": 4.5, "verdict": "férová cena", "year": 2022, "km": 133000, "km_per_year": 30700.0, "eg": "30d / 35d (249–313 k)", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava-Ružinov", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": null}, {"id": "195264765", "url": "https://auto.bazos.sk/inzerat/195264765/bmw-x-3-f25.php", "title": "BMW X 3 F25", "price": 11550, "price_gross": 11550, "fair_price": 12100.0, "discount_pct": 4.5, "verdict": "férová cena", "year": 2014, "km": 278300, "km_per_year": 22600.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Košice", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": null}, {"id": "ab-AbRm8WLcP0H", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive30i/AbRm8WLcP0H/", "title": "BMW X3 xDrive30i", "price": 34499, "price_gross": 34499, "fair_price": 36010.0, "discount_pct": 4.2, "verdict": "férová cena", "year": 2020, "km": 59500, "km_per_year": 9400.0, "eg": "Benzín 20i / 28i / 30i (184–252 k)", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava - Vajnory", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": null}, {"id": "ab-AmHad92vOkw", "url": "https://www.autobazar.eu/detail/bmw-x3-m40i-at/AmHad92vOkw/", "title": "BMW X3 M40i A/T", "price": 24990, "price_gross": 24990, "fair_price": 26050.0, "discount_pct": 4.1, "verdict": "férová cena", "year": 2019, "km": 205000, "km_per_year": 28000.0, "eg": "M40i / X3 M (354–510 k)", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Malženice", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": null}, {"id": "ab-AesqKKLiRau", "url": "https://www.autobazar.eu/detail/bmw-x3-m40i-at-260kw353hp-a8/AesqKKLiRau/", "title": "BMW X3 M40i AT 260kW353HP A8", "price": 27500, "price_gross": 27500, "fair_price": 28650.0, "discount_pct": 4.0, "verdict": "férová cena", "year": 2019, "km": 153700, "km_per_year": 21000.0, "eg": "M40i / X3 M (354–510 k)", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Prešov", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": null}, {"id": "ab-AbQJXZQ902q", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive30d/AbQJXZQ902q/", "title": "BMW X3 xDrive30d", "price": 36499, "price_gross": 36499, "fair_price": 37890.0, "discount_pct": 3.7, "verdict": "férová cena", "year": 2023, "km": 105300, "km_per_year": 31600.0, "eg": "30d / 35d (249–313 k)", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava - Vajnory", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": null}, {"id": "ab-AePRAf4rdi8", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive30d-at-195kw265hp-a8/AePRAf4rdi8/", "title": "BMW X3 xDrive30d AT 195kW265HP A8", "price": 19990, "price_gross": 19990, "fair_price": 20710.0, "discount_pct": 3.5, "verdict": "férová cena", "year": 2019, "km": 272000, "km_per_year": 37100.0, "eg": "30d / 35d (249–313 k)", "cg": 1, "transmission": "automatic", "seller_type": "private", "location": "Piešťany", "flags": ["vysoký nájazd 37000 km/rok – flotila / taxi?"], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "197195483", "url": "https://auto.bazos.sk/inzerat/197195483/bmw-x3-xdrive30d-luxury-line-at.php", "price": 20599}], "body": null}, {"id": "ab-AeFWLlQ_867", "url": "https://www.autobazar.eu/detail/bmw-x3-m40d-at-240kw326hp-a8/AeFWLlQ_867/", "title": "BMW X3 M40d AT 240kW326HP A8", "price": 27300, "price_gross": 27300, "fair_price": 28290.0, "discount_pct": 3.5, "verdict": "férová cena", "year": 2020, "km": 144000, "km_per_year": 22700.0, "eg": "M40d (326–340 k)", "cg": 1, "transmission": "automatic", "seller_type": "private", "location": "Lučivná", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": null}, {"id": "195289070", "url": "https://auto.bazos.sk/inzerat/195289070/bmw-x3-xdrive-30d-195kw-m-packet.php", "title": "BMW X3 xDrive  3.0d 195kw M-packet", "price": 25500, "price_gross": 25500, "fair_price": 26410.0, "discount_pct": 3.5, "verdict": "férová cena", "year": 2018, "km": 98400, "km_per_year": 11800.0, "eg": "30d / 35d (249–313 k)", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Bratislava", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": null}, {"id": "ab-Am51Xm38llP", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive20d-m-sport-at/Am51Xm38llP/", "title": "BMW X3 xDrive20d M Sport A/T", "price": 15500, "price_gross": 15500, "fair_price": 16020.0, "discount_pct": 3.3, "verdict": "férová cena", "year": 2017, "km": 208455, "km_per_year": 22300.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Trenčín", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "196709582", "url": "https://auto.bazos.sk/inzerat/196709582/bmw-x3-xdrive20d-m-sport-at.php", "price": 15500}], "body": null}, {"id": "ab-Aen9QeSXqij", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive20i-m-sport-at-135kw184hp-a8/Aen9QeSXqij/", "title": "BMW X3 xDrive20i M Sport AT 135kW184HP A8", "price": 22900, "price_gross": 22900, "fair_price": 23680.0, "discount_pct": 3.3, "verdict": "férová cena", "year": 2019, "km": 140000, "km_per_year": 19100.0, "eg": "Benzín 20i / 28i / 30i (184–252 k)", "cg": 2, "transmission": "automatic", "seller_type": "private", "location": "Košice-Sever", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": null}, {"id": "ab-Amv5QKYLFH2", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive30d-xline-195kw-a8-zaruka-aj-na-splatky-protiucet/Amv5QKYLFH2/", "title": "BMW X3 xDrive30d xLine / 195kW / A8 / ZÁRUKA / AJ NA SPLÁTKY / PROTIÚČET", "price": 24490, "price_gross": 24490, "fair_price": 25310.0, "discount_pct": 3.2, "verdict": "férová cena", "year": 2019, "km": 186619, "km_per_year": 25400.0, "eg": "30d / 35d (249–313 k)", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Košice-Pereš", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "196945628", "url": "https://auto.bazos.sk/inzerat/196945628/bmw-x3-xdrive30d-xline-195kw-a8-2019.php", "price": 24490}], "body": null}, {"id": "ab-AmfT4mu0wbK", "url": "https://www.autobazar.eu/detail/bmw-x3-20d-xdrive-financovanie-protiucet/AmfT4mu0wbK/", "title": "BMW X3 20d xDrive / FINANCOVANIE / PROTIÚČET /", "price": 23990, "price_gross": 23990, "fair_price": 24670.0, "discount_pct": 2.8, "verdict": "férová cena", "year": 2020, "km": 149600, "km_per_year": 23600.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Trenčín", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": null}, {"id": "197004754", "url": "https://auto.bazos.sk/inzerat/197004754/predam-bmw-x3-xdrive20d-mhev-ag.php", "title": "Predám BMW X3 XDrive20d mHEV A/G", "price": 45000, "price_gross": 45000, "fair_price": 46300.0, "discount_pct": 2.8, "verdict": "férová cena", "year": 2023, "km": 40000, "km_per_year": 12000.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": null, "seller_type": "dealer", "location": "Dunajská Streda", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": null}, {"id": "ab-AmhQbspOOfI", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive20d-mhev-m-sport-140kw-2022-aj-na-splatky-protiucet/AmhQbspOOfI/", "title": "BMW X3 xDrive20d mHEV M Sport 140kW 2022 / AJ NA SPLÁTKY / PROTIÚČET", "price": 39990, "price_gross": 39990, "fair_price": 41100.0, "discount_pct": 2.7, "verdict": "férová cena", "year": 2022, "km": 38046, "km_per_year": 8800.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Trenčín", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "196916170", "url": "https://auto.bazos.sk/inzerat/196916170/bmw-x3-xdrive20d-mhev-m-sport-140kw-2022-1-majitel.php", "price": 39990}], "body": null}, {"id": "ab-AmG2gLmwCeo", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive20d-xline-at/AmG2gLmwCeo/", "title": "BMW X3 xDrive20d xLine A/T", "price": 27990, "price_gross": 27990, "fair_price": 28770.0, "discount_pct": 2.7, "verdict": "férová cena", "year": 2019, "km": 67637, "km_per_year": 9200.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Michalovce", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197094485", "url": "https://auto.bazos.sk/inzerat/197094485/bmw-x3-xdrive20d-xline-at-67-637km-tazne-zariadenie.php", "price": 27990}], "body": null}, {"id": "ab-AmOGP8LlK6c", "url": "https://www.autobazar.eu/detail/bmw-x3-20i-xdrive-m-sport/AmOGP8LlK6c/", "title": "BMW X3 20i xDrive M-Sport", "price": 32990, "price_gross": 32990, "fair_price": 33790.0, "discount_pct": 2.4, "verdict": "férová cena", "year": 2021, "km": 70000, "km_per_year": 13100.0, "eg": "Benzín 20i / 28i / 30i (184–252 k)", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Košice-Vyšné Opátske", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "195410685", "url": "https://auto.bazos.sk/inzerat/195410685/bmw-x3-20i-xdrive-m-sport.php", "price": 32990}], "body": null}, {"id": "ab-AeTPhl_djMo", "url": "https://www.autobazar.eu/detail/bmw-x3-2024-xdrive-210kw-m-sport-sk-dph-zaruka-zimne/AeTPhl_djMo/", "title": "BMW X3 2024 XDRIVE 210KW M-SPORT SK DPH ZARUKA zimne", "price": 39300, "price_gross": 39300, "fair_price": 40180.0, "discount_pct": 2.2, "verdict": "férová cena", "year": 2024, "km": 120000, "km_per_year": 51400.0, "eg": "30d / 35d (249–313 k)", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": ["vysoký nájazd 51000 km/rok – flotila / taxi?"], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197103613", "url": "https://auto.bazos.sk/inzerat/197103613/bmw-x3-30d-2024-xdrive-210kw-m-sport-sk-dph-zaruka-zimne.php", "price": 39300}], "body": null}, {"id": "196825970", "url": "https://auto.bazos.sk/inzerat/196825970/bmw-x3-20-xdrive-140kw-112015.php", "title": "BMW X3 2.0 xDrive, 140kW, 11/2015", "price": 13999, "price_gross": 13999, "fair_price": 14240.0, "discount_pct": 1.7, "verdict": "férová cena", "year": 2015, "km": 266328, "km_per_year": 23500.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Snina", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [], "body": null}, {"id": "ab-AmKSJg5IyB2", "url": "https://www.autobazar.eu/detail/bmw-x3-m40i-xdrive-m-sport/AmKSJg5IyB2/", "title": "BMW X3 M40i xDrive M-Sport", "price": 29990, "price_gross": 29990, "fair_price": 30510.0, "discount_pct": 1.7, "verdict": "férová cena", "year": 2019, "km": 135400, "km_per_year": 18500.0, "eg": "M40i / X3 M (354–510 k)", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Košice-Vyšné Opátske", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "195518878", "url": "https://auto.bazos.sk/inzerat/195518878/bmw-x3-m40i-xdrive-m-sport.php", "price": 29990}], "body": null}, {"id": "196722025", "url": "https://auto.bazos.sk/inzerat/196722025/bmw-x3-xdrive20d-140kw.php", "title": "BMW X3 xDrive20d 140kw", "price": 14600, "price_gross": 14600, "fair_price": 14820.0, "discount_pct": 1.5, "verdict": "férová cena", "year": 2016, "km": 205000, "km_per_year": 19800.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Prievidza", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": null}, {"id": "196492566", "url": "https://auto.bazos.sk/inzerat/196492566/bmw-x3-m40d-mhev-at.php", "title": "BMW X3 M40d mHEV A/T", "price": 44700, "price_gross": 44700, "fair_price": 45300.0, "discount_pct": 1.3, "verdict": "férová cena", "year": 2023, "km": 85721, "km_per_year": 25700.0, "eg": "M40d (326–340 k)", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Trenčín", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": null}, {"id": "ab-AeZk5s1K2sB", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive30d-m-sport-at-195kw265hp-a8/AeZk5s1K2sB/", "title": "BMW X3 xDrive30d M Sport AT 195kW265HP A8", "price": 25900, "price_gross": 25900, "fair_price": 26210.0, "discount_pct": 1.2, "verdict": "férová cena", "year": 2019, "km": 150000, "km_per_year": 20500.0, "eg": "30d / 35d (249–313 k)", "cg": 1, "transmission": "automatic", "seller_type": "private", "location": "Banská Bystrica", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": null}, {"id": "ab-AmSyXUm2IVN", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive20d-mhev-at/AmSyXUm2IVN/", "title": "BMW X3 xDrive20d mHEV A/T", "price": 29990, "price_gross": 29990, "fair_price": 30260.0, "discount_pct": 0.9, "verdict": "férová cena", "year": 2021, "km": 109474, "km_per_year": 20500.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Košice", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": null}, {"id": "ab-AmrQvqMxtVn", "url": "https://www.autobazar.eu/detail/bmw-x3-20i-xdrive-8-stup-automat/AmrQvqMxtVn/", "title": "BMW X3 20i xdrive 8-stup. automat", "price": 20990, "price_gross": 20990, "fair_price": 21160.0, "discount_pct": 0.8, "verdict": "férová cena", "year": 2017, "km": 86078, "km_per_year": 9200.0, "eg": "Benzín 20i / 28i / 30i (184–252 k)", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Ivanka pri Dunaji", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": null}, {"id": "197063002", "url": "https://auto.bazos.sk/inzerat/197063002/bmw-x3-xdrive-20d-xline-at-f25-4x4-140kw.php", "title": "BMW X3 xDrive 20d xLine A/T F25 4X4 140KW", "price": 14600, "price_gross": 14600, "fair_price": 14690.0, "discount_pct": 0.6, "verdict": "férová cena", "year": 2016, "km": 207654, "km_per_year": 20100.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Prievidza", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": null}, {"id": "ab-AbmYkBVVvhj", "url": "https://www.autobazar.eu/detail/bmw-x3-2-0-xdrive20d-140kw-a8/AbmYkBVVvhj/", "title": "BMW X3 2, 0 xDrive20d 140kW A8", "price": 38499, "price_gross": 38499, "fair_price": 38700.0, "discount_pct": 0.5, "verdict": "férová cena", "year": 2023, "km": 75584, "km_per_year": 22700.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava-Ružinov", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": null}, {"id": "ab-AmUk2raiB6t", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive30e-at/AmUk2raiB6t/", "title": "BMW X3 xDrive30e A/T", "price": 32800, "price_gross": 32800, "fair_price": 32980.0, "discount_pct": 0.5, "verdict": "férová cena", "year": 2020, "km": 97200, "km_per_year": 15300.0, "eg": "30e plug-in hybrid", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava-Podunajské Biskupice", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "196804131", "url": "https://auto.bazos.sk/inzerat/196804131/bmw-x3-xdrive30e-at.php", "price": 32800}], "body": null}, {"id": "197110357", "url": "https://auto.bazos.sk/inzerat/197110357/bmw-x3-m-paket-20d-panorama-led.php", "title": "BMW X3, M-PAKET, 2.0d, panoráma, LED", "price": 12500, "price_gross": 12500, "fair_price": 12550.0, "discount_pct": 0.4, "verdict": "férová cena", "year": 2016, "km": 288800, "km_per_year": 27900.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Myjava", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": null}, {"id": "ab-AeyPMJSVvXx", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive30d-zaruka-2027-sr-1majitel/AeyPMJSVvXx/", "title": "BMW X3 xDrive30d M-Sport, zár. 2027 - SR - 1.majiteľ", "price": 43980, "price_gross": 43980, "fair_price": 43920.0, "discount_pct": -0.1, "verdict": "férová cena", "year": 2024, "km": 86186, "km_per_year": 36900.0, "eg": "30d / 35d (249–313 k)", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava-Rača", "flags": ["vysoký nájazd 37000 km/rok – flotila / taxi?"], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": null}, {"id": "ab-Ae2MaLrRdyS", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive30d-mhev-at-210kw286hp-a8/Ae2MaLrRdyS/", "title": "BMW X3 xDrive30d mHEV AT 210kW286HP A8", "price": 39850, "price_gross": 39850, "fair_price": 39760.0, "discount_pct": -0.2, "verdict": "férová cena", "year": 2022, "km": 75017, "km_per_year": 17300.0, "eg": "30d / 35d (249–313 k)", "cg": 1, "transmission": "automatic", "seller_type": "private", "location": "Nitra", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": null}, {"id": "ab-Ae9APEw7Dt7", "url": "https://www.autobazar.eu/detail/bmw-x3-2019/Ae9APEw7Dt7/", "title": "BMW X3 M40i DPH", "price": 29990, "price_gross": 29990, "fair_price": 29890.0, "discount_pct": -0.3, "verdict": "férová cena", "year": 2019, "km": 149200, "km_per_year": 20300.0, "eg": "M40i / X3 M (354–510 k)", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Košice", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazos", "id": "195274575", "url": "https://auto.bazos.sk/inzerat/195274575/bmw-x3-m40i-2019-odpocet-dph.php", "price": 29990}], "body": null}, {"id": "196754960", "url": "https://auto.bazos.sk/inzerat/196754960/bmw-x3-20xdrive30i-m-sport-at-sk-1-majitel.php", "title": "BMW X3 2.0xDrive30i M Sport AT, SK - 1 Majiteľ", "price": 27199, "price_gross": 27199, "fair_price": 27110.0, "discount_pct": -0.3, "verdict": "férová cena", "year": 2021, "km": 179366, "km_per_year": 33600.0, "eg": "Benzín 20i / 28i / 30i (184–252 k)", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Banská Bystrica", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AmMLDXZY5nt", "url": "https://www.autobazar.eu/detail/bmw-x3-20xdrive30i-m-sport-at-sk-1-majitel/AmMLDXZY5nt/", "price": 27199}], "body": null}, {"id": "ab-Amjw8GP_RRj", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive20d-at/Amjw8GP_RRj/", "title": "BMW X3 xDrive20d A/T", "price": 23900, "price_gross": 23900, "fair_price": 23800.0, "discount_pct": -0.4, "verdict": "férová cena", "year": 2021, "km": 197200, "km_per_year": 37000.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Ilava", "flags": ["vysoký nájazd 37000 km/rok – flotila / taxi?"], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "196892846", "url": "https://auto.bazos.sk/inzerat/196892846/bmw-x3-xdrive20d-at-x-line.php", "price": 23900}], "body": null}, {"id": "ab-Ae49A_IWH9t", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive30d-mhev-at-210kw286hp-a8/Ae49A_IWH9t/", "title": "BMW X3 30D, zaruka 8-27, nez.kurenie, laser, adapt.podvozok, el.sedadla", "price": 31900, "price_gross": 31900, "fair_price": 31720.0, "discount_pct": -0.6, "verdict": "férová cena", "year": 2022, "km": 126000, "km_per_year": 29100.0, "eg": "30d / 35d (249–313 k)", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Bratislava-Jarovce", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": null}, {"id": "196358589", "url": "https://auto.bazos.sk/inzerat/196358589/bmw-x3-xdrive30d-luxury-line-2019.php", "title": "BMW X3 xDrive30d Luxury Line • 2019 •", "price": 24999, "price_gross": 24999, "fair_price": 24800.0, "discount_pct": -0.8, "verdict": "férová cena", "year": 2019, "km": 192030, "km_per_year": 26200.0, "eg": "30d / 35d (249–313 k)", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Žarnovica", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": null}, {"id": "ab-Amaj-5oNTFq", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive20d-m-sport-4x4-automat/Amaj-5oNTFq/", "title": "BMW X3 XDrive20d, M Sport, 4X4, Automat", "price": 39990, "price_gross": 39990, "fair_price": 39680.0, "discount_pct": -0.8, "verdict": "férová cena", "year": 2023, "km": 73000, "km_per_year": 21900.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Žilina", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": null}, {"id": "195278665", "url": "https://auto.bazos.sk/inzerat/195278665/bmw-x3-30-d.php", "title": "BMW X3 3,0 d", "price": 13500, "price_gross": 13500, "fair_price": 13320.0, "discount_pct": -1.3, "verdict": "férová cena", "year": 2015, "km": 280000, "km_per_year": 24700.0, "eg": "30d / 35d (249–313 k)", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Lučenec", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AeMmTimqeCe", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive30d-190kw258hp-a8/AeMmTimqeCe/", "price": 13500}], "body": null}, {"id": "196852746", "url": "https://auto.bazos.sk/inzerat/196852746/bmw-x3-xdrive30d-mhev-at.php", "title": "BMW X3 xDrive30d mHEV A/T", "price": 31990, "price_gross": 31990, "fair_price": 31550.0, "discount_pct": -1.4, "verdict": "férová cena", "year": 2021, "km": 119000, "km_per_year": 22300.0, "eg": "30d / 35d (249–313 k)", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Žarnovica", "flags": [], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [{"source": "autobazar", "id": "ab-Am9Qcc7Pg78", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive30d-mhev-at/Am9Qcc7Pg78/", "price": 31990}], "body": null}, {"id": "ab-AeM84RADrdX-", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive20d-4x4-automat-servkniha/AeM84RADrdX-/", "title": "BMW X3 xDrive20d, 4X4, Automat, Serv.kniha", "price": 34000, "price_gross": 34000, "fair_price": 33420.0, "discount_pct": -1.7, "verdict": "férová cena", "year": 2022, "km": 95667, "km_per_year": 22100.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Trnava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": null}, {"id": "196766015", "url": "https://auto.bazos.sk/inzerat/196766015/bmw-x3-xdrive20d-at-20-diesel-8-st-automat-suv.php", "title": "BMW X3 xDrive20d A/T • 2.0 Diesel • 8-st. automat • SUV", "price": 22500, "price_gross": 22500, "fair_price": 22130.0, "discount_pct": -1.7, "verdict": "férová cena", "year": 2020, "km": 179316, "km_per_year": 28300.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Kežmarok", "flags": [], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [{"source": "autobazar", "id": "ab-Amdf6Jm9pM_", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive20d-at/Amdf6Jm9pM_/", "price": 22500}], "body": null}, {"id": "ab-AmUTlfA_6-D", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive30d-at/AmUTlfA_6-D/", "title": "BMW X3 xDrive30d A/T", "price": 31990, "price_gross": 31990, "fair_price": 31410.0, "discount_pct": -1.8, "verdict": "férová cena", "year": 2020, "km": 118624, "km_per_year": 18700.0, "eg": "30d / 35d (249–313 k)", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": null}, {"id": "ab-AmKQyIU6oky", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive30e-at/AmKQyIU6oky/", "title": "BMW X3 xDrive30e M-PACKET PLUG-IN HYBRID", "price": 59999, "price_gross": 59999, "fair_price": 58870.0, "discount_pct": -1.9, "verdict": "férová cena", "year": 2024, "km": 20786, "km_per_year": 8900.0, "eg": "30e plug-in hybrid", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Pezinok", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": null}, {"id": "ab-Ae9L01O7_cy", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive30d-m-sport-4x4-automat/Ae9L01O7_cy/", "title": "BMW X3 xDrive30d, M Sport, 4X4, Automat", "price": 35000, "price_gross": 35000, "fair_price": 34360.0, "discount_pct": -1.9, "verdict": "férová cena", "year": 2022, "km": 100988, "km_per_year": 23300.0, "eg": "30d / 35d (249–313 k)", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Košice", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": null}, {"id": "ab-AmGcXJA7qLT", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive30d-luxury-line-g01-195kw-aj-na-splatky-protiucet/AmGcXJA7qLT/", "title": "BMW X3 xDrive30d Luxury Line G01 195kW / AJ NA SPLÁTKY / PROTIÚČET", "price": 30990, "price_gross": 30990, "fair_price": 30390.0, "discount_pct": -2.0, "verdict": "férová cena", "year": 2020, "km": 131943, "km_per_year": 20800.0, "eg": "30d / 35d (249–313 k)", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Trenčín", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": null}, {"id": "ab-AeYI72qSgE3", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive20d-at-140kw190hp-a8/AeYI72qSgE3/", "title": "BMW X3 xDrive20d AT 140kW190HP A8", "price": 15450, "price_gross": 15450, "fair_price": 15120.0, "discount_pct": -2.2, "verdict": "férová cena", "year": 2016, "km": 199500, "km_per_year": 19300.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "automatic", "seller_type": "private", "location": "Banská Bystrica", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "196358438", "url": "https://auto.bazos.sk/inzerat/196358438/2016-bmw-x3-xdrive20d-at8.php", "price": 15450}], "body": null}, {"id": "ab-AmahkL_fanl", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive30d-mhev-at/AmahkL_fanl/", "title": "BMW X3 xDrive30d mHEV A/T", "price": 51490, "price_gross": 51490, "fair_price": 50350.0, "discount_pct": -2.3, "verdict": "férová cena", "year": 2023, "km": 30863, "km_per_year": 9300.0, "eg": "30d / 35d (249–313 k)", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": null}, {"id": "196469784", "url": "https://auto.bazos.sk/inzerat/196469784/bmw-x3.php", "title": "Bmw x3 130000km Full led Mpaket", "price": 24000, "price_gross": 24000, "fair_price": 23430.0, "discount_pct": -2.4, "verdict": "férová cena", "year": 2018, "km": 130000, "km_per_year": 15600.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Humenné", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": null}, {"id": "196350856", "url": "https://auto.bazos.sk/inzerat/196350856/predam-bmw-x3-f25-2016.php", "title": "Predam BMW X3 - X LINE F25 2016 XDRIVE", "price": 15000, "price_gross": 15000, "fair_price": 14640.0, "discount_pct": -2.4, "verdict": "férová cena", "year": 2016, "km": 237000, "km_per_year": 22900.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Pezinok", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": null}, {"id": "195764077", "url": "https://auto.bazos.sk/inzerat/195764077/bmw-x3-xdrive20d-m-sport-at.php", "title": "BMW X3 xDrive20d M Sport A/T", "price": 27490, "price_gross": 27490, "fair_price": 26850.0, "discount_pct": -2.4, "verdict": "férová cena", "year": 2019, "km": 89152, "km_per_year": 12200.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Vranov nad Topľou", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AmDXydNXwx7", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive20d-m-sport-at/AmDXydNXwx7/", "price": 27490}], "body": null}, {"id": "196008076", "url": "https://auto.bazos.sk/inzerat/196008076/bmw-x3-30xd-mhev-mpaket.php", "title": "Bmw x3 30xd mhev M paket panorama", "price": 32800, "price_gross": 32800, "fair_price": 31970.0, "discount_pct": -2.6, "verdict": "férová cena", "year": 2022, "km": 190600, "km_per_year": 44000.0, "eg": "30d / 35d (249–313 k)", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Bratislava", "flags": ["vysoký nájazd 44000 km/rok – flotila / taxi?", "prevodovka nezistená"], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": null}, {"id": "195961207", "url": "https://auto.bazos.sk/inzerat/195961207/bmw-x3-35xdrive.php", "title": "BMW x3 35xdrive", "price": 15800, "price_gross": 15800, "fair_price": 15390.0, "discount_pct": -2.6, "verdict": "férová cena", "year": 2016, "km": 210000, "km_per_year": 20300.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Malacky", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": null}, {"id": "ab-AeQojtMdbFb", "url": "https://www.autobazar.eu/detail/bmw-x3-2016/AeQojtMdbFb/", "title": "BMW X3 xDrive20d M Sport AT 140kW190HP A8", "price": 16000, "price_gross": 16000, "fair_price": 15570.0, "discount_pct": -2.7, "verdict": "férová cena", "year": 2016, "km": 185000, "km_per_year": 17900.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "automatic", "seller_type": "private", "location": "Košice", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": null}, {"id": "197186318", "url": "https://auto.bazos.sk/inzerat/197186318/bmw-x3-xdrive20d-140kw-at8-2021-v-zaruke-kupene-v-sr.php", "title": "BMW X3 xDrive20d 140kW AT/8 2021 / V Záruke + Kúpené v SR", "price": 29990, "price_gross": 29990, "fair_price": 29170.0, "discount_pct": -2.8, "verdict": "férová cena", "year": 2021, "km": 118000, "km_per_year": 22100.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Lučenec", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AmsIqj51TIR", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive20d-140kw-at8-2021-aj-na-splatky-protiucet/AmsIqj51TIR/", "price": 29990}], "body": null}, {"id": "196227426", "url": "https://auto.bazos.sk/inzerat/196227426/bmw-x3-xdriwe-30d-210kw-360kamerabeam-led60000km.php", "title": "Bmw X3 xDriwe 30d 195Kw 360Kamera/Beam Led/60000km", "price": 37999, "price_gross": 37999, "fair_price": 36980.0, "discount_pct": -2.8, "verdict": "férová cena", "year": 2020, "km": 60000, "km_per_year": 9500.0, "eg": "30d / 35d (249–313 k)", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Kežmarok", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": null}, {"id": "ab-AeQJ7uI7aI7", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive30d-at-210kw286hp-a8/AeQJ7uI7aI7/", "title": "BMW X3 M Sport xDrive30d AT 210kW286HP A8", "price": 23500, "price_gross": 23500, "fair_price": 22830.0, "discount_pct": -2.9, "verdict": "férová cena", "year": 2020, "km": 198000, "km_per_year": 31300.0, "eg": "30d / 35d (249–313 k)", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Lučenec", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "197007069", "url": "https://auto.bazos.sk/inzerat/197007069/bmw-x3-30d-xdrive-m-sport-210kw-122020.php", "price": 23500}], "body": null}, {"id": "ab-Ab1DlnySDRT", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive20d/Ab1DlnySDRT/", "title": "BMW X3 xDrive20d", "price": 28999, "price_gross": 28999, "fair_price": 28120.0, "discount_pct": -3.1, "verdict": "férová cena", "year": 2020, "km": 104000, "km_per_year": 16400.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava - Vajnory", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": null}, {"id": "ab-Amlxj_hHKTN", "url": "https://www.autobazar.eu/detail/bmw-x3-20d-m-packet-led-panorama/Amlxj_hHKTN/", "title": "BMW X3 2.0d, M-PAKET, LED, Panorama", "price": 12500, "price_gross": 12500, "fair_price": 12120.0, "discount_pct": -3.1, "verdict": "férová cena", "year": 2015, "km": 289000, "km_per_year": 25500.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Myjava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": null}, {"id": "195696877", "url": "https://auto.bazos.sk/inzerat/195696877/bmw-x3-20d-xdrive-at2014.php", "title": "BMW X3 2,0d xDrive A/T,2014", "price": 13999, "price_gross": 13999, "fair_price": 13560.0, "discount_pct": -3.2, "verdict": "férová cena", "year": 2014, "km": 245000, "km_per_year": 19900.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Nitra", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": null}, {"id": "ab-AenJphQ3OBC", "url": "https://www.autobazar.eu/detail/bmw-x3-m40d-at-240kw326hp-a8/AenJphQ3OBC/", "title": "BMW X3 M40d AT 240kW326HP A8", "price": 23500, "price_gross": 23500, "fair_price": 22730.0, "discount_pct": -3.4, "verdict": "férová cena", "year": 2019, "km": 210000, "km_per_year": 28600.0, "eg": "M40d (326–340 k)", "cg": 1, "transmission": "automatic", "seller_type": "private", "location": "Trnava", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": null}, {"id": "ab-AbVSErBuoD-", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive30d/AbVSErBuoD-/", "title": "BMW X3 xDrive30d", "price": 28500, "price_gross": 28500, "fair_price": 27480.0, "discount_pct": -3.7, "verdict": "férová cena", "year": 2020, "km": 184000, "km_per_year": 29100.0, "eg": "30d / 35d (249–313 k)", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Nitra", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": null}, {"id": "ab-AeZW3dlpQRN", "url": "https://www.autobazar.eu/detail/bmw-x3-30-diesel-190kw-automat-prevodovka-4x4/AeZW3dlpQRN/", "title": "BMW X3 3.0 Diesel 190kW Automat. prevodovka 4x4", "price": 16800, "price_gross": 16800, "fair_price": 16190.0, "discount_pct": -3.8, "verdict": "férová cena", "year": 2016, "km": 208000, "km_per_year": 20100.0, "eg": "30d / 35d (249–313 k)", "cg": 1, "transmission": "automatic", "seller_type": "private", "location": "Ľubotín", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197181792", "url": "https://auto.bazos.sk/inzerat/197181792/bmw-x3-f25-30d-xdrive.php", "price": 16800}], "body": null}, {"id": "196484264", "url": "https://auto.bazos.sk/inzerat/196484264/bmw-x3-m40d.php", "title": "Bmw x3 m40d", "price": 23500, "price_gross": 23500, "fair_price": 22650.0, "discount_pct": -3.8, "verdict": "férová cena", "year": 2019, "km": 213500, "km_per_year": 29100.0, "eg": "M40d (326–340 k)", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Trnava", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": null}, {"id": "ab-AeyQR_NlDNR", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive30d-mhev-at-210kw286hp-a8/AeyQR_NlDNR/", "title": "BMW X3 xDrive30d mHEV AT 210kW286HP A8", "price": 44280, "price_gross": 44280, "fair_price": 42620.0, "discount_pct": -3.9, "verdict": "férová cena", "year": 2023, "km": 88000, "km_per_year": 26400.0, "eg": "30d / 35d (249–313 k)", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Most pri Bratislave", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": null}, {"id": "ab-Abm3sBhK15K", "url": "https://www.autobazar.eu/detail/bmw-x3-20d-xdrive/Abm3sBhK15K/", "title": "BMW X3 20d xDrive", "price": 52990, "price_gross": 52990, "fair_price": 50850.0, "discount_pct": -4.2, "verdict": "férová cena", "year": 2024, "km": 35100, "km_per_year": 15000.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Trnava", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": null}, {"id": "197175470", "url": "https://auto.bazos.sk/inzerat/197175470/bmw-x3-xdrive20d-at-140kw190hp-a8.php", "title": "BMW X3 xDrive20d AT 140kW190HP A8", "price": 27490, "price_gross": 27490, "fair_price": 26380.0, "discount_pct": -4.2, "verdict": "férová cena", "year": 2020, "km": 120000, "km_per_year": 18900.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Senec", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AeegiEltKxi", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive20d-at-140kw190hp-a8/AeegiEltKxi/", "price": 27490}], "body": null}, {"id": "196930964", "url": "https://auto.bazos.sk/inzerat/196930964/bmw-x3-f25-30d-190kw-xdrive.php", "title": "BMW X3 f25 3.0d 190kw xDrive", "price": 15500, "price_gross": 15500, "fair_price": 14880.0, "discount_pct": -4.2, "verdict": "férová cena", "year": 2015, "km": 320000, "km_per_year": 28200.0, "eg": "30d / 35d (249–313 k)", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Kežmarok", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": null}, {"id": "ab-AeBqSWXr6Wh", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive30d-mhev-at-210kw286hp-a8/AeBqSWXr6Wh/", "title": "BMW X3 xDrive30d Luxury", "price": 39000, "price_gross": 39000, "fair_price": 37390.0, "discount_pct": -4.3, "verdict": "férová cena", "year": 2022, "km": 76466, "km_per_year": 17600.0, "eg": "30d / 35d (249–313 k)", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Žilina", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197166022", "url": "https://auto.bazos.sk/inzerat/197166022/bmw-x3-xdrive30d-mhev-210kw-a8-1-majitel-odpocet-dph.php", "price": 39000}], "body": null}, {"id": "ab-Aml-wtDEzLA", "url": "https://www.autobazar.eu/detail/bmw-x3-m-competition/Aml-wtDEzLA/", "title": "BMW X3 M COMPETITION", "price": 69800, "price_gross": 69800, "fair_price": 66670.0, "discount_pct": -4.7, "verdict": "férová cena", "year": 2024, "km": 31561, "km_per_year": 13500.0, "eg": "M40i / X3 M (354–510 k)", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava-Ružinov", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": null}, {"id": "196564049", "url": "https://auto.bazos.sk/inzerat/196564049/bmw-x3-20xd.php", "title": "BMW X3 2.0d Xdrive", "price": 11900, "price_gross": 11900, "fair_price": 11370.0, "discount_pct": -4.7, "verdict": "férová cena", "year": 2014, "km": 209000, "km_per_year": 16900.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Myjava", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": null}, {"id": "197166582", "url": "https://auto.bazos.sk/inzerat/197166582/bmw-x3-20d-140kw.php", "title": "BMW X3 2.0D 140kw", "price": 16700, "price_gross": 16700, "fair_price": 15920.0, "discount_pct": -4.9, "verdict": "férová cena", "year": 2015, "km": 187000, "km_per_year": 16500.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Piešťany", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": null}, {"id": "197114433", "url": "https://auto.bazos.sk/inzerat/197114433/bmw-x3-30d-xdrive-m-sport-210kw-2023-sk-spz-laser-webasto.php", "title": "BMW X3 30D XDRIVE M-SPORT 210KW 2023 /SK ŠPZ/ LASER, WEBASTO", "price": 39990, "price_gross": 39990, "fair_price": 38130.0, "discount_pct": -4.9, "verdict": "férová cena", "year": 2023, "km": 120254, "km_per_year": 36100.0, "eg": "30d / 35d (249–313 k)", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Nové Zámky", "flags": ["vysoký nájazd 36000 km/rok – flotila / taxi?"], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-Am8fH3oPSIO", "url": "https://www.autobazar.eu/detail/bmw-x3-30d-xdrive-m-sport-210kw-sk-spz-laser-tazne-20-disky-webasto-pano/Am8fH3oPSIO/", "price": 39990}], "body": null}, {"id": "196541167", "url": "https://auto.bazos.sk/inzerat/196541167/bmw-x3-xdrive20d-m-sport.php", "title": "BMW X3 xDrive20d M SPORT", "price": 47900, "price_gross": 47900, "fair_price": 45660.0, "discount_pct": -4.9, "verdict": "férová cena", "year": 2023, "km": 63800, "km_per_year": 19100.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Žilina", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": null}, {"id": "197164945", "url": "https://auto.bazos.sk/inzerat/197164945/bmw-x3-20d.php", "title": "BMW X3 2.0D", "price": 17990, "price_gross": 17990, "fair_price": 17140.0, "discount_pct": -5.0, "verdict": "férová cena", "year": 2015, "km": 106000, "km_per_year": 9400.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Prešov", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": null}, {"id": "ab-AeiYwZ5HF_q", "url": "https://www.autobazar.eu/detail/bmw-x3-m40d-mhev-at-250kw340hp-a8/AeiYwZ5HF_q/", "title": "BMW X3 M40d xDrive AT 250kW340HP A8", "price": 54900, "price_gross": 54900, "fair_price": 51980.0, "discount_pct": -5.6, "verdict": "férová cena", "year": 2024, "km": 54700, "km_per_year": 23400.0, "eg": "M40d (326–340 k)", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Pezinok", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": null}, {"id": "ab-Ammu0V3o9y-", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive30d-m-packet-at-195kw-a8-aj-na-splatky-protiucet/Ammu0V3o9y-/", "title": "BMW X3 xDrive30d M-packet A/T, 195kW, A8 / AJ NA SPLÁTKY / PROTIÚČET /", "price": 28990, "price_gross": 28990, "fair_price": 27400.0, "discount_pct": -5.8, "verdict": "férová cena", "year": 2020, "km": 177104, "km_per_year": 28000.0, "eg": "30d / 35d (249–313 k)", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": null}, {"id": "196787896", "url": "https://auto.bazos.sk/inzerat/196787896/bmw-x3-xdrive-m-packet-at-full-led-acc-hud-panorama-4x4-f.php", "title": "BMW X3 xDrive M-packet A/T FULL LED ACC HUD PANORÁMA, 4x4, F", "price": 28990, "price_gross": 28990, "fair_price": 27270.0, "discount_pct": -6.3, "verdict": "férová cena", "year": 2019, "km": 83500, "km_per_year": 11400.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Dunajská Streda", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": null}, {"id": "ab-AeiE1_kuVSt", "url": "https://www.autobazar.eu/detail/bmw-x3-bmw-x3m-40d/AeiE1_kuVSt/", "title": "BMW X3 M40", "price": 29990, "price_gross": 29990, "fair_price": 28150.0, "discount_pct": -6.5, "verdict": "férová cena", "year": 2020, "km": 152000, "km_per_year": 24000.0, "eg": "M40d (326–340 k)", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Žilina", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": null}, {"id": "ab-Amu12ptqAAo", "url": "https://www.autobazar.eu/detail/bmw-x3-35d-xdrive-m-paket-230kw-aj-na-splatky-protihodnota/Amu12ptqAAo/", "title": "BMW X3 35d xDrive M-paket 230kW - AJ NA SPLÁTKY / PROTIHODNOTA", "price": 21990, "price_gross": 21990, "fair_price": 20540.0, "discount_pct": -7.0, "verdict": "nad trhom", "year": 2015, "km": 100501, "km_per_year": 8900.0, "eg": "30d / 35d (249–313 k)", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Trenčín", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": null}, {"id": "197052303", "url": "https://auto.bazos.sk/inzerat/197052303/bmw-x3-m40i-xdrive-265-kw-052022-80-000-km.php", "title": "BMW X3 M40i xDrive 265 kW | 05/2022 | 80 000 km", "price": 50000, "price_gross": 50000, "fair_price": 46740.0, "discount_pct": -7.0, "verdict": "férová cena", "year": 2022, "km": 80000, "km_per_year": 18500.0, "eg": "M40i / X3 M (354–510 k)", "cg": 2, "transmission": null, "seller_type": "uncertain", "location": "Banská Bystrica", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": null}, {"id": "195460144", "url": "https://auto.bazos.sk/inzerat/195460144/bmw-x3-xdrive-m-packet-at-led-acc-hud-panorama.php", "title": "BMW X3 xDrive M-packet A/T LED ACC HUD PANORÁMA", "price": 28900, "price_gross": 28900, "fair_price": 26970.0, "discount_pct": -7.1, "verdict": "nad trhom", "year": 2019, "km": 87500, "km_per_year": 11900.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Dunajská Streda", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": null}, {"id": "197070977", "url": "https://auto.bazos.sk/inzerat/197070977/bmw-x3-xdrive30d-m-sport-30d-265-koni-xdrive-44.php", "title": "BMW X3 xDrive30d M SPORT | 3.0d 265 KONÍ | xDRIVE 4×4", "price": 27990, "price_gross": 27990, "fair_price": 26020.0, "discount_pct": -7.6, "verdict": "nad trhom", "year": 2019, "km": 158000, "km_per_year": 21500.0, "eg": "30d / 35d (249–313 k)", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Piešťany", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": null}, {"id": "ab-Amd6Y8sFpdL", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive20d-a-t/Amd6Y8sFpdL/", "title": "BMW X3 xDrive20d A/T", "price": 27499, "price_gross": 27499, "fair_price": 25490.0, "discount_pct": -7.9, "verdict": "nad trhom", "year": 2020, "km": 130000, "km_per_year": 20500.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Trenčianska Turná", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "196018917", "url": "https://auto.bazos.sk/inzerat/196018917/bmw-x3-xdrive-20d.php", "price": 26999}], "body": null}, {"id": "196694092", "url": "https://auto.bazos.sk/inzerat/196694092/bmw-x3-xdrive-20d-x-line-44-187oookm.php", "title": "BMW X3 xDrive 2.0D X-Line 4✖️4 187oookm", "price": 17990, "price_gross": 17990, "fair_price": 16650.0, "discount_pct": -8.0, "verdict": "nad trhom", "year": 2016, "km": 187000, "km_per_year": 18100.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Piešťany", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": null}, {"id": "197190596", "url": "https://auto.bazos.sk/inzerat/197190596/bmw-x3-f25.php", "title": "BMW X3 F25", "price": 14500, "price_gross": 14500, "fair_price": 13420.0, "discount_pct": -8.1, "verdict": "nad trhom", "year": 2014, "km": 208000, "km_per_year": 16900.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Kežmarok", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": null}, {"id": "ab-AbYR0AJICJN", "url": "https://www.autobazar.eu/detail/bmw-x3-20d-xdrive/AbYR0AJICJN/", "title": "BMW X3 20d xDrive", "price": 57900, "price_gross": 57900, "fair_price": 53530.0, "discount_pct": -8.2, "verdict": "nad trhom", "year": 2024, "km": 18700, "km_per_year": 8000.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava-Petržalka", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": null}, {"id": "ab-AmcQg3jExTU", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive20d-a-t/AmcQg3jExTU/", "title": "BMW X3 xDrive20d A/T", "price": 13490, "price_gross": 13490, "fair_price": 12430.0, "discount_pct": -8.5, "verdict": "nad trhom", "year": 2015, "km": 276148, "km_per_year": 24400.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Nové Zámky", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": null}, {"id": "ab-AerVqRHKYia", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive30d-at-195kw265hp-a8/AerVqRHKYia/", "title": "BMW X3 xDrive30d AT 195kW265HP A8", "price": 23900, "price_gross": 23900, "fair_price": 21890.0, "discount_pct": -9.2, "verdict": "nad trhom", "year": 2019, "km": 266000, "km_per_year": 36300.0, "eg": "30d / 35d (249–313 k)", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Žilina", "flags": ["vysoký nájazd 36000 km/rok – flotila / taxi?"], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": null}, {"id": "ab-Abeb0aBLQyK", "url": "https://www.autobazar.eu/detail/bmw-x3-2-0/Abeb0aBLQyK/", "title": "BMW X3 2, 0 xDrive M packet 20i 135kw A8", "price": 32999, "price_gross": 32999, "fair_price": 30080.0, "discount_pct": -9.7, "verdict": "nad trhom", "year": 2021, "km": 106195, "km_per_year": 19900.0, "eg": "Benzín 20i / 28i / 30i (184–252 k)", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava-Ružinov", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": null}, {"id": "ab-AmJTW7JAzMi", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive20d-mhev-at/AmJTW7JAzMi/", "title": "BMW X3 xDrive20d mHEV A/T", "price": 32390, "price_gross": 32390, "fair_price": 29500.0, "discount_pct": -9.8, "verdict": "nad trhom", "year": 2022, "km": 149166, "km_per_year": 34400.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava-Staré Mesto", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "197182614", "url": "https://auto.bazos.sk/inzerat/197182614/bmw-x3-xdrive20d-hybrid-140kw.php", "price": 32390}], "body": null}, {"id": "197052061", "url": "https://auto.bazos.sk/inzerat/197052061/2018-x3-g01-30d-xd-195kw8st-automatperfektny-stavxline.php", "title": "2018 X3 G01 3.0d xd 195kw,8st automat,perfektný stav,Xline", "price": 23490, "price_gross": 23490, "fair_price": 21350.0, "discount_pct": -10.0, "verdict": "nad trhom", "year": 2018, "km": 192000, "km_per_year": 23000.0, "eg": "30d / 35d (249–313 k)", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Prievidza", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AeByUa2JbU2", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive30d-xline-at-195kw265hp-a8/AeByUa2JbU2/", "price": 23490}], "body": null}, {"id": "196083459", "url": "https://auto.bazos.sk/inzerat/196083459/bmw-x3-20d-xdrive.php", "title": "Bmw x3 2.0d xdrive", "price": 21500, "price_gross": 21500, "fair_price": 19470.0, "discount_pct": -10.4, "verdict": "nad trhom", "year": 2018, "km": 170000, "km_per_year": 20400.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Bánovce nad Bebravou", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": null}, {"id": "ab-AmHntKhOqkI", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive-30e-luxury-line/AmHntKhOqkI/", "title": "BMW X3 xDrive 30e Luxury Line", "price": 32990, "price_gross": 32990, "fair_price": 29770.0, "discount_pct": -10.8, "verdict": "nad trhom", "year": 2021, "km": 130200, "km_per_year": 24400.0, "eg": "30e plug-in hybrid", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Senec", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": null}, {"id": "197155664", "url": "https://auto.bazos.sk/inzerat/197155664/bmw-x3-xdrive20d-xline-steptronic-135kw-2014-1majitel.php", "title": "BMW X3 xDrive20d xLine Steptronic 135kW 2014 / 1.Majiteľ", "price": 12490, "price_gross": 12490, "fair_price": 11270.0, "discount_pct": -10.9, "verdict": "nad trhom", "year": 2014, "km": 272776, "km_per_year": 22100.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Partizánske", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-Amc_iP69N2L", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive20d-xline-steptronic-135kw-2014-aj-na-splatky-protiucet/Amc_iP69N2L/", "price": 13690}], "body": null}, {"id": "196202945", "url": "https://auto.bazos.sk/inzerat/196202945/bmw-x3-20d-xdrive-140kw-mt6-4x4.php", "title": "BMW X3 20d xDrive 140kW MT6 4x4", "price": 9990, "price_gross": 9990, "fair_price": 9010.0, "discount_pct": -10.9, "verdict": "nad trhom", "year": 2014, "km": 341315, "km_per_year": 27700.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Galanta", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AmWeYE_d8Oe", "url": "https://www.autobazar.eu/detail/bmw-x3-20d-xdrive-140kw-mt6-4x4/AmWeYE_d8Oe/", "price": 9990}], "body": null}, {"id": "195785618", "url": "https://auto.bazos.sk/inzerat/195785618/bmw-x3-xdrive30i-mhev-pano-laser.php", "title": "BMW X3 xDrive30i mHEV PANO, LASER", "price": 39900, "price_gross": 39900, "fair_price": 35950.0, "discount_pct": -11.0, "verdict": "nad trhom", "year": 2022, "km": 98000, "km_per_year": 22600.0, "eg": "Benzín 20i / 28i / 30i (184–252 k)", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": null}, {"id": "ab-AmUCQz9EL22", "url": "https://www.autobazar.eu/detail/bmw-radu-x3-xdrive20d/AmUCQz9EL22/", "title": "BMW radu X3 xDrive20d", "price": 13900, "price_gross": 13900, "fair_price": 12500.0, "discount_pct": -11.2, "verdict": "nad trhom", "year": 2014, "km": 208000, "km_per_year": 16900.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Dunajská Streda", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": null}, {"id": "197156362", "url": "https://auto.bazos.sk/inzerat/197156362/bmw-x3-xdrive-20-diesel-140kw190ps-automat-m-paket.php", "title": "BMW X3 xdrive 2.0 Diesel 140kw/190PS AUTOMAT M-Paket", "price": 26800, "price_gross": 26800, "fair_price": 24080.0, "discount_pct": -11.3, "verdict": "nad trhom", "year": 2020, "km": 148000, "km_per_year": 23400.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Púchov", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": null}, {"id": "196255590", "url": "https://auto.bazos.sk/inzerat/196255590/bmw-x3-xdrive-20d-at8-webasto.php", "title": "BMW X3 xDrive 20d AT8 Webasto", "price": 14890, "price_gross": 14890, "fair_price": 13380.0, "discount_pct": -11.3, "verdict": "nad trhom", "year": 2014, "km": 199552, "km_per_year": 16200.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Pezinok", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmCzigPqhb0", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive-20d-at8-webasto/AmCzigPqhb0/", "price": 14890}], "body": null}, {"id": "195923146", "url": "https://auto.bazos.sk/inzerat/195923146/bmw-x3-m40i-xdrive-2019-360-k-92-000-km.php", "title": "BMW X3 M40i xDrive, 2019, 360 k, 92 000 km", "price": 36500, "price_gross": 36500, "fair_price": 32750.0, "discount_pct": -11.4, "verdict": "nad trhom", "year": 2019, "km": 92000, "km_per_year": 12500.0, "eg": "M40i / X3 M (354–510 k)", "cg": 2, "transmission": null, "seller_type": "uncertain", "location": "Považská Bystrica", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": null}, {"id": "196463288", "url": "https://auto.bazos.sk/inzerat/196463288/bmw-x3-xdrive30i-2018-185kw-harman-kardon-xline.php", "title": "BMW X3 xDrive30i 2018 185kW Harman Kardon - Odpočet DPH", "price": 29990, "price_gross": 29990, "fair_price": 26820.0, "discount_pct": -11.8, "verdict": "nad trhom", "year": 2018, "km": 102594, "km_per_year": 12300.0, "eg": "Benzín 20i / 28i / 30i (184–252 k)", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Spišská Nová Ves", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmL5MclIzrE", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive30i-2018-185kw-harman-kardon-xline/AmL5MclIzrE/", "price": 29490}], "body": null}, {"id": "ab-AmcRZu4Hb3n", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive20d-m-sport-at/AmcRZu4Hb3n/", "title": "BMW X3 xDrive20d M Sport A/T", "price": 34990, "price_gross": 34990, "fair_price": 31200.0, "discount_pct": -12.2, "verdict": "nad trhom", "year": 2019, "km": 40205, "km_per_year": 5500.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Trenčín", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": null}, {"id": "196476216", "url": "https://auto.bazos.sk/inzerat/196476216/bmw-x3-xdrive20d-xline-at-140kw-2019.php", "title": "BMW X3 xDrive20d xLine A/T, 140kW (2019)", "price": 23200, "price_gross": 23200, "fair_price": 20650.0, "discount_pct": -12.3, "verdict": "nad trhom", "year": 2019, "km": 191600, "km_per_year": 26100.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Námestovo", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": null}, {"id": "196668523", "url": "https://auto.bazos.sk/inzerat/196668523/bmw-x3-m40i-xdrive-360ps-full-vybava-s-dph.php", "title": "BMW X3 M40i xDrive 360PS | FULL VÝBAVA / s DPH", "price": 29000, "price_gross": 29000, "fair_price": 25790.0, "discount_pct": -12.4, "verdict": "nad trhom", "year": 2018, "km": 167000, "km_per_year": 20000.0, "eg": "M40i / X3 M (354–510 k)", "cg": 2, "transmission": "automatic", "seller_type": "uncertain", "location": "Prievidza", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": null}, {"id": "ab-Am7vaPwx5w1", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive20i-mhev-at/Am7vaPwx5w1/", "title": "BMW X3 xDrive 30e PHEV A/T, 135kW A8, 5d (2021 - 2024)", "price": 39900, "price_gross": 39900, "fair_price": 35330.0, "discount_pct": -12.9, "verdict": "nad trhom", "year": 2022, "km": 136380, "km_per_year": 31500.0, "eg": "30e plug-in hybrid", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Dunajská Streda", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "196277293", "url": "https://auto.bazos.sk/inzerat/196277293/bmw-x3-xdrive20i-mhev-at.php", "price": 39900}], "body": null}, {"id": "196950991", "url": "https://auto.bazos.sk/inzerat/196950991/bmw-x3-m40d-at8-250kw.php", "title": "BMW X3 M40d AT/8 250kW", "price": 39990, "price_gross": 39990, "fair_price": 35380.0, "discount_pct": -13.0, "verdict": "nad trhom", "year": 2021, "km": 95000, "km_per_year": 17800.0, "eg": "M40d (326–340 k)", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmillD5S9ws", "url": "https://www.autobazar.eu/detail/bmw-x3-m40d-at8-250kw-aj-na-splatky-protiucet/AmillD5S9ws/", "price": 39990}], "body": null}, {"id": "196509578", "url": "https://auto.bazos.sk/inzerat/196509578/bmw-x3-xdrive-at-panorama.php", "title": "BMW X3 Xdrive A/T PANORAMA", "price": 14950, "price_gross": 14950, "fair_price": 13190.0, "discount_pct": -13.4, "verdict": "nad trhom", "year": 2014, "km": 295000, "km_per_year": 23900.0, "eg": "Benzín 20i / 28i / 30i (184–252 k)", "cg": 2, "transmission": "automatic", "seller_type": "uncertain", "location": "Rimavská Sobota", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": null}, {"id": "196739995", "url": "https://auto.bazos.sk/inzerat/196739995/bmw-x3-30d-rv-2016.php", "title": "BMW X3 30d r.v 2016", "price": 20000, "price_gross": 20000, "fair_price": 17550.0, "discount_pct": -14.0, "verdict": "nad trhom", "year": 2016, "km": 154000, "km_per_year": 14900.0, "eg": "30d / 35d (249–313 k)", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Považská Bystrica", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": null}, {"id": "ab-Ambq7-7ihLF", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive20d-mhev-a-t/Ambq7-7ihLF/", "title": "BMW X3 xDrive20d mHEV A/T", "price": 38900, "price_gross": 38900, "fair_price": 33930.0, "discount_pct": -14.6, "verdict": "nad trhom", "year": 2022, "km": 93500, "km_per_year": 21600.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Ilava", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": null}, {"id": "ab-AbdoXIh_Evu", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive20d-za/AbdoXIh_Evu/", "title": "BMW X3 xDrive20d ZA", "price": 26900, "price_gross": 26900, "fair_price": 23290.0, "discount_pct": -15.5, "verdict": "výrazne nad trhom", "year": 2018, "km": 119500, "km_per_year": 14300.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava-Petržalka", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": null}, {"id": "ab-Am8vWa4EFcQ", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive20d-m-paket-facelift-mhev-a-t-140kw-a8-5d-2022/Am8vWa4EFcQ/", "title": "BMW X3 Mod. 2023 INDIVIDUAL M-PAKET 140kw, A8,5d 2022", "price": 33999, "price_gross": 33999, "fair_price": 29390.0, "discount_pct": -15.7, "verdict": "výrazne nad trhom", "year": 2022, "km": 146000, "km_per_year": 33700.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Mechenice", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "196386968", "url": "https://auto.bazos.sk/inzerat/196386968/bmw-x3-g01-facelift-m-paket-2022-20d-x-drive-at-dph.php", "price": 27641}], "body": null}, {"id": "196514099", "url": "https://auto.bazos.sk/inzerat/196514099/bmw-x3-20i-xdrive-odpocet-dph.php", "title": "BMW X3 xDrive20i (Mild-Hybrid ), zaruka, odpocet dph", "price": 47600, "price_gross": 47600, "fair_price": 41040.0, "discount_pct": -16.0, "verdict": "výrazne nad trhom", "year": 2022, "km": 51000, "km_per_year": 11800.0, "eg": "Benzín 20i / 28i / 30i (184–252 k)", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Komárno", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": null}, {"id": "ab-Ae-1jst8iT1", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive20d-mhev-at-140kw190hp-a8/Ae-1jst8iT1/", "title": "BMW X3 xDrive20d mHEV AT 140kW190HP A8", "price": 35990, "price_gross": 35990, "fair_price": 30860.0, "discount_pct": -16.6, "verdict": "výrazne nad trhom", "year": 2022, "km": 138000, "km_per_year": 31800.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "automatic", "seller_type": "private", "location": "Trenčín", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": null}, {"id": "195717260", "url": "https://auto.bazos.sk/inzerat/195717260/bmw-x3-xdrive20d-xline-8at-led-navi-kamera-full-servis.php", "title": "BMW X3 xDrive20d xLine A/T", "price": 25500, "price_gross": 25500, "fair_price": 21750.0, "discount_pct": -17.2, "verdict": "výrazne nad trhom", "year": 2018, "km": 130438, "km_per_year": 15700.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Ružomberok", "flags": [], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [{"source": "autobazar", "id": "ab-AmlZdl_7zvb", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive20d-xline-a-t/AmlZdl_7zvb/", "price": 25500}], "body": null}, {"id": "195305153", "url": "https://auto.bazos.sk/inzerat/195305153/bmw-x3-xdrive20d-at.php", "title": "✅️BMW X3 xDrive20d A/T✅️", "price": 14500, "price_gross": 14500, "fair_price": 12240.0, "discount_pct": -18.5, "verdict": "výrazne nad trhom", "year": 2014, "km": 247863, "km_per_year": 20100.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Nitra", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": null}, {"id": "196471328", "url": "https://auto.bazos.sk/inzerat/196471328/bmw-x3-xdrive30d190kw258psautomat.php", "title": "BMW X3 xDrive30d,190kw(258Ps),automat", "price": 18200, "price_gross": 18200, "fair_price": 15300.0, "discount_pct": -18.9, "verdict": "výrazne nad trhom", "year": 2015, "km": 230000, "km_per_year": 20300.0, "eg": "30d / 35d (249–313 k)", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Šaľa", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": null}, {"id": "197098678", "url": "https://auto.bazos.sk/inzerat/197098678/bmw-x3-m40i-at-265-kw-a8-2017-head-up-harmankardon.php", "title": "BMW X3 M40i A/T, 265 kW, A8, 2017, head-up, harman/kardon", "price": 26990, "price_gross": 26990, "fair_price": 25090.0, "discount_pct": -7.6, "verdict": "nad trhom", "year": 2017, "km": 161096, "km_per_year": 17300.0, "eg": "M40i / X3 M (354–510 k)", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmTZq-bPmM1", "url": "https://www.autobazar.eu/detail/bmw-x3-m40i-at-265-kw-a8-5d-aj-na-splatky-protiucet/AmTZq-bPmM1/", "price": 35990}], "body": null}, {"id": "ab-Am0E3MDLaNv", "url": "https://www.autobazar.eu/detail/bmw-x3-30m-40i-2021/Am0E3MDLaNv/", "title": "BMW X3  3.0M 40i 2021", "price": 32500, "price_gross": 32500, "fair_price": 26980.0, "discount_pct": -20.5, "verdict": "výrazne nad trhom", "year": 2021, "km": 183353, "km_per_year": 34400.0, "eg": "M40i / X3 M (354–510 k)", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": null}, {"id": "ab-AbqTkmnPGbH", "url": "https://www.autobazar.eu/detail/bmw-x3-20d-xdrive/AbqTkmnPGbH/", "title": "BMW X3 20d xDrive", "price": 62400, "price_gross": 62400, "fair_price": 51630.0, "discount_pct": -20.9, "verdict": "výrazne nad trhom", "year": 2024, "km": 19960, "km_per_year": 8600.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava-Petržalka", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": null}, {"id": "196786100", "url": "https://auto.bazos.sk/inzerat/196786100/bmw-x3-m40i-g01.php", "title": "Bmw x3 M40i G01", "price": 28999, "price_gross": 35669, "fair_price": 29430.0, "discount_pct": -21.2, "verdict": "výrazne nad trhom", "year": 2018, "km": 110000, "km_per_year": 13200.0, "eg": "M40i / X3 M (354–510 k)", "cg": 2, "transmission": null, "seller_type": "uncertain", "location": "Trnava", "flags": ["inzerovaná cena 28999 € je bez DPH – porovnáva sa cena s DPH 35669 €", "prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": null}, {"id": "ab-Ae_qC-P3Sn3", "url": "https://www.autobazar.eu/detail/bmw-x3-m40d-mhev-at-250kw340hp-a8/Ae_qC-P3Sn3/", "title": "BMW X3 M40d mHEV AT 250kW340HP A8", "price": 52000, "price_gross": 52000, "fair_price": 42530.0, "discount_pct": -22.3, "verdict": "výrazne nad trhom", "year": 2022, "km": 85000, "km_per_year": 19600.0, "eg": "M40d (326–340 k)", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Žilina", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": null}, {"id": "ab-Ab6vKM1OLXY", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive30d/Ab6vKM1OLXY/", "title": "BMW X3 xDrive30d", "price": 45900, "price_gross": 45900, "fair_price": 37380.0, "discount_pct": -22.8, "verdict": "výrazne nad trhom", "year": 2022, "km": 76557, "km_per_year": 17700.0, "eg": "30d / 35d (249–313 k)", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava-Petržalka", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": null}, {"id": "ab-Amib1jH-Dt2", "url": "https://www.autobazar.eu/detail/bmw-x3-m-competition-v-zaruke-aj-na-splatky-protiucet/Amib1jH-Dt2/", "title": "BMW X3 M Competition / V ZÁRUKE / AJ NA SPLÁTKY / PROTIÚČET /", "price": 39990, "price_gross": 39990, "fair_price": 32450.0, "discount_pct": -23.2, "verdict": "výrazne nad trhom", "year": 2019, "km": 135533, "km_per_year": 18500.0, "eg": "M40i / X3 M (354–510 k)", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Trenčín", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": null}, {"id": "196800208", "url": "https://auto.bazos.sk/inzerat/196800208/bmw-x3-35d-xdrive-x-line-230kw.php", "title": "BMW X3 35d xDrive X-Line 230kW Facelift", "price": 19900, "price_gross": 19900, "fair_price": 16020.0, "discount_pct": -24.2, "verdict": "výrazne nad trhom", "year": 2016, "km": 227000, "km_per_year": 22000.0, "eg": "30d / 35d (249–313 k)", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Rimavská Sobota", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": null}, {"id": "ab-Am03aNetZ4w", "url": "https://www.autobazar.eu/detail/bmw-x3-m40i-xdrive-g01-odpdph-sk-povod-top-stav/Am03aNetZ4w/", "title": "BMW X3 M40i xDrive G01 |odp.DPH, SK pôvod, TOP stav|", "price": 43990, "price_gross": 43990, "fair_price": 35330.0, "discount_pct": -24.5, "verdict": "výrazne nad trhom", "year": 2019, "km": 79000, "km_per_year": 10800.0, "eg": "M40i / X3 M (354–510 k)", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Bardejov", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": null}, {"id": "195425906", "url": "https://auto.bazos.sk/inzerat/195425906/bmw-x3-xdrive20d-m-sport-140kw-navikamera.php", "title": "BMW X3 XDRIVE20D M SPORT 140KW NAVI+KAMERA", "price": 15999, "price_gross": 15999, "fair_price": 12820.0, "discount_pct": -24.8, "verdict": "výrazne nad trhom", "year": 2016, "km": 178868, "km_per_year": 17300.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Martin", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": null}, {"id": "196303639", "url": "https://auto.bazos.sk/inzerat/196303639/bmw-x3-20-kw140-f25-xdrive-rv2015.php", "title": "BMW X3 2.0 KW:140 F25 XDRIVE RV:2015", "price": 14500, "price_gross": 14500, "fair_price": 11390.0, "discount_pct": -27.4, "verdict": "výrazne nad trhom", "year": 2015, "km": 260000, "km_per_year": 22900.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Lučenec", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": null}, {"id": "ab-AmDWjk7BOgP", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive20d-luxury-line-at/AmDWjk7BOgP/", "title": "BMW X3 xDrive20d Luxury Line A/T", "price": 20960, "price_gross": 20960, "fair_price": 16280.0, "discount_pct": -28.7, "verdict": "výrazne nad trhom", "year": 2017, "km": 191500, "km_per_year": 20500.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Kostolné Kračany", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": null}, {"id": "ab-AmIRekQy7ZD", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive20d-m-sport-140kw-navi-pluskamera-panoramagarancia-kmoverene/AmIRekQy7ZD/", "title": "BMW X3 xDrive20d M Sport 140kW NAVI+KAMERA,PANORÁMA=GARANCIA KM=OVERENÉ", "price": 16499, "price_gross": 16499, "fair_price": 12750.0, "discount_pct": -29.4, "verdict": "výrazne nad trhom", "year": 2016, "km": 178868, "km_per_year": 17300.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Martin", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": null}, {"id": "ab-AeA0PlFSuCx", "url": "https://www.autobazar.eu/detail/bmw-x3-xdrive30d-190kw258hp-a8/AeA0PlFSuCx/", "title": "BMW X3 xDrive30d 190kW258HP A8", "price": 19800, "price_gross": 19800, "fair_price": 15190.0, "discount_pct": -30.3, "verdict": "výrazne nad trhom", "year": 2014, "km": 212900, "km_per_year": 17300.0, "eg": "30d / 35d (249–313 k)", "cg": 1, "transmission": "automatic", "seller_type": "private", "location": "Piešťany", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": null}, {"id": "195362285", "url": "https://auto.bazos.sk/inzerat/195362285/bmw-x3.php", "title": "Bmw X3", "price": 29000, "price_gross": 29000, "fair_price": 21640.0, "discount_pct": -34.0, "verdict": "výrazne nad trhom", "year": 2018, "km": 215000, "km_per_year": 25800.0, "eg": "30d / 35d (249–313 k)", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Košice", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": null}, {"id": "195798499", "url": "https://auto.bazos.sk/inzerat/195798499/predam-bmw-x3-alpina-xd3.php", "title": "Predam BMW X3 Alpina XD3", "price": 22900, "price_gross": 22900, "fair_price": 15110.0, "discount_pct": -51.5, "verdict": "výrazne nad trhom", "year": 2014, "km": 172000, "km_per_year": 13900.0, "eg": "18d / 20d (150–190 k)", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Bratislava", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": null}];
+const GROUPS = ["Diesel 18d / 20d", "Diesel 30d, 35d a M40d", "Benzín a plug-in 30e"];
+const fmt = n => Math.round(n).toLocaleString("sk-SK");
+const eur = n => fmt(n) + " €";
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const TRANS = {automatic: "automat", manual: "manuál"};
+const SRC = {bazos: "bazoš", autobazar: "autobazar.eu"};
+
+// --- theme toggle ---------------------------------------------------------
+document.getElementById("themeBtn").onclick = () => {
+  const root = document.documentElement;
+  const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  drawChart();
+};
+
+// --- scatter chart --------------------------------------------------------
+const legend = document.getElementById("legend");
+legend.innerHTML = GROUPS.map((g, i) => `<span><i style="background:var(--s${i+1})"></i>${g}</span>`).join("")
+  + `<span><i class="ring"></i>odporúčaná ponuka</span>`;
+
+function drawChart() {
+  const svg = document.getElementById("chart"), wrap = document.getElementById("chartWrap"), tip = document.getElementById("tip");
+  const W = svg.clientWidth, H = 420, m = {l: 56, r: 16, t: 10, b: 40};
+  const pts = DATA.filter(d => d.km && d.price_gross);
+  const xMax = Math.ceil(Math.max(...pts.map(d => d.km)) / 50000) * 50000;
+  const yStep = Math.max(...pts.map(d => d.price_gross)) > 60000 ? 10000 : 5000;
+  const yMax = Math.ceil(Math.max(...pts.map(d => d.price_gross)) / yStep) * yStep;
+  const x = v => m.l + v / xMax * (W - m.l - m.r), y = v => H - m.b - v / yMax * (H - m.t - m.b);
+  let s = "";
+  for (let v = 0; v <= yMax; v += yStep)
+    s += `<line x1="${m.l}" x2="${W-m.r}" y1="${y(v)}" y2="${y(v)}" stroke="var(--grid)"/><text x="${m.l-8}" y="${y(v)+4}" text-anchor="end">${v/1000} tis. €</text>`;
+  const step = (W < 520 ? 2 : 1) * (xMax > 400000 ? 100000 : 50000);
+  for (let v = 0; v <= xMax; v += step)
+    s += `<text x="${x(v)}" y="${H-m.b+18}" text-anchor="middle">${v/1000} tis.</text>`;
+  s += `<text x="${(W+m.l)/2}" y="${H-6}" text-anchor="middle">nájazd (km)</text>`;
+  const order = [...pts].sort((a, b) => (a.pick ? 1 : 0) - (b.pick ? 1 : 0));
+  order.forEach(d => {
+    const cx = x(d.km), cy = y(d.price_gross);
+    if (d.pick) s += `<circle cx="${cx}" cy="${cy}" r="9" fill="none" stroke="var(--text)" stroke-width="2"/>`;
+    s += `<circle class="pt" data-id="${d.id}" cx="${cx}" cy="${cy}" r="5" fill="var(--s${d.cg+1})" stroke="var(--surface)" stroke-width="2"/>`;
+  });
+  // invisible bigger hit targets
+  order.forEach(d => s += `<circle class="hit" data-id="${d.id}" cx="${x(d.km)}" cy="${y(d.price_gross)}" r="11" fill="transparent" style="cursor:pointer"/>`);
+  svg.innerHTML = s;
+  const byId = Object.fromEntries(pts.map(d => [d.id, d]));
+  svg.querySelectorAll(".hit").forEach(c => {
+    c.onmouseenter = c.onmousemove = ev => {
+      const d = byId[c.dataset.id];
+      tip.innerHTML = `<b>${esc(d.title)}</b>
+        <div class="row"><span>Cena</span><span>${eur(d.price_gross)}</span></div>
+        <div class="row"><span>Férová cena</span><span>${eur(d.fair_price)}</span></div>
+        <div class="row"><span>Pod trhom</span><span>${d.discount_pct > 0 ? "+" : ""}${d.discount_pct.toLocaleString("sk-SK")} %</span></div>
+        <div class="row"><span>Zdroj</span><span>${SRC[d.source]}${d.also_listed.length ? " + " + d.also_listed.map(a => SRC[a.source]).join(", ") : ""}</span></div>
+        <div class="row"><span>Rok · km</span><span>${d.year} · ${fmt(d.km)}</span></div>
+        <div class="row"><span>Motor</span><span>${esc(d.eg)} ${TRANS[d.transmission] || ""}</span></div>`;
+      tip.style.display = "block";
+      const r = wrap.getBoundingClientRect();
+      let lx = ev.clientX - r.left + 14, ly = ev.clientY - r.top + 14;
+      if (lx + 290 > r.width) lx = ev.clientX - r.left - 290;
+      tip.style.left = lx + "px"; tip.style.top = ly + "px";
+    };
+    c.onmouseleave = () => tip.style.display = "none";
+    c.onclick = () => window.open(byId[c.dataset.id].url, "_blank", "noopener");
+  });
+}
+drawChart();
+addEventListener("resize", drawChart);
+
+// --- full table -----------------------------------------------------------
+const fEngine = document.getElementById("fEngine");
+[...new Set(DATA.map(d => d.eg))].sort().forEach(g => fEngine.insertAdjacentHTML("beforeend", `<option>${esc(g)}</option>`));
+let sortK = "discount_pct", sortDir = -1;
+function discCell(v) {
+  const w = Math.min(Math.abs(v), 30) / 30 * 50;
+  const bar = v >= 0 ? `left:50%;width:${w}%;background:var(--pos)` : `right:50%;width:${w}%;background:var(--neg)`;
+  return `<span class="disc">${v > 0 ? "+" : ""}${v.toLocaleString("sk-SK")} %<span class="dbar"><span style="${bar}"></span></span></span>`;
+}
+function renderTable() {
+  const max = parseFloat(document.getElementById("fMax").value) || Infinity;
+  const tr = document.getElementById("fTrans").value, se = document.getElementById("fSeller").value, en = fEngine.value;
+  const so = document.getElementById("fSource").value, og = document.getElementById("fOrigin").value;
+  const bo = document.getElementById("fBody").value;
+  const rows = DATA.filter(d => (!en || d.eg === en) && (!tr || d.transmission === tr)
+    && (!se || d.seller_type !== "dealer") && d.price_gross <= max
+    && (!so || d.source === so || d.also_listed.some(a => a.source === so)) && (!og || d.origin === og) && (!bo || d.body === bo))
+    .sort((a, b) => { const A = a[sortK], B = b[sortK]; return (typeof A === "string" ? A.localeCompare(B) : A - B) * sortDir; });
+  document.getElementById("count").textContent = `${rows.length} z ${DATA.length} inzerátov`;
+  document.querySelector("#tbl tbody").innerHTML = rows.map(d => `<tr>
+    <td><a href="${d.url}" target="_blank" rel="noopener">${esc(d.title)}</a> ${d.pick ? '<span class="badge pick">odporúčané</span>' : ""}
+      <div class="sub">${esc(d.eg)} · ${TRANS[d.transmission] || "prevodovka ?"} · ${esc(d.location)} · ${d.seller_type === "dealer" ? "predajca/firma" : d.seller_type === "private" ? "súkromník" : "neisté"} · ${SRC[d.source]}${d.origin === "SR" ? " · kúpené v SR" : d.origin === "dovoz" ? " · dovoz" : ""}${d.also_listed.map(a => ` · <a href="${a.url}" target="_blank" rel="noopener">aj na ${SRC[a.source]}</a>`).join("")}</div>
+      ${d.flags.filter(f => !f.startsWith("prevodovka")).map(f => `<div class="flag">⚠ ${esc(f)}</div>`).join("")}</td>
+    <td class="num">${d.year}</td><td class="num">${fmt(d.km)}</td>
+    <td class="num">${eur(d.price_gross)}</td><td class="num">${eur(d.fair_price)}</td>
+    <td class="num">${discCell(d.discount_pct)}</td></tr>`).join("");
+  document.querySelectorAll("#tbl th.sortable").forEach(th => {
+    const base = th.textContent.replace(/ [▾▴]$/, "");
+    th.textContent = base + (th.dataset.k === sortK ? (sortDir < 0 ? " ▾" : " ▴") : "");
+  });
+}
+document.querySelectorAll("#tbl th.sortable").forEach(th => th.onclick = () => {
+  if (sortK === th.dataset.k) sortDir *= -1; else { sortK = th.dataset.k; sortDir = th.dataset.k === "title" ? 1 : -1; }
+  renderTable();
+});
+["fEngine", "fTrans", "fSeller", "fSource", "fBody", "fOrigin", "fMax"].forEach(id => document.getElementById(id).addEventListener("input", renderTable));
+renderTable();
+</script>
+<!-- ferovka-theme --><script id="ferovka-chart">/* Férovka – chart → ad links, injected into every report by sync-reports.mjs.
+ *
+ * The reports draw one invisible 11px "hit" circle per ad. In dense charts (and always on a narrow phone) those
+ * circles overlap and the one drawn last wins, so a click/tap often opened a neighbouring ad. Here the pointer is
+ * always resolved to the NEAREST point, the report's own tooltip is shown for that point, and a click opens its ad.
+ * Touch: the first tap shows the tooltip (with a hint), a second tap on the same point opens the ad.
+ */
+(() => {
+  let rows;
+  try { rows = DATA; } catch { return; } // eslint-disable-line no-undef
+  if (!Array.isArray(rows) || !rows.length || !("url" in rows[0])) return;
+  const byId = new Map(rows.map((d) => [String(d.id), d]));
+  const MOUSE = ["mouseover", "mouseout", "mouseenter", "mouseleave", "mousemove", "mousedown", "mouseup", "click"];
+  let lastPointer = "mouse", down = null;
+  // the finger position as it was – Chrome "snaps" the later click of a tap to the centre of a nearby clickable element
+  addEventListener("pointerdown", (e) => { lastPointer = e.pointerType || "mouse"; down = { clientX: e.clientX, clientY: e.clientY }; }, true);
+
+  // the old per-point hit circles must not be targets (they overlap, and touch snapping aims at them)
+  document.head.insertAdjacentHTML("beforeend", "<style>svg circle.hit[data-id],svg circle.pt[data-id]{pointer-events:none}</style>");
+
+  function nearest(svg, ev, radius) {
+    let best = null, bd = Infinity;
+    for (const c of svg.querySelectorAll("circle.pt[data-id]")) {
+      const r = c.getBoundingClientRect();
+      const dx = r.left + r.width / 2 - ev.clientX, dy = r.top + r.height / 2 - ev.clientY;
+      const d = dx * dx + dy * dy;
+      if (d <= bd) { bd = d; best = c; } // ties: the point drawn on top (later) wins – that is the one you see
+    }
+    return best && bd <= radius * radius ? best : null;
+  }
+
+  function bind(svg) {
+    if (svg.__fvLinks) return;
+    svg.__fvLinks = true;
+    let current = null, armed = null;
+    const hitOf = (pt) => pt && svg.querySelector(`circle.hit[data-id="${CSS.escape(pt.dataset.id)}"]`);
+    const fire = (el, type, ev) => {
+      if (!el) return;
+      const e = new MouseEvent(type, { clientX: ev.clientX, clientY: ev.clientY, bubbles: false });
+      e.__fv = true;
+      el.dispatchEvent(e);
+    };
+    const tip = () => (svg.parentElement && svg.parentElement.querySelector("#tip, .tip")) || document.getElementById("tip");
+    const mark = (pt) => {
+      if (current === pt) return;
+      if (current) current.setAttribute("r", current.__r || "5");
+      current = pt;
+      if (pt) { pt.__r = pt.__r || pt.getAttribute("r"); pt.setAttribute("r", String(+pt.__r + 2)); }
+    };
+    const show = (pt, ev, hint) => {
+      mark(pt);
+      if (!pt) { const t = tip(); if (t) t.style.display = "none"; return; }
+      fire(hitOf(pt), "mousemove", ev); // the report's own tooltip, for the nearest point
+      const t = tip();
+      if (t && hint) t.insertAdjacentHTML("beforeend", `<div class="fv-hint">Ťukni ešte raz – otvorí sa inzerát ↗</div>`);
+    };
+    const open = (pt) => {
+      const d = byId.get(pt.dataset.id);
+      if (d && d.url) window.open(d.url, "_blank", "noopener");
+    };
+
+    // the per-circle handlers of the report never see real mouse events – only our synthetic ones
+    for (const type of MOUSE) {
+      svg.addEventListener(type, (ev) => {
+        if (ev.__fv) return;
+        ev.stopImmediatePropagation();
+        if (type === "mousemove" && lastPointer === "mouse") {
+          show(nearest(svg, ev, 18), ev, false);
+          svg.style.cursor = current ? "pointer" : "";
+        } else if (type === "mouseleave" && ev.target === svg && lastPointer === "mouse") {
+          show(null, ev);
+        } else if (type === "click") {
+          const touch = lastPointer !== "mouse";
+          const at = touch && down ? down : ev;
+          const pt = nearest(svg, at, touch ? 26 : 18);
+          if (!pt) { armed = null; show(null, ev); return; }
+          if (!touch || armed === pt) { armed = null; open(pt); }
+          else { armed = pt; show(pt, at, true); }
+        }
+      }, true);
+    }
+  }
+
+  const scan = () => document.querySelectorAll("svg").forEach((s) => s.querySelector("circle.pt[data-id]") && bind(s));
+  scan();
+  new MutationObserver(scan).observe(document.body, { childList: true, subtree: true });
+})();
+</script><script id="ferovka-filters">/* Férovka – filters for the whole report, injected into every model report by sync-reports.mjs.
+ *
+ * The reports render the chart (drawChart) and the full ranking (renderTable) from the global DATA array; their own
+ * filter bar only filters the table. Here the filter bar (kept in its place above the ranking) gets more filters (year, price from/to,
+ * km, fuel, discount, picks only, text search) and every filter applies to the chart and the ranking together: DATA is
+ * refilled in place with the matching ads and both are drawn again. "</script" can't occur inside this file.
+ */
+(() => {
+  let data;
+  try { data = DATA; } catch { return; } // eslint-disable-line no-undef
+  if (!Array.isArray(data) || !data.length || typeof renderTable !== "function") return; // eslint-disable-line no-undef
+  const bar = document.querySelector(".filters");
+  if (!bar || bar.dataset.fv) return;
+  bar.dataset.fv = "1";
+  const ALL = data.slice();
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+  const fmt = (n) => Math.round(n).toLocaleString("sk-SK");
+  const norm = (s) => String(s ?? "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+  let groups = null;
+  try { groups = GROUPS; } catch { /* report without groups */ } // eslint-disable-line no-undef
+
+  const FUEL = { diesel: "Diesel", petrol: "Benzín", hybrid: "Hybrid", "plug-in hybrid": "Plug-in hybrid", electric: "Elektro", lpg: "LPG", cng: "CNG" };
+  const fuelOf = (d) => {
+    const e = norm(d.eg);
+    if (/tdi|crdi|dci|hdi|diesel|\bd\b|cdi|\d+d\b|blue/.test(e)) return "Diesel";
+    if (/plug-in|phev|e-hybrid|recharge|\bgte\b|\bt8\b|\b\d{2}e\b|\b\d{3} ?e\b/.test(e)) return "Plug-in hybrid";
+    if (/elektro|electric|\bev\b/.test(e)) return "Elektro";
+    if (/cng|lpg|g-tec|g-tron|tgi|ecofuel/.test(e)) return "Plyn (CNG/LPG)";
+    if (/mild|mhev/.test(e)) return "Benzín"; // mild-hybrid petrol (the diesel ones say TDI / d above)
+    if (/hybrid|hev/.test(e)) return "Hybrid";
+    if (/tsi|tfsi|mpi|fsi|benzin|gdi|dpi|htp|12v|\bt\d\b|\bb[56]\b|\d+i\b|turbo|tce|\bs4\b|rs ?\d|amg|competition|\bm\d{2,3}i?\b|gti|\bx5 m\b/.test(e)) return "Benzín";
+    return d.fuel ? FUEL[d.fuel] || String(d.fuel) : null;
+  };
+
+  // --- controls ---------------------------------------------------------------------------------------------------
+  const years = ALL.map((d) => d.year).filter(Boolean);
+  const yMin = Math.min(...years), yMax = Math.max(...years);
+  const yearOpts = (label) => `<option value="">${label}</option>` +
+    Array.from({ length: yMax - yMin + 1 }, (_, i) => yMax - i).map((y) => `<option>${y}</option>`).join("");
+  const kms = [30000, 50000, 75000, 100000, 150000, 200000, 250000, 300000];
+  const fuels = [...new Set(ALL.map(fuelOf).filter(Boolean))].sort((a, b) => a.localeCompare(b, "sk"));
+  const showGroups = Array.isArray(groups) && groups.length > 1 && ALL.some((d) => Number.isInteger(d.cg));
+
+  const maxInput = $("fMax");
+  if (maxInput) { maxInput.placeholder = "Cena do €"; maxInput.title = "Najvyššia cena (s DPH)"; }
+  const html =
+    `<select id="fvYearFrom" title="Rok výroby od">${yearOpts("Rok od")}</select>` +
+    `<select id="fvYearTo" title="Rok výroby do">${yearOpts("Rok do")}</select>` +
+    `<input id="fvPriceMin" type="number" placeholder="Cena od €" step="500" min="0" title="Najnižšia cena (s DPH)" style="width:110px">`;
+  if (maxInput) maxInput.insertAdjacentHTML("beforebegin", html);
+  else bar.insertAdjacentHTML("afterbegin", html);
+  const more =
+    `<select id="fvKm" title="Najviac najazdených km"><option value="">Nájazd – všetky</option>${kms.map((k) => `<option value="${k}">do ${fmt(k)} km</option>`).join("")}</select>` +
+    (fuels.length > 1 ? `<select id="fvFuel" title="Palivo"><option value="">Všetky palivá</option>${fuels.map((f) => `<option>${esc(f)}</option>`).join("")}</select>` : "") +
+    (showGroups ? `<select id="fvGroup" title="Skupina motorov (farba v grafe)"><option value="">Všetky skupiny</option>${groups.map((g, i) => `<option value="${i}">${esc(g)}</option>`).join("")}</select>` : "") +
+    `<select id="fvDisc" title="O koľko je auto lacnejšie ako férová cena"><option value="">Cena – všetky</option><option value="0">pod férovou cenou</option><option value="10">aspoň 10 % pod trhom</option><option value="20">aspoň 20 % pod trhom</option></select>` +
+    `<input id="fvText" type="search" placeholder="Hľadať (výbava, mesto…)" title="Hľadá v názve inzerátu, motore a lokalite" style="width:170px">` +
+    `<label class="fv-check"><input id="fvPick" type="checkbox"> len odporúčané</label>` +
+    `<button type="button" id="fvReset" class="fv-reset">Zrušiť filtre</button>`;
+  const count = $("count");
+  if (count) count.insertAdjacentHTML("beforebegin", more);
+  else bar.insertAdjacentHTML("beforeend", more);
+
+  // the bar stays where it was – right above the ranking – and also drives the chart; the chart gets a pointer to it
+  const chart = $("chartWrap");
+  const box = document.createElement("div");
+  box.className = "fv-filters";
+  box.id = "filtre";
+  bar.before(box);
+  box.innerHTML = `<div class="fv-head"><b>Filtre</b><span>platia pre rebríček aj graf vyššie</span></div>`;
+  box.appendChild(bar);
+  const note = document.createElement("div");
+  note.className = "fv-note";
+  chart?.before(note);
+
+  document.head.insertAdjacentHTML("beforeend", `<style id="fv-filters-css">
+.fv-filters{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 14px 4px;margin:24px 0 8px}
+.fv-filters .fv-head{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;margin-bottom:8px}
+.fv-filters .fv-head span{color:var(--muted);font-size:13px}
+.fv-filters .filters{margin-bottom:8px}
+.fv-filters .filters .count{flex-basis:100%;margin-left:0}
+.fv-check{display:inline-flex;gap:6px;align-items:center;font-size:13px;color:var(--text-2,var(--text));white-space:nowrap}
+.fv-reset{background:none;border:1px solid var(--border);color:var(--text);border-radius:8px;padding:6px 10px;font:inherit;font-size:13px;cursor:pointer}
+.fv-reset:hover{background:var(--surface-2,var(--surface))}
+.fv-note{color:var(--muted);font-size:13px;margin:0 0 8px}
+.fv-note a{color:inherit}
+.fv-empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:14px;pointer-events:none}
+@media (max-width:600px){.fv-filters .filters select,.fv-filters .filters input[type=number],.fv-filters .filters input[type=search]{flex:1 1 calc(50% - 8px);min-width:0;width:auto!important}}
+</style>`);
+
+  // --- filtering --------------------------------------------------------------------------------------------------
+  const val = (id) => ($(id) ? $(id).value : "");
+  const num = (id) => { const v = parseFloat(val(id)); return Number.isFinite(v) ? v : null; };
+  function matches(d) {
+    const yf = num("fvYearFrom"), yt = num("fvYearTo"), pmin = num("fvPriceMin"), pmax = num("fMax"), km = num("fvKm"), disc = num("fvDisc");
+    const fuel = val("fvFuel"), grp = val("fvGroup"), q = norm(val("fvText")).trim();
+    if (yf != null && !(d.year >= yf)) return false;
+    if (yt != null && !(d.year <= yt)) return false;
+    if (pmin != null && !(d.price_gross >= pmin)) return false;
+    if (pmax != null && !(d.price_gross <= pmax)) return false;
+    if (km != null && !(d.km <= km)) return false;
+    if (disc != null && !(d.discount_pct > disc || (disc > 0 && d.discount_pct >= disc))) return false;
+    if (fuel && fuelOf(d) !== fuel) return false;
+    if (grp !== "" && String(d.cg) !== grp) return false;
+    if ($("fvPick")?.checked && !d.pick) return false;
+    if (q && !q.split(/\s+/).every((w) => norm(`${d.title} ${d.eg ?? ""} ${d.engine ?? ""} ${d.location ?? ""}`).includes(w))) return false;
+    // the report's own filters (engine, gearbox, seller, portal, body, origin) – same rules as its renderTable
+    const en = val("fEngine"), tr = val("fTrans"), se = val("fSeller"), so = val("fSource"), og = val("fOrigin"), bo = val("fBody");
+    if (en && d.eg !== en) return false;
+    if (tr && d.transmission !== tr) return false;
+    if (se && d.seller_type === "dealer") return false;
+    if (so && !(d.source === so || (d.also_listed || []).some((a) => a.source === so))) return false;
+    if (og && d.origin !== og) return false;
+    if (bo && d.body !== bo) return false;
+    return true;
+  }
+  const active = () => [...box.querySelectorAll("select, input")].filter((el) => (el.type === "checkbox" ? el.checked : el.value !== "")).length;
+
+  let drawing = false;
+  function apply() {
+    if (drawing) return;
+    drawing = true;
+    const rows = ALL.filter(matches);
+    data.length = 0;
+    data.push(...rows);
+    const wrap = $("chartWrap");
+    wrap?.querySelector(".fv-empty")?.remove();
+    const plotted = rows.filter((d) => d.km && d.price_gross).length;
+    try {
+      if (typeof drawChart === "function") { // eslint-disable-line no-undef
+        if (plotted) drawChart(); // eslint-disable-line no-undef
+        else { const svg = $("chart"); if (svg) svg.innerHTML = ""; }
+      }
+    } catch (e) { console.warn("chart", e); }
+    if (wrap && !plotted) {
+      if (getComputedStyle(wrap).position === "static") wrap.style.position = "relative";
+      wrap.insertAdjacentHTML("beforeend", `<div class="fv-empty">Filtrom nezodpovedá žiadny inzerát</div>`);
+    }
+    try { renderTable(); } catch (e) { console.warn("table", e); } // eslint-disable-line no-undef
+    const n = active();
+    if (count) count.textContent = `Zobrazených ${fmt(rows.length)} z ${fmt(ALL.length)} inzerátov` + (n ? ` · aktívne filtre: ${n}` : "");
+    note.innerHTML = n
+      ? `Zobrazených ${fmt(rows.length)} z ${fmt(ALL.length)} inzerátov podľa <a href="#filtre">filtrov pri rebríčku</a>.`
+      : `Filtre (rok, cena, nájazd, palivo…) nájdeš <a href="#filtre">pri kompletnom rebríčku</a> – platia aj pre tento graf.`;
+    drawing = false;
+  }
+  box.querySelectorAll("select, input").forEach((el) => el.addEventListener("input", apply));
+  $("fvPick")?.addEventListener("change", apply);
+  $("fvReset").addEventListener("click", () => {
+    box.querySelectorAll("select, input").forEach((el) => { if (el.type === "checkbox") el.checked = false; else el.value = ""; });
+    apply();
+  });
+  apply();
+})();
+</script><!-- /ferovka-theme -->
+</body>
+</html>
