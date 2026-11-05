@@ -229,5 +229,26 @@
     "author": "Vauxford",
     "license": "CC BY-SA 4.0",
     "source": "https://commons.wikimedia.org/wiki/File:2018_BMW_X1_sDrive18i_xLine_1.5_Front.jpg"
+  },
+  "renault-captur": {
+    "src": "/img/renault-captur.jpg",
+    "file": "File:2024 Renault Captur II IMG 9306.jpg",
+    "author": "Alexander-93",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:2024_Renault_Captur_II_IMG_9306.jpg"
+  },
+  "renault-clio": {
+    "src": "/img/renault-clio.jpg",
+    "file": "File:Renault Clio R.S. Line (V) – f 17102021.jpg",
+    "author": "© M 93",
+    "license": "CC BY-SA 3.0 de",
+    "source": "https://commons.wikimedia.org/wiki/File:Renault_Clio_R.S._Line_(V)_%E2%80%93_f_17102021.jpg"
+  },
+  "renault-megane": {
+    "src": "/img/renault-megane.jpg",
+    "file": "File:Renault Megane IV Grandtour (FL) IMG 3785.jpg",
+    "author": "Alexander Migl",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Renault_Megane_IV_Grandtour_(FL)_IMG_3785.jpg"
   }
 }

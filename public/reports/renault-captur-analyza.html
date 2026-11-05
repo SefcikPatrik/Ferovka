@@ -1,0 +1,924 @@
+<!doctype html>
+<html lang="sk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Renault Captur – analýza ponúk</title>
+<style>
+:root {
+  color-scheme: light;
+  --bg: #f6f6f4; --surface: #fcfcfb; --surface-2: #f0efec; --border: #e2e1dc;
+  --text: #0b0b0b; --text-2: #52514e; --muted: #7a7974;
+  --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a;
+  --pos: #2a78d6; --neg: #eb6834; --accent: #2a78d6;
+  --good: #1d7f4e; --bad: #b4332f; --grid: #e8e7e3;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #121211; --surface: #1a1a19; --surface-2: #232321; --border: #33332f;
+    --text: #f0efec; --text-2: #c3c2b7; --muted: #8f8e86;
+    --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+    --pos: #3987e5; --neg: #d95926; --accent: #5598e7;
+    --good: #4cc38a; --bad: #f07a76; --grid: #2a2a27;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #121211; --surface: #1a1a19; --surface-2: #232321; --border: #33332f;
+  --text: #f0efec; --text-2: #c3c2b7; --muted: #8f8e86;
+  --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+  --pos: #3987e5; --neg: #d95926; --accent: #5598e7;
+  --good: #4cc38a; --bad: #f07a76; --grid: #2a2a27;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text);
+  font: 15px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+main { max-width: 1120px; margin: 0 auto; padding: 32px 16px 64px; }
+a { color: var(--accent); text-decoration: none; } a:hover { text-decoration: underline; }
+h1 { font-size: 30px; margin: 0 0 4px; letter-spacing: -.01em; }
+h2 { font-size: 21px; margin: 48px 0 6px; }
+h3 { font-size: 15px; margin: 6px 0 4px; line-height: 1.35; }
+.lead { color: var(--text-2); margin: 0 0 20px; max-width: 760px; }
+.section-lead { color: var(--text-2); margin: 0 0 16px; max-width: 800px; }
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
+.kpi { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+.kpi .v { font-size: 26px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.kpi .l { color: var(--text-2); font-size: 13px; }
+.explain { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; margin-top: 12px; }
+.explain p { margin: 6px 0; color: var(--text-2); }
+.explain b { color: var(--text); }
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; }
+.card-head { display: flex; justify-content: space-between; gap: 8px; font-size: 12px; }
+.tag { font-weight: 600; color: var(--accent); }
+.loc { color: var(--muted); }
+.facts { color: var(--text-2); font-size: 13px; }
+.prices { display: grid; grid-template-columns: 1.2fr 1fr .8fr; gap: 8px; margin: 12px 0 8px; }
+.lbl { display: block; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+.big { font-size: 22px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.mid { font-size: 16px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.good { color: var(--good); }
+.meter { height: 6px; background: var(--surface-2); border-radius: 4px; overflow: hidden; }
+.meter span { display: block; height: 100%; background: var(--s1); border-radius: 4px; }
+.news ul { margin: 6px 0 0; padding-left: 20px; } .news li { margin: 4px 0; } .news .down { color: var(--good, #1baf7a); font-weight: 600; }
+.note { font-size: 12.5px; background: var(--surface-2); border-radius: 6px; padding: 6px 8px; margin-top: 8px; color: var(--text-2); }
+.pc { list-style: none; padding: 0; margin: 10px 0 0; font-size: 13.5px; }
+.pc li { padding-left: 20px; position: relative; margin: 3px 0; }
+.pc li.pro::before { content: "+"; position: absolute; left: 4px; color: var(--good); font-weight: 700; }
+.pc li.con::before { content: "–"; position: absolute; left: 4px; color: var(--bad); font-weight: 700; }
+.subhead { font-size: 15px; color: var(--text-2); margin: 22px 0 10px; font-weight: 600; }
+.chart-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 14px 8px; position: relative; }
+.legend { display: flex; flex-wrap: wrap; gap: 16px; font-size: 13px; color: var(--text-2); margin: 0 0 6px 4px; }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; }
+.legend .ring { background: transparent; border: 2px solid var(--text); width: 12px; height: 12px; }
+svg text { fill: var(--muted); font-size: 11px; }
+.tip { position: absolute; pointer-events: none; background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+  padding: 8px 10px; font-size: 12.5px; box-shadow: 0 6px 20px rgba(0,0,0,.15); max-width: 280px; display: none; z-index: 5; }
+.tip b { display: block; margin-bottom: 2px; }
+.tip .row { display: flex; justify-content: space-between; gap: 12px; color: var(--text-2); }
+.tip .row span:last-child { color: var(--text); font-variant-numeric: tabular-nums; }
+table { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; font-size: 13.5px; }
+th, td { padding: 9px 10px; border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; }
+th { font-size: 12px; color: var(--text-2); font-weight: 600; background: var(--surface-2); white-space: nowrap; }
+th.sortable { cursor: pointer; user-select: none; } th.sortable:hover { color: var(--text); }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+.sub { color: var(--text-2); font-size: 12.5px; margin-top: 2px; }
+.stars { color: #c98500; letter-spacing: 1px; white-space: nowrap; } .stars .off { color: var(--border); }
+.cellbar { height: 5px; background: var(--surface-2); border-radius: 3px; margin-bottom: 4px; }
+.cellbar span { display: block; height: 100%; background: var(--s1); border-radius: 3px; }
+.disc { display: inline-flex; align-items: center; gap: 6px; justify-content: flex-end; }
+.dbar { width: 54px; height: 6px; background: var(--surface-2); border-radius: 3px; position: relative; }
+.dbar span { position: absolute; top: 0; height: 100%; border-radius: 3px; }
+.filters { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 10px; align-items: center; }
+.filters select, .filters input { background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 6px 8px; font: inherit; font-size: 13px; }
+.filters .count { color: var(--muted); font-size: 13px; margin-left: auto; }
+.table-scroll { overflow-x: auto; border-radius: 12px; }
+.badge { font-size: 11px; padding: 1px 6px; border-radius: 10px; background: var(--surface-2); color: var(--text-2); white-space: nowrap; }
+.badge.pick { background: var(--s1); color: #fff; }
+.flag { color: var(--bad); font-size: 12px; }
+.warn { background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--neg); border-radius: 10px; padding: 12px 16px; }
+.warn li { margin: 4px 0; }
+.check { columns: 2 300px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px 14px 34px; margin: 0; }
+.check li { margin: 4px 0; break-inside: avoid; }
+footer { color: var(--muted); font-size: 12.5px; margin-top: 48px; border-top: 1px solid var(--border); padding-top: 14px; }
+.theme-btn { float: right; background: var(--surface); color: var(--text-2); border: 1px solid var(--border); border-radius: 8px; padding: 5px 10px; cursor: pointer; font: inherit; font-size: 13px; }
+@media (max-width: 640px) { h1 { font-size: 24px; } .prices { grid-template-columns: 1fr 1fr 1fr; } .big { font-size: 18px; } th, td { padding: 7px 6px; } }
+</style>
+<!-- ferovka-theme --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"><style id="ferovka-theme">/* Férovka look for the generated analyses – injected by sync-reports.mjs after each report's own <style>.
+   Same palette and type as the site; chart colours (--s1..--s3) stay the validated set. */
+:root {
+  --bg: #f5f4ef; --surface: #fdfdfb; --surface-2: #eeede6; --border: #e1dfd6;
+  --text: #0f1513; --text-2: #4f5551; --muted: #6f746f;
+  --accent: #0b8a56; --good: #0b7a4b; --grid: #e6e4dc; --win: #dff3e9;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d110f; --surface: #151a17; --surface-2: #1d2420; --border: #2a322d;
+    --text: #eef1ec; --text-2: #b6bdb6; --muted: #8f978f;
+    --accent: #2fc583; --good: #4cd08f; --grid: #1f2622; --win: #143223;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d110f; --surface: #151a17; --surface-2: #1d2420; --border: #2a322d;
+  --text: #eef1ec; --text-2: #b6bdb6; --muted: #8f978f;
+  --accent: #2fc583; --good: #4cd08f; --grid: #1f2622; --win: #143223;
+}
+
+body { font-family: "Manrope", system-ui, sans-serif; }
+h1, h2 { letter-spacing: -0.02em; font-weight: 800; }
+.tag { color: var(--accent); }
+
+/* photo header (removed by the site's viewer, which shows its own) */
+.fv-hero { position: relative; margin: 0 0 26px; border-radius: 20px; overflow: hidden; aspect-ratio: 21 / 8; background: #0d110f; display: flex; }
+.fv-hero img { flex: 1; min-width: 0; height: 100%; object-fit: cover; animation: fv-zoom 1.4s cubic-bezier(.2,.7,.2,1) both; }
+.fv-collage img + img { border-left: 3px solid #0d110f; }
+.fv-hero::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(180deg, transparent 55%, rgb(13 17 15 / .75)),
+    repeating-linear-gradient(90deg, rgb(47 197 131 / .06) 0 1px, transparent 1px 48px); }
+.fv-hero figcaption { position: absolute; right: 12px; bottom: 8px; z-index: 1; font-size: 11px; color: rgb(255 255 255 / .75); }
+.fv-hero figcaption a { color: inherit; }
+
+/* cards & panels: softer, lift on hover */
+.card, .kpi, .explain, .chart-wrap, .box { border-radius: 16px; }
+.card { transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease; }
+.card:hover { transform: translateY(-3px); border-color: var(--accent); box-shadow: 0 14px 30px -18px rgb(0 0 0 / .45); }
+.badge.pick { background: var(--accent); }
+
+/* entrance animation */
+@keyframes fv-up { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes fv-zoom { from { transform: scale(1.08); filter: brightness(.6); } to { transform: none; filter: none; } }
+h1, .lead, .kpis, .cards .card { animation: fv-up .6s cubic-bezier(.2,.7,.2,1) both; }
+.lead { animation-delay: .08s; }
+.kpis { animation-delay: .16s; }
+.cards .card:nth-child(2) { animation-delay: .06s; }
+.cards .card:nth-child(3) { animation-delay: .12s; }
+.cards .card:nth-child(4) { animation-delay: .18s; }
+.cards .card:nth-child(5) { animation-delay: .24s; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+@media (max-width: 640px) { .fv-hero { aspect-ratio: 16 / 9; border-radius: 14px; } }
+
+/* touch: hint under the chart tooltip (report-chart.js) */
+.fv-hint { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--border, rgba(127,127,127,.3)); font-weight: 700; color: var(--accent, #2fc583); }
+</style><!-- /ferovka-theme -->
+</head>
+<body>
+<main><!-- ferovka-theme --><figure class="fv-hero"><img src="/img/renault-captur.jpg" alt=""><figcaption>Foto: <a href="https://commons.wikimedia.org/wiki/File:2024_Renault_Captur_II_IMG_9306.jpg" target="_blank" rel="noopener">Alexander-93</a>, CC BY-SA 4.0 (Wikimedia Commons)</figcaption></figure><!-- /ferovka-theme -->
+<button class="theme-btn" id="themeBtn" type="button">Svetlý / tmavý</button>
+<h1>Renault Captur – ktorá ponuka sa oplatí</h1>
+<p class="lead">Analýza aktuálnych inzerátov Renault Captur (Captur I aj II vrátane faceliftu, všetky motory vrátane LPG a hybridov) od 2 500 € na auto.bazos.sk a www.autobazar.eu (4. 11. 2026). Na oboch portáloch je spolu 175 inzerátov (37 na bazoši, 138 na autobazar.eu) – prezreli sme všetky. Po zlúčení áut ponúkaných na oboch portáloch a vynechaní ponúk z Česka ostáva 113 rôznych áut zo Slovenska. Každé auto sme porovnali
+s <b>férovou cenou</b>: tú vypočítal model naučený na celom trhu podľa veku, nájazdu, motora, prevodovky a typu predajcu.</p>
+
+<div class="kpis">
+  <div class="kpi"><div class="v">113</div><div class="l">inzerátov Captura (nad 2 500 €)</div></div>
+  <div class="kpi"><div class="v">102</div><div class="l">ohodnotených (majú rok aj km)</div></div>
+  <div class="kpi"><div class="v">15 300 €</div><div class="l">medián ceny s DPH</div></div>
+  <div class="kpi"><div class="v">97 %</div><div class="l">rozdielov v cenách vysvetlí model</div></div>
+</div>
+
+
+<h2>Odkiaľ sú dáta: bazoš + autobazar.eu</h2>
+<div class="kpis">
+  <div class="kpi"><div class="v">22</div><div class="l">ohodnotených z bazoša</div></div>
+  <div class="kpi"><div class="v">80</div><div class="l">ohodnotených z autobazar.eu</div></div>
+  <div class="kpi"><div class="v">6</div><div class="l">áut bolo na oboch portáloch – započítané raz</div></div>
+  <div class="kpi"><div class="v">23 / 4</div><div class="l">s uvedeným pôvodom SR / dovoz</div></div>
+</div>
+<div class="explain">
+  <p><b>Dva portály, jeden trh.</b> Bazoš prehľadal 37 inzerátov, autobazar.eu
+  138. Ponuky z Česka (na autobazar.eu ich je veľa) sme vynechali. Autobazáre často dávajú
+  to isté auto na oba portály. Takéto dvojice (6 v rebríčku) sme spojili podľa VIN alebo zhody roku, km a ceny,
+  aby sa v modeli nerátali dvakrát. Pri aute nájdeš odkaz na obe ponuky – niekedy sa líšia cenou.</p>
+  <p><b>Rozdiel medzi portálmi:</b> rovnaké auto je na autobazar.eu v priemere -5,6 %
+  oproti bazošu. Na autobazar.eu predávajú hlavne firmy (70 z 80 ohodnotených).</p>
+  <p><b>Kúpené v SR vs. dovoz:</b> autá s uvedeným pôvodom zo SR sú oproti autám bez uvedeného pôvodu
+  +2,9 %, dovezené –
+  (pri rovnakom veku, nájazde a motore). Pôvod zo SR je výhoda pri overovaní histórie, trh zaň však nepripláca – väčšina
+  inzerátov pôvod jednoducho neuvádza. V tabulke dole si môžeš nechať zobraziť len autá kúpené v SR.</p>
+</div>
+
+<h2>Čo hýbe cenou Captura</h2>
+<p class="section-lead">Toto sa model naučil z trhu. Keď porovnávaš dve autá, tieto čísla ti povedia, koľko má byť
+rozdiel v cene, aby to bolo fér.</p>
+<div class="kpis">
+  <div class="kpi"><div class="v">-2,2 %</div><div class="l">každých ďalších 10 000 km</div></div>
+  <div class="kpi"><div class="v">-6,1 %</div><div class="l">každý rok veku navyše</div></div>
+  <div class="kpi"><div class="v">+23 %</div><div class="l">príplatok za automat (DSG)</div></div>
+  <div class="kpi"><div class="v">+3,3 %</div><div class="l">príplatok u predajcu / firmy</div></div>
+  <div class="kpi"><div class="v">+13,3 %</div><div class="l">Captur II (2020+) oproti cene podľa veku</div></div>
+  <div class="kpi"><div class="v">+23,3 %</div><div class="l">príplatok za automat</div></div>
+</div>
+<div class="explain">
+  <p><b>Príklad:</b> dva rovnaké Captury II 1.0 TCe z roku 2022, jedno má 60 tis. km, druhé 120 tis. km. Druhé má byť
+  približne o 13 % lacnejšie (6 × -2,2 %). Ak je lacnejšie len o 5 %, preplácaš kilometre.</p>
+  <p><b>Ako čítať „pod trhom“:</b> +15 % znamená, že auto stojí o 15 % menej, než by malo podľa trhu. Bežný rozptyl
+  cien je asi ±11 %, takže až zľava nad ~10–15 % je naozaj výnimočná. Pri takej zľave vždy zisti, prečo je auto lacné
+  (stav, história, nájazd).</p>
+  <p><b>DPH:</b> ceny uvedené bez DPH (napr. „10 300 € netto“) sme prepočítali na cenu s DPH, ktorú zaplatí súkromná osoba.</p>
+</div>
+
+<h2>Odporúčané ponuky</h2>
+<p class="section-lead">Kandidáti s najlepším pomerom cena / vek / nájazd, ktorých celý inzerát sme prečítali.
+Zoradené podľa toho, ako ich odporúčame.</p>
+<div class="subhead">Captur II (2020+) – najlepší pomer cena / vek</div>
+<div class="cards">
+<article class="card">
+  <div class="card-head"><span class="tag">Captur s továrenským LPG, 5 tis. km</span><span class="loc">Humenné</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/195560329/renault-captur-10-74kw-original-fabricky-lpg.php" target="_blank" rel="noopener">Renault Captur 1,0 74kW originál fabrický LPG / DPH Záruka</a></h3>
+  <div class="facts">2025 · 5 100 km · 1.0 TCe Eco-G 100 LPG (Captur II) · manuál · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">16 500 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">19 290 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+14.4 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:48%"></span></div>
+  <ul class="pc"><li class="pro">2025, 1.0 TCe Eco-G 74 kW (100 k), LPG, 5 100 km</li><li class="pro">1. majiteľ, kúpené v SR, záruka, kamera, automatická klíma</li><li class="pro">VIN v inzeráte, faktúra s DPH</li><li class="con">O 2 800 € pod férovou cenou – over dôvod predaja</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">LPG Captur 2024 v záruke od 1. majiteľky</span><span class="loc">Michalovce</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/195856525/renault-captut.php" target="_blank" rel="noopener">Renault Captur</a></h3>
+  <div class="facts">2024 · 74 133 km · 1.0 TCe Eco-G 100 LPG (Captur II) · prevodovka ? · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">14 500 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">15 800 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+8.2 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:27%"></span></div>
+  <ul class="pc"><li class="pro">5/2024, 1.0 TCe 67 kW, LPG od výroby, 74 tis. km</li><li class="pro">V záruke, zimné pneumatiky, ťažné a nosič bicyklov</li><li class="pro">Možný odpočet DPH</li><li class="con">Predáva firma</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">Captur 1.3 TCe 2025 s kožou</span><span class="loc">Košice</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/renault-captur-13-tce-sr1maj-servkniha-koza/AeHE3QhIDt_/" target="_blank" rel="noopener">Renault Captur 1.3 TCe, SR,1.maj, Serv.kniha, Koža</a></h3>
+  <div class="facts">2025 · 30 858 km · 1.3 TCe 130–160 (Captur II) · manuál · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">15 600 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">17 280 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+9.7 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:32%"></span></div>
+  <ul class="pc"><li class="pro">2025, 1.3 TCe, manuál, 31 tis. km</li><li class="pro">1. majiteľ, kúpené u dealera v SR, servisná knižka</li><li class="con">AAA AUTO – nižšia cena len pri financovaní</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">Captur II 2020 s 26 tis. km</span><span class="loc">Banská Bystrica</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/renault-captur-10-tce-klima-tempomat/AeqUgzVfV0T/" target="_blank" rel="noopener">Renault Captur 1.0 TCe, Klíma, Tempomat</a></h3>
+  <div class="facts">2020 · 26 359 km · 1.0 TCe 90/100 (Captur II) · manuál · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">11 900 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">12 900 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+7.7 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:26%"></span></div>
+  <ul class="pc"><li class="pro">2020, 1.0 TCe, manuál, 26 tis. km</li><li class="pro">Kúpené u dealera v SR, tempomat, klimatizácia</li><li class="con">AAA AUTO</li><li class="con">Slabší 1.0 TCe</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">Nový Captur Eco-G 120 o 4 000 € pod cenníkom</span><span class="loc">Trenčín</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/renault-captur-tce-100-lpg-evolution/AmygddOP0kp/" target="_blank" rel="noopener">Renault Captur Evolution Eco-G 120 - LPG</a></h3>
+  <div class="facts">2026 · 5 km · 1.2 TCe Eco-G 120 LPG (od 2025) · manuál · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">17 990 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">20 270 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+11.3 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:38%"></span></div>
+  <ul class="pc"><li class="pro">2026, 1.2 TCe Eco-G 120 (LPG), 5 km – nové auto</li><li class="pro">Plná záruka, továrenské LPG</li><li class="con">Základná výbava Evolution</li><li class="con">Text inzerátu bez detailov</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">Plug-in hybrid od 1. majiteľa so servisom</span><span class="loc">Zlatovce</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/renault-captur-e-tech-16tce-phev/Am3XLBlHiYw/" target="_blank" rel="noopener">Renault Captur e-Tech 1.6Tce PHEV</a></h3>
+  <div class="facts">2020 · 51 000 km · E-Tech plug-in hybrid 160 (Captur II) · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · kúpené v SR</div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">14 690 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">15 760 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+6.8 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:23%"></span></div>
+  <ul class="pc"><li class="pro">2020, E-Tech plug-in hybrid 160, automat, 51 tis. km</li><li class="pro">Slovenské auto, 1. majiteľ, servis v autorizovanom servise</li><li class="pro">Letné aj zimné kolesá na hliníkových diskoch</li><li class="con">Plug-in sa oplatí len pri pravidelnom nabíjaní</li></ul>
+</article></div>
+<div class="subhead">Lacnejšie Captury do 10 000 €</div>
+<div class="cards">
+<article class="card">
+  <div class="card-head"><span class="tag">Captur I s 74 tis. km za 5 990 €</span><span class="loc">Bratislava</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/196859168/renault-captur-09tce-74000-km-stk-428.php" target="_blank" rel="noopener">Renault Captur, 0,9Tce, 74000 km, STK 4/28</a></h3>
+  <div class="facts">2014 · 74 000 km · 0.9 TCe 90 (Captur I) · manuál · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">5 990 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">7 350 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+18.5 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:62%"></span></div>
+  <ul class="pc"><li class="pro">7/2014, 0.9 TCe 66 kW, manuál, 74 tis. km</li><li class="pro">STK/EK do 4/2028</li><li class="con">0.9 TCe z rokov do 2016 – pýtaj sa na olej a reťaz</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">Captur 2016 s 39 tis. km</span><span class="loc">Levice</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/196874635/renault-captur-energy-tce-90-life.php" target="_blank" rel="noopener">Renault Captur Energy TCe 90 Life</a></h3>
+  <div class="facts">2016 · 38 617 km · 0.9 TCe 90 (Captur I) · manuál · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazoš</b> · aj na <a href='https://www.autobazar.eu/detail/renault-captur-energy-tce-90-life/Ampqw_J_Prc/' target='_blank' rel='noopener'>autobazar.eu</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">7 490 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">8 640 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+13.3 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:44%"></span></div>
+  <ul class="pc"><li class="pro">9/2016, 0.9 TCe 66 kW, 39 tis. km</li><li class="pro">VIN v inzeráte – nájazd sa dá overiť</li><li class="con">Veľmi nízky nájazd – over cez VIN</li><li class="con">Predáva autobazár</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">Diesel 1.5 dCi od 1. majiteľa</span><span class="loc">Liptovský Mikuláš</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/196091881/renault-captur.php" target="_blank" rel="noopener">Renault Captur</a></h3>
+  <div class="facts">2016 · 153 000 km · 1.5 dCi (Captur I) · prevodovka ? · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">6 900 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">7 440 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+7.2 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:24%"></span></div>
+  <ul class="pc"><li class="pro">2016, 1.5 dCi 66 kW, 153 tis. km</li><li class="pro">Kúpené v SR, 1. majiteľ</li><li class="con">Stručný inzerát bez servisnej histórie</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">Captur 1.5 dCi s 98 tis. km</span><span class="loc">Bratislava</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/renault-captur/Am6gMhzpa6L/" target="_blank" rel="noopener">RENAULT Captur</a></h3>
+  <div class="facts">2015 · 97 567 km · 1.5 dCi (Captur I) · manuál · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · kúpené v SR</div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">6 899 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">7 660 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+9.9 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:33%"></span></div>
+  <ul class="pc"><li class="pro">2015, 1.5 dCi, manuál, 98 tis. km</li><li class="pro">Kúpené v SR</li><li class="con">Predáva autobazár</li><li class="con">Inzerát bez popisu</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">Najlacnejší Captur II – s LPG</span><span class="loc">Trnava</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/renault-captur-10-tce-lpg-sr1maj-servkniha/AegXjIZmX_e/" target="_blank" rel="noopener">Renault Captur 1.0 TCe, LPG, SR,1.maj, Serv.kniha</a></h3>
+  <div class="facts">2020 · 191 645 km · 1.0 TCe Eco-G 100 LPG (Captur II) · manuál · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">7 500 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">8 260 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+9.2 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:31%"></span></div>
+  <ul class="pc"><li class="pro">2020, 1.0 TCe s továrenským LPG, 192 tis. km</li><li class="pro">Kúpené v SR, 1. majiteľ, servisná knižka</li><li class="con">Vysoký nájazd</li><li class="con">AAA AUTO</li></ul>
+</article></div>
+<div class="subhead">Špeciálne prípady</div>
+<div class="cards">
+<article class="card">
+  <div class="card-head"><span class="tag">Plug-in hybrid s 21 tis. km</span><span class="loc">Piešťany</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/196545912/renault-captur-e-tech-plug-in-hybrid-full-vybava-21133km.php" target="_blank" rel="noopener">Renault Captur E-TECH Plug-in Hybrid | INTENSE</a></h3>
+  <div class="facts">2020 · 21 133 km · E-Tech plug-in hybrid 160 (Captur II) · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">16 490 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">18 210 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+9.5 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:32%"></span></div>
+  <ul class="pc"><li class="pro">2020, E-Tech plug-in hybrid, automat, 21 tis. km</li><li class="pro">Výbava Intense, 360° kamera</li><li class="pro">~50–60 km na elektrinu</li><li class="con">Predáva firma</li><li class="con">Over stav batérie servisným testom</li></ul>
+</article></div>
+
+<h2>Cena vs. nájazd: celý trh na jednom grafe</h2>
+<p class="section-lead">Každý bod je jeden inzerát. Čím nižšie bod leží oproti ostatným s podobným nájazdom, tým je auto lacnejšie.
+Krúžkom sú označené odporúčané ponuky. Prejdi myšou na bod a uvidíš detail.</p>
+<div class="chart-wrap" id="chartWrap">
+  <div class="legend" id="legend"></div>
+  <svg id="chart" width="100%" height="420" role="img" aria-label="Bodový graf ceny a nájazdu inzerátov"></svg>
+  <div class="tip" id="tip"></div>
+</div>
+
+<h2>Porovnanie motorov</h2>
+<p class="section-lead">Hodnotenie (hviezdičky) zohľadňuje spoľahlivosť, spoľahlivosť a náklady na prevádzku a pomer cena/výkon.
+Číselné stĺpce sú mediány z ohodnotených inzerátov.</p>
+<div class="table-scroll">
+<table>
+  <thead><tr><th>Motor</th><th>Hodnotenie</th><th class="num">Ponúk</th><th class="num">Medián ceny</th><th class="num">Medián roku</th><th class="num">Medián km</th></tr></thead>
+  <tbody>
+<tr>
+  <td><b>1.0 TCe 90/100 (Captur II)</b><div class="sub">3-valec 67–74 kW s reťazou. Najčastejší motor – úsporný, ale s plným autom na diaľnici slabší.</div></td>
+  <td><span class="stars" aria-label="4 z 5">★★★★<span class="off">★</span></span></td>
+  <td class="num">15</td>
+  <td class="num"><div class="cellbar"><span style="width:49%"></span></div>13 300 €</td>
+  <td class="num">2022</td>
+  <td class="num">42 528 km</td>
+</tr>
+<tr>
+  <td><b>1.0 TCe Eco-G 100 LPG (Captur II)</b><div class="sub">Továrenské LPG 74 kW (do 2023 aj 67 kW) – jazda približne o tretinu lacnejšia, záruka aj na plynový systém. Na trhu veľmi obľúbený.</div></td>
+  <td><span class="stars" aria-label="5 z 5">★★★★★<span class="off"></span></span></td>
+  <td class="num">10</td>
+  <td class="num"><div class="cellbar"><span style="width:56%"></span></div>15 050 €</td>
+  <td class="num">2024</td>
+  <td class="num">65 718 km</td>
+</tr>
+<tr>
+  <td><b>1.2 TCe Eco-G 120 LPG (od 2025)</b><div class="sub">Nový 3-valec 84–90 kW s továrenským LPG, väčšinou s automatom. Zatiaľ takmer len nové autá od predajcov.</div></td>
+  <td><span class="stars" aria-label="4 z 5">★★★★<span class="off">★</span></span></td>
+  <td class="num">24</td>
+  <td class="num"><div class="cellbar"><span style="width:75%"></span></div>20 250 €</td>
+  <td class="num">2026</td>
+  <td class="num">5 km</td>
+</tr>
+<tr>
+  <td><b>1.2 TCe 115 (od 2025)</b><div class="sub">Nový 3-valec 84 kW – zatiaľ takmer len nové autá od predajcov.</div></td>
+  <td><span class="stars" aria-label="4 z 5">★★★★<span class="off">★</span></span></td>
+  <td class="num">3</td>
+  <td class="num"><div class="cellbar"><span style="width:85%"></span></div>22 900 €</td>
+  <td class="num">2026</td>
+  <td class="num">1 000 km</td>
+</tr>
+<tr>
+  <td><b>1.3 TCe 130–160 (Captur II)</b><div class="sub">96–116 kW (od 2022 mild hybrid), väčšinou s automatom EDC. Svižný a odolný motor.</div></td>
+  <td><span class="stars" aria-label="4 z 5">★★★★<span class="off">★</span></span></td>
+  <td class="num">7</td>
+  <td class="num"><div class="cellbar"><span style="width:67%"></span></div>17 990 €</td>
+  <td class="num">2023</td>
+  <td class="num">42 000 km</td>
+</tr>
+<tr>
+  <td><b>1.3 TCe mild hybrid 140/160 (Captur II)</b><div class="sub">1.3 TCe s 12 V mild hybridom 103–116 kW a automatom EDC.</div></td>
+  <td><span class="stars" aria-label="4 z 5">★★★★<span class="off">★</span></span></td>
+  <td class="num">5</td>
+  <td class="num"><div class="cellbar"><span style="width:87%"></span></div>23 490 €</td>
+  <td class="num">2025</td>
+  <td class="num">2 500 km</td>
+</tr>
+<tr>
+  <td><b>E-Tech full hybrid 145/160 (Captur II)</b><div class="sub">Plný hybrid 103–116 kW, ~4,5 l v meste. Over plynulosť multimode prevodovky.</div></td>
+  <td><span class="stars" aria-label="4 z 5">★★★★<span class="off">★</span></span></td>
+  <td class="num">3</td>
+  <td class="num"><div class="cellbar"><span style="width:100%"></span></div>26 900 €</td>
+  <td class="num">2026</td>
+  <td class="num">4 000 km</td>
+</tr>
+<tr>
+  <td><b>E-Tech plug-in hybrid 160 (Captur II)</b><div class="sub">Plug-in 118 kW, ~50 km na elektrinu. Bez pravidelného nabíjania nemá zmysel; staršie kusy majú zníženú kapacitu batérie.</div></td>
+  <td><span class="stars" aria-label="3 z 5">★★★<span class="off">★★</span></span></td>
+  <td class="num">6</td>
+  <td class="num"><div class="cellbar"><span style="width:60%"></span></div>16 240 €</td>
+  <td class="num">2021</td>
+  <td class="num">53 750 km</td>
+</tr>
+<tr>
+  <td><b>0.9 TCe 90 (Captur I)</b><div class="sub">3-valec 66 kW – na Captur slabší; do 2016 vyššia spotreba oleja a natiahnutie reťaze.</div></td>
+  <td><span class="stars" aria-label="3 z 5">★★★<span class="off">★★</span></span></td>
+  <td class="num">9</td>
+  <td class="num"><div class="cellbar"><span style="width:29%"></span></div>7 850 €</td>
+  <td class="num">2017</td>
+  <td class="num">92 300 km</td>
+</tr>
+<tr>
+  <td><b>1.2 TCe 120 EDC (Captur I)</b><div class="sub">88 kW so suchým automatom EDC – známe problémy so spotrebou oleja, reťazou a spojkami automatu.</div></td>
+  <td><span class="stars" aria-label="2 z 5">★★<span class="off">★★★</span></span></td>
+  <td class="num">13</td>
+  <td class="num"><div class="cellbar"><span style="width:29%"></span></div>7 700 €</td>
+  <td class="num">2015</td>
+  <td class="num">130 000 km</td>
+</tr>
+<tr>
+  <td><b>1.3 TCe 130/150 (Captur I, 2018–2019)</b><div class="sub">Modernejší 1.3 TCe z konca výroby Captura I – najlepší benzín do staršieho Captura.</div></td>
+  <td><span class="stars" aria-label="4 z 5">★★★★<span class="off">★</span></span></td>
+  <td class="num">1</td>
+  <td class="num"><div class="cellbar"><span style="width:51%"></span></div>13 600 €</td>
+  <td class="num">2019</td>
+  <td class="num">17 500 km</td>
+</tr>
+<tr>
+  <td><b>1.5 dCi (Captur I)</b><div class="sub">66 kW (90 k), ~4,5 l. Odolný diesel; pri vysokom nájazde DPF, vstrekovače a dvojhmota.</div></td>
+  <td><span class="stars" aria-label="4 z 5">★★★★<span class="off">★</span></span></td>
+  <td class="num">6</td>
+  <td class="num"><div class="cellbar"><span style="width:28%"></span></div>7 450 €</td>
+  <td class="num">2015</td>
+  <td class="num">125 284 km</td>
+</tr></tbody>
+</table>
+</div>
+<div class="explain">
+  <p><b>Generácie:</b> <b>Captur I</b> (2013–2019) je malé SUV postavené na Cliu IV – lacné, ale s jednoduchším interiérom.
+  <b>Captur II</b> (od 2020, facelift 2024) je väčší, kvalitnejší a bezpečnejší a ponúka LPG aj hybridy.</p>
+  <p><b>Ktorý motor zvoliť?</b> Najvýhodnejší je <b>1.0 TCe Eco-G</b> s továrenským LPG (lacná jazda a záruka), do mesta <b>E-Tech full hybrid</b>.
+  V staršom Capture I hľadaj diesel <b>1.5 dCi</b> alebo <b>1.3 TCe</b> z rokov 2018–2019. Opatrne s <b>1.2 TCe 120 EDC</b>
+  (spotreba oleja a suchý automat).</p>
+  <p><b>Nové autá:</b> veľká časť ponúk z roku 2025–2026 sú nové alebo predvádzacie autá od predajcov – ich cena je blízko cenníka.</p>
+</div>
+
+<h2>Na čo si dať pozor</h2>
+<div class="warn">
+  <p><b>Lacné kvôli extrémnemu nájazdu</b> (viac ako 35 tis. km ročne, typicky flotila alebo taxi):</p>
+  <ul><li><a href='https://www.autobazar.eu/detail/renault-captur-10-tce-90-equilibre/AeQMKR6_UUT/' target='_blank' rel='noopener'>Renault Captur 1.0 TCe 90 Equilibre</a>: 2023, 159 000 km → 48 000 km/rok. Lacné je kvôli nájazdu.</li><li><a href='https://auto.bazos.sk/inzerat/196710231/renault-captur-10-tce-90-equilibrelpgbenzin.php' target='_blank' rel='noopener'>Renault Captur 1.0 TCe 90 Equilibre,LPG+Benzin</a>: 2023, 149 000 km → 45 000 km/rok. Lacné je kvôli nájazdu.</li><li><a href='https://www.autobazar.eu/detail/renault-captur-e-tech-plug-in-hybrid/Am-odYDhy7p/' target='_blank' rel='noopener'>Renault Captur E-TECH PLUG-IN HYBRID</a>: 2023, 130 755 km → 39 000 km/rok. Lacné je kvôli nájazdu.</li><li><a href='https://www.autobazar.eu/detail/renault-captur-10-tce-lpg-2023/AmB8Sg8G8Yx/' target='_blank' rel='noopener'>RENAULT Captur 1.0 TCe LPG 2023</a>: 2023, 128 333 km → 38 000 km/rok. Lacné je kvôli nájazdu.</li></ul>
+  <p><b>Podozrivo nízky nájazd na vek</b> – preklep alebo stočené km, over cez Cebiu:</p><ul><li><a href='https://auto.bazos.sk/inzerat/196874635/renault-captur-energy-tce-90-life.php' target='_blank' rel='noopener'>Renault Captur Energy TCe 90 Life</a> (7 490 €): rok 2016 a len 38 617 km</li><li><a href='https://www.autobazar.eu/detail/renault-captur-12000-renault-captur/Aer2zVQTyuQ/' target='_blank' rel='noopener'>Renault Captur 12000 Renault Captur</a> (13 000 €): rok 2018 a len 18 200 km</li><li><a href='https://auto.bazos.sk/inzerat/195373301/renault-captur-2016-len-37xxxkm.php' target='_blank' rel='noopener'>Renault Captur 2016. Len 37xxxkm</a> (9 300 €): rok 2016 a len 37 000 km</li></ul><p><b>Ďalšie veci, ktoré sme v inzerátoch našli:</b></p><ul><li>Veľká časť ponúk z rokov 2025–2026 sú <b>nové alebo predvádzacie autá od predajcov</b> s pár kilometrami – ich „zľava“ je zľava z cenníka, nie ojazdené auto pod cenou.</li><li><a href='https://auto.bazos.sk/inzerat/195809330/renault-captur.php' target='_blank' rel='noopener'>Captur 1.2 TCe 2018</a> má najazdených 170 tis. km, ale motor len 60 tis. km – bol vymenený. Inzerát je na bazoši dvakrát.</li><li>Niekoľko Capturov s veľmi nízkym nájazdom (37–39 tis. km za 10 rokov) – nájazd si over cez VIN.</li><li><b>AAA AUTO</b> uvádza aj „cenu pri financovaní“ (často o 1 000–2 000 € nižšiu) – porovnávame cenu za hotové.</li></ul><p><b>Iné modely z vyhľadávania, duplicitné inzeráty a inzeráty s chybným nájazdom</b> (2 inzerátov) sme z rebríčka vynechali.</p>
+  <p>Ďalších <b>8</b> inzerátov nemá v texte rok alebo kilometre, takže ich nebolo možné ohodnotiť.
+  Ak ťa niektorý zaujme, predajcu sa na tieto údaje opýtaj.</p>
+</div>
+
+<h2>Kompletný rebríček</h2>
+<p class="section-lead">Všetky ohodnotené inzeráty. Kliknutím na hlavičku stĺpca zoraďuješ, filtrom zužuješ výber.</p>
+<div class="filters">
+  <select id="fEngine"><option value="">Všetky motory</option></select>
+  <select id="fTrans"><option value="">Každá prevodovka</option><option value="automatic">Automat</option><option value="manual">Manuál</option></select>
+  <select id="fSeller"><option value="">Všetci predajcovia</option><option value="nodealer">Bez autobazárov</option></select>
+  <select id="fSource"><option value="">Oba portály</option><option value="bazos">bazoš</option><option value="autobazar">autobazar.eu</option></select>
+  <select id="fBody" hidden><option value=""></option></select>
+  <select id="fOrigin"><option value="">Akýkoľvek pôvod</option><option value="SR">Kúpené v SR</option><option value="dovoz">Dovoz</option></select>
+  <input id="fMax" type="number" placeholder="Max. cena €" step="500" min="0" style="width:120px">
+  <span class="count" id="count"></span>
+</div>
+<div class="table-scroll">
+<table id="tbl">
+  <thead><tr>
+    <th class="sortable" data-k="title">Inzerát</th>
+    <th class="sortable num" data-k="year">Rok</th>
+    <th class="sortable num" data-k="km">Km</th>
+    <th class="sortable num" data-k="price_gross">Cena</th>
+    <th class="sortable num" data-k="fair_price">Férová</th>
+    <th class="sortable num" data-k="discount_pct">Pod trhom ▾</th>
+  </tr></thead>
+  <tbody></tbody>
+</table>
+</div>
+
+<h2>Pred kúpou over</h2>
+<ul class="check">
+  <li>VIN cez Cebia / autoDNA (história km, havárie, leasing) – časté sú bývalé požičovňové a firemné autá</li>
+  <li>Servisná história u Renaultu – dealer ju vie podľa VIN vytiahnuť zo systému</li>
+  <li>LPG Eco-G: pravidelná výmena filtrov plynu, revízia nádrže, zápis v TP</li>
+  <li>Automat EDC: plynulý rozjazd a radenie, žiadne trhanie v kolóne</li>
+  <li>Captur I 0.9 / 1.2 TCe: spotreba oleja, hluk reťaze za studena</li>
+  <li>Hybrid / plug-in: stav batérie (servisný test), nabíjací kábel</li>
+  <li>Elektronika: kľúčová karta, displej, kamera; opotrebenie sedadiel a volantu</li>
+  <li>STK/EK protokol a dátum platnosti; cena s DPH alebo bez DPH, ak predáva firma</li>
+</ul>
+
+<footer>
+  Zdroj: auto.bazos.sk a www.autobazar.eu (len ponuky zo Slovenska, to isté auto na oboch portáloch je započítané raz), sťahované cez lokálny MCP server bazos-mcp (nástroj <code>fair_price</code>), 4. 11. 2026.
+  Model: ridge regresia log(ceny s DPH) podľa veku, veku², km, km², prevodovky, typu predajcu, motora, karosérie, pohonu 4x4, pôvodu (SR / dovoz) a portálu. Vzorka 102
+  inzerátov, R² 97 %. Parametre sú vyťažené z textu inzerátov, a preto môžu obsahovať chyby. Odporúčané ponuky sme overili
+  prečítaním celého inzerátu. Hodnotenie motorov je odborný odhad, nie výsledok modelu.
+</footer>
+</main>
+
+<script>
+const DATA = [{"id": "196859168", "url": "https://auto.bazos.sk/inzerat/196859168/renault-captur-09tce-74000-km-stk-428.php", "title": "Renault Captur, 0,9Tce, 74000 km, STK 4/28", "price": 5990, "price_gross": 5990, "fair_price": 7350.0, "discount_pct": 18.5, "verdict": "výrazne pod trhom – over prečo", "year": 2014, "km": 74000, "km_per_year": 6000.0, "eg": "0.9 TCe 90 (Captur I)", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Bratislava", "flags": [], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AeG8_RishfV", "url": "https://www.autobazar.eu/detail/renault-captur-12-tce-automat-po-stk/AeG8_RishfV/", "title": "Renault Captur 1.2 TCe, Automat, Navigácia, Klíma", "price": 6600, "price_gross": 6600, "fair_price": 7710.0, "discount_pct": 14.4, "verdict": "pod trhom", "year": 2014, "km": 74873, "km_per_year": 6100.0, "eg": "1.2 TCe 120 EDC (Captur I)", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Prešovský kraj", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "195560329", "url": "https://auto.bazos.sk/inzerat/195560329/renault-captur-10-74kw-original-fabricky-lpg.php", "title": "Renault Captur 1,0 74kW originál fabrický LPG / DPH Záruka", "price": 16500, "price_gross": 16500, "fair_price": 19290.0, "discount_pct": 14.4, "verdict": "pod trhom", "year": 2025, "km": 5100, "km_per_year": 3800.0, "eg": "1.0 TCe Eco-G 100 LPG (Captur II)", "cg": 2, "transmission": "manual", "seller_type": "uncertain", "location": "Humenné", "flags": [], "pick": "top", "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "196874635", "url": "https://auto.bazos.sk/inzerat/196874635/renault-captur-energy-tce-90-life.php", "title": "Renault Captur Energy TCe 90 Life", "price": 7490, "price_gross": 7490, "fair_price": 8640.0, "discount_pct": 13.3, "verdict": "pod trhom", "year": 2016, "km": 38617, "km_per_year": 3700.0, "eg": "0.9 TCe 90 (Captur I)", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Levice", "flags": ["nezvyčajne nízky nájazd na vek (38 617 km) – over  či nejde o preklep"], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-Ampqw_J_Prc", "url": "https://www.autobazar.eu/detail/renault-captur-energy-tce-90-life/Ampqw_J_Prc/", "price": 7490}], "body": "suv"}, {"id": "ab-AbqEwONkFYW", "url": "https://www.autobazar.eu/detail/renault-captur-techno-mild-hybrid-140-edc/AbqEwONkFYW/", "title": " Renault Captur techno mild hybrid 140 EDC ", "price": 23490, "price_gross": 23490, "fair_price": 26900.0, "discount_pct": 12.7, "verdict": "pod trhom", "year": 2026, "km": 565, "km_per_year": 1700.0, "eg": "1.3 TCe mild hybrid 140/160 (Captur II)", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Dunajská Streda", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "ab-AmygddOP0kp", "url": "https://www.autobazar.eu/detail/renault-captur-tce-100-lpg-evolution/AmygddOP0kp/", "title": "Renault Captur Evolution Eco-G 120 - LPG", "price": 17990, "price_gross": 17990, "fair_price": 20270.0, "discount_pct": 11.3, "verdict": "pod trhom", "year": 2026, "km": 5, "km_per_year": 0.0, "eg": "1.2 TCe Eco-G 120 LPG (od 2025)", "cg": 2, "transmission": "manual", "seller_type": "dealer", "location": "Trenčín", "flags": [], "pick": "top", "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-Am6gMhzpa6L", "url": "https://www.autobazar.eu/detail/renault-captur/Am6gMhzpa6L/", "title": "RENAULT Captur", "price": 6899, "price_gross": 6899, "fair_price": 7660.0, "discount_pct": 9.9, "verdict": "pod trhom", "year": 2015, "km": 97567, "km_per_year": 8600.0, "eg": "1.5 dCi (Captur I)", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": "budget", "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "ab-AeHE3QhIDt_", "url": "https://www.autobazar.eu/detail/renault-captur-13-tce-sr1maj-servkniha-koza/AeHE3QhIDt_/", "title": "Renault Captur 1.3 TCe, SR,1.maj, Serv.kniha, Koža", "price": 15600, "price_gross": 15600, "fair_price": 17280.0, "discount_pct": 9.7, "verdict": "pod trhom", "year": 2025, "km": 30858, "km_per_year": 23100.0, "eg": "1.3 TCe 130–160 (Captur II)", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Košice", "flags": [], "pick": "top", "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "196545912", "url": "https://auto.bazos.sk/inzerat/196545912/renault-captur-e-tech-plug-in-hybrid-full-vybava-21133km.php", "title": "Renault Captur E-TECH Plug-in Hybrid | INTENSE", "price": 16490, "price_gross": 16490, "fair_price": 18210.0, "discount_pct": 9.5, "verdict": "pod trhom", "year": 2020, "km": 21133, "km_per_year": 3300.0, "eg": "E-Tech plug-in hybrid 160 (Captur II)", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Piešťany", "flags": [], "pick": "vat", "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AegXjIZmX_e", "url": "https://www.autobazar.eu/detail/renault-captur-10-tce-lpg-sr1maj-servkniha/AegXjIZmX_e/", "title": "Renault Captur 1.0 TCe, LPG, SR,1.maj, Serv.kniha", "price": 7500, "price_gross": 7500, "fair_price": 8260.0, "discount_pct": 9.2, "verdict": "pod trhom", "year": 2020, "km": 191645, "km_per_year": 30300.0, "eg": "1.0 TCe Eco-G 100 LPG (Captur II)", "cg": 2, "transmission": "manual", "seller_type": "dealer", "location": "Trnava", "flags": [], "pick": "budget", "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "196710231", "url": "https://auto.bazos.sk/inzerat/196710231/renault-captur-10-tce-90-equilibrelpgbenzin.php", "title": "Renault Captur 1.0 TCe 90 Equilibre,LPG+Benzin", "price": 10990, "price_gross": 10990, "fair_price": 12080.0, "discount_pct": 9.0, "verdict": "pod trhom", "year": 2023, "km": 149000, "km_per_year": 44700.0, "eg": "1.0 TCe Eco-G 100 LPG (Captur II)", "cg": 2, "transmission": null, "seller_type": "dealer", "location": "Malacky", "flags": ["vysoký nájazd 45000 km/rok – flotila / taxi?", "prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AeWQvw8fgcV", "url": "https://www.autobazar.eu/detail/renault-captur-10-tce-sr2maj-servkniha-klima/AeWQvw8fgcV/", "title": "Renault Captur 1.0 TCe, SR,2.maj, Serv.kniha, Klíma", "price": 16000, "price_gross": 16000, "fair_price": 17460.0, "discount_pct": 8.4, "verdict": "pod trhom", "year": 2025, "km": 9362, "km_per_year": 7000.0, "eg": "1.0 TCe 90/100 (Captur II)", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Nitriansky kraj", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AbWEx626dJm", "url": "https://www.autobazar.eu/detail/renault-captur-evolution-eco-g-120/AbWEx626dJm/", "title": "Renault Captur Evolution Eco-G 120", "price": 18590, "price_gross": 18590, "fair_price": 20270.0, "discount_pct": 8.3, "verdict": "pod trhom", "year": 2026, "km": 8, "km_per_year": 0.0, "eg": "1.2 TCe Eco-G 120 LPG (od 2025)", "cg": 2, "transmission": "manual", "seller_type": "dealer", "location": "Bardejov", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-Abb9B50lScZ", "url": "https://www.autobazar.eu/detail/renault-captur-evolution-eco-g-120/Abb9B50lScZ/", "title": "Renault Captur Evolution Eco-G 120", "price": 17940, "price_gross": 17940, "fair_price": 19530.0, "discount_pct": 8.2, "verdict": "pod trhom", "year": 2026, "km": 5, "km_per_year": 0.0, "eg": "1.2 TCe Eco-G 120 LPG (od 2025)", "cg": 2, "transmission": "manual", "seller_type": "dealer", "location": "Michalovce", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "195856525", "url": "https://auto.bazos.sk/inzerat/195856525/renault-captut.php", "title": "Renault Captur", "price": 14500, "price_gross": 14500, "fair_price": 15800.0, "discount_pct": 8.2, "verdict": "pod trhom", "year": 2024, "km": 74133, "km_per_year": 31800.0, "eg": "1.0 TCe Eco-G 100 LPG (Captur II)", "cg": 2, "transmission": null, "seller_type": "dealer", "location": "Michalovce", "flags": ["prevodovka nezistená"], "pick": "top", "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-Am8KKs3W3qb", "url": "https://www.autobazar.eu/detail/renault-captur-12-eco-g-120-lpg-evolution-90kw-m6-5d/Am8KKs3W3qb/", "title": "Renault Captur 1.2 Eco-G 120 LPG, Evolution, 90kW, M6, 5d", "price": 18590, "price_gross": 18590, "fair_price": 20160.0, "discount_pct": 7.8, "verdict": "pod trhom", "year": 2026, "km": 5, "km_per_year": 0.0, "eg": "1.2 TCe Eco-G 120 LPG (od 2025)", "cg": 2, "transmission": "manual", "seller_type": "dealer", "location": "Tovarníky", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AeqUgzVfV0T", "url": "https://www.autobazar.eu/detail/renault-captur-10-tce-klima-tempomat/AeqUgzVfV0T/", "title": "Renault Captur 1.0 TCe, Klíma, Tempomat", "price": 11900, "price_gross": 11900, "fair_price": 12900.0, "discount_pct": 7.7, "verdict": "pod trhom", "year": 2020, "km": 26359, "km_per_year": 4200.0, "eg": "1.0 TCe 90/100 (Captur II)", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Banská Bystrica", "flags": [], "pick": "top", "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-Aex9fVedu2f", "url": "https://www.autobazar.eu/detail/renault-captur-10-tce-servkniha-klima-tempomat/Aex9fVedu2f/", "title": "Renault Captur 1.0 TCe, Serv.kniha, Klíma, Tempomat", "price": 13300, "price_gross": 13300, "fair_price": 14360.0, "discount_pct": 7.4, "verdict": "pod trhom", "year": 2024, "km": 69467, "km_per_year": 29800.0, "eg": "1.0 TCe 90/100 (Captur II)", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Prešovský kraj", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "196091881", "url": "https://auto.bazos.sk/inzerat/196091881/renault-captur.php", "title": "Renault Captur", "price": 6900, "price_gross": 6900, "fair_price": 7440.0, "discount_pct": 7.2, "verdict": "pod trhom", "year": 2016, "km": 153000, "km_per_year": 14800.0, "eg": "1.5 dCi (Captur I)", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Liptovský Mikuláš", "flags": ["prevodovka nezistená"], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AeFuC7xa2No", "url": "https://www.autobazar.eu/detail/renault-captur-12-tce-sr1maj-servkniha-klima/AeFuC7xa2No/", "title": "Renault Captur 1.2 TCe, SR,1.maj, Serv.kniha, Klíma", "price": 7000, "price_gross": 7000, "fair_price": 7530.0, "discount_pct": 7.0, "verdict": "férová cena", "year": 2017, "km": 110060, "km_per_year": 11800.0, "eg": "1.2 TCe 120 EDC (Captur I)", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Prešovský kraj", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AbiPV9jM2MK", "url": "https://www.autobazar.eu/detail/renault-captur-techno-13-tce-edc/AbiPV9jM2MK/", "title": "Renault Captur Intens 1,3 TCe EDC", "price": 16400, "price_gross": 16400, "fair_price": 17630.0, "discount_pct": 7.0, "verdict": "férová cena", "year": 2022, "km": 46548, "km_per_year": 10700.0, "eg": "1.3 TCe 130–160 (Captur II)", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "ab-AbQkgL13CIp", "url": "https://www.autobazar.eu/detail/renault-captur-evolution-eco-g-120/AbQkgL13CIp/", "title": "Renault Captur Evolution Eco-G 120", "price": 18890, "price_gross": 18890, "fair_price": 20270.0, "discount_pct": 6.8, "verdict": "férová cena", "year": 2026, "km": 8, "km_per_year": 0.0, "eg": "1.2 TCe Eco-G 120 LPG (od 2025)", "cg": 2, "transmission": "manual", "seller_type": "dealer", "location": "Stará Ľubovňa", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-Am3XLBlHiYw", "url": "https://www.autobazar.eu/detail/renault-captur-e-tech-16tce-phev/Am3XLBlHiYw/", "title": "Renault Captur e-Tech 1.6Tce PHEV", "price": 14690, "price_gross": 14690, "fair_price": 15760.0, "discount_pct": 6.8, "verdict": "férová cena", "year": 2020, "km": 51000, "km_per_year": 8100.0, "eg": "E-Tech plug-in hybrid 160 (Captur II)", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Zlatovce", "flags": [], "pick": "top", "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "ab-AeFVrsld2yg", "url": "https://www.autobazar.eu/detail/renault-captur-automat-benzin-rv-2015/AeFVrsld2yg/", "title": "Renault Captur AUTOMAT benzin, r.v. 2015", "price": 7890, "price_gross": 7890, "fair_price": 8440.0, "discount_pct": 6.5, "verdict": "férová cena", "year": 2015, "km": 110000, "km_per_year": 9700.0, "eg": "1.2 TCe 120 EDC (Captur I)", "cg": 0, "transmission": "automatic", "seller_type": "private", "location": "Sereď", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "ab-Ae0QKI9UfJb", "url": "https://www.autobazar.eu/detail/renault-captur-10-tce-klima-tempomat/Ae0QKI9UfJb/", "title": "Renault Captur 1.0 TCe, Klíma, Tempomat", "price": 12600, "price_gross": 12600, "fair_price": 13260.0, "discount_pct": 5.0, "verdict": "férová cena", "year": 2022, "km": 50492, "km_per_year": 11700.0, "eg": "1.0 TCe 90/100 (Captur II)", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Trnava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-Ame2f5OT56Y", "url": "https://www.autobazar.eu/detail/renault-captur-92982/Ame2f5OT56Y/", "title": "Renault Captur Intens 145 Plug in hybrid", "price": 12990, "price_gross": 12990, "fair_price": 13640.0, "discount_pct": 4.8, "verdict": "férová cena", "year": 2021, "km": 151671, "km_per_year": 28400.0, "eg": "E-Tech plug-in hybrid 160 (Captur II)", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Banská Bystrica", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AmO_NkWz5Ss", "url": "https://www.autobazar.eu/detail/renault-captur-evolution-tce-115/AmO_NkWz5Ss/", "title": "Renault Captur evolution TCe 115", "price": 20140, "price_gross": 20140, "fair_price": 21150.0, "discount_pct": 4.8, "verdict": "férová cena", "year": 2026, "km": 5, "km_per_year": 0.0, "eg": "1.2 TCe 115 (od 2025)", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Trenčín", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AmxpFR21Nvt", "url": "https://www.autobazar.eu/detail/renault-captur-10-tce-100-intens/AmxpFR21Nvt/", "title": "Renault Captur 1.0 TCe 100 Intens", "price": 11999, "price_gross": 11999, "fair_price": 12550.0, "discount_pct": 4.4, "verdict": "férová cena", "year": 2020, "km": 35082, "km_per_year": 5500.0, "eg": "1.0 TCe 90/100 (Captur II)", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Tlmače", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "195987115", "url": "https://auto.bazos.sk/inzerat/195987115/renault-captur-10-tce-100-intens.php", "price": 11999}], "body": "suv"}, {"id": "ab-AewWOhptyjS", "url": "https://www.autobazar.eu/detail/renault-captur-energy-tce-90-e6c-advantage-66kw90hp-m5/AewWOhptyjS/", "title": "Renault Captur Energy TCe 90 E6c Advantage 66kW90HP M5", "price": 8500, "price_gross": 8500, "fair_price": 8870.0, "discount_pct": 4.1, "verdict": "férová cena", "year": 2019, "km": 92300, "km_per_year": 12600.0, "eg": "0.9 TCe 90 (Captur I)", "cg": 0, "transmission": "manual", "seller_type": "private", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "195827658", "url": "https://auto.bazos.sk/inzerat/195827658/ponukan-na-predaj-renault-captur-09-tce-s-benzinovym.php", "price": 8500}], "body": "suv"}, {"id": "196894336", "url": "https://auto.bazos.sk/inzerat/196894336/renault-captur-2022-45082-km.php", "title": "Renault Captur 2022 | 45082 km", "price": 14500, "price_gross": 14500, "fair_price": 15040.0, "discount_pct": 3.6, "verdict": "férová cena", "year": 2022, "km": 45082, "km_per_year": 10400.0, "eg": "1.0 TCe 90/100 (Captur II)", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Senec", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AelhY2IMmGf", "url": "https://www.autobazar.eu/detail/renault-captur-techno-eco-g-100-tce-100/AelhY2IMmGf/", "title": "Renault Captur Techno Eco-G 100 TCe 100", "price": 16490, "price_gross": 16490, "fair_price": 17090.0, "discount_pct": 3.5, "verdict": "férová cena", "year": 2025, "km": 57302, "km_per_year": 43000.0, "eg": "1.0 TCe Eco-G 100 LPG (Captur II)", "cg": 2, "transmission": "manual", "seller_type": "dealer", "location": "Modra", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "ab-AeLdjbxKhP1", "url": "https://www.autobazar.eu/detail/renault-captur-12-tce-intens-automat-sr2maj/AeLdjbxKhP1/", "title": "Renault Captur 1.2 TCe, Intens, Automat, SR,2.maj", "price": 6900, "price_gross": 6900, "fair_price": 7140.0, "discount_pct": 3.3, "verdict": "férová cena", "year": 2015, "km": 141266, "km_per_year": 12500.0, "eg": "1.2 TCe 120 EDC (Captur I)", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Trenčiansky kraj", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AbcULaPa9yO", "url": "https://www.autobazar.eu/detail/renault-captur-evolution-eco-g-120/AbcULaPa9yO/", "title": "Renault Captur Evolution Eco-G 120", "price": 19690, "price_gross": 19690, "fair_price": 20270.0, "discount_pct": 2.9, "verdict": "férová cena", "year": 2026, "km": 8, "km_per_year": 0.0, "eg": "1.2 TCe Eco-G 120 LPG (od 2025)", "cg": 2, "transmission": "manual", "seller_type": "dealer", "location": "Stará Ľubovňa", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AbY7DCrJtSo", "url": "https://www.autobazar.eu/detail/renault-captur-evolution-eco-g-120/AbY7DCrJtSo/", "title": "Renault Captur Evolution Eco-G 120", "price": 19690, "price_gross": 19690, "fair_price": 20270.0, "discount_pct": 2.9, "verdict": "férová cena", "year": 2026, "km": 8, "km_per_year": 0.0, "eg": "1.2 TCe Eco-G 120 LPG (od 2025)", "cg": 2, "transmission": "manual", "seller_type": "dealer", "location": "Stará Ľubovňa", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AbPWk77DExu", "url": "https://www.autobazar.eu/detail/renault-captur-evolution-eco-g-120/AbPWk77DExu/", "title": "Renault Captur Evolution Eco-G 120", "price": 19690, "price_gross": 19690, "fair_price": 20270.0, "discount_pct": 2.9, "verdict": "férová cena", "year": 2026, "km": 4, "km_per_year": 0.0, "eg": "1.2 TCe Eco-G 120 LPG (od 2025)", "cg": 2, "transmission": "manual", "seller_type": "dealer", "location": "Michalovce", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "196984992", "url": "https://auto.bazos.sk/inzerat/196984992/renault-captur.php", "title": "Renault Captur", "price": 5000, "price_gross": 5000, "fair_price": 5150.0, "discount_pct": 2.9, "verdict": "férová cena", "year": 2014, "km": 309000, "km_per_year": 25100.0, "eg": "1.2 TCe 120 EDC (Captur I)", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Malacky", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AmFcmPeXXQY", "url": "https://www.autobazar.eu/detail/renault-captur-techno-mild-hybrid-140-edc/AmFcmPeXXQY/", "title": "Renault Captur techno mild hybrid 140 EDC", "price": 26800, "price_gross": 26800, "fair_price": 27340.0, "discount_pct": 2.0, "verdict": "férová cena", "year": 2026, "km": 5, "km_per_year": 0.0, "eg": "1.3 TCe mild hybrid 140/160 (Captur II)", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Banská Bystrica", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "ab-AbkjrFB4HlC", "url": "https://www.autobazar.eu/detail/renault-captur-evolution-eco-g-120/AbkjrFB4HlC/", "title": "Renault CAPTUR Evolution  Eco-G 120  ", "price": 20900, "price_gross": 20900, "fair_price": 21300.0, "discount_pct": 1.9, "verdict": "férová cena", "year": 2026, "km": 5, "km_per_year": 0.0, "eg": "1.2 TCe Eco-G 120 LPG (od 2025)", "cg": 2, "transmission": "manual", "seller_type": "dealer", "location": "Košice", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AmhkYFRs0Ch", "url": "https://www.autobazar.eu/detail/renault-captur/AmhkYFRs0Ch/", "title": "Renault Captur Evolution Eco G-120 - LPG", "price": 19690, "price_gross": 19690, "fair_price": 20050.0, "discount_pct": 1.8, "verdict": "férová cena", "year": 2026, "km": 5, "km_per_year": 0.0, "eg": "1.2 TCe Eco-G 120 LPG (od 2025)", "cg": 2, "transmission": "manual", "seller_type": "dealer", "location": "Trenčín", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AeAH1GkYb1a", "url": "https://www.autobazar.eu/detail/renault-captur-renault-captur/AeAH1GkYb1a/", "title": "Renault Captur Renault Captur", "price": 15600, "price_gross": 15600, "fair_price": 15810.0, "discount_pct": 1.3, "verdict": "férová cena", "year": 2024, "km": 34500, "km_per_year": 14800.0, "eg": "1.0 TCe Eco-G 100 LPG (Captur II)", "cg": 2, "transmission": "manual", "seller_type": "private", "location": "Nové Zámky", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "196147649", "url": "https://auto.bazos.sk/inzerat/196147649/renault-captur-intens-tce-140-mild-hybrid.php", "title": "Renault Captur Intens tce 140 mild hybrid", "price": 15000, "price_gross": 15000, "fair_price": 15190.0, "discount_pct": 1.3, "verdict": "férová cena", "year": 2022, "km": 30000, "km_per_year": 6900.0, "eg": "1.3 TCe mild hybrid 140/160 (Captur II)", "cg": 2, "transmission": "manual", "seller_type": "uncertain", "location": "Spišská Nová Ves", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-Ae7qk3S9PDJ", "url": "https://www.autobazar.eu/detail/renault-captur-10-tce-sr1maj-servkniha-koza/Ae7qk3S9PDJ/", "title": "Renault Captur 1.0 TCe, SR,1.maj, Serv.kniha, Koža", "price": 14400, "price_gross": 14400, "fair_price": 14580.0, "discount_pct": 1.2, "verdict": "férová cena", "year": 2022, "km": 8537, "km_per_year": 2000.0, "eg": "1.0 TCe 90/100 (Captur II)", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Trnava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-Am-odYDhy7p", "url": "https://www.autobazar.eu/detail/renault-captur-e-tech-plug-in-hybrid/Am-odYDhy7p/", "title": "Renault Captur E-TECH PLUG-IN HYBRID", "price": 15990, "price_gross": 15990, "fair_price": 16100.0, "discount_pct": 0.7, "verdict": "férová cena", "year": 2023, "km": 130755, "km_per_year": 39200.0, "eg": "E-Tech plug-in hybrid 160 (Captur II)", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Košice-Košická Nová Ves", "flags": ["vysoký nájazd 39000 km/rok – flotila / taxi?"], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "suv"}, {"id": "ab-Amy8sZfFz_Z", "url": "https://www.autobazar.eu/detail/renault-captur-evolution-eco-g-120/Amy8sZfFz_Z/", "title": "Renault Captur evolution Eco-G 120", "price": 19400, "price_gross": 19400, "fair_price": 19530.0, "discount_pct": 0.7, "verdict": "férová cena", "year": 2026, "km": 74, "km_per_year": 200.0, "eg": "1.2 TCe Eco-G 120 LPG (od 2025)", "cg": 2, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AmzL5XkEHaa", "url": "https://www.autobazar.eu/detail/renault-captur/AmzL5XkEHaa/", "title": "Renault Captur", "price": 26900, "price_gross": 26900, "fair_price": 27050.0, "discount_pct": 0.6, "verdict": "férová cena", "year": 2026, "km": 4000, "km_per_year": 12000.0, "eg": "E-Tech full hybrid 145/160 (Captur II)", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Malacky", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-Ab45X6ZBAbu", "url": "https://www.autobazar.eu/detail/renault-captur-techno-eco-g-100/Ab45X6ZBAbu/", "title": "Renault Captur techno Eco-G 100", "price": 19990, "price_gross": 19990, "fair_price": 20050.0, "discount_pct": 0.3, "verdict": "férová cena", "year": 2026, "km": 8, "km_per_year": 0.0, "eg": "1.0 TCe Eco-G 100 LPG (Captur II)", "cg": 2, "transmission": "manual", "seller_type": "dealer", "location": "Stará Ľubovňa", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AervsL_6JTG", "url": "https://www.autobazar.eu/detail/renault-captur-09-benzin-66kw-manual-prevodovka/AervsL_6JTG/", "title": "Renault Captur 0.9 Benzín 66kW Manuál. prevodovka", "price": 7500, "price_gross": 7500, "fair_price": 7520.0, "discount_pct": 0.3, "verdict": "férová cena", "year": 2017, "km": 134000, "km_per_year": 14400.0, "eg": "0.9 TCe 90 (Captur I)", "cg": 0, "transmission": "manual", "seller_type": "private", "location": "Hlohovec", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AbHKl_F8xfL", "url": "https://www.autobazar.eu/detail/renault-captur-techno-eco-g-120/AbHKl_F8xfL/", "title": "Renault Captur Techno Eco-G 120", "price": 20250, "price_gross": 20250, "fair_price": 20270.0, "discount_pct": 0.1, "verdict": "férová cena", "year": 2026, "km": 5, "km_per_year": 0.0, "eg": "1.2 TCe Eco-G 120 LPG (od 2025)", "cg": 2, "transmission": "manual", "seller_type": "dealer", "location": "Bardejov", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AbDW7bG8kReV", "url": "https://www.autobazar.eu/detail/renault-captur-techno-eco-g-120/AbDW7bG8kReV/", "title": "Renault Captur techno Eco-G 120", "price": 20250, "price_gross": 20250, "fair_price": 20270.0, "discount_pct": 0.1, "verdict": "férová cena", "year": 2026, "km": 8, "km_per_year": 0.0, "eg": "1.2 TCe Eco-G 120 LPG (od 2025)", "cg": 2, "transmission": "manual", "seller_type": "dealer", "location": "Stará Ľubovňa", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AeQMKR6_UUT", "url": "https://www.autobazar.eu/detail/renault-captur-10-tce-90-equilibre/AeQMKR6_UUT/", "title": "Renault Captur 1.0 TCe 90 Equilibre", "price": 10990, "price_gross": 10990, "fair_price": 10980.0, "discount_pct": -0.1, "verdict": "férová cena", "year": 2023, "km": 159000, "km_per_year": 47700.0, "eg": "1.0 TCe 90/100 (Captur II)", "cg": 0, "transmission": "manual", "seller_type": "private", "location": "Malacky", "flags": ["vysoký nájazd 48000 km/rok – flotila / taxi?"], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "ab-AmOEDrFqo9e", "url": "https://www.autobazar.eu/detail/renault-captur-techno-eco-g-120-lpg/AmOEDrFqo9e/", "title": "Renault Captur techno Eco-G 120 ( LPG )", "price": 20350, "price_gross": 20350, "fair_price": 20270.0, "discount_pct": -0.4, "verdict": "férová cena", "year": 2026, "km": 5, "km_per_year": 0.0, "eg": "1.2 TCe Eco-G 120 LPG (od 2025)", "cg": 2, "transmission": "manual", "seller_type": "dealer", "location": "Trenčín", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AmgExgb2E_G", "url": "https://www.autobazar.eu/detail/renault-captur-13-tce-techno-105kw-6-stup-automat/AmgExgb2E_G/", "title": "Renault Captur 1,3 TCe Techno 105kW 6-stup automat.", "price": 19990, "price_gross": 19990, "fair_price": 19920.0, "discount_pct": -0.4, "verdict": "férová cena", "year": 2023, "km": 42000, "km_per_year": 12600.0, "eg": "1.3 TCe 130–160 (Captur II)", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "ab-Aehw4YpNxzB", "url": "https://www.autobazar.eu/detail/renault-captur-tce-150-gpf-intens-edc-110kw150hp-a6/Aehw4YpNxzB/", "title": "Renault Captur TCe 150 GPF Intens EDC 110kW150HP A6", "price": 13600, "price_gross": 13600, "fair_price": 13510.0, "discount_pct": -0.6, "verdict": "férová cena", "year": 2019, "km": 17500, "km_per_year": 2400.0, "eg": "1.3 TCe 130/150 (Captur I, 2018–2019)", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Bratislava-Petržalka", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "196235032", "url": "https://auto.bazos.sk/inzerat/196235032/renault-captur-12-tce.php", "title": "Renault Captur 1.2 TCe", "price": 8500, "price_gross": 8500, "fair_price": 8430.0, "discount_pct": -0.8, "verdict": "férová cena", "year": 2016, "km": 132000, "km_per_year": 12800.0, "eg": "1.2 TCe 120 EDC (Captur I)", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Bratislava", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AmjVC3p9pxj", "url": "https://www.autobazar.eu/detail/renault-captur-energy-tce-66kw-m5-zaruka-aj-na-splatky-protiucet/AmjVC3p9pxj/", "title": "Renault Captur Energy TCe / 66kW / M5 / ZÁRUKA / AJ NA SPLÁTKY / PROTIÚČET", "price": 8990, "price_gross": 8990, "fair_price": 8890.0, "discount_pct": -1.1, "verdict": "férová cena", "year": 2017, "km": 44654, "km_per_year": 4800.0, "eg": "0.9 TCe 90 (Captur I)", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Košice-Pereš", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197006953", "url": "https://auto.bazos.sk/inzerat/197006953/renault-captur-energy-tce-66kw-m5-2017.php", "price": 8990}], "body": "suv"}, {"id": "ab-Aer2zVQTyuQ", "url": "https://www.autobazar.eu/detail/renault-captur-12000-renault-captur/Aer2zVQTyuQ/", "title": "Renault Captur 12000 Renault Captur", "price": 13000, "price_gross": 13000, "fair_price": 12860.0, "discount_pct": -1.1, "verdict": "férová cena", "year": 2018, "km": 18200, "km_per_year": 2200.0, "eg": "1.2 TCe 120 EDC (Captur I)", "cg": 0, "transmission": "automatic", "seller_type": "private", "location": "Jaslovské Bohunice", "flags": ["nezvyčajne nízky nájazd na vek (18 200 km) – over  či nejde o preklep"], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "195373301", "url": "https://auto.bazos.sk/inzerat/195373301/renault-captur-2016-len-37xxxkm.php", "title": "Renault Captur 2016. Len 37xxxkm", "price": 9300, "price_gross": 9300, "fair_price": 9200.0, "discount_pct": -1.1, "verdict": "férová cena", "year": 2016, "km": 37000, "km_per_year": 3600.0, "eg": "1.2 TCe 120 EDC (Captur I)", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Banská Bystrica", "flags": ["nezvyčajne nízky nájazd na vek (37 000 km) – over  či nejde o preklep"], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "ab-AeDKWpusbgC", "url": "https://www.autobazar.eu/detail/renault-captur-10-tce-sr1maj-servkniha-koza/AeDKWpusbgC/", "title": "Renault Captur 1.0 TCe, SR,1.maj, Serv.kniha, Koža", "price": 12200, "price_gross": 12200, "fair_price": 12050.0, "discount_pct": -1.2, "verdict": "férová cena", "year": 2021, "km": 64550, "km_per_year": 12100.0, "eg": "1.0 TCe 90/100 (Captur II)", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Dunajská Streda", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-Am-pkF3NaS0", "url": "https://www.autobazar.eu/detail/renault-captur-12-tce-2016/Am-pkF3NaS0/", "title": "RENAULT Captur 1.2 TCe 2016", "price": 7999, "price_gross": 7999, "fair_price": 7900.0, "discount_pct": -1.2, "verdict": "férová cena", "year": 2016, "km": 149374, "km_per_year": 14500.0, "eg": "1.2 TCe 120 EDC (Captur I)", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "195809330", "url": "https://auto.bazos.sk/inzerat/195809330/renault-captur.php", "title": "Renault Captur", "price": 7700, "price_gross": 7700, "fair_price": 7600.0, "discount_pct": -1.3, "verdict": "férová cena", "year": 2018, "km": 169737, "km_per_year": 20400.0, "eg": "1.2 TCe 120 EDC (Captur I)", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Galanta", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AekWxTjaB9k", "url": "https://www.autobazar.eu/detail/renault-captur-10-tce-lpg-sr2maj-servkniha/AekWxTjaB9k/", "title": "Renault Captur 1.0 TCe, LPG, SR,2.maj, Serv.kniha", "price": 12300, "price_gross": 12300, "fair_price": 12090.0, "discount_pct": -1.7, "verdict": "férová cena", "year": 2022, "km": 83843, "km_per_year": 19300.0, "eg": "1.0 TCe Eco-G 100 LPG (Captur II)", "cg": 2, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AeI_YConJlt", "url": "https://www.autobazar.eu/detail/renault-captur-10-tce-sr2maj-servkniha-klima/AeI_YConJlt/", "title": "Renault Captur 1.0 TCe, SR,2.maj, Serv.kniha, Klíma", "price": 13700, "price_gross": 13700, "fair_price": 13450.0, "discount_pct": -1.8, "verdict": "férová cena", "year": 2022, "km": 44075, "km_per_year": 10200.0, "eg": "1.0 TCe 90/100 (Captur II)", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Lučenec", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AbiS2sLgtZg", "url": "https://www.autobazar.eu/detail/renault-captur-evolution-eco-g120/AbiS2sLgtZg/", "title": "Renault CAPTUR Evolution ECO-G120", "price": 19900, "price_gross": 19900, "fair_price": 19530.0, "discount_pct": -1.9, "verdict": "férová cena", "year": 2026, "km": 5, "km_per_year": 0.0, "eg": "1.2 TCe Eco-G 120 LPG (od 2025)", "cg": 2, "transmission": "manual", "seller_type": "dealer", "location": "Košice", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazos", "id": "196949426", "url": "https://auto.bazos.sk/inzerat/196949426/renault-captur-evolution-eco-g-120.php", "price": 19900}], "body": "suv"}, {"id": "ab-AmjOoBUHZgH", "url": "https://www.autobazar.eu/detail/renault-captur-energy-tce-90-e6c-limited/AmjOoBUHZgH/", "title": "Renault Captur Energy TCe 90 E6c Limited", "price": 8990, "price_gross": 8990, "fair_price": 8820.0, "discount_pct": -2.0, "verdict": "férová cena", "year": 2019, "km": 92959, "km_per_year": 12700.0, "eg": "0.9 TCe 90 (Captur I)", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Žilina", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "suv"}, {"id": "ab-AmpS0ORDPkp", "url": "https://www.autobazar.eu/detail/renault-captur-10-tce-techno-lpg-sr1maj/AmpS0ORDPkp/", "title": "Renault Captur 1.0 TCe, techno, LPG, SR,1.maj", "price": 17000, "price_gross": 17000, "fair_price": 16600.0, "discount_pct": -2.4, "verdict": "férová cena", "year": 2025, "km": 24619, "km_per_year": 18500.0, "eg": "1.0 TCe Eco-G 100 LPG (Captur II)", "cg": 2, "transmission": "manual", "seller_type": "dealer", "location": "Prešovský kraj", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-Abfy318mSUn", "url": "https://www.autobazar.eu/detail/renault-captur-full-hybrid-e-tech-160/Abfy318mSUn/", "title": "Renault Captur esprit Alpine full hybrid E-Tech 160 TOP", "price": 27990, "price_gross": 27990, "fair_price": 27300.0, "discount_pct": -2.5, "verdict": "férová cena", "year": 2026, "km": 5, "km_per_year": 0.0, "eg": "E-Tech full hybrid 145/160 (Captur II)", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Prešov", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-Abu7KW6gIoa", "url": "https://www.autobazar.eu/detail/renault-captur-techno-eco-g-120/Abu7KW6gIoa/", "title": "Renault CAPTUR Techno ECO-G 120", "price": 21900, "price_gross": 21900, "fair_price": 21300.0, "discount_pct": -2.8, "verdict": "férová cena", "year": 2026, "km": 5, "km_per_year": 0.0, "eg": "1.2 TCe Eco-G 120 LPG (od 2025)", "cg": 2, "transmission": "manual", "seller_type": "dealer", "location": "Košice", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AbMPUJaZnf4", "url": "https://www.autobazar.eu/detail/renault-captur-techno-eco-g120/AbMPUJaZnf4/", "title": "Renault CAPTUR Techno ECO-G120", "price": 21900, "price_gross": 21900, "fair_price": 21300.0, "discount_pct": -2.8, "verdict": "férová cena", "year": 2026, "km": 5, "km_per_year": 0.0, "eg": "1.2 TCe Eco-G 120 LPG (od 2025)", "cg": 2, "transmission": "manual", "seller_type": "dealer", "location": "Košice", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AmrfX5tyDr6", "url": "https://www.autobazar.eu/detail/renault-captur-15-dci-eco-keyless-len-96879km-103489/AmrfX5tyDr6/", "title": "Renault Captur 1.5 dCi ECO - KEYLESS - LEN 96.879KM (103489)", "price": 7999, "price_gross": 7999, "fair_price": 7780.0, "discount_pct": -2.9, "verdict": "férová cena", "year": 2014, "km": 96879, "km_per_year": 7900.0, "eg": "1.5 dCi (Captur I)", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Dražkovce", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "suv"}, {"id": "ab-AevVPMPtdtt", "url": "https://www.autobazar.eu/detail/renault-captur-09-tce/AevVPMPtdtt/", "title": "Renault Captur 0.9 TCE", "price": 5999, "price_gross": 5999, "fair_price": 5820.0, "discount_pct": -3.0, "verdict": "férová cena", "year": 2014, "km": 121000, "km_per_year": 9800.0, "eg": "0.9 TCe 90 (Captur I)", "cg": 0, "transmission": "manual", "seller_type": "private", "location": "Blatná na Ostrove", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "ab-AbRII1kscxx", "url": "https://www.autobazar.eu/detail/renault-captur-techno-eco-g-120/AbRII1kscxx/", "title": "Renault Captur techno Eco-G 120", "price": 20900, "price_gross": 20900, "fair_price": 20270.0, "discount_pct": -3.1, "verdict": "férová cena", "year": 2026, "km": 5, "km_per_year": 0.0, "eg": "1.2 TCe Eco-G 120 LPG (od 2025)", "cg": 2, "transmission": "manual", "seller_type": "dealer", "location": "Prešov", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "196984010", "url": "https://auto.bazos.sk/inzerat/196984010/renault-captur-diesel-66kw-5st-manual.php", "title": "Renault Captur Diesel 66kw 5st manuál", "price": 6499, "price_gross": 6499, "fair_price": 6290.0, "discount_pct": -3.4, "verdict": "férová cena", "year": 2015, "km": 182350, "km_per_year": 16100.0, "eg": "1.5 dCi (Captur I)", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Pezinok", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-Amenf8Krh8Y", "url": "https://www.autobazar.eu/detail/renault-captur/Amenf8Krh8Y/", "title": "Renault Captur techno mild hybrid 160 EDC", "price": 26500, "price_gross": 26500, "fair_price": 25620.0, "discount_pct": -3.4, "verdict": "férová cena", "year": 2025, "km": 2500, "km_per_year": 1900.0, "eg": "1.3 TCe mild hybrid 140/160 (Captur II)", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Trnava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-Abbi3oaNpyE", "url": "https://www.autobazar.eu/detail/renault-captur-techno-eco-g-100/Abbi3oaNpyE/", "title": "Renault Captur techno Eco-G 120", "price": 21050, "price_gross": 21050, "fair_price": 20270.0, "discount_pct": -3.8, "verdict": "férová cena", "year": 2026, "km": 8, "km_per_year": 0.0, "eg": "1.2 TCe Eco-G 120 LPG (od 2025)", "cg": 2, "transmission": "manual", "seller_type": "dealer", "location": "Stará Ľubovňa", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AbDVOe7-Z44", "url": "https://www.autobazar.eu/detail/renault-captur-techno-eco-g-120/AbDVOe7-Z44/", "title": "Renault Captur techno Eco-G 120", "price": 21050, "price_gross": 21050, "fair_price": 20270.0, "discount_pct": -3.8, "verdict": "férová cena", "year": 2026, "km": 5, "km_per_year": 0.0, "eg": "1.2 TCe Eco-G 120 LPG (od 2025)", "cg": 2, "transmission": "manual", "seller_type": "dealer", "location": "Prešov", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-Aex8UaxTKoe", "url": "https://www.autobazar.eu/detail/renault-captur-10-tce-sr2maj-servkniha/Aex8UaxTKoe/", "title": "Renault Captur 1.0 TCe, SR,2.maj, Serv.kniha", "price": 13000, "price_gross": 13000, "fair_price": 12500.0, "discount_pct": -4.0, "verdict": "férová cena", "year": 2020, "km": 40370, "km_per_year": 6400.0, "eg": "1.0 TCe 90/100 (Captur II)", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Žilinský kraj", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AmTbe4GJOeN", "url": "https://www.autobazar.eu/detail/renault-captur-12-tce-88kw-at6-aj-na-splatky-protiucet/AmTbe4GJOeN/", "title": "Renault Captur 1.2 TCe 88kW AT/6 / AJ NA SPLÁTKY / PROTIÚČET", "price": 6990, "price_gross": 6990, "fair_price": 6720.0, "discount_pct": -4.1, "verdict": "férová cena", "year": 2014, "km": 147826, "km_per_year": 12000.0, "eg": "1.2 TCe 120 EDC (Captur I)", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Trenčín", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197032003", "url": "https://auto.bazos.sk/inzerat/197032003/renault-captur-12-tce-88kw-at6.php", "price": 6990}], "body": "suv"}, {"id": "ab-AerVZhzrm87", "url": "https://www.autobazar.eu/detail/renault-captur-energy-tce-90-e6c-intens-66kw90hp-m5/AerVZhzrm87/", "title": "Renault Captur Energy TCe 90 E6c Intens 66kW90HP M5", "price": 10390, "price_gross": 10390, "fair_price": 9980.0, "discount_pct": -4.1, "verdict": "férová cena", "year": 2019, "km": 40000, "km_per_year": 5500.0, "eg": "0.9 TCe 90 (Captur I)", "cg": 0, "transmission": "manual", "seller_type": "private", "location": "Nové Zámky", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "ab-AmHQwkaMJGI", "url": "https://www.autobazar.eu/detail/renault-captur-13-tce-130-gpf-intens-edc/AmHQwkaMJGI/", "title": "Renault Captur 1.3 TCe 130PS Intens | SK vozidlo | 1. majiteľ | nehavarované | Automat EDC", "price": 16990, "price_gross": 16990, "fair_price": 16250.0, "discount_pct": -4.5, "verdict": "férová cena", "year": 2020, "km": 73245, "km_per_year": 11600.0, "eg": "1.3 TCe 130–160 (Captur II)", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Nové Zámky", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "196433376", "url": "https://auto.bazos.sk/inzerat/196433376/renault-captur-12-tce-2015-130-000-km-cierna-metaliza.php", "title": "RENAULT CAPTUR 1.2 TCe | 2015 | 130 000 km | ČIERNA METALÍZA", "price": 6890, "price_gross": 6890, "fair_price": 6560.0, "discount_pct": -5.0, "verdict": "férová cena", "year": 2015, "km": 130000, "km_per_year": 11500.0, "eg": "1.2 TCe 120 EDC (Captur I)", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Nitra", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-Ab3J7HE4PVJ", "url": "https://www.autobazar.eu/detail/renault-captur-techno-eco-g-120/Ab3J7HE4PVJ/", "title": "Renault Captur techno Eco-G 120", "price": 21550, "price_gross": 21550, "fair_price": 20270.0, "discount_pct": -6.3, "verdict": "férová cena", "year": 2026, "km": 5, "km_per_year": 0.0, "eg": "1.2 TCe Eco-G 120 LPG (od 2025)", "cg": 2, "transmission": "manual", "seller_type": "dealer", "location": "Prešov", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "196698237", "url": "https://auto.bazos.sk/inzerat/196698237/renault-captur.php", "title": "RENAULT CAPTUR", "price": 8500, "price_gross": 8500, "fair_price": 7990.0, "discount_pct": -6.4, "verdict": "férová cena", "year": 2014, "km": 119124, "km_per_year": 9700.0, "eg": "1.2 TCe 120 EDC (Captur I)", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Trebišov", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AmejnZsaAcz", "url": "https://www.autobazar.eu/detail/renault-captur/AmejnZsaAcz/", "title": "Renault Captur", "price": 25900, "price_gross": 25900, "fair_price": 24300.0, "discount_pct": -6.6, "verdict": "férová cena", "year": 2025, "km": 14000, "km_per_year": 10500.0, "eg": "E-Tech full hybrid 145/160 (Captur II)", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AmB8Sg8G8Yx", "url": "https://www.autobazar.eu/detail/renault-captur-10-tce-lpg-2023/AmB8Sg8G8Yx/", "title": "RENAULT Captur 1.0 TCe LPG 2023", "price": 12399, "price_gross": 12399, "fair_price": 11630.0, "discount_pct": -6.6, "verdict": "férová cena", "year": 2023, "km": 128333, "km_per_year": 38500.0, "eg": "1.0 TCe Eco-G 100 LPG (Captur II)", "cg": 2, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava", "flags": ["vysoký nájazd 38000 km/rok – flotila / taxi?"], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-Ae0x6TjhV51", "url": "https://www.autobazar.eu/detail/renault-captur-10-tce-sr2maj-servkniha-koza/Ae0x6TjhV51/", "title": "Renault Captur 1.0 TCe, SR,2.maj, Serv.kniha, Koža", "price": 14400, "price_gross": 14400, "fair_price": 13500.0, "discount_pct": -6.7, "verdict": "férová cena", "year": 2022, "km": 42528, "km_per_year": 9800.0, "eg": "1.0 TCe 90/100 (Captur II)", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Nitriansky kraj", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AmR0jdwTqr9", "url": "https://www.autobazar.eu/detail/renault-captur-10-tce-sr2maj-servkniha-koza/AmR0jdwTqr9/", "title": "Renault Captur 1.0 TCe, SR,2.maj, Serv.kniha, Koža", "price": 14400, "price_gross": 14400, "fair_price": 13500.0, "discount_pct": -6.7, "verdict": "férová cena", "year": 2022, "km": 42528, "km_per_year": 9800.0, "eg": "1.0 TCe 90/100 (Captur II)", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Nitriansky kraj", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "195822844", "url": "https://auto.bazos.sk/inzerat/195822844/renault-captur-13-tce-130-gpf-intens-edc.php", "title": "Renault Captur 1.3 TCe 130 GPF Intens EDC", "price": 17990, "price_gross": 17990, "fair_price": 16730.0, "discount_pct": -7.5, "verdict": "nad trhom", "year": 2020, "km": 73245, "km_per_year": 11600.0, "eg": "1.3 TCe 130–160 (Captur II)", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Nové Zámky", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "197021000", "url": "https://auto.bazos.sk/inzerat/197021000/renault-captur-13-tce-edc-2023.php", "title": "Renault Captur 1.3 TCe EDC 2023", "price": 22990, "price_gross": 22990, "fair_price": 21300.0, "discount_pct": -7.9, "verdict": "nad trhom", "year": 2023, "km": 15700, "km_per_year": 4700.0, "eg": "1.3 TCe 130–160 (Captur II)", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Prešov", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "ab-AbM4Cl__DRR", "url": "https://www.autobazar.eu/detail/renault-captur-techno-eco-g-120/AbM4Cl__DRR/", "title": "Renault Captur techno Eco-G 120", "price": 22050, "price_gross": 22050, "fair_price": 20270.0, "discount_pct": -8.8, "verdict": "nad trhom", "year": 2026, "km": 5, "km_per_year": 0.0, "eg": "1.2 TCe Eco-G 120 LPG (od 2025)", "cg": 2, "transmission": "manual", "seller_type": "dealer", "location": "Piešťany", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "195716829", "url": "https://auto.bazos.sk/inzerat/195716829/captur-140-edc-at-7-13m-len-12-4xx-km.php", "title": "CAPTUR 140 EDC, AT 7, 1,3m³, len 137xx km", "price": 22500, "price_gross": 22500, "fair_price": 20690.0, "discount_pct": -8.8, "verdict": "nad trhom", "year": 2023, "km": 13797, "km_per_year": 4100.0, "eg": "1.3 TCe 130–160 (Captur II)", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Prešov", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AefwDjw3bmk", "url": "https://www.autobazar.eu/detail/renault-captur-10-tce-90-zen-67kw91hp-m6/AefwDjw3bmk/", "title": "Renault Captur 1.0 TCe 90 Zen 67kW91HP M6", "price": 13999, "price_gross": 13999, "fair_price": 12800.0, "discount_pct": -9.4, "verdict": "nad trhom", "year": 2021, "km": 36171, "km_per_year": 6800.0, "eg": "1.0 TCe 90/100 (Captur II)", "cg": 0, "transmission": "manual", "seller_type": "private", "location": "Martin", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "ab-AbLp_51EIK2k", "url": "https://www.autobazar.eu/detail/renault-captur-intens-e-tech-plug-in-hybrid-160/AbLp_51EIK2k/", "title": "Renault CAPTUR Intens E-Tech Plug in hybrid 160", "price": 19900, "price_gross": 19900, "fair_price": 18060.0, "discount_pct": -10.2, "verdict": "nad trhom", "year": 2022, "km": 56500, "km_per_year": 13000.0, "eg": "E-Tech plug-in hybrid 160 (Captur II)", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Košice", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "196970097", "url": "https://auto.bazos.sk/inzerat/196970097/renault-captur-energy-15-dci-zen-ss.php", "title": "Renault Captur Energy 1.5 dCi Zen S&S", "price": 7999, "price_gross": 7999, "fair_price": 7250.0, "discount_pct": -10.3, "verdict": "nad trhom", "year": 2015, "km": 188000, "km_per_year": 16600.0, "eg": "1.5 dCi (Captur I)", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Rožňava", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AbcBfn_YrV4", "url": "https://www.autobazar.eu/detail/renault-captur-techno-mild-hybrid-140/AbcBfn_YrV4/", "title": "Renault CAPTUR Techno (AA076UX)  mild hybrid 140", "price": 22600, "price_gross": 22600, "fair_price": 20340.0, "discount_pct": -11.1, "verdict": "nad trhom", "year": 2025, "km": 5700, "km_per_year": 4300.0, "eg": "1.3 TCe mild hybrid 140/160 (Captur II)", "cg": 2, "transmission": "manual", "seller_type": "dealer", "location": "Košice", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "ab-AmV-BLRAhIv", "url": "https://www.autobazar.eu/detail/renault-captur-e-tech-phev-intens-68kw-a6-aj-na-splatky-protiucet/AmV-BLRAhIv/", "title": "Renault Captur E-Tech PHEV Intens, 68kW, A6 / AJ NA SPLÁTKY / PROTIÚČET /", "price": 20250, "price_gross": 20250, "fair_price": 18200.0, "discount_pct": -11.3, "verdict": "nad trhom", "year": 2021, "km": 37614, "km_per_year": 7100.0, "eg": "E-Tech plug-in hybrid 160 (Captur II)", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "ab-AmdNazHFN5h", "url": "https://www.autobazar.eu/detail/renault-captur/AmdNazHFN5h/", "title": "Renault Captur Techno Eco-G 120 - LPG", "price": 22650, "price_gross": 22650, "fair_price": 20230.0, "discount_pct": -11.9, "verdict": "nad trhom", "year": 2026, "km": 850, "km_per_year": 2600.0, "eg": "1.2 TCe Eco-G 120 LPG (od 2025)", "cg": 2, "transmission": "manual", "seller_type": "dealer", "location": "Trenčín", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AeaCyhZhVls", "url": "https://www.autobazar.eu/detail/renault-captur-10-tce-sr2maj-koza-navigacia/AeaCyhZhVls/", "title": "Renault Captur 1.0 TCe, SR,2.maj, Koža, Navigácia", "price": 13300, "price_gross": 13300, "fair_price": 11840.0, "discount_pct": -12.3, "verdict": "nad trhom", "year": 2020, "km": 64239, "km_per_year": 10100.0, "eg": "1.0 TCe 90/100 (Captur II)", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Nitriansky kraj", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AmUzvdsHNRT", "url": "https://www.autobazar.eu/detail/renault-captur-12-tce-115k-techno-m6-5d/AmUzvdsHNRT/", "title": "Renault Captur 1,2 TCe 115k Techno, M6, 5d", "price": 22900, "price_gross": 22900, "fair_price": 19880.0, "discount_pct": -15.2, "verdict": "výrazne nad trhom", "year": 2026, "km": 1000, "km_per_year": 3000.0, "eg": "1.2 TCe 115 (od 2025)", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Nitra", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AmcCtUbKxeH", "url": "https://www.autobazar.eu/detail/renault-captur-techno-tce-115/AmcCtUbKxeH/", "title": "Renault Captur techno TCe 115", "price": 24680, "price_gross": 24680, "fair_price": 21100.0, "discount_pct": -17.0, "verdict": "výrazne nad trhom", "year": 2026, "km": 1000, "km_per_year": 3000.0, "eg": "1.2 TCe 115 (od 2025)", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Trnava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "195613351", "url": "https://auto.bazos.sk/inzerat/195613351/renault-captur.php", "title": "Renault captur", "price": 12300, "price_gross": 12300, "fair_price": 10170.0, "discount_pct": -21.0, "verdict": "výrazne nad trhom", "year": 2018, "km": 65000, "km_per_year": 7800.0, "eg": "1.5 dCi (Captur I)", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Prievidza", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AbWYuBU_FTU", "url": "https://www.autobazar.eu/detail/renault-captur-techno-eco-g-120/AbWYuBU_FTU/", "title": "Renault Captur Techno Eco-G 120", "price": 24620, "price_gross": 24620, "fair_price": 20210.0, "discount_pct": -21.8, "verdict": "výrazne nad trhom", "year": 2026, "km": 1088, "km_per_year": 3300.0, "eg": "1.2 TCe Eco-G 120 LPG (od 2025)", "cg": 2, "transmission": "manual", "seller_type": "dealer", "location": "Michalovce", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "197048991", "url": "https://auto.bazos.sk/inzerat/197048991/renault-captur.php", "title": "Renault Captur", "price": 7850, "price_gross": 7850, "fair_price": 6080.0, "discount_pct": -29.2, "verdict": "výrazne nad trhom", "year": 2013, "km": 151000, "km_per_year": 11300.0, "eg": "0.9 TCe 90 (Captur I)", "cg": 0, "transmission": null, "seller_type": "dealer", "location": "Zvolen", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}];
+const GROUPS = ["Benzín TCe", "Diesel dCi", "LPG Eco-G a hybridy E-Tech"];
+const BODY = {"suv": "SUV"};
+const fmt = n => Math.round(n).toLocaleString("sk-SK");
+const eur = n => fmt(n) + " €";
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const TRANS = {automatic: "automat", manual: "manuál"};
+const SRC = {bazos: "bazoš", autobazar: "autobazar.eu"};
+
+// --- theme toggle ---------------------------------------------------------
+document.getElementById("themeBtn").onclick = () => {
+  const root = document.documentElement;
+  const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  drawChart();
+};
+
+// --- scatter chart --------------------------------------------------------
+const legend = document.getElementById("legend");
+legend.innerHTML = GROUPS.map((g, i) => `<span><i style="background:var(--s${i+1})"></i>${g}</span>`).join("")
+  + `<span><i class="ring"></i>odporúčaná ponuka</span>`;
+
+function drawChart() {
+  const svg = document.getElementById("chart"), wrap = document.getElementById("chartWrap"), tip = document.getElementById("tip");
+  const W = svg.clientWidth, H = 420, m = {l: 56, r: 16, t: 10, b: 40};
+  const pts = DATA.filter(d => d.km && d.price_gross);
+  const xMax = Math.ceil(Math.max(...pts.map(d => d.km)) / 50000) * 50000;
+  const yMax = Math.ceil(Math.max(...pts.map(d => d.price_gross)) / 5000) * 5000;
+  const x = v => m.l + v / xMax * (W - m.l - m.r), y = v => H - m.b - v / yMax * (H - m.t - m.b);
+  let s = "";
+  for (let v = 0; v <= yMax; v += 5000)
+    s += `<line x1="${m.l}" x2="${W-m.r}" y1="${y(v)}" y2="${y(v)}" stroke="var(--grid)"/><text x="${m.l-8}" y="${y(v)+4}" text-anchor="end">${v/1000} tis. €</text>`;
+  const step = W < 520 ? 100000 : 50000;
+  for (let v = 0; v <= xMax; v += step)
+    s += `<text x="${x(v)}" y="${H-m.b+18}" text-anchor="middle">${v/1000} tis.</text>`;
+  s += `<text x="${(W+m.l)/2}" y="${H-6}" text-anchor="middle">nájazd (km)</text>`;
+  const order = [...pts].sort((a, b) => (a.pick ? 1 : 0) - (b.pick ? 1 : 0));
+  order.forEach(d => {
+    const cx = x(d.km), cy = y(d.price_gross);
+    if (d.pick) s += `<circle cx="${cx}" cy="${cy}" r="9" fill="none" stroke="var(--text)" stroke-width="2"/>`;
+    s += `<circle class="pt" data-id="${d.id}" cx="${cx}" cy="${cy}" r="5" fill="var(--s${d.cg+1})" stroke="var(--surface)" stroke-width="2"/>`;
+  });
+  // invisible bigger hit targets
+  order.forEach(d => s += `<circle class="hit" data-id="${d.id}" cx="${x(d.km)}" cy="${y(d.price_gross)}" r="11" fill="transparent" style="cursor:pointer"/>`);
+  svg.innerHTML = s;
+  const byId = Object.fromEntries(pts.map(d => [d.id, d]));
+  svg.querySelectorAll(".hit").forEach(c => {
+    c.onmouseenter = c.onmousemove = ev => {
+      const d = byId[c.dataset.id];
+      tip.innerHTML = `<b>${esc(d.title)}</b>
+        <div class="row"><span>Cena</span><span>${eur(d.price_gross)}</span></div>
+        <div class="row"><span>Férová cena</span><span>${eur(d.fair_price)}</span></div>
+        <div class="row"><span>Pod trhom</span><span>${d.discount_pct > 0 ? "+" : ""}${d.discount_pct.toLocaleString("sk-SK")} %</span></div>
+        <div class="row"><span>Zdroj</span><span>${SRC[d.source]}${d.also_listed.length ? " + " + d.also_listed.map(a => SRC[a.source]).join(", ") : ""}</span></div>
+        <div class="row"><span>Rok · km</span><span>${d.year} · ${fmt(d.km)}</span></div>
+        <div class="row"><span>Motor</span><span>${esc(d.eg)} ${TRANS[d.transmission] || ""}</span></div>`;
+      tip.style.display = "block";
+      const r = wrap.getBoundingClientRect();
+      let lx = ev.clientX - r.left + 14, ly = ev.clientY - r.top + 14;
+      if (lx + 290 > r.width) lx = ev.clientX - r.left - 290;
+      tip.style.left = lx + "px"; tip.style.top = ly + "px";
+    };
+    c.onmouseleave = () => tip.style.display = "none";
+    c.onclick = () => window.open(byId[c.dataset.id].url, "_blank", "noopener");
+  });
+}
+drawChart();
+addEventListener("resize", drawChart);
+
+// --- full table -----------------------------------------------------------
+const fEngine = document.getElementById("fEngine");
+[...new Set(DATA.map(d => d.eg))].sort().forEach(g => fEngine.insertAdjacentHTML("beforeend", `<option>${esc(g)}</option>`));
+let sortK = "discount_pct", sortDir = -1;
+function discCell(v) {
+  const w = Math.min(Math.abs(v), 30) / 30 * 50;
+  const bar = v >= 0 ? `left:50%;width:${w}%;background:var(--pos)` : `right:50%;width:${w}%;background:var(--neg)`;
+  return `<span class="disc">${v > 0 ? "+" : ""}${v.toLocaleString("sk-SK")} %<span class="dbar"><span style="${bar}"></span></span></span>`;
+}
+function renderTable() {
+  const max = parseFloat(document.getElementById("fMax").value) || Infinity;
+  const tr = document.getElementById("fTrans").value, se = document.getElementById("fSeller").value, en = fEngine.value;
+  const so = document.getElementById("fSource").value, og = document.getElementById("fOrigin").value;
+  const bo = document.getElementById("fBody").value;
+  const rows = DATA.filter(d => (!en || d.eg === en) && (!tr || d.transmission === tr)
+    && (!se || d.seller_type !== "dealer") && d.price_gross <= max
+    && (!so || d.source === so || d.also_listed.some(a => a.source === so)) && (!og || d.origin === og) && (!bo || d.body === bo))
+    .sort((a, b) => { const A = a[sortK], B = b[sortK]; return (typeof A === "string" ? A.localeCompare(B) : A - B) * sortDir; });
+  document.getElementById("count").textContent = `${rows.length} z ${DATA.length} inzerátov`;
+  document.querySelector("#tbl tbody").innerHTML = rows.map(d => `<tr>
+    <td><a href="${d.url}" target="_blank" rel="noopener">${esc(d.title)}</a> ${d.pick ? '<span class="badge pick">odporúčané</span>' : ""}
+      <div class="sub">${BODY[d.body] || "karoséria ?"} · ${esc(d.eg)} · ${TRANS[d.transmission] || "prevodovka ?"} · ${esc(d.location)} · ${d.seller_type === "dealer" ? "predajca/firma" : d.seller_type === "private" ? "súkromník" : "neisté"} · ${SRC[d.source]}${d.origin === "SR" ? " · kúpené v SR" : d.origin === "dovoz" ? " · dovoz" : ""}${d.also_listed.map(a => ` · <a href="${a.url}" target="_blank" rel="noopener">aj na ${SRC[a.source]}</a>`).join("")}</div>
+      ${d.flags.filter(f => !f.startsWith("prevodovka")).map(f => `<div class="flag">⚠ ${esc(f)}</div>`).join("")}</td>
+    <td class="num">${d.year}</td><td class="num">${fmt(d.km)}</td>
+    <td class="num">${eur(d.price_gross)}</td><td class="num">${eur(d.fair_price)}</td>
+    <td class="num">${discCell(d.discount_pct)}</td></tr>`).join("");
+  document.querySelectorAll("#tbl th.sortable").forEach(th => {
+    const base = th.textContent.replace(/ [▾▴]$/, "");
+    th.textContent = base + (th.dataset.k === sortK ? (sortDir < 0 ? " ▾" : " ▴") : "");
+  });
+}
+document.querySelectorAll("#tbl th.sortable").forEach(th => th.onclick = () => {
+  if (sortK === th.dataset.k) sortDir *= -1; else { sortK = th.dataset.k; sortDir = th.dataset.k === "title" ? 1 : -1; }
+  renderTable();
+});
+["fEngine", "fTrans", "fSeller", "fSource", "fBody", "fOrigin", "fMax"].forEach(id => document.getElementById(id).addEventListener("input", renderTable));
+renderTable();
+</script>
+<!-- ferovka-theme --><script defer src="/analytics-config.js"></script><script defer src="/analytics.js"></script><script id="ferovka-chart">/* Férovka – chart → ad links, injected into every report by sync-reports.mjs.
+ *
+ * The reports draw one invisible 11px "hit" circle per ad. In dense charts (and always on a narrow phone) those
+ * circles overlap and the one drawn last wins, so a click/tap often opened a neighbouring ad. Here the pointer is
+ * always resolved to the NEAREST point, the report's own tooltip is shown for that point, and a click opens its ad.
+ * Touch: the first tap shows the tooltip (with a hint), a second tap on the same point opens the ad.
+ */
+(() => {
+  let rows;
+  try { rows = DATA; } catch { return; } // eslint-disable-line no-undef
+  if (!Array.isArray(rows) || !rows.length || !("url" in rows[0])) return;
+  const byId = new Map(rows.map((d) => [String(d.id), d]));
+  const MOUSE = ["mouseover", "mouseout", "mouseenter", "mouseleave", "mousemove", "mousedown", "mouseup", "click"];
+  let lastPointer = "mouse", down = null;
+  // the finger position as it was – Chrome "snaps" the later click of a tap to the centre of a nearby clickable element
+  addEventListener("pointerdown", (e) => { lastPointer = e.pointerType || "mouse"; down = { clientX: e.clientX, clientY: e.clientY }; }, true);
+
+  // the old per-point hit circles must not be targets (they overlap, and touch snapping aims at them)
+  document.head.insertAdjacentHTML("beforeend", "<style>svg circle.hit[data-id],svg circle.pt[data-id]{pointer-events:none}</style>");
+
+  function nearest(svg, ev, radius) {
+    let best = null, bd = Infinity;
+    for (const c of svg.querySelectorAll("circle.pt[data-id]")) {
+      const r = c.getBoundingClientRect();
+      const dx = r.left + r.width / 2 - ev.clientX, dy = r.top + r.height / 2 - ev.clientY;
+      const d = dx * dx + dy * dy;
+      if (d <= bd) { bd = d; best = c; } // ties: the point drawn on top (later) wins – that is the one you see
+    }
+    return best && bd <= radius * radius ? best : null;
+  }
+
+  function bind(svg) {
+    if (svg.__fvLinks) return;
+    svg.__fvLinks = true;
+    let current = null, armed = null;
+    const hitOf = (pt) => pt && svg.querySelector(`circle.hit[data-id="${CSS.escape(pt.dataset.id)}"]`);
+    const fire = (el, type, ev) => {
+      if (!el) return;
+      const e = new MouseEvent(type, { clientX: ev.clientX, clientY: ev.clientY, bubbles: false });
+      e.__fv = true;
+      el.dispatchEvent(e);
+    };
+    const tip = () => (svg.parentElement && svg.parentElement.querySelector("#tip, .tip")) || document.getElementById("tip");
+    const mark = (pt) => {
+      if (current === pt) return;
+      if (current) current.setAttribute("r", current.__r || "5");
+      current = pt;
+      if (pt) { pt.__r = pt.__r || pt.getAttribute("r"); pt.setAttribute("r", String(+pt.__r + 2)); }
+    };
+    const show = (pt, ev, hint) => {
+      mark(pt);
+      if (!pt) { const t = tip(); if (t) t.style.display = "none"; return; }
+      fire(hitOf(pt), "mousemove", ev); // the report's own tooltip, for the nearest point
+      const t = tip();
+      if (t && hint) t.insertAdjacentHTML("beforeend", `<div class="fv-hint">Ťukni ešte raz – otvorí sa inzerát ↗</div>`);
+    };
+    const open = (pt) => {
+      const d = byId.get(pt.dataset.id);
+      if (d && d.url) {
+        try { window.FerovkaAnalytics?.listingClick(d.url, "chart"); } catch { /* analytics must never block an ad */ }
+        window.open(d.url, "_blank", "noopener");
+      }
+    };
+
+    // the per-circle handlers of the report never see real mouse events – only our synthetic ones
+    for (const type of MOUSE) {
+      svg.addEventListener(type, (ev) => {
+        if (ev.__fv) return;
+        ev.stopImmediatePropagation();
+        if (type === "mousemove" && lastPointer === "mouse") {
+          show(nearest(svg, ev, 18), ev, false);
+          svg.style.cursor = current ? "pointer" : "";
+        } else if (type === "mouseleave" && ev.target === svg && lastPointer === "mouse") {
+          show(null, ev);
+        } else if (type === "click") {
+          const touch = lastPointer !== "mouse";
+          const at = touch && down ? down : ev;
+          const pt = nearest(svg, at, touch ? 26 : 18);
+          if (!pt) { armed = null; show(null, ev); return; }
+          if (!touch || armed === pt) { armed = null; open(pt); }
+          else { armed = pt; show(pt, at, true); }
+        }
+      }, true);
+    }
+  }
+
+  const scan = () => document.querySelectorAll("svg").forEach((s) => s.querySelector("circle.pt[data-id]") && bind(s));
+  scan();
+  new MutationObserver(scan).observe(document.body, { childList: true, subtree: true });
+})();
+</script><script id="ferovka-filters">/* Férovka – filters for the whole report, injected into every model report by sync-reports.mjs.
+ *
+ * The reports render the chart (drawChart) and the full ranking (renderTable) from the global DATA array; their own
+ * filter bar only filters the table. Here the filter bar (kept in its place above the ranking) gets more filters (year, price from/to,
+ * km, fuel, discount, picks only, text search) and every filter applies to the chart and the ranking together: DATA is
+ * refilled in place with the matching ads and both are drawn again. "</script" can't occur inside this file.
+ */
+(() => {
+  let data;
+  try { data = DATA; } catch { return; } // eslint-disable-line no-undef
+  if (!Array.isArray(data) || !data.length || typeof renderTable !== "function") return; // eslint-disable-line no-undef
+  const bar = document.querySelector(".filters");
+  if (!bar || bar.dataset.fv) return;
+  bar.dataset.fv = "1";
+  const ALL = data.slice();
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+  const fmt = (n) => Math.round(n).toLocaleString("sk-SK");
+  const norm = (s) => String(s ?? "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+  let groups = null;
+  try { groups = GROUPS; } catch { /* report without groups */ } // eslint-disable-line no-undef
+
+  const FUEL = { diesel: "Diesel", petrol: "Benzín", hybrid: "Hybrid", "plug-in hybrid": "Plug-in hybrid", electric: "Elektro", lpg: "LPG", cng: "CNG" };
+  const fuelOf = (d) => {
+    const e = norm(d.eg);
+    if (/tdi|crdi|dci|hdi|diesel|\bd\b|cdi|\d+d\b|blue/.test(e)) return "Diesel";
+    if (/plug-in|phev|e-hybrid|recharge|\bgte\b|\bt8\b|\b\d{2}e\b|\b\d{3} ?e\b/.test(e)) return "Plug-in hybrid";
+    if (/elektro|electric|\bev\b/.test(e)) return "Elektro";
+    if (/cng|lpg|g-tec|g-tron|tgi|ecofuel/.test(e)) return "Plyn (CNG/LPG)";
+    if (/mild|mhev/.test(e)) return "Benzín"; // mild-hybrid petrol (the diesel ones say TDI / d above)
+    if (/hybrid|hev/.test(e)) return "Hybrid";
+    if (/tsi|tfsi|mpi|fsi|benzin|gdi|dpi|htp|12v|\bt\d\b|\bb[56]\b|\d+i\b|turbo|tce|\bs4\b|rs ?\d|amg|competition|\bm\d{2,3}i?\b|gti|\bx5 m\b/.test(e)) return "Benzín";
+    return d.fuel ? FUEL[d.fuel] || String(d.fuel) : null;
+  };
+
+  // --- controls ---------------------------------------------------------------------------------------------------
+  const years = ALL.map((d) => d.year).filter(Boolean);
+  const yMin = Math.min(...years), yMax = Math.max(...years);
+  const yearOpts = (label) => `<option value="">${label}</option>` +
+    Array.from({ length: yMax - yMin + 1 }, (_, i) => yMax - i).map((y) => `<option>${y}</option>`).join("");
+  const kms = [30000, 50000, 75000, 100000, 150000, 200000, 250000, 300000];
+  const fuels = [...new Set(ALL.map(fuelOf).filter(Boolean))].sort((a, b) => a.localeCompare(b, "sk"));
+  const showGroups = Array.isArray(groups) && groups.length > 1 && ALL.some((d) => Number.isInteger(d.cg));
+
+  const maxInput = $("fMax");
+  if (maxInput) { maxInput.placeholder = "Cena do €"; maxInput.title = "Najvyššia cena (s DPH)"; }
+  const html =
+    `<select id="fvYearFrom" title="Rok výroby od">${yearOpts("Rok od")}</select>` +
+    `<select id="fvYearTo" title="Rok výroby do">${yearOpts("Rok do")}</select>` +
+    `<input id="fvPriceMin" type="number" placeholder="Cena od €" step="500" min="0" title="Najnižšia cena (s DPH)" style="width:110px">`;
+  if (maxInput) maxInput.insertAdjacentHTML("beforebegin", html);
+  else bar.insertAdjacentHTML("afterbegin", html);
+  const more =
+    `<select id="fvKm" title="Najviac najazdených km"><option value="">Nájazd – všetky</option>${kms.map((k) => `<option value="${k}">do ${fmt(k)} km</option>`).join("")}</select>` +
+    (fuels.length > 1 ? `<select id="fvFuel" title="Palivo"><option value="">Všetky palivá</option>${fuels.map((f) => `<option>${esc(f)}</option>`).join("")}</select>` : "") +
+    (showGroups ? `<select id="fvGroup" title="Skupina motorov (farba v grafe)"><option value="">Všetky skupiny</option>${groups.map((g, i) => `<option value="${i}">${esc(g)}</option>`).join("")}</select>` : "") +
+    `<select id="fvDisc" title="O koľko je auto lacnejšie ako férová cena"><option value="">Cena – všetky</option><option value="0">pod férovou cenou</option><option value="10">aspoň 10 % pod trhom</option><option value="20">aspoň 20 % pod trhom</option></select>` +
+    `<input id="fvText" type="search" placeholder="Hľadať (výbava, mesto…)" title="Hľadá v názve inzerátu, motore a lokalite" style="width:170px">` +
+    `<label class="fv-check"><input id="fvPick" type="checkbox"> len odporúčané</label>` +
+    `<button type="button" id="fvReset" class="fv-reset">Zrušiť filtre</button>`;
+  const count = $("count");
+  if (count) count.insertAdjacentHTML("beforebegin", more);
+  else bar.insertAdjacentHTML("beforeend", more);
+
+  // the bar stays where it was – right above the ranking – and also drives the chart; the chart gets a pointer to it
+  const chart = $("chartWrap");
+  const box = document.createElement("div");
+  box.className = "fv-filters";
+  box.id = "filtre";
+  bar.before(box);
+  box.innerHTML = `<div class="fv-head"><b>Filtre</b><span>platia pre rebríček aj graf vyššie</span></div>`;
+  box.appendChild(bar);
+  const note = document.createElement("div");
+  note.className = "fv-note";
+  chart?.before(note);
+
+  document.head.insertAdjacentHTML("beforeend", `<style id="fv-filters-css">
+.fv-filters{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 14px 4px;margin:24px 0 8px}
+.fv-filters .fv-head{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;margin-bottom:8px}
+.fv-filters .fv-head span{color:var(--muted);font-size:13px}
+.fv-filters .filters{margin-bottom:8px}
+.fv-filters .filters .count{flex-basis:100%;margin-left:0}
+.fv-check{display:inline-flex;gap:6px;align-items:center;font-size:13px;color:var(--text-2,var(--text));white-space:nowrap}
+.fv-reset{background:none;border:1px solid var(--border);color:var(--text);border-radius:8px;padding:6px 10px;font:inherit;font-size:13px;cursor:pointer}
+.fv-reset:hover{background:var(--surface-2,var(--surface))}
+.fv-note{color:var(--muted);font-size:13px;margin:0 0 8px}
+.fv-note a{color:inherit}
+.fv-empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:14px;pointer-events:none}
+@media (max-width:600px){.fv-filters .filters select,.fv-filters .filters input[type=number],.fv-filters .filters input[type=search]{flex:1 1 calc(50% - 8px);min-width:0;width:auto!important}}
+</style>`);
+
+  // --- filtering --------------------------------------------------------------------------------------------------
+  const val = (id) => ($(id) ? $(id).value : "");
+  const num = (id) => { const v = parseFloat(val(id)); return Number.isFinite(v) ? v : null; };
+  function matches(d) {
+    const yf = num("fvYearFrom"), yt = num("fvYearTo"), pmin = num("fvPriceMin"), pmax = num("fMax"), km = num("fvKm"), disc = num("fvDisc");
+    const fuel = val("fvFuel"), grp = val("fvGroup"), q = norm(val("fvText")).trim();
+    if (yf != null && !(d.year >= yf)) return false;
+    if (yt != null && !(d.year <= yt)) return false;
+    if (pmin != null && !(d.price_gross >= pmin)) return false;
+    if (pmax != null && !(d.price_gross <= pmax)) return false;
+    if (km != null && !(d.km <= km)) return false;
+    if (disc != null && !(d.discount_pct > disc || (disc > 0 && d.discount_pct >= disc))) return false;
+    if (fuel && fuelOf(d) !== fuel) return false;
+    if (grp !== "" && String(d.cg) !== grp) return false;
+    if ($("fvPick")?.checked && !d.pick) return false;
+    if (q && !q.split(/\s+/).every((w) => norm(`${d.title} ${d.eg ?? ""} ${d.engine ?? ""} ${d.location ?? ""}`).includes(w))) return false;
+    // the report's own filters (engine, gearbox, seller, portal, body, origin) – same rules as its renderTable
+    const en = val("fEngine"), tr = val("fTrans"), se = val("fSeller"), so = val("fSource"), og = val("fOrigin"), bo = val("fBody");
+    if (en && d.eg !== en) return false;
+    if (tr && d.transmission !== tr) return false;
+    if (se && d.seller_type === "dealer") return false;
+    if (so && !(d.source === so || (d.also_listed || []).some((a) => a.source === so))) return false;
+    if (og && d.origin !== og) return false;
+    if (bo && d.body !== bo) return false;
+    return true;
+  }
+  const active = () => [...box.querySelectorAll("select, input")].filter((el) => (el.type === "checkbox" ? el.checked : el.value !== "")).length;
+
+  let drawing = false;
+  function apply() {
+    if (drawing) return;
+    drawing = true;
+    const rows = ALL.filter(matches);
+    data.length = 0;
+    data.push(...rows);
+    const wrap = $("chartWrap");
+    wrap?.querySelector(".fv-empty")?.remove();
+    const plotted = rows.filter((d) => d.km && d.price_gross).length;
+    try {
+      if (typeof drawChart === "function") { // eslint-disable-line no-undef
+        if (plotted) drawChart(); // eslint-disable-line no-undef
+        else { const svg = $("chart"); if (svg) svg.innerHTML = ""; }
+      }
+    } catch (e) { console.warn("chart", e); }
+    if (wrap && !plotted) {
+      if (getComputedStyle(wrap).position === "static") wrap.style.position = "relative";
+      wrap.insertAdjacentHTML("beforeend", `<div class="fv-empty">Filtrom nezodpovedá žiadny inzerát</div>`);
+    }
+    try { renderTable(); } catch (e) { console.warn("table", e); } // eslint-disable-line no-undef
+    const n = active();
+    if (count) count.textContent = `Zobrazených ${fmt(rows.length)} z ${fmt(ALL.length)} inzerátov` + (n ? ` · aktívne filtre: ${n}` : "");
+    note.innerHTML = n
+      ? `Zobrazených ${fmt(rows.length)} z ${fmt(ALL.length)} inzerátov podľa <a href="#filtre">filtrov pri rebríčku</a>.`
+      : `Filtre (rok, cena, nájazd, palivo…) nájdeš <a href="#filtre">pri kompletnom rebríčku</a> – platia aj pre tento graf.`;
+    drawing = false;
+  }
+  box.querySelectorAll("select, input").forEach((el) => el.addEventListener("input", apply));
+  $("fvPick")?.addEventListener("change", apply);
+  $("fvReset").addEventListener("click", () => {
+    box.querySelectorAll("select, input").forEach((el) => { if (el.type === "checkbox") el.checked = false; else el.value = ""; });
+    apply();
+  });
+  apply();
+})();
+</script><!-- /ferovka-theme -->
+</body>
+</html>

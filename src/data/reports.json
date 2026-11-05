@@ -260,6 +260,45 @@
     "r2": "96 %"
   },
   {
+    "slug": "renault-captur",
+    "file": "renault-captur-analyza.html",
+    "name": "Renault Captur",
+    "brand": "Renault",
+    "model": "Captur",
+    "kind": "model",
+    "date": "2026-11-04",
+    "summary": "Analýza aktuálnych inzerátov Renault Captur (Captur I aj II vrátane faceliftu, všetky motory vrátane LPG a hybridov) od 2 500 € na bazoši a autobazar.eu. Na oboch portáloch je spolu 175 inzerátov (37 na bazoši, 138 na autobazar.eu) – prezreli sme všetky. Po zlúčení áut ponúkaných na oboch portáloch a vynechaní ponúk z Česka ostáva 113 rôznych áut zo Slovenska.",
+    "ads": 113,
+    "median": "15 300 €",
+    "r2": "97 %"
+  },
+  {
+    "slug": "renault-clio",
+    "file": "renault-clio-analyza.html",
+    "name": "Renault Clio",
+    "brand": "Renault",
+    "model": "Clio",
+    "kind": "model",
+    "date": "2026-11-04",
+    "summary": "Analýza aktuálnych inzerátov Renault Clio (Clio II až VI, hatchback aj Grandtour, bez športových R.S.) od 1 500 € na bazoši a autobazar.eu. Na oboch portáloch je spolu 361 inzerátov (164 na bazoši, 197 na autobazar.eu) – prezreli sme všetky. Po zlúčení áut ponúkaných na oboch portáloch a vynechaní ponúk z Česka ostáva 239 rôznych áut zo Slovenska.",
+    "ads": 239,
+    "median": "7 000 €",
+    "r2": "96 %"
+  },
+  {
+    "slug": "renault-megane",
+    "file": "renault-megane-analyza.html",
+    "name": "Renault Mégane",
+    "brand": "Renault",
+    "model": "Mégane",
+    "kind": "model",
+    "date": "2026-11-04",
+    "summary": "Analýza aktuálnych inzerátov Renault Mégane (Mégane II, III a IV – hatchback, Grandtour, GrandCoupé aj kupé; bez Scénicu, elektrického E-Tech a športových R.S.) od 1 500 € na bazoši a autobazar.eu. Na oboch portáloch je spolu 487 inzerátov (237 na bazoši, 250 na autobazar.eu) – prezreli sme všetky. Po zlúčení áut ponúkaných na oboch portáloch a vynechaní ponúk z Česka ostáva 296 rôznych áut zo Slovenska.",
+    "ads": 296,
+    "median": "5 600 €",
+    "r2": "90 %"
+  },
+  {
     "slug": "seat-ateca",
     "file": "seat-ateca-analyza.html",
     "name": "Seat Ateca",
