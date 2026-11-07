@@ -25,7 +25,7 @@
     "median": "14 990 €",
     "r2": "90 %",
     "history": {
-      "updated_at": "2026-11-07T18:17:35",
+      "updated_at": "2026-11-07T18:44:02",
       "as_of": "2026-11-07",
       "coverage": "partial",
       "baseline_count": 519,
@@ -57,7 +57,7 @@
     "median": "17 500 €",
     "r2": "92 %",
     "history": {
-      "updated_at": "2026-11-07T18:17:35",
+      "updated_at": "2026-11-07T18:44:02",
       "as_of": "2026-11-07",
       "coverage": "partial",
       "baseline_count": 705,
@@ -89,7 +89,7 @@
     "median": "24 990 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-07T18:17:35",
+      "updated_at": "2026-11-07T18:44:02",
       "as_of": "2026-11-07",
       "coverage": "partial",
       "baseline_count": 209,
@@ -121,7 +121,7 @@
     "median": "26 900 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-07T18:17:35",
+      "updated_at": "2026-11-07T18:44:02",
       "as_of": "2026-11-07",
       "coverage": "partial",
       "baseline_count": 263,
@@ -153,7 +153,7 @@
     "median": "16 994 €",
     "r2": "91 %",
     "history": {
-      "updated_at": "2026-11-07T18:17:35",
+      "updated_at": "2026-11-07T18:44:02",
       "as_of": "2026-11-07",
       "coverage": "partial",
       "baseline_count": 470,
@@ -185,7 +185,7 @@
     "median": "19 000 €",
     "r2": "93 %",
     "history": {
-      "updated_at": "2026-11-07T18:17:35",
+      "updated_at": "2026-11-07T18:44:02",
       "as_of": "2026-11-07",
       "coverage": "partial",
       "baseline_count": 513,
@@ -217,7 +217,7 @@
     "median": "43 483 €",
     "r2": "86 %",
     "history": {
-      "updated_at": "2026-11-07T18:17:35",
+      "updated_at": "2026-11-07T18:44:02",
       "as_of": "2026-11-07",
       "coverage": "partial",
       "baseline_count": 17,
@@ -249,7 +249,7 @@
     "median": "19 700 €",
     "r2": "95 %",
     "history": {
-      "updated_at": "2026-11-07T18:17:35",
+      "updated_at": "2026-11-07T18:44:02",
       "as_of": "2026-11-07",
       "coverage": "partial",
       "baseline_count": 196,
@@ -281,7 +281,7 @@
     "median": "27 300 €",
     "r2": "95 %",
     "history": {
-      "updated_at": "2026-11-07T18:17:35",
+      "updated_at": "2026-11-07T18:44:02",
       "as_of": "2026-11-07",
       "coverage": "partial",
       "baseline_count": 186,
@@ -313,7 +313,7 @@
     "median": "39 999 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-07T18:17:35",
+      "updated_at": "2026-11-07T18:44:02",
       "as_of": "2026-11-07",
       "coverage": "partial",
       "baseline_count": 433,
@@ -345,7 +345,7 @@
     "median": "37 544 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-07T18:17:35",
+      "updated_at": "2026-11-07T18:44:02",
       "as_of": "2026-11-07",
       "coverage": "partial",
       "baseline_count": 31,
@@ -377,7 +377,7 @@
     "median": "24 994 €",
     "r2": "90 %",
     "history": {
-      "updated_at": "2026-11-07T18:17:35",
+      "updated_at": "2026-11-07T18:44:02",
       "as_of": "2026-11-07",
       "coverage": "partial",
       "baseline_count": 314,
@@ -409,7 +409,7 @@
     "median": "17 200 €",
     "r2": "90 %",
     "history": {
-      "updated_at": "2026-11-07T18:17:35",
+      "updated_at": "2026-11-07T18:44:02",
       "as_of": "2026-11-07",
       "coverage": "partial",
       "baseline_count": 464,
@@ -441,7 +441,7 @@
     "median": "15 900 €",
     "r2": "95 %",
     "history": {
-      "updated_at": "2026-11-07T18:17:35",
+      "updated_at": "2026-11-07T18:44:02",
       "as_of": "2026-11-07",
       "coverage": "partial",
       "baseline_count": 487,
@@ -463,17 +463,17 @@
   {
     "slug": "mercedes-glc",
     "file": "mercedes-glc-analyza.html",
-    "name": "Mercedes GLC",
-    "brand": "Mercedes",
+    "name": "Mercedes-Benz GLC",
+    "brand": "Mercedes-Benz",
     "model": "GLC",
     "kind": "model",
     "date": "2026-11-07",
-    "summary": "Analýza aktuálnych inzerátov Mercedes GLC (SUV aj kupé, obe generácie) na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (7. 11. 2026). Na trhu je okolo 672 inzerátov (194 na bazoši, 476 na autobazar.eu, 2 na bazar.sk) – prezreli sme všetky. Veľa áut je na viacerých portáloch, takže po zlúčení a bez ponúk z Česka ostáva 520 rôznych áut.",
+    "summary": "Analýza aktuálnych inzerátov Mercedes-Benz GLC (SUV aj kupé, obe generácie) na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (7. 11. 2026). Na trhu je okolo 672 inzerátov (194 na bazoši, 476 na autobazar.eu, 2 na bazar.sk) – prezreli sme všetky. Veľa áut je na viacerých portáloch, takže po zlúčení a bez ponúk z Česka ostáva 520 rôznych áut.",
     "ads": 520,
     "median": "39 250 €",
     "r2": "95 %",
     "history": {
-      "updated_at": "2026-11-07T18:17:35",
+      "updated_at": "2026-11-07T18:44:02",
       "as_of": "2026-11-07",
       "coverage": "partial",
       "baseline_count": 368,
@@ -505,7 +505,7 @@
     "median": "42 000 €",
     "r2": "96 %",
     "history": {
-      "updated_at": "2026-11-07T18:17:35",
+      "updated_at": "2026-11-07T18:44:02",
       "as_of": "2026-11-07",
       "coverage": "partial",
       "baseline_count": 366,
@@ -537,7 +537,7 @@
     "median": "19 900 €",
     "r2": "87 %",
     "history": {
-      "updated_at": "2026-11-07T18:17:35",
+      "updated_at": "2026-11-07T18:44:02",
       "as_of": "2026-11-07",
       "coverage": "partial",
       "baseline_count": 504,
@@ -569,7 +569,7 @@
     "median": "10 900 €",
     "r2": "95 %",
     "history": {
-      "updated_at": "2026-11-07T18:17:35",
+      "updated_at": "2026-11-07T18:44:02",
       "as_of": "2026-11-07",
       "coverage": "partial",
       "baseline_count": 3448,
@@ -601,7 +601,7 @@
     "median": "16 945 €",
     "r2": "93 %",
     "history": {
-      "updated_at": "2026-11-07T18:17:35",
+      "updated_at": "2026-11-07T18:44:02",
       "as_of": "2026-11-07",
       "coverage": "partial",
       "baseline_count": 282,
@@ -633,7 +633,7 @@
     "median": "10 200 €",
     "r2": "92 %",
     "history": {
-      "updated_at": "2026-11-07T18:17:35",
+      "updated_at": "2026-11-07T18:44:02",
       "as_of": "2026-11-07",
       "coverage": "partial",
       "baseline_count": 1577,
@@ -665,7 +665,7 @@
     "median": "12 300 €",
     "r2": "93 %",
     "history": {
-      "updated_at": "2026-11-07T18:17:35",
+      "updated_at": "2026-11-07T18:44:02",
       "as_of": "2026-11-07",
       "coverage": "partial",
       "baseline_count": 1346,
@@ -685,51 +685,19 @@
     }
   },
   {
-    "slug": "volvo-xc60",
-    "file": "volvo-xc60-analyza.html",
-    "name": "Volvo XC60",
-    "brand": "Volvo",
-    "model": "XC60",
-    "kind": "model",
-    "date": "2026-11-07",
-    "summary": "Analýza aktuálnych inzerátov Volvo XC60 (druhá generácia, od roku 2018) na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (7. 11. 2026). Na trhu je okolo 863 inzerátov (193 na bazoši, 350 na autobazar.eu, 320 na bazar.sk) – prezreli sme 824 najnovších. Veľa áut je na viacerých portáloch, takže po zlúčení a bez ponúk z Česka ostáva 388 rôznych áut.",
-    "ads": 388,
-    "median": "37 739 €",
-    "r2": "94 %",
-    "history": {
-      "updated_at": "2026-11-07T18:17:35",
-      "as_of": "2026-11-07",
-      "coverage": "partial",
-      "baseline_count": 230,
-      "total_count": 519,
-      "active_count": 510,
-      "inactive_count": 0,
-      "unverified_count": 9,
-      "new_count": 289,
-      "price_changed_count": 13,
-      "price_lowered_count": 13,
-      "paired_count": 221,
-      "paired_median_change_pct": 0,
-      "historical_median": 42900,
-      "seen_median": 42925,
-      "seen_price_count": 510,
-      "last_observed_at": "2026-11-07T17:26:49"
-    }
-  },
-  {
     "slug": "vw-tiguan",
     "file": "vw-tiguan-analyza.html",
-    "name": "VW Tiguan",
-    "brand": "VW",
+    "name": "Volkswagen Tiguan",
+    "brand": "Volkswagen",
     "model": "Tiguan",
     "kind": "model",
     "date": "2026-11-07",
-    "summary": "Analýza aktuálnych inzerátov VW Tiguan (generácie 5N a AD1, roky 2012–2024) na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (7. 11. 2026). Na trhu je okolo 2 610 inzerátov (950 na bazoši, 860 na autobazar.eu, 800 na bazar.sk) – prezreli sme 2 527 najnovších. Veľa áut je na viacerých portáloch, takže po zlúčení a bez ponúk z Česka ostáva 1 472 rôznych áut.",
+    "summary": "Analýza aktuálnych inzerátov Volkswagen Tiguan (generácie 5N a AD1, roky 2012–2024) na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (7. 11. 2026). Na trhu je okolo 2 610 inzerátov (950 na bazoši, 860 na autobazar.eu, 800 na bazar.sk) – prezreli sme 2 527 najnovších. Veľa áut je na viacerých portáloch, takže po zlúčení a bez ponúk z Česka ostáva 1 472 rôznych áut.",
     "ads": 1472,
     "median": "19 870 €",
     "r2": "93 %",
     "history": {
-      "updated_at": "2026-11-07T18:17:35",
+      "updated_at": "2026-11-07T18:44:02",
       "as_of": "2026-11-07",
       "coverage": "partial",
       "baseline_count": 893,
@@ -749,6 +717,38 @@
     }
   },
   {
+    "slug": "volvo-xc60",
+    "file": "volvo-xc60-analyza.html",
+    "name": "Volvo XC60",
+    "brand": "Volvo",
+    "model": "XC60",
+    "kind": "model",
+    "date": "2026-11-07",
+    "summary": "Analýza aktuálnych inzerátov Volvo XC60 (druhá generácia, od roku 2018) na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (7. 11. 2026). Na trhu je okolo 863 inzerátov (193 na bazoši, 350 na autobazar.eu, 320 na bazar.sk) – prezreli sme 824 najnovších. Veľa áut je na viacerých portáloch, takže po zlúčení a bez ponúk z Česka ostáva 388 rôznych áut.",
+    "ads": 388,
+    "median": "37 739 €",
+    "r2": "94 %",
+    "history": {
+      "updated_at": "2026-11-07T18:44:02",
+      "as_of": "2026-11-07",
+      "coverage": "partial",
+      "baseline_count": 230,
+      "total_count": 519,
+      "active_count": 510,
+      "inactive_count": 0,
+      "unverified_count": 9,
+      "new_count": 289,
+      "price_changed_count": 13,
+      "price_lowered_count": 13,
+      "paired_count": 221,
+      "paired_median_change_pct": 0,
+      "historical_median": 42900,
+      "seen_median": 42925,
+      "seen_price_count": 510,
+      "last_observed_at": "2026-11-07T17:26:49"
+    }
+  },
+  {
     "slug": "audi-a5-s5",
     "file": "audi-a5-s5-analyza.html",
     "name": "Audi A5 / S5",
@@ -761,7 +761,7 @@
     "median": "13 500 €",
     "r2": "90 %",
     "history": {
-      "updated_at": "2026-11-07T18:17:35",
+      "updated_at": "2026-11-07T18:44:02",
       "as_of": "2026-11-07",
       "coverage": "partial",
       "baseline_count": 221,
@@ -793,7 +793,7 @@
     "median": "14 500 €",
     "r2": "97 %",
     "history": {
-      "updated_at": "2026-11-07T18:17:35",
+      "updated_at": "2026-11-07T18:44:02",
       "as_of": "2026-11-07",
       "coverage": "partial",
       "baseline_count": 102,
@@ -825,7 +825,7 @@
     "median": "7 000 €",
     "r2": "95 %",
     "history": {
-      "updated_at": "2026-11-07T18:17:35",
+      "updated_at": "2026-11-07T18:44:02",
       "as_of": "2026-11-07",
       "coverage": "partial",
       "baseline_count": 181,
@@ -857,7 +857,7 @@
     "median": "6 000 €",
     "r2": "90 %",
     "history": {
-      "updated_at": "2026-11-07T18:17:35",
+      "updated_at": "2026-11-07T18:44:02",
       "as_of": "2026-11-07",
       "coverage": "partial",
       "baseline_count": 210,
@@ -889,7 +889,7 @@
     "median": "16 999 €",
     "r2": "89 %",
     "history": {
-      "updated_at": "2026-11-07T18:17:35",
+      "updated_at": "2026-11-07T18:44:02",
       "as_of": "2026-11-07",
       "coverage": "partial",
       "baseline_count": 178,
@@ -921,7 +921,7 @@
     "median": "9 600 €",
     "r2": "92 %",
     "history": {
-      "updated_at": "2026-11-07T18:17:35",
+      "updated_at": "2026-11-07T18:44:02",
       "as_of": "2026-11-07",
       "coverage": "partial",
       "baseline_count": 463,
@@ -953,7 +953,7 @@
     "median": "5 800 €",
     "r2": "93 %",
     "history": {
-      "updated_at": "2026-11-07T18:17:35",
+      "updated_at": "2026-11-07T18:44:02",
       "as_of": "2026-11-07",
       "coverage": "partial",
       "baseline_count": 1030,
@@ -985,7 +985,7 @@
     "median": "24 900 €",
     "r2": "88 %",
     "history": {
-      "updated_at": "2026-11-07T18:17:35",
+      "updated_at": "2026-11-07T18:44:02",
       "as_of": "2026-11-07",
       "coverage": "partial",
       "baseline_count": 1084,
@@ -1007,17 +1007,17 @@
   {
     "slug": "vw-touran",
     "file": "vw-touran-analyza.html",
-    "name": "VW Touran",
-    "brand": "VW",
+    "name": "Volkswagen Touran",
+    "brand": "Volkswagen",
     "model": "Touran",
     "kind": "model",
     "date": "2026-11-06",
-    "summary": "Analýza aktuálnych inzerátov VW Touran (Touran I aj II, 5- aj 7-miestne, všetky motory vrátane CNG EcoFuel) od 1 500 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (6. 11. 2026). Na portáloch je spolu 1 189 inzerátov (567 na bazoši, 398 na autobazar.eu, 224 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 719 rôznych áut zo Slovenska.",
+    "summary": "Analýza aktuálnych inzerátov Volkswagen Touran (Touran I aj II, 5- aj 7-miestne, všetky motory vrátane CNG EcoFuel) od 1 500 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (6. 11. 2026). Na portáloch je spolu 1 189 inzerátov (567 na bazoši, 398 na autobazar.eu, 224 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 719 rôznych áut zo Slovenska.",
     "ads": 719,
     "median": "8 500 €",
     "r2": "92 %",
     "history": {
-      "updated_at": "2026-11-07T18:17:35",
+      "updated_at": "2026-11-07T18:44:02",
       "as_of": "2026-11-07",
       "coverage": "partial",
       "baseline_count": 463,
@@ -1049,7 +1049,7 @@
     "median": "11 550 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-07T18:17:35",
+      "updated_at": "2026-11-07T18:44:02",
       "as_of": "2026-11-07",
       "coverage": "partial",
       "baseline_count": 274,
@@ -1081,7 +1081,7 @@
     "median": "12 850 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-07T18:17:35",
+      "updated_at": "2026-11-07T18:44:02",
       "as_of": "2026-11-07",
       "coverage": "partial",
       "baseline_count": 176,
@@ -1101,19 +1101,6 @@
     }
   },
   {
-    "slug": "skoda-octavia-combi",
-    "file": "skoda-octavia-combi-analyza.html",
-    "name": "Škoda Octavia combi",
-    "brand": "Škoda",
-    "model": "Octavia combi",
-    "kind": "model",
-    "date": "2026-11-04",
-    "summary": "Analýza aktuálnych inzerátov Škoda Octavia combi od 4 000 € na bazoši a autobazar.eu. Octavií je na trhu toľko, že sme prezreli vždy najnovšie ponuky (asi polovicu trhu).",
-    "ads": 1081,
-    "median": "10 000 €",
-    "r2": "92 %"
-  },
-  {
     "slug": "skoda-superb",
     "file": "skoda-superb-analyza.html",
     "name": "Škoda Superb",
@@ -1126,7 +1113,7 @@
     "median": "16 990 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-07T18:17:35",
+      "updated_at": "2026-11-07T18:44:02",
       "as_of": "2026-11-07",
       "coverage": "partial",
       "baseline_count": 1346,

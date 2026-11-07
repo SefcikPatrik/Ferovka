@@ -1,8 +1,40 @@
 {
-  "rewrites": [{ "source": "/reports/:name.html", "destination": "/reports/:name/" }],
+  "rewrites": [
+    {
+      "source": "/reports/:name.html",
+      "destination": "/reports/:name/"
+    }
+  ],
   "redirects": [
-    { "source": "/analyza/octavia-combi/", "destination": "/analyza/skoda-octavia/", "permanent": true },
-    { "source": "/analyza/octavia-combi", "destination": "/analyza/skoda-octavia/", "permanent": true },
-    { "source": "/reports/octavia-combi-analyza.html", "destination": "/reports/skoda-octavia-analyza.html", "permanent": true }
+    {
+      "source": "/analyza/octavia-combi/",
+      "destination": "/analyza/skoda-octavia/",
+      "permanent": true
+    },
+    {
+      "source": "/analyza/octavia-combi",
+      "destination": "/analyza/skoda-octavia/",
+      "permanent": true
+    },
+    {
+      "source": "/reports/octavia-combi-analyza.html",
+      "destination": "/reports/skoda-octavia-analyza.html",
+      "permanent": true
+    },
+    {
+      "source": "/analyza/skoda-octavia-combi/",
+      "destination": "/analyza/skoda-octavia/",
+      "permanent": true
+    },
+    {
+      "source": "/analyza/skoda-octavia-combi",
+      "destination": "/analyza/skoda-octavia/",
+      "permanent": true
+    },
+    {
+      "source": "/reports/skoda-octavia-combi-analyza.html",
+      "destination": "/reports/skoda-octavia-analyza.html",
+      "permanent": true
+    }
   ]
 }

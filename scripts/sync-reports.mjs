@@ -32,7 +32,8 @@ for (const file of fs.readdirSync(src).filter((f) => f.endsWith(".html"))) {
     ? `${d[3]}-${d[2].padStart(2, "0")}-${d[1].padStart(2, "0")}`
     : fs.statSync(path.join(src, file)).mtime.toISOString().slice(0, 10);
   const comparison = slug.startsWith("porovnanie");
-  const name = comparison ? title : title.split(" – ")[0];
+  // one brand name everywhere: "VW Tiguan" → "Volkswagen Tiguan", "Mercedes GLC" → "Mercedes-Benz GLC"
+  const name = (comparison ? title : title.split(" – ")[0]).replace(/^VW /, "Volkswagen ").replace(/^Mercedes (?!-)/, "Mercedes-Benz ");
   const kpi = (re) => kpis.find((k) => re.test(k.label))?.value ?? null;
   reports.push({
     slug,
