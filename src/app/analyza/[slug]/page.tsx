@@ -5,6 +5,7 @@ import { Mark } from "@/components/Logo";
 import ReportFrame from "@/components/ReportFrame";
 import ThemeToggle from "@/components/ThemeToggle";
 import { formatDate, formatNum, getReport, photosFor, reports } from "@/lib/reports";
+import FeedbackForm from "@/components/FeedbackForm";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -95,6 +96,7 @@ export default async function ReportPage({ params }: Props) {
       </section>
 
       <ReportFrame src={src} title={`Analýza ${r.name}`} />
+      <FeedbackForm context={`/analyza/${r.slug}/`} />
     </>
   );
 }

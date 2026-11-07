@@ -4,6 +4,7 @@ import { CountUp } from "@/components/Motion";
 import ReportGrid from "@/components/ReportGrid";
 import ThemeToggle from "@/components/ThemeToggle";
 import { allPhotos, formatDate, photosFor, reports, totals } from "@/lib/reports";
+import FeedbackForm from "@/components/FeedbackForm";
 
 function Gauge() {
   // −20 % … +20 % against the fair price; the needle sweeps to +11 % (cheaper than the market)
@@ -167,6 +168,8 @@ export default function Home() {
           </div>
         </section>
       </main>
+
+      <FeedbackForm />
 
       <footer className="site">
         <div className="wrap">

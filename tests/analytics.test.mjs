@@ -84,14 +84,17 @@ test("listing events retain the exact ad ID and placement; unrelated hosts are r
   const b = browser({ saved: "granted", path: "/reports/kia-sportage-analyza.html" });
   b.api.listingClick("https://auto.bazos.sk/inzerat/123/auto.php?secret=ignore", "chart");
   b.api.listingClick("https://www.autobazar.eu/detail-aaa/car/Aa_ID-123/", "ranking");
+  b.api.listingClick("https://auto.bazar.sk/39534442-bmw-x1-xdrive20d/", "ranking");
   b.api.listingClick("https://auto.bazos.sk.attacker.example/inzerat/456/car.php", "ranking");
   b.api.listingClick("javascript:alert(1)", "ranking");
   const events = b.events().filter((e) => e.name === "listing_click");
-  assert.equal(events.length, 2);
+  assert.equal(events.length, 3);
   assert.equal(events[0].properties.report_slug, "kia-sportage");
   assert.equal(events[0].properties.listing_id, "123");
   assert.equal(events[0].properties.placement, "chart");
   assert.equal(events[1].properties.listing_id, "ab-Aa_ID-123");
+  assert.equal(events[2].properties.listing_id, "bs-39534442");
+  assert.equal(events[2].properties.portal, "bazarsk");
   assert.ok(!JSON.stringify(events).includes("secret"));
 });
 

@@ -89,3 +89,20 @@ celkové štatistiky ukladá účet GA4 a zobrazujú sa iba jeho oprávneným po
 Kontroly: `npm run test:analytics` a `npx tsc --noEmit`.
 Dokumentácia: [GA4 udalosti](https://developers.google.com/analytics/devguides/collection/ga4/events),
 [meranie SPA](https://developers.google.com/analytics/devguides/collection/ga4/single-page-applications).
+
+## Požiadavky návštevníkov (formulár na spodku stránok)
+
+Formulár „Chýba ti model alebo niečo nesedí?“ je na úvodnej stránke aj pod každou analýzou. Odoslanie spracuje
+Vercel Function `api/poziadavka.js` a uloží ho ako súkromný JSON do Vercel Blob úložiska `ferovka-poziadavky`
+(Frankfurt, prístup len s kľúčom). Ukladá sa typ, správa, nepovinný e-mail a stránka – IP adresa nie.
+
+Čítanie (kľúč `BLOB_READ_WRITE_TOKEN` stiahni mimo repozitára, súbor nikdy necommituj):
+
+```
+npx vercel env pull ../poziadavky.env --environment production
+node scripts/poziadavky.mjs --env ../poziadavky.env               # všetky, najnovšie hore
+node scripts/poziadavky.mjs --env ../poziadavky.env --since 2026-11-01
+node scripts/poziadavky.mjs --env ../poziadavky.env --delete poziadavky/<súbor>.json
+```
+
+Formulár volá `/api/poziadavka/` s lomkou na konci (web má `trailingSlash`, bez lomky by prišlo presmerovanie).

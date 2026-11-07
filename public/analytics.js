@@ -68,6 +68,10 @@
       const match = url.pathname.match(/^\/detail(?:-[a-z-]+)?\/[^/]+\/([a-zA-Z0-9_-]+)\/?$/);
       if (!match) return;
       portal = "autobazar"; listingId = "ab-" + match[1];
+    } else if (url.hostname === "auto.bazar.sk") {
+      const match = url.pathname.match(/^\/(\d+)-[^/]*\/?$/);
+      if (!match) return;
+      portal = "bazarsk"; listingId = "bs-" + match[1];
     } else return;
     track("listing_click", { report_slug: reportSlug(), portal, listing_id: listingId, placement });
   }
