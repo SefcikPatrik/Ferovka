@@ -243,5 +243,47 @@
     "author": "Alexander Migl",
     "license": "CC BY-SA 4.0",
     "source": "https://commons.wikimedia.org/wiki/File:Renault_Megane_IV_Grandtour_(FL)_IMG_3785.jpg"
+  },
+  "opel-astra": {
+    "src": "/img/opel-astra.jpg",
+    "file": "File:Opel Astra L 1X7A6738.jpg",
+    "author": "Alexander Migl",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Opel_Astra_L_1X7A6738.jpg"
+  },
+  "opel-corsa": {
+    "src": "/img/opel-corsa.jpg",
+    "file": "File:2023 Opel Corsa-e IAA 2023 1X7A0385.jpg",
+    "author": "Alexander-93",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:2023_Opel_Corsa-e_IAA_2023_1X7A0385.jpg"
+  },
+  "opel-grandland": {
+    "src": "/img/opel-grandland.jpg",
+    "file": "File:Opel Grandland B DSC 8322.jpg",
+    "author": "Alexander Migl",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Opel_Grandland_B_DSC_8322.jpg"
+  },
+  "opel-insignia": {
+    "src": "/img/opel-insignia.jpg",
+    "file": "File:Opel Insignia GSi (1X7A8481).jpg",
+    "author": "Matti Blume",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Opel_Insignia_GSi_(1X7A8481).jpg"
+  },
+  "opel-mokka": {
+    "src": "/img/opel-mokka.jpg",
+    "file": "File:Opel Mokka-e GSE IAA 2025 DSC 1463.jpg",
+    "author": "Alexander-93",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Opel_Mokka-e_GSE_IAA_2025_DSC_1463.jpg"
+  },
+  "opel-zafira": {
+    "src": "/img/opel-zafira.jpg",
+    "file": "File:Opel Zafira Tourer 2.0 CDTI Innovation (C) – Frontansicht, 23. Mai 2013, Heiligenhaus.jpg",
+    "author": "M 93",
+    "license": "CC BY-SA 3.0 de",
+    "source": "https://commons.wikimedia.org/wiki/File:Opel_Zafira_Tourer_2.0_CDTI_Innovation_(C)_%E2%80%93_Frontansicht,_23._Mai_2013,_Heiligenhaus.jpg"
   }
 }
