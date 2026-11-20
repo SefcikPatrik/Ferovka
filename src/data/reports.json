@@ -1101,6 +1101,38 @@
     }
   },
   {
+    "slug": "vw-golf",
+    "file": "vw-golf-analyza.html",
+    "name": "Volkswagen Golf",
+    "brand": "Volkswagen",
+    "model": "Golf",
+    "kind": "model",
+    "date": "2026-11-20",
+    "summary": "Analýza aktuálnych inzerátov Volkswagen Golf (hatchback aj Variant, generácie IV až VIII vrátane GTI, GTD a R) od 2 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (20. 11. 2026). Na portáloch je spolu 4 146 inzerátov (1 871 na bazoši, 1 347 na autobazar.eu, 928 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 2 612 rôznych áut zo Slovenska.",
+    "ads": 2612,
+    "median": "9 999 €",
+    "r2": "92 %",
+    "history": {
+      "updated_at": "2026-11-20T21:53:47",
+      "as_of": "2026-11-20",
+      "coverage": "partial",
+      "baseline_count": 1577,
+      "total_count": 3724,
+      "active_count": 2816,
+      "inactive_count": 0,
+      "unverified_count": 908,
+      "new_count": 2147,
+      "price_changed_count": 210,
+      "price_lowered_count": 197,
+      "paired_count": 964,
+      "paired_median_change_pct": 0,
+      "historical_median": 9999,
+      "seen_median": 10500,
+      "seen_price_count": 2742,
+      "last_observed_at": "2026-11-20T21:52:06"
+    }
+  },
+  {
     "slug": "vw-tiguan",
     "file": "vw-tiguan-analyza.html",
     "name": "Volkswagen Tiguan",
@@ -1113,7 +1145,7 @@
     "median": "19 790 €",
     "r2": "92 %",
     "history": {
-      "updated_at": "2026-11-20T19:53:49",
+      "updated_at": "2026-11-20T21:53:47",
       "as_of": "2026-11-20",
       "coverage": "partial",
       "baseline_count": 893,
@@ -1209,23 +1241,23 @@
     "median": "12 440 €",
     "r2": "93 %",
     "history": {
-      "updated_at": "2026-11-20T19:53:49",
+      "updated_at": "2026-11-20T21:53:47",
       "as_of": "2026-11-20",
       "coverage": "partial",
       "baseline_count": 1346,
       "total_count": 3073,
-      "active_count": 2,
+      "active_count": 4,
       "inactive_count": 0,
-      "unverified_count": 3071,
+      "unverified_count": 3069,
       "new_count": 1727,
-      "price_changed_count": 0,
-      "price_lowered_count": 0,
-      "paired_count": 0,
-      "paired_median_change_pct": null,
+      "price_changed_count": 2,
+      "price_lowered_count": 2,
+      "paired_count": 2,
+      "paired_median_change_pct": -3,
       "historical_median": 12500,
-      "seen_median": 14975,
-      "seen_price_count": 2,
-      "last_observed_at": "2026-11-20T10:11:29"
+      "seen_median": 11250,
+      "seen_price_count": 4,
+      "last_observed_at": "2026-11-20T21:47:00"
     }
   },
   {
@@ -1241,7 +1273,7 @@
     "median": "8 490 €",
     "r2": "93 %",
     "history": {
-      "updated_at": "2026-11-20T19:53:49",
+      "updated_at": "2026-11-20T21:53:47",
       "as_of": "2026-11-20",
       "coverage": "partial",
       "baseline_count": 463,
@@ -1290,38 +1322,6 @@
       "seen_median": null,
       "seen_price_count": 0,
       "last_observed_at": "2026-11-16T10:42:08"
-    }
-  },
-  {
-    "slug": "vw-golf",
-    "file": "vw-golf-analyza.html",
-    "name": "Volkswagen Golf",
-    "brand": "Volkswagen",
-    "model": "Golf",
-    "kind": "model",
-    "date": "2026-11-16",
-    "summary": "Analýza aktuálnych inzerátov Volkswagen Golf (hatchback aj Variant, generácie IV až VIII vrátane GTI, GTD a R) od 2 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (16. 11. 2026). Na portáloch je spolu 4 110 inzerátov (1 844 na bazoši, 1 338 na autobazar.eu, 928 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 2 621 rôznych áut zo Slovenska.",
-    "ads": 2621,
-    "median": "10 000 €",
-    "r2": "92 %",
-    "history": {
-      "updated_at": "2026-11-20T19:53:49",
-      "as_of": "2026-11-20",
-      "coverage": "partial",
-      "baseline_count": 1577,
-      "total_count": 3385,
-      "active_count": 1,
-      "inactive_count": 0,
-      "unverified_count": 3384,
-      "new_count": 1808,
-      "price_changed_count": 1,
-      "price_lowered_count": 1,
-      "paired_count": 1,
-      "paired_median_change_pct": -25.1,
-      "historical_median": 10000,
-      "seen_median": 11950,
-      "seen_price_count": 1,
-      "last_observed_at": "2026-11-20T10:05:28"
     }
   }
 ]
