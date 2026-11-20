@@ -601,7 +601,7 @@
     "median": "5 500 €",
     "r2": "92 %",
     "history": {
-      "updated_at": "2026-11-20T20:14:58",
+      "updated_at": "2026-11-20T20:18:03",
       "as_of": "2026-11-20",
       "coverage": "partial",
       "baseline_count": 567,
@@ -621,6 +621,38 @@
     }
   },
   {
+    "slug": "opel-corsa",
+    "file": "opel-corsa-analyza.html",
+    "name": "Opel Corsa",
+    "brand": "Opel",
+    "model": "Corsa",
+    "kind": "model",
+    "date": "2026-11-20",
+    "summary": "Analýza aktuálnych inzerátov Opel Corsa (Corsa C až F vrátane Corsa-e) od 1 500 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (20. 11. 2026). Na portáloch je spolu 436 inzerátov (118 na bazoši, 158 na autobazar.eu, 160 na bazar.sk) – prezreli sme 93 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 257 rôznych áut zo Slovenska.",
+    "ads": 257,
+    "median": "6 300 €",
+    "r2": "92 %",
+    "history": {
+      "updated_at": "2026-11-20T20:18:03",
+      "as_of": "2026-11-20",
+      "coverage": "partial",
+      "baseline_count": 210,
+      "total_count": 263,
+      "active_count": 232,
+      "inactive_count": 0,
+      "unverified_count": 31,
+      "new_count": 53,
+      "price_changed_count": 19,
+      "price_lowered_count": 13,
+      "paired_count": 176,
+      "paired_median_change_pct": 0,
+      "historical_median": 6200,
+      "seen_median": 6300,
+      "seen_price_count": 229,
+      "last_observed_at": "2026-11-20T20:17:24"
+    }
+  },
+  {
     "slug": "opel-insignia",
     "file": "opel-insignia-analyza.html",
     "name": "Opel Insignia",
@@ -633,7 +665,7 @@
     "median": "7 500 €",
     "r2": "87 %",
     "history": {
-      "updated_at": "2026-11-20T20:14:58",
+      "updated_at": "2026-11-20T20:18:03",
       "as_of": "2026-11-20",
       "coverage": "partial",
       "baseline_count": 352,
@@ -1197,38 +1229,6 @@
     }
   },
   {
-    "slug": "opel-corsa",
-    "file": "opel-corsa-analyza.html",
-    "name": "Opel Corsa",
-    "brand": "Opel",
-    "model": "Corsa",
-    "kind": "model",
-    "date": "2026-11-12",
-    "summary": "Analýza aktuálnych inzerátov Opel Corsa (Corsa C až F vrátane Corsa-e) od 1 500 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (12. 11. 2026). Na portáloch je spolu 438 inzerátov (110 na bazoši, 168 na autobazar.eu, 160 na bazar.sk) – prezreli sme 94 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 257 rôznych áut zo Slovenska.",
-    "ads": 257,
-    "median": "6 500 €",
-    "r2": "92 %",
-    "history": {
-      "updated_at": "2026-11-20T20:14:58",
-      "as_of": "2026-11-20",
-      "coverage": "partial",
-      "baseline_count": 210,
-      "total_count": 210,
-      "active_count": 0,
-      "inactive_count": 0,
-      "unverified_count": 210,
-      "new_count": 0,
-      "price_changed_count": 0,
-      "price_lowered_count": 0,
-      "paired_count": 0,
-      "paired_median_change_pct": null,
-      "historical_median": 6500,
-      "seen_median": null,
-      "seen_price_count": 0,
-      "last_observed_at": "2026-11-12T15:53:45"
-    }
-  },
-  {
     "slug": "opel-grandland",
     "file": "opel-grandland-analyza.html",
     "name": "Opel Grandland",
@@ -1241,7 +1241,7 @@
     "median": "15 590 €",
     "r2": "95 %",
     "history": {
-      "updated_at": "2026-11-20T20:14:58",
+      "updated_at": "2026-11-20T20:18:03",
       "as_of": "2026-11-20",
       "coverage": "partial",
       "baseline_count": 92,
@@ -1273,7 +1273,7 @@
     "median": "14 300 €",
     "r2": "96 %",
     "history": {
-      "updated_at": "2026-11-20T20:14:58",
+      "updated_at": "2026-11-20T20:18:03",
       "as_of": "2026-11-20",
       "coverage": "partial",
       "baseline_count": 109,
@@ -1305,7 +1305,7 @@
     "median": "5 700 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-20T20:14:58",
+      "updated_at": "2026-11-20T20:18:03",
       "as_of": "2026-11-20",
       "coverage": "partial",
       "baseline_count": 142,
