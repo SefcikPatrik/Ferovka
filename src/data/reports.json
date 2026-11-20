@@ -793,7 +793,7 @@
     "median": "16 999 €",
     "r2": "89 %",
     "history": {
-      "updated_at": "2026-11-20T20:51:43",
+      "updated_at": "2026-11-20T20:56:51",
       "as_of": "2026-11-20",
       "coverage": "partial",
       "baseline_count": 178,
@@ -810,6 +810,38 @@
       "seen_median": 16600,
       "seen_price_count": 223,
       "last_observed_at": "2026-11-20T20:51:16"
+    }
+  },
+  {
+    "slug": "seat-leon",
+    "file": "seat-leon-analyza.html",
+    "name": "Seat Leon",
+    "brand": "Seat",
+    "model": "Leon",
+    "kind": "model",
+    "date": "2026-11-20",
+    "summary": "Analýza aktuálnych inzerátov Seat Leon (hatchback aj ST kombi, generácie I až IV vrátane FR a Cupra) od 1 500 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (20. 11. 2026). Na portáloch je spolu 971 inzerátov (501 na bazoši, 311 na autobazar.eu, 159 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 684 rôznych áut zo Slovenska.",
+    "ads": 684,
+    "median": "9 994 €",
+    "r2": "92 %",
+    "history": {
+      "updated_at": "2026-11-20T20:56:51",
+      "as_of": "2026-11-20",
+      "coverage": "partial",
+      "baseline_count": 463,
+      "total_count": 931,
+      "active_count": 656,
+      "inactive_count": 0,
+      "unverified_count": 275,
+      "new_count": 468,
+      "price_changed_count": 72,
+      "price_lowered_count": 68,
+      "paired_count": 279,
+      "paired_median_change_pct": 0,
+      "historical_median": 9490,
+      "seen_median": 10300,
+      "seen_price_count": 643,
+      "last_observed_at": "2026-11-20T20:56:22"
     }
   },
   {
@@ -1290,38 +1322,6 @@
       "seen_median": null,
       "seen_price_count": 0,
       "last_observed_at": "2026-11-14T15:46:27"
-    }
-  },
-  {
-    "slug": "seat-leon",
-    "file": "seat-leon-analyza.html",
-    "name": "Seat Leon",
-    "brand": "Seat",
-    "model": "Leon",
-    "kind": "model",
-    "date": "2026-11-14",
-    "summary": "Analýza aktuálnych inzerátov Seat Leon (hatchback aj ST kombi, generácie I až IV vrátane FR a Cupra) od 1 500 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (14. 11. 2026). Na portáloch je spolu 959 inzerátov (500 na bazoši, 300 na autobazar.eu, 159 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 675 rôznych áut zo Slovenska.",
-    "ads": 675,
-    "median": "9 920 €",
-    "r2": "92 %",
-    "history": {
-      "updated_at": "2026-11-20T20:51:43",
-      "as_of": "2026-11-20",
-      "coverage": "partial",
-      "baseline_count": 463,
-      "total_count": 808,
-      "active_count": 0,
-      "inactive_count": 0,
-      "unverified_count": 808,
-      "new_count": 345,
-      "price_changed_count": 0,
-      "price_lowered_count": 0,
-      "paired_count": 0,
-      "paired_median_change_pct": null,
-      "historical_median": 9800,
-      "seen_median": null,
-      "seen_price_count": 0,
-      "last_observed_at": "2026-11-14T15:41:16"
     }
   }
 ]
