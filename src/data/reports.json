@@ -601,7 +601,7 @@
     "median": "5 500 €",
     "r2": "92 %",
     "history": {
-      "updated_at": "2026-11-20T20:20:51",
+      "updated_at": "2026-11-20T20:23:37",
       "as_of": "2026-11-20",
       "coverage": "partial",
       "baseline_count": 567,
@@ -633,7 +633,7 @@
     "median": "6 300 €",
     "r2": "92 %",
     "history": {
-      "updated_at": "2026-11-20T20:20:51",
+      "updated_at": "2026-11-20T20:23:37",
       "as_of": "2026-11-20",
       "coverage": "partial",
       "baseline_count": 210,
@@ -665,7 +665,7 @@
     "median": "7 500 €",
     "r2": "87 %",
     "history": {
-      "updated_at": "2026-11-20T20:20:51",
+      "updated_at": "2026-11-20T20:23:37",
       "as_of": "2026-11-20",
       "coverage": "partial",
       "baseline_count": 352,
@@ -685,6 +685,38 @@
     }
   },
   {
+    "slug": "opel-mokka",
+    "file": "opel-mokka-analyza.html",
+    "name": "Opel Mokka",
+    "brand": "Opel",
+    "model": "Mokka",
+    "kind": "model",
+    "date": "2026-11-20",
+    "summary": "Analýza aktuálnych inzerátov Opel Mokka (Mokka / Mokka X a nová Mokka vrátane Mokka-e) od 3 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (20. 11. 2026). Na portáloch je spolu 314 inzerátov (67 na bazoši, 151 na autobazar.eu, 96 na bazar.sk) – prezreli sme 92 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 128 rôznych áut zo Slovenska.",
+    "ads": 128,
+    "median": "14 528 €",
+    "r2": "96 %",
+    "history": {
+      "updated_at": "2026-11-20T20:23:37",
+      "as_of": "2026-11-20",
+      "coverage": "partial",
+      "baseline_count": 109,
+      "total_count": 139,
+      "active_count": 121,
+      "inactive_count": 0,
+      "unverified_count": 18,
+      "new_count": 30,
+      "price_changed_count": 18,
+      "price_lowered_count": 4,
+      "paired_count": 89,
+      "paired_median_change_pct": 0,
+      "historical_median": 13600,
+      "seen_median": 14300,
+      "seen_price_count": 119,
+      "last_observed_at": "2026-11-20T20:22:57"
+    }
+  },
+  {
     "slug": "opel-zafira",
     "file": "opel-zafira-analyza.html",
     "name": "Opel Zafira",
@@ -697,7 +729,7 @@
     "median": "5 700 €",
     "r2": "95 %",
     "history": {
-      "updated_at": "2026-11-20T20:20:51",
+      "updated_at": "2026-11-20T20:23:37",
       "as_of": "2026-11-20",
       "coverage": "partial",
       "baseline_count": 142,
@@ -1273,7 +1305,7 @@
     "median": "15 590 €",
     "r2": "95 %",
     "history": {
-      "updated_at": "2026-11-20T20:20:51",
+      "updated_at": "2026-11-20T20:23:37",
       "as_of": "2026-11-20",
       "coverage": "partial",
       "baseline_count": 92,
@@ -1290,38 +1322,6 @@
       "seen_median": null,
       "seen_price_count": 0,
       "last_observed_at": "2026-11-12T15:57:36"
-    }
-  },
-  {
-    "slug": "opel-mokka",
-    "file": "opel-mokka-analyza.html",
-    "name": "Opel Mokka",
-    "brand": "Opel",
-    "model": "Mokka",
-    "kind": "model",
-    "date": "2026-11-12",
-    "summary": "Analýza aktuálnych inzerátov Opel Mokka (Mokka / Mokka X a nová Mokka vrátane Mokka-e) od 3 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (12. 11. 2026). Na portáloch je spolu 307 inzerátov (66 na bazoši, 145 na autobazar.eu, 96 na bazar.sk) – prezreli sme 92 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 131 rôznych áut zo Slovenska.",
-    "ads": 131,
-    "median": "14 300 €",
-    "r2": "96 %",
-    "history": {
-      "updated_at": "2026-11-20T20:20:51",
-      "as_of": "2026-11-20",
-      "coverage": "partial",
-      "baseline_count": 109,
-      "total_count": 109,
-      "active_count": 0,
-      "inactive_count": 0,
-      "unverified_count": 109,
-      "new_count": 0,
-      "price_changed_count": 0,
-      "price_lowered_count": 0,
-      "paired_count": 0,
-      "paired_median_change_pct": null,
-      "historical_median": 14100,
-      "seen_median": null,
-      "seen_price_count": 0,
-      "last_observed_at": "2026-11-12T15:56:35"
     }
   }
 ]
