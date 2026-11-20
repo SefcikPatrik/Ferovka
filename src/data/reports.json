@@ -781,6 +781,38 @@
     }
   },
   {
+    "slug": "seat-ateca",
+    "file": "seat-ateca-analyza.html",
+    "name": "Seat Ateca",
+    "brand": "Seat",
+    "model": "Ateca",
+    "kind": "model",
+    "date": "2026-11-20",
+    "summary": "Analýza aktuálnych inzerátov Seat Ateca (všetky motory vrátane FR, Xcellence a Cupra Ateca) od 4 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (20. 11. 2026). Na portáloch je spolu 477 inzerátov (187 na bazoši, 164 na autobazar.eu, 126 na bazar.sk) – prezreli sme 75 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 260 rôznych áut zo Slovenska.",
+    "ads": 260,
+    "median": "16 999 €",
+    "r2": "89 %",
+    "history": {
+      "updated_at": "2026-11-20T20:51:43",
+      "as_of": "2026-11-20",
+      "coverage": "partial",
+      "baseline_count": 178,
+      "total_count": 303,
+      "active_count": 237,
+      "inactive_count": 0,
+      "unverified_count": 66,
+      "new_count": 125,
+      "price_changed_count": 29,
+      "price_lowered_count": 27,
+      "paired_count": 118,
+      "paired_median_change_pct": 0,
+      "historical_median": 16950,
+      "seen_median": 16600,
+      "seen_price_count": 223,
+      "last_observed_at": "2026-11-20T20:51:16"
+    }
+  },
+  {
     "slug": "skoda-fabia",
     "file": "skoda-fabia-analyza.html",
     "name": "Škoda Fabia",
@@ -1273,7 +1305,7 @@
     "median": "9 920 €",
     "r2": "92 %",
     "history": {
-      "updated_at": "2026-11-20T19:53:49",
+      "updated_at": "2026-11-20T20:51:43",
       "as_of": "2026-11-20",
       "coverage": "partial",
       "baseline_count": 463,
@@ -1290,38 +1322,6 @@
       "seen_median": null,
       "seen_price_count": 0,
       "last_observed_at": "2026-11-14T15:41:16"
-    }
-  },
-  {
-    "slug": "seat-ateca",
-    "file": "seat-ateca-analyza.html",
-    "name": "Seat Ateca",
-    "brand": "Seat",
-    "model": "Ateca",
-    "kind": "model",
-    "date": "2026-11-13",
-    "summary": "Analýza aktuálnych inzerátov Seat Ateca (všetky motory vrátane FR, Xcellence a Cupra Ateca) od 4 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (13. 11. 2026). Na portáloch je spolu 461 inzerátov (183 na bazoši, 156 na autobazar.eu, 122 na bazar.sk) – prezreli sme 75 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 251 rôznych áut zo Slovenska.",
-    "ads": 251,
-    "median": "16 994 €",
-    "r2": "89 %",
-    "history": {
-      "updated_at": "2026-11-20T19:53:49",
-      "as_of": "2026-11-20",
-      "coverage": "partial",
-      "baseline_count": 178,
-      "total_count": 247,
-      "active_count": 0,
-      "inactive_count": 0,
-      "unverified_count": 247,
-      "new_count": 69,
-      "price_changed_count": 0,
-      "price_lowered_count": 0,
-      "paired_count": 0,
-      "paired_median_change_pct": null,
-      "historical_median": 16990,
-      "seen_median": null,
-      "seen_price_count": 0,
-      "last_observed_at": "2026-11-13T09:21:02"
     }
   }
 ]
