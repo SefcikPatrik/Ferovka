@@ -781,6 +781,38 @@
     }
   },
   {
+    "slug": "renault-captur",
+    "file": "renault-captur-analyza.html",
+    "name": "Renault Captur",
+    "brand": "Renault",
+    "model": "Captur",
+    "kind": "model",
+    "date": "2026-11-20",
+    "summary": "Analýza aktuálnych inzerátov Renault Captur (Captur I aj II vrátane faceliftu, všetky motory vrátane LPG a hybridov) od 2 500 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (20. 11. 2026). Na portáloch je spolu 265 inzerátov (40 na bazoši, 129 na autobazar.eu, 96 na bazar.sk) – prezreli sme 92 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 143 rôznych áut zo Slovenska.",
+    "ads": 143,
+    "median": "14 500 €",
+    "r2": "97 %",
+    "history": {
+      "updated_at": "2026-11-20T21:57:58",
+      "as_of": "2026-11-20",
+      "coverage": "partial",
+      "baseline_count": 102,
+      "total_count": 102,
+      "active_count": 74,
+      "inactive_count": 0,
+      "unverified_count": 28,
+      "new_count": 0,
+      "price_changed_count": 13,
+      "price_lowered_count": 12,
+      "paired_count": 74,
+      "paired_median_change_pct": 0,
+      "historical_median": 15150,
+      "seen_median": 16195,
+      "seen_price_count": 74,
+      "last_observed_at": "2026-11-20T21:57:32"
+    }
+  },
+  {
     "slug": "renault-clio",
     "file": "renault-clio-analyza.html",
     "name": "Renault Clio",
@@ -793,7 +825,7 @@
     "median": "7 000 €",
     "r2": "96 %",
     "history": {
-      "updated_at": "2026-11-20T21:04:03",
+      "updated_at": "2026-11-20T21:57:58",
       "as_of": "2026-11-20",
       "coverage": "partial",
       "baseline_count": 181,
@@ -825,7 +857,7 @@
     "median": "6 299 €",
     "r2": "90 %",
     "history": {
-      "updated_at": "2026-11-20T21:04:03",
+      "updated_at": "2026-11-20T21:57:58",
       "as_of": "2026-11-20",
       "coverage": "partial",
       "baseline_count": 210,
@@ -1290,38 +1322,6 @@
       "seen_median": null,
       "seen_price_count": 0,
       "last_observed_at": "2026-11-17T10:37:01"
-    }
-  },
-  {
-    "slug": "renault-captur",
-    "file": "renault-captur-analyza.html",
-    "name": "Renault Captur",
-    "brand": "Renault",
-    "model": "Captur",
-    "kind": "model",
-    "date": "2026-11-16",
-    "summary": "Analýza aktuálnych inzerátov Renault Captur (Captur I aj II vrátane faceliftu, všetky motory vrátane LPG a hybridov) od 2 500 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (16. 11. 2026). Na portáloch je spolu 257 inzerátov (40 na bazoši, 121 na autobazar.eu, 96 na bazar.sk) – prezreli sme 89 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 134 rôznych áut zo Slovenska.",
-    "ads": 134,
-    "median": "14 000 €",
-    "r2": "96 %",
-    "history": {
-      "updated_at": "2026-11-20T21:04:03",
-      "as_of": "2026-11-20",
-      "coverage": "partial",
-      "baseline_count": 102,
-      "total_count": 102,
-      "active_count": 0,
-      "inactive_count": 0,
-      "unverified_count": 102,
-      "new_count": 0,
-      "price_changed_count": 0,
-      "price_lowered_count": 0,
-      "paired_count": 0,
-      "paired_median_change_pct": null,
-      "historical_median": 15150,
-      "seen_median": null,
-      "seen_price_count": 0,
-      "last_observed_at": "2026-11-16T10:42:08"
     }
   }
 ]
