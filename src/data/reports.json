@@ -793,7 +793,7 @@
     "median": "7 000 €",
     "r2": "96 %",
     "history": {
-      "updated_at": "2026-11-20T21:00:04",
+      "updated_at": "2026-11-20T21:04:03",
       "as_of": "2026-11-20",
       "coverage": "partial",
       "baseline_count": 181,
@@ -810,6 +810,38 @@
       "seen_median": 7340,
       "seen_price_count": 132,
       "last_observed_at": "2026-11-20T20:59:32"
+    }
+  },
+  {
+    "slug": "renault-megane",
+    "file": "renault-megane-analyza.html",
+    "name": "Renault Mégane",
+    "brand": "Renault",
+    "model": "Mégane",
+    "kind": "model",
+    "date": "2026-11-20",
+    "summary": "Analýza aktuálnych inzerátov Renault Mégane (Mégane II, III a IV – hatchback, Grandtour, GrandCoupé aj kupé; bez Scénicu, elektrického E-Tech a športových R.S.) od 1 500 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (20. 11. 2026). Na portáloch je spolu 632 inzerátov (229 na bazoši, 243 na autobazar.eu, 160 na bazar.sk) – prezreli sme 96 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 382 rôznych áut zo Slovenska.",
+    "ads": 382,
+    "median": "6 299 €",
+    "r2": "90 %",
+    "history": {
+      "updated_at": "2026-11-20T21:04:03",
+      "as_of": "2026-11-20",
+      "coverage": "partial",
+      "baseline_count": 210,
+      "total_count": 210,
+      "active_count": 133,
+      "inactive_count": 0,
+      "unverified_count": 77,
+      "new_count": 0,
+      "price_changed_count": 29,
+      "price_lowered_count": 27,
+      "paired_count": 130,
+      "paired_median_change_pct": 0,
+      "historical_median": 5578,
+      "seen_median": 6695,
+      "seen_price_count": 130,
+      "last_observed_at": "2026-11-20T21:03:34"
     }
   },
   {
@@ -1209,7 +1241,7 @@
     "median": "14 000 €",
     "r2": "96 %",
     "history": {
-      "updated_at": "2026-11-20T21:00:04",
+      "updated_at": "2026-11-20T21:04:03",
       "as_of": "2026-11-20",
       "coverage": "partial",
       "baseline_count": 102,
@@ -1290,38 +1322,6 @@
       "seen_median": 11950,
       "seen_price_count": 1,
       "last_observed_at": "2026-11-20T10:05:28"
-    }
-  },
-  {
-    "slug": "renault-megane",
-    "file": "renault-megane-analyza.html",
-    "name": "Renault Mégane",
-    "brand": "Renault",
-    "model": "Mégane",
-    "kind": "model",
-    "date": "2026-11-14",
-    "summary": "Analýza aktuálnych inzerátov Renault Mégane (Mégane II, III a IV – hatchback, Grandtour, GrandCoupé aj kupé; bez Scénicu, elektrického E-Tech a športových R.S.) od 1 500 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (14. 11. 2026). Na portáloch je spolu 621 inzerátov (226 na bazoši, 235 na autobazar.eu, 160 na bazar.sk) – prezreli sme 96 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 375 rôznych áut zo Slovenska.",
-    "ads": 375,
-    "median": "6 300 €",
-    "r2": "89 %",
-    "history": {
-      "updated_at": "2026-11-20T21:00:04",
-      "as_of": "2026-11-20",
-      "coverage": "partial",
-      "baseline_count": 210,
-      "total_count": 210,
-      "active_count": 0,
-      "inactive_count": 0,
-      "unverified_count": 210,
-      "new_count": 0,
-      "price_changed_count": 0,
-      "price_lowered_count": 0,
-      "paired_count": 0,
-      "paired_median_change_pct": null,
-      "historical_median": 5578,
-      "seen_median": null,
-      "seen_price_count": 0,
-      "last_observed_at": "2026-11-14T15:46:27"
     }
   }
 ]
