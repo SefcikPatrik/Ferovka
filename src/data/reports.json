@@ -921,7 +921,7 @@
     "median": "5 945 €",
     "r2": "93 %",
     "history": {
-      "updated_at": "2026-11-20T20:46:01",
+      "updated_at": "2026-11-20T21:39:39",
       "as_of": "2026-11-20",
       "coverage": "partial",
       "baseline_count": 1030,
@@ -953,14 +953,14 @@
     "median": "19 490 €",
     "r2": "89 %",
     "history": {
-      "updated_at": "2026-11-20T20:46:01",
+      "updated_at": "2026-11-20T21:39:39",
       "as_of": "2026-11-20",
       "coverage": "partial",
       "baseline_count": 504,
       "total_count": 1257,
-      "active_count": 974,
+      "active_count": 975,
       "inactive_count": 0,
-      "unverified_count": 283,
+      "unverified_count": 282,
       "new_count": 753,
       "price_changed_count": 86,
       "price_lowered_count": 83,
@@ -968,8 +968,8 @@
       "paired_median_change_pct": 0,
       "historical_median": 19490,
       "seen_median": 19500,
-      "seen_price_count": 942,
-      "last_observed_at": "2026-11-20T09:59:25"
+      "seen_price_count": 943,
+      "last_observed_at": "2026-11-20T21:35:56"
     }
   },
   {
@@ -985,7 +985,7 @@
     "median": "24 490 €",
     "r2": "89 %",
     "history": {
-      "updated_at": "2026-11-20T20:46:01",
+      "updated_at": "2026-11-20T21:39:39",
       "as_of": "2026-11-20",
       "coverage": "partial",
       "baseline_count": 1084,
@@ -994,14 +994,46 @@
       "inactive_count": 0,
       "unverified_count": 505,
       "new_count": 1373,
-      "price_changed_count": 188,
-      "price_lowered_count": 177,
-      "paired_count": 703,
+      "price_changed_count": 189,
+      "price_lowered_count": 178,
+      "paired_count": 704,
       "paired_median_change_pct": 0,
-      "historical_median": 24790,
+      "historical_median": 24750,
       "seen_median": 24999,
-      "seen_price_count": 1888,
-      "last_observed_at": "2026-11-20T20:45:29"
+      "seen_price_count": 1889,
+      "last_observed_at": "2026-11-20T21:36:05"
+    }
+  },
+  {
+    "slug": "skoda-octavia",
+    "file": "skoda-octavia-analyza.html",
+    "name": "Škoda Octavia",
+    "brand": "Škoda",
+    "model": "Octavia",
+    "kind": "model",
+    "date": "2026-11-20",
+    "summary": "Analýza aktuálnych inzerátov Škoda Octavia (liftback aj combi, všetky generácie vrátane RS a Scout) od 1 500 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (20. 11. 2026). Na portáloch je spolu 9 593 inzerátov (3 490 na bazoši, 3 672 na autobazar.eu, 2 431 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 5 598 rôznych áut zo Slovenska.",
+    "ads": 5598,
+    "median": "10 900 €",
+    "r2": "94 %",
+    "history": {
+      "updated_at": "2026-11-20T21:39:39",
+      "as_of": "2026-11-20",
+      "coverage": "partial",
+      "baseline_count": 3448,
+      "total_count": 8550,
+      "active_count": 6575,
+      "inactive_count": 1,
+      "unverified_count": 1974,
+      "new_count": 5102,
+      "price_changed_count": 559,
+      "price_lowered_count": 528,
+      "paired_count": 2183,
+      "paired_median_change_pct": 0,
+      "historical_median": 11490,
+      "seen_median": 11999,
+      "seen_price_count": 6438,
+      "last_observed_at": "2026-11-20T21:38:21"
     }
   },
   {
@@ -1017,7 +1049,7 @@
     "median": "16 590 €",
     "r2": "92 %",
     "history": {
-      "updated_at": "2026-11-20T20:46:01",
+      "updated_at": "2026-11-20T21:39:39",
       "as_of": "2026-11-20",
       "coverage": "partial",
       "baseline_count": 282,
@@ -1049,23 +1081,23 @@
     "median": "16 000 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-20T20:46:01",
+      "updated_at": "2026-11-20T21:39:39",
       "as_of": "2026-11-20",
       "coverage": "partial",
       "baseline_count": 1346,
       "total_count": 4305,
-      "active_count": 3486,
+      "active_count": 3488,
       "inactive_count": 0,
-      "unverified_count": 819,
+      "unverified_count": 817,
       "new_count": 2959,
-      "price_changed_count": 267,
+      "price_changed_count": 268,
       "price_lowered_count": 252,
-      "paired_count": 954,
+      "paired_count": 955,
       "paired_median_change_pct": 0,
       "historical_median": 16600,
       "seen_median": 16990,
-      "seen_price_count": 3440,
-      "last_observed_at": "2026-11-20T10:17:46"
+      "seen_price_count": 3441,
+      "last_observed_at": "2026-11-20T21:36:04"
     }
   },
   {
@@ -1258,38 +1290,6 @@
       "seen_median": null,
       "seen_price_count": 0,
       "last_observed_at": "2026-11-16T10:42:08"
-    }
-  },
-  {
-    "slug": "skoda-octavia",
-    "file": "skoda-octavia-analyza.html",
-    "name": "Škoda Octavia",
-    "brand": "Škoda",
-    "model": "Octavia",
-    "kind": "model",
-    "date": "2026-11-16",
-    "summary": "Analýza aktuálnych inzerátov Škoda Octavia (liftback aj combi, všetky generácie vrátane RS a Scout) od 1 500 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (16. 11. 2026). Na portáloch je spolu 9 377 inzerátov (3 447 na bazoši, 3 562 na autobazar.eu, 2 368 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 5 513 rôznych áut zo Slovenska.",
-    "ads": 5513,
-    "median": "10 900 €",
-    "r2": "94 %",
-    "history": {
-      "updated_at": "2026-11-20T20:46:01",
-      "as_of": "2026-11-20",
-      "coverage": "partial",
-      "baseline_count": 3448,
-      "total_count": 7741,
-      "active_count": 7,
-      "inactive_count": 1,
-      "unverified_count": 7733,
-      "new_count": 4293,
-      "price_changed_count": 4,
-      "price_lowered_count": 0,
-      "paired_count": 4,
-      "paired_median_change_pct": 30.5,
-      "historical_median": 11499,
-      "seen_median": 20900,
-      "seen_price_count": 7,
-      "last_observed_at": "2026-11-20T20:42:37"
     }
   },
   {
