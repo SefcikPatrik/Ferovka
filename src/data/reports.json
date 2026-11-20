@@ -601,7 +601,7 @@
     "median": "5 500 €",
     "r2": "92 %",
     "history": {
-      "updated_at": "2026-11-20T20:10:56",
+      "updated_at": "2026-11-20T20:14:58",
       "as_of": "2026-11-20",
       "coverage": "partial",
       "baseline_count": 567,
@@ -618,6 +618,38 @@
       "seen_median": 5500,
       "seen_price_count": 582,
       "last_observed_at": "2026-11-20T19:46:36"
+    }
+  },
+  {
+    "slug": "opel-insignia",
+    "file": "opel-insignia-analyza.html",
+    "name": "Opel Insignia",
+    "brand": "Opel",
+    "model": "Insignia",
+    "kind": "model",
+    "date": "2026-11-20",
+    "summary": "Analýza aktuálnych inzerátov Opel Insignia (Insignia A a B, liftback aj Sports Tourer) od 2 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (20. 11. 2026). Na portáloch je spolu 629 inzerátov (262 na bazoši, 207 na autobazar.eu, 160 na bazar.sk) – prezreli sme 97 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 412 rôznych áut zo Slovenska.",
+    "ads": 412,
+    "median": "7 500 €",
+    "r2": "87 %",
+    "history": {
+      "updated_at": "2026-11-20T20:14:58",
+      "as_of": "2026-11-20",
+      "coverage": "partial",
+      "baseline_count": 352,
+      "total_count": 443,
+      "active_count": 376,
+      "inactive_count": 0,
+      "unverified_count": 67,
+      "new_count": 91,
+      "price_changed_count": 30,
+      "price_lowered_count": 27,
+      "paired_count": 273,
+      "paired_median_change_pct": 0,
+      "historical_median": 7490,
+      "seen_median": 7500,
+      "seen_price_count": 364,
+      "last_observed_at": "2026-11-20T20:14:22"
     }
   },
   {
@@ -1177,7 +1209,7 @@
     "median": "6 500 €",
     "r2": "92 %",
     "history": {
-      "updated_at": "2026-11-20T20:10:56",
+      "updated_at": "2026-11-20T20:14:58",
       "as_of": "2026-11-20",
       "coverage": "partial",
       "baseline_count": 210,
@@ -1209,7 +1241,7 @@
     "median": "15 590 €",
     "r2": "95 %",
     "history": {
-      "updated_at": "2026-11-20T20:10:56",
+      "updated_at": "2026-11-20T20:14:58",
       "as_of": "2026-11-20",
       "coverage": "partial",
       "baseline_count": 92,
@@ -1229,38 +1261,6 @@
     }
   },
   {
-    "slug": "opel-insignia",
-    "file": "opel-insignia-analyza.html",
-    "name": "Opel Insignia",
-    "brand": "Opel",
-    "model": "Insignia",
-    "kind": "model",
-    "date": "2026-11-12",
-    "summary": "Analýza aktuálnych inzerátov Opel Insignia (Insignia A a B, liftback aj Sports Tourer) od 2 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (12. 11. 2026). Na portáloch je spolu 644 inzerátov (276 na bazoši, 208 na autobazar.eu, 160 na bazar.sk) – prezreli sme 96 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 431 rôznych áut zo Slovenska.",
-    "ads": 431,
-    "median": "7 499 €",
-    "r2": "88 %",
-    "history": {
-      "updated_at": "2026-11-20T20:10:56",
-      "as_of": "2026-11-20",
-      "coverage": "partial",
-      "baseline_count": 352,
-      "total_count": 352,
-      "active_count": 0,
-      "inactive_count": 0,
-      "unverified_count": 352,
-      "new_count": 0,
-      "price_changed_count": 0,
-      "price_lowered_count": 0,
-      "paired_count": 0,
-      "paired_median_change_pct": null,
-      "historical_median": 7499,
-      "seen_median": null,
-      "seen_price_count": 0,
-      "last_observed_at": "2026-11-12T15:51:54"
-    }
-  },
-  {
     "slug": "opel-mokka",
     "file": "opel-mokka-analyza.html",
     "name": "Opel Mokka",
@@ -1273,7 +1273,7 @@
     "median": "14 300 €",
     "r2": "96 %",
     "history": {
-      "updated_at": "2026-11-20T20:10:56",
+      "updated_at": "2026-11-20T20:14:58",
       "as_of": "2026-11-20",
       "coverage": "partial",
       "baseline_count": 109,
@@ -1305,7 +1305,7 @@
     "median": "5 700 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-20T20:10:56",
+      "updated_at": "2026-11-20T20:14:58",
       "as_of": "2026-11-20",
       "coverage": "partial",
       "baseline_count": 142,
