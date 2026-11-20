@@ -601,7 +601,7 @@
     "median": "5 500 €",
     "r2": "92 %",
     "history": {
-      "updated_at": "2026-11-20T20:23:37",
+      "updated_at": "2026-11-20T20:26:16",
       "as_of": "2026-11-20",
       "coverage": "partial",
       "baseline_count": 567,
@@ -633,7 +633,7 @@
     "median": "6 300 €",
     "r2": "92 %",
     "history": {
-      "updated_at": "2026-11-20T20:23:37",
+      "updated_at": "2026-11-20T20:26:16",
       "as_of": "2026-11-20",
       "coverage": "partial",
       "baseline_count": 210,
@@ -653,6 +653,38 @@
     }
   },
   {
+    "slug": "opel-grandland",
+    "file": "opel-grandland-analyza.html",
+    "name": "Opel Grandland",
+    "brand": "Opel",
+    "model": "Grandland",
+    "kind": "model",
+    "date": "2026-11-20",
+    "summary": "Analýza aktuálnych inzerátov Opel Grandland (Grandland X, Grandland a nový Grandland od 2024) od 5 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (20. 11. 2026). Na portáloch je spolu 194 inzerátov (45 na bazoši, 124 na autobazar.eu, 25 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 106 rôznych áut zo Slovenska.",
+    "ads": 106,
+    "median": "16 190 €",
+    "r2": "95 %",
+    "history": {
+      "updated_at": "2026-11-20T20:26:16",
+      "as_of": "2026-11-20",
+      "coverage": "partial",
+      "baseline_count": 92,
+      "total_count": 114,
+      "active_count": 104,
+      "inactive_count": 0,
+      "unverified_count": 10,
+      "new_count": 22,
+      "price_changed_count": 15,
+      "price_lowered_count": 9,
+      "paired_count": 79,
+      "paired_median_change_pct": 0,
+      "historical_median": 14900,
+      "seen_median": 15590,
+      "seen_price_count": 101,
+      "last_observed_at": "2026-11-20T20:25:35"
+    }
+  },
+  {
     "slug": "opel-insignia",
     "file": "opel-insignia-analyza.html",
     "name": "Opel Insignia",
@@ -665,7 +697,7 @@
     "median": "7 500 €",
     "r2": "87 %",
     "history": {
-      "updated_at": "2026-11-20T20:23:37",
+      "updated_at": "2026-11-20T20:26:16",
       "as_of": "2026-11-20",
       "coverage": "partial",
       "baseline_count": 352,
@@ -697,7 +729,7 @@
     "median": "14 528 €",
     "r2": "96 %",
     "history": {
-      "updated_at": "2026-11-20T20:23:37",
+      "updated_at": "2026-11-20T20:26:16",
       "as_of": "2026-11-20",
       "coverage": "partial",
       "baseline_count": 109,
@@ -729,7 +761,7 @@
     "median": "5 700 €",
     "r2": "95 %",
     "history": {
-      "updated_at": "2026-11-20T20:23:37",
+      "updated_at": "2026-11-20T20:26:16",
       "as_of": "2026-11-20",
       "coverage": "partial",
       "baseline_count": 142,
@@ -1290,38 +1322,6 @@
       "seen_median": null,
       "seen_price_count": 0,
       "last_observed_at": "2026-11-16T10:56:19"
-    }
-  },
-  {
-    "slug": "opel-grandland",
-    "file": "opel-grandland-analyza.html",
-    "name": "Opel Grandland",
-    "brand": "Opel",
-    "model": "Grandland",
-    "kind": "model",
-    "date": "2026-11-12",
-    "summary": "Analýza aktuálnych inzerátov Opel Grandland (Grandland X, Grandland a nový Grandland od 2024) od 5 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (12. 11. 2026). Na portáloch je spolu 188 inzerátov (48 na bazoši, 117 na autobazar.eu, 23 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 109 rôznych áut zo Slovenska.",
-    "ads": 109,
-    "median": "15 590 €",
-    "r2": "95 %",
-    "history": {
-      "updated_at": "2026-11-20T20:23:37",
-      "as_of": "2026-11-20",
-      "coverage": "partial",
-      "baseline_count": 92,
-      "total_count": 92,
-      "active_count": 0,
-      "inactive_count": 0,
-      "unverified_count": 92,
-      "new_count": 0,
-      "price_changed_count": 0,
-      "price_lowered_count": 0,
-      "paired_count": 0,
-      "paired_median_change_pct": null,
-      "historical_median": 15294,
-      "seen_median": null,
-      "seen_price_count": 0,
-      "last_observed_at": "2026-11-12T15:57:36"
     }
   }
 ]
