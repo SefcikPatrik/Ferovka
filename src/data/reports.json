@@ -535,7 +535,26 @@
     "summary": "Analýza aktuálnych inzerátov Ford Fiesta (Fiesta Mk6 až Mk8, bez ST) od 1 500 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 354 inzerátov (131 na bazoši, 127 na autobazar.eu, 96 na bazar.sk) – prezreli sme 89 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 206 rôznych áut zo Slovenska.",
     "ads": 206,
     "median": "4 000 €",
-    "r2": "85 %"
+    "r2": "85 %",
+    "history": {
+      "updated_at": "2026-11-21T17:57:03",
+      "as_of": "2026-11-21",
+      "coverage": "partial",
+      "baseline_count": 157,
+      "total_count": 157,
+      "active_count": 157,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 157,
+      "paired_median_change_pct": 0,
+      "historical_median": 4000,
+      "seen_median": 4000,
+      "seen_price_count": 157,
+      "last_observed_at": "2026-11-21T17:51:46"
+    }
   },
   {
     "slug": "ford-focus",
@@ -550,7 +569,7 @@
     "median": "5 500 €",
     "r2": "90 %",
     "history": {
-      "updated_at": "2026-11-21T17:31:53",
+      "updated_at": "2026-11-21T17:57:03",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 493,
@@ -582,7 +601,7 @@
     "median": "14 000 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-21T17:31:53",
+      "updated_at": "2026-11-21T17:57:03",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 357,
@@ -614,7 +633,7 @@
     "median": "7 200 €",
     "r2": "91 %",
     "history": {
-      "updated_at": "2026-11-21T17:31:53",
+      "updated_at": "2026-11-21T17:57:03",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 311,
@@ -1176,6 +1195,19 @@
       "seen_price_count": 228,
       "last_observed_at": "2026-11-21T17:34:41"
     }
+  },
+  {
+    "slug": "toyota-c-hr",
+    "file": "toyota-c-hr-analyza.html",
+    "name": "Toyota C-HR",
+    "brand": "Toyota",
+    "model": "C-HR",
+    "kind": "model",
+    "date": "2026-11-21",
+    "summary": "Analýza aktuálnych inzerátov Toyota C-HR (prvá generácia od 2016 a druhá od 2023) od 6 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 348 inzerátov (52 na bazoši, 168 na autobazar.eu, 128 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 178 rôznych áut zo Slovenska.",
+    "ads": 178,
+    "median": "24 600 €",
+    "r2": "95 %"
   },
   {
     "slug": "toyota-corolla",
