@@ -429,6 +429,38 @@
     }
   },
   {
+    "slug": "citroen-berlingo",
+    "file": "citroen-berlingo-analyza.html",
+    "name": "Citroën Berlingo",
+    "brand": "Citroën",
+    "model": "Berlingo",
+    "kind": "model",
+    "date": "2026-11-21",
+    "summary": "Analýza aktuálnych inzerátov Citroën Berlingo (osobný Berlingo / Multispace, 2010–2025, bez dodávky Van) od 3 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 450 inzerátov (155 na bazoši, 135 na autobazar.eu, 160 na bazar.sk) – prezreli sme 92 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 261 rôznych áut zo Slovenska.",
+    "ads": 261,
+    "median": "9 700 €",
+    "r2": "92 %",
+    "history": {
+      "updated_at": "2026-11-21T19:55:22",
+      "as_of": "2026-11-21",
+      "coverage": "partial",
+      "baseline_count": 182,
+      "total_count": 182,
+      "active_count": 182,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 182,
+      "paired_median_change_pct": 0,
+      "historical_median": 9700,
+      "seen_median": 9700,
+      "seen_price_count": 182,
+      "last_observed_at": "2026-11-21T19:54:28"
+    }
+  },
+  {
     "slug": "cupra-formentor",
     "file": "cupra-formentor-analyza.html",
     "name": "Cupra Formentor",
