@@ -320,5 +320,12 @@
     "author": "Vauxford",
     "license": "CC BY-SA 4.0",
     "source": "https://commons.wikimedia.org/wiki/File:2018_Ford_Focus_Titanium_Ecoboost_1.0_Front.jpg"
+  },
+  "toyota-corolla": {
+    "src": "/img/toyota-corolla.jpg",
+    "file": "File:2023 Toyota Corolla Hybrid (E210) hatchback IMG 9884.jpg",
+    "author": "Alexander-93",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:2023_Toyota_Corolla_Hybrid_(E210)_hatchback_IMG_9884.jpg"
   }
 }
