@@ -589,6 +589,38 @@
     }
   },
   {
+    "slug": "peugeot-308",
+    "file": "peugeot-308-analyza.html",
+    "name": "Peugeot 308",
+    "brand": "Peugeot",
+    "model": "308",
+    "kind": "model",
+    "date": "2026-11-21",
+    "summary": "Analýza aktuálnych inzerátov Peugeot 308 (308 I až III, hatchback aj kombi SW, bez 308 CC a GTi) od 1 500 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 1 009 inzerátov (319 na bazoši, 402 na autobazar.eu, 288 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 607 rôznych áut zo Slovenska.",
+    "ads": 607,
+    "median": "7 570 €",
+    "r2": "94 %",
+    "history": {
+      "updated_at": "2026-11-21T16:33:27",
+      "as_of": "2026-11-21",
+      "coverage": "partial",
+      "baseline_count": 440,
+      "total_count": 440,
+      "active_count": 440,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 440,
+      "paired_median_change_pct": 0,
+      "historical_median": 7570,
+      "seen_median": 7570,
+      "seen_price_count": 440,
+      "last_observed_at": "2026-11-21T16:32:20"
+    }
+  },
+  {
     "slug": "skoda-kamiq",
     "file": "skoda-kamiq-analyza.html",
     "name": "Škoda Kamiq",
