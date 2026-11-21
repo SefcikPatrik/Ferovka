@@ -909,6 +909,19 @@
     }
   },
   {
+    "slug": "peugeot-208",
+    "file": "peugeot-208-analyza.html",
+    "name": "Peugeot 208",
+    "brand": "Peugeot",
+    "model": "208",
+    "kind": "model",
+    "date": "2026-11-21",
+    "summary": "Analýza aktuálnych inzerátov Peugeot 208 (prvá generácia 2012–2019 a druhá od 2019, aj elektrický e-208, bez GTi) od 2 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 663 inzerátov (191 na bazoši, 280 na autobazar.eu, 192 na bazar.sk) – prezreli sme 95 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 348 rôznych áut zo Slovenska.",
+    "ads": 348,
+    "median": "8 500 €",
+    "r2": "92 %"
+  },
+  {
     "slug": "peugeot-3008",
     "file": "peugeot-3008-analyza.html",
     "name": "Peugeot 3008",
@@ -1207,7 +1220,26 @@
     "summary": "Analýza aktuálnych inzerátov Toyota C-HR (prvá generácia od 2016 a druhá od 2023) od 6 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 348 inzerátov (52 na bazoši, 168 na autobazar.eu, 128 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 178 rôznych áut zo Slovenska.",
     "ads": 178,
     "median": "24 600 €",
-    "r2": "95 %"
+    "r2": "95 %",
+    "history": {
+      "updated_at": "2026-11-21T17:59:54",
+      "as_of": "2026-11-21",
+      "coverage": "partial",
+      "baseline_count": 161,
+      "total_count": 161,
+      "active_count": 161,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 161,
+      "paired_median_change_pct": 0,
+      "historical_median": 24600,
+      "seen_median": 24600,
+      "seen_price_count": 161,
+      "last_observed_at": "2026-11-21T17:56:50"
+    }
   },
   {
     "slug": "toyota-corolla",
@@ -1222,7 +1254,7 @@
     "median": "18 000 €",
     "r2": "96 %",
     "history": {
-      "updated_at": "2026-11-21T17:16:10",
+      "updated_at": "2026-11-21T17:59:54",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 254,
@@ -1254,7 +1286,7 @@
     "median": "22 700 €",
     "r2": "97 %",
     "history": {
-      "updated_at": "2026-11-21T17:16:10",
+      "updated_at": "2026-11-21T17:59:54",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 246,
@@ -1286,7 +1318,7 @@
     "median": "12 000 €",
     "r2": "95 %",
     "history": {
-      "updated_at": "2026-11-21T17:16:10",
+      "updated_at": "2026-11-21T17:59:54",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 186,
