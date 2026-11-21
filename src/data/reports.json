@@ -2201,7 +2201,7 @@
     "median": "7 100 €",
     "r2": "90 %",
     "history": {
-      "updated_at": "2026-11-21T20:20:27",
+      "updated_at": "2026-11-21T20:53:22",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 101,
@@ -2233,7 +2233,7 @@
     "median": "8 500 €",
     "r2": "93 %",
     "history": {
-      "updated_at": "2026-11-21T20:20:27",
+      "updated_at": "2026-11-21T20:53:22",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 51,
@@ -2253,6 +2253,38 @@
     }
   },
   {
+    "slug": "toyota-aygo",
+    "file": "toyota-aygo-analyza.html",
+    "name": "Toyota Aygo",
+    "brand": "Toyota",
+    "model": "Aygo",
+    "kind": "model",
+    "date": "2026-11-21",
+    "summary": "Analýza aktuálnych inzerátov Toyota Aygo (Aygo II 2014–2021 a ojazdené Aygo X 2022–2025) od 2 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 107 inzerátov (24 na bazoši, 61 na autobazar.eu, 22 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 69 rôznych áut zo Slovenska.",
+    "ads": 69,
+    "median": "10 395 €",
+    "r2": "99 %",
+    "history": {
+      "updated_at": "2026-11-21T20:53:22",
+      "as_of": "2026-11-21",
+      "coverage": "partial",
+      "baseline_count": 28,
+      "total_count": 28,
+      "active_count": 28,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 28,
+      "paired_median_change_pct": 0,
+      "historical_median": 10395,
+      "seen_median": 10395,
+      "seen_price_count": 28,
+      "last_observed_at": "2026-11-21T20:52:19"
+    }
+  },
+  {
     "slug": "toyota-c-hr",
     "file": "toyota-c-hr-analyza.html",
     "name": "Toyota C-HR",
@@ -2265,7 +2297,7 @@
     "median": "24 600 €",
     "r2": "95 %",
     "history": {
-      "updated_at": "2026-11-21T20:20:27",
+      "updated_at": "2026-11-21T20:53:22",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 161,
@@ -2297,7 +2329,7 @@
     "median": "18 000 €",
     "r2": "96 %",
     "history": {
-      "updated_at": "2026-11-21T20:20:27",
+      "updated_at": "2026-11-21T20:53:22",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 254,
@@ -2329,7 +2361,7 @@
     "median": "22 700 €",
     "r2": "97 %",
     "history": {
-      "updated_at": "2026-11-21T20:20:27",
+      "updated_at": "2026-11-21T20:53:22",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 246,
@@ -2361,7 +2393,7 @@
     "median": "12 000 €",
     "r2": "95 %",
     "history": {
-      "updated_at": "2026-11-21T20:20:27",
+      "updated_at": "2026-11-21T20:53:22",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 186,
