@@ -685,6 +685,38 @@
     }
   },
   {
+    "slug": "fiat-500",
+    "file": "fiat-500-analyza.html",
+    "name": "Fiat 500",
+    "brand": "Fiat",
+    "model": "500",
+    "kind": "model",
+    "date": "2026-11-21",
+    "summary": "Analýza aktuálnych inzerátov Fiat 500 (2008–2025, hatchback aj kabriolet 500C, aj elektrický 500e, bez 500X / 500L a Abarthu) od 2 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 1 335 inzerátov (1 133 na bazoši, 106 na autobazar.eu, 96 na bazar.sk) – prezreli sme 24 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 194 rôznych áut zo Slovenska.",
+    "ads": 194,
+    "median": "7 900 €",
+    "r2": "92 %",
+    "history": {
+      "updated_at": "2026-11-21T23:26:36",
+      "as_of": "2026-11-21",
+      "coverage": "partial",
+      "baseline_count": 121,
+      "total_count": 121,
+      "active_count": 121,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 121,
+      "paired_median_change_pct": 0,
+      "historical_median": 7900,
+      "seen_median": 7900,
+      "seen_price_count": 121,
+      "last_observed_at": "2026-11-21T23:20:26"
+    }
+  },
+  {
     "slug": "fiat-tipo",
     "file": "fiat-tipo-analyza.html",
     "name": "Fiat Tipo",
@@ -697,7 +729,7 @@
     "median": "7 895 €",
     "r2": "82 %",
     "history": {
-      "updated_at": "2026-11-21T21:28:11",
+      "updated_at": "2026-11-21T23:26:36",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 62,

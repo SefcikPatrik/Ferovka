@@ -1,0 +1,932 @@
+<!doctype html>
+<html lang="sk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fiat 500 – analýza ponúk</title>
+<style>
+:root {
+  color-scheme: light;
+  --bg: #f6f6f4; --surface: #fcfcfb; --surface-2: #f0efec; --border: #e2e1dc;
+  --text: #0b0b0b; --text-2: #52514e; --muted: #7a7974;
+  --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a;
+  --pos: #2a78d6; --neg: #eb6834; --accent: #2a78d6;
+  --good: #1d7f4e; --bad: #b4332f; --grid: #e8e7e3;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #121211; --surface: #1a1a19; --surface-2: #232321; --border: #33332f;
+    --text: #f0efec; --text-2: #c3c2b7; --muted: #8f8e86;
+    --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+    --pos: #3987e5; --neg: #d95926; --accent: #5598e7;
+    --good: #4cc38a; --bad: #f07a76; --grid: #2a2a27;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #121211; --surface: #1a1a19; --surface-2: #232321; --border: #33332f;
+  --text: #f0efec; --text-2: #c3c2b7; --muted: #8f8e86;
+  --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+  --pos: #3987e5; --neg: #d95926; --accent: #5598e7;
+  --good: #4cc38a; --bad: #f07a76; --grid: #2a2a27;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text);
+  font: 15px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+main { max-width: 1120px; margin: 0 auto; padding: 32px 16px 64px; }
+a { color: var(--accent); text-decoration: none; } a:hover { text-decoration: underline; }
+h1 { font-size: 30px; margin: 0 0 4px; letter-spacing: -.01em; }
+h2 { font-size: 21px; margin: 48px 0 6px; }
+h3 { font-size: 15px; margin: 6px 0 4px; line-height: 1.35; }
+.lead { color: var(--text-2); margin: 0 0 20px; max-width: 760px; }
+.section-lead { color: var(--text-2); margin: 0 0 16px; max-width: 800px; }
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
+.kpi { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+.kpi .v { font-size: 26px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.kpi .l { color: var(--text-2); font-size: 13px; }
+.explain { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; margin-top: 12px; }
+.explain p { margin: 6px 0; color: var(--text-2); }
+.explain b { color: var(--text); }
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; }
+.card-head { display: flex; justify-content: space-between; gap: 8px; font-size: 12px; }
+.tag { font-weight: 600; color: var(--accent); }
+.loc { color: var(--muted); }
+.facts { color: var(--text-2); font-size: 13px; }
+.prices { display: grid; grid-template-columns: 1.2fr 1fr .8fr; gap: 8px; margin: 12px 0 8px; }
+.lbl { display: block; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+.big { font-size: 22px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.mid { font-size: 16px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.good { color: var(--good); }
+.meter { height: 6px; background: var(--surface-2); border-radius: 4px; overflow: hidden; }
+.meter span { display: block; height: 100%; background: var(--s1); border-radius: 4px; }
+.news ul { margin: 6px 0 0; padding-left: 20px; } .news li { margin: 4px 0; } .news .down { color: var(--good, #1baf7a); font-weight: 600; }
+.note { font-size: 12.5px; background: var(--surface-2); border-radius: 6px; padding: 6px 8px; margin-top: 8px; color: var(--text-2); }
+.pc { list-style: none; padding: 0; margin: 10px 0 0; font-size: 13.5px; }
+.pc li { padding-left: 20px; position: relative; margin: 3px 0; }
+.pc li.pro::before { content: "+"; position: absolute; left: 4px; color: var(--good); font-weight: 700; }
+.pc li.con::before { content: "–"; position: absolute; left: 4px; color: var(--bad); font-weight: 700; }
+.subhead { font-size: 15px; color: var(--text-2); margin: 22px 0 10px; font-weight: 600; }
+.chart-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 14px 8px; position: relative; }
+.legend { display: flex; flex-wrap: wrap; gap: 16px; font-size: 13px; color: var(--text-2); margin: 0 0 6px 4px; }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; }
+.legend .ring { background: transparent; border: 2px solid var(--text); width: 12px; height: 12px; }
+svg text { fill: var(--muted); font-size: 11px; }
+.tip { position: absolute; pointer-events: none; background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+  padding: 8px 10px; font-size: 12.5px; box-shadow: 0 6px 20px rgba(0,0,0,.15); max-width: 280px; display: none; z-index: 5; }
+.tip b { display: block; margin-bottom: 2px; }
+.tip .row { display: flex; justify-content: space-between; gap: 12px; color: var(--text-2); }
+.tip .row span:last-child { color: var(--text); font-variant-numeric: tabular-nums; }
+table { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; font-size: 13.5px; }
+th, td { padding: 9px 10px; border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; }
+th { font-size: 12px; color: var(--text-2); font-weight: 600; background: var(--surface-2); white-space: nowrap; }
+th.sortable { cursor: pointer; user-select: none; } th.sortable:hover { color: var(--text); }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+.sub { color: var(--text-2); font-size: 12.5px; margin-top: 2px; }
+.stars { color: #c98500; letter-spacing: 1px; white-space: nowrap; } .stars .off { color: var(--border); }
+.cellbar { height: 5px; background: var(--surface-2); border-radius: 3px; margin-bottom: 4px; }
+.cellbar span { display: block; height: 100%; background: var(--s1); border-radius: 3px; }
+.disc { display: inline-flex; align-items: center; gap: 6px; justify-content: flex-end; }
+.dbar { width: 54px; height: 6px; background: var(--surface-2); border-radius: 3px; position: relative; }
+.dbar span { position: absolute; top: 0; height: 100%; border-radius: 3px; }
+.filters { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 10px; align-items: center; }
+.filters select, .filters input { background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 6px 8px; font: inherit; font-size: 13px; }
+.filters .count { color: var(--muted); font-size: 13px; margin-left: auto; }
+.table-scroll { overflow-x: auto; border-radius: 12px; }
+.badge { font-size: 11px; padding: 1px 6px; border-radius: 10px; background: var(--surface-2); color: var(--text-2); white-space: nowrap; }
+.badge.pick { background: var(--s1); color: #fff; }
+.flag { color: var(--bad); font-size: 12px; }
+.warn { background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--neg); border-radius: 10px; padding: 12px 16px; }
+.warn li { margin: 4px 0; }
+.check { columns: 2 300px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px 14px 34px; margin: 0; }
+.check li { margin: 4px 0; break-inside: avoid; }
+footer { color: var(--muted); font-size: 12.5px; margin-top: 48px; border-top: 1px solid var(--border); padding-top: 14px; }
+.theme-btn { float: right; background: var(--surface); color: var(--text-2); border: 1px solid var(--border); border-radius: 8px; padding: 5px 10px; cursor: pointer; font: inherit; font-size: 13px; }
+@media (max-width: 640px) { h1 { font-size: 24px; } .prices { grid-template-columns: 1fr 1fr 1fr; } .big { font-size: 18px; } th, td { padding: 7px 6px; } }
+</style>
+<!-- ferovka-theme --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"><style id="ferovka-theme">/* Férovka look for the generated analyses – injected by sync-reports.mjs after each report's own <style>.
+   Same palette and type as the site; chart colours (--s1..--s3) stay the validated set. */
+:root {
+  --bg: #f5f4ef; --surface: #fdfdfb; --surface-2: #eeede6; --border: #e1dfd6;
+  --text: #0f1513; --text-2: #4f5551; --muted: #6f746f;
+  --accent: #0b8a56; --good: #0b7a4b; --grid: #e6e4dc; --win: #dff3e9;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d110f; --surface: #151a17; --surface-2: #1d2420; --border: #2a322d;
+    --text: #eef1ec; --text-2: #b6bdb6; --muted: #8f978f;
+    --accent: #2fc583; --good: #4cd08f; --grid: #1f2622; --win: #143223;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d110f; --surface: #151a17; --surface-2: #1d2420; --border: #2a322d;
+  --text: #eef1ec; --text-2: #b6bdb6; --muted: #8f978f;
+  --accent: #2fc583; --good: #4cd08f; --grid: #1f2622; --win: #143223;
+}
+
+body { font-family: "Manrope", system-ui, sans-serif; }
+h1, h2 { letter-spacing: -0.02em; font-weight: 800; }
+.tag { color: var(--accent); }
+
+/* photo header (removed by the site's viewer, which shows its own) */
+.fv-hero { position: relative; margin: 0 0 26px; border-radius: 20px; overflow: hidden; aspect-ratio: 21 / 8; background: #0d110f; display: flex; }
+.fv-hero img { flex: 1; min-width: 0; height: 100%; object-fit: cover; animation: fv-zoom 1.4s cubic-bezier(.2,.7,.2,1) both; }
+.fv-collage img + img { border-left: 3px solid #0d110f; }
+.fv-hero::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(180deg, transparent 55%, rgb(13 17 15 / .75)),
+    repeating-linear-gradient(90deg, rgb(47 197 131 / .06) 0 1px, transparent 1px 48px); }
+.fv-hero figcaption { position: absolute; right: 12px; bottom: 8px; z-index: 1; font-size: 11px; color: rgb(255 255 255 / .75); }
+.fv-hero figcaption a { color: inherit; }
+
+/* cards & panels: softer, lift on hover */
+.card, .kpi, .explain, .chart-wrap, .box { border-radius: 16px; }
+.card { transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease; }
+.card:hover { transform: translateY(-3px); border-color: var(--accent); box-shadow: 0 14px 30px -18px rgb(0 0 0 / .45); }
+.badge.pick { background: var(--accent); }
+
+/* entrance animation */
+@keyframes fv-up { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes fv-zoom { from { transform: scale(1.08); filter: brightness(.6); } to { transform: none; filter: none; } }
+h1, .lead, .kpis, .cards .card { animation: fv-up .6s cubic-bezier(.2,.7,.2,1) both; }
+.lead { animation-delay: .08s; }
+.kpis { animation-delay: .16s; }
+.cards .card:nth-child(2) { animation-delay: .06s; }
+.cards .card:nth-child(3) { animation-delay: .12s; }
+.cards .card:nth-child(4) { animation-delay: .18s; }
+.cards .card:nth-child(5) { animation-delay: .24s; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+@media (max-width: 640px) { .fv-hero { aspect-ratio: 16 / 9; border-radius: 14px; } }
+
+/* touch: hint under the chart tooltip (report-chart.js) */
+.fv-hint { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--border, rgba(127,127,127,.3)); font-weight: 700; color: var(--accent, #2fc583); }
+</style><!-- /ferovka-theme -->
+</head>
+<body>
+<main><!-- ferovka-theme --><!-- /ferovka-theme -->
+<button class="theme-btn" id="themeBtn" type="button">Svetlý / tmavý</button>
+<h1>Fiat 500 – ktorá ponuka sa oplatí</h1>
+<p class="lead">Analýza aktuálnych inzerátov Fiat 500 (2008–2025, hatchback aj kabriolet 500C, aj elektrický 500e, bez 500X / 500L a Abarthu) od 2 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 1 335 inzerátov (1 133 na bazoši, 106 na autobazar.eu, 96 na bazar.sk) – prezreli sme 24 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 194 rôznych áut zo Slovenska. Každé auto sme porovnali
+s <b>férovou cenou</b>: tú vypočítal model naučený na celom trhu podľa veku, nájazdu, motora, prevodovky a typu predajcu.</p>
+
+<div class="kpis">
+  <div class="kpi"><div class="v">194</div><div class="l">inzerátov Fiatu 500 (nad 2 000 €)</div></div>
+  <div class="kpi"><div class="v">121</div><div class="l">ohodnotených (majú rok aj km)</div></div>
+  <div class="kpi"><div class="v">7 900 €</div><div class="l">medián ceny s DPH</div></div>
+  <div class="kpi"><div class="v">92 %</div><div class="l">rozdielov v cenách vysvetlí model</div></div>
+</div>
+
+
+<h2>Odkiaľ sú dáta: bazoš, autobazar.eu a bazar.sk</h2>
+<div class="kpis">
+  <div class="kpi"><div class="v">67</div><div class="l">ohodnotených z bazoša</div></div>
+  <div class="kpi"><div class="v">38</div><div class="l">ohodnotených z autobazar.eu</div></div><div class="kpi"><div class="v">16</div><div class="l">ohodnotených z bazar.sk</div></div>
+  <div class="kpi"><div class="v">105</div><div class="l">áut bolo na viacerých portáloch – započítané raz</div></div>
+  <div class="kpi"><div class="v">32 / 24</div><div class="l">s uvedeným pôvodom SR / dovoz</div></div>
+</div>
+<div class="explain">
+  <p><b>Tri portály, jeden trh.</b> Bazoš prehľadal 132 inzerátov, autobazar.eu
+  106, bazar.sk 82. Ponuky z Česka (na autobazar.eu ich je veľa) sme vynechali. Autobazáre často dávajú
+  to isté auto na viac portálov. Takéto dvojice (45 v rebríčku) sme spojili podľa VIN alebo zhody roku, km a ceny,
+  aby sa v modeli nerátali dvakrát. Pri aute nájdeš odkaz na všetky ponuky – niekedy sa líšia cenou.</p>
+  <p><b>Rozdiel medzi portálmi:</b> rovnaké auto je na autobazar.eu v priemere -1,0 %
+  oproti bazošu. Na autobazar.eu predávajú hlavne firmy (27 z 38 ohodnotených). Na bazar.sk je rovnaké auto v priemere +10,8 % oproti bazošu.</p>
+  <p><b>Kúpené v SR vs. dovoz:</b> autá s uvedeným pôvodom zo SR sú oproti autám bez uvedeného pôvodu
+  -1,9 %, dovezené -4,1 %
+  (pri rovnakom veku, nájazde a motore). Pôvod zo SR je výhoda pri overovaní histórie, trh zaň však nepripláca – väčšina
+  inzerátov pôvod jednoducho neuvádza. V tabulke dole si môžeš nechať zobraziť len autá kúpené v SR.</p>
+</div>
+
+<h2>Čo hýbe cenou Fiatu 500</h2>
+<p class="section-lead">Toto sa model naučil z trhu. Keď porovnávaš dve autá, tieto čísla ti povedia, koľko má byť
+rozdiel v cene, aby to bolo fér.</p>
+<div class="kpis">
+  <div class="kpi"><div class="v">-1,9 %</div><div class="l">každých ďalších 10 000 km</div></div>
+  <div class="kpi"><div class="v">-5,7 %</div><div class="l">každý rok veku navyše</div></div>
+  <div class="kpi"><div class="v">+10 %</div><div class="l">príplatok za automat (DSG)</div></div>
+  <div class="kpi"><div class="v">+0,3 %</div><div class="l">príplatok u predajcu / firmy</div></div>
+  <div class="kpi"><div class="v">+13,0 %</div><div class="l">Fiat 500 po facelifte (2016+) oproti cene podľa veku</div></div>
+  <div class="kpi"><div class="v">+10,0 %</div><div class="l">príplatok za automat</div></div>
+</div>
+<div class="explain">
+  <p><b>Príklad:</b> dva rovnaké Fiaty 500 1.2 z roku 2017, jedno má 60 tis. km, druhé 120 tis. km. Druhé má byť
+  približne o 11 % lacnejšie (6 × -1,9 %). Ak je lacnejšie len o 5 %, preplácaš kilometre.</p>
+  <p><b>Ako čítať „pod trhom“:</b> +15 % znamená, že auto stojí o 15 % menej, než by malo podľa trhu. Bežný rozptyl
+  cien je asi ±19 %, takže až zľava nad ~10–15 % je naozaj výnimočná. Pri takej zľave vždy zisti, prečo je auto lacné
+  (stav, história, nájazd).</p>
+  <p><b>DPH:</b> ceny uvedené bez DPH (napr. „10 300 € netto“) sme prepočítali na cenu s DPH, ktorú zaplatí súkromná osoba.</p>
+</div>
+
+<h2>Odporúčané ponuky</h2>
+<p class="section-lead">Kandidáti s najlepším pomerom cena / vek / nájazd, ktorých celý inzerát sme prečítali.
+Zoradené podľa toho, ako ich odporúčame.</p>
+<div class="subhead">Fiat 500 po facelifte (2016+) – najlepší pomer cena / vek</div>
+<div class="cards">
+<article class="card">
+  <div class="card-head"><span class="tag">Fiat 500 1.0 Hybrid z 2022 za 9 500 €</span><span class="loc">Štiavnička</span></div>
+  <h3><a href="https://auto.bazar.sk/39741387-fiat-500-1-0-bsg-mildhybrid-connect/" target="_blank" rel="noopener">Fiat 500 1.0 BSG Mildhybrid Connect</a></h3>
+  <div class="facts">2022 · 44 828 km · 1.0 mild hybrid 51 kW · manuál · Hatchback · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazar.sk</b> · kúpené v SR · aj na <a href='https://www.autobazar.eu/detail/fiat-500-10-bsg-mildhybrid-connect/Am-3XQfFHPv/' target='_blank' rel='noopener'>autobazar.eu</a> · aj na <a href='https://auto.bazos.sk/inzerat/196689980/fiat-500-10-bsg-mildhybrid-connect.php' target='_blank' rel='noopener'>bazoš</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">9 500 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">12 060 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+21.2 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:71%"></span></div>
+  <ul class="pc"><li class="pro">9/2022, 1.0 mild hybrid 51 kW, manuál, výbava Connect, 45 tis. km</li><li class="pro">Kúpené v SR, uvedený VIN, STK do 10/2028</li><li class="pro">~21 % pod férovou cenou</li><li class="con">Predáva autobazár</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke aspoň 22 dní</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Fiat 500 Sport 1.2 automat z 2020 s 40 tis. km</span><span class="loc">Pezinok</span></div>
+  <h3><a href="https://auto.bazar.sk/39729837-fiat-500-sport-1-2i-51kw-automat-f1-digi-klima-cierna-stropnica/" target="_blank" rel="noopener">Fiat 500 Šport 1,2i 51kW Automat + F1, digi klíma, čierna stropnica</a></h3>
+  <div class="facts">2020 · 39 900 km · 1.2 8V 51 kW · automat · Hatchback · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazar.sk</b> · dovezené · aj na <a href='https://www.autobazar.eu/detail/fiat-500-sport-12i-51kw-automat-f1-digi-klima-cierna-stropnica/Am92xZ2Qi43/' target='_blank' rel='noopener'>autobazar.eu</a> · aj na <a href='https://auto.bazos.sk/inzerat/196333977/fiat-500-sport-12i-51kw-automat-f1-digi-klima-cierna-stro.php' target='_blank' rel='noopener'>bazoš</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">10 490 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">13 420 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+21.8 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:73%"></span></div>
+  <ul class="pc"><li class="pro">1/2020, 1.2 8V 51 kW, automat Dualogic, výbava Sport, 40 tis. km</li><li class="pro">Digitálna klimatizácia, čierna strecha</li><li class="pro">~22 % pod férovou cenou</li><li class="con">Dovoz</li><li class="con">Predáva autobazár</li><li class="con">Automat Dualogic je pomalý</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke aspoň 43 dní</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Fiat 500 1.2 Lounge z 2018 za 7 500 €</span><span class="loc">Bratislava I - Staré Mesto</span></div>
+  <h3><a href="https://auto.bazar.sk/39417265-fiat-500-1-2-8v-lounge/" target="_blank" rel="noopener">Fiat 500 1.2 8v Lounge</a></h3>
+  <div class="facts">2018 · 118 913 km · 1.2 8V 51 kW · manuál · Hatchback · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazar.sk</b> · kúpené v SR</div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">7 500 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">9 300 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+19.4 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:65%"></span></div>
+  <ul class="pc"><li class="pro">6/2018, 1.2 8V 51 kW, manuál, výbava Lounge, 119 tis. km</li><li class="pro">Kúpené v SR, uvedený VIN</li><li class="pro">~19 % pod férovou cenou</li><li class="con">Predáva autobazár</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">Nový inzerát</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Fiat 500e 42 kWh Icon z 2023</span><span class="loc">Kráľovičove Kračany</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/fiat-500-500e-42-kwh-icon/Am7PGSDDOYY/" target="_blank" rel="noopener">Fiat 500 500e 42 kWh Icon</a></h3>
+  <div class="facts">2023 · 37 500 km · 500e elektro 70–87 kW · automat · Hatchback · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · dovezené · aj na <a href='https://auto.bazar.sk/39752875-fiat-500-500e-42-kwh-icon/' target='_blank' rel='noopener'>bazar.sk</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">14 900 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">17 490 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+14.8 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:49%"></span></div>
+  <ul class="pc"><li class="pro">2023, elektro, batéria 42 kWh, výbava Icon, 38 tis. km</li><li class="pro">Komisionálny predaj</li><li class="pro">~15 % pod férovou cenou</li><li class="con">Dovoz</li><li class="con">Over stav batérie (SOH)</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 21 dní (od 31. 10.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Fiat 500 Dolcevita z 2023 s 26 tis. km</span><span class="loc">Bošany</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/fiat-500-10-benzin-51kw-manual-prevodovka/AeglY3qcf_v/" target="_blank" rel="noopener">Fiat 500 Dolcevita 1.0 Benzín51kW Manuál. prevodovka</a></h3>
+  <div class="facts">2023 · 26 000 km · 1.0 mild hybrid 51 kW · manuál · Hatchback · neisté</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · kúpené v SR</div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">10 000 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">11 550 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+13.4 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:45%"></span></div>
+  <ul class="pc"><li class="pro">2023, 1.0 mild hybrid 51 kW, manuál, výbava Dolcevita, 26 tis. km</li><li class="pro">Kúpené v SR, pravidelný servis, letné aj zimné pneumatiky</li><li class="pro">~13 % pod férovou cenou</li><li class="con">Predajca neistý</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 46 dní (od 6. 10.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Fiat 500 1.0 Hybrid z 2023 so 14 tis. km</span><span class="loc">Lovinobaňa</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/fiat-500-10-bsg-mildhybrid/AmroiQL-H44/" target="_blank" rel="noopener">Fiat 500 1.0 BSG Mildhybrid</a></h3>
+  <div class="facts">2023 · 14 143 km · 1.0 mild hybrid 51 kW · manuál · Hatchback · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · kúpené v SR · aj na <a href='https://auto.bazar.sk/39772869-fiat-500-1-0-bsg-mildhybrid/' target='_blank' rel='noopener'>bazar.sk</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">10 900 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">12 540 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+13.1 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:44%"></span></div>
+  <ul class="pc"><li class="pro">2023, 1.0 mild hybrid 51 kW, manuál, 14 tis. km</li><li class="pro">Kúpené v SR</li><li class="pro">~13 % pod férovou cenou</li><li class="con">Predáva autobazár</li><li class="con">Inzerát bez textu</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 4 dni (od 17. 11.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Fiat 500 Hybrid Sport od 1. majiteľa s 15 tis. km</span><span class="loc">Nitra</span></div>
+  <h3><a href="https://auto.bazar.sk/38959986-fiat-500-milhybrid-51kw-sport-verzia-1majitel-15000km/" target="_blank" rel="noopener">Fiat 500 MILHYBRID 51KW SPORT VERZIA 1MAJITEL 15000KM !!!</a></h3>
+  <div class="facts">2021 · 15 500 km · 1.0 mild hybrid 51 kW · manuál · Hatchback · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazar.sk</b> · kúpené v SR</div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">10 490 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">11 860 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+11.5 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:38%"></span></div>
+  <ul class="pc"><li class="pro">3/2021, 1.0 mild hybrid 51 kW, manuál, výbava Sport, 16 tis. km</li><li class="pro">Kúpené v SR, 1. majiteľ, uvedený VIN</li><li class="pro">~12 % pod férovou cenou</li><li class="con">Predáva autobazár</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">Nový inzerát</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Fiat 500e elektro z 2022 so 16 tis. km</span><span class="loc">Trenčín</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/196429690/predam.php" target="_blank" rel="noopener">Predám Fiat 500 e</a></h3>
+  <div class="facts">2022 · 16 400 km · 500e elektro 70–87 kW · prevodovka ? · Hatchback · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">12 900 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">14 930 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+13.6 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:45%"></span></div>
+  <ul class="pc"><li class="pro">2022, elektro 70 kW, batéria 23,8 kWh, 16 tis. km</li><li class="pro">Po STK, letné aj zimné pneumatiky na diskoch</li><li class="con">Predajca neistý</li><li class="con">Malá batéria – dojazd 160–170 km</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke aspoň 40 dní</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Fiat 500 1.2 z 2017 so 61 tis. km</span><span class="loc">Levice</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197459138/fiat-500-2017-12i-61000km.php" target="_blank" rel="noopener">Fiat 500 2017 1.2i 61.000KM</a></h3>
+  <div class="facts">2017 · 61 453 km · 1.2 8V 51 kW · manuál · Hatchback · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazoš</b> · aj na <a href='https://www.autobazar.eu/detail/fiat-500-12-8v-anniversario-dualogic/AmQ14c4kYmi/' target='_blank' rel='noopener'>autobazar.eu</a> za 7 999 € · aj na <a href='https://auto.bazar.sk/39738924-fiat-500-1-2-8v-anniversario-dualogic/' target='_blank' rel='noopener'>bazar.sk</a> za 7 999 €</div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">7 990 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">8 930 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+10.5 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:35%"></span></div>
+  <ul class="pc"><li class="pro">7/2017, 1.2 8V 51 kW, 5-st. manuál, 61 tis. km</li><li class="pro">Pravidelne servisované</li><li class="pro">~11 % pod férovou cenou</li><li class="con">Predáva autobazár</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 9 dní (od 12. 11.)</p><!-- history-card:end --></article></div>
+<div class="subhead">Lacnejšie Fiaty 500 do 7 000 €</div>
+<div class="cards">
+<article class="card">
+  <div class="card-head"><span class="tag">Fiat 500 1.2 za 2 999 €</span><span class="loc">Púchov</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197191482/fiat-500-12-51kw-2008-137tkm-parkovacie-senzory-city.php" target="_blank" rel="noopener">Fiat 500 1.2 51kw 2008 137tkm – parkovacie senzory, CITY</a></h3>
+  <div class="facts">2008 · 137 000 km · 1.2 8V 51 kW · manuál · Hatchback · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b> · dovezené</div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">2 999 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">4 360 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+31.1 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:100%"></span></div>
+  <ul class="pc"><li class="pro">2008, 1.2 8V 51 kW, 5-st. manuál, 137 tis. km</li><li class="pro">Parkovacie senzory, režim CITY</li><li class="pro">~31 % pod férovou cenou</li><li class="con">Dovoz z Rakúska</li><li class="con">Predajca neistý</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 17 dní (od 4. 11.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Fiat 500 1.2 s bielou strechou za 3 200 €</span><span class="loc">Trnava</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/196675945/fiat-500.php" target="_blank" rel="noopener">Fiat 500</a></h3>
+  <div class="facts">2008 · 169 800 km · 1.2 8V 51 kW · manuál · Hatchback · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">3 200 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">4 360 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+26.6 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:89%"></span></div>
+  <ul class="pc"><li class="pro">2008, 1.2 8V 51 kW, 5-st. manuál, 170 tis. km</li><li class="pro">Klimatizácia, bluetooth</li><li class="pro">~27 % pod férovou cenou</li><li class="con">Vysoký nájazd</li><li class="con">Predajca neistý</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke aspoň 32 dní</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Súkromník: Fiat 500 1.4 s 92 tis. km</span><span class="loc">Šaľa</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/fiat-500-fiat-500/Aef0t8kI1p0/" target="_blank" rel="noopener">Fiat 500 Fiat 500</a></h3>
+  <div class="facts">2010 · 92 000 km · 1.4 16V 74 kW · manuál · Hatchback · súkromník</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · kúpené v SR · aj na <a href='https://auto.bazos.sk/inzerat/196992771/fiat-500-r2010.php' target='_blank' rel='noopener'>bazoš</a> za 3 900 €</div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">3 800 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">4 950 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+23.2 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:77%"></span></div>
+  <ul class="pc"><li class="pro">2010, 1.4 16V 74 kW, manuál, 92 tis. km</li><li class="pro">Kúpené v SR</li><li class="pro">~23 % pod férovou cenou</li><li class="con">Inzerát bez textu</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke aspoň 23 dní</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Fiat 500 1.2 Pop za 3 500 €</span><span class="loc">Dunajská Streda</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/fiat-500-12-pop/AmFQCrojcIg/" target="_blank" rel="noopener">Fiat 500 1.2 Pop</a></h3>
+  <div class="facts">2008 · 133 278 km · 1.2 8V 51 kW · manuál · Hatchback · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · aj na <a href='https://auto.bazar.sk/39322636-fiat-500-1-2-pop/' target='_blank' rel='noopener'>bazar.sk</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">3 500 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">4 540 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+22.8 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:76%"></span></div>
+  <ul class="pc"><li class="pro">2008, 1.2 8V, manuál, výbava Pop, 133 tis. km</li><li class="pro">~23 % pod férovou cenou</li><li class="con">Predáva autobazár</li><li class="con">Inzerát bez textu</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 289 dní (od 5. 2.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Fiat 500 1.2 Pop s 110 tis. km</span><span class="loc">Prievidza</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/196565419/fiat-500-12-pop.php" target="_blank" rel="noopener">Fiat 500 1.2 Pop</a></h3>
+  <div class="facts">2010 · 109 549 km · 1.2 8V 51 kW · manuál · Hatchback · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazoš</b> · aj na <a href='https://www.autobazar.eu/detail/fiat-500-12-pop/AmmB8PO3Nfj/' target='_blank' rel='noopener'>autobazar.eu</a> · aj na <a href='https://auto.bazar.sk/39737088-fiat-500-1-2-pop/' target='_blank' rel='noopener'>bazar.sk</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">4 290 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">5 090 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+15.7 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:52%"></span></div>
+  <ul class="pc"><li class="pro">8/2010, 1.2 8V 51 kW, 5-st. manuál, výbava Pop, 110 tis. km</li><li class="pro">Uvedený VIN</li><li class="pro">~16 % pod férovou cenou</li><li class="con">Predáva autobazár</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke aspoň 36 dní</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Fiat 500 1.2 s LPG – jazda za ~5,5 €/100 km</span><span class="loc">Bánovce nad Bebravou</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197606778/fiat-500-benzinlpg.php" target="_blank" rel="noopener">Fiat 500 benzin+lpg</a></h3>
+  <div class="facts">2013 · 205 000 km · LPG · prevodovka ? · Hatchback · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">4 200 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">4 700 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+10.6 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:35%"></span></div>
+  <ul class="pc"><li class="pro">2013, 1.2 8V 51 kW s LPG, 205 tis. km</li><li class="pro">Rozvody menené pred 20 tis. km, nové plynové vstrekovače a brzdy, STK do 03/2028</li><li class="pro">~11 % pod férovou cenou</li><li class="con">Vysoký nájazd</li><li class="con">Predajca neistý</li><li class="con">Škrabance na karosérii</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 4 dni (od 17. 11.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Fiat 500 1.2 automat z SR</span><span class="loc">Bratislava</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/fiat-500-12-automat-sr2maj/AecXtaED3Pj/" target="_blank" rel="noopener">Fiat 500 1.2, Automat, SR,2.maj</a></h3>
+  <div class="facts">2013 · 94 808 km · 1.2 8V 51 kW · automat · Hatchback · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">5 800 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">6 460 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+10.2 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:34%"></span></div>
+  <ul class="pc"><li class="pro">2013, 1.2 8V, automat, 95 tis. km</li><li class="pro">Kúpené v SR u autorizovaného predajcu, 2. majiteľ</li><li class="pro">~10 % pod férovou cenou</li><li class="con">AAA AUTO – over cenu v hotovosti</li><li class="con">Automat Dualogic je pomalý</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 6 dní (od 15. 11.)</p><!-- history-card:end --></article></div>
+<div class="subhead">Špeciálne prípady</div>
+<div class="cards"></div>
+
+<h2>Cena vs. nájazd: celý trh na jednom grafe</h2>
+<p class="section-lead">Každý bod je jeden inzerát. Čím nižšie bod leží oproti ostatným s podobným nájazdom, tým je auto lacnejšie.
+Krúžkom sú označené odporúčané ponuky. Prejdi myšou na bod a uvidíš detail.</p>
+<div class="chart-wrap" id="chartWrap">
+  <div class="legend" id="legend"></div>
+  <svg id="chart" width="100%" height="420" role="img" aria-label="Bodový graf ceny a nájazdu inzerátov"></svg>
+  <div class="tip" id="tip"></div>
+</div>
+
+<h2>Porovnanie motorov</h2>
+<p class="section-lead">Hodnotenie (hviezdičky) zohľadňuje spoľahlivosť, spoľahlivosť a náklady na prevádzku a pomer cena/výkon.
+Číselné stĺpce sú mediány z ohodnotených inzerátov.</p>
+<div class="table-scroll">
+<table>
+  <thead><tr><th>Motor</th><th>Hodnotenie</th><th class="num">Ponúk</th><th class="num">Medián ceny</th><th class="num">Medián roku</th><th class="num">Medián km</th></tr></thead>
+  <tbody>
+<tr>
+  <td><b>500e elektro 70–87 kW</b><div class="sub">Elektro (2020+) s batériou 24 alebo 42 kWh, dojazd 180–320 km. Do mesta.</div></td>
+  <td><span class="stars" aria-label="3 z 5">★★★<span class="off">★★</span></span></td>
+  <td class="num">10</td>
+  <td class="num"><div class="cellbar"><span style="width:100%"></span></div>15 575 €</td>
+  <td class="num">2022</td>
+  <td class="num">37 250 km</td>
+</tr>
+<tr>
+  <td><b>1.0 mild hybrid 51 kW</b><div class="sub">3-valec 70 k s 12V mild hybridom (2020+). Úsporný, ale slabší.</div></td>
+  <td><span class="stars" aria-label="4 z 5">★★★★<span class="off">★</span></span></td>
+  <td class="num">16</td>
+  <td class="num"><div class="cellbar"><span style="width:77%"></span></div>11 950 €</td>
+  <td class="num">2023</td>
+  <td class="num">27 660 km</td>
+</tr>
+<tr>
+  <td><b>LPG</b><div class="sub">Továrenské alebo dodatočné LPG – over revíziu a zápis v TP.</div></td>
+  <td><span class="stars" aria-label="3 z 5">★★★<span class="off">★★</span></span></td>
+  <td class="num">2</td>
+  <td class="num"><div class="cellbar"><span style="width:34%"></span></div>5 350 €</td>
+  <td class="num">2010</td>
+  <td class="num">185 300 km</td>
+</tr>
+<tr>
+  <td><b>1.3 MultiJet diesel 55–70 kW</b><div class="sub">Úsporný diesel 75–95 k, ale v malom mestskom aute sa DPF pri krátkych jazdách zanáša.</div></td>
+  <td><span class="stars" aria-label="3 z 5">★★★<span class="off">★★</span></span></td>
+  <td class="num">5</td>
+  <td class="num"><div class="cellbar"><span style="width:32%"></span></div>4 999 €</td>
+  <td class="num">2011</td>
+  <td class="num">150 000 km</td>
+</tr>
+<tr>
+  <td><b>0.9 TwinAir 59–77 kW</b><div class="sub">2-valec s turbom 80–105 k. Zábavný, ale v praxi smädný a citlivejší na údržbu.</div></td>
+  <td><span class="stars" aria-label="2 z 5">★★<span class="off">★★★</span></span></td>
+  <td class="num">14</td>
+  <td class="num"><div class="cellbar"><span style="width:44%"></span></div>6 895 €</td>
+  <td class="num">2015</td>
+  <td class="num">106 910 km</td>
+</tr>
+<tr>
+  <td><b>1.4 16V 74 kW</b><div class="sub">Atmosférický 4-valec 100 k. Svižnejší, vyššia spotreba.</div></td>
+  <td><span class="stars" aria-label="3 z 5">★★★<span class="off">★★</span></span></td>
+  <td class="num">9</td>
+  <td class="num"><div class="cellbar"><span style="width:44%"></span></div>6 900 €</td>
+  <td class="num">2009</td>
+  <td class="num">119 432 km</td>
+</tr>
+<tr>
+  <td><b>1.2 8V 51 kW</b><div class="sub">Jednoduchý a odolný 4-valec 69 k. Najčastejší a najlacnejší na údržbu.</div></td>
+  <td><span class="stars" aria-label="4 z 5">★★★★<span class="off">★</span></span></td>
+  <td class="num">65</td>
+  <td class="num"><div class="cellbar"><span style="width:48%"></span></div>7 490 €</td>
+  <td class="num">2015</td>
+  <td class="num">109 549 km</td>
+</tr></tbody>
+</table>
+</div>
+<div class="explain">
+  <p><b>Fiat 500</b> (2007–2024, facelift 2016) je malé mestské auto v retro štýle, aj ako kabriolet <b>500C</b> so stiahnuteľnou
+  plátennou strechou. Od 2020 existuje aj samostatný elektrický <b>500e</b>.</p>
+  <p><b>Ktorý motor zvoliť?</b> Najrozumnejší je jednoduchý <b>1.2 8V</b> (69 k) – lacný na údržbu. <b>0.9 TwinAir</b> je zábavný,
+  ale reálna spotreba býva vyššia, ako sľubuje katalóg. Automat <b>Dualogic</b> je pomalý – lepší je manuál.</p>
+</div>
+
+<h2>Na čo si dať pozor</h2>
+<div class="warn">
+  <p><b>Lacné kvôli extrémnemu nájazdu</b> (viac ako 35 tis. km ročne, typicky flotila alebo taxi):</p>
+  <ul><li>Žiadne výrazné prípady.</li></ul>
+  <p><b>Podozrivo nízky nájazd na vek</b> – preklep alebo stočené km, over cez Cebiu:</p><ul><li><a href='https://auto.bazar.sk/34351374-fiat-500-1-2/' target='_blank' rel='noopener'>Fiat 500 1.2</a> (7 700 €): rok 2015 a len 27 241 km</li><li><a href='https://auto.bazar.sk/39733832-fiat-500-1-4-16v-sport/' target='_blank' rel='noopener'>Fiat 500 1.4 16V Sport</a> (6 900 €): rok 2009 a len 51 722 km</li><li><a href='https://www.autobazar.eu/detail/fiat-500-automat-nizky-najazd-kilometrov/Aetlj5dsYP9/' target='_blank' rel='noopener'>Fiat 500 , Automat, Nízky nájazd kilometrov</a> (10 490 €): rok 2016 a len 21 300 km</li><li><a href='https://auto.bazar.sk/34353644-fiat-500-1-2/' target='_blank' rel='noopener'>Fiat 500 1.2</a> (8 300 €): rok 2012 a len 19 422 km</li></ul><p><b>Ďalšie veci, ktoré sme v inzerátoch našli:</b></p><ul><li>Asi tretina inzerátov sú staré Fiaty 500 z rokov 2008–2012 – pri nich over hrdzu a servis.</li><li>Niektoré elektrické 500e sú staršie americké verzie (2013–2019, dovoz z USA) – iné auto ako európsky 500e z 2020+.</li><li>Inzeráty s výbavou „Abarth Packet“ alebo výkonom nad 90 kW sme vyradili – ide o Abarth alebo jeho vzhľad.</li><li>Pri inzerátoch AAA AUTO je uvedená <b>cena pri financovaní</b> – pri platbe v hotovosti môže byť iná.</li></ul><p><b>Vyradené z porovnania</b> (poškodené autá alebo nezmyselné údaje – model ich nehodnotí):</p><ul><li><a href='https://www.autobazar.eu/detail/fiat-500-10-bsg-mildhybrid-dolcevita/AmRm3EC4GHQ/' target='_blank' rel='noopener'>Fiat 500 1.0 BSG Mildhybrid Dolcevita</a> (8 590 €): havarované / poškodené – cena nie je porovnateľná s trhom</li><li><a href='https://www.autobazar.eu/detail/fiat-500-1-0-bsg-51kw-dolcevita-m6/AbGobbcCS8w/' target='_blank' rel='noopener'>Fiat 500 1, 0 BSG 51kW DOLCEVITA M6</a> (11 499 €): havarované / poškodené – cena nie je porovnateľná s trhom</li><li><a href='https://www.autobazar.eu/detail/fiat-500-10-torino-hybrid-65k/Amg06Pbvpnt/' target='_blank' rel='noopener'>Fiat 500 1,0 Torino Hybrid 65k</a> (18 990 €): 195000 km/rok je nereálne – skontroluj rok a km</li><li><a href='https://auto.bazos.sk/inzerat/197305152/fiat-500c-cabrio-13-multijet.php' target='_blank' rel='noopener'>Fiat 500C Cabrio 1.3 Multijet</a> (3 500 €): havarované / poškodené – cena nie je porovnateľná s trhom</li><li><a href='https://www.autobazar.eu/detail/fiat-500-09-twin-air-lounge/AmqbUpUYIBZ/' target='_blank' rel='noopener'>Fiat 500 0.9 Twin Air Lounge</a> (3 490 €): havarované / poškodené – cena nie je porovnateľná s trhom</li><li><a href='https://www.autobazar.eu/detail/fiat-500-10-hb-torino-hybrid-65k/AmXW97UBlvQ/' target='_blank' rel='noopener'>Fiat 500 1,0 HB Torino Hybrid 65k</a> (18 900 €): 195000 km/rok je nereálne – skontroluj rok a km</li><li><a href='https://www.autobazar.eu/detail/fiat-500-10-torino-hybrid-65k/Am51haTzCyE/' target='_blank' rel='noopener'>Fiat 500 1,0 Torino Hybrid 65k</a> (18 900 €): 195000 km/rok je nereálne – skontroluj rok a km</li><li><a href='https://auto.bazos.sk/inzerat/196758954/fiat-500-14-16v-100-koni-6-stupnovy-manual-sport.php' target='_blank' rel='noopener'>Fiat 500 1.4 16V, 100 koní, 6-stupňový manuál, SPORT</a> (2 490 €): rok výroby 2027 je v budúcnosti – chyba v inzeráte alebo v rozpoznaní</li><li><a href='https://www.autobazar.eu/detail/fiat-500-10-bsg-mildhybrid-dolcevita/Ami-1n6bBAL/' target='_blank' rel='noopener'>Fiat 500 1.0 BSG Mildhybrid Dolcevita</a> (5 900 €): cena je o 57 % pod trhom – havarované, na diely, záloha/splátka namiesto ceny alebo podvod</li><li><a href='https://auto.bazar.sk/39638823-fiat-500-1-0-bsg-mildhybrid-red/' target='_blank' rel='noopener'>Fiat 500 1.0 BSG Mildhybrid RED</a> (12 490 €): havarované / poškodené – cena nie je porovnateľná s trhom</li><li><a href='https://auto.bazar.sk/39453976-fiat-500/' target='_blank' rel='noopener'>Fiat 500</a> (10 999 €): podozrivo nízky nájazd</li></ul><p><b>Fiat 500X / 500L, Abarth, nové autá z 2026 a iné modely z vyhľadávania, inzeráty s chybným nájazdom</b> (30 inzerátov) sme z rebríčka vynechali.</p>
+  <p>Ďalších <b>25</b> inzerátov nemá v texte rok alebo kilometre, takže ich nebolo možné ohodnotiť.
+  Ak ťa niektorý zaujme, predajcu sa na tieto údaje opýtaj.</p>
+</div>
+
+<h2>Kompletný rebríček</h2>
+<p class="section-lead">Všetky ohodnotené inzeráty. Kliknutím na hlavičku stĺpca zoraďuješ, filtrom zužuješ výber.</p>
+<div class="filters">
+  <select id="fEngine"><option value="">Všetky motory</option></select>
+  <select id="fTrans"><option value="">Každá prevodovka</option><option value="automatic">Automat</option><option value="manual">Manuál</option></select>
+  <select id="fSeller"><option value="">Všetci predajcovia</option><option value="nodealer">Bez autobazárov</option></select>
+  <select id="fSource"><option value="">Všetky portály</option><option value="bazos">bazoš</option><option value="autobazar">autobazar.eu</option><option value="bazarsk">bazar.sk</option></select>
+  <select id="fBody"><option value="">Všetky karosérie</option><option value="hatchback">Hatchback</option><option value="cabrio">Kabriolet 500c</option></select>
+  <select id="fOrigin"><option value="">Akýkoľvek pôvod</option><option value="SR">Kúpené v SR</option><option value="dovoz">Dovoz</option></select>
+  <input id="fMax" type="number" placeholder="Max. cena €" step="500" min="0" style="width:120px">
+  <span class="count" id="count"></span>
+</div>
+<div class="table-scroll">
+<table id="tbl">
+  <thead><tr>
+    <th class="sortable" data-k="title">Inzerát</th>
+    <th class="sortable num" data-k="year">Rok</th>
+    <th class="sortable num" data-k="km">Km</th>
+    <th class="sortable num" data-k="price_gross">Cena</th>
+    <th class="sortable num" data-k="fair_price">Férová</th>
+    <th class="sortable num" data-k="discount_pct">Pod trhom ▾</th>
+  </tr></thead>
+  <tbody></tbody>
+</table>
+</div>
+
+<h2>Pred kúpou over</h2>
+<ul class="check">
+  <li>VIN cez Cebia / autoDNA (história km, havárie)</li>
+  <li>Automat Dualogic: plynulé radenie, servis hydrauliky</li>
+  <li>500C: stav plátennej strechy a odvodnenia</li>
+  <li>Hrdza na prahoch a pod dverami (staršie kusy)</li>
+  <li>500e: stav batérie (SOH) a nabíjací kábel</li>
+  <li>STK/EK protokol a dátum platnosti</li>
+</ul>
+
+<footer>
+  Zdroj: auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (len ponuky zo Slovenska, to isté auto na viacerých portáloch je započítané raz), sťahované cez lokálny MCP server bazos-mcp (nástroj <code>fair_price</code>), 21. 11. 2026.
+  Model: ridge regresia log(ceny s DPH) podľa veku, veku², km, km², prevodovky, typu predajcu, motora, karosérie, pohonu 4x4, pôvodu (SR / dovoz) a portálu. Vzorka 121
+  inzerátov, R² 92 %. Parametre sú vyťažené z textu inzerátov, a preto môžu obsahovať chyby. Odporúčané ponuky sme overili
+  prečítaním celého inzerátu. Hodnotenie motorov je odborný odhad, nie výsledok modelu.
+</footer>
+</main>
+
+<script>
+const DATA = [{"id": "197191482", "url": "https://auto.bazos.sk/inzerat/197191482/fiat-500-12-51kw-2008-137tkm-parkovacie-senzory-city.php", "title": "Fiat 500 1.2 51kw 2008 137tkm – parkovacie senzory, CITY", "price": 2999, "price_gross": 2999, "fair_price": 4360.0, "discount_pct": 31.1, "verdict": "výrazne pod trhom – over prečo", "year": 2008, "km": 137000, "km_per_year": 7500.0, "eg": "1.2 8V 51 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Púchov", "flags": [], "pick": "budget", "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "hatchback"}, {"id": "196675945", "url": "https://auto.bazos.sk/inzerat/196675945/fiat-500.php", "title": "Fiat 500", "price": 3200, "price_gross": 3200, "fair_price": 4360.0, "discount_pct": 26.6, "verdict": "výrazne pod trhom – over prečo", "year": 2008, "km": 169800, "km_per_year": 9300.0, "eg": "1.2 8V 51 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Trnava", "flags": [], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "ab-Aef0t8kI1p0", "url": "https://www.autobazar.eu/detail/fiat-500-fiat-500/Aef0t8kI1p0/", "title": "Fiat 500 Fiat 500", "price": 3800, "price_gross": 3800, "fair_price": 4950.0, "discount_pct": 23.2, "verdict": "výrazne pod trhom – over prečo", "year": 2010, "km": 92000, "km_per_year": 5600.0, "eg": "1.4 16V 74 kW", "cg": 0, "transmission": "manual", "seller_type": "private", "location": "Šaľa", "flags": [], "pick": "budget", "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "196992771", "url": "https://auto.bazos.sk/inzerat/196992771/fiat-500-r2010.php", "price": 3900}], "body": "hatchback"}, {"id": "ab-AmFQCrojcIg", "url": "https://www.autobazar.eu/detail/fiat-500-12-pop/AmFQCrojcIg/", "title": "Fiat 500 1.2 Pop", "price": 3500, "price_gross": 3500, "fair_price": 4540.0, "discount_pct": 22.8, "verdict": "výrazne pod trhom – over prečo", "year": 2008, "km": 133278, "km_per_year": 7300.0, "eg": "1.2 8V 51 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Dunajská Streda", "flags": [], "pick": "budget", "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39322636", "url": "https://auto.bazar.sk/39322636-fiat-500-1-2-pop/", "price": 3500}], "body": "hatchback"}, {"id": "ab-AegHo9lgM25", "url": "https://www.autobazar.eu/detail/fiat-500-09-twinair-koza-klima-po-stk-klima/AegHo9lgM25/", "title": "Fiat 500 0.9 TwinAir, Koža, Klíma, po STK, Klíma", "price": 3400, "price_gross": 3400, "fair_price": 4380.0, "discount_pct": 22.3, "verdict": "výrazne pod trhom – over prečo", "year": 2010, "km": 158973, "km_per_year": 9700.0, "eg": "0.9 TwinAir 59–77 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "bs-39729837", "url": "https://auto.bazar.sk/39729837-fiat-500-sport-1-2i-51kw-automat-f1-digi-klima-cierna-stropnica/", "title": "Fiat 500 Šport 1,2i 51kW Automat + F1, digi klíma, čierna stropnica", "price": 10490, "price_gross": 10490, "fair_price": 13420.0, "discount_pct": 21.8, "verdict": "výrazne pod trhom – over prečo", "year": 2020, "km": 39900, "km_per_year": 6300.0, "eg": "1.2 8V 51 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Pezinok", "flags": [], "pick": "top", "source": "bazarsk", "origin": "dovoz", "also_listed": [{"source": "autobazar", "id": "ab-Am92xZ2Qi43", "url": "https://www.autobazar.eu/detail/fiat-500-sport-12i-51kw-automat-f1-digi-klima-cierna-stropnica/Am92xZ2Qi43/", "price": 10490}, {"source": "bazos", "id": "196333977", "url": "https://auto.bazos.sk/inzerat/196333977/fiat-500-sport-12i-51kw-automat-f1-digi-klima-cierna-stro.php", "price": 10490}], "body": "hatchback"}, {"id": "bs-39741387", "url": "https://auto.bazar.sk/39741387-fiat-500-1-0-bsg-mildhybrid-connect/", "title": "Fiat 500 1.0 BSG Mildhybrid Connect", "price": 9500, "price_gross": 9500, "fair_price": 12060.0, "discount_pct": 21.2, "verdict": "výrazne pod trhom – over prečo", "year": 2022, "km": 44828, "km_per_year": 10300.0, "eg": "1.0 mild hybrid 51 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Štiavnička", "flags": [], "pick": "top", "source": "bazarsk", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-Am-3XQfFHPv", "url": "https://www.autobazar.eu/detail/fiat-500-10-bsg-mildhybrid-connect/Am-3XQfFHPv/", "price": 9500}, {"source": "bazos", "id": "196689980", "url": "https://auto.bazos.sk/inzerat/196689980/fiat-500-10-bsg-mildhybrid-connect.php", "price": 9500}], "body": "hatchback"}, {"id": "bs-39417265", "url": "https://auto.bazar.sk/39417265-fiat-500-1-2-8v-lounge/", "title": "Fiat 500 1.2 8v Lounge", "price": 7500, "price_gross": 7500, "fair_price": 9300.0, "discount_pct": 19.4, "verdict": "výrazne pod trhom – over prečo", "year": 2018, "km": 118913, "km_per_year": 14300.0, "eg": "1.2 8V 51 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava I - Staré Mesto", "flags": [], "pick": "top", "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "hatchback"}, {"id": "196190286", "url": "https://auto.bazos.sk/inzerat/196190286/fiat-500e.php", "title": "Fiat 500e elektromotor", "price": 8999, "price_gross": 8999, "fair_price": 11140.0, "discount_pct": 19.2, "verdict": "výrazne pod trhom – over prečo", "year": 2017, "km": 70000, "km_per_year": 7500.0, "eg": "500e elektro 70–87 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Rožňava", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "196402155", "url": "https://auto.bazos.sk/inzerat/196402155/fiat-500-13-multijet-16v.php", "title": "Fiat 500 1.3 MultiJet 16V", "price": 3990, "price_gross": 3990, "fair_price": 4880.0, "discount_pct": 18.2, "verdict": "výrazne pod trhom – over prečo", "year": 2008, "km": 108983, "km_per_year": 5900.0, "eg": "1.3 MultiJet diesel 55–70 kW", "cg": 2, "transmission": "manual", "seller_type": "uncertain", "location": "Lučenec", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmXtLabEPC5", "url": "https://www.autobazar.eu/detail/fiat-500-13-multijet-16v-pop/AmXtLabEPC5/", "price": 3990}, {"source": "bazarsk", "id": "bs-39542935", "url": "https://auto.bazar.sk/39542935-fiat-500-1-3-multijet-16v-pop/", "price": 3990}], "body": "hatchback"}, {"id": "196816188", "url": "https://auto.bazos.sk/inzerat/196816188/2010-fiat-500.php", "title": "2010 Fiat 500", "price": 3499, "price_gross": 3499, "fair_price": 4240.0, "discount_pct": 17.4, "verdict": "výrazne pod trhom – over prečo", "year": 2010, "km": 181000, "km_per_year": 11100.0, "eg": "1.2 8V 51 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Bratislava", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "196565419", "url": "https://auto.bazos.sk/inzerat/196565419/fiat-500-12-pop.php", "title": "Fiat 500 1.2 Pop", "price": 4290, "price_gross": 4290, "fair_price": 5090.0, "discount_pct": 15.7, "verdict": "výrazne pod trhom – over prečo", "year": 2010, "km": 109549, "km_per_year": 6700.0, "eg": "1.2 8V 51 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Prievidza", "flags": [], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmmB8PO3Nfj", "url": "https://www.autobazar.eu/detail/fiat-500-12-pop/AmmB8PO3Nfj/", "price": 4290}, {"source": "bazarsk", "id": "bs-39737088", "url": "https://auto.bazar.sk/39737088-fiat-500-1-2-pop/", "price": 4290}], "body": "hatchback"}, {"id": "ab-Am7PGSDDOYY", "url": "https://www.autobazar.eu/detail/fiat-500-500e-42-kwh-icon/Am7PGSDDOYY/", "title": "Fiat 500 500e 42 kWh Icon", "price": 14900, "price_gross": 14900, "fair_price": 17490.0, "discount_pct": 14.8, "verdict": "pod trhom", "year": 2023, "km": 37500, "km_per_year": 11300.0, "eg": "500e elektro 70–87 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Kráľovičove Kračany", "flags": [], "pick": "top", "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazarsk", "id": "bs-39752875", "url": "https://auto.bazar.sk/39752875-fiat-500-500e-42-kwh-icon/", "price": 14900}], "body": "hatchback"}, {"id": "bs-39697486", "url": "https://auto.bazar.sk/39697486-fiat-500-1-0-mild-hybrid/", "title": "Fiat 500 1.0 mild-hybrid", "price": 9000, "price_gross": 9000, "fair_price": 10460.0, "discount_pct": 14.0, "verdict": "pod trhom", "year": 2021, "km": 107483, "km_per_year": 20200.0, "eg": "1.0 mild hybrid 51 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava V - Petržalka", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "197007068", "url": "https://auto.bazos.sk/inzerat/197007068/predam-fiat-500.php", "title": "Predám Fiat 500", "price": 4300, "price_gross": 4300, "fair_price": 4990.0, "discount_pct": 13.9, "verdict": "pod trhom", "year": 2012, "km": 177000, "km_per_year": 12300.0, "eg": "1.2 8V 51 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Senica", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "197006868", "url": "https://auto.bazos.sk/inzerat/197006868/fiat-500e-cabrio-2024-extra-vybava-vetsi-baterie-42kwh.php", "title": "Fiat 500e CABRIO 2024 , EXTRA VÝBAVA, větší baterie 42kWh", "price": 15700, "price_gross": 15700, "fair_price": 18210.0, "discount_pct": 13.8, "verdict": "pod trhom", "year": 2024, "km": 20000, "km_per_year": 8600.0, "eg": "500e elektro 70–87 kW", "cg": 1, "transmission": null, "seller_type": "dealer", "location": "Čadca", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "cabrio"}, {"id": "196429690", "url": "https://auto.bazos.sk/inzerat/196429690/predam.php", "title": "Predám Fiat 500 e", "price": 12900, "price_gross": 12900, "fair_price": 14930.0, "discount_pct": 13.6, "verdict": "pod trhom", "year": 2022, "km": 16400, "km_per_year": 3800.0, "eg": "500e elektro 70–87 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Trenčín", "flags": ["prevodovka nezistená"], "pick": "top", "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "ab-AeglY3qcf_v", "url": "https://www.autobazar.eu/detail/fiat-500-10-benzin-51kw-manual-prevodovka/AeglY3qcf_v/", "title": "Fiat 500 Dolcevita 1.0 Benzín51kW Manuál. prevodovka", "price": 10000, "price_gross": 10000, "fair_price": 11550.0, "discount_pct": 13.4, "verdict": "pod trhom", "year": 2023, "km": 26000, "km_per_year": 7800.0, "eg": "1.0 mild hybrid 51 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Bošany", "flags": [], "pick": "top", "source": "autobazar", "origin": "SR", "also_listed": [], "body": "hatchback"}, {"id": "ab-AmroiQL-H44", "url": "https://www.autobazar.eu/detail/fiat-500-10-bsg-mildhybrid/AmroiQL-H44/", "title": "Fiat 500 1.0 BSG Mildhybrid", "price": 10900, "price_gross": 10900, "fair_price": 12540.0, "discount_pct": 13.1, "verdict": "pod trhom", "year": 2023, "km": 14143, "km_per_year": 4200.0, "eg": "1.0 mild hybrid 51 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Lovinobaňa", "flags": [], "pick": "top", "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-39772869", "url": "https://auto.bazar.sk/39772869-fiat-500-1-0-bsg-mildhybrid/", "price": 10900}], "body": "hatchback"}, {"id": "ab-Aeq11axq12L", "url": "https://www.autobazar.eu/detail/fiat-500-diesel-74kw/Aeq11axq12L/", "title": "Fiat 500 - DIESEL 74kW", "price": 5900, "price_gross": 5900, "fair_price": 6750.0, "discount_pct": 12.6, "verdict": "pod trhom", "year": 2016, "km": 128000, "km_per_year": 12400.0, "eg": "1.3 MultiJet diesel 55–70 kW", "cg": 2, "transmission": "manual", "seller_type": "private", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "hatchback"}, {"id": "bs-38959986", "url": "https://auto.bazar.sk/38959986-fiat-500-milhybrid-51kw-sport-verzia-1majitel-15000km/", "title": "Fiat 500 MILHYBRID 51KW SPORT VERZIA 1MAJITEL 15000KM !!!", "price": 10490, "price_gross": 10490, "fair_price": 11860.0, "discount_pct": 11.5, "verdict": "pod trhom", "year": 2021, "km": 15500, "km_per_year": 2900.0, "eg": "1.0 mild hybrid 51 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Nitra", "flags": [], "pick": "top", "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "hatchback"}, {"id": "196501535", "url": "https://auto.bazos.sk/inzerat/196501535/fiat-500.php", "title": "Fiat 500", "price": 6900, "price_gross": 6900, "fair_price": 7750.0, "discount_pct": 11.0, "verdict": "pod trhom", "year": 2016, "km": 96000, "km_per_year": 9300.0, "eg": "1.2 8V 51 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Kežmarok", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "197527467", "url": "https://auto.bazos.sk/inzerat/197527467/fiat-500-09-twinair-automat-xenon.php", "title": "Fiat 500 0.9 TwinAir – Automat – Xenón", "price": 4600, "price_gross": 4600, "fair_price": 5160.0, "discount_pct": 10.8, "verdict": "pod trhom", "year": 2011, "km": 169000, "km_per_year": 11000.0, "eg": "0.9 TwinAir 59–77 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Levice", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "196207837", "url": "https://auto.bazos.sk/inzerat/196207837/fiat-500-s-62kw-m5-2017-za-8600-eur.php", "title": "Fiat 500 S 62KW M5 2017", "price": 7600, "price_gross": 7600, "fair_price": 8510.0, "discount_pct": 10.7, "verdict": "pod trhom", "year": 2017, "km": 110504, "km_per_year": 11800.0, "eg": "0.9 TwinAir 59–77 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Galanta", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmGWLKvn4wl", "url": "https://www.autobazar.eu/detail/fiat-500-s-62kw-m5-2017-za-8600-eur/AmGWLKvn4wl/", "price": 7600}, {"source": "bazarsk", "id": "bs-39690587", "url": "https://auto.bazar.sk/39690587-fiat-500-s-62kw-m5-2017/", "price": 7600}], "body": "hatchback"}, {"id": "197606778", "url": "https://auto.bazos.sk/inzerat/197606778/fiat-500-benzinlpg.php", "title": "Fiat 500 benzin+lpg", "price": 4200, "price_gross": 4200, "fair_price": 4700.0, "discount_pct": 10.6, "verdict": "pod trhom", "year": 2013, "km": 205000, "km_per_year": 15400.0, "eg": "LPG", "cg": 2, "transmission": null, "seller_type": "uncertain", "location": "Bánovce nad Bebravou", "flags": ["prevodovka nezistená"], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "197459138", "url": "https://auto.bazos.sk/inzerat/197459138/fiat-500-2017-12i-61000km.php", "title": "Fiat 500 2017 1.2i 61.000KM", "price": 7990, "price_gross": 7990, "fair_price": 8930.0, "discount_pct": 10.5, "verdict": "pod trhom", "year": 2017, "km": 61453, "km_per_year": 6600.0, "eg": "1.2 8V 51 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Levice", "flags": [], "pick": "top", "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmQ14c4kYmi", "url": "https://www.autobazar.eu/detail/fiat-500-12-8v-anniversario-dualogic/AmQ14c4kYmi/", "price": 7999}, {"source": "bazarsk", "id": "bs-39738924", "url": "https://auto.bazar.sk/39738924-fiat-500-1-2-8v-anniversario-dualogic/", "price": 7999}], "body": "hatchback"}, {"id": "196717993", "url": "https://auto.bazos.sk/inzerat/196717993/fiat-500-2008.php", "title": "Fiat 500 2008", "price": 4200, "price_gross": 4200, "fair_price": 4690.0, "discount_pct": 10.4, "verdict": "pod trhom", "year": 2008, "km": 138021, "km_per_year": 7500.0, "eg": "1.2 8V 51 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Bratislava", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "bs-39705035", "url": "https://auto.bazar.sk/39705035-fiat-500-1-2-naked/", "title": "Fiat 500 1.2 Naked", "price": 4490, "price_gross": 4490, "fair_price": 5000.0, "discount_pct": 10.3, "verdict": "pod trhom", "year": 2008, "km": 116800, "km_per_year": 6400.0, "eg": "1.2 8V 51 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Pezinok", "flags": [], "pick": null, "source": "bazarsk", "origin": "dovoz", "also_listed": [{"source": "autobazar", "id": "ab-AmN2TiD3ebo", "url": "https://www.autobazar.eu/detail/fiat-500-12-fun-lounge/AmN2TiD3ebo/", "price": 4490}], "body": "hatchback"}, {"id": "ab-AecXtaED3Pj", "url": "https://www.autobazar.eu/detail/fiat-500-12-automat-sr2maj/AecXtaED3Pj/", "title": "Fiat 500 1.2, Automat, SR,2.maj", "price": 5800, "price_gross": 5800, "fair_price": 6460.0, "discount_pct": 10.2, "verdict": "pod trhom", "year": 2013, "km": 94808, "km_per_year": 7100.0, "eg": "1.2 8V 51 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": "budget", "source": "autobazar", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "197588157", "url": "https://auto.bazos.sk/inzerat/197588157/fiat-500-12i-51kw.php", "title": "Fiat 500 1.2i 51kw", "price": 3990, "price_gross": 3990, "fair_price": 4410.0, "discount_pct": 9.4, "verdict": "pod trhom", "year": 2009, "km": 150000, "km_per_year": 8700.0, "eg": "1.2 8V 51 kW", "cg": 0, "transmission": null, "seller_type": "dealer", "location": "Prievidza", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "ab-AmoaTNnU44S", "url": "https://www.autobazar.eu/detail/fiat-500/AmoaTNnU44S/", "title": "Fiat 500", "price": 6800, "price_gross": 6800, "fair_price": 7480.0, "discount_pct": 9.1, "verdict": "pod trhom", "year": 2015, "km": 54741, "km_per_year": 4800.0, "eg": "1.2 8V 51 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bánovce nad Bebravou", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazarsk", "id": "bs-39766612", "url": "https://auto.bazar.sk/39766612-fiat-500/", "price": 6800}], "body": "hatchback"}, {"id": "197701621", "url": "https://auto.bazos.sk/inzerat/197701621/fiat-500-12-51kw-2018.php", "title": "Fiat 500 1,2/ 51KW/ 2018", "price": 7999, "price_gross": 7999, "fair_price": 8780.0, "discount_pct": 8.9, "verdict": "pod trhom", "year": 2018, "km": 163641, "km_per_year": 19600.0, "eg": "1.2 8V 51 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39749058", "url": "https://auto.bazar.sk/39749058-fiat-500-1-2-51kw-2018/", "price": 7999}, {"source": "autobazar", "id": "ab-Amq8uaRyPmT", "url": "https://www.autobazar.eu/detail/fiat-500-12-51kw-2018/Amq8uaRyPmT/", "price": 7999}], "body": "hatchback"}, {"id": "bs-39736561", "url": "https://auto.bazar.sk/39736561-fiat-500-1-2/", "title": "Fiat 500 1.2", "price": 9300, "price_gross": 9300, "fair_price": 10200.0, "discount_pct": 8.8, "verdict": "pod trhom", "year": 2018, "km": 59857, "km_per_year": 7200.0, "eg": "1.2 8V 51 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava V - Petržalka", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "ab-AeZtYcbCqvU", "url": "https://www.autobazar.eu/detail/fiat-500-r-2018/AeZtYcbCqvU/", "title": "Fiat 500 r. 2018", "price": 7700, "price_gross": 7700, "fair_price": 8440.0, "discount_pct": 8.7, "verdict": "pod trhom", "year": 2018, "km": 123820, "km_per_year": 14900.0, "eg": "1.2 8V 51 kW", "cg": 0, "transmission": "manual", "seller_type": "private", "location": "Malacky", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "197442698", "url": "https://auto.bazos.sk/inzerat/197442698/fiat-500-09-turbo-twin-air-plus.php", "title": "✅Fiat 500 0.9 Turbo Twin Air Plus✅", "price": 4750, "price_gross": 4750, "fair_price": 5190.0, "discount_pct": 8.4, "verdict": "pod trhom", "year": 2012, "km": 105250, "km_per_year": 7300.0, "eg": "0.9 TwinAir 59–77 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Lučenec", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "196084430", "url": "https://auto.bazos.sk/inzerat/196084430/fiat-500.php", "title": "Fiat 500", "price": 4000, "price_gross": 4000, "fair_price": 4360.0, "discount_pct": 8.3, "verdict": "pod trhom", "year": 2008, "km": 119432, "km_per_year": 6500.0, "eg": "1.4 16V 74 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Banská Bystrica", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "197760682", "url": "https://auto.bazos.sk/inzerat/197760682/predam-fiat-500.php", "title": "Predám  fiat 500", "price": 4000, "price_gross": 4000, "fair_price": 4320.0, "discount_pct": 7.4, "verdict": "pod trhom", "year": 2009, "km": 119000, "km_per_year": 6900.0, "eg": "1.2 8V 51 kW", "cg": 0, "transmission": null, "seller_type": "dealer", "location": "Spišská Nová Ves", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "hatchback"}, {"id": "196786280", "url": "https://auto.bazos.sk/inzerat/196786280/fiat-500-e.php", "title": "Fiat 500 e", "price": 14400, "price_gross": 14400, "fair_price": 15510.0, "discount_pct": 7.1, "verdict": "pod trhom", "year": 2023, "km": 37000, "km_per_year": 11100.0, "eg": "500e elektro 70–87 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Dunajská Streda", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "hatchback"}, {"id": "197562698", "url": "https://auto.bazos.sk/inzerat/197562698/fiat-500-cabrio-500c-12.php", "title": "Fiat 500 Cabrio (500C) 1.2", "price": 4900, "price_gross": 4900, "fair_price": 5270.0, "discount_pct": 7.0, "verdict": "pod trhom", "year": 2011, "km": 110000, "km_per_year": 7200.0, "eg": "1.2 8V 51 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Prievidza", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "cabrio"}, {"id": "196278329", "url": "https://auto.bazos.sk/inzerat/196278329/2024-fiat-500-dolcevita-21-000-km-top-stav-mozny-od.php", "title": "🔥2024 Fiat 500 Dolcevita  • 21 000 km •  Možný odpočet DPH", "price": 12900, "price_gross": 12900, "fair_price": 13850.0, "discount_pct": 6.9, "verdict": "férová cena", "year": 2024, "km": 21000, "km_per_year": 9000.0, "eg": "1.0 mild hybrid 51 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Nitra", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "ab-Ae4RUR-1_7i", "url": "https://www.autobazar.eu/detail/fiat-500-14-koza-klima-po-stk-klima/Ae4RUR-1_7i/", "title": "Fiat 500 1.4, Koža, Klíma, po STK, Klíma", "price": 4500, "price_gross": 4500, "fair_price": 4820.0, "discount_pct": 6.6, "verdict": "férová cena", "year": 2008, "km": 151881, "km_per_year": 8300.0, "eg": "1.4 16V 74 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Žilinský kraj", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "hatchback"}, {"id": "196639285", "url": "https://auto.bazos.sk/inzerat/196639285/fiat-500-12-8v-51kw-2019-45-300km.php", "title": "Fiat 500 1.2 8v, 51kW, 2019, 45 300km", "price": 9900, "price_gross": 9900, "fair_price": 10530.0, "discount_pct": 6.0, "verdict": "férová cena", "year": 2019, "km": 45300, "km_per_year": 6200.0, "eg": "1.2 8V 51 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Košice", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "bs-39115690", "url": "https://auto.bazar.sk/39115690-fiat-500-1-2-8v-plus/", "title": "Fiat 500 1.2 8v Plus", "price": 8790, "price_gross": 8790, "fair_price": 9350.0, "discount_pct": 6.0, "verdict": "férová cena", "year": 2016, "km": 49800, "km_per_year": 4800.0, "eg": "1.2 8V 51 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava I - Staré Mesto", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "hatchback"}, {"id": "bs-34351374", "url": "https://auto.bazar.sk/34351374-fiat-500-1-2/", "title": "Fiat 500 1.2", "price": 7700, "price_gross": 7700, "fair_price": 8180.0, "discount_pct": 5.9, "verdict": "férová cena", "year": 2015, "km": 27241, "km_per_year": 2400.0, "eg": "1.2 8V 51 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Nové Zámky", "flags": ["nezvyčajne nízky nájazd na vek (27 241 km) – over  či nejde o preklep"], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AeLXF_0B8CA", "url": "https://www.autobazar.eu/detail/fiat-500-12-sr2maj-koza/AeLXF_0B8CA/", "price": 7300}], "body": "hatchback"}, {"id": "197710333", "url": "https://auto.bazos.sk/inzerat/197710333/fiat-500e-bev-236-kwh-95-k.php", "title": "Fiat 500e BEV 23,6 kWh 95 k ▪️Možnosť odpočtu DPH▪️", "price": 16390, "price_gross": 16390, "fair_price": 17380.0, "discount_pct": 5.7, "verdict": "férová cena", "year": 2023, "km": 40964, "km_per_year": 12300.0, "eg": "500e elektro 70–87 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Banská Bystrica", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "ab-Ae4gexzT93K", "url": "https://www.autobazar.eu/detail/fiat-500-fiat-500-12-benzin-2017/Ae4gexzT93K/", "title": "Fiat 500 1.2 benzín 2017", "price": 8000, "price_gross": 8000, "fair_price": 8460.0, "discount_pct": 5.5, "verdict": "férová cena", "year": 2017, "km": 72000, "km_per_year": 7700.0, "eg": "1.2 8V 51 kW", "cg": 0, "transmission": "manual", "seller_type": "private", "location": "Malacky", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197369790", "url": "https://auto.bazos.sk/inzerat/197369790/fiat-500-12-benzin-2017.php", "price": 8400}], "body": "hatchback"}, {"id": "ab-AmSpTmBAejK", "url": "https://www.autobazar.eu/detail/fiat-500-fiat-500-09-s-abart/AmSpTmBAejK/", "title": "Fiat 500 0.9 S Abart", "price": 5490, "price_gross": 5490, "fair_price": 5790.0, "discount_pct": 5.2, "verdict": "férová cena", "year": 2014, "km": 91460, "km_per_year": 7400.0, "eg": "0.9 TwinAir 59–77 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Považská Bystrica", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazarsk", "id": "bs-39760160", "url": "https://auto.bazar.sk/39760160-fiat-500-0-9-s-abart/", "price": 5490}], "body": "hatchback"}, {"id": "bs-39728416", "url": "https://auto.bazar.sk/39728416-fiat-500-1-2-a-t/", "title": "Fiat 500 1.2 A/T", "price": 9999, "price_gross": 9999, "fair_price": 10480.0, "discount_pct": 4.6, "verdict": "férová cena", "year": 2017, "km": 79382, "km_per_year": 8500.0, "eg": "1.2 8V 51 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Pezinok", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [{"source": "bazos", "id": "196302100", "url": "https://auto.bazos.sk/inzerat/196302100/fiat-500-12-at.php", "price": 9999}, {"source": "autobazar", "id": "ab-Am65HBXfPyr", "url": "https://www.autobazar.eu/detail/fiat-500-12-at/Am65HBXfPyr/", "price": 9999}], "body": "hatchback"}, {"id": "196754053", "url": "https://auto.bazos.sk/inzerat/196754053/predam-fiat-500.php", "title": "Predám Fiat 500", "price": 5200, "price_gross": 5200, "fair_price": 5420.0, "discount_pct": 4.0, "verdict": "férová cena", "year": 2008, "km": 76000, "km_per_year": 4100.0, "eg": "1.2 8V 51 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Zlaté Moravce", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "196850631", "url": "https://auto.bazos.sk/inzerat/196850631/fiat-500c-12-8v-lounge-cabrio-77-000-km.php", "title": "Fiat 500C 1.2 8V Lounge | Cabrio | 77 000 km", "price": 7990, "price_gross": 7990, "fair_price": 8300.0, "discount_pct": 3.7, "verdict": "férová cena", "year": 2017, "km": 77000, "km_per_year": 8300.0, "eg": "1.2 8V 51 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Žarnovica", "flags": [], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "cabrio"}, {"id": "197370998", "url": "https://auto.bazos.sk/inzerat/197370998/fiat-500-12-51-kw-2015.php", "title": "Fiat 500 1,2 51 kw 2015", "price": 4999, "price_gross": 4999, "fair_price": 5190.0, "discount_pct": 3.6, "verdict": "férová cena", "year": 2015, "km": 153000, "km_per_year": 13500.0, "eg": "1.2 8V 51 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Skalica", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "197057049", "url": "https://auto.bazos.sk/inzerat/197057049/fiat-500c-cabrio-12-51kw-2010.php", "title": "Fiat 500C Cabrio - 1.2 51kW 2010", "price": 3600, "price_gross": 3600, "fair_price": 3730.0, "discount_pct": 3.4, "verdict": "férová cena", "year": 2010, "km": 195000, "km_per_year": 11900.0, "eg": "1.2 8V 51 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Martin", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "cabrio"}, {"id": "ab-Aml5vJXFmM9", "url": "https://www.autobazar.eu/detail/fiat-500-12-pop/Aml5vJXFmM9/", "title": "Fiat 500 1.2 Pop", "price": 4690, "price_gross": 4690, "fair_price": 4830.0, "discount_pct": 2.8, "verdict": "férová cena", "year": 2011, "km": 132900, "km_per_year": 8700.0, "eg": "1.2 8V 51 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Komárno", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "196061794", "url": "https://auto.bazos.sk/inzerat/196061794/fiat-500-pop-12-klima.php", "price": 4690}, {"source": "bazarsk", "id": "bs-39623467", "url": "https://auto.bazar.sk/39623467-fiat-500-1-2-pop/", "price": 4690}], "body": "hatchback"}, {"id": "197623904", "url": "https://auto.bazos.sk/inzerat/197623904/fiat-500-12.php", "title": "Fiat 500 1.2", "price": 4300, "price_gross": 4300, "fair_price": 4400.0, "discount_pct": 2.3, "verdict": "férová cena", "year": 2008, "km": 160000, "km_per_year": 8700.0, "eg": "1.2 8V 51 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Trnava", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "197566079", "url": "https://auto.bazos.sk/inzerat/197566079/fiat-500-12benz.php", "title": "Fiat 500 1.2benz", "price": 3799, "price_gross": 3799, "fair_price": 3840.0, "discount_pct": 1.1, "verdict": "férová cena", "year": 2009, "km": 158000, "km_per_year": 9100.0, "eg": "1.2 8V 51 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Bratislava", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "hatchback"}, {"id": "ab-AeETVDqSc7k", "url": "https://www.autobazar.eu/detail/fiat-500-09-benzin-63kw-automat-prevodovka/AeETVDqSc7k/", "title": "Fiat 500 0.9 Benzín 63kW Automat. prevodovka", "price": 8490, "price_gross": 8490, "fair_price": 8580.0, "discount_pct": 1.1, "verdict": "férová cena", "year": 2017, "km": 71500, "km_per_year": 7700.0, "eg": "0.9 TwinAir 59–77 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Martin", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "hatchback"}, {"id": "196894540", "url": "https://auto.bazos.sk/inzerat/196894540/fiat-500-09-twinair-lounge-63-kw-panorama-klima-top-f.php", "title": "FIAT 500 0.9 TwinAir LOUNGE 63 kW | PANORÁMA | KLÍMA | TOP F", "price": 7500, "price_gross": 7500, "fair_price": 7540.0, "discount_pct": 0.6, "verdict": "férová cena", "year": 2016, "km": 84600, "km_per_year": 8200.0, "eg": "0.9 TwinAir 59–77 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Piešťany", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "ab-AmXPJOsLkxd", "url": "https://www.autobazar.eu/detail/fiat-500-10-bsg-mildhybrid-connect/AmXPJOsLkxd/", "title": "Fiat 500 1.0 BSG Mildhybrid Connect", "price": 9490, "price_gross": 9490, "fair_price": 9510.0, "discount_pct": 0.3, "verdict": "férová cena", "year": 2021, "km": 54800, "km_per_year": 10300.0, "eg": "1.0 mild hybrid 51 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Trnava", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazarsk", "id": "bs-39126096", "url": "https://auto.bazar.sk/39126096-fiat-500-1-0-bsg-mildhybrid-connect/", "price": 9490}], "body": "hatchback"}, {"id": "197528654", "url": "https://auto.bazos.sk/inzerat/197528654/fiat-500-10-bsg-mildhybrid-dolcevita-1-majitel-sk-povod.php", "title": "Fiat 500 1.0 BSG Mildhybrid Dolcevita / 1. MAJITEĽ, SK PÔVOD", "price": 13090, "price_gross": 13090, "fair_price": 13110.0, "discount_pct": 0.1, "verdict": "férová cena", "year": 2024, "km": 38000, "km_per_year": 16300.0, "eg": "1.0 mild hybrid 51 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Nové Mesto n.Váhom", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AmUBmbt20Sq", "url": "https://www.autobazar.eu/detail/fiat-500-10-bsg-mildhybrid-dolcevita-1-majitel-v-zaruke-nizky-najazd-financovanie/AmUBmbt20Sq/", "price": 13090}, {"source": "bazos", "id": "197319155", "url": "https://auto.bazos.sk/inzerat/197319155/fiat-500-mild-hybrid.php", "price": 13000}, {"source": "bazarsk", "id": "bs-39769949", "url": "https://auto.bazar.sk/39769949-fiat-500-1-0-bsg-mildhybrid-dolcevita-1-majitel-sk-povod-nizky-najazd-financovanie/", "price": 13090}], "body": "hatchback"}, {"id": "ab-Ae4T2gVNkhY", "url": "https://www.autobazar.eu/detail/fiat-500-09-twinair-sport-koza-navigacia/Ae4T2gVNkhY/", "title": "Fiat 500 0.9 TwinAir, Sport, Koža, Navigácia", "price": 8000, "price_gross": 8000, "fair_price": 7930.0, "discount_pct": -0.9, "verdict": "férová cena", "year": 2017, "km": 84921, "km_per_year": 9100.0, "eg": "0.9 TwinAir 59–77 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Trenčiansky kraj", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "197585531", "url": "https://auto.bazos.sk/inzerat/197585531/fiat-500.php", "title": "FIAT 500", "price": 4500, "price_gross": 4500, "fair_price": 4440.0, "discount_pct": -1.4, "verdict": "férová cena", "year": 2010, "km": 172000, "km_per_year": 10500.0, "eg": "1.2 8V 51 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Ilava", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "196784818", "url": "https://auto.bazos.sk/inzerat/196784818/2016-fiat-500-09-twinair-s.php", "title": "2016 Fiat 500 0.9 TwinAir S", "price": 7990, "price_gross": 7990, "fair_price": 7850.0, "discount_pct": -1.8, "verdict": "férová cena", "year": 2017, "km": 95820, "km_per_year": 10300.0, "eg": "0.9 TwinAir 59–77 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Levice", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "197710732", "url": "https://auto.bazos.sk/inzerat/197710732/fiat-500e-bev-42-kwh-118-k.php", "title": "Fiat 500e BEV 42 kWh 118 k", "price": 18390, "price_gross": 18390, "fair_price": 18050.0, "discount_pct": -1.9, "verdict": "férová cena", "year": 2023, "km": 45873, "km_per_year": 13800.0, "eg": "500e elektro 70–87 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Banská Bystrica", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "196117155", "url": "https://auto.bazos.sk/inzerat/196117155/fiat-500-13-multijet-16v-95k-lounge.php", "title": "Fiat 500 1.3 MultiJet 16V 95k Lounge", "price": 4999, "price_gross": 4999, "fair_price": 4880.0, "discount_pct": -2.4, "verdict": "férová cena", "year": 2013, "km": 208868, "km_per_year": 15700.0, "eg": "1.3 MultiJet diesel 55–70 kW", "cg": 2, "transmission": "manual", "seller_type": "dealer", "location": "Bánovce nad Bebravou", "flags": [], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [{"source": "autobazar", "id": "ab-AmPIoPGEaHA", "url": "https://www.autobazar.eu/detail/fiat-500-13-multijet-16v-95k-lounge/AmPIoPGEaHA/", "price": 4999}, {"source": "bazarsk", "id": "bs-39723589", "url": "https://auto.bazar.sk/39723589-fiat-500-1-3-multijet-16v-95k-lounge/", "price": 4999}], "body": "hatchback"}, {"id": "ab-AewCY0h371s", "url": "https://www.autobazar.eu/detail/fiat-500-12-8v-cool-51kw69hp-m5/AewCY0h371s/", "title": "Fiat 500 1.2 8v Cool 51kW69HP M5", "price": 8499, "price_gross": 8499, "fair_price": 8300.0, "discount_pct": -2.5, "verdict": "férová cena", "year": 2018, "km": 118085, "km_per_year": 14200.0, "eg": "1.2 8V 51 kW", "cg": 0, "transmission": "manual", "seller_type": "private", "location": "Michalovce", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "hatchback"}, {"id": "ab-Am98DC_XsTM", "url": "https://www.autobazar.eu/detail/fiat-500-club-10-70k-bsg/Am98DC_XsTM/", "title": "Fiat 500 Club 1,0 70k BSG", "price": 11900, "price_gross": 11900, "fair_price": 11590.0, "discount_pct": -2.7, "verdict": "férová cena", "year": 2023, "km": 25943, "km_per_year": 7800.0, "eg": "1.0 mild hybrid 51 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Lovinobaňa", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-39760303", "url": "https://auto.bazar.sk/39760303-fiat-500-club-1-0-70k-bsg/", "price": 11900}], "body": "hatchback"}, {"id": "ab-Amd0NY4TljI", "url": "https://www.autobazar.eu/detail/fiat-500-automat/Amd0NY4TljI/", "title": "Fiat 500 1.2 Automat", "price": 8800, "price_gross": 8800, "fair_price": 8560.0, "discount_pct": -2.8, "verdict": "férová cena", "year": 2016, "km": 84963, "km_per_year": 8200.0, "eg": "1.2 8V 51 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Topoľčany", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197605000", "url": "https://auto.bazos.sk/inzerat/197605000/fiat-500-12-automat.php", "price": 9490}, {"source": "bazarsk", "id": "bs-39699902", "url": "https://auto.bazar.sk/39699902-fiat-500-1-2-automat/", "price": 8800}], "body": "hatchback"}, {"id": "ab-Am_XYaqkD_q", "url": "https://www.autobazar.eu/detail/fiat-500-12-8v-mirror/Am_XYaqkD_q/", "title": "Fiat 500 1.2 8v Mirror", "price": 9900, "price_gross": 9900, "fair_price": 9630.0, "discount_pct": -2.8, "verdict": "férová cena", "year": 2018, "km": 42200, "km_per_year": 5100.0, "eg": "1.2 8V 51 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Košice", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197005050", "url": "https://auto.bazos.sk/inzerat/197005050/fiat-500-12-8v-mirror.php", "price": 9900}, {"source": "bazarsk", "id": "bs-39723163", "url": "https://auto.bazar.sk/39723163-fiat-500-1-2-8v-mirror/", "price": 9900}], "body": "hatchback"}, {"id": "197621987", "url": "https://auto.bazos.sk/inzerat/197621987/fiat-500-09-lounge-2012-automat.php", "title": "Fiat 500 0.9 Lounge 2012 AUTOMAT", "price": 5950, "price_gross": 5950, "fair_price": 5790.0, "discount_pct": -2.8, "verdict": "férová cena", "year": 2012, "km": 159935, "km_per_year": 11200.0, "eg": "0.9 TwinAir 59–77 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bánovce nad Bebravou", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "ab-AeoME4pXmd8", "url": "https://www.autobazar.eu/detail/fiat-500-c/AeoME4pXmd8/", "title": "Fiat 500 c", "price": 8900, "price_gross": 8900, "fair_price": 8610.0, "discount_pct": -3.3, "verdict": "férová cena", "year": 2017, "km": 66755, "km_per_year": 7200.0, "eg": "1.2 8V 51 kW", "cg": 0, "transmission": "manual", "seller_type": "private", "location": "Levice", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "hatchback"}, {"id": "ab-AmRFegjI0Gb", "url": "https://www.autobazar.eu/detail/fiat-500-dolcevita-10-hybrid-70k-6mt/AmRFegjI0Gb/", "title": "Fiat 500 Dolcevita 1,0 Hybrid 70k 6MT", "price": 13690, "price_gross": 13690, "fair_price": 13230.0, "discount_pct": -3.5, "verdict": "férová cena", "year": 2024, "km": 29190, "km_per_year": 12500.0, "eg": "1.0 mild hybrid 51 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Banská Bystrica", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "196676103", "url": "https://auto.bazos.sk/inzerat/196676103/fiat-500-dolcevita-10-hybrid-70k-6mt-odpocet-dph.php", "price": 13690}, {"source": "bazarsk", "id": "bs-39686891", "url": "https://auto.bazar.sk/39686891-fiat-500-dolcevita-1-0-hybrid-70k-6mt/", "price": 13690}], "body": "hatchback"}, {"id": "ab-Aejwr4LrZXs", "url": "https://www.autobazar.eu/detail/fiat-500-10-bsg-mild-hybrid-hatchback-3dv/Aejwr4LrZXs/", "title": "Fiat 500 1.0 BSG Mild Hybrid Hatchback 3.dv.", "price": 11999, "price_gross": 11999, "fair_price": 11590.0, "discount_pct": -3.5, "verdict": "férová cena", "year": 2023, "km": 49628, "km_per_year": 14900.0, "eg": "1.0 mild hybrid 51 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "196698153", "url": "https://auto.bazos.sk/inzerat/196698153/fiat-500-10-bsg-mild-hybrid-hatchback-3dv.php", "price": 11999}], "body": "hatchback"}, {"id": "196676596", "url": "https://auto.bazos.sk/inzerat/196676596/fiat-500e-bev-42-kwh-118-k-icon.php", "title": "Fiat 500e BEV 42 kWh 118 k ICON", "price": 17990, "price_gross": 17990, "fair_price": 17390.0, "discount_pct": -3.5, "verdict": "férová cena", "year": 2022, "km": 24865, "km_per_year": 5700.0, "eg": "500e elektro 70–87 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Banská Bystrica", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "bs-39733832", "url": "https://auto.bazar.sk/39733832-fiat-500-1-4-16v-sport/", "title": "Fiat 500 1.4 16V Sport", "price": 6900, "price_gross": 6900, "fair_price": 6660.0, "discount_pct": -3.6, "verdict": "férová cena", "year": 2009, "km": 51722, "km_per_year": 3000.0, "eg": "1.4 16V 74 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Štiavnička", "flags": ["nezvyčajne nízky nájazd na vek (51 722 km) – over  či nejde o preklep"], "pick": null, "source": "bazarsk", "origin": "dovoz", "also_listed": [{"source": "autobazar", "id": "ab-Am4xYIEs3lY", "url": "https://www.autobazar.eu/detail/fiat-500-14-16v-sport/Am4xYIEs3lY/", "price": 6900}, {"source": "bazos", "id": "196475876", "url": "https://auto.bazos.sk/inzerat/196475876/fiat-500-14-16v-sport.php", "price": 6900}, {"source": "bazos", "id": "196373067", "url": "https://auto.bazos.sk/inzerat/196373067/fiat-500-14-i-edicia-sport.php", "price": 6900}], "body": "hatchback"}, {"id": "ab-Am_u-6fh87r", "url": "https://www.autobazar.eu/detail/fiat-500-125i-benzin-automat-52009-po-servise/Am_u-6fh87r/", "title": "Fiat 500 1,25i, BENZÍN, AUTOMAT, 5/2009, PO SERVISE", "price": 4990, "price_gross": 4990, "fair_price": 4810.0, "discount_pct": -3.7, "verdict": "férová cena", "year": 2009, "km": 153711, "km_per_year": 8900.0, "eg": "1.2 8V 51 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Levice", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "197115738", "url": "https://auto.bazos.sk/inzerat/197115738/skoda-rapid-spaceback-drive-12-tsi-manual-108-749-km.php", "price": 4990}, {"source": "bazarsk", "id": "bs-39553234", "url": "https://auto.bazar.sk/39553234-fiat-500-1-25i-benzin-automat-5-2009-po-servise/", "price": 4990}], "body": "hatchback"}, {"id": "196286665", "url": "https://auto.bazos.sk/inzerat/196286665/fiat-500-12-i-51kw69ps-mt5-2014.php", "title": "FIAT 500, 1.2 i, 51KW/69PS, MT5, 2014", "price": 6499, "price_gross": 6499, "fair_price": 6270.0, "discount_pct": -3.7, "verdict": "férová cena", "year": 2014, "km": 92094, "km_per_year": 7500.0, "eg": "1.2 8V 51 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Poprad", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "ab-Ae8BmKJ2D0N", "url": "https://www.autobazar.eu/detail/fiat-500-turbo-twinair-sport/Ae8BmKJ2D0N/", "title": "Fiat 500 Turbo TwinAir Sport", "price": 7490, "price_gross": 7490, "fair_price": 7210.0, "discount_pct": -3.9, "verdict": "férová cena", "year": 2017, "km": 108570, "km_per_year": 11600.0, "eg": "0.9 TwinAir 59–77 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Michalovce", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "196119319", "url": "https://auto.bazos.sk/inzerat/196119319/predam-fiat-500c-twinair-60-kw-82-ps-rv-2017.php", "price": 7490}], "body": "hatchback"}, {"id": "197753085", "url": "https://auto.bazos.sk/inzerat/197753085/fiat-500-10-bsg-mildhybrid-red-1-majitel-kupene-sr.php", "title": "Fiat 500 1.0 BSG Mildhybrid RED, 1. majiteľ, kúpené SR", "price": 11850, "price_gross": 11850, "fair_price": 11340.0, "discount_pct": -4.5, "verdict": "férová cena", "year": 2023, "km": 43989, "km_per_year": 13200.0, "eg": "1.0 mild hybrid 51 kW", "cg": 1, "transmission": null, "seller_type": "dealer", "location": "Ilava", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "hatchback"}, {"id": "196720887", "url": "https://auto.bazos.sk/inzerat/196720887/fiat-500-12-i-51-kw-automat.php", "title": "Fiat 500 1,2 i 51 KW AUTOMAT", "price": 7499, "price_gross": 7499, "fair_price": 7150.0, "discount_pct": -4.9, "verdict": "férová cena", "year": 2015, "km": 90932, "km_per_year": 8000.0, "eg": "1.2 8V 51 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-Am1lKY6e4B7", "url": "https://www.autobazar.eu/detail/fiat-500-12-i-51-kw-automat/Am1lKY6e4B7/", "price": 7499}, {"source": "bazarsk", "id": "bs-39734830", "url": "https://auto.bazar.sk/39734830-fiat-500-1-2-i-51-kw-automat/", "price": 7499}], "body": "hatchback"}, {"id": "196644609", "url": "https://auto.bazos.sk/inzerat/196644609/fiat-500-10-cult-hybrid-2694km.php", "title": "Fiat 500 1.0 Cult Hybrid 2694km", "price": 12500, "price_gross": 12500, "fair_price": 11910.0, "discount_pct": -5.0, "verdict": "férová cena", "year": 2022, "km": 2694, "km_per_year": 600.0, "eg": "1.0 mild hybrid 51 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Bratislava", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "hatchback"}, {"id": "ab-AmIoo-2jIdx", "url": "https://www.autobazar.eu/detail/fiat-500-10-bsg-mildhybrid-dolcevita/AmIoo-2jIdx/", "title": "Fiat 500 1.0 BSG Mildhybrid Dolcevita", "price": 13999, "price_gross": 13999, "fair_price": 13320.0, "discount_pct": -5.1, "verdict": "férová cena", "year": 2024, "km": 26131, "km_per_year": 11200.0, "eg": "1.0 mild hybrid 51 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Trenčín", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-39651475", "url": "https://auto.bazar.sk/39651475-fiat-500-1-0-bsg-mildhybrid-dolcevita/", "price": 13999}], "body": "hatchback"}, {"id": "ab-AeY55bd0UPD", "url": "https://www.autobazar.eu/detail/fiat-500-12-benzin/AeY55bd0UPD/", "title": "Fiat 500 , 1.2 Benzín, Dohoda pri rýchlom jednaní", "price": 7900, "price_gross": 7900, "fair_price": 7510.0, "discount_pct": -5.2, "verdict": "férová cena", "year": 2017, "km": 139000, "km_per_year": 14900.0, "eg": "1.2 8V 51 kW", "cg": 0, "transmission": "manual", "seller_type": "private", "location": "Piešťany", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "hatchback"}, {"id": "ab-Am-4nsahUdD", "url": "https://www.autobazar.eu/detail/fiat-500-12-8v-lounge-51kw-m5-zaruka-aj-na-splatky-protiucet/Am-4nsahUdD/", "title": "Fiat 500 1.2 8v Lounge / 51kW / M5 / ZÁRUKA / AJ NA SPLÁTKY / PROTIÚČET", "price": 8990, "price_gross": 8990, "fair_price": 8520.0, "discount_pct": -5.6, "verdict": "férová cena", "year": 2017, "km": 70138, "km_per_year": 7500.0, "eg": "1.2 8V 51 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Košice-Pereš", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197248535", "url": "https://auto.bazos.sk/inzerat/197248535/fiat-500-12-8v-lounge-51kw-m5-2017.php", "price": 8990}, {"source": "bazarsk", "id": "bs-39757572", "url": "https://auto.bazar.sk/39757572-fiat-500-1-2-8v-lounge-51kw-m5-zaruka-aj-na-splatky-protiucet/", "price": 8990}], "body": "hatchback"}, {"id": "197644160", "url": "https://auto.bazos.sk/inzerat/197644160/fiat-500-elekro.php", "title": "Fiat 500 elekro", "price": 14999, "price_gross": 14999, "fair_price": 14170.0, "discount_pct": -5.8, "verdict": "férová cena", "year": 2021, "km": 91482, "km_per_year": 17200.0, "eg": "1.4 16V 74 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Senec", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "197691026", "url": "https://auto.bazos.sk/inzerat/197691026/fiat-500-500e-238-kwh-action.php", "title": "FIAT 500 500E 23,8 KWH ACTION", "price": 15450, "price_gross": 15450, "fair_price": 14580.0, "discount_pct": -6.0, "verdict": "férová cena", "year": 2022, "km": 19702, "km_per_year": 4500.0, "eg": "500e elektro 70–87 kW", "cg": 1, "transmission": null, "seller_type": "dealer", "location": "Nitra", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "196270374", "url": "https://auto.bazos.sk/inzerat/196270374/fiat-500e-action-plus-70-kw-49-000-km.php", "title": "Fiat 500e Action Plus 70kW, 49 000 km, 1. majiteľ", "price": 14190, "price_gross": 14190, "fair_price": 13350.0, "discount_pct": -6.3, "verdict": "férová cena", "year": 2022, "km": 49000, "km_per_year": 11300.0, "eg": "1.4 16V 74 kW", "cg": 0, "transmission": null, "seller_type": "dealer", "location": "Prešov", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "hatchback"}, {"id": "197552138", "url": "https://auto.bazos.sk/inzerat/197552138/fiat-500-c.php", "title": "FIAT 500 C", "price": 7990, "price_gross": 7990, "fair_price": 7480.0, "discount_pct": -6.8, "verdict": "férová cena", "year": 2016, "km": 128000, "km_per_year": 12400.0, "eg": "1.2 8V 51 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Nitra", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "cabrio"}, {"id": "ab-Aetlj5dsYP9", "url": "https://www.autobazar.eu/detail/fiat-500-automat-nizky-najazd-kilometrov/Aetlj5dsYP9/", "title": "Fiat 500 , Automat, Nízky nájazd kilometrov", "price": 10490, "price_gross": 10490, "fair_price": 9830.0, "discount_pct": -6.8, "verdict": "férová cena", "year": 2016, "km": 21300, "km_per_year": 2100.0, "eg": "1.2 8V 51 kW", "cg": 0, "transmission": "automatic", "seller_type": "private", "location": "Banská Bystrica", "flags": ["nezvyčajne nízky nájazd na vek (21 300 km) – over  či nejde o preklep"], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "hatchback"}, {"id": "ab-AeKpOV40E2G", "url": "https://www.autobazar.eu/detail/fiat-500-collezione/AeKpOV40E2G/", "title": "Fiat 500 Collezione", "price": 12490, "price_gross": 12490, "fair_price": 11650.0, "discount_pct": -7.2, "verdict": "nad trhom", "year": 2019, "km": 31940, "km_per_year": 4400.0, "eg": "1.2 8V 51 kW", "cg": 0, "transmission": "automatic", "seller_type": "private", "location": "Sečovce", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197626099", "url": "https://auto.bazos.sk/inzerat/197626099/fiat-500-collezione.php", "price": 12490}], "body": "hatchback"}, {"id": "196926227", "url": "https://auto.bazos.sk/inzerat/196926227/fiat-500.php", "title": "Fiat 500", "price": 6500, "price_gross": 6500, "fair_price": 6030.0, "discount_pct": -7.9, "verdict": "nad trhom", "year": 2015, "km": 122000, "km_per_year": 10800.0, "eg": "1.2 8V 51 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Bratislava", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "196504286", "url": "https://auto.bazos.sk/inzerat/196504286/fiat-500-c-12-lounge.php", "title": "Fiat 500 C 1.2 Lounge", "price": 6490, "price_gross": 6490, "fair_price": 5990.0, "discount_pct": -8.4, "verdict": "nad trhom", "year": 2013, "km": 89600, "km_per_year": 6700.0, "eg": "1.2 8V 51 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Komárno", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-Am7IMTzXt36", "url": "https://www.autobazar.eu/detail/fiat-500-c-12-lounge/Am7IMTzXt36/", "price": 6490}, {"source": "bazarsk", "id": "bs-39628247", "url": "https://auto.bazar.sk/39628247-fiat-500-c-1-2-lounge/", "price": 6490}], "body": "cabrio"}, {"id": "ab-AmWvxJwHCQL", "url": "https://www.autobazar.eu/detail/fiat-500-c-twinair-85-color-therapy-benzin-automat/AmWvxJwHCQL/", "title": "Fiat 500 C    TwinAir 85 COLOR THERAPY    \" BENZÍN  AUTOMAT", "price": 5000, "price_gross": 5000, "fair_price": 4590.0, "discount_pct": -9.0, "verdict": "nad trhom", "year": 2011, "km": 191636, "km_per_year": 12500.0, "eg": "0.9 TwinAir 59–77 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Michalovce", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "197591850", "url": "https://auto.bazos.sk/inzerat/197591850/fiat-500-c-twinair-85-color-therapy-benzin-automat.php", "price": 5000}, {"source": "bazarsk", "id": "bs-39687830", "url": "https://auto.bazar.sk/39687830-fiat-500-c-twinair-85-color-therapy-benzin-automat/", "price": 5000}], "body": "hatchback"}, {"id": "ab-AmJZVz3TJYY", "url": "https://www.autobazar.eu/detail/fiat-500-09-twinair-s/AmJZVz3TJYY/", "title": "Fiat 500 0.9 TwinAir S", "price": 7990, "price_gross": 7990, "fair_price": 7320.0, "discount_pct": -9.1, "verdict": "nad trhom", "year": 2016, "km": 95000, "km_per_year": 9200.0, "eg": "0.9 TwinAir 59–77 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Levice", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39744255", "url": "https://auto.bazar.sk/39744255-fiat-500-0-9-twinair-s/", "price": 7990}], "body": "hatchback"}, {"id": "197301332", "url": "https://auto.bazos.sk/inzerat/197301332/fiat-500-automat-prevodovka.php", "title": "Fiat 500 AUTOMAT. Prevodovka", "price": 5500, "price_gross": 5500, "fair_price": 5030.0, "discount_pct": -9.3, "verdict": "nad trhom", "year": 2011, "km": 186506, "km_per_year": 12200.0, "eg": "1.4 16V 74 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Topoľčany", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "197334331", "url": "https://auto.bazos.sk/inzerat/197334331/fiat-500-12-8v-s-s-e6d-120th-anniversary-dualogic.php", "title": "Fiat 500 1.2 8v S S E6D 120th Anniversary Dualogic", "price": 10900, "price_gross": 10900, "fair_price": 9890.0, "discount_pct": -10.2, "verdict": "nad trhom", "year": 2019, "km": 77148, "km_per_year": 10500.0, "eg": "1.2 8V 51 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Košice", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmCxz8bMmk4", "url": "https://www.autobazar.eu/detail/fiat-500-12-8v-sands-e6d-120th-anniversary-dualogic/AmCxz8bMmk4/", "price": 10900}, {"source": "bazarsk", "id": "bs-39623031", "url": "https://auto.bazar.sk/39623031-fiat-500-1-2-8v-ss-e6d-120th-anniversary-dualogic/", "price": 10900}], "body": "hatchback"}, {"id": "197327206", "url": "https://auto.bazos.sk/inzerat/197327206/fiat-500c-12-8v-cabrio-lounge.php", "title": "Fiat 500c 1.2 8v Cabrio Lounge", "price": 7950, "price_gross": 7950, "fair_price": 7150.0, "discount_pct": -11.1, "verdict": "nad trhom", "year": 2016, "km": 152424, "km_per_year": 14800.0, "eg": "1.2 8V 51 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Bánovce nad Bebravou", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "cabrio"}, {"id": "195983703", "url": "https://auto.bazos.sk/inzerat/195983703/fiat-500c.php", "title": "Fiat 500C", "price": 4950, "price_gross": 4950, "fair_price": 4450.0, "discount_pct": -11.1, "verdict": "nad trhom", "year": 2011, "km": 180000, "km_per_year": 11700.0, "eg": "1.3 MultiJet diesel 55–70 kW", "cg": 2, "transmission": "manual", "seller_type": "dealer", "location": "Trebišov", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmsBl8HxJk8", "url": "https://www.autobazar.eu/detail/fiat-500-13-multijet-16v-95k-sport/AmsBl8HxJk8/", "price": 4990}, {"source": "bazarsk", "id": "bs-39730183", "url": "https://auto.bazar.sk/39730183-fiat-500-1-3-multijet-16v-95k-sport/", "price": 4990}], "body": "cabrio"}, {"id": "196917198", "url": "https://auto.bazos.sk/inzerat/196917198/predam-fiat-500-10-mild-hybrid-rv-2022.php", "title": "Predám Fiat 500 1.0 Mild Hybrid, r.v. 2022", "price": 13300, "price_gross": 13300, "fair_price": 11920.0, "discount_pct": -11.6, "verdict": "nad trhom", "year": 2022, "km": 21000, "km_per_year": 4800.0, "eg": "1.0 mild hybrid 51 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Partizánske", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "hatchback"}, {"id": "197699439", "url": "https://auto.bazos.sk/inzerat/197699439/fiat-500-lounge-panorama-2014-len-59-540-km.php", "title": "Fiat 500 Lounge Panorama (2014) – len 59 540 km", "price": 7490, "price_gross": 7490, "fair_price": 6710.0, "discount_pct": -11.7, "verdict": "nad trhom", "year": 2014, "km": 59540, "km_per_year": 4800.0, "eg": "1.2 8V 51 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Sabinov", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "197231127", "url": "https://auto.bazos.sk/inzerat/197231127/fiat-500-12i.php", "title": "Fiat 500 1.2i", "price": 6999, "price_gross": 6999, "fair_price": 6190.0, "discount_pct": -13.2, "verdict": "nad trhom", "year": 2014, "km": 130000, "km_per_year": 10500.0, "eg": "1.2 8V 51 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Rožňava", "flags": [], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "hatchback"}, {"id": "bs-39062790", "url": "https://auto.bazar.sk/39062790-fiat-500/", "title": "Fiat 500", "price": 10499, "price_gross": 10499, "fair_price": 9240.0, "discount_pct": -13.7, "verdict": "nad trhom", "year": 2016, "km": 99490, "km_per_year": 9600.0, "eg": "1.2 8V 51 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Jelka", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "197556973", "url": "https://auto.bazos.sk/inzerat/197556973/fiat-500-12-lounge-51kw-m5-2013.php", "title": "Fiat 500 1.2 Lounge / 51kW / M5 / 2013", "price": 5990, "price_gross": 5990, "fair_price": 5250.0, "discount_pct": -14.2, "verdict": "nad trhom", "year": 2013, "km": 171055, "km_per_year": 12800.0, "eg": "1.2 8V 51 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Nové Mesto n.Váhom", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmwdwVPDeWF", "url": "https://www.autobazar.eu/detail/fiat-500-12-lounge-51kw-m5-zaruka-aj-na-splatky-protiucet/AmwdwVPDeWF/", "price": 5990}, {"source": "bazarsk", "id": "bs-39759933", "url": "https://auto.bazar.sk/39759933-fiat-500-1-2-lounge-51kw-m5-zaruka-aj-na-splatky-protiucet/", "price": 5990}], "body": "hatchback"}, {"id": "196697272", "url": "https://auto.bazos.sk/inzerat/196697272/fiat-500c-12-8v-51-kw-koza-navigacia-kabriolet.php", "title": "FIAT 500C 1.2 8V 51 kW | KOŽA | NAVIGÁCIA | KABRIOLET", "price": 8200, "price_gross": 8200, "fair_price": 7170.0, "discount_pct": -14.3, "verdict": "nad trhom", "year": 2016, "km": 124000, "km_per_year": 12000.0, "eg": "1.2 8V 51 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Žilina", "flags": [], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "cabrio"}, {"id": "196125115", "url": "https://auto.bazos.sk/inzerat/196125115/fiat-500.php", "title": "Fiat 500", "price": 8790, "price_gross": 8790, "fair_price": 7680.0, "discount_pct": -14.5, "verdict": "nad trhom", "year": 2015, "km": 56740, "km_per_year": 5000.0, "eg": "1.2 8V 51 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Banská Bystrica", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "hatchback"}, {"id": "ab-Am4E09c-vv2", "url": "https://www.autobazar.eu/detail/fiat-500-10-bsg-mildhybrid-dolcevita/Am4E09c-vv2/", "title": "Fiat 500 1.0 BSG Mildhybrid Dolcevita", "price": 12990, "price_gross": 12990, "fair_price": 11330.0, "discount_pct": -14.7, "verdict": "nad trhom", "year": 2023, "km": 60695, "km_per_year": 18200.0, "eg": "1.0 mild hybrid 51 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava-Staré Mesto", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-39615639", "url": "https://auto.bazar.sk/39615639-fiat-500-1-0-bsg-mildhybrid-dolcevita/", "price": 12990}], "body": "hatchback"}, {"id": "197259524", "url": "https://auto.bazos.sk/inzerat/197259524/fiat-500-12-sport-2014.php", "title": "Fiat 500 1.2 Sport 2014", "price": 6999, "price_gross": 6999, "fair_price": 6070.0, "discount_pct": -15.3, "verdict": "výrazne nad trhom", "year": 2014, "km": 84000, "km_per_year": 6800.0, "eg": "1.2 8V 51 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Michalovce", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "bs-34353644", "url": "https://auto.bazar.sk/34353644-fiat-500-1-2/", "title": "Fiat 500 1.2", "price": 8300, "price_gross": 8300, "fair_price": 7180.0, "discount_pct": -15.7, "verdict": "výrazne nad trhom", "year": 2012, "km": 19422, "km_per_year": 1400.0, "eg": "1.2 8V 51 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Nové Zámky", "flags": ["nezvyčajne nízky nájazd na vek (19 422 km) – over  či nejde o preklep"], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "hatchback"}, {"id": "196932419", "url": "https://auto.bazos.sk/inzerat/196932419/fiat-500c-12-lounge-cabrio.php", "title": "Fiat 500C 1.2 Lounge Cabrio červené", "price": 6190, "price_gross": 6190, "fair_price": 5300.0, "discount_pct": -16.8, "verdict": "výrazne nad trhom", "year": 2011, "km": 107000, "km_per_year": 7000.0, "eg": "1.2 8V 51 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Bratislava", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "cabrio"}, {"id": "ab-AmWj7VW-S_j", "url": "https://www.autobazar.eu/detail/fiat-500-12-limited-edition-italia/AmWj7VW-S_j/", "title": "Fiat 500 1,2 LIMITED EDITION ITALIA", "price": 5960, "price_gross": 5960, "fair_price": 5080.0, "discount_pct": -17.4, "verdict": "výrazne nad trhom", "year": 2012, "km": 154900, "km_per_year": 10800.0, "eg": "1.2 8V 51 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Kostolné Kračany", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39308604", "url": "https://auto.bazar.sk/39308604-fiat-500-1-2-limited-edition-italia/", "price": 5960}], "body": "hatchback"}, {"id": "ab-AmCU89NgllNw", "url": "https://www.autobazar.eu/detail/fiat-500-12-8v-plus/AmCU89NgllNw/", "title": "Fiat 500 1.2 8V Plus,51kw,M5,3d.Panorama,Kupene v SR.", "price": 6990, "price_gross": 6990, "fair_price": 5910.0, "discount_pct": -18.3, "verdict": "výrazne nad trhom", "year": 2015, "km": 139950, "km_per_year": 12300.0, "eg": "1.2 8V 51 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Komárno", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197369538", "url": "https://auto.bazos.sk/inzerat/197369538/fiat-500-12-8v-plus51kwm53dpanoramakupene-v-sr.php", "price": 6990}, {"source": "bazarsk", "id": "bs-39275422", "url": "https://auto.bazar.sk/39275422-fiat-500-1-2-8v-plus-51kw-m5-3d-panorama-kupene-v-sr/", "price": 6990}], "body": "hatchback"}, {"id": "197575941", "url": "https://auto.bazos.sk/inzerat/197575941/fiat-500-12i-mt5.php", "title": "Fiat 500 1.2i MT/5", "price": 5790, "price_gross": 5790, "fair_price": 4860.0, "discount_pct": -19.1, "verdict": "výrazne nad trhom", "year": 2009, "km": 116248, "km_per_year": 6700.0, "eg": "1.2 8V 51 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Nové Zámky", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "196252376", "url": "https://auto.bazos.sk/inzerat/196252376/predam-fiat-500e-red.php", "title": "Predám Fiat 500e RED", "price": 13500, "price_gross": 16605, "fair_price": 13800.0, "discount_pct": -20.3, "verdict": "výrazne nad trhom", "year": 2021, "km": 34600, "km_per_year": 6500.0, "eg": "1.2 8V 51 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Bardejov", "flags": ["inzerovaná cena 13500 € je bez DPH – porovnáva sa cena s DPH 16605 €", "prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "ab-Am5_-o9tIGv", "url": "https://www.autobazar.eu/detail/fiat-500-c-12-8v-riva/Am5_-o9tIGv/", "title": "Fiat 500 C 1.2 8v Riva", "price": 9490, "price_gross": 9490, "fair_price": 7790.0, "discount_pct": -21.9, "verdict": "výrazne nad trhom", "year": 2016, "km": 73100, "km_per_year": 7100.0, "eg": "1.2 8V 51 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Nový Život", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "196802679", "url": "https://auto.bazos.sk/inzerat/196802679/fiat-500c-cabrio-12-2016.php", "price": 9500}, {"source": "bazos", "id": "196537513", "url": "https://auto.bazos.sk/inzerat/196537513/fiat-500-c-12-8v-riva.php", "price": 9490}, {"source": "bazarsk", "id": "bs-39391834", "url": "https://auto.bazar.sk/39391834-fiat-500-c-1-2-8v-riva/", "price": 9490}], "body": "hatchback"}, {"id": "196730672", "url": "https://auto.bazos.sk/inzerat/196730672/fiat-500-13-multijet-16v-lounge-facelift-panorama.php", "title": "Fiat 500 1.3 MultiJet 16V Lounge Facelift Panoráma", "price": 6290, "price_gross": 6290, "fair_price": 5070.0, "discount_pct": -23.9, "verdict": "výrazne nad trhom", "year": 2011, "km": 150000, "km_per_year": 9800.0, "eg": "1.3 MultiJet diesel 55–70 kW", "cg": 2, "transmission": "manual", "seller_type": "dealer", "location": "Nitra", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "ab-AmI8Y4b4_eN", "url": "https://www.autobazar.eu/detail/fiat-500-12-8v/AmI8Y4b4_eN/", "title": "Fiat 500 1.2 8v", "price": 8990, "price_gross": 8990, "fair_price": 7180.0, "discount_pct": -25.1, "verdict": "výrazne nad trhom", "year": 2016, "km": 142839, "km_per_year": 13800.0, "eg": "1.2 8V 51 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Bodza", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39746570", "url": "https://auto.bazar.sk/39746570-fiat-500-1-2-8v/", "price": 8990}], "body": "hatchback"}, {"id": "195906257", "url": "https://auto.bazos.sk/inzerat/195906257/fiat-500-twinair.php", "title": "Fiat 500 TwinAir", "price": 6300, "price_gross": 6300, "fair_price": 4900.0, "discount_pct": -28.7, "verdict": "výrazne nad trhom", "year": 2011, "km": 122000, "km_per_year": 8000.0, "eg": "0.9 TwinAir 59–77 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Bratislava", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "hatchback"}, {"id": "bs-37867572", "url": "https://auto.bazar.sk/37867572-fiat-500-e/", "title": "Fiat 500 E", "price": 12990, "price_gross": 12990, "fair_price": 9670.0, "discount_pct": -34.3, "verdict": "výrazne nad trhom", "year": 2015, "km": 70000, "km_per_year": 6200.0, "eg": "1.2 8V 51 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Nitra", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "bs-23491025", "url": "https://auto.bazar.sk/23491025-fiat-500-1-4-edition-sport-74kw-m6/", "title": "Fiat 500 1.4 edition sport 74kw M6", "price": 6499, "price_gross": 6499, "fair_price": 4730.0, "discount_pct": -37.5, "verdict": "výrazne nad trhom", "year": 2008, "km": 165600, "km_per_year": 9000.0, "eg": "LPG", "cg": 2, "transmission": "manual", "seller_type": "private", "location": "Bošany", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "196190208", "url": "https://auto.bazos.sk/inzerat/196190208/fiat-500e-la-prima-42kwh-bateria.php", "title": "FIAT 500e LA PRIMA 42kwh batéria", "price": 18500, "price_gross": 18500, "fair_price": 13340.0, "discount_pct": -38.7, "verdict": "výrazne nad trhom", "year": 2020, "km": 56736, "km_per_year": 9000.0, "eg": "500e elektro 70–87 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Veľký Krtíš", "flags": [], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "hatchback"}, {"id": "bs-39704338", "url": "https://auto.bazar.sk/39704338-fiat-500-1-4-16v-sport/", "title": "Fiat 500 1.4 16v Sport", "price": 7999, "price_gross": 7999, "fair_price": 5410.0, "discount_pct": -47.8, "verdict": "výrazne nad trhom", "year": 2009, "km": 160472, "km_per_year": 9300.0, "eg": "1.4 16V 74 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Kežmarok", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-Am0wRNvm2eO", "url": "https://www.autobazar.eu/detail/fiat-500-14-16v-sport/Am0wRNvm2eO/", "price": 7999}], "body": "hatchback"}, {"id": "197666187", "url": "https://auto.bazos.sk/inzerat/197666187/fiat.php", "title": "Fiat 500 1.4 SPORT Panoráma + INTERSCOPE Sound System", "price": 6990, "price_gross": 6990, "fair_price": 4660.0, "discount_pct": -50.0, "verdict": "výrazne nad trhom", "year": 2008, "km": 216000, "km_per_year": 11800.0, "eg": "1.4 16V 74 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Rimavská Sobota", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}];
+const GROUPS = ["Benzín", "Mild hybrid a elektro", "LPG, diesel a nezistený"];
+const BODY = {"hatchback": "Hatchback", "cabrio": "Kabriolet 500C"};
+const fmt = n => Math.round(n).toLocaleString("sk-SK");
+const eur = n => fmt(n) + " €";
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const TRANS = {automatic: "automat", manual: "manuál"};
+const SRC = {bazos: "bazoš", autobazar: "autobazar.eu", bazarsk: "bazar.sk"};
+
+// --- theme toggle ---------------------------------------------------------
+document.getElementById("themeBtn").onclick = () => {
+  const root = document.documentElement;
+  const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  drawChart();
+};
+
+// --- scatter chart --------------------------------------------------------
+const legend = document.getElementById("legend");
+legend.innerHTML = GROUPS.map((g, i) => `<span><i style="background:var(--s${i+1})"></i>${g}</span>`).join("")
+  + `<span><i class="ring"></i>odporúčaná ponuka</span>`;
+
+function drawChart() {
+  const svg = document.getElementById("chart"), wrap = document.getElementById("chartWrap"), tip = document.getElementById("tip");
+  const W = svg.clientWidth, H = 420, m = {l: 56, r: 16, t: 10, b: 40};
+  const pts = DATA.filter(d => d.km && d.price_gross);
+  const xMax = Math.ceil(Math.max(...pts.map(d => d.km)) / 50000) * 50000;
+  const yMax = Math.ceil(Math.max(...pts.map(d => d.price_gross)) / 5000) * 5000;
+  const x = v => m.l + v / xMax * (W - m.l - m.r), y = v => H - m.b - v / yMax * (H - m.t - m.b);
+  let s = "";
+  for (let v = 0; v <= yMax; v += 5000)
+    s += `<line x1="${m.l}" x2="${W-m.r}" y1="${y(v)}" y2="${y(v)}" stroke="var(--grid)"/><text x="${m.l-8}" y="${y(v)+4}" text-anchor="end">${v/1000} tis. €</text>`;
+  const step = W < 520 ? 100000 : 50000;
+  for (let v = 0; v <= xMax; v += step)
+    s += `<text x="${x(v)}" y="${H-m.b+18}" text-anchor="middle">${v/1000} tis.</text>`;
+  s += `<text x="${(W+m.l)/2}" y="${H-6}" text-anchor="middle">nájazd (km)</text>`;
+  const order = [...pts].sort((a, b) => (a.pick ? 1 : 0) - (b.pick ? 1 : 0));
+  order.forEach(d => {
+    const cx = x(d.km), cy = y(d.price_gross);
+    if (d.pick) s += `<circle cx="${cx}" cy="${cy}" r="9" fill="none" stroke="var(--text)" stroke-width="2"/>`;
+    s += `<circle class="pt" data-id="${d.id}" cx="${cx}" cy="${cy}" r="5" fill="var(--s${d.cg+1})" stroke="var(--surface)" stroke-width="2"/>`;
+  });
+  // invisible bigger hit targets
+  order.forEach(d => s += `<circle class="hit" data-id="${d.id}" cx="${x(d.km)}" cy="${y(d.price_gross)}" r="11" fill="transparent" style="cursor:pointer"/>`);
+  svg.innerHTML = s;
+  const byId = Object.fromEntries(pts.map(d => [d.id, d]));
+  svg.querySelectorAll(".hit").forEach(c => {
+    c.onmouseenter = c.onmousemove = ev => {
+      const d = byId[c.dataset.id];
+      tip.innerHTML = `<b>${esc(d.title)}</b>
+        <div class="row"><span>Cena</span><span>${eur(d.price_gross)}</span></div>
+        <div class="row"><span>Férová cena</span><span>${eur(d.fair_price)}</span></div>
+        <div class="row"><span>Pod trhom</span><span>${d.discount_pct > 0 ? "+" : ""}${d.discount_pct.toLocaleString("sk-SK")} %</span></div>
+        <div class="row"><span>Zdroj</span><span>${SRC[d.source]}${d.also_listed.length ? " + " + d.also_listed.map(a => SRC[a.source]).join(", ") : ""}</span></div>
+        <div class="row"><span>Rok · km</span><span>${d.year} · ${fmt(d.km)}</span></div>
+        <div class="row"><span>Motor</span><span>${esc(d.eg)} ${TRANS[d.transmission] || ""}</span></div>`;
+      tip.style.display = "block";
+      const r = wrap.getBoundingClientRect();
+      let lx = ev.clientX - r.left + 14, ly = ev.clientY - r.top + 14;
+      if (lx + 290 > r.width) lx = ev.clientX - r.left - 290;
+      tip.style.left = lx + "px"; tip.style.top = ly + "px";
+    };
+    c.onmouseleave = () => tip.style.display = "none";
+    c.onclick = () => window.open(byId[c.dataset.id].url, "_blank", "noopener");
+  });
+}
+drawChart();
+addEventListener("resize", drawChart);
+
+// --- full table -----------------------------------------------------------
+const fEngine = document.getElementById("fEngine");
+[...new Set(DATA.map(d => d.eg))].sort().forEach(g => fEngine.insertAdjacentHTML("beforeend", `<option>${esc(g)}</option>`));
+let sortK = "discount_pct", sortDir = -1;
+function discCell(v) {
+  const w = Math.min(Math.abs(v), 30) / 30 * 50;
+  const bar = v >= 0 ? `left:50%;width:${w}%;background:var(--pos)` : `right:50%;width:${w}%;background:var(--neg)`;
+  return `<span class="disc">${v > 0 ? "+" : ""}${v.toLocaleString("sk-SK")} %<span class="dbar"><span style="${bar}"></span></span></span>`;
+}
+function renderTable() {
+  const max = parseFloat(document.getElementById("fMax").value) || Infinity;
+  const tr = document.getElementById("fTrans").value, se = document.getElementById("fSeller").value, en = fEngine.value;
+  const so = document.getElementById("fSource").value, og = document.getElementById("fOrigin").value;
+  const bo = document.getElementById("fBody").value;
+  const rows = DATA.filter(d => (!en || d.eg === en) && (!tr || d.transmission === tr)
+    && (!se || d.seller_type !== "dealer") && d.price_gross <= max
+    && (!so || d.source === so || d.also_listed.some(a => a.source === so)) && (!og || d.origin === og) && (!bo || d.body === bo))
+    .sort((a, b) => { const A = a[sortK], B = b[sortK]; return (typeof A === "string" ? A.localeCompare(B) : A - B) * sortDir; });
+  document.getElementById("count").textContent = `${rows.length} z ${DATA.length} inzerátov`;
+  document.querySelector("#tbl tbody").innerHTML = rows.map(d => `<tr>
+    <td><a href="${d.url}" target="_blank" rel="noopener">${esc(d.title)}</a> ${d.pick ? '<span class="badge pick">odporúčané</span>' : ""}
+      <div class="sub">${BODY[d.body] || "karoséria ?"} · ${esc(d.eg)} · ${TRANS[d.transmission] || "prevodovka ?"} · ${esc(d.location)} · ${d.seller_type === "dealer" ? "predajca/firma" : d.seller_type === "private" ? "súkromník" : "neisté"} · ${SRC[d.source]}${d.origin === "SR" ? " · kúpené v SR" : d.origin === "dovoz" ? " · dovoz" : ""}${d.also_listed.map(a => ` · <a href="${a.url}" target="_blank" rel="noopener">aj na ${SRC[a.source]}</a>`).join("")}</div>
+      ${d.flags.filter(f => !f.startsWith("prevodovka")).map(f => `<div class="flag">⚠ ${esc(f)}</div>`).join("")}</td>
+    <td class="num">${d.year}</td><td class="num">${fmt(d.km)}</td>
+    <td class="num">${eur(d.price_gross)}</td><td class="num">${eur(d.fair_price)}</td>
+    <td class="num">${discCell(d.discount_pct)}</td></tr>`).join("");
+  document.querySelectorAll("#tbl th.sortable").forEach(th => {
+    const base = th.textContent.replace(/ [▾▴]$/, "");
+    th.textContent = base + (th.dataset.k === sortK ? (sortDir < 0 ? " ▾" : " ▴") : "");
+  });
+}
+document.querySelectorAll("#tbl th.sortable").forEach(th => th.onclick = () => {
+  if (sortK === th.dataset.k) sortDir *= -1; else { sortK = th.dataset.k; sortDir = th.dataset.k === "title" ? 1 : -1; }
+  renderTable();
+});
+["fEngine", "fTrans", "fSeller", "fSource", "fBody", "fOrigin", "fMax"].forEach(id => document.getElementById(id).addEventListener("input", renderTable));
+renderTable();
+</script>
+<!-- ferovka-theme --><script defer src="/analytics-config.js"></script><script defer src="/analytics.js"></script><script id="ferovka-chart">/* Férovka – chart → ad links, injected into every report by sync-reports.mjs.
+ *
+ * The reports draw one invisible 11px "hit" circle per ad. In dense charts (and always on a narrow phone) those
+ * circles overlap and the one drawn last wins, so a click/tap often opened a neighbouring ad. Here the pointer is
+ * always resolved to the NEAREST point, the report's own tooltip is shown for that point, and a click opens its ad.
+ * Touch: the first tap shows the tooltip (with a hint), a second tap on the same point opens the ad.
+ */
+(() => {
+  let rows;
+  try { rows = DATA; } catch { return; } // eslint-disable-line no-undef
+  if (!Array.isArray(rows) || !rows.length || !("url" in rows[0])) return;
+  const byId = new Map(rows.map((d) => [String(d.id), d]));
+  const MOUSE = ["mouseover", "mouseout", "mouseenter", "mouseleave", "mousemove", "mousedown", "mouseup", "click"];
+  let lastPointer = "mouse", down = null;
+  // the finger position as it was – Chrome "snaps" the later click of a tap to the centre of a nearby clickable element
+  addEventListener("pointerdown", (e) => { lastPointer = e.pointerType || "mouse"; down = { clientX: e.clientX, clientY: e.clientY }; }, true);
+
+  // the old per-point hit circles must not be targets (they overlap, and touch snapping aims at them)
+  document.head.insertAdjacentHTML("beforeend", "<style>svg circle.hit[data-id],svg circle.pt[data-id]{pointer-events:none}</style>");
+
+  function nearest(svg, ev, radius) {
+    let best = null, bd = Infinity;
+    for (const c of svg.querySelectorAll("circle.pt[data-id]")) {
+      const r = c.getBoundingClientRect();
+      const dx = r.left + r.width / 2 - ev.clientX, dy = r.top + r.height / 2 - ev.clientY;
+      const d = dx * dx + dy * dy;
+      if (d <= bd) { bd = d; best = c; } // ties: the point drawn on top (later) wins – that is the one you see
+    }
+    return best && bd <= radius * radius ? best : null;
+  }
+
+  function bind(svg) {
+    if (svg.__fvLinks) return;
+    svg.__fvLinks = true;
+    let current = null, armed = null;
+    const hitOf = (pt) => pt && svg.querySelector(`circle.hit[data-id="${CSS.escape(pt.dataset.id)}"]`);
+    const fire = (el, type, ev) => {
+      if (!el) return;
+      const e = new MouseEvent(type, { clientX: ev.clientX, clientY: ev.clientY, bubbles: false });
+      e.__fv = true;
+      el.dispatchEvent(e);
+    };
+    const tip = () => (svg.parentElement && svg.parentElement.querySelector("#tip, .tip")) || document.getElementById("tip");
+    const mark = (pt) => {
+      if (current === pt) return;
+      if (current) current.setAttribute("r", current.__r || "5");
+      current = pt;
+      if (pt) { pt.__r = pt.__r || pt.getAttribute("r"); pt.setAttribute("r", String(+pt.__r + 2)); }
+    };
+    const show = (pt, ev, hint) => {
+      mark(pt);
+      if (!pt) { const t = tip(); if (t) t.style.display = "none"; return; }
+      fire(hitOf(pt), "mousemove", ev); // the report's own tooltip, for the nearest point
+      const t = tip();
+      if (t && hint) t.insertAdjacentHTML("beforeend", `<div class="fv-hint">Ťukni ešte raz – otvorí sa inzerát ↗</div>`);
+    };
+    const open = (pt) => {
+      const d = byId.get(pt.dataset.id);
+      if (d && d.url) {
+        try { window.FerovkaAnalytics?.listingClick(d.url, "chart"); } catch { /* analytics must never block an ad */ }
+        window.open(d.url, "_blank", "noopener");
+      }
+    };
+
+    // the per-circle handlers of the report never see real mouse events – only our synthetic ones
+    for (const type of MOUSE) {
+      svg.addEventListener(type, (ev) => {
+        if (ev.__fv) return;
+        ev.stopImmediatePropagation();
+        if (type === "mousemove" && lastPointer === "mouse") {
+          show(nearest(svg, ev, 18), ev, false);
+          svg.style.cursor = current ? "pointer" : "";
+        } else if (type === "mouseleave" && ev.target === svg && lastPointer === "mouse") {
+          show(null, ev);
+        } else if (type === "click") {
+          const touch = lastPointer !== "mouse";
+          const at = touch && down ? down : ev;
+          const pt = nearest(svg, at, touch ? 26 : 18);
+          if (!pt) { armed = null; show(null, ev); return; }
+          if (!touch || armed === pt) { armed = null; open(pt); }
+          else { armed = pt; show(pt, at, true); }
+        }
+      }, true);
+    }
+  }
+
+  const scan = () => document.querySelectorAll("svg").forEach((s) => s.querySelector("circle.pt[data-id]") && bind(s));
+  scan();
+  new MutationObserver(scan).observe(document.body, { childList: true, subtree: true });
+})();
+</script><script id="ferovka-filters">/* Férovka – filters for the whole report, injected into every model report by sync-reports.mjs.
+ *
+ * The reports render the chart (drawChart) and the full ranking (renderTable) from the global DATA array; their own
+ * filter bar only filters the table. Here the filter bar (kept in its place above the ranking) gets more filters (year, price from/to,
+ * km, fuel, discount, picks only, text search) and every filter applies to the chart and the ranking together: DATA is
+ * refilled in place with the matching ads and both are drawn again. "</script" can't occur inside this file.
+ */
+(() => {
+  let data;
+  try { data = DATA; } catch { return; } // eslint-disable-line no-undef
+  if (!Array.isArray(data) || !data.length || typeof renderTable !== "function") return; // eslint-disable-line no-undef
+  const bar = document.querySelector(".filters");
+  if (!bar || bar.dataset.fv) return;
+  bar.dataset.fv = "1";
+  const ALL = data.slice();
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+  const fmt = (n) => Math.round(n).toLocaleString("sk-SK");
+  const norm = (s) => String(s ?? "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+  let groups = null;
+  try { groups = GROUPS; } catch { /* report without groups */ } // eslint-disable-line no-undef
+
+  const FUEL = { diesel: "Diesel", petrol: "Benzín", hybrid: "Hybrid", "plug-in hybrid": "Plug-in hybrid", electric: "Elektro", lpg: "LPG", cng: "CNG" };
+  const fuelOf = (d) => {
+    const e = norm(d.eg);
+    if (/tdi|crdi|dci|hdi|diesel|\bd\b|cdi|\d+d\b|blue/.test(e)) return "Diesel";
+    if (/plug-in|phev|e-hybrid|recharge|\bgte\b|\bt8\b|\b\d{2}e\b|\b\d{3} ?e\b/.test(e)) return "Plug-in hybrid";
+    if (/elektro|electric|\bev\b/.test(e)) return "Elektro";
+    if (/cng|lpg|g-tec|g-tron|tgi|ecofuel/.test(e)) return "Plyn (CNG/LPG)";
+    if (/mild|mhev/.test(e)) return "Benzín"; // mild-hybrid petrol (the diesel ones say TDI / d above)
+    if (/hybrid|hev/.test(e)) return "Hybrid";
+    if (/tsi|tfsi|mpi|fsi|benzin|gdi|dpi|htp|12v|\bt\d\b|\bb[56]\b|\d+i\b|turbo|tce|\bs4\b|rs ?\d|amg|competition|\bm\d{2,3}i?\b|gti|\bx5 m\b/.test(e)) return "Benzín";
+    return d.fuel ? FUEL[d.fuel] || String(d.fuel) : null;
+  };
+
+  // --- controls ---------------------------------------------------------------------------------------------------
+  const years = ALL.map((d) => d.year).filter(Boolean);
+  const yMin = Math.min(...years), yMax = Math.max(...years);
+  const yearOpts = (label) => `<option value="">${label}</option>` +
+    Array.from({ length: yMax - yMin + 1 }, (_, i) => yMax - i).map((y) => `<option>${y}</option>`).join("");
+  const kms = [30000, 50000, 75000, 100000, 150000, 200000, 250000, 300000];
+  const fuels = [...new Set(ALL.map(fuelOf).filter(Boolean))].sort((a, b) => a.localeCompare(b, "sk"));
+  const showGroups = Array.isArray(groups) && groups.length > 1 && ALL.some((d) => Number.isInteger(d.cg));
+
+  const maxInput = $("fMax");
+  if (maxInput) { maxInput.placeholder = "Cena do €"; maxInput.title = "Najvyššia cena (s DPH)"; }
+  const html =
+    `<select id="fvYearFrom" title="Rok výroby od">${yearOpts("Rok od")}</select>` +
+    `<select id="fvYearTo" title="Rok výroby do">${yearOpts("Rok do")}</select>` +
+    `<input id="fvPriceMin" type="number" placeholder="Cena od €" step="500" min="0" title="Najnižšia cena (s DPH)" style="width:110px">`;
+  if (maxInput) maxInput.insertAdjacentHTML("beforebegin", html);
+  else bar.insertAdjacentHTML("afterbegin", html);
+  const more =
+    `<select id="fvKm" title="Najviac najazdených km"><option value="">Nájazd – všetky</option>${kms.map((k) => `<option value="${k}">do ${fmt(k)} km</option>`).join("")}</select>` +
+    (fuels.length > 1 ? `<select id="fvFuel" title="Palivo"><option value="">Všetky palivá</option>${fuels.map((f) => `<option>${esc(f)}</option>`).join("")}</select>` : "") +
+    (showGroups ? `<select id="fvGroup" title="Skupina motorov (farba v grafe)"><option value="">Všetky skupiny</option>${groups.map((g, i) => `<option value="${i}">${esc(g)}</option>`).join("")}</select>` : "") +
+    `<select id="fvDisc" title="O koľko je auto lacnejšie ako férová cena"><option value="">Cena – všetky</option><option value="0">pod férovou cenou</option><option value="10">aspoň 10 % pod trhom</option><option value="20">aspoň 20 % pod trhom</option></select>` +
+    `<input id="fvText" type="search" placeholder="Hľadať (výbava, mesto…)" title="Hľadá v názve inzerátu, motore a lokalite" style="width:170px">` +
+    `<label class="fv-check"><input id="fvPick" type="checkbox"> len odporúčané</label>` +
+    `<button type="button" id="fvReset" class="fv-reset">Zrušiť filtre</button>`;
+  const count = $("count");
+  if (count) count.insertAdjacentHTML("beforebegin", more);
+  else bar.insertAdjacentHTML("beforeend", more);
+
+  // the bar stays where it was – right above the ranking – and also drives the chart; the chart gets a pointer to it
+  const chart = $("chartWrap");
+  const box = document.createElement("div");
+  box.className = "fv-filters";
+  box.id = "filtre";
+  bar.before(box);
+  box.innerHTML = `<div class="fv-head"><b>Filtre</b><span>platia pre rebríček aj graf vyššie</span></div>`;
+  box.appendChild(bar);
+  const note = document.createElement("div");
+  note.className = "fv-note";
+  chart?.before(note);
+
+  document.head.insertAdjacentHTML("beforeend", `<style id="fv-filters-css">
+.fv-filters{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 14px 4px;margin:24px 0 8px}
+.fv-filters .fv-head{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;margin-bottom:8px}
+.fv-filters .fv-head span{color:var(--muted);font-size:13px}
+.fv-filters .filters{margin-bottom:8px}
+.fv-filters .filters .count{flex-basis:100%;margin-left:0}
+.fv-check{display:inline-flex;gap:6px;align-items:center;font-size:13px;color:var(--text-2,var(--text));white-space:nowrap}
+.fv-reset{background:none;border:1px solid var(--border);color:var(--text);border-radius:8px;padding:6px 10px;font:inherit;font-size:13px;cursor:pointer}
+.fv-reset:hover{background:var(--surface-2,var(--surface))}
+.fv-note{color:var(--muted);font-size:13px;margin:0 0 8px}
+.fv-note a{color:inherit}
+.fv-empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:14px;pointer-events:none}
+@media (max-width:600px){.fv-filters .filters select,.fv-filters .filters input[type=number],.fv-filters .filters input[type=search]{flex:1 1 calc(50% - 8px);min-width:0;width:auto!important}}
+</style>`);
+
+  // --- filtering --------------------------------------------------------------------------------------------------
+  const val = (id) => ($(id) ? $(id).value : "");
+  const num = (id) => { const v = parseFloat(val(id)); return Number.isFinite(v) ? v : null; };
+  function matches(d) {
+    const yf = num("fvYearFrom"), yt = num("fvYearTo"), pmin = num("fvPriceMin"), pmax = num("fMax"), km = num("fvKm"), disc = num("fvDisc");
+    const fuel = val("fvFuel"), grp = val("fvGroup"), q = norm(val("fvText")).trim();
+    if (yf != null && !(d.year >= yf)) return false;
+    if (yt != null && !(d.year <= yt)) return false;
+    if (pmin != null && !(d.price_gross >= pmin)) return false;
+    if (pmax != null && !(d.price_gross <= pmax)) return false;
+    if (km != null && !(d.km <= km)) return false;
+    if (disc != null && !(d.discount_pct > disc || (disc > 0 && d.discount_pct >= disc))) return false;
+    if (fuel && fuelOf(d) !== fuel) return false;
+    if (grp !== "" && String(d.cg) !== grp) return false;
+    if ($("fvPick")?.checked && !d.pick) return false;
+    if (q && !q.split(/\s+/).every((w) => norm(`${d.title} ${d.eg ?? ""} ${d.engine ?? ""} ${d.location ?? ""}`).includes(w))) return false;
+    // the report's own filters (engine, gearbox, seller, portal, body, origin) – same rules as its renderTable
+    const en = val("fEngine"), tr = val("fTrans"), se = val("fSeller"), so = val("fSource"), og = val("fOrigin"), bo = val("fBody");
+    if (en && d.eg !== en) return false;
+    if (tr && d.transmission !== tr) return false;
+    if (se && d.seller_type === "dealer") return false;
+    if (so && !(d.source === so || (d.also_listed || []).some((a) => a.source === so))) return false;
+    if (og && d.origin !== og) return false;
+    if (bo && d.body !== bo) return false;
+    return true;
+  }
+  const active = () => [...box.querySelectorAll("select, input")].filter((el) => (el.type === "checkbox" ? el.checked : el.value !== "")).length;
+
+  let drawing = false;
+  function apply() {
+    if (drawing) return;
+    drawing = true;
+    const rows = ALL.filter(matches);
+    data.length = 0;
+    data.push(...rows);
+    const wrap = $("chartWrap");
+    wrap?.querySelector(".fv-empty")?.remove();
+    const plotted = rows.filter((d) => d.km && d.price_gross).length;
+    try {
+      if (typeof drawChart === "function") { // eslint-disable-line no-undef
+        if (plotted) drawChart(); // eslint-disable-line no-undef
+        else { const svg = $("chart"); if (svg) svg.innerHTML = ""; }
+      }
+    } catch (e) { console.warn("chart", e); }
+    if (wrap && !plotted) {
+      if (getComputedStyle(wrap).position === "static") wrap.style.position = "relative";
+      wrap.insertAdjacentHTML("beforeend", `<div class="fv-empty">Filtrom nezodpovedá žiadny inzerát</div>`);
+    }
+    try { renderTable(); } catch (e) { console.warn("table", e); } // eslint-disable-line no-undef
+    const n = active();
+    if (count) count.textContent = `Zobrazených ${fmt(rows.length)} z ${fmt(ALL.length)} inzerátov` + (n ? ` · aktívne filtre: ${n}` : "");
+    note.innerHTML = n
+      ? `Zobrazených ${fmt(rows.length)} z ${fmt(ALL.length)} inzerátov podľa <a href="#filtre">filtrov pri rebríčku</a>.`
+      : `Filtre (rok, cena, nájazd, palivo…) nájdeš <a href="#filtre">pri kompletnom rebríčku</a> – platia aj pre tento graf.`;
+    drawing = false;
+  }
+  box.querySelectorAll("select, input").forEach((el) => el.addEventListener("input", apply));
+  $("fvPick")?.addEventListener("change", apply);
+  $("fvReset").addEventListener("click", () => {
+    box.querySelectorAll("select, input").forEach((el) => { if (el.type === "checkbox") el.checked = false; else el.value = ""; });
+    apply();
+  });
+  apply();
+})();
+</script><!-- /ferovka-theme -->
+</body>
+</html>
