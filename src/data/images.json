@@ -383,5 +383,12 @@
     "author": "ShangTW",
     "license": "CC BY-SA 4.0",
     "source": "https://commons.wikimedia.org/wiki/File:2022_Mazda_CX-5_2.0_front.jpg"
+  },
+  "peugeot-3008": {
+    "src": "/img/peugeot-3008.jpg",
+    "file": "File:Peugeot 3008 II BlueHDi 130 (2022) (53326635256).jpg",
+    "author": "Charles from Port Chester, New York",
+    "license": "CC BY 2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Peugeot_3008_II_BlueHDi_130_(2022)_(53326635256).jpg"
   }
 }

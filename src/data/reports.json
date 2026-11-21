@@ -781,6 +781,38 @@
     }
   },
   {
+    "slug": "peugeot-3008",
+    "file": "peugeot-3008-analyza.html",
+    "name": "Peugeot 3008",
+    "brand": "Peugeot",
+    "model": "3008",
+    "kind": "model",
+    "date": "2026-11-21",
+    "summary": "Analýza aktuálnych inzerátov Peugeot 3008 (3008 I až III, vrátane hybridov) od 3 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 811 inzerátov (185 na bazoši, 339 na autobazar.eu, 287 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 448 rôznych áut zo Slovenska.",
+    "ads": 448,
+    "median": "13 990 €",
+    "r2": "96 %",
+    "history": {
+      "updated_at": "2026-11-21T17:10:35",
+      "as_of": "2026-11-21",
+      "coverage": "partial",
+      "baseline_count": 359,
+      "total_count": 359,
+      "active_count": 359,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 359,
+      "paired_median_change_pct": 0,
+      "historical_median": 13990,
+      "seen_median": 13990,
+      "seen_price_count": 359,
+      "last_observed_at": "2026-11-21T17:09:42"
+    }
+  },
+  {
     "slug": "peugeot-308",
     "file": "peugeot-308-analyza.html",
     "name": "Peugeot 308",
@@ -793,7 +825,7 @@
     "median": "7 570 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-21T16:33:27",
+      "updated_at": "2026-11-21T17:10:35",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 440,
