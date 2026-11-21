@@ -2669,6 +2669,38 @@
     }
   },
   {
+    "slug": "vw-arteon",
+    "file": "vw-arteon-analyza.html",
+    "name": "Volkswagen Arteon",
+    "brand": "Volkswagen",
+    "model": "Arteon",
+    "kind": "model",
+    "date": "2026-11-21",
+    "summary": "Analýza aktuálnych inzerátov Volkswagen Arteon (2017–2024, liftback aj Shooting Brake) od 10 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 671 inzerátov (269 na bazoši, 274 na autobazar.eu, 128 na bazar.sk) – prezreli sme 96 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 387 rôznych áut zo Slovenska.",
+    "ads": 387,
+    "median": "23 990 €",
+    "r2": "84 %",
+    "history": {
+      "updated_at": "2026-11-21T21:57:37",
+      "as_of": "2026-11-21",
+      "coverage": "partial",
+      "baseline_count": 304,
+      "total_count": 304,
+      "active_count": 304,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 304,
+      "paired_median_change_pct": 0,
+      "historical_median": 23990,
+      "seen_median": 23990,
+      "seen_price_count": 304,
+      "last_observed_at": "2026-11-21T21:56:27"
+    }
+  },
+  {
     "slug": "vw-caddy",
     "file": "vw-caddy-analyza.html",
     "name": "Volkswagen Caddy",
@@ -2681,7 +2713,7 @@
     "median": "9 500 €",
     "r2": "86 %",
     "history": {
-      "updated_at": "2026-11-21T18:32:45",
+      "updated_at": "2026-11-21T21:57:37",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 261,
@@ -2713,7 +2745,7 @@
     "median": "12 500 €",
     "r2": "93 %",
     "history": {
-      "updated_at": "2026-11-21T18:32:45",
+      "updated_at": "2026-11-21T21:57:37",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 1346,
@@ -2729,7 +2761,7 @@
       "historical_median": 12499,
       "seen_median": 12990,
       "seen_price_count": 2484,
-      "last_observed_at": "2026-11-21T11:42:42"
+      "last_observed_at": "2026-11-21T18:59:13"
     }
   },
   {
@@ -2745,7 +2777,7 @@
     "median": "5 999 €",
     "r2": "90 %",
     "history": {
-      "updated_at": "2026-11-21T18:32:45",
+      "updated_at": "2026-11-21T21:57:37",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 219,
@@ -2777,7 +2809,7 @@
     "median": "9 950 €",
     "r2": "89 %",
     "history": {
-      "updated_at": "2026-11-21T18:32:45",
+      "updated_at": "2026-11-21T21:57:37",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 241,
@@ -2807,7 +2839,26 @@
     "summary": "Analýza aktuálnych inzerátov Volkswagen T-Cross (ojazdené 2019–2025, bez nových áut z 2026) od 8 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 171 inzerátov (31 na bazoši, 76 na autobazar.eu, 64 na bazar.sk) – prezreli sme 92 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 93 rôznych áut zo Slovenska.",
     "ads": 93,
     "median": "16 140 €",
-    "r2": "96 %"
+    "r2": "96 %",
+    "history": {
+      "updated_at": "2026-11-21T21:57:37",
+      "as_of": "2026-11-21",
+      "coverage": "partial",
+      "baseline_count": 59,
+      "total_count": 59,
+      "active_count": 59,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 59,
+      "paired_median_change_pct": 0,
+      "historical_median": 16140,
+      "seen_median": 16140,
+      "seen_price_count": 59,
+      "last_observed_at": "2026-11-21T20:57:32"
+    }
   },
   {
     "slug": "vw-t-roc",
@@ -2822,7 +2873,7 @@
     "median": "18 740 €",
     "r2": "90 %",
     "history": {
-      "updated_at": "2026-11-21T18:32:45",
+      "updated_at": "2026-11-21T21:57:37",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 166,
@@ -2854,7 +2905,7 @@
     "median": "19 800 €",
     "r2": "92 %",
     "history": {
-      "updated_at": "2026-11-21T18:32:45",
+      "updated_at": "2026-11-21T21:57:37",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 893,
@@ -2886,7 +2937,7 @@
     "median": "8 500 €",
     "r2": "93 %",
     "history": {
-      "updated_at": "2026-11-21T18:32:45",
+      "updated_at": "2026-11-21T21:57:37",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 463,
@@ -3590,7 +3641,7 @@
     "median": "9 999 €",
     "r2": "92 %",
     "history": {
-      "updated_at": "2026-11-21T18:32:45",
+      "updated_at": "2026-11-21T21:57:37",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 1577,
