@@ -749,6 +749,19 @@
     }
   },
   {
+    "slug": "kia-rio",
+    "file": "kia-rio-analyza.html",
+    "name": "Kia Rio",
+    "brand": "Kia",
+    "model": "Rio",
+    "kind": "model",
+    "date": "2026-11-21",
+    "summary": "Analýza aktuálnych inzerátov Kia Rio (Rio JB, UB a YB, hatchback aj sedan) od 1 500 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 280 inzerátov (88 na bazoši, 96 na autobazar.eu, 96 na bazar.sk) – prezreli sme 90 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 177 rôznych áut zo Slovenska.",
+    "ads": 177,
+    "median": "5 900 €",
+    "r2": "90 %"
+  },
+  {
     "slug": "kia-sportage",
     "file": "kia-sportage-analyza.html",
     "name": "Kia Sportage",
@@ -1047,7 +1060,26 @@
     "summary": "Analýza aktuálnych inzerátov Seat Arona (od 2017, vrátane faceliftu 2021) od 5 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 153 inzerátov (43 na bazoši, 61 na autobazar.eu, 49 na bazar.sk) – prezreli sme 71 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 82 rôznych áut zo Slovenska.",
     "ads": 82,
     "median": "13 500 €",
-    "r2": "92 %"
+    "r2": "92 %",
+    "history": {
+      "updated_at": "2026-11-21T18:14:35",
+      "as_of": "2026-11-21",
+      "coverage": "partial",
+      "baseline_count": 58,
+      "total_count": 58,
+      "active_count": 58,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 58,
+      "paired_median_change_pct": 0,
+      "historical_median": 13500,
+      "seen_median": 13500,
+      "seen_price_count": 58,
+      "last_observed_at": "2026-11-21T18:11:13"
+    }
   },
   {
     "slug": "seat-ibiza",
@@ -1062,7 +1094,7 @@
     "median": "3 764 €",
     "r2": "86 %",
     "history": {
-      "updated_at": "2026-11-21T17:34:55",
+      "updated_at": "2026-11-21T18:14:35",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 126,
@@ -2022,7 +2054,7 @@
     "median": "16 999 €",
     "r2": "89 %",
     "history": {
-      "updated_at": "2026-11-21T17:34:55",
+      "updated_at": "2026-11-21T18:14:35",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 178,
@@ -2054,7 +2086,7 @@
     "median": "9 994 €",
     "r2": "92 %",
     "history": {
-      "updated_at": "2026-11-21T17:34:55",
+      "updated_at": "2026-11-21T18:14:35",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 463,
