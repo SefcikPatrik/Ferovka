@@ -601,7 +601,7 @@
     "median": "4 000 €",
     "r2": "85 %",
     "history": {
-      "updated_at": "2026-11-21T19:38:44",
+      "updated_at": "2026-11-21T20:29:25",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 157,
@@ -633,7 +633,7 @@
     "median": "5 500 €",
     "r2": "90 %",
     "history": {
-      "updated_at": "2026-11-21T19:38:44",
+      "updated_at": "2026-11-21T20:29:25",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 493,
@@ -653,6 +653,38 @@
     }
   },
   {
+    "slug": "ford-galaxy",
+    "file": "ford-galaxy-analyza.html",
+    "name": "Ford Galaxy",
+    "brand": "Ford",
+    "model": "Galaxy",
+    "kind": "model",
+    "date": "2026-11-21",
+    "summary": "Analýza aktuálnych inzerátov Ford Galaxy (tretia generácia po facelifte a štvrtá generácia, 2010–2023, 7 miest) od 3 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 240 inzerátov (102 na bazoši, 74 na autobazar.eu, 64 na bazar.sk) – prezreli sme 93 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 137 rôznych áut zo Slovenska.",
+    "ads": 137,
+    "median": "12 994 €",
+    "r2": "88 %",
+    "history": {
+      "updated_at": "2026-11-21T20:29:25",
+      "as_of": "2026-11-21",
+      "coverage": "partial",
+      "baseline_count": 96,
+      "total_count": 96,
+      "active_count": 96,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 96,
+      "paired_median_change_pct": 0,
+      "historical_median": 12994,
+      "seen_median": 12994,
+      "seen_price_count": 96,
+      "last_observed_at": "2026-11-21T20:28:33"
+    }
+  },
+  {
     "slug": "ford-kuga",
     "file": "ford-kuga-analyza.html",
     "name": "Ford Kuga",
@@ -665,7 +697,7 @@
     "median": "14 000 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-21T19:38:44",
+      "updated_at": "2026-11-21T20:29:25",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 357,
@@ -697,7 +729,7 @@
     "median": "7 200 €",
     "r2": "91 %",
     "history": {
-      "updated_at": "2026-11-21T19:38:44",
+      "updated_at": "2026-11-21T20:29:25",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 311,
@@ -729,7 +761,7 @@
     "median": "10 499 €",
     "r2": "87 %",
     "history": {
-      "updated_at": "2026-11-21T19:38:44",
+      "updated_at": "2026-11-21T20:29:25",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 175,
