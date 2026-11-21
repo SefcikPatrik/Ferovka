@@ -759,7 +759,26 @@
     "summary": "Analýza aktuálnych inzerátov Kia Rio (Rio JB, UB a YB, hatchback aj sedan) od 1 500 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 280 inzerátov (88 na bazoši, 96 na autobazar.eu, 96 na bazar.sk) – prezreli sme 90 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 177 rôznych áut zo Slovenska.",
     "ads": 177,
     "median": "5 900 €",
-    "r2": "90 %"
+    "r2": "90 %",
+    "history": {
+      "updated_at": "2026-11-21T18:19:50",
+      "as_of": "2026-11-21",
+      "coverage": "partial",
+      "baseline_count": 147,
+      "total_count": 147,
+      "active_count": 147,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 147,
+      "paired_median_change_pct": 0,
+      "historical_median": 5900,
+      "seen_median": 5900,
+      "seen_price_count": 147,
+      "last_observed_at": "2026-11-21T18:14:22"
+    }
   },
   {
     "slug": "kia-sportage",
@@ -774,7 +793,7 @@
     "median": "15 900 €",
     "r2": "95 %",
     "history": {
-      "updated_at": "2026-11-21T15:25:51",
+      "updated_at": "2026-11-21T18:19:50",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 487,
@@ -824,6 +843,19 @@
       "seen_price_count": 164,
       "last_observed_at": "2026-11-21T18:03:30"
     }
+  },
+  {
+    "slug": "mazda-6",
+    "file": "mazda-6-analyza.html",
+    "name": "Mazda 6",
+    "brand": "Mazda",
+    "model": "6",
+    "kind": "model",
+    "date": "2026-11-21",
+    "summary": "Analýza aktuálnych inzerátov Mazda 6 (GH a GJ/GL, sedan aj kombi Wagon, bez MPS) od 2 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 927 inzerátov (711 na bazoši, 120 na autobazar.eu, 96 na bazar.sk) – prezreli sme 38 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 235 rôznych áut zo Slovenska.",
+    "ads": 235,
+    "median": "8 500 €",
+    "r2": "90 %"
   },
   {
     "slug": "mazda-cx-5",
@@ -1734,7 +1766,7 @@
     "median": "12 985 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-21T15:25:51",
+      "updated_at": "2026-11-21T18:19:50",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 176,
