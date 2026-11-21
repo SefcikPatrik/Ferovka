@@ -973,6 +973,19 @@
     }
   },
   {
+    "slug": "suzuki-vitara",
+    "file": "suzuki-vitara-analyza.html",
+    "name": "Suzuki Vitara",
+    "brand": "Suzuki",
+    "model": "Vitara",
+    "kind": "model",
+    "date": "2026-11-21",
+    "summary": "Analýza aktuálnych inzerátov Suzuki Vitara (Vitara LY od 2015, 2WD aj ALLGRIP, bez starej Grand Vitary) od 4 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 505 inzerátov (205 na bazoši, 140 na autobazar.eu, 160 na bazar.sk) – prezreli sme 91 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 330 rôznych áut zo Slovenska.",
+    "ads": 330,
+    "median": "14 300 €",
+    "r2": "93 %"
+  },
+  {
     "slug": "skoda-kamiq",
     "file": "skoda-kamiq-analyza.html",
     "name": "Škoda Kamiq",
@@ -985,7 +998,7 @@
     "median": "18 432 €",
     "r2": "86 %",
     "history": {
-      "updated_at": "2026-11-21T15:55:25",
+      "updated_at": "2026-11-21T17:40:15",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 301,
@@ -1017,7 +1030,7 @@
     "median": "19 489 €",
     "r2": "89 %",
     "history": {
-      "updated_at": "2026-11-21T15:55:25",
+      "updated_at": "2026-11-21T17:40:15",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 504,
@@ -1049,7 +1062,7 @@
     "median": "7 000 €",
     "r2": "81 %",
     "history": {
-      "updated_at": "2026-11-21T15:55:25",
+      "updated_at": "2026-11-21T17:40:15",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 308,
@@ -1081,7 +1094,7 @@
     "median": "16 590 €",
     "r2": "91 %",
     "history": {
-      "updated_at": "2026-11-21T15:55:25",
+      "updated_at": "2026-11-21T17:40:15",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 282,
@@ -1111,7 +1124,26 @@
     "summary": "Analýza aktuálnych inzerátov Škoda Yeti (2009–2017, 4x2 aj 4x4, Outdoor aj City) od 2 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 525 inzerátov (162 na bazoši, 203 na autobazar.eu, 160 na bazar.sk) – prezreli sme 94 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 265 rôznych áut zo Slovenska.",
     "ads": 265,
     "median": "7 900 €",
-    "r2": "87 %"
+    "r2": "87 %",
+    "history": {
+      "updated_at": "2026-11-21T17:40:15",
+      "as_of": "2026-11-21",
+      "coverage": "partial",
+      "baseline_count": 228,
+      "total_count": 228,
+      "active_count": 228,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 228,
+      "paired_median_change_pct": 0,
+      "historical_median": 7900,
+      "seen_median": 7900,
+      "seen_price_count": 228,
+      "last_observed_at": "2026-11-21T17:34:41"
+    }
   },
   {
     "slug": "toyota-corolla",
@@ -1830,7 +1862,7 @@
     "median": "5 945 €",
     "r2": "93 %",
     "history": {
-      "updated_at": "2026-11-21T15:55:25",
+      "updated_at": "2026-11-21T17:40:15",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 1030,
@@ -1862,7 +1894,7 @@
     "median": "24 490 €",
     "r2": "89 %",
     "history": {
-      "updated_at": "2026-11-21T15:55:25",
+      "updated_at": "2026-11-21T17:40:15",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 1084,
@@ -1894,7 +1926,7 @@
     "median": "10 900 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-21T15:55:25",
+      "updated_at": "2026-11-21T17:40:15",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 3448,
@@ -1926,14 +1958,14 @@
     "median": "16 000 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-21T15:55:25",
+      "updated_at": "2026-11-21T17:40:15",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 1346,
       "total_count": 4305,
-      "active_count": 1,
+      "active_count": 3,
       "inactive_count": 0,
-      "unverified_count": 4304,
+      "unverified_count": 4302,
       "new_count": 2959,
       "price_changed_count": 1,
       "price_lowered_count": 1,
@@ -1942,7 +1974,7 @@
       "historical_median": 16600,
       "seen_median": 17200,
       "seen_price_count": 1,
-      "last_observed_at": "2026-11-21T11:40:39"
+      "last_observed_at": "2026-11-21T16:42:39"
     }
   },
   {
