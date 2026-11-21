@@ -569,7 +569,7 @@
     "median": "18 432 €",
     "r2": "86 %",
     "history": {
-      "updated_at": "2026-11-21T15:47:59",
+      "updated_at": "2026-11-21T15:55:25",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 301,
@@ -601,7 +601,7 @@
     "median": "19 489 €",
     "r2": "89 %",
     "history": {
-      "updated_at": "2026-11-21T15:47:59",
+      "updated_at": "2026-11-21T15:55:25",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 504,
@@ -621,6 +621,38 @@
     }
   },
   {
+    "slug": "skoda-rapid",
+    "file": "skoda-rapid-analyza.html",
+    "name": "Škoda Rapid",
+    "brand": "Škoda",
+    "model": "Rapid",
+    "kind": "model",
+    "date": "2026-11-21",
+    "summary": "Analýza aktuálnych inzerátov Škoda Rapid (2012–2019, liftback aj Spaceback) od 1 500 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 780 inzerátov (217 na bazoši, 371 na autobazar.eu, 192 na bazar.sk) – prezreli sme 93 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 373 rôznych áut zo Slovenska.",
+    "ads": 373,
+    "median": "7 000 €",
+    "r2": "81 %",
+    "history": {
+      "updated_at": "2026-11-21T15:55:25",
+      "as_of": "2026-11-21",
+      "coverage": "partial",
+      "baseline_count": 308,
+      "total_count": 308,
+      "active_count": 308,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 308,
+      "paired_median_change_pct": 0,
+      "historical_median": 7000,
+      "seen_median": 7000,
+      "seen_price_count": 308,
+      "last_observed_at": "2026-11-21T15:54:11"
+    }
+  },
+  {
     "slug": "skoda-scala",
     "file": "skoda-scala-analyza.html",
     "name": "Škoda Scala",
@@ -633,7 +665,7 @@
     "median": "16 590 €",
     "r2": "91 %",
     "history": {
-      "updated_at": "2026-11-21T15:47:59",
+      "updated_at": "2026-11-21T15:55:25",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 282,
@@ -649,7 +681,7 @@
       "historical_median": 16720,
       "seen_median": 16990,
       "seen_price_count": 587,
-      "last_observed_at": "2026-11-21T15:46:51"
+      "last_observed_at": "2026-11-21T15:52:03"
     }
   },
   {
@@ -1209,7 +1241,7 @@
     "median": "5 945 €",
     "r2": "93 %",
     "history": {
-      "updated_at": "2026-11-21T15:47:59",
+      "updated_at": "2026-11-21T15:55:25",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 1030,
@@ -1241,7 +1273,7 @@
     "median": "24 490 €",
     "r2": "89 %",
     "history": {
-      "updated_at": "2026-11-21T15:47:59",
+      "updated_at": "2026-11-21T15:55:25",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 1084,
@@ -1273,7 +1305,7 @@
     "median": "10 900 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-21T15:47:59",
+      "updated_at": "2026-11-21T15:55:25",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 3448,
@@ -1305,7 +1337,7 @@
     "median": "16 000 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-21T15:47:59",
+      "updated_at": "2026-11-21T15:55:25",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 1346,

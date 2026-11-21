@@ -292,5 +292,12 @@
     "author": "Alexander Migl",
     "license": "CC BY-SA 4.0",
     "source": "https://commons.wikimedia.org/wiki/File:Skoda_Kamiq_(2019)_Monte_Carlo_1X7A6165.jpg"
+  },
+  "skoda-rapid": {
+    "src": "/img/skoda-rapid.jpg",
+    "file": "File:Skoda Rapid at Pfingsttreffen Puetnitz 2018, Ribnitz-Damgarten (1X7A2428).jpg",
+    "author": "Matti Blume",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Skoda_Rapid_at_Pfingsttreffen_Puetnitz_2018,_Ribnitz-Damgarten_(1X7A2428).jpg"
   }
 }
