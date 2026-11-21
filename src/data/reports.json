@@ -525,6 +525,19 @@
     }
   },
   {
+    "slug": "ford-fiesta",
+    "file": "ford-fiesta-analyza.html",
+    "name": "Ford Fiesta",
+    "brand": "Ford",
+    "model": "Fiesta",
+    "kind": "model",
+    "date": "2026-11-21",
+    "summary": "Analýza aktuálnych inzerátov Ford Fiesta (Fiesta Mk6 až Mk8, bez ST) od 1 500 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 354 inzerátov (131 na bazoši, 127 na autobazar.eu, 96 na bazar.sk) – prezreli sme 89 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 206 rôznych áut zo Slovenska.",
+    "ads": 206,
+    "median": "4 000 €",
+    "r2": "85 %"
+  },
+  {
     "slug": "ford-focus",
     "file": "ford-focus-analyza.html",
     "name": "Ford Focus",
@@ -1271,7 +1284,26 @@
     "summary": "Analýza aktuálnych inzerátov Volkswagen Caddy (Caddy III a V, osobný aj Maxi, bez úžitkových Cargo bez sedadiel, kde to inzerát uvádza) od 2 500 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 533 inzerátov (325 na bazoši, 80 na autobazar.eu, 128 na bazar.sk) – prezreli sme 93 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 363 rôznych áut zo Slovenska.",
     "ads": 363,
     "median": "9 500 €",
-    "r2": "86 %"
+    "r2": "86 %",
+    "history": {
+      "updated_at": "2026-11-21T17:52:02",
+      "as_of": "2026-11-21",
+      "coverage": "partial",
+      "baseline_count": 261,
+      "total_count": 261,
+      "active_count": 261,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 261,
+      "paired_median_change_pct": 0,
+      "historical_median": 9500,
+      "seen_median": 9500,
+      "seen_price_count": 261,
+      "last_observed_at": "2026-11-21T17:48:41"
+    }
   },
   {
     "slug": "vw-passat",
@@ -1286,7 +1318,7 @@
     "median": "12 500 €",
     "r2": "93 %",
     "history": {
-      "updated_at": "2026-11-21T16:10:49",
+      "updated_at": "2026-11-21T17:52:02",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 1346,
@@ -1318,7 +1350,7 @@
     "median": "5 999 €",
     "r2": "90 %",
     "history": {
-      "updated_at": "2026-11-21T16:10:49",
+      "updated_at": "2026-11-21T17:52:02",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 219,
@@ -1350,7 +1382,7 @@
     "median": "18 740 €",
     "r2": "90 %",
     "history": {
-      "updated_at": "2026-11-21T16:10:49",
+      "updated_at": "2026-11-21T17:52:02",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 166,
@@ -1382,7 +1414,7 @@
     "median": "19 800 €",
     "r2": "92 %",
     "history": {
-      "updated_at": "2026-11-21T16:10:49",
+      "updated_at": "2026-11-21T17:52:02",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 893,
@@ -1414,7 +1446,7 @@
     "median": "8 500 €",
     "r2": "93 %",
     "history": {
-      "updated_at": "2026-11-21T16:10:49",
+      "updated_at": "2026-11-21T17:52:02",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 463,
@@ -2022,23 +2054,23 @@
     "median": "9 999 €",
     "r2": "92 %",
     "history": {
-      "updated_at": "2026-11-21T16:10:49",
+      "updated_at": "2026-11-21T17:52:02",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 1577,
       "total_count": 3724,
-      "active_count": 2,
+      "active_count": 3,
       "inactive_count": 0,
-      "unverified_count": 3722,
+      "unverified_count": 3721,
       "new_count": 2147,
       "price_changed_count": 2,
       "price_lowered_count": 2,
       "paired_count": 2,
       "paired_median_change_pct": -3,
       "historical_median": 9999,
-      "seen_median": 9075,
-      "seen_price_count": 2,
-      "last_observed_at": "2026-11-21T11:40:48"
+      "seen_median": 8650,
+      "seen_price_count": 3,
+      "last_observed_at": "2026-11-21T17:37:05"
     }
   }
 ]
