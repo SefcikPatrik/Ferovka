@@ -1037,6 +1037,19 @@
     }
   },
   {
+    "slug": "seat-arona",
+    "file": "seat-arona-analyza.html",
+    "name": "Seat Arona",
+    "brand": "Seat",
+    "model": "Arona",
+    "kind": "model",
+    "date": "2026-11-21",
+    "summary": "Analýza aktuálnych inzerátov Seat Arona (od 2017, vrátane faceliftu 2021) od 5 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 153 inzerátov (43 na bazoši, 61 na autobazar.eu, 49 na bazar.sk) – prezreli sme 71 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 82 rôznych áut zo Slovenska.",
+    "ads": 82,
+    "median": "13 500 €",
+    "r2": "92 %"
+  },
+  {
     "slug": "seat-ibiza",
     "file": "seat-ibiza-analyza.html",
     "name": "Seat Ibiza",
@@ -1261,6 +1274,38 @@
     }
   },
   {
+    "slug": "toyota-auris",
+    "file": "toyota-auris-analyza.html",
+    "name": "Toyota Auris",
+    "brand": "Toyota",
+    "model": "Auris",
+    "kind": "model",
+    "date": "2026-11-21",
+    "summary": "Analýza aktuálnych inzerátov Toyota Auris (E150 a E180, hatchback aj kombi Touring Sports) od 1 500 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 195 inzerátov (60 na bazoši, 71 na autobazar.eu, 64 na bazar.sk) – prezreli sme 94 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 132 rôznych áut zo Slovenska.",
+    "ads": 132,
+    "median": "7 100 €",
+    "r2": "90 %",
+    "history": {
+      "updated_at": "2026-11-21T18:11:26",
+      "as_of": "2026-11-21",
+      "coverage": "partial",
+      "baseline_count": 101,
+      "total_count": 101,
+      "active_count": 101,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 101,
+      "paired_median_change_pct": 0,
+      "historical_median": 7100,
+      "seen_median": 7100,
+      "seen_price_count": 101,
+      "last_observed_at": "2026-11-21T18:10:05"
+    }
+  },
+  {
     "slug": "toyota-c-hr",
     "file": "toyota-c-hr-analyza.html",
     "name": "Toyota C-HR",
@@ -1273,7 +1318,7 @@
     "median": "24 600 €",
     "r2": "95 %",
     "history": {
-      "updated_at": "2026-11-21T17:59:54",
+      "updated_at": "2026-11-21T18:11:26",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 161,
@@ -1305,7 +1350,7 @@
     "median": "18 000 €",
     "r2": "96 %",
     "history": {
-      "updated_at": "2026-11-21T17:59:54",
+      "updated_at": "2026-11-21T18:11:26",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 254,
@@ -1337,7 +1382,7 @@
     "median": "22 700 €",
     "r2": "97 %",
     "history": {
-      "updated_at": "2026-11-21T17:59:54",
+      "updated_at": "2026-11-21T18:11:26",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 246,
@@ -1369,7 +1414,7 @@
     "median": "12 000 €",
     "r2": "95 %",
     "history": {
-      "updated_at": "2026-11-21T17:59:54",
+      "updated_at": "2026-11-21T18:11:26",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 186,
