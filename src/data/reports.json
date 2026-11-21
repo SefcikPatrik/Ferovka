@@ -653,6 +653,38 @@
     }
   },
   {
+    "slug": "mazda-cx-5",
+    "file": "mazda-cx-5-analyza.html",
+    "name": "Mazda CX-5",
+    "brand": "Mazda",
+    "model": "CX-5",
+    "kind": "model",
+    "date": "2026-11-21",
+    "summary": "Analýza aktuálnych inzerátov Mazda CX-5 (KE a KF, 2WD aj AWD) od 4 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 328 inzerátov (155 na bazoši, 165 na autobazar.eu, 8 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 226 rôznych áut zo Slovenska.",
+    "ads": 226,
+    "median": "12 990 €",
+    "r2": "95 %",
+    "history": {
+      "updated_at": "2026-11-21T17:06:05",
+      "as_of": "2026-11-21",
+      "coverage": "partial",
+      "baseline_count": 191,
+      "total_count": 191,
+      "active_count": 191,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 191,
+      "paired_median_change_pct": 0,
+      "historical_median": 12990,
+      "seen_median": 12990,
+      "seen_price_count": 191,
+      "last_observed_at": "2026-11-21T17:04:50"
+    }
+  },
+  {
     "slug": "mercedes-glc",
     "file": "mercedes-glc-analyza.html",
     "name": "Mercedes-Benz GLC",

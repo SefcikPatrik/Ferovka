@@ -376,5 +376,12 @@
     "author": "Alistair Fernandez",
     "license": "CC BY-SA 3.0",
     "source": "https://commons.wikimedia.org/wiki/File:Toyota_RAV4_2019_(XA50)_CUV_Quarter_Front.jpg"
+  },
+  "mazda-cx-5": {
+    "src": "/img/mazda-cx-5.jpg",
+    "file": "File:2022 Mazda CX-5 2.0 front.jpg",
+    "author": "ShangTW",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:2022_Mazda_CX-5_2.0_front.jpg"
   }
 }
