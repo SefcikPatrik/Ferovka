@@ -697,7 +697,7 @@
     "median": "12 500 €",
     "r2": "93 %",
     "history": {
-      "updated_at": "2026-11-21T16:04:42",
+      "updated_at": "2026-11-21T16:10:49",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 1346,
@@ -729,7 +729,7 @@
     "median": "5 999 €",
     "r2": "90 %",
     "history": {
-      "updated_at": "2026-11-21T16:04:42",
+      "updated_at": "2026-11-21T16:10:49",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 219,
@@ -749,6 +749,38 @@
     }
   },
   {
+    "slug": "vw-t-roc",
+    "file": "vw-t-roc-analyza.html",
+    "name": "Volkswagen T-Roc",
+    "brand": "Volkswagen",
+    "model": "T-Roc",
+    "kind": "model",
+    "date": "2026-11-21",
+    "summary": "Analýza aktuálnych inzerátov Volkswagen T-Roc (od 2017, SUV aj Cabriolet, vrátane T-Roc R) od 6 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 386 inzerátov (106 na bazoši, 152 na autobazar.eu, 128 na bazar.sk) – prezreli sme 92 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 188 rôznych áut zo Slovenska.",
+    "ads": 188,
+    "median": "18 740 €",
+    "r2": "90 %",
+    "history": {
+      "updated_at": "2026-11-21T16:10:49",
+      "as_of": "2026-11-21",
+      "coverage": "partial",
+      "baseline_count": 166,
+      "total_count": 166,
+      "active_count": 166,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 166,
+      "paired_median_change_pct": 0,
+      "historical_median": 18740,
+      "seen_median": 18740,
+      "seen_price_count": 166,
+      "last_observed_at": "2026-11-21T16:09:44"
+    }
+  },
+  {
     "slug": "vw-tiguan",
     "file": "vw-tiguan-analyza.html",
     "name": "Volkswagen Tiguan",
@@ -761,7 +793,7 @@
     "median": "19 800 €",
     "r2": "92 %",
     "history": {
-      "updated_at": "2026-11-21T16:04:42",
+      "updated_at": "2026-11-21T16:10:49",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 893,
@@ -793,7 +825,7 @@
     "median": "8 500 €",
     "r2": "93 %",
     "history": {
-      "updated_at": "2026-11-21T16:04:42",
+      "updated_at": "2026-11-21T16:10:49",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 463,
@@ -1401,7 +1433,7 @@
     "median": "9 999 €",
     "r2": "92 %",
     "history": {
-      "updated_at": "2026-11-21T16:04:42",
+      "updated_at": "2026-11-21T16:10:49",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 1577,
