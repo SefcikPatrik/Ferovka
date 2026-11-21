@@ -1497,7 +1497,7 @@
     "median": "6 084 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-21T19:01:38",
+      "updated_at": "2026-11-21T19:30:44",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 42,
@@ -1517,6 +1517,38 @@
     }
   },
   {
+    "slug": "skoda-enyaq",
+    "file": "skoda-enyaq-analyza.html",
+    "name": "Škoda Enyaq",
+    "brand": "Škoda",
+    "model": "Enyaq",
+    "kind": "model",
+    "date": "2026-11-21",
+    "summary": "Analýza aktuálnych inzerátov Škoda Enyaq (Enyaq iV a Enyaq Coupé, 2020–2025, elektro) od 15 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 398 inzerátov (89 na bazoši, 174 na autobazar.eu, 135 na bazar.sk) – prezreli sme 66 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 130 rôznych áut zo Slovenska.",
+    "ads": 130,
+    "median": "28 990 €",
+    "r2": "88 %",
+    "history": {
+      "updated_at": "2026-11-21T19:30:44",
+      "as_of": "2026-11-21",
+      "coverage": "partial",
+      "baseline_count": 111,
+      "total_count": 111,
+      "active_count": 111,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 111,
+      "paired_median_change_pct": 0,
+      "historical_median": 28990,
+      "seen_median": 28990,
+      "seen_price_count": 111,
+      "last_observed_at": "2026-11-21T19:29:53"
+    }
+  },
+  {
     "slug": "skoda-kamiq",
     "file": "skoda-kamiq-analyza.html",
     "name": "Škoda Kamiq",
@@ -1529,7 +1561,7 @@
     "median": "18 432 €",
     "r2": "86 %",
     "history": {
-      "updated_at": "2026-11-21T19:01:38",
+      "updated_at": "2026-11-21T19:30:44",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 301,
@@ -1561,7 +1593,7 @@
     "median": "19 489 €",
     "r2": "89 %",
     "history": {
-      "updated_at": "2026-11-21T19:01:38",
+      "updated_at": "2026-11-21T19:30:44",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 504,
@@ -1593,7 +1625,7 @@
     "median": "7 000 €",
     "r2": "81 %",
     "history": {
-      "updated_at": "2026-11-21T19:01:38",
+      "updated_at": "2026-11-21T19:30:44",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 308,
@@ -1625,7 +1657,7 @@
     "median": "3 990 €",
     "r2": "78 %",
     "history": {
-      "updated_at": "2026-11-21T19:01:38",
+      "updated_at": "2026-11-21T19:30:44",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 115,
@@ -1657,7 +1689,7 @@
     "median": "16 590 €",
     "r2": "91 %",
     "history": {
-      "updated_at": "2026-11-21T19:01:38",
+      "updated_at": "2026-11-21T19:30:44",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 282,
@@ -1689,7 +1721,7 @@
     "median": "7 900 €",
     "r2": "87 %",
     "history": {
-      "updated_at": "2026-11-21T19:01:38",
+      "updated_at": "2026-11-21T19:30:44",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 228,
@@ -2553,7 +2585,7 @@
     "median": "5 945 €",
     "r2": "93 %",
     "history": {
-      "updated_at": "2026-11-21T19:01:38",
+      "updated_at": "2026-11-21T19:30:44",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 1030,
@@ -2585,7 +2617,7 @@
     "median": "24 490 €",
     "r2": "89 %",
     "history": {
-      "updated_at": "2026-11-21T19:01:38",
+      "updated_at": "2026-11-21T19:30:44",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 1084,
@@ -2617,7 +2649,7 @@
     "median": "10 900 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-21T19:01:38",
+      "updated_at": "2026-11-21T19:30:44",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 3448,
@@ -2649,7 +2681,7 @@
     "median": "16 000 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-21T19:01:38",
+      "updated_at": "2026-11-21T19:30:44",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 1346,
