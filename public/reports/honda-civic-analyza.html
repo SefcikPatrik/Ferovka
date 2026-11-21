@@ -1,0 +1,725 @@
+<!doctype html>
+<html lang="sk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Honda Civic – analýza ponúk</title>
+<style>
+:root {
+  color-scheme: light;
+  --bg: #f6f6f4; --surface: #fcfcfb; --surface-2: #f0efec; --border: #e2e1dc;
+  --text: #0b0b0b; --text-2: #52514e; --muted: #7a7974;
+  --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a;
+  --pos: #2a78d6; --neg: #eb6834; --accent: #2a78d6;
+  --good: #1d7f4e; --bad: #b4332f; --grid: #e8e7e3;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #121211; --surface: #1a1a19; --surface-2: #232321; --border: #33332f;
+    --text: #f0efec; --text-2: #c3c2b7; --muted: #8f8e86;
+    --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+    --pos: #3987e5; --neg: #d95926; --accent: #5598e7;
+    --good: #4cc38a; --bad: #f07a76; --grid: #2a2a27;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #121211; --surface: #1a1a19; --surface-2: #232321; --border: #33332f;
+  --text: #f0efec; --text-2: #c3c2b7; --muted: #8f8e86;
+  --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+  --pos: #3987e5; --neg: #d95926; --accent: #5598e7;
+  --good: #4cc38a; --bad: #f07a76; --grid: #2a2a27;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text);
+  font: 15px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+main { max-width: 1120px; margin: 0 auto; padding: 32px 16px 64px; }
+a { color: var(--accent); text-decoration: none; } a:hover { text-decoration: underline; }
+h1 { font-size: 30px; margin: 0 0 4px; letter-spacing: -.01em; }
+h2 { font-size: 21px; margin: 48px 0 6px; }
+h3 { font-size: 15px; margin: 6px 0 4px; line-height: 1.35; }
+.lead { color: var(--text-2); margin: 0 0 20px; max-width: 760px; }
+.section-lead { color: var(--text-2); margin: 0 0 16px; max-width: 800px; }
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
+.kpi { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+.kpi .v { font-size: 26px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.kpi .l { color: var(--text-2); font-size: 13px; }
+.explain { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; margin-top: 12px; }
+.explain p { margin: 6px 0; color: var(--text-2); }
+.explain b { color: var(--text); }
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; }
+.card-head { display: flex; justify-content: space-between; gap: 8px; font-size: 12px; }
+.tag { font-weight: 600; color: var(--accent); }
+.loc { color: var(--muted); }
+.facts { color: var(--text-2); font-size: 13px; }
+.prices { display: grid; grid-template-columns: 1.2fr 1fr .8fr; gap: 8px; margin: 12px 0 8px; }
+.lbl { display: block; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+.big { font-size: 22px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.mid { font-size: 16px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.good { color: var(--good); }
+.meter { height: 6px; background: var(--surface-2); border-radius: 4px; overflow: hidden; }
+.meter span { display: block; height: 100%; background: var(--s1); border-radius: 4px; }
+.news ul { margin: 6px 0 0; padding-left: 20px; } .news li { margin: 4px 0; } .news .down { color: var(--good, #1baf7a); font-weight: 600; }
+.note { font-size: 12.5px; background: var(--surface-2); border-radius: 6px; padding: 6px 8px; margin-top: 8px; color: var(--text-2); }
+.pc { list-style: none; padding: 0; margin: 10px 0 0; font-size: 13.5px; }
+.pc li { padding-left: 20px; position: relative; margin: 3px 0; }
+.pc li.pro::before { content: "+"; position: absolute; left: 4px; color: var(--good); font-weight: 700; }
+.pc li.con::before { content: "–"; position: absolute; left: 4px; color: var(--bad); font-weight: 700; }
+.subhead { font-size: 15px; color: var(--text-2); margin: 22px 0 10px; font-weight: 600; }
+.chart-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 14px 8px; position: relative; }
+.legend { display: flex; flex-wrap: wrap; gap: 16px; font-size: 13px; color: var(--text-2); margin: 0 0 6px 4px; }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; }
+.legend .ring { background: transparent; border: 2px solid var(--text); width: 12px; height: 12px; }
+svg text { fill: var(--muted); font-size: 11px; }
+.tip { position: absolute; pointer-events: none; background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+  padding: 8px 10px; font-size: 12.5px; box-shadow: 0 6px 20px rgba(0,0,0,.15); max-width: 280px; display: none; z-index: 5; }
+.tip b { display: block; margin-bottom: 2px; }
+.tip .row { display: flex; justify-content: space-between; gap: 12px; color: var(--text-2); }
+.tip .row span:last-child { color: var(--text); font-variant-numeric: tabular-nums; }
+table { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; font-size: 13.5px; }
+th, td { padding: 9px 10px; border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; }
+th { font-size: 12px; color: var(--text-2); font-weight: 600; background: var(--surface-2); white-space: nowrap; }
+th.sortable { cursor: pointer; user-select: none; } th.sortable:hover { color: var(--text); }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+.sub { color: var(--text-2); font-size: 12.5px; margin-top: 2px; }
+.stars { color: #c98500; letter-spacing: 1px; white-space: nowrap; } .stars .off { color: var(--border); }
+.cellbar { height: 5px; background: var(--surface-2); border-radius: 3px; margin-bottom: 4px; }
+.cellbar span { display: block; height: 100%; background: var(--s1); border-radius: 3px; }
+.disc { display: inline-flex; align-items: center; gap: 6px; justify-content: flex-end; }
+.dbar { width: 54px; height: 6px; background: var(--surface-2); border-radius: 3px; position: relative; }
+.dbar span { position: absolute; top: 0; height: 100%; border-radius: 3px; }
+.filters { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 10px; align-items: center; }
+.filters select, .filters input { background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 6px 8px; font: inherit; font-size: 13px; }
+.filters .count { color: var(--muted); font-size: 13px; margin-left: auto; }
+.table-scroll { overflow-x: auto; border-radius: 12px; }
+.badge { font-size: 11px; padding: 1px 6px; border-radius: 10px; background: var(--surface-2); color: var(--text-2); white-space: nowrap; }
+.badge.pick { background: var(--s1); color: #fff; }
+.flag { color: var(--bad); font-size: 12px; }
+.warn { background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--neg); border-radius: 10px; padding: 12px 16px; }
+.warn li { margin: 4px 0; }
+.check { columns: 2 300px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px 14px 34px; margin: 0; }
+.check li { margin: 4px 0; break-inside: avoid; }
+footer { color: var(--muted); font-size: 12.5px; margin-top: 48px; border-top: 1px solid var(--border); padding-top: 14px; }
+.theme-btn { float: right; background: var(--surface); color: var(--text-2); border: 1px solid var(--border); border-radius: 8px; padding: 5px 10px; cursor: pointer; font: inherit; font-size: 13px; }
+@media (max-width: 640px) { h1 { font-size: 24px; } .prices { grid-template-columns: 1fr 1fr 1fr; } .big { font-size: 18px; } th, td { padding: 7px 6px; } }
+</style>
+<!-- ferovka-theme --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"><style id="ferovka-theme">/* Férovka look for the generated analyses – injected by sync-reports.mjs after each report's own <style>.
+   Same palette and type as the site; chart colours (--s1..--s3) stay the validated set. */
+:root {
+  --bg: #f5f4ef; --surface: #fdfdfb; --surface-2: #eeede6; --border: #e1dfd6;
+  --text: #0f1513; --text-2: #4f5551; --muted: #6f746f;
+  --accent: #0b8a56; --good: #0b7a4b; --grid: #e6e4dc; --win: #dff3e9;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d110f; --surface: #151a17; --surface-2: #1d2420; --border: #2a322d;
+    --text: #eef1ec; --text-2: #b6bdb6; --muted: #8f978f;
+    --accent: #2fc583; --good: #4cd08f; --grid: #1f2622; --win: #143223;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d110f; --surface: #151a17; --surface-2: #1d2420; --border: #2a322d;
+  --text: #eef1ec; --text-2: #b6bdb6; --muted: #8f978f;
+  --accent: #2fc583; --good: #4cd08f; --grid: #1f2622; --win: #143223;
+}
+
+body { font-family: "Manrope", system-ui, sans-serif; }
+h1, h2 { letter-spacing: -0.02em; font-weight: 800; }
+.tag { color: var(--accent); }
+
+/* photo header (removed by the site's viewer, which shows its own) */
+.fv-hero { position: relative; margin: 0 0 26px; border-radius: 20px; overflow: hidden; aspect-ratio: 21 / 8; background: #0d110f; display: flex; }
+.fv-hero img { flex: 1; min-width: 0; height: 100%; object-fit: cover; animation: fv-zoom 1.4s cubic-bezier(.2,.7,.2,1) both; }
+.fv-collage img + img { border-left: 3px solid #0d110f; }
+.fv-hero::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(180deg, transparent 55%, rgb(13 17 15 / .75)),
+    repeating-linear-gradient(90deg, rgb(47 197 131 / .06) 0 1px, transparent 1px 48px); }
+.fv-hero figcaption { position: absolute; right: 12px; bottom: 8px; z-index: 1; font-size: 11px; color: rgb(255 255 255 / .75); }
+.fv-hero figcaption a { color: inherit; }
+
+/* cards & panels: softer, lift on hover */
+.card, .kpi, .explain, .chart-wrap, .box { border-radius: 16px; }
+.card { transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease; }
+.card:hover { transform: translateY(-3px); border-color: var(--accent); box-shadow: 0 14px 30px -18px rgb(0 0 0 / .45); }
+.badge.pick { background: var(--accent); }
+
+/* entrance animation */
+@keyframes fv-up { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes fv-zoom { from { transform: scale(1.08); filter: brightness(.6); } to { transform: none; filter: none; } }
+h1, .lead, .kpis, .cards .card { animation: fv-up .6s cubic-bezier(.2,.7,.2,1) both; }
+.lead { animation-delay: .08s; }
+.kpis { animation-delay: .16s; }
+.cards .card:nth-child(2) { animation-delay: .06s; }
+.cards .card:nth-child(3) { animation-delay: .12s; }
+.cards .card:nth-child(4) { animation-delay: .18s; }
+.cards .card:nth-child(5) { animation-delay: .24s; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+@media (max-width: 640px) { .fv-hero { aspect-ratio: 16 / 9; border-radius: 14px; } }
+
+/* touch: hint under the chart tooltip (report-chart.js) */
+.fv-hint { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--border, rgba(127,127,127,.3)); font-weight: 700; color: var(--accent, #2fc583); }
+</style><!-- /ferovka-theme -->
+</head>
+<body>
+<main><!-- ferovka-theme --><!-- /ferovka-theme -->
+<button class="theme-btn" id="themeBtn" type="button">Svetlý / tmavý</button>
+<h1>Honda Civic – ktorá ponuka sa oplatí</h1>
+<p class="lead">Analýza aktuálnych inzerátov Honda Civic (8. až 11. generácia, hatchback, sedan aj kombi Tourer, bez Type R) od 1 500 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 266 inzerátov (129 na bazoši, 73 na autobazar.eu, 64 na bazar.sk) – prezreli sme 89 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 173 rôznych áut zo Slovenska. Každé auto sme porovnali
+s <b>férovou cenou</b>: tú vypočítal model naučený na celom trhu podľa veku, nájazdu, motora, prevodovky a typu predajcu.</p>
+
+<div class="kpis">
+  <div class="kpi"><div class="v">173</div><div class="l">inzerátov Hondy Civic (nad 1 500 €)</div></div>
+  <div class="kpi"><div class="v">93</div><div class="l">ohodnotených (majú rok aj km)</div></div>
+  <div class="kpi"><div class="v">7 700 €</div><div class="l">medián ceny s DPH</div></div>
+  <div class="kpi"><div class="v">94 %</div><div class="l">rozdielov v cenách vysvetlí model</div></div>
+</div>
+
+
+<h2>Odkiaľ sú dáta: bazoš, autobazar.eu a bazar.sk</h2>
+<div class="kpis">
+  <div class="kpi"><div class="v">51</div><div class="l">ohodnotených z bazoša</div></div>
+  <div class="kpi"><div class="v">24</div><div class="l">ohodnotených z autobazar.eu</div></div><div class="kpi"><div class="v">18</div><div class="l">ohodnotených z bazar.sk</div></div>
+  <div class="kpi"><div class="v">38</div><div class="l">áut bolo na viacerých portáloch – započítané raz</div></div>
+  <div class="kpi"><div class="v">31 / 3</div><div class="l">s uvedeným pôvodom SR / dovoz</div></div>
+</div>
+<div class="explain">
+  <p><b>Tri portály, jeden trh.</b> Bazoš prehľadal 125 inzerátov, autobazar.eu
+  73, bazar.sk 39. Ponuky z Česka (na autobazar.eu ich je veľa) sme vynechali. Autobazáre často dávajú
+  to isté auto na viac portálov. Takéto dvojice (23 v rebríčku) sme spojili podľa VIN alebo zhody roku, km a ceny,
+  aby sa v modeli nerátali dvakrát. Pri aute nájdeš odkaz na všetky ponuky – niekedy sa líšia cenou.</p>
+  <p><b>Rozdiel medzi portálmi:</b> rovnaké auto je na autobazar.eu v priemere +18,7 %
+  oproti bazošu. Na autobazar.eu predávajú hlavne firmy (16 z 24 ohodnotených). Na bazar.sk je rovnaké auto v priemere +17,0 % oproti bazošu.</p>
+  <p><b>Kúpené v SR vs. dovoz:</b> autá s uvedeným pôvodom zo SR sú oproti autám bez uvedeného pôvodu
+  +0,7 %, dovezené –
+  (pri rovnakom veku, nájazde a motore). Pôvod zo SR je výhoda pri overovaní histórie, trh zaň však nepripláca – väčšina
+  inzerátov pôvod jednoducho neuvádza. V tabulke dole si môžeš nechať zobraziť len autá kúpené v SR.</p>
+</div>
+
+<h2>Čo hýbe cenou Hondy Civic</h2>
+<p class="section-lead">Toto sa model naučil z trhu. Keď porovnávaš dve autá, tieto čísla ti povedia, koľko má byť
+rozdiel v cene, aby to bolo fér.</p>
+<div class="kpis">
+  <div class="kpi"><div class="v">-2,7 %</div><div class="l">každých ďalších 10 000 km</div></div>
+  <div class="kpi"><div class="v">-7,2 %</div><div class="l">každý rok veku navyše</div></div>
+  <div class="kpi"><div class="v">+4 %</div><div class="l">príplatok za automat (DSG)</div></div>
+  <div class="kpi"><div class="v">-0,5 %</div><div class="l">príplatok u predajcu / firmy</div></div>
+  <div class="kpi"><div class="v">-6,8 %</div><div class="l">Civic 10. a 11. generácie (2017+) oproti cene podľa veku</div></div>
+  <div class="kpi"><div class="v">+4,3 %</div><div class="l">príplatok za automat</div></div>
+</div>
+<div class="explain">
+  <p><b>Príklad:</b> dve rovnaké Hondy Civic 1.0 VTEC Turbo z roku 2018, jedno má 60 tis. km, druhé 120 tis. km. Druhé má byť
+  približne o 16 % lacnejšie (6 × -2,7 %). Ak je lacnejšie len o 5 %, preplácaš kilometre.</p>
+  <p><b>Ako čítať „pod trhom“:</b> +15 % znamená, že auto stojí o 15 % menej, než by malo podľa trhu. Bežný rozptyl
+  cien je asi ±31 %, takže až zľava nad ~10–15 % je naozaj výnimočná. Pri takej zľave vždy zisti, prečo je auto lacné
+  (stav, história, nájazd).</p>
+  <p><b>DPH:</b> ceny uvedené bez DPH (napr. „10 300 € netto“) sme prepočítali na cenu s DPH, ktorú zaplatí súkromná osoba.</p>
+</div>
+
+<h2>Odporúčané ponuky</h2>
+<p class="section-lead">Kandidáti s najlepším pomerom cena / vek / nájazd, ktorých celý inzerát sme prečítali.
+Zoradené podľa toho, ako ich odporúčame.</p>
+<div class="subhead">Civic od 2017 – najlepší pomer cena / vek</div>
+<div class="cards"></div>
+<div class="subhead">Lacnejšie Civicy do 7 000 €</div>
+<div class="cards"></div>
+<div class="subhead">Špeciálne prípady</div>
+<div class="cards"></div>
+
+<h2>Cena vs. nájazd: celý trh na jednom grafe</h2>
+<p class="section-lead">Každý bod je jeden inzerát. Čím nižšie bod leží oproti ostatným s podobným nájazdom, tým je auto lacnejšie.
+Krúžkom sú označené odporúčané ponuky. Prejdi myšou na bod a uvidíš detail.</p>
+<div class="chart-wrap" id="chartWrap">
+  <div class="legend" id="legend"></div>
+  <svg id="chart" width="100%" height="420" role="img" aria-label="Bodový graf ceny a nájazdu inzerátov"></svg>
+  <div class="tip" id="tip"></div>
+</div>
+
+<h2>Porovnanie motorov</h2>
+<p class="section-lead">Hodnotenie (hviezdičky) zohľadňuje spoľahlivosť, spoľahlivosť a náklady na prevádzku a pomer cena/výkon.
+Číselné stĺpce sú mediány z ohodnotených inzerátov.</p>
+<div class="table-scroll">
+<table>
+  <thead><tr><th>Motor</th><th>Hodnotenie</th><th class="num">Ponúk</th><th class="num">Medián ceny</th><th class="num">Medián roku</th><th class="num">Medián km</th></tr></thead>
+  <tbody>
+<tr>
+  <td><b>Hybrid (IMA / e:HEV)</b><div class="sub">Starší 1.3 IMA hybrid (sedan, 2006–2011) alebo nový 2.0 e:HEV (2022+, 135 kW). e:HEV je úsporný a svižný.</div></td>
+  <td><span class="stars" aria-label="4 z 5">★★★★<span class="off">★</span></span></td>
+  <td class="num">7</td>
+  <td class="num"><div class="cellbar"><span style="width:100%"></span></div>25 200 €</td>
+  <td class="num">2024</td>
+  <td class="num">43 000 km</td>
+</tr>
+<tr>
+  <td><b>LPG</b><div class="sub">Dodatočne montované LPG – over revíziu a zápis plynu v TP.</div></td>
+  <td><span class="stars" aria-label="3 z 5">★★★<span class="off">★★</span></span></td>
+  <td class="num">4</td>
+  <td class="num"><div class="cellbar"><span style="width:25%"></span></div>6 290 €</td>
+  <td class="num">2008</td>
+  <td class="num">224 300 km</td>
+</tr>
+<tr>
+  <td><b>1.6 i-DTEC 88 kW</b><div class="sub">Moderný diesel 120 k (2013+). Veľmi úsporný a odolný; over DPF.</div></td>
+  <td><span class="stars" aria-label="4 z 5">★★★★<span class="off">★</span></span></td>
+  <td class="num">3</td>
+  <td class="num"><div class="cellbar"><span style="width:38%"></span></div>9 500 €</td>
+  <td class="num">2016</td>
+  <td class="num">171 000 km</td>
+</tr>
+<tr>
+  <td><b>2.2 i-CTDi / i-DTEC</b><div class="sub">Staršie diesely 103–110 kW (do 2015). Ťahavé; over dvojhmotu a DPF.</div></td>
+  <td><span class="stars" aria-label="3 z 5">★★★<span class="off">★★</span></span></td>
+  <td class="num">5</td>
+  <td class="num"><div class="cellbar"><span style="width:12%"></span></div>3 000 €</td>
+  <td class="num">2008</td>
+  <td class="num">218 270 km</td>
+</tr>
+<tr>
+  <td><b>1.5 VTEC Turbo 134 kW</b><div class="sub">Turbobenzín 182 k (2017+). Svižný; pri krátkych jazdách riedenie oleja – častejšia výmena.</div></td>
+  <td><span class="stars" aria-label="4 z 5">★★★★<span class="off">★</span></span></td>
+  <td class="num">9</td>
+  <td class="num"><div class="cellbar"><span style="width:56%"></span></div>14 000 €</td>
+  <td class="num">2018</td>
+  <td class="num">144 353 km</td>
+</tr>
+<tr>
+  <td><b>1.0 VTEC Turbo 95 kW</b><div class="sub">3-valec s turbom 129 k (2017+). Úsporný a dostatočne svižný.</div></td>
+  <td><span class="stars" aria-label="4 z 5">★★★★<span class="off">★</span></span></td>
+  <td class="num">18</td>
+  <td class="num"><div class="cellbar"><span style="width:46%"></span></div>11 550 €</td>
+  <td class="num">2018</td>
+  <td class="num">100 168 km</td>
+</tr>
+<tr>
+  <td><b>1.4 / 1.8 i-VTEC</b><div class="sub">Atmosférické benzíny 73–104 kW (do 2017). Mimoriadne odolné – Honda v najlepšej forme. 8. generácia má robotizovaný automat i-Shift.</div></td>
+  <td><span class="stars" aria-label="5 z 5">★★★★★<span class="off"></span></span></td>
+  <td class="num">47</td>
+  <td class="num"><div class="cellbar"><span style="width:21%"></span></div>5 400 €</td>
+  <td class="num">2009</td>
+  <td class="num">181 757 km</td>
+</tr></tbody>
+</table>
+</div>
+<div class="explain">
+  <p><b>Generácie:</b> <b>8. generácia</b> (2006–2011, „UFO“), <b>9.</b> (2012–2017, aj kombi Tourer), <b>10.</b> (2017–2022)
+  a <b>11.</b> (od 2022, len hybrid e:HEV). Civic má vysokú spoľahlivosť a nízke náklady na údržbu.</p>
+  <p><b>Ktorý motor zvoliť?</b> V starších Civicoch atmosférický <b>1.8 i-VTEC</b> – prakticky nezničiteľný. V 10. generácii
+  <b>1.0 VTEC Turbo</b> alebo svižnejší <b>1.5</b>. Diesel <b>1.6 i-DTEC</b> je veľmi úsporný. Pri 8. generácii over hrdzu na zadných
+  lemoch a stav zadnej nápravy.</p>
+</div>
+
+<h2>Na čo si dať pozor</h2>
+<div class="warn">
+  <p><b>Lacné kvôli extrémnemu nájazdu</b> (viac ako 35 tis. km ročne, typicky flotila alebo taxi):</p>
+  <ul><li><a href='https://auto.bazos.sk/inzerat/195871428/honda-civic-sport-2024-odhlucnena.php' target='_blank' rel='noopener'>Honda Civic SPORT 2024 - odhlucnena</a>: 2024, 84 000 km → 36 000 km/rok. Lacné je kvôli nájazdu.</li></ul>
+  <p><b>Podozrivo nízky nájazd na vek</b> – preklep alebo stočené km, over cez Cebiu:</p><ul><li><a href='https://www.autobazar.eu/detail/honda-civic-18-i-vtec-104kw-m6-aj-na-splatky-protiucet/Amd_9JC3UTu/' target='_blank' rel='noopener'>Honda Civic 1.8 i-VTEC, 104kW, M6 / AJ NA SPLÁTKY / PROTIÚČET /</a> (12 490 €): rok 2014 a len 24 305 km</li><li><a href='https://auto.bazar.sk/23440402-honda-civic-1-8-i-vtec-sport-104kw-m6-5d/' target='_blank' rel='noopener'>Honda Civic 1.8 i-VTEC Sport, 104kW, M6, 5d.</a> (12 500 €): rok 2012 a len 50 000 km</li></ul><p><b>Vyradené z porovnania</b> (poškodené autá alebo nezmyselné údaje – model ich nehodnotí):</p><ul><li><a href='https://www.autobazar.eu/detail/honda-civic-15-dohc-vtec-turbo-sport-plus-cvt/AmUKlCfmd2T/' target='_blank' rel='noopener'>Honda Civic 1.5 DOHC VTEC Turbo Sport Plus CVT</a> (3 990 €): cena je o 77 % pod trhom – havarované, na diely, záloha/splátka namiesto ceny alebo podvod</li><li><a href='https://auto.bazos.sk/inzerat/196257206/honda-civic-10-93kw-m6-2020.php' target='_blank' rel='noopener'>Honda Civic 1,0 VTEC Turbo 93KW</a> (10 900 €): havarované / poškodené – cena nie je porovnateľná s trhom</li><li><a href='https://auto.bazos.sk/inzerat/196992316/honda-civic-6g-1997.php' target='_blank' rel='noopener'>Honda Civic 6g 1997</a> (2 000 €): cena je o 46 % pod trhom – havarované, na diely, záloha/splátka namiesto ceny alebo podvod</li><li><a href='https://auto.bazar.sk/39359493-honda-civic-type-r-2-0-vtec-turbo-2025/' target='_blank' rel='noopener'>HONDA CIVIC TYPE R 2.0 VTEC TURBO 2025</a> (59 990 €): podozrivo nízky nájazd</li><li><a href='https://auto.bazar.sk/38149856-honda-civic-2-0-ehev-elegance-2024/' target='_blank' rel='noopener'>HONDA CIVIC 2.0 eHEV Elegance 2024</a> (30 700 €): podozrivo nízky nájazd</li><li><a href='https://auto.bazar.sk/37725135-honda-civic-2-0-ehev-sport-2024/' target='_blank' rel='noopener'>HONDA CIVIC 2.0 eHEV Sport 2024</a> (35 990 €): podozrivo nízky nájazd</li></ul><p><b>Športový Civic Type R, iné modely z vyhľadávania a inzeráty s chybným nájazdom</b> (26 inzerátov) sme z rebríčka vynechali.</p>
+  <p>Ďalších <b>38</b> inzerátov nemá v texte rok alebo kilometre, takže ich nebolo možné ohodnotiť.
+  Ak ťa niektorý zaujme, predajcu sa na tieto údaje opýtaj.</p>
+</div>
+
+<h2>Kompletný rebríček</h2>
+<p class="section-lead">Všetky ohodnotené inzeráty. Kliknutím na hlavičku stĺpca zoraďuješ, filtrom zužuješ výber.</p>
+<div class="filters">
+  <select id="fEngine"><option value="">Všetky motory</option></select>
+  <select id="fTrans"><option value="">Každá prevodovka</option><option value="automatic">Automat</option><option value="manual">Manuál</option></select>
+  <select id="fSeller"><option value="">Všetci predajcovia</option><option value="nodealer">Bez autobazárov</option></select>
+  <select id="fSource"><option value="">Všetky portály</option><option value="bazos">bazoš</option><option value="autobazar">autobazar.eu</option><option value="bazarsk">bazar.sk</option></select>
+  <select id="fBody"><option value="">Všetky karosérie</option><option value="hatchback">Hatchback</option><option value="sedan">Sedan</option><option value="wagon">Kombi tourer</option></select>
+  <select id="fOrigin"><option value="">Akýkoľvek pôvod</option><option value="SR">Kúpené v SR</option><option value="dovoz">Dovoz</option></select>
+  <input id="fMax" type="number" placeholder="Max. cena €" step="500" min="0" style="width:120px">
+  <span class="count" id="count"></span>
+</div>
+<div class="table-scroll">
+<table id="tbl">
+  <thead><tr>
+    <th class="sortable" data-k="title">Inzerát</th>
+    <th class="sortable num" data-k="year">Rok</th>
+    <th class="sortable num" data-k="km">Km</th>
+    <th class="sortable num" data-k="price_gross">Cena</th>
+    <th class="sortable num" data-k="fair_price">Férová</th>
+    <th class="sortable num" data-k="discount_pct">Pod trhom ▾</th>
+  </tr></thead>
+  <tbody></tbody>
+</table>
+</div>
+
+<h2>Pred kúpou over</h2>
+<ul class="check">
+  <li>VIN cez Cebia / autoDNA (história km, havárie)</li>
+  <li>Hrdza na zadných lemoch a prahoch (8. a 9. generácia)</li>
+  <li>Automat i-Shift (8. gen.) je robotizovaný – pomalé radenie; CVT (10. gen.) over plynulosť</li>
+  <li>1.5 VTEC Turbo: hladina oleja (riedenie benzínom pri krátkych jazdách)</li>
+  <li>i-DTEC: DPF, štartovanie za studena</li>
+  <li>STK/EK protokol a dátum platnosti</li>
+</ul>
+
+<footer>
+  Zdroj: auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (len ponuky zo Slovenska, to isté auto na viacerých portáloch je započítané raz), sťahované cez lokálny MCP server bazos-mcp (nástroj <code>fair_price</code>), 21. 11. 2026.
+  Model: ridge regresia log(ceny s DPH) podľa veku, veku², km, km², prevodovky, typu predajcu, motora, karosérie, pohonu 4x4, pôvodu (SR / dovoz) a portálu. Vzorka 93
+  inzerátov, R² 94 %. Parametre sú vyťažené z textu inzerátov, a preto môžu obsahovať chyby. Odporúčané ponuky sme overili
+  prečítaním celého inzerátu. Hodnotenie motorov je odborný odhad, nie výsledok modelu.
+</footer>
+</main>
+
+<script>
+const DATA = [{"id": "ab-AeJ2oPTdFZa", "url": "https://www.autobazar.eu/detail/honda-civic-14-i-vtec-comfort-servkniha-koza/AeJ2oPTdFZa/", "title": "Honda Civic 1.4 i-VTEC, Comfort, Serv.kniha, Koža", "price": 3200, "price_gross": 3200, "fair_price": 5180.0, "discount_pct": 38.2, "verdict": "výrazne pod trhom – over prečo", "year": 2009, "km": 132735, "km_per_year": 7700.0, "eg": "1.4 / 1.8 i-VTEC", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "197093229", "url": "https://auto.bazos.sk/inzerat/197093229/honda-civic.php", "title": "Honda Civic", "price": 2450, "price_gross": 2450, "fair_price": 3690.0, "discount_pct": 33.6, "verdict": "výrazne pod trhom – over prečo", "year": 2008, "km": 287400, "km_per_year": 15700.0, "eg": "1.4 / 1.8 i-VTEC", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Rožňava", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "197486664", "url": "https://auto.bazos.sk/inzerat/197486664/honda-civic-2020-50000km.php", "title": "Honda Civic 2020 50000km", "price": 14990, "price_gross": 14990, "fair_price": 21170.0, "discount_pct": 29.2, "verdict": "výrazne pod trhom – over prečo", "year": 2020, "km": 50000, "km_per_year": 7900.0, "eg": "1.0 VTEC Turbo 95 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Pezinok", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AeOHPIOaKPs", "url": "https://www.autobazar.eu/detail/honda-civic-10-dohc-vtec-turbo-comfort-93kw126hp-m6/AeOHPIOaKPs/", "price": 14990}], "body": "hatchback"}, {"id": "197453792", "url": "https://auto.bazos.sk/inzerat/197453792/honda-civic-18-benzin.php", "title": "Honda Civic 1.8 benzin", "price": 2800, "price_gross": 2800, "fair_price": 3900.0, "discount_pct": 28.2, "verdict": "výrazne pod trhom – over prečo", "year": 2011, "km": 310000, "km_per_year": 20200.0, "eg": "1.4 / 1.8 i-VTEC", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Trebišov", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "197424383", "url": "https://auto.bazos.sk/inzerat/197424383/predm-hondu-civic-22-i-cdti-rv-2006.php", "title": "Predâm Hondu Civic 2.2 i-cdti R.V. 2006", "price": 2300, "price_gross": 2300, "fair_price": 3090.0, "discount_pct": 25.5, "verdict": "výrazne pod trhom – over prečo", "year": 2006, "km": 218270, "km_per_year": 10700.0, "eg": "2.2 i-CTDi / i-DTEC", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Banská Bystrica", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "197364968", "url": "https://auto.bazos.sk/inzerat/197364968/honda-civic-9genr-benzin-84000km.php", "title": "Honda Civic 9genr. Benzín , 84000km", "price": 8800, "price_gross": 8800, "fair_price": 11600.0, "discount_pct": 24.1, "verdict": "výrazne pod trhom – over prečo", "year": 2014, "km": 84000, "km_per_year": 6800.0, "eg": "1.4 / 1.8 i-VTEC", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Turčianske Teplice", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "bs-39632454", "url": "https://auto.bazar.sk/39632454-honda-civic-1-4-i-vtec/", "title": "Honda Civic 1.4 i-VTEC", "price": 3700, "price_gross": 3700, "fair_price": 4840.0, "discount_pct": 23.6, "verdict": "výrazne pod trhom – over prečo", "year": 2009, "km": 132735, "km_per_year": 7700.0, "eg": "1.4 / 1.8 i-VTEC", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava V - Petržalka", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "196192304", "url": "https://auto.bazos.sk/inzerat/196192304/predam-honda-civic-18-8generacia.php", "title": "predám Honda CIVIC 1.8 8.generácia", "price": 3500, "price_gross": 3500, "fair_price": 4500.0, "discount_pct": 22.2, "verdict": "výrazne pod trhom – over prečo", "year": 2006, "km": 146000, "km_per_year": 7200.0, "eg": "1.4 / 1.8 i-VTEC", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Košice", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "196105945", "url": "https://auto.bazos.sk/inzerat/196105945/honda-civic-22-i-dci.php", "title": "Honda Civic", "price": 3000, "price_gross": 3000, "fair_price": 3860.0, "discount_pct": 22.2, "verdict": "výrazne pod trhom – over prečo", "year": 2009, "km": 229000, "km_per_year": 13200.0, "eg": "2.2 i-CTDi / i-DTEC", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Dolný Kubín", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "ab-AebyFM4jmnz", "url": "https://www.autobazar.eu/detail/honda-civic-18-vtec-comfort-103kw140hp-m6/AebyFM4jmnz/", "title": "Honda Civic 1.8 VTEC Comfort 103kW140HP M6", "price": 2700, "price_gross": 2700, "fair_price": 3420.0, "discount_pct": 21.1, "verdict": "výrazne pod trhom – over prečo", "year": 2006, "km": 280000, "km_per_year": 13800.0, "eg": "1.4 / 1.8 i-VTEC", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava-Rača", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "bs-34351887", "url": "https://auto.bazar.sk/34351887-honda-civic-1-8-i/", "title": "Honda Civic 1.8 i", "price": 6000, "price_gross": 6000, "fair_price": 7570.0, "discount_pct": 20.7, "verdict": "výrazne pod trhom – over prečo", "year": 2011, "km": 127552, "km_per_year": 8300.0, "eg": "1.4 / 1.8 i-VTEC", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Nové Zámky", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "hatchback"}, {"id": "196685241", "url": "https://auto.bazos.sk/inzerat/196685241/honda-civic-10-vtec-turbo.php", "title": "Honda Civic 1.0 VTEC Turbo", "price": 11500, "price_gross": 11500, "fair_price": 14250.0, "discount_pct": 19.3, "verdict": "výrazne pod trhom – over prečo", "year": 2021, "km": 53000, "km_per_year": 9900.0, "eg": "1.0 VTEC Turbo 95 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Prešov", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "196789930", "url": "https://auto.bazos.sk/inzerat/196789930/honda-civic-8g-18-i-vtec.php", "title": "Honda Civic 8g 1,8 i-Vtec", "price": 2800, "price_gross": 2800, "fair_price": 3450.0, "discount_pct": 18.8, "verdict": "výrazne pod trhom – over prečo", "year": 2006, "km": 254000, "km_per_year": 12500.0, "eg": "1.4 / 1.8 i-VTEC", "cg": 0, "transmission": null, "seller_type": "dealer", "location": "Nitra", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "bs-33295376", "url": "https://auto.bazar.sk/33295376-honda-civic-1-4-i-vtec/", "title": "Honda Civic 1.4 i-VTEC", "price": 5400, "price_gross": 5400, "fair_price": 6600.0, "discount_pct": 18.2, "verdict": "výrazne pod trhom – over prečo", "year": 2012, "km": 119606, "km_per_year": 8300.0, "eg": "1.4 / 1.8 i-VTEC", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Nové Zámky", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "hatchback"}, {"id": "196367619", "url": "https://auto.bazos.sk/inzerat/196367619/honda-civic-viii-18-i-vtec.php", "title": "Honda Civic VIII 1.8 i-VTEC", "price": 2800, "price_gross": 2800, "fair_price": 3420.0, "discount_pct": 18.0, "verdict": "výrazne pod trhom – over prečo", "year": 2007, "km": 250000, "km_per_year": 12900.0, "eg": "1.4 / 1.8 i-VTEC", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Bratislava", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "bs-34352855", "url": "https://auto.bazar.sk/34352855-honda-civic-1-8-i/", "title": "Honda Civic 1.8 i", "price": 5800, "price_gross": 5800, "fair_price": 6950.0, "discount_pct": 16.6, "verdict": "výrazne pod trhom – over prečo", "year": 2009, "km": 105586, "km_per_year": 6100.0, "eg": "1.4 / 1.8 i-VTEC", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Nové Zámky", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "hatchback"}, {"id": "197742687", "url": "https://auto.bazos.sk/inzerat/197742687/honda-civic-10g.php", "title": "Honda Civic 10g", "price": 11200, "price_gross": 11200, "fair_price": 13230.0, "discount_pct": 15.3, "verdict": "výrazne pod trhom – over prečo", "year": 2018, "km": 118000, "km_per_year": 14200.0, "eg": "1.0 VTEC Turbo 95 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Košice", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "hatchback"}, {"id": "ab-Aeif9c-t6_6", "url": "https://www.autobazar.eu/detail/honda-civic-10-dohc-vtec-turbo-elegance-cvt-93kw126hp-a1/Aeif9c-t6_6/", "title": "Honda Civic 1.0 DOHC VTEC Turbo Elegance CVT 93kW 54tis. km", "price": 16990, "price_gross": 16990, "fair_price": 20010.0, "discount_pct": 15.1, "verdict": "výrazne pod trhom – over prečo", "year": 2022, "km": 54315, "km_per_year": 12500.0, "eg": "1.0 VTEC Turbo 95 kW", "cg": 0, "transmission": "automatic", "seller_type": "private", "location": "Prievidza", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197618333", "url": "https://auto.bazos.sk/inzerat/197618333/honda-civic-10-vtec-turbo-cvt-automat-2022-54-tis-km.php", "price": 16990}], "body": "hatchback"}, {"id": "196278848", "url": "https://auto.bazos.sk/inzerat/196278848/honda-civic-8g-22-i-ctdi.php", "title": "Honda Civic 8g, 2.2 i-CTDI", "price": 2800, "price_gross": 2800, "fair_price": 3280.0, "discount_pct": 14.7, "verdict": "pod trhom", "year": 2008, "km": 272000, "km_per_year": 14800.0, "eg": "1.4 / 1.8 i-VTEC", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Tvrdošín", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "197660384", "url": "https://auto.bazos.sk/inzerat/197660384/honda-civic-8g-14-61-kw.php", "title": "Honda Civic 8G 1.4 61 kw", "price": 1650, "price_gross": 1650, "fair_price": 1920.0, "discount_pct": 14.0, "verdict": "pod trhom", "year": 2007, "km": 290170, "km_per_year": 15000.0, "eg": "1.4 / 1.8 i-VTEC", "cg": 0, "transmission": "manual", "seller_type": "private", "location": "Brezno", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "196222690", "url": "https://auto.bazos.sk/inzerat/196222690/honda-civic-18-ufo-103-kw.php", "title": "Honda Civic 1,8 ufo 103 kw", "price": 2900, "price_gross": 2900, "fair_price": 3320.0, "discount_pct": 12.6, "verdict": "pod trhom", "year": 2008, "km": 286000, "km_per_year": 15600.0, "eg": "1.4 / 1.8 i-VTEC", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Poprad", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "ab-Amq33aMa_SA", "url": "https://www.autobazar.eu/detail/honda-civic-20-ehev-sport-2026/Amq33aMa_SA/", "title": "HONDA CIVIC 2.0 eHEV Sport  2026", "price": 33900, "price_gross": 33900, "fair_price": 38670.0, "discount_pct": 12.3, "verdict": "pod trhom", "year": 2026, "km": 8, "km_per_year": 0.0, "eg": "Hybrid (IMA / e:HEV)", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Košice-Dargovských hrdinov", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-39361188", "url": "https://auto.bazar.sk/39361188-honda-civic-2-0-ehev-sport-2026/", "price": 33900}, {"source": "bazarsk", "id": "bs-38831051", "url": "https://auto.bazar.sk/38831051-honda-civic-2-0-ehev-sport-2026/", "price": 33900}], "body": "sedan"}, {"id": "ab-AmWS7lMLrkf", "url": "https://www.autobazar.eu/detail/honda-civic-20-ehev-advance-2024/AmWS7lMLrkf/", "title": "HONDA CIVIC 2.0 eHEV Sport  2026", "price": 33900, "price_gross": 33900, "fair_price": 38670.0, "discount_pct": 12.3, "verdict": "pod trhom", "year": 2026, "km": 8, "km_per_year": 0.0, "eg": "Hybrid (IMA / e:HEV)", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Košice-Dargovských hrdinov", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "sedan"}, {"id": "ab-AeYjvOcLEnX", "url": "https://www.autobazar.eu/detail/honda-civic-14-i-dsi-po-stk/AeYjvOcLEnX/", "title": "Honda Civic 1.4 i-DSIKlíma, Park. senzory, po STK", "price": 2100, "price_gross": 2100, "fair_price": 2380.0, "discount_pct": 11.7, "verdict": "pod trhom", "year": 2007, "km": 276951, "km_per_year": 14300.0, "eg": "1.4 / 1.8 i-VTEC", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Nitriansky kraj", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39730545", "url": "https://auto.bazar.sk/39730545-honda-civic-1-4-i-dsi/", "price": 2100}], "body": "hatchback"}, {"id": "ab-Ae5OZEwZ3zH", "url": "https://www.autobazar.eu/detail/honda-civic-20-i-mmd-elegance-e-cvt-105kw143hp-a1/Ae5OZEwZ3zH/", "title": "Honda Civic 2.0 i-MMD Elegance e-CVT 105kW143HP A1", "price": 22490, "price_gross": 22490, "fair_price": 25330.0, "discount_pct": 11.2, "verdict": "pod trhom", "year": 2023, "km": 86680, "km_per_year": 26000.0, "eg": "Hybrid (IMA / e:HEV)", "cg": 2, "transmission": "automatic", "seller_type": "private", "location": "Štúrovo", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "197578131", "url": "https://auto.bazos.sk/inzerat/197578131/predam-honda-civic-20-i-mmd-elegance-e-cvt-105kw143hp-a1.php", "price": 22490}], "body": "hatchback"}, {"id": "197699766", "url": "https://auto.bazos.sk/inzerat/197699766/predam-honda-civic-18-8g-vtec-lpg.php", "title": "Predám Honda Civic 1.8 8G Vtec + LPG", "price": 3800, "price_gross": 3800, "fair_price": 4270.0, "discount_pct": 11.1, "verdict": "pod trhom", "year": 2007, "km": 255000, "km_per_year": 13200.0, "eg": "LPG", "cg": 2, "transmission": "manual", "seller_type": "uncertain", "location": "Žilina", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "197468858", "url": "https://auto.bazos.sk/inzerat/197468858/predam-honda-civic-9g20d.php", "title": "Predam Honda Civic 9g.2.0d.", "price": 6500, "price_gross": 6500, "fair_price": 7290.0, "discount_pct": 10.8, "verdict": "pod trhom", "year": 2011, "km": 210679, "km_per_year": 13700.0, "eg": "1.4 / 1.8 i-VTEC", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Šaľa", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "195871428", "url": "https://auto.bazos.sk/inzerat/195871428/honda-civic-sport-2024-odhlucnena.php", "title": "Honda Civic SPORT 2024 - odhlucnena", "price": 23290, "price_gross": 23290, "fair_price": 26060.0, "discount_pct": 10.6, "verdict": "pod trhom", "year": 2024, "km": 84000, "km_per_year": 36000.0, "eg": "Hybrid (IMA / e:HEV)", "cg": 2, "transmission": "automatic", "seller_type": "uncertain", "location": "Košice-okolie", "flags": ["vysoký nájazd 36000 km/rok – flotila / taxi?"], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AeSSq2jcnAa", "url": "https://www.autobazar.eu/detail/honda-civic-sport-ehev-odhlucnena/AeSSq2jcnAa/", "price": 23290}], "body": "hatchback"}, {"id": "197614534", "url": "https://auto.bazos.sk/inzerat/197614534/honda-civic-10-dohc-vtec-turbo-elegance.php", "title": "Honda Civic 1.0 DOHC VTEC Turbo Elegance", "price": 12999, "price_gross": 12999, "fair_price": 14490.0, "discount_pct": 10.3, "verdict": "pod trhom", "year": 2022, "km": 101335, "km_per_year": 23400.0, "eg": "1.0 VTEC Turbo 95 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Nové Mesto n.Váhom", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-Aepgnmyd_x9", "url": "https://www.autobazar.eu/detail/honda-civic-10-dohc-vtec-turbo-elegance-93kw126hp-m6/Aepgnmyd_x9/", "price": 12999}], "body": "hatchback"}, {"id": "197690328", "url": "https://auto.bazos.sk/inzerat/197690328/honda-civic-15-vtec-turbo-134-kw182k-sedan-1-majitel.php", "title": "Honda Civic 1.5 VTEC Turbo (134 kW/182k)  sedan | 1. majiteľ", "price": 9900, "price_gross": 9900, "fair_price": 10960.0, "discount_pct": 9.7, "verdict": "pod trhom", "year": 2019, "km": 192800, "km_per_year": 26300.0, "eg": "1.5 VTEC Turbo 134 kW", "cg": 0, "transmission": "manual", "seller_type": "private", "location": "Prešov", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "sedan"}, {"id": "ab-AmYTE30XbgJ", "url": "https://www.autobazar.eu/detail/honda-civic-20-ehev-sport-2027/AmYTE30XbgJ/", "title": "HONDA CIVIC 2.0 eHEV Sport  2027", "price": 34990, "price_gross": 34990, "fair_price": 38670.0, "discount_pct": 9.5, "verdict": "pod trhom", "year": 2026, "km": 8, "km_per_year": 0.0, "eg": "Hybrid (IMA / e:HEV)", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Košice-Dargovských hrdinov", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-39678355", "url": "https://auto.bazar.sk/39678355-honda-civic-2-0-ehev-sport-2027/", "price": 34990}], "body": "sedan"}, {"id": "ab-Amd_9JC3UTu", "url": "https://www.autobazar.eu/detail/honda-civic-18-i-vtec-104kw-m6-aj-na-splatky-protiucet/Amd_9JC3UTu/", "title": "Honda Civic 1.8 i-VTEC, 104kW, M6 / AJ NA SPLÁTKY / PROTIÚČET /", "price": 12490, "price_gross": 12490, "fair_price": 13770.0, "discount_pct": 9.3, "verdict": "pod trhom", "year": 2014, "km": 24305, "km_per_year": 2000.0, "eg": "1.4 / 1.8 i-VTEC", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Trenčín", "flags": ["nezvyčajne nízky nájazd na vek (24 305 km) – over  či nejde o preklep"], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197305673", "url": "https://auto.bazos.sk/inzerat/197305673/honda-civic-18-i-vtec-104kw-m6-kupene-na-sk.php", "price": 12490}, {"source": "bazarsk", "id": "bs-39759370", "url": "https://auto.bazar.sk/39759370-honda-civic-1-8-i-vtec-104kw-m6-aj-na-splatky-protiucet/", "price": 12490}], "body": "hatchback"}, {"id": "197172336", "url": "https://auto.bazos.sk/inzerat/197172336/honda-civic-18vtec-executive.php", "title": "Honda Civic 1.8Vtec EXECUTIVE", "price": 2500, "price_gross": 2500, "fair_price": 2750.0, "discount_pct": 9.0, "verdict": "pod trhom", "year": 2009, "km": 340800, "km_per_year": 19700.0, "eg": "1.4 / 1.8 i-VTEC", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Bratislava", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AeaiMRVs6qn", "url": "https://www.autobazar.eu/detail/honda-civic-18-vtec-executive-103kw140hp-m6/AeaiMRVs6qn/", "price": 3100}], "body": "hatchback"}, {"id": "195966181", "url": "https://auto.bazos.sk/inzerat/195966181/honda-civic-10-dohc-vtec-turbo-executive-95kw126hp-m6.php", "title": "Honda Civic 1.0 DOHC VTEC Turbo Executive 95kW126HP M6", "price": 12000, "price_gross": 12000, "fair_price": 13170.0, "discount_pct": 8.9, "verdict": "pod trhom", "year": 2018, "km": 99000, "km_per_year": 11900.0, "eg": "1.0 VTEC Turbo 95 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Liptovský Mikuláš", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "hatchback"}, {"id": "ab-AewQPfod6Ix", "url": "https://www.autobazar.eu/detail/honda-civic-22-diesel-103kw/AewQPfod6Ix/", "title": "Honda Civic 2.2 Diesel 103kW", "price": 4900, "price_gross": 4900, "fair_price": 5370.0, "discount_pct": 8.7, "verdict": "pod trhom", "year": 2011, "km": 180000, "km_per_year": 11700.0, "eg": "2.2 i-CTDi / i-DTEC", "cg": 1, "transmission": "manual", "seller_type": "private", "location": "Drienovská Nová Ves", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "ab-AeKvkBmhaul", "url": "https://www.autobazar.eu/detail/honda-civic-15-vtec-po-stk/AeKvkBmhaul/", "title": "Honda Civic 1.5 VTEC, Navigácia, strešné okno", "price": 12300, "price_gross": 12300, "fair_price": 13140.0, "discount_pct": 6.4, "verdict": "férová cena", "year": 2017, "km": 144353, "km_per_year": 15500.0, "eg": "1.5 VTEC Turbo 134 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Trnava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "197221016", "url": "https://auto.bazos.sk/inzerat/197221016/honda-civic-22-icdti.php", "title": "HONDA CIVIC 2.2 icdti", "price": 3500, "price_gross": 3500, "fair_price": 3720.0, "discount_pct": 6.0, "verdict": "férová cena", "year": 2007, "km": 200000, "km_per_year": 10300.0, "eg": "1.4 / 1.8 i-VTEC", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Rožňava", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "ab-AmIKXiUOSIU", "url": "https://www.autobazar.eu/detail/honda-civic-10-dohc-vtec-turbo-comfort/AmIKXiUOSIU/", "title": "Honda Civic 1.0 DOHC VTEC Turbo Comfort", "price": 10990, "price_gross": 10990, "fair_price": 11640.0, "discount_pct": 5.6, "verdict": "férová cena", "year": 2018, "km": 78000, "km_per_year": 9400.0, "eg": "1.0 VTEC Turbo 95 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Poprad", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197589051", "url": "https://auto.bazos.sk/inzerat/197589051/honda-civic-10-dohc-vtec-turbo-comfort.php", "price": 10990}, {"source": "bazarsk", "id": "bs-39576507", "url": "https://auto.bazar.sk/39576507-honda-civic-1-0-dohc-vtec-turbo-comfort/", "price": 10990}], "body": "hatchback"}, {"id": "ab-Aei-7yQcSIW", "url": "https://www.autobazar.eu/detail/honda-civic-10-dohc-vtec-turbo-s-93kw126hp-m6/Aei-7yQcSIW/", "title": "Honda Civic 1.0 DOHC VTEC Turbo S 93kW126HP M6", "price": 9990, "price_gross": 9990, "fair_price": 10550.0, "discount_pct": 5.3, "verdict": "férová cena", "year": 2019, "km": 158590, "km_per_year": 21600.0, "eg": "1.0 VTEC Turbo 95 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Prešov", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "hatchback"}, {"id": "196662952", "url": "https://auto.bazos.sk/inzerat/196662952/honda-civic-9g.php", "title": "Honda Civic 9g", "price": 7700, "price_gross": 7700, "fair_price": 8130.0, "discount_pct": 5.3, "verdict": "férová cena", "year": 2014, "km": 250000, "km_per_year": 20300.0, "eg": "1.4 / 1.8 i-VTEC", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Topoľčany", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "196166843", "url": "https://auto.bazos.sk/inzerat/196166843/honda-civic.php", "title": "HONDA CIVIC", "price": 6990, "price_gross": 6990, "fair_price": 7340.0, "discount_pct": 4.7, "verdict": "férová cena", "year": 2007, "km": 100000, "km_per_year": 5200.0, "eg": "1.4 / 1.8 i-VTEC", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Ilava", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "ab-Aetjjw1eUN7", "url": "https://www.autobazar.eu/detail/honda-civic-14-i-vtec-comfort-73kw100hp-m6/Aetjjw1eUN7/", "title": "Honda Civic 1.4 i-VTEC Comfort 73kW100HP M6", "price": 8000, "price_gross": 8000, "fair_price": 8360.0, "discount_pct": 4.3, "verdict": "férová cena", "year": 2014, "km": 95299, "km_per_year": 7700.0, "eg": "1.4 / 1.8 i-VTEC", "cg": 0, "transmission": "manual", "seller_type": "private", "location": "Holíč", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "bs-34352198", "url": "https://auto.bazar.sk/34352198-honda-civic-1-4-i-vtec/", "title": "Honda Civic 1.4 i-VTEC", "price": 7800, "price_gross": 7800, "fair_price": 8140.0, "discount_pct": 4.1, "verdict": "férová cena", "year": 2013, "km": 66609, "km_per_year": 5000.0, "eg": "1.4 / 1.8 i-VTEC", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Nové Zámky", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "hatchback"}, {"id": "ab-Aed9quxfgpJ", "url": "https://www.autobazar.eu/detail/honda-civic-10-dohc-vtec-turbo-elegance-93kw126hp-m6/Aed9quxfgpJ/", "title": "Honda Civic 1.0 DOHC VTEC Turbo Elegance 93kW126HP M6", "price": 11499, "price_gross": 11499, "fair_price": 11960.0, "discount_pct": 3.8, "verdict": "férová cena", "year": 2019, "km": 113370, "km_per_year": 15500.0, "eg": "1.0 VTEC Turbo 95 kW", "cg": 0, "transmission": "manual", "seller_type": "private", "location": "Janíkovce", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "hatchback"}, {"id": "197362631", "url": "https://auto.bazos.sk/inzerat/197362631/honda-civic-x-v-plnej-vybave.php", "title": "Honda Civic X v plnej výbave", "price": 14000, "price_gross": 14000, "fair_price": 14540.0, "discount_pct": 3.7, "verdict": "férová cena", "year": 2018, "km": 75000, "km_per_year": 9000.0, "eg": "1.0 VTEC Turbo 95 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Prešov", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "ab-AmEsoPgTGvL", "url": "https://www.autobazar.eu/detail/honda-civic-15-dohc-vtec-turbo-sport-plus-cvt/AmEsoPgTGvL/", "title": "Honda Civic 1.5 DOHC VTEC Turbo Sport Plus CVT", "price": 15990, "price_gross": 15990, "fair_price": 16390.0, "discount_pct": 2.4, "verdict": "férová cena", "year": 2019, "km": 126486, "km_per_year": 17200.0, "eg": "1.5 VTEC Turbo 134 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Nové Mesto nad Váhom", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "196987444", "url": "https://auto.bazos.sk/inzerat/196987444/honda-civic-15-dohc-vtec-turbo-sport-plus-cvt.php", "price": 15990}, {"source": "bazarsk", "id": "bs-39749732", "url": "https://auto.bazar.sk/39749732-honda-civic-1-5-dohc-vtec-turbo-sport-plus-cvt/", "price": 15990}], "body": "hatchback"}, {"id": "ab-AeLmOwhVZCe", "url": "https://www.autobazar.eu/detail/honda-civic-15-dohc-vtec-turbo-sport-plus-134kw182hp-m6/AeLmOwhVZCe/", "title": "Honda Civic 1.5 DOHC VTEC Turbo Sport Plus 134kW182HP M6", "price": 21000, "price_gross": 21000, "fair_price": 21220.0, "discount_pct": 1.0, "verdict": "férová cena", "year": 2020, "km": 42000, "km_per_year": 6600.0, "eg": "1.5 VTEC Turbo 134 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Banská Bystrica", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "hatchback"}, {"id": "bs-39534975", "url": "https://auto.bazar.sk/39534975-honda-civic-1-0-dohc-vtec-turbo-elegance-cvt/", "title": "Honda Civic 1.0 DOHC VTEC Turbo Elegance CVT", "price": 15900, "price_gross": 15900, "fair_price": 16070.0, "discount_pct": 1.0, "verdict": "férová cena", "year": 2020, "km": 39000, "km_per_year": 6200.0, "eg": "1.0 VTEC Turbo 95 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava I - Staré Mesto", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "hatchback"}, {"id": "ab-AmzffGAkvGjk", "url": "https://www.autobazar.eu/detail/honda-civic-16i-d-tec-2018/AmzffGAkvGjk/", "title": "HONDA Civic 1.6I D-Tec 2018", "price": 13999, "price_gross": 13999, "fair_price": 14080.0, "discount_pct": 0.6, "verdict": "férová cena", "year": 2018, "km": 116546, "km_per_year": 14000.0, "eg": "1.6 i-DTEC 88 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39670248", "url": "https://auto.bazar.sk/39670248-honda-civic-1-6i-d-tec-2018/", "price": 13999}], "body": "sedan"}, {"id": "197538714", "url": "https://auto.bazos.sk/inzerat/197538714/honda-civic-10-i-vtec-elegance-93-kw.php", "title": "Honda Civic 1.0 i-VTEC Elegance 93 kW", "price": 15500, "price_gross": 15500, "fair_price": 15510.0, "discount_pct": 0.1, "verdict": "férová cena", "year": 2020, "km": 84000, "km_per_year": 13300.0, "eg": "1.0 VTEC Turbo 95 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Bratislava", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AeZZxdh1bue", "url": "https://www.autobazar.eu/detail/honda-civic-10-dohc-vtec-turbo-elegance-93kw126hp-m6/AeZZxdh1bue/", "price": 15500}], "body": "hatchback"}, {"id": "bs-34353188", "url": "https://auto.bazar.sk/34353188-honda-civic-sport-1-8-i/", "title": "Honda Civic Sport 1.8 i", "price": 5999, "price_gross": 5999, "fair_price": 6000.0, "discount_pct": -0.0, "verdict": "férová cena", "year": 2008, "km": 137728, "km_per_year": 7500.0, "eg": "1.4 / 1.8 i-VTEC", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Nové Zámky", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "ab-AemO_W0WZq0", "url": "https://www.autobazar.eu/detail/honda-civic-10-vtec-turbo-sr2maj-navigacia-klima/AemO_W0WZq0/", "title": "Honda Civic 1.0 VTEC Turbo, SR,2.maj, Serv.kniha", "price": 11600, "price_gross": 11600, "fair_price": 11590.0, "discount_pct": -0.1, "verdict": "férová cena", "year": 2019, "km": 121182, "km_per_year": 16500.0, "eg": "1.0 VTEC Turbo 95 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "197348430", "url": "https://auto.bazos.sk/inzerat/197348430/honda-civic-8g.php", "title": "Honda Civic 8g", "price": 3999, "price_gross": 3999, "fair_price": 3950.0, "discount_pct": -1.3, "verdict": "férová cena", "year": 2006, "km": 305000, "km_per_year": 15000.0, "eg": "1.4 / 1.8 i-VTEC", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Žiar nad Hronom", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "197560433", "url": "https://auto.bazos.sk/inzerat/197560433/honda-civic-10-dohc-vtec-turbo-s-m6-158000km-2018.php", "title": "Honda Civic 1.0 DOHC VTEC Turbo S M6 158000km 2018", "price": 9990, "price_gross": 9990, "fair_price": 9710.0, "discount_pct": -2.8, "verdict": "férová cena", "year": 2018, "km": 158000, "km_per_year": 19000.0, "eg": "1.0 VTEC Turbo 95 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Sabinov", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "197623570", "url": "https://auto.bazos.sk/inzerat/197623570/honda-civic.php", "title": "Honda civic", "price": 17000, "price_gross": 17000, "fair_price": 16400.0, "discount_pct": -3.7, "verdict": "férová cena", "year": 2018, "km": 69800, "km_per_year": 8400.0, "eg": "1.5 VTEC Turbo 134 kW", "cg": 0, "transmission": "manual", "seller_type": "private", "location": "Trnava", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "hatchback"}, {"id": "197452705", "url": "https://auto.bazos.sk/inzerat/197452705/honda-civic-9-gen-16-i-dtec.php", "title": "Honda Civic 9 gen. 1.6 i-DTEC", "price": 7400, "price_gross": 7400, "fair_price": 7100.0, "discount_pct": -4.2, "verdict": "férová cena", "year": 2013, "km": 178000, "km_per_year": 13400.0, "eg": "1.6 i-DTEC 88 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Pezinok", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "bs-23377495", "url": "https://auto.bazar.sk/23377495-honda-civic-1-4-i-vtec-comfort-73kw-m6-5d/", "title": "Honda Civic 1.4 i-VTEC Comfort, 73kW, M6, 5d.", "price": 9500, "price_gross": 9500, "fair_price": 9030.0, "discount_pct": -5.2, "verdict": "férová cena", "year": 2014, "km": 53625, "km_per_year": 4300.0, "eg": "1.4 / 1.8 i-VTEC", "cg": 0, "transmission": "manual", "seller_type": "private", "location": "Liptovský Mikuláš", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "bs-35705127", "url": "https://auto.bazar.sk/35705127-honda-civic-2-2-ctdi-comfort/", "title": "Honda Civic 2.2 CTDi Comfort", "price": 4400, "price_gross": 4400, "fair_price": 4140.0, "discount_pct": -6.3, "verdict": "férová cena", "year": 2008, "km": 193750, "km_per_year": 10600.0, "eg": "2.2 i-CTDi / i-DTEC", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Žiar nad Hronom", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "bs-23191135", "url": "https://auto.bazar.sk/23191135-honda-civic-1-8-vtec-gt-103kw-m6-5d/", "title": "Honda Civic 1.8 VTEC GT, 103kW, M6, 5d.", "price": 7600, "price_gross": 7600, "fair_price": 7140.0, "discount_pct": -6.5, "verdict": "férová cena", "year": 2009, "km": 93864, "km_per_year": 5400.0, "eg": "1.4 / 1.8 i-VTEC", "cg": 0, "transmission": "manual", "seller_type": "private", "location": "Prievidza", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "197332852", "url": "https://auto.bazos.sk/inzerat/197332852/honda-civic-14-i-vtec-comfort.php", "title": "Honda Civic 1.4 i-VTEC Comfort", "price": 5300, "price_gross": 5300, "fair_price": 4930.0, "discount_pct": -7.4, "verdict": "nad trhom", "year": 2013, "km": 195758, "km_per_year": 14700.0, "eg": "1.4 / 1.8 i-VTEC", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Žilina", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-Am6yOQiyifB", "url": "https://www.autobazar.eu/detail/honda-civic-14-i-vtec-comfort/Am6yOQiyifB/", "price": 5300}, {"source": "bazarsk", "id": "bs-39581313", "url": "https://auto.bazar.sk/39581313-honda-civic-1-4-i-vtec-comfort/", "price": 5300}], "body": "hatchback"}, {"id": "196535666", "url": "https://auto.bazos.sk/inzerat/196535666/predam-honda-civic-14-i-vtec-2009.php", "title": "Predám Honda Civic 1.4 i-VTEC (2009)", "price": 5000, "price_gross": 5000, "fair_price": 4630.0, "discount_pct": -7.9, "verdict": "nad trhom", "year": 2009, "km": 111000, "km_per_year": 6400.0, "eg": "1.4 / 1.8 i-VTEC", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Ilava", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "195956473", "url": "https://auto.bazos.sk/inzerat/195956473/honda-civic-8g.php", "title": "Honda Civic 8g", "price": 3300, "price_gross": 3300, "fair_price": 3060.0, "discount_pct": -7.9, "verdict": "nad trhom", "year": 2007, "km": 320000, "km_per_year": 16600.0, "eg": "1.4 / 1.8 i-VTEC", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Levice", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "bs-39712618", "url": "https://auto.bazar.sk/39712618-honda-civic-1-5-vtec/", "title": "Honda Civic 1.5 VTEC", "price": 14000, "price_gross": 14000, "fair_price": 12950.0, "discount_pct": -8.1, "verdict": "nad trhom", "year": 2017, "km": 144353, "km_per_year": 15500.0, "eg": "1.5 VTEC Turbo 134 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava V - Petržalka", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "bs-39262843", "url": "https://auto.bazar.sk/39262843-honda-civic-1-4-comfort/", "title": "Honda Civic 1.4 Comfort", "price": 7499, "price_gross": 7499, "fair_price": 6920.0, "discount_pct": -8.4, "verdict": "nad trhom", "year": 2012, "km": 97494, "km_per_year": 6800.0, "eg": "1.4 / 1.8 i-VTEC", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Stará Ľubovňa", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "197727606", "url": "https://auto.bazos.sk/inzerat/197727606/honda-civic-8g-14i-5dv.php", "title": "Honda Civic 8g 1.4i 5dv", "price": 2750, "price_gross": 2750, "fair_price": 2520.0, "discount_pct": -8.9, "verdict": "nad trhom", "year": 2007, "km": 249000, "km_per_year": 12900.0, "eg": "1.4 / 1.8 i-VTEC", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Partizánske", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "195958950", "url": "https://auto.bazos.sk/inzerat/195958950/predam-honda-civic-8g-22-i-ctdi.php", "title": "Predám Honda Civic 8G 2.2 i-CTDi", "price": 2970, "price_gross": 2970, "fair_price": 2730.0, "discount_pct": -8.9, "verdict": "nad trhom", "year": 2007, "km": 284500, "km_per_year": 14700.0, "eg": "2.2 i-CTDi / i-DTEC", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Bratislava", "flags": [], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "hatchback"}, {"id": "197494164", "url": "https://auto.bazos.sk/inzerat/197494164/honda-civic-18-vtec-lpg-at.php", "title": "Honda Civic 1.8 VTEC LPG A/T", "price": 5790, "price_gross": 5790, "fair_price": 5260.0, "discount_pct": -10.1, "verdict": "nad trhom", "year": 2009, "km": 241600, "km_per_year": 13900.0, "eg": "LPG", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Bardejov", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "196511754", "url": "https://auto.bazos.sk/inzerat/196511754/predam-honda-civic-14-i-vtec.php", "title": "Predám Honda Civic 1.4 i-VTEC", "price": 5499, "price_gross": 5499, "fair_price": 4910.0, "discount_pct": -12.0, "verdict": "nad trhom", "year": 2011, "km": 143000, "km_per_year": 9300.0, "eg": "1.4 / 1.8 i-VTEC", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Prešov", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "196371040", "url": "https://auto.bazos.sk/inzerat/196371040/honda-civic-22i-ctdi-103kw-2007-8g.php", "title": "Honda Civic 2,2i-CTDi 103kw 2007 8G", "price": 3300, "price_gross": 3300, "fair_price": 2940.0, "discount_pct": -12.1, "verdict": "nad trhom", "year": 2007, "km": 292000, "km_per_year": 15100.0, "eg": "1.4 / 1.8 i-VTEC", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Senica", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "197591691", "url": "https://auto.bazos.sk/inzerat/197591691/honda-civic-10-vtec-turbo-elegance-mt-2018-ev-2020-v.php", "title": "Honda Civic 1.0 VTEC Turbo Elegance MT (2018 / ev. 2020) – V", "price": 8800, "price_gross": 8800, "fair_price": 7770.0, "discount_pct": -13.3, "verdict": "nad trhom", "year": 2018, "km": 183000, "km_per_year": 22000.0, "eg": "1.0 VTEC Turbo 95 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Vranov nad Topľou", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "ab-Ae7Xo7kDVL-", "url": "https://www.autobazar.eu/detail/honda-civic-10-dohc-vtec-turbo-elegance-93kw126hp-m6/Ae7Xo7kDVL-/", "title": "Honda Civic 1.0 DOHC VTEC Turbo Elegance 93kW126HP M6", "price": 11199, "price_gross": 11199, "fair_price": 9880.0, "discount_pct": -13.4, "verdict": "nad trhom", "year": 2018, "km": 146500, "km_per_year": 17600.0, "eg": "1.0 VTEC Turbo 95 kW", "cg": 0, "transmission": "manual", "seller_type": "private", "location": "Trnava", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "195972291", "url": "https://auto.bazos.sk/inzerat/195972291/honda-civic-10-dohc-vtec-turbo-elegance-93kw126hp-m6.php", "price": 11199}], "body": "hatchback"}, {"id": "bs-23440402", "url": "https://auto.bazar.sk/23440402-honda-civic-1-8-i-vtec-sport-104kw-m6-5d/", "title": "Honda Civic 1.8 i-VTEC Sport, 104kW, M6, 5d.", "price": 12500, "price_gross": 12500, "fair_price": 10940.0, "discount_pct": -14.2, "verdict": "nad trhom", "year": 2012, "km": 50000, "km_per_year": 3500.0, "eg": "1.4 / 1.8 i-VTEC", "cg": 0, "transmission": "manual", "seller_type": "private", "location": "Pezinok", "flags": ["nezvyčajne nízky nájazd na vek (50 000 km) – over  či nejde o preklep"], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "bs-23490978", "url": "https://auto.bazar.sk/23490978-honda-civic-1-8-vtec/", "title": "Honda Civic 1.8 VTEC", "price": 6790, "price_gross": 6790, "fair_price": 5930.0, "discount_pct": -14.4, "verdict": "nad trhom", "year": 2007, "km": 207000, "km_per_year": 10700.0, "eg": "LPG", "cg": 2, "transmission": "manual", "seller_type": "private", "location": "Levice", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "197340047", "url": "https://auto.bazos.sk/inzerat/197340047/honda-civic-tourer-18-i-vtec-104-kw-benzin-lpg-2015.php", "title": "Honda Civic Tourer 1.8 i-VTEC, 104 kW, benzín + LPG, 2015", "price": 12500, "price_gross": 12500, "fair_price": 10900.0, "discount_pct": -14.7, "verdict": "nad trhom", "year": 2015, "km": 149396, "km_per_year": 13200.0, "eg": "LPG", "cg": 2, "transmission": "manual", "seller_type": "uncertain", "location": "Humenné", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "196814470", "url": "https://auto.bazos.sk/inzerat/196814470/honda-civic-8g-18-automat.php", "title": "Honda Civic 8g. 1.8 Automat", "price": 3999, "price_gross": 3999, "fair_price": 3490.0, "discount_pct": -14.7, "verdict": "nad trhom", "year": 2006, "km": 240000, "km_per_year": 11800.0, "eg": "1.4 / 1.8 i-VTEC", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Levoča", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "bs-39634905", "url": "https://auto.bazar.sk/39634905-honda-civic-1-4-i-vtec/", "title": "Honda Civic 1.4 i-VTEC", "price": 6600, "price_gross": 6600, "fair_price": 5750.0, "discount_pct": -14.7, "verdict": "nad trhom", "year": 2013, "km": 177506, "km_per_year": 13300.0, "eg": "1.4 / 1.8 i-VTEC", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava V - Petržalka", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "ab-AeptSgOQmmw", "url": "https://www.autobazar.eu/detail/honda-civic-20-i-mmd-sport-e-cvt-135kw/AeptSgOQmmw/", "title": "Honda Civic 2.0 eHEV Sport e-CVT 135kW", "price": 25200, "price_gross": 25200, "fair_price": 21620.0, "discount_pct": -16.5, "verdict": "výrazne nad trhom", "year": 2022, "km": 43000, "km_per_year": 9900.0, "eg": "Hybrid (IMA / e:HEV)", "cg": 2, "transmission": "automatic", "seller_type": "private", "location": "Trenčín", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "196638097", "url": "https://auto.bazos.sk/inzerat/196638097/predam-honda-civic-20-ehev-sport.php", "price": 25200}], "body": "hatchback"}, {"id": "197563786", "url": "https://auto.bazos.sk/inzerat/197563786/honda-civic-10-dohc-vtec-turbo-elegance.php", "title": "Honda Civic 1.0 DOHC VTEC Turbo Elegance", "price": 10899, "price_gross": 10899, "fair_price": 9350.0, "discount_pct": -16.6, "verdict": "výrazne nad trhom", "year": 2017, "km": 190324, "km_per_year": 20400.0, "eg": "1.0 VTEC Turbo 95 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Piešťany", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "196368871", "url": "https://auto.bazos.sk/inzerat/196368871/honda-civic-14-i-vtec-9-generacia.php", "title": "Honda Civic 1.4 i-VTEC (9. generácia)", "price": 5790, "price_gross": 5790, "fair_price": 4960.0, "discount_pct": -16.8, "verdict": "výrazne nad trhom", "year": 2012, "km": 167000, "km_per_year": 11700.0, "eg": "1.4 / 1.8 i-VTEC", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Košice", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "195838891", "url": "https://auto.bazos.sk/inzerat/195838891/predam-honda-civic-tourer.php", "title": "Predám Honda Civic Tourer", "price": 9500, "price_gross": 9500, "fair_price": 8120.0, "discount_pct": -17.0, "verdict": "výrazne nad trhom", "year": 2016, "km": 171000, "km_per_year": 16500.0, "eg": "1.6 i-DTEC 88 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Rožňava", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "bs-23520552", "url": "https://auto.bazar.sk/23520552-honda-civic-1-8-vtec-gt-103kw-m6-5d/", "title": "Honda Civic 1.8 VTEC GT, 103kW, M6, 5d.", "price": 9500, "price_gross": 9500, "fair_price": 8120.0, "discount_pct": -17.0, "verdict": "výrazne nad trhom", "year": 2010, "km": 66500, "km_per_year": 4100.0, "eg": "1.4 / 1.8 i-VTEC", "cg": 0, "transmission": "manual", "seller_type": "private", "location": "Rovinka", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "bs-23520551", "url": "https://auto.bazar.sk/23520551-honda-civic-1-8-vtec-gt-103kw-m6-5d/", "title": "Honda Civic 1.8 VTEC GT, 103kW, M6, 5d.", "price": 9500, "price_gross": 9500, "fair_price": 8120.0, "discount_pct": -17.0, "verdict": "výrazne nad trhom", "year": 2010, "km": 66500, "km_per_year": 4100.0, "eg": "1.4 / 1.8 i-VTEC", "cg": 0, "transmission": "manual", "seller_type": "private", "location": "Rovinka", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "bs-39750868", "url": "https://auto.bazar.sk/39750868-honda-civic-2-0-i-mmd-executive-e-cvt/", "title": "Honda Civic 2.0 i-MMD Executive e-CVT", "price": 23499, "price_gross": 23499, "fair_price": 20060.0, "discount_pct": -17.1, "verdict": "výrazne nad trhom", "year": 2022, "km": 69891, "km_per_year": 16100.0, "eg": "Hybrid (IMA / e:HEV)", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AmBF-_odeMp", "url": "https://www.autobazar.eu/detail/honda-civic-20-i-mmd-executive-e-cvt/AmBF-_odeMp/", "price": 23499}], "body": "hatchback"}, {"id": "197446015", "url": "https://auto.bazos.sk/inzerat/197446015/honda-civic-10-v-tec-turbo-95kw-2017-povodny-lak.php", "title": "Honda Civic 1.0 V-TEC Turbo, 95kW, 2017, pôvodný lak", "price": 15490, "price_gross": 15490, "fair_price": 13180.0, "discount_pct": -17.5, "verdict": "výrazne nad trhom", "year": 2017, "km": 75559, "km_per_year": 8100.0, "eg": "1.0 VTEC Turbo 95 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Zlaté Moravce", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmyMBH98WK4", "url": "https://www.autobazar.eu/detail/honda-civic-10-v-tec-turbo-95kw-aj-na-splatky-protiucet/AmyMBH98WK4/", "price": 15490}, {"source": "bazarsk", "id": "bs-39765839", "url": "https://auto.bazar.sk/39765839-honda-civic-1-0-v-tec-turbo-95kw-aj-na-splatky-protiucet/", "price": 15490}], "body": "sedan"}, {"id": "196363186", "url": "https://auto.bazos.sk/inzerat/196363186/honda-civic-x-15-dohc-vtec-turbo-2019.php", "title": "Honda Civic X 1.5 DOHC VTEC Turbo 2019", "price": 12499, "price_gross": 12499, "fair_price": 10480.0, "discount_pct": -19.3, "verdict": "výrazne nad trhom", "year": 2019, "km": 205642, "km_per_year": 28000.0, "eg": "1.5 VTEC Turbo 134 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Michalovce", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "ab-Amx4mG9X9Ul", "url": "https://www.autobazar.eu/detail/honda-civic-18-i-vtec-sport-at/Amx4mG9X9Ul/", "title": "Honda Civic 1.8 i-VTEC Sport A/T", "price": 9990, "price_gross": 9990, "fair_price": 8340.0, "discount_pct": -19.8, "verdict": "výrazne nad trhom", "year": 2012, "km": 181757, "km_per_year": 12700.0, "eg": "1.4 / 1.8 i-VTEC", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava-Nové Mesto", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-39704488", "url": "https://auto.bazar.sk/39704488-honda-civic-1-8-i-vtec-sport-a-t/", "price": 9990}], "body": "hatchback"}, {"id": "195893300", "url": "https://auto.bazos.sk/inzerat/195893300/honda-civic-15-turbo-elegance.php", "title": "Honda Civic 1.5 turbo Elegance", "price": 15900, "price_gross": 15900, "fair_price": 11980.0, "discount_pct": -32.7, "verdict": "výrazne nad trhom", "year": 2018, "km": 103000, "km_per_year": 12400.0, "eg": "1.5 VTEC Turbo 134 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Prievidza", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "hatchback"}, {"id": "197625945", "url": "https://auto.bazos.sk/inzerat/197625945/honda-civic-14-i-dsi-2008-153-000-km.php", "title": "Honda Civic 1.4 i-DSI 2008 153 000 km", "price": 5490, "price_gross": 5490, "fair_price": 4020.0, "discount_pct": -36.5, "verdict": "výrazne nad trhom", "year": 2008, "km": 153000, "km_per_year": 8300.0, "eg": "1.4 / 1.8 i-VTEC", "cg": 0, "transmission": null, "seller_type": "private", "location": "Trnava", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "197402362", "url": "https://auto.bazos.sk/inzerat/197402362/honda-civic-14-i-vtec-comfort.php", "title": "Honda Civic 1.4 i-VTEC Comfort", "price": 5590, "price_gross": 5590, "fair_price": 4040.0, "discount_pct": -38.5, "verdict": "výrazne nad trhom", "year": 2012, "km": 233051, "km_per_year": 16300.0, "eg": "1.4 / 1.8 i-VTEC", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Vranov nad Topľou", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AmLS9mx6vb1", "url": "https://www.autobazar.eu/detail/honda-civic-14-i-vtec-comfort/AmLS9mx6vb1/", "price": 5590}, {"source": "bazarsk", "id": "bs-39766088", "url": "https://auto.bazar.sk/39766088-honda-civic-1-4-i-vtec-comfort/", "price": 5590}], "body": "hatchback"}, {"id": "ab-AmgX5NmAnZi", "url": "https://www.autobazar.eu/detail/honda-civic-14-comfort/AmgX5NmAnZi/", "title": "Honda Civic 1.4 Comfort", "price": 4490, "price_gross": 4490, "fair_price": 3230.0, "discount_pct": -39.2, "verdict": "výrazne nad trhom", "year": 2008, "km": 239256, "km_per_year": 13100.0, "eg": "1.4 / 1.8 i-VTEC", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Veľký Krtíš", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazarsk", "id": "bs-39767798", "url": "https://auto.bazar.sk/39767798-honda-civic-1-4-comfort/", "price": 4490}, {"source": "bazos", "id": "197449642", "url": "https://auto.bazos.sk/inzerat/197449642/honda-civic-14i-5dverove-benzin-stk-spz-tazne.php", "price": 4490}], "body": "hatchback"}, {"id": "197700638", "url": "https://auto.bazos.sk/inzerat/197700638/honda-civic-18-vtec-comfort.php", "title": "Honda Civic 1.8 VTEC Comfort", "price": 5500, "price_gross": 5500, "fair_price": 3860.0, "discount_pct": -42.4, "verdict": "výrazne nad trhom", "year": 2007, "km": 211843, "km_per_year": 11000.0, "eg": "1.4 / 1.8 i-VTEC", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Martin", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-Amt0oTL9DRb", "url": "https://www.autobazar.eu/detail/honda-civic-18-vtec-comfort/Amt0oTL9DRb/", "price": 5500}, {"source": "bazarsk", "id": "bs-39676784", "url": "https://auto.bazar.sk/39676784-honda-civic-1-8-vtec-comfort/", "price": 5500}], "body": "hatchback"}, {"id": "197312814", "url": "https://auto.bazos.sk/inzerat/197312814/honda-civic-5dr-18-benzin-2008-103kw.php", "title": "Honda Civic 5DR 1.8 Benzin, 2008, 103kw", "price": 2700, "price_gross": 2700, "fair_price": 1800.0, "discount_pct": -49.8, "verdict": "výrazne nad trhom", "year": 2008, "km": 438020, "km_per_year": 23900.0, "eg": "1.4 / 1.8 i-VTEC", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Dunajská Streda", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "hatchback"}, {"id": "ab-Ae8y2MIg2H2", "url": "https://www.autobazar.eu/detail/honda-civic-fn211-ulozenka/Ae8y2MIg2H2/", "title": "Honda Civic FN211 uloženka", "price": 13800, "price_gross": 13800, "fair_price": 6100.0, "discount_pct": -126.1, "verdict": "výrazne nad trhom", "year": 2008, "km": 217300, "km_per_year": 11900.0, "eg": "1.5 VTEC Turbo 134 kW", "cg": 0, "transmission": "manual", "seller_type": "private", "location": "Komárno", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "hatchback"}];
+const GROUPS = ["Benzín", "Diesel i-DTEC", "Hybrid, LPG a nezistený"];
+const BODY = {"hatchback": "hatchback", "sedan": "sedan", "wagon": "kombi Tourer"};
+const fmt = n => Math.round(n).toLocaleString("sk-SK");
+const eur = n => fmt(n) + " €";
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const TRANS = {automatic: "automat", manual: "manuál"};
+const SRC = {bazos: "bazoš", autobazar: "autobazar.eu", bazarsk: "bazar.sk"};
+
+// --- theme toggle ---------------------------------------------------------
+document.getElementById("themeBtn").onclick = () => {
+  const root = document.documentElement;
+  const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  drawChart();
+};
+
+// --- scatter chart --------------------------------------------------------
+const legend = document.getElementById("legend");
+legend.innerHTML = GROUPS.map((g, i) => `<span><i style="background:var(--s${i+1})"></i>${g}</span>`).join("")
+  + `<span><i class="ring"></i>odporúčaná ponuka</span>`;
+
+function drawChart() {
+  const svg = document.getElementById("chart"), wrap = document.getElementById("chartWrap"), tip = document.getElementById("tip");
+  const W = svg.clientWidth, H = 420, m = {l: 56, r: 16, t: 10, b: 40};
+  const pts = DATA.filter(d => d.km && d.price_gross);
+  const xMax = Math.ceil(Math.max(...pts.map(d => d.km)) / 50000) * 50000;
+  const yMax = Math.ceil(Math.max(...pts.map(d => d.price_gross)) / 5000) * 5000;
+  const x = v => m.l + v / xMax * (W - m.l - m.r), y = v => H - m.b - v / yMax * (H - m.t - m.b);
+  let s = "";
+  for (let v = 0; v <= yMax; v += 5000)
+    s += `<line x1="${m.l}" x2="${W-m.r}" y1="${y(v)}" y2="${y(v)}" stroke="var(--grid)"/><text x="${m.l-8}" y="${y(v)+4}" text-anchor="end">${v/1000} tis. €</text>`;
+  const step = W < 520 ? 100000 : 50000;
+  for (let v = 0; v <= xMax; v += step)
+    s += `<text x="${x(v)}" y="${H-m.b+18}" text-anchor="middle">${v/1000} tis.</text>`;
+  s += `<text x="${(W+m.l)/2}" y="${H-6}" text-anchor="middle">nájazd (km)</text>`;
+  const order = [...pts].sort((a, b) => (a.pick ? 1 : 0) - (b.pick ? 1 : 0));
+  order.forEach(d => {
+    const cx = x(d.km), cy = y(d.price_gross);
+    if (d.pick) s += `<circle cx="${cx}" cy="${cy}" r="9" fill="none" stroke="var(--text)" stroke-width="2"/>`;
+    s += `<circle class="pt" data-id="${d.id}" cx="${cx}" cy="${cy}" r="5" fill="var(--s${d.cg+1})" stroke="var(--surface)" stroke-width="2"/>`;
+  });
+  // invisible bigger hit targets
+  order.forEach(d => s += `<circle class="hit" data-id="${d.id}" cx="${x(d.km)}" cy="${y(d.price_gross)}" r="11" fill="transparent" style="cursor:pointer"/>`);
+  svg.innerHTML = s;
+  const byId = Object.fromEntries(pts.map(d => [d.id, d]));
+  svg.querySelectorAll(".hit").forEach(c => {
+    c.onmouseenter = c.onmousemove = ev => {
+      const d = byId[c.dataset.id];
+      tip.innerHTML = `<b>${esc(d.title)}</b>
+        <div class="row"><span>Cena</span><span>${eur(d.price_gross)}</span></div>
+        <div class="row"><span>Férová cena</span><span>${eur(d.fair_price)}</span></div>
+        <div class="row"><span>Pod trhom</span><span>${d.discount_pct > 0 ? "+" : ""}${d.discount_pct.toLocaleString("sk-SK")} %</span></div>
+        <div class="row"><span>Zdroj</span><span>${SRC[d.source]}${d.also_listed.length ? " + " + d.also_listed.map(a => SRC[a.source]).join(", ") : ""}</span></div>
+        <div class="row"><span>Rok · km</span><span>${d.year} · ${fmt(d.km)}</span></div>
+        <div class="row"><span>Motor</span><span>${esc(d.eg)} ${TRANS[d.transmission] || ""}</span></div>`;
+      tip.style.display = "block";
+      const r = wrap.getBoundingClientRect();
+      let lx = ev.clientX - r.left + 14, ly = ev.clientY - r.top + 14;
+      if (lx + 290 > r.width) lx = ev.clientX - r.left - 290;
+      tip.style.left = lx + "px"; tip.style.top = ly + "px";
+    };
+    c.onmouseleave = () => tip.style.display = "none";
+    c.onclick = () => window.open(byId[c.dataset.id].url, "_blank", "noopener");
+  });
+}
+drawChart();
+addEventListener("resize", drawChart);
+
+// --- full table -----------------------------------------------------------
+const fEngine = document.getElementById("fEngine");
+[...new Set(DATA.map(d => d.eg))].sort().forEach(g => fEngine.insertAdjacentHTML("beforeend", `<option>${esc(g)}</option>`));
+let sortK = "discount_pct", sortDir = -1;
+function discCell(v) {
+  const w = Math.min(Math.abs(v), 30) / 30 * 50;
+  const bar = v >= 0 ? `left:50%;width:${w}%;background:var(--pos)` : `right:50%;width:${w}%;background:var(--neg)`;
+  return `<span class="disc">${v > 0 ? "+" : ""}${v.toLocaleString("sk-SK")} %<span class="dbar"><span style="${bar}"></span></span></span>`;
+}
+function renderTable() {
+  const max = parseFloat(document.getElementById("fMax").value) || Infinity;
+  const tr = document.getElementById("fTrans").value, se = document.getElementById("fSeller").value, en = fEngine.value;
+  const so = document.getElementById("fSource").value, og = document.getElementById("fOrigin").value;
+  const bo = document.getElementById("fBody").value;
+  const rows = DATA.filter(d => (!en || d.eg === en) && (!tr || d.transmission === tr)
+    && (!se || d.seller_type !== "dealer") && d.price_gross <= max
+    && (!so || d.source === so || d.also_listed.some(a => a.source === so)) && (!og || d.origin === og) && (!bo || d.body === bo))
+    .sort((a, b) => { const A = a[sortK], B = b[sortK]; return (typeof A === "string" ? A.localeCompare(B) : A - B) * sortDir; });
+  document.getElementById("count").textContent = `${rows.length} z ${DATA.length} inzerátov`;
+  document.querySelector("#tbl tbody").innerHTML = rows.map(d => `<tr>
+    <td><a href="${d.url}" target="_blank" rel="noopener">${esc(d.title)}</a> ${d.pick ? '<span class="badge pick">odporúčané</span>' : ""}
+      <div class="sub">${BODY[d.body] || "karoséria ?"} · ${esc(d.eg)} · ${TRANS[d.transmission] || "prevodovka ?"} · ${esc(d.location)} · ${d.seller_type === "dealer" ? "predajca/firma" : d.seller_type === "private" ? "súkromník" : "neisté"} · ${SRC[d.source]}${d.origin === "SR" ? " · kúpené v SR" : d.origin === "dovoz" ? " · dovoz" : ""}${d.also_listed.map(a => ` · <a href="${a.url}" target="_blank" rel="noopener">aj na ${SRC[a.source]}</a>`).join("")}</div>
+      ${d.flags.filter(f => !f.startsWith("prevodovka")).map(f => `<div class="flag">⚠ ${esc(f)}</div>`).join("")}</td>
+    <td class="num">${d.year}</td><td class="num">${fmt(d.km)}</td>
+    <td class="num">${eur(d.price_gross)}</td><td class="num">${eur(d.fair_price)}</td>
+    <td class="num">${discCell(d.discount_pct)}</td></tr>`).join("");
+  document.querySelectorAll("#tbl th.sortable").forEach(th => {
+    const base = th.textContent.replace(/ [▾▴]$/, "");
+    th.textContent = base + (th.dataset.k === sortK ? (sortDir < 0 ? " ▾" : " ▴") : "");
+  });
+}
+document.querySelectorAll("#tbl th.sortable").forEach(th => th.onclick = () => {
+  if (sortK === th.dataset.k) sortDir *= -1; else { sortK = th.dataset.k; sortDir = th.dataset.k === "title" ? 1 : -1; }
+  renderTable();
+});
+["fEngine", "fTrans", "fSeller", "fSource", "fBody", "fOrigin", "fMax"].forEach(id => document.getElementById(id).addEventListener("input", renderTable));
+renderTable();
+</script>
+<!-- ferovka-theme --><script defer src="/analytics-config.js"></script><script defer src="/analytics.js"></script><script id="ferovka-chart">/* Férovka – chart → ad links, injected into every report by sync-reports.mjs.
+ *
+ * The reports draw one invisible 11px "hit" circle per ad. In dense charts (and always on a narrow phone) those
+ * circles overlap and the one drawn last wins, so a click/tap often opened a neighbouring ad. Here the pointer is
+ * always resolved to the NEAREST point, the report's own tooltip is shown for that point, and a click opens its ad.
+ * Touch: the first tap shows the tooltip (with a hint), a second tap on the same point opens the ad.
+ */
+(() => {
+  let rows;
+  try { rows = DATA; } catch { return; } // eslint-disable-line no-undef
+  if (!Array.isArray(rows) || !rows.length || !("url" in rows[0])) return;
+  const byId = new Map(rows.map((d) => [String(d.id), d]));
+  const MOUSE = ["mouseover", "mouseout", "mouseenter", "mouseleave", "mousemove", "mousedown", "mouseup", "click"];
+  let lastPointer = "mouse", down = null;
+  // the finger position as it was – Chrome "snaps" the later click of a tap to the centre of a nearby clickable element
+  addEventListener("pointerdown", (e) => { lastPointer = e.pointerType || "mouse"; down = { clientX: e.clientX, clientY: e.clientY }; }, true);
+
+  // the old per-point hit circles must not be targets (they overlap, and touch snapping aims at them)
+  document.head.insertAdjacentHTML("beforeend", "<style>svg circle.hit[data-id],svg circle.pt[data-id]{pointer-events:none}</style>");
+
+  function nearest(svg, ev, radius) {
+    let best = null, bd = Infinity;
+    for (const c of svg.querySelectorAll("circle.pt[data-id]")) {
+      const r = c.getBoundingClientRect();
+      const dx = r.left + r.width / 2 - ev.clientX, dy = r.top + r.height / 2 - ev.clientY;
+      const d = dx * dx + dy * dy;
+      if (d <= bd) { bd = d; best = c; } // ties: the point drawn on top (later) wins – that is the one you see
+    }
+    return best && bd <= radius * radius ? best : null;
+  }
+
+  function bind(svg) {
+    if (svg.__fvLinks) return;
+    svg.__fvLinks = true;
+    let current = null, armed = null;
+    const hitOf = (pt) => pt && svg.querySelector(`circle.hit[data-id="${CSS.escape(pt.dataset.id)}"]`);
+    const fire = (el, type, ev) => {
+      if (!el) return;
+      const e = new MouseEvent(type, { clientX: ev.clientX, clientY: ev.clientY, bubbles: false });
+      e.__fv = true;
+      el.dispatchEvent(e);
+    };
+    const tip = () => (svg.parentElement && svg.parentElement.querySelector("#tip, .tip")) || document.getElementById("tip");
+    const mark = (pt) => {
+      if (current === pt) return;
+      if (current) current.setAttribute("r", current.__r || "5");
+      current = pt;
+      if (pt) { pt.__r = pt.__r || pt.getAttribute("r"); pt.setAttribute("r", String(+pt.__r + 2)); }
+    };
+    const show = (pt, ev, hint) => {
+      mark(pt);
+      if (!pt) { const t = tip(); if (t) t.style.display = "none"; return; }
+      fire(hitOf(pt), "mousemove", ev); // the report's own tooltip, for the nearest point
+      const t = tip();
+      if (t && hint) t.insertAdjacentHTML("beforeend", `<div class="fv-hint">Ťukni ešte raz – otvorí sa inzerát ↗</div>`);
+    };
+    const open = (pt) => {
+      const d = byId.get(pt.dataset.id);
+      if (d && d.url) {
+        try { window.FerovkaAnalytics?.listingClick(d.url, "chart"); } catch { /* analytics must never block an ad */ }
+        window.open(d.url, "_blank", "noopener");
+      }
+    };
+
+    // the per-circle handlers of the report never see real mouse events – only our synthetic ones
+    for (const type of MOUSE) {
+      svg.addEventListener(type, (ev) => {
+        if (ev.__fv) return;
+        ev.stopImmediatePropagation();
+        if (type === "mousemove" && lastPointer === "mouse") {
+          show(nearest(svg, ev, 18), ev, false);
+          svg.style.cursor = current ? "pointer" : "";
+        } else if (type === "mouseleave" && ev.target === svg && lastPointer === "mouse") {
+          show(null, ev);
+        } else if (type === "click") {
+          const touch = lastPointer !== "mouse";
+          const at = touch && down ? down : ev;
+          const pt = nearest(svg, at, touch ? 26 : 18);
+          if (!pt) { armed = null; show(null, ev); return; }
+          if (!touch || armed === pt) { armed = null; open(pt); }
+          else { armed = pt; show(pt, at, true); }
+        }
+      }, true);
+    }
+  }
+
+  const scan = () => document.querySelectorAll("svg").forEach((s) => s.querySelector("circle.pt[data-id]") && bind(s));
+  scan();
+  new MutationObserver(scan).observe(document.body, { childList: true, subtree: true });
+})();
+</script><script id="ferovka-filters">/* Férovka – filters for the whole report, injected into every model report by sync-reports.mjs.
+ *
+ * The reports render the chart (drawChart) and the full ranking (renderTable) from the global DATA array; their own
+ * filter bar only filters the table. Here the filter bar (kept in its place above the ranking) gets more filters (year, price from/to,
+ * km, fuel, discount, picks only, text search) and every filter applies to the chart and the ranking together: DATA is
+ * refilled in place with the matching ads and both are drawn again. "</script" can't occur inside this file.
+ */
+(() => {
+  let data;
+  try { data = DATA; } catch { return; } // eslint-disable-line no-undef
+  if (!Array.isArray(data) || !data.length || typeof renderTable !== "function") return; // eslint-disable-line no-undef
+  const bar = document.querySelector(".filters");
+  if (!bar || bar.dataset.fv) return;
+  bar.dataset.fv = "1";
+  const ALL = data.slice();
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+  const fmt = (n) => Math.round(n).toLocaleString("sk-SK");
+  const norm = (s) => String(s ?? "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+  let groups = null;
+  try { groups = GROUPS; } catch { /* report without groups */ } // eslint-disable-line no-undef
+
+  const FUEL = { diesel: "Diesel", petrol: "Benzín", hybrid: "Hybrid", "plug-in hybrid": "Plug-in hybrid", electric: "Elektro", lpg: "LPG", cng: "CNG" };
+  const fuelOf = (d) => {
+    const e = norm(d.eg);
+    if (/tdi|crdi|dci|hdi|diesel|\bd\b|cdi|\d+d\b|blue/.test(e)) return "Diesel";
+    if (/plug-in|phev|e-hybrid|recharge|\bgte\b|\bt8\b|\b\d{2}e\b|\b\d{3} ?e\b/.test(e)) return "Plug-in hybrid";
+    if (/elektro|electric|\bev\b/.test(e)) return "Elektro";
+    if (/cng|lpg|g-tec|g-tron|tgi|ecofuel/.test(e)) return "Plyn (CNG/LPG)";
+    if (/mild|mhev/.test(e)) return "Benzín"; // mild-hybrid petrol (the diesel ones say TDI / d above)
+    if (/hybrid|hev/.test(e)) return "Hybrid";
+    if (/tsi|tfsi|mpi|fsi|benzin|gdi|dpi|htp|12v|\bt\d\b|\bb[56]\b|\d+i\b|turbo|tce|\bs4\b|rs ?\d|amg|competition|\bm\d{2,3}i?\b|gti|\bx5 m\b/.test(e)) return "Benzín";
+    return d.fuel ? FUEL[d.fuel] || String(d.fuel) : null;
+  };
+
+  // --- controls ---------------------------------------------------------------------------------------------------
+  const years = ALL.map((d) => d.year).filter(Boolean);
+  const yMin = Math.min(...years), yMax = Math.max(...years);
+  const yearOpts = (label) => `<option value="">${label}</option>` +
+    Array.from({ length: yMax - yMin + 1 }, (_, i) => yMax - i).map((y) => `<option>${y}</option>`).join("");
+  const kms = [30000, 50000, 75000, 100000, 150000, 200000, 250000, 300000];
+  const fuels = [...new Set(ALL.map(fuelOf).filter(Boolean))].sort((a, b) => a.localeCompare(b, "sk"));
+  const showGroups = Array.isArray(groups) && groups.length > 1 && ALL.some((d) => Number.isInteger(d.cg));
+
+  const maxInput = $("fMax");
+  if (maxInput) { maxInput.placeholder = "Cena do €"; maxInput.title = "Najvyššia cena (s DPH)"; }
+  const html =
+    `<select id="fvYearFrom" title="Rok výroby od">${yearOpts("Rok od")}</select>` +
+    `<select id="fvYearTo" title="Rok výroby do">${yearOpts("Rok do")}</select>` +
+    `<input id="fvPriceMin" type="number" placeholder="Cena od €" step="500" min="0" title="Najnižšia cena (s DPH)" style="width:110px">`;
+  if (maxInput) maxInput.insertAdjacentHTML("beforebegin", html);
+  else bar.insertAdjacentHTML("afterbegin", html);
+  const more =
+    `<select id="fvKm" title="Najviac najazdených km"><option value="">Nájazd – všetky</option>${kms.map((k) => `<option value="${k}">do ${fmt(k)} km</option>`).join("")}</select>` +
+    (fuels.length > 1 ? `<select id="fvFuel" title="Palivo"><option value="">Všetky palivá</option>${fuels.map((f) => `<option>${esc(f)}</option>`).join("")}</select>` : "") +
+    (showGroups ? `<select id="fvGroup" title="Skupina motorov (farba v grafe)"><option value="">Všetky skupiny</option>${groups.map((g, i) => `<option value="${i}">${esc(g)}</option>`).join("")}</select>` : "") +
+    `<select id="fvDisc" title="O koľko je auto lacnejšie ako férová cena"><option value="">Cena – všetky</option><option value="0">pod férovou cenou</option><option value="10">aspoň 10 % pod trhom</option><option value="20">aspoň 20 % pod trhom</option></select>` +
+    `<input id="fvText" type="search" placeholder="Hľadať (výbava, mesto…)" title="Hľadá v názve inzerátu, motore a lokalite" style="width:170px">` +
+    `<label class="fv-check"><input id="fvPick" type="checkbox"> len odporúčané</label>` +
+    `<button type="button" id="fvReset" class="fv-reset">Zrušiť filtre</button>`;
+  const count = $("count");
+  if (count) count.insertAdjacentHTML("beforebegin", more);
+  else bar.insertAdjacentHTML("beforeend", more);
+
+  // the bar stays where it was – right above the ranking – and also drives the chart; the chart gets a pointer to it
+  const chart = $("chartWrap");
+  const box = document.createElement("div");
+  box.className = "fv-filters";
+  box.id = "filtre";
+  bar.before(box);
+  box.innerHTML = `<div class="fv-head"><b>Filtre</b><span>platia pre rebríček aj graf vyššie</span></div>`;
+  box.appendChild(bar);
+  const note = document.createElement("div");
+  note.className = "fv-note";
+  chart?.before(note);
+
+  document.head.insertAdjacentHTML("beforeend", `<style id="fv-filters-css">
+.fv-filters{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 14px 4px;margin:24px 0 8px}
+.fv-filters .fv-head{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;margin-bottom:8px}
+.fv-filters .fv-head span{color:var(--muted);font-size:13px}
+.fv-filters .filters{margin-bottom:8px}
+.fv-filters .filters .count{flex-basis:100%;margin-left:0}
+.fv-check{display:inline-flex;gap:6px;align-items:center;font-size:13px;color:var(--text-2,var(--text));white-space:nowrap}
+.fv-reset{background:none;border:1px solid var(--border);color:var(--text);border-radius:8px;padding:6px 10px;font:inherit;font-size:13px;cursor:pointer}
+.fv-reset:hover{background:var(--surface-2,var(--surface))}
+.fv-note{color:var(--muted);font-size:13px;margin:0 0 8px}
+.fv-note a{color:inherit}
+.fv-empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:14px;pointer-events:none}
+@media (max-width:600px){.fv-filters .filters select,.fv-filters .filters input[type=number],.fv-filters .filters input[type=search]{flex:1 1 calc(50% - 8px);min-width:0;width:auto!important}}
+</style>`);
+
+  // --- filtering --------------------------------------------------------------------------------------------------
+  const val = (id) => ($(id) ? $(id).value : "");
+  const num = (id) => { const v = parseFloat(val(id)); return Number.isFinite(v) ? v : null; };
+  function matches(d) {
+    const yf = num("fvYearFrom"), yt = num("fvYearTo"), pmin = num("fvPriceMin"), pmax = num("fMax"), km = num("fvKm"), disc = num("fvDisc");
+    const fuel = val("fvFuel"), grp = val("fvGroup"), q = norm(val("fvText")).trim();
+    if (yf != null && !(d.year >= yf)) return false;
+    if (yt != null && !(d.year <= yt)) return false;
+    if (pmin != null && !(d.price_gross >= pmin)) return false;
+    if (pmax != null && !(d.price_gross <= pmax)) return false;
+    if (km != null && !(d.km <= km)) return false;
+    if (disc != null && !(d.discount_pct > disc || (disc > 0 && d.discount_pct >= disc))) return false;
+    if (fuel && fuelOf(d) !== fuel) return false;
+    if (grp !== "" && String(d.cg) !== grp) return false;
+    if ($("fvPick")?.checked && !d.pick) return false;
+    if (q && !q.split(/\s+/).every((w) => norm(`${d.title} ${d.eg ?? ""} ${d.engine ?? ""} ${d.location ?? ""}`).includes(w))) return false;
+    // the report's own filters (engine, gearbox, seller, portal, body, origin) – same rules as its renderTable
+    const en = val("fEngine"), tr = val("fTrans"), se = val("fSeller"), so = val("fSource"), og = val("fOrigin"), bo = val("fBody");
+    if (en && d.eg !== en) return false;
+    if (tr && d.transmission !== tr) return false;
+    if (se && d.seller_type === "dealer") return false;
+    if (so && !(d.source === so || (d.also_listed || []).some((a) => a.source === so))) return false;
+    if (og && d.origin !== og) return false;
+    if (bo && d.body !== bo) return false;
+    return true;
+  }
+  const active = () => [...box.querySelectorAll("select, input")].filter((el) => (el.type === "checkbox" ? el.checked : el.value !== "")).length;
+
+  let drawing = false;
+  function apply() {
+    if (drawing) return;
+    drawing = true;
+    const rows = ALL.filter(matches);
+    data.length = 0;
+    data.push(...rows);
+    const wrap = $("chartWrap");
+    wrap?.querySelector(".fv-empty")?.remove();
+    const plotted = rows.filter((d) => d.km && d.price_gross).length;
+    try {
+      if (typeof drawChart === "function") { // eslint-disable-line no-undef
+        if (plotted) drawChart(); // eslint-disable-line no-undef
+        else { const svg = $("chart"); if (svg) svg.innerHTML = ""; }
+      }
+    } catch (e) { console.warn("chart", e); }
+    if (wrap && !plotted) {
+      if (getComputedStyle(wrap).position === "static") wrap.style.position = "relative";
+      wrap.insertAdjacentHTML("beforeend", `<div class="fv-empty">Filtrom nezodpovedá žiadny inzerát</div>`);
+    }
+    try { renderTable(); } catch (e) { console.warn("table", e); } // eslint-disable-line no-undef
+    const n = active();
+    if (count) count.textContent = `Zobrazených ${fmt(rows.length)} z ${fmt(ALL.length)} inzerátov` + (n ? ` · aktívne filtre: ${n}` : "");
+    note.innerHTML = n
+      ? `Zobrazených ${fmt(rows.length)} z ${fmt(ALL.length)} inzerátov podľa <a href="#filtre">filtrov pri rebríčku</a>.`
+      : `Filtre (rok, cena, nájazd, palivo…) nájdeš <a href="#filtre">pri kompletnom rebríčku</a> – platia aj pre tento graf.`;
+    drawing = false;
+  }
+  box.querySelectorAll("select, input").forEach((el) => el.addEventListener("input", apply));
+  $("fvPick")?.addEventListener("change", apply);
+  $("fvReset").addEventListener("click", () => {
+    box.querySelectorAll("select, input").forEach((el) => { if (el.type === "checkbox") el.checked = false; else el.value = ""; });
+    apply();
+  });
+  apply();
+})();
+</script><!-- /ferovka-theme -->
+</body>
+</html>

@@ -653,6 +653,19 @@
     }
   },
   {
+    "slug": "honda-civic",
+    "file": "honda-civic-analyza.html",
+    "name": "Honda Civic",
+    "brand": "Honda",
+    "model": "Civic",
+    "kind": "model",
+    "date": "2026-11-21",
+    "summary": "Analýza aktuálnych inzerátov Honda Civic (8. až 11. generácia, hatchback, sedan aj kombi Tourer, bez Type R) od 1 500 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 266 inzerátov (129 na bazoši, 73 na autobazar.eu, 64 na bazar.sk) – prezreli sme 89 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 173 rôznych áut zo Slovenska.",
+    "ads": 173,
+    "median": "7 700 €",
+    "r2": "94 %"
+  },
+  {
     "slug": "hyundai-i20",
     "file": "hyundai-i20-analyza.html",
     "name": "Hyundai i20",
@@ -825,7 +838,7 @@
     "median": "9 145 €",
     "r2": "95 %",
     "history": {
-      "updated_at": "2026-11-21T18:05:37",
+      "updated_at": "2026-11-21T18:25:23",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 164,
@@ -855,7 +868,26 @@
     "summary": "Analýza aktuálnych inzerátov Mazda 6 (GH a GJ/GL, sedan aj kombi Wagon, bez MPS) od 2 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 927 inzerátov (711 na bazoši, 120 na autobazar.eu, 96 na bazar.sk) – prezreli sme 38 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 235 rôznych áut zo Slovenska.",
     "ads": 235,
     "median": "8 500 €",
-    "r2": "90 %"
+    "r2": "90 %",
+    "history": {
+      "updated_at": "2026-11-21T18:25:23",
+      "as_of": "2026-11-21",
+      "coverage": "partial",
+      "baseline_count": 190,
+      "total_count": 190,
+      "active_count": 190,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 190,
+      "paired_median_change_pct": 0,
+      "historical_median": 8500,
+      "seen_median": 8500,
+      "seen_price_count": 190,
+      "last_observed_at": "2026-11-21T18:19:30"
+    }
   },
   {
     "slug": "mazda-cx-5",
@@ -870,7 +902,7 @@
     "median": "12 990 €",
     "r2": "95 %",
     "history": {
-      "updated_at": "2026-11-21T18:05:37",
+      "updated_at": "2026-11-21T18:25:23",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 191,
