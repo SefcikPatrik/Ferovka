@@ -505,7 +505,7 @@
     "median": "10 999 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-21T17:28:13",
+      "updated_at": "2026-11-21T19:58:08",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 245,
@@ -525,6 +525,38 @@
     }
   },
   {
+    "slug": "dacia-logan",
+    "file": "dacia-logan-analyza.html",
+    "name": "Dacia Logan",
+    "brand": "Dacia",
+    "model": "Logan",
+    "kind": "model",
+    "date": "2026-11-21",
+    "summary": "Analýza aktuálnych inzerátov Dacia Logan (druhá a tretia generácia, 2013–2025, sedan aj MCV kombi) od 2 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 183 inzerátov (52 na bazoši, 67 na autobazar.eu, 64 na bazar.sk) – prezreli sme 80 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 102 rôznych áut zo Slovenska.",
+    "ads": 102,
+    "median": "4 500 €",
+    "r2": "80 %",
+    "history": {
+      "updated_at": "2026-11-21T19:58:08",
+      "as_of": "2026-11-21",
+      "coverage": "partial",
+      "baseline_count": 77,
+      "total_count": 77,
+      "active_count": 77,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 77,
+      "paired_median_change_pct": 0,
+      "historical_median": 4500,
+      "seen_median": 4500,
+      "seen_price_count": 77,
+      "last_observed_at": "2026-11-21T19:57:19"
+    }
+  },
+  {
     "slug": "dacia-sandero",
     "file": "dacia-sandero-analyza.html",
     "name": "Dacia Sandero",
@@ -537,7 +569,7 @@
     "median": "7 099 €",
     "r2": "93 %",
     "history": {
-      "updated_at": "2026-11-21T17:28:13",
+      "updated_at": "2026-11-21T19:58:08",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 153,
