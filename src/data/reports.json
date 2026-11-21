@@ -1177,7 +1177,7 @@
     "median": "8 700 €",
     "r2": "92 %",
     "history": {
-      "updated_at": "2026-11-21T18:03:44",
+      "updated_at": "2026-11-21T19:18:17",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 279,
@@ -1209,7 +1209,7 @@
     "median": "13 990 €",
     "r2": "96 %",
     "history": {
-      "updated_at": "2026-11-21T18:03:44",
+      "updated_at": "2026-11-21T19:18:17",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 359,
@@ -1241,7 +1241,7 @@
     "median": "7 570 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-21T18:03:44",
+      "updated_at": "2026-11-21T19:18:17",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 440,
@@ -1258,6 +1258,38 @@
       "seen_median": 7570,
       "seen_price_count": 440,
       "last_observed_at": "2026-11-21T16:32:20"
+    }
+  },
+  {
+    "slug": "peugeot-5008",
+    "file": "peugeot-5008-analyza.html",
+    "name": "Peugeot 5008",
+    "brand": "Peugeot",
+    "model": "5008",
+    "kind": "model",
+    "date": "2026-11-21",
+    "summary": "Analýza aktuálnych inzerátov Peugeot 5008 (druhá generácia SUV, 2017–2024, 7 miest) od 8 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 456 inzerátov (82 na bazoši, 182 na autobazar.eu, 192 na bazar.sk) – prezreli sme 87 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 221 rôznych áut zo Slovenska.",
+    "ads": 221,
+    "median": "15 900 €",
+    "r2": "93 %",
+    "history": {
+      "updated_at": "2026-11-21T19:18:17",
+      "as_of": "2026-11-21",
+      "coverage": "partial",
+      "baseline_count": 126,
+      "total_count": 126,
+      "active_count": 126,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 126,
+      "paired_median_change_pct": 0,
+      "historical_median": 15900,
+      "seen_median": 15900,
+      "seen_price_count": 126,
+      "last_observed_at": "2026-11-21T19:16:57"
     }
   },
   {
