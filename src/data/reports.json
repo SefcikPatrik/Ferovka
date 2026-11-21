@@ -2726,7 +2726,7 @@
     "median": "19 990 €",
     "r2": "95 %",
     "history": {
-      "updated_at": "2026-11-21T21:07:26",
+      "updated_at": "2026-11-21T21:20:56",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 142,
@@ -2758,7 +2758,7 @@
     "median": "22 370 €",
     "r2": "93 %",
     "history": {
-      "updated_at": "2026-11-21T21:07:26",
+      "updated_at": "2026-11-21T21:20:56",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 86,
@@ -2790,7 +2790,7 @@
     "median": "37 900 €",
     "r2": "95 %",
     "history": {
-      "updated_at": "2026-11-21T21:07:26",
+      "updated_at": "2026-11-21T21:20:56",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 230,
@@ -2807,6 +2807,38 @@
       "seen_median": 42700,
       "seen_price_count": 594,
       "last_observed_at": "2026-11-21T19:53:10"
+    }
+  },
+  {
+    "slug": "volvo-xc90",
+    "file": "volvo-xc90-analyza.html",
+    "name": "Volvo XC90",
+    "brand": "Volvo",
+    "model": "XC90",
+    "kind": "model",
+    "date": "2026-11-21",
+    "summary": "Analýza aktuálnych inzerátov Volvo XC90 (druhá generácia 2015–2025, bez nových áut z 2026) od 10 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 1 029 inzerátov (109 na bazoši, 472 na autobazar.eu, 448 na bazar.sk) – prezreli sme 96 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 519 rôznych áut zo Slovenska.",
+    "ads": 519,
+    "median": "35 670 €",
+    "r2": "96 %",
+    "history": {
+      "updated_at": "2026-11-21T21:20:56",
+      "as_of": "2026-11-21",
+      "coverage": "partial",
+      "baseline_count": 216,
+      "total_count": 216,
+      "active_count": 216,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 216,
+      "paired_median_change_pct": 0,
+      "historical_median": 35670,
+      "seen_median": 35670,
+      "seen_price_count": 216,
+      "last_observed_at": "2026-11-21T21:19:32"
     }
   },
   {
