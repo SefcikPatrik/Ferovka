@@ -665,7 +665,7 @@
     "median": "4 000 €",
     "r2": "85 %",
     "history": {
-      "updated_at": "2026-11-21T20:29:25",
+      "updated_at": "2026-11-21T21:11:14",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 157,
@@ -697,7 +697,7 @@
     "median": "5 500 €",
     "r2": "90 %",
     "history": {
-      "updated_at": "2026-11-21T20:29:25",
+      "updated_at": "2026-11-21T21:11:14",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 493,
@@ -729,7 +729,7 @@
     "median": "12 994 €",
     "r2": "88 %",
     "history": {
-      "updated_at": "2026-11-21T20:29:25",
+      "updated_at": "2026-11-21T21:11:14",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 96,
@@ -761,7 +761,7 @@
     "median": "14 000 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-21T20:29:25",
+      "updated_at": "2026-11-21T21:11:14",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 357,
@@ -793,7 +793,7 @@
     "median": "7 200 €",
     "r2": "91 %",
     "history": {
-      "updated_at": "2026-11-21T20:29:25",
+      "updated_at": "2026-11-21T21:11:14",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 311,
@@ -813,6 +813,38 @@
     }
   },
   {
+    "slug": "ford-puma",
+    "file": "ford-puma-analyza.html",
+    "name": "Ford Puma",
+    "brand": "Ford",
+    "model": "Puma",
+    "kind": "model",
+    "date": "2026-11-21",
+    "summary": "Analýza aktuálnych inzerátov Ford Puma (crossover 2019–2025, bez nových áut z 2026) od 7 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 183 inzerátov (18 na bazoši, 101 na autobazar.eu, 64 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 88 rôznych áut zo Slovenska.",
+    "ads": 88,
+    "median": "15 500 €",
+    "r2": "96 %",
+    "history": {
+      "updated_at": "2026-11-21T21:11:14",
+      "as_of": "2026-11-21",
+      "coverage": "partial",
+      "baseline_count": 48,
+      "total_count": 48,
+      "active_count": 48,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 48,
+      "paired_median_change_pct": 0,
+      "historical_median": 15500,
+      "seen_median": 15500,
+      "seen_price_count": 48,
+      "last_observed_at": "2026-11-21T21:09:58"
+    }
+  },
+  {
     "slug": "ford-s-max",
     "file": "ford-s-max-analyza.html",
     "name": "Ford S-Max",
@@ -825,7 +857,7 @@
     "median": "10 499 €",
     "r2": "87 %",
     "history": {
-      "updated_at": "2026-11-21T20:29:25",
+      "updated_at": "2026-11-21T21:11:14",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 175,
