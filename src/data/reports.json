@@ -1229,6 +1229,38 @@
     }
   },
   {
+    "slug": "skoda-citigo",
+    "file": "skoda-citigo-analyza.html",
+    "name": "Škoda Citigo",
+    "brand": "Škoda",
+    "model": "Citigo",
+    "kind": "model",
+    "date": "2026-11-21",
+    "summary": "Analýza aktuálnych inzerátov Škoda Citigo (2011–2020, 3 aj 5 dverí, benzín, CNG aj elektro) od 1 500 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 111 inzerátov (30 na bazoši, 65 na autobazar.eu, 16 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 46 rôznych áut zo Slovenska.",
+    "ads": 46,
+    "median": "6 084 €",
+    "r2": "94 %",
+    "history": {
+      "updated_at": "2026-11-21T18:38:30",
+      "as_of": "2026-11-21",
+      "coverage": "partial",
+      "baseline_count": 42,
+      "total_count": 42,
+      "active_count": 42,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 42,
+      "paired_median_change_pct": 0,
+      "historical_median": 6084,
+      "seen_median": 6084,
+      "seen_price_count": 42,
+      "last_observed_at": "2026-11-21T18:37:40"
+    }
+  },
+  {
     "slug": "skoda-kamiq",
     "file": "skoda-kamiq-analyza.html",
     "name": "Škoda Kamiq",
@@ -1241,7 +1273,7 @@
     "median": "18 432 €",
     "r2": "86 %",
     "history": {
-      "updated_at": "2026-11-21T17:40:15",
+      "updated_at": "2026-11-21T18:38:30",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 301,
@@ -1273,7 +1305,7 @@
     "median": "19 489 €",
     "r2": "89 %",
     "history": {
-      "updated_at": "2026-11-21T17:40:15",
+      "updated_at": "2026-11-21T18:38:30",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 504,
@@ -1305,7 +1337,7 @@
     "median": "7 000 €",
     "r2": "81 %",
     "history": {
-      "updated_at": "2026-11-21T17:40:15",
+      "updated_at": "2026-11-21T18:38:30",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 308,
@@ -1337,7 +1369,7 @@
     "median": "16 590 €",
     "r2": "91 %",
     "history": {
-      "updated_at": "2026-11-21T17:40:15",
+      "updated_at": "2026-11-21T18:38:30",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 282,
@@ -1369,7 +1401,7 @@
     "median": "7 900 €",
     "r2": "87 %",
     "history": {
-      "updated_at": "2026-11-21T17:40:15",
+      "updated_at": "2026-11-21T18:38:30",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 228,
@@ -2233,7 +2265,7 @@
     "median": "5 945 €",
     "r2": "93 %",
     "history": {
-      "updated_at": "2026-11-21T17:40:15",
+      "updated_at": "2026-11-21T18:38:30",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 1030,
@@ -2265,7 +2297,7 @@
     "median": "24 490 €",
     "r2": "89 %",
     "history": {
-      "updated_at": "2026-11-21T17:40:15",
+      "updated_at": "2026-11-21T18:38:30",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 1084,
@@ -2297,23 +2329,23 @@
     "median": "10 900 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-21T17:40:15",
+      "updated_at": "2026-11-21T18:38:30",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 3448,
       "total_count": 8550,
-      "active_count": 2,
+      "active_count": 3,
       "inactive_count": 1,
-      "unverified_count": 8547,
+      "unverified_count": 8546,
       "new_count": 5102,
       "price_changed_count": 0,
       "price_lowered_count": 0,
       "paired_count": 0,
       "paired_median_change_pct": null,
       "historical_median": 11490,
-      "seen_median": 15290,
-      "seen_price_count": 1,
-      "last_observed_at": "2026-11-21T11:40:43"
+      "seen_median": 12270,
+      "seen_price_count": 2,
+      "last_observed_at": "2026-11-21T18:10:51"
     }
   },
   {
@@ -2329,7 +2361,7 @@
     "median": "16 000 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-21T17:40:15",
+      "updated_at": "2026-11-21T18:38:30",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 1346,
