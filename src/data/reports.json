@@ -1677,6 +1677,38 @@
     }
   },
   {
+    "slug": "suzuki-s-cross",
+    "file": "suzuki-s-cross-analyza.html",
+    "name": "Suzuki S-Cross",
+    "brand": "Suzuki",
+    "model": "S-Cross",
+    "kind": "model",
+    "date": "2026-11-21",
+    "summary": "Analýza aktuálnych inzerátov Suzuki S-Cross (SX4 S-Cross 2013–2021 a S-Cross od 2022) od 4 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 167 inzerátov (52 na bazoši, 19 na autobazar.eu, 96 na bazar.sk) – prezreli sme 50 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 82 rôznych áut zo Slovenska.",
+    "ads": 82,
+    "median": "14 490 €",
+    "r2": "94 %",
+    "history": {
+      "updated_at": "2026-11-21T20:11:52",
+      "as_of": "2026-11-21",
+      "coverage": "partial",
+      "baseline_count": 63,
+      "total_count": 63,
+      "active_count": 63,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 63,
+      "paired_median_change_pct": 0,
+      "historical_median": 14490,
+      "seen_median": 14490,
+      "seen_price_count": 63,
+      "last_observed_at": "2026-11-21T20:11:00"
+    }
+  },
+  {
     "slug": "suzuki-vitara",
     "file": "suzuki-vitara-analyza.html",
     "name": "Suzuki Vitara",
@@ -1689,7 +1721,7 @@
     "median": "14 300 €",
     "r2": "93 %",
     "history": {
-      "updated_at": "2026-11-21T17:48:55",
+      "updated_at": "2026-11-21T20:11:52",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 162,
