@@ -781,19 +781,6 @@
     }
   },
   {
-    "slug": "kia-picanto",
-    "file": "kia-picanto-analyza.html",
-    "name": "Kia Picanto",
-    "brand": "Kia",
-    "model": "Picanto",
-    "kind": "model",
-    "date": "2026-11-21",
-    "summary": "Analýza aktuálnych inzerátov Kia Picanto (SA, TA a JA, benzín aj LPG) od 1 500 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 88 inzerátov (12 na bazoši, 45 na autobazar.eu, 31 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 49 rôznych áut zo Slovenska.",
-    "ads": 49,
-    "median": "11 950 €",
-    "r2": "99 %"
-  },
-  {
     "slug": "kia-rio",
     "file": "kia-rio-analyza.html",
     "name": "Kia Rio",
@@ -1574,7 +1561,7 @@
     "median": "9 500 €",
     "r2": "86 %",
     "history": {
-      "updated_at": "2026-11-21T17:52:02",
+      "updated_at": "2026-11-21T18:32:45",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 261,
@@ -1590,7 +1577,7 @@
       "historical_median": 9500,
       "seen_median": 9500,
       "seen_price_count": 261,
-      "last_observed_at": "2026-11-21T17:48:41"
+      "last_observed_at": "2026-11-21T18:28:48"
     }
   },
   {
@@ -1606,7 +1593,7 @@
     "median": "12 500 €",
     "r2": "93 %",
     "history": {
-      "updated_at": "2026-11-21T17:52:02",
+      "updated_at": "2026-11-21T18:32:45",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 1346,
@@ -1638,7 +1625,7 @@
     "median": "5 999 €",
     "r2": "90 %",
     "history": {
-      "updated_at": "2026-11-21T17:52:02",
+      "updated_at": "2026-11-21T18:32:45",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 219,
@@ -1658,6 +1645,38 @@
     }
   },
   {
+    "slug": "vw-sharan",
+    "file": "vw-sharan-analyza.html",
+    "name": "Volkswagen Sharan",
+    "brand": "Volkswagen",
+    "model": "Sharan",
+    "kind": "model",
+    "date": "2026-11-21",
+    "summary": "Analýza aktuálnych inzerátov Volkswagen Sharan (Sharan II 7N, 2010–2022, 5 aj 7 miest) od 3 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 552 inzerátov (262 na bazoši, 162 na autobazar.eu, 128 na bazar.sk) – prezreli sme 92 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 331 rôznych áut zo Slovenska.",
+    "ads": 331,
+    "median": "9 950 €",
+    "r2": "89 %",
+    "history": {
+      "updated_at": "2026-11-21T18:32:45",
+      "as_of": "2026-11-21",
+      "coverage": "partial",
+      "baseline_count": 241,
+      "total_count": 241,
+      "active_count": 241,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 241,
+      "paired_median_change_pct": 0,
+      "historical_median": 9950,
+      "seen_median": 9950,
+      "seen_price_count": 241,
+      "last_observed_at": "2026-11-21T18:31:45"
+    }
+  },
+  {
     "slug": "vw-t-roc",
     "file": "vw-t-roc-analyza.html",
     "name": "Volkswagen T-Roc",
@@ -1670,7 +1689,7 @@
     "median": "18 740 €",
     "r2": "90 %",
     "history": {
-      "updated_at": "2026-11-21T17:52:02",
+      "updated_at": "2026-11-21T18:32:45",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 166,
@@ -1702,7 +1721,7 @@
     "median": "19 800 €",
     "r2": "92 %",
     "history": {
-      "updated_at": "2026-11-21T17:52:02",
+      "updated_at": "2026-11-21T18:32:45",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 893,
@@ -1734,7 +1753,7 @@
     "median": "8 500 €",
     "r2": "93 %",
     "history": {
-      "updated_at": "2026-11-21T17:52:02",
+      "updated_at": "2026-11-21T18:32:45",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 463,
@@ -2342,7 +2361,7 @@
     "median": "9 999 €",
     "r2": "92 %",
     "history": {
-      "updated_at": "2026-11-21T17:52:02",
+      "updated_at": "2026-11-21T18:32:45",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 1577,
