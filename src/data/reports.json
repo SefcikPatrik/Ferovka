@@ -493,6 +493,38 @@
     }
   },
   {
+    "slug": "hyundai-i20",
+    "file": "hyundai-i20-analyza.html",
+    "name": "Hyundai i20",
+    "brand": "Hyundai",
+    "model": "i20",
+    "kind": "model",
+    "date": "2026-11-21",
+    "summary": "Analýza aktuálnych inzerátov Hyundai i20 (i20 PB, GB a BC3, vrátane i20 Active, bez i20 N) od 1 500 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 496 inzerátov (83 na bazoši, 221 na autobazar.eu, 192 na bazar.sk) – prezreli sme 95 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 269 rôznych áut zo Slovenska.",
+    "ads": 269,
+    "median": "8 990 €",
+    "r2": "96 %",
+    "history": {
+      "updated_at": "2026-11-21T16:40:29",
+      "as_of": "2026-11-21",
+      "coverage": "partial",
+      "baseline_count": 213,
+      "total_count": 213,
+      "active_count": 213,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 213,
+      "paired_median_change_pct": 0,
+      "historical_median": 8990,
+      "seen_median": 8990,
+      "seen_price_count": 213,
+      "last_observed_at": "2026-11-21T16:39:45"
+    }
+  },
+  {
     "slug": "hyundai-tucson",
     "file": "hyundai-tucson-analyza.html",
     "name": "Hyundai Tucson",
@@ -505,7 +537,7 @@
     "median": "17 299 €",
     "r2": "89 %",
     "history": {
-      "updated_at": "2026-11-21T15:25:51",
+      "updated_at": "2026-11-21T16:40:29",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 464,
@@ -1017,7 +1049,7 @@
     "median": "11 390 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-21T15:25:51",
+      "updated_at": "2026-11-21T16:40:29",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 274,

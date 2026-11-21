@@ -341,5 +341,12 @@
     "author": "(G)jabz",
     "license": "CC BY 4.0",
     "source": "https://commons.wikimedia.org/wiki/File:Dacia_Duster_Mk2_-_Front_View.jpg"
+  },
+  "hyundai-i20": {
+    "src": "/img/hyundai-i20.jpg",
+    "file": "File:2020 Hyundai i20 1.2 MPI (BC3).jpg",
+    "author": "Rutger van der Maar",
+    "license": "CC BY 2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:2020_Hyundai_i20_1.2_MPI_(BC3).jpg"
   }
 }
