@@ -1,0 +1,883 @@
+<!doctype html>
+<html lang="sk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ford C-Max – analýza ponúk</title>
+<style>
+:root {
+  color-scheme: light;
+  --bg: #f6f6f4; --surface: #fcfcfb; --surface-2: #f0efec; --border: #e2e1dc;
+  --text: #0b0b0b; --text-2: #52514e; --muted: #7a7974;
+  --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a;
+  --pos: #2a78d6; --neg: #eb6834; --accent: #2a78d6;
+  --good: #1d7f4e; --bad: #b4332f; --grid: #e8e7e3;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #121211; --surface: #1a1a19; --surface-2: #232321; --border: #33332f;
+    --text: #f0efec; --text-2: #c3c2b7; --muted: #8f8e86;
+    --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+    --pos: #3987e5; --neg: #d95926; --accent: #5598e7;
+    --good: #4cc38a; --bad: #f07a76; --grid: #2a2a27;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #121211; --surface: #1a1a19; --surface-2: #232321; --border: #33332f;
+  --text: #f0efec; --text-2: #c3c2b7; --muted: #8f8e86;
+  --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+  --pos: #3987e5; --neg: #d95926; --accent: #5598e7;
+  --good: #4cc38a; --bad: #f07a76; --grid: #2a2a27;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text);
+  font: 15px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+main { max-width: 1120px; margin: 0 auto; padding: 32px 16px 64px; }
+a { color: var(--accent); text-decoration: none; } a:hover { text-decoration: underline; }
+h1 { font-size: 30px; margin: 0 0 4px; letter-spacing: -.01em; }
+h2 { font-size: 21px; margin: 48px 0 6px; }
+h3 { font-size: 15px; margin: 6px 0 4px; line-height: 1.35; }
+.lead { color: var(--text-2); margin: 0 0 20px; max-width: 760px; }
+.section-lead { color: var(--text-2); margin: 0 0 16px; max-width: 800px; }
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
+.kpi { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+.kpi .v { font-size: 26px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.kpi .l { color: var(--text-2); font-size: 13px; }
+.explain { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; margin-top: 12px; }
+.explain p { margin: 6px 0; color: var(--text-2); }
+.explain b { color: var(--text); }
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; }
+.card-head { display: flex; justify-content: space-between; gap: 8px; font-size: 12px; }
+.tag { font-weight: 600; color: var(--accent); }
+.loc { color: var(--muted); }
+.facts { color: var(--text-2); font-size: 13px; }
+.prices { display: grid; grid-template-columns: 1.2fr 1fr .8fr; gap: 8px; margin: 12px 0 8px; }
+.lbl { display: block; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+.big { font-size: 22px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.mid { font-size: 16px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.good { color: var(--good); }
+.meter { height: 6px; background: var(--surface-2); border-radius: 4px; overflow: hidden; }
+.meter span { display: block; height: 100%; background: var(--s1); border-radius: 4px; }
+.news ul { margin: 6px 0 0; padding-left: 20px; } .news li { margin: 4px 0; } .news .down { color: var(--good, #1baf7a); font-weight: 600; }
+.note { font-size: 12.5px; background: var(--surface-2); border-radius: 6px; padding: 6px 8px; margin-top: 8px; color: var(--text-2); }
+.pc { list-style: none; padding: 0; margin: 10px 0 0; font-size: 13.5px; }
+.pc li { padding-left: 20px; position: relative; margin: 3px 0; }
+.pc li.pro::before { content: "+"; position: absolute; left: 4px; color: var(--good); font-weight: 700; }
+.pc li.con::before { content: "–"; position: absolute; left: 4px; color: var(--bad); font-weight: 700; }
+.subhead { font-size: 15px; color: var(--text-2); margin: 22px 0 10px; font-weight: 600; }
+.chart-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 14px 8px; position: relative; }
+.legend { display: flex; flex-wrap: wrap; gap: 16px; font-size: 13px; color: var(--text-2); margin: 0 0 6px 4px; }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; }
+.legend .ring { background: transparent; border: 2px solid var(--text); width: 12px; height: 12px; }
+svg text { fill: var(--muted); font-size: 11px; }
+.tip { position: absolute; pointer-events: none; background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+  padding: 8px 10px; font-size: 12.5px; box-shadow: 0 6px 20px rgba(0,0,0,.15); max-width: 280px; display: none; z-index: 5; }
+.tip b { display: block; margin-bottom: 2px; }
+.tip .row { display: flex; justify-content: space-between; gap: 12px; color: var(--text-2); }
+.tip .row span:last-child { color: var(--text); font-variant-numeric: tabular-nums; }
+table { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; font-size: 13.5px; }
+th, td { padding: 9px 10px; border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; }
+th { font-size: 12px; color: var(--text-2); font-weight: 600; background: var(--surface-2); white-space: nowrap; }
+th.sortable { cursor: pointer; user-select: none; } th.sortable:hover { color: var(--text); }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+.sub { color: var(--text-2); font-size: 12.5px; margin-top: 2px; }
+.stars { color: #c98500; letter-spacing: 1px; white-space: nowrap; } .stars .off { color: var(--border); }
+.cellbar { height: 5px; background: var(--surface-2); border-radius: 3px; margin-bottom: 4px; }
+.cellbar span { display: block; height: 100%; background: var(--s1); border-radius: 3px; }
+.disc { display: inline-flex; align-items: center; gap: 6px; justify-content: flex-end; }
+.dbar { width: 54px; height: 6px; background: var(--surface-2); border-radius: 3px; position: relative; }
+.dbar span { position: absolute; top: 0; height: 100%; border-radius: 3px; }
+.filters { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 10px; align-items: center; }
+.filters select, .filters input { background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 6px 8px; font: inherit; font-size: 13px; }
+.filters .count { color: var(--muted); font-size: 13px; margin-left: auto; }
+.table-scroll { overflow-x: auto; border-radius: 12px; }
+.badge { font-size: 11px; padding: 1px 6px; border-radius: 10px; background: var(--surface-2); color: var(--text-2); white-space: nowrap; }
+.badge.pick { background: var(--s1); color: #fff; }
+.flag { color: var(--bad); font-size: 12px; }
+.warn { background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--neg); border-radius: 10px; padding: 12px 16px; }
+.warn li { margin: 4px 0; }
+.check { columns: 2 300px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px 14px 34px; margin: 0; }
+.check li { margin: 4px 0; break-inside: avoid; }
+footer { color: var(--muted); font-size: 12.5px; margin-top: 48px; border-top: 1px solid var(--border); padding-top: 14px; }
+.theme-btn { float: right; background: var(--surface); color: var(--text-2); border: 1px solid var(--border); border-radius: 8px; padding: 5px 10px; cursor: pointer; font: inherit; font-size: 13px; }
+@media (max-width: 640px) { h1 { font-size: 24px; } .prices { grid-template-columns: 1fr 1fr 1fr; } .big { font-size: 18px; } th, td { padding: 7px 6px; } }
+</style>
+<!-- ferovka-theme --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"><style id="ferovka-theme">/* Férovka look for the generated analyses – injected by sync-reports.mjs after each report's own <style>.
+   Same palette and type as the site; chart colours (--s1..--s3) stay the validated set. */
+:root {
+  --bg: #f5f4ef; --surface: #fdfdfb; --surface-2: #eeede6; --border: #e1dfd6;
+  --text: #0f1513; --text-2: #4f5551; --muted: #6f746f;
+  --accent: #0b8a56; --good: #0b7a4b; --grid: #e6e4dc; --win: #dff3e9;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d110f; --surface: #151a17; --surface-2: #1d2420; --border: #2a322d;
+    --text: #eef1ec; --text-2: #b6bdb6; --muted: #8f978f;
+    --accent: #2fc583; --good: #4cd08f; --grid: #1f2622; --win: #143223;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d110f; --surface: #151a17; --surface-2: #1d2420; --border: #2a322d;
+  --text: #eef1ec; --text-2: #b6bdb6; --muted: #8f978f;
+  --accent: #2fc583; --good: #4cd08f; --grid: #1f2622; --win: #143223;
+}
+
+body { font-family: "Manrope", system-ui, sans-serif; }
+h1, h2 { letter-spacing: -0.02em; font-weight: 800; }
+.tag { color: var(--accent); }
+
+/* photo header (removed by the site's viewer, which shows its own) */
+.fv-hero { position: relative; margin: 0 0 26px; border-radius: 20px; overflow: hidden; aspect-ratio: 21 / 8; background: #0d110f; display: flex; }
+.fv-hero img { flex: 1; min-width: 0; height: 100%; object-fit: cover; animation: fv-zoom 1.4s cubic-bezier(.2,.7,.2,1) both; }
+.fv-collage img + img { border-left: 3px solid #0d110f; }
+.fv-hero::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(180deg, transparent 55%, rgb(13 17 15 / .75)),
+    repeating-linear-gradient(90deg, rgb(47 197 131 / .06) 0 1px, transparent 1px 48px); }
+.fv-hero figcaption { position: absolute; right: 12px; bottom: 8px; z-index: 1; font-size: 11px; color: rgb(255 255 255 / .75); }
+.fv-hero figcaption a { color: inherit; }
+
+/* cards & panels: softer, lift on hover */
+.card, .kpi, .explain, .chart-wrap, .box { border-radius: 16px; }
+.card { transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease; }
+.card:hover { transform: translateY(-3px); border-color: var(--accent); box-shadow: 0 14px 30px -18px rgb(0 0 0 / .45); }
+.badge.pick { background: var(--accent); }
+
+/* entrance animation */
+@keyframes fv-up { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes fv-zoom { from { transform: scale(1.08); filter: brightness(.6); } to { transform: none; filter: none; } }
+h1, .lead, .kpis, .cards .card { animation: fv-up .6s cubic-bezier(.2,.7,.2,1) both; }
+.lead { animation-delay: .08s; }
+.kpis { animation-delay: .16s; }
+.cards .card:nth-child(2) { animation-delay: .06s; }
+.cards .card:nth-child(3) { animation-delay: .12s; }
+.cards .card:nth-child(4) { animation-delay: .18s; }
+.cards .card:nth-child(5) { animation-delay: .24s; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+@media (max-width: 640px) { .fv-hero { aspect-ratio: 16 / 9; border-radius: 14px; } }
+
+/* touch: hint under the chart tooltip (report-chart.js) */
+.fv-hint { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--border, rgba(127,127,127,.3)); font-weight: 700; color: var(--accent, #2fc583); }
+</style><!-- /ferovka-theme -->
+</head>
+<body>
+<main><!-- ferovka-theme --><!-- /ferovka-theme -->
+<button class="theme-btn" id="themeBtn" type="button">Svetlý / tmavý</button>
+<h1>Ford C-Max – ktorá ponuka sa oplatí</h1>
+<p class="lead">Analýza aktuálnych inzerátov Ford C-Max (druhá generácia 2011–2019, aj 7-miestny Grand C-Max) od 2 500 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 252 inzerátov (108 na bazoši, 80 na autobazar.eu, 64 na bazar.sk) – prezreli sme 87 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 148 rôznych áut zo Slovenska. Každé auto sme porovnali
+s <b>férovou cenou</b>: tú vypočítal model naučený na celom trhu podľa veku, nájazdu, motora, prevodovky a typu predajcu.</p>
+
+<div class="kpis">
+  <div class="kpi"><div class="v">148</div><div class="l">inzerátov C-Maxu (nad 2 500 €)</div></div>
+  <div class="kpi"><div class="v">96</div><div class="l">ohodnotených (majú rok aj km)</div></div>
+  <div class="kpi"><div class="v">5 499 €</div><div class="l">medián ceny s DPH</div></div>
+  <div class="kpi"><div class="v">82 %</div><div class="l">rozdielov v cenách vysvetlí model</div></div>
+</div>
+
+
+<h2>Odkiaľ sú dáta: bazoš, autobazar.eu a bazar.sk</h2>
+<div class="kpis">
+  <div class="kpi"><div class="v">57</div><div class="l">ohodnotených z bazoša</div></div>
+  <div class="kpi"><div class="v">28</div><div class="l">ohodnotených z autobazar.eu</div></div><div class="kpi"><div class="v">11</div><div class="l">ohodnotených z bazar.sk</div></div>
+  <div class="kpi"><div class="v">34</div><div class="l">áut bolo na viacerých portáloch – započítané raz</div></div>
+  <div class="kpi"><div class="v">21 / 8</div><div class="l">s uvedeným pôvodom SR / dovoz</div></div>
+</div>
+<div class="explain">
+  <p><b>Tri portály, jeden trh.</b> Bazoš prehľadal 106 inzerátov, autobazar.eu
+  80, bazar.sk 34. Ponuky z Česka (na autobazar.eu ich je veľa) sme vynechali. Autobazáre často dávajú
+  to isté auto na viac portálov. Takéto dvojice (18 v rebríčku) sme spojili podľa VIN alebo zhody roku, km a ceny,
+  aby sa v modeli nerátali dvakrát. Pri aute nájdeš odkaz na všetky ponuky – niekedy sa líšia cenou.</p>
+  <p><b>Rozdiel medzi portálmi:</b> rovnaké auto je na autobazar.eu v priemere -5,2 %
+  oproti bazošu. Na autobazar.eu predávajú hlavne firmy (19 z 28 ohodnotených). Na bazar.sk je rovnaké auto v priemere +30,4 % oproti bazošu.</p>
+  <p><b>Kúpené v SR vs. dovoz:</b> autá s uvedeným pôvodom zo SR sú oproti autám bez uvedeného pôvodu
+  -8,3 %, dovezené -4,4 %
+  (pri rovnakom veku, nájazde a motore). Pôvod zo SR je výhoda pri overovaní histórie, trh zaň však nepripláca – väčšina
+  inzerátov pôvod jednoducho neuvádza. V tabulke dole si môžeš nechať zobraziť len autá kúpené v SR.</p>
+</div>
+
+<h2>Čo hýbe cenou C-Maxu</h2>
+<p class="section-lead">Toto sa model naučil z trhu. Keď porovnávaš dve autá, tieto čísla ti povedia, koľko má byť
+rozdiel v cene, aby to bolo fér.</p>
+<div class="kpis">
+  <div class="kpi"><div class="v">-2,9 %</div><div class="l">každých ďalších 10 000 km</div></div>
+  <div class="kpi"><div class="v">-7,2 %</div><div class="l">každý rok veku navyše</div></div>
+  <div class="kpi"><div class="v">+2 %</div><div class="l">príplatok za automat (DSG)</div></div>
+  <div class="kpi"><div class="v">+0,8 %</div><div class="l">príplatok u predajcu / firmy</div></div>
+  <div class="kpi"><div class="v">+1,9 %</div><div class="l">C-Max po facelifte (2015+) oproti cene podľa veku</div></div>
+  <div class="kpi"><div class="v">+2,4 %</div><div class="l">príplatok za automat</div></div>
+</div>
+<div class="explain">
+  <p><b>Príklad:</b> dva rovnaké C-Maxy 1.0 EcoBoost z roku 2016, jedno má 60 tis. km, druhé 120 tis. km. Druhé má byť
+  približne o 17 % lacnejšie (6 × -2,9 %). Ak je lacnejšie len o 5 %, preplácaš kilometre.</p>
+  <p><b>Ako čítať „pod trhom“:</b> +15 % znamená, že auto stojí o 15 % menej, než by malo podľa trhu. Bežný rozptyl
+  cien je asi ±26 %, takže až zľava nad ~10–15 % je naozaj výnimočná. Pri takej zľave vždy zisti, prečo je auto lacné
+  (stav, história, nájazd).</p>
+  <p><b>DPH:</b> ceny uvedené bez DPH (napr. „10 300 € netto“) sme prepočítali na cenu s DPH, ktorú zaplatí súkromná osoba.</p>
+</div>
+
+<h2>Odporúčané ponuky</h2>
+<p class="section-lead">Kandidáti s najlepším pomerom cena / vek / nájazd, ktorých celý inzerát sme prečítali.
+Zoradené podľa toho, ako ich odporúčame.</p>
+<div class="subhead">C-Max po facelifte (2015+) – najlepší pomer cena / vek</div>
+<div class="cards">
+<article class="card">
+  <div class="card-head"><span class="tag">C-Max 1.0 EcoBoost z 2018 od 1. majiteľa</span><span class="loc">Košice-okolie</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197069476/predam-ford-c-max-10-l-74kw-100-k-1-majitel-top-stav.php" target="_blank" rel="noopener">Predám Ford C-Max 1.0 l 74kW (100 k) | 1. majiteľ | TOP stav</a></h3>
+  <div class="facts">2018 · 133 700 km · 1.0 EcoBoost 74–92 kW · manuál · C-Max (5 miest) · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b> · kúpené v SR · aj na <a href='https://www.autobazar.eu/detail/ford-c-max-c-max-10-ecoboost-trend-x-74kw100hp-m6/AeqeB_IJpMM/' target='_blank' rel='noopener'>autobazar.eu</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">4 750 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">6 160 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+22.9 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:76%"></span></div>
+  <ul class="pc"><li class="pro">3/2018, 1.0 EcoBoost 74 kW, manuál, 134 tis. km</li><li class="pro">Kúpené v SR, 1. majiteľ, nefajčiar, pravidelný servis, nehavarované</li><li class="pro">~23 % pod férovou cenou</li><li class="con">Predajca neistý</li><li class="con">1.0 EcoBoost – over chladenie</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 13 dní (od 8. 11.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">C-Max 1.0 EcoBoost s 65 tis. km a úplnou históriou</span><span class="loc">Zvolen</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197149644/64-109-km-ford-c-max-c-max-10-ecoboost-92kw.php" target="_blank" rel="noopener">65 100 km, Ford C-MAX 1.0 EcoBoost 92kW</a></h3>
+  <div class="facts">2016 · 65 100 km · 1.0 EcoBoost 74–92 kW · manuál · C-Max (5 miest) · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b> · kúpené v SR</div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">4 990 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">6 200 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+19.5 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:65%"></span></div>
+  <ul class="pc"><li class="pro">2016, 1.0 EcoBoost 92 kW, 6-st. manuál, 65 tis. km</li><li class="pro">Kúpené v SR, nebúrané, nelakované, úplná servisná história</li><li class="pro">~20 % pod férovou cenou</li><li class="con">Predajca neistý</li><li class="con">1.0 EcoBoost – over chladenie</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 18 dní (od 3. 11.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">C-Max 1.0 EcoBoost z 2019 so 71 tis. km</span><span class="loc">Košický kraj</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/ford-c-max-10-ecoboost-sr2maj-klima-tempomat/AeNOy3_07T2/" target="_blank" rel="noopener">Ford C-Max 1.0 EcoBoost, SR,2.maj, Klíma, Tempomat</a></h3>
+  <div class="facts">2019 · 71 045 km · 1.0 EcoBoost 74–92 kW · manuál · C-Max (5 miest) · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">6 700 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">8 310 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+19.4 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:65%"></span></div>
+  <ul class="pc"><li class="pro">2019, 1.0 EcoBoost, manuál, 71 tis. km</li><li class="pro">Kúpené v SR, 2. majiteľ, klíma, tempomat</li><li class="pro">~19 % pod férovou cenou</li><li class="con">AAA AUTO – over cenu v hotovosti</li><li class="con">1.0 EcoBoost – over chladenie</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 5 dní (od 16. 11.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">C-Max 1.0 EcoBoost z 2019 od 1. majiteľa</span><span class="loc">Bratislava</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/ford-c-max-10-ecoboost-sr1maj-servkniha-klima/AeiGNPFSItY/" target="_blank" rel="noopener">Ford C-Max 1.0 EcoBoost, SR,1.maj, Serv.kniha, Klíma</a></h3>
+  <div class="facts">2019 · 109 960 km · 1.0 EcoBoost 74–92 kW · manuál · C-Max (5 miest) · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">6 000 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">7 330 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+18.2 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:61%"></span></div>
+  <ul class="pc"><li class="pro">2019, 1.0 EcoBoost, manuál, 110 tis. km</li><li class="pro">Kúpené v SR, 1. majiteľ, servisná knižka</li><li class="pro">~18 % pod férovou cenou</li><li class="con">AAA AUTO – over cenu v hotovosti</li><li class="con">1.0 EcoBoost – over chladenie</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 28 dní (od 24. 10.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">C-Max 1.5 EcoBoost automat z SR</span><span class="loc">Bratislava</span></div>
+  <h3><a href="https://auto.bazar.sk/39769404-ford-c-max-1-5-ecoboost-a-t-110kw-2017-aj-na-splatky-protiucet/" target="_blank" rel="noopener">Ford C-Max 1.5 Ecoboost A/T, 110kW (2017) / AJ NA SPLÁTKY / PROTIÚČET /</a></h3>
+  <div class="facts">2017 · 114 687 km · 1.5 / 1.6 EcoBoost 110–134 kW · automat · C-Max (5 miest) · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazar.sk</b> · kúpené v SR · aj na <a href='https://www.autobazar.eu/detail/ford-c-max-15-ecoboost-at-110kw-2017-aj-na-splatky-protiucet/AmFtajkJIoj/' target='_blank' rel='noopener'>autobazar.eu</a> · aj na <a href='https://auto.bazos.sk/inzerat/197521488/ford-c-max-15-ecoboost-at-110kw-2017.php' target='_blank' rel='noopener'>bazoš</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">9 990 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">11 390 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+12.3 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:41%"></span></div>
+  <ul class="pc"><li class="pro">4/2017, 1.5 EcoBoost 110 kW, automat, 115 tis. km</li><li class="pro">Kúpené v SR, uvedený VIN, STK do 04/2027</li><li class="pro">~12 % pod férovou cenou</li><li class="con">Predáva autobazár</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 7 dní (od 14. 11.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Grand C-Max 1.5 TDCi automat 7-miestny</span><span class="loc">Námestovo</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/196639781/predam-ford-grand-c-max-15tdci-2018-7miest.php" target="_blank" rel="noopener">Predám Ford Grand C-max 1,5TDCi, 2018, 99750km, 7miest</a></h3>
+  <div class="facts">2018 · 99 750 km · 1.5 / 1.6 / 2.0 TDCi 70–125 kW · automat · Grand C-Max (7 miest) · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">9 000 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">9 540 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+5.7 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:19%"></span></div>
+  <ul class="pc"><li class="pro">2018, 1.5 TDCi, 6-st. automat, 7 miest, 100 tis. km</li><li class="pro">Po facelifte, udržiavané, čisté</li><li class="pro">~6 % pod férovou cenou</li><li class="con">Predajca neistý</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke aspoň 33 dní</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">C-Max 1.0 EcoBoost z 2018 s 55 tis. km</span><span class="loc">Bratislava</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/ford-c-max-10-ecoboost-sr2maj-servkniha-po-stk/Aebwl5VM8Le/" target="_blank" rel="noopener">Ford C-Max 1.0 EcoBoost, SR,2.maj, Serv.kniha, Klíma</a></h3>
+  <div class="facts">2018 · 54 946 km · 1.0 EcoBoost 74–92 kW · manuál · C-Max (5 miest) · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">7 000 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">7 970 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+12.2 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:41%"></span></div>
+  <ul class="pc"><li class="pro">2018, 1.0 EcoBoost, manuál, 55 tis. km</li><li class="pro">Kúpené v SR, 2. majiteľ, servisná knižka</li><li class="pro">~12 % pod férovou cenou</li><li class="con">AAA AUTO – over cenu v hotovosti</li><li class="con">1.0 EcoBoost – over chladenie</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 35 dní (od 17. 10.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Grand C-Max 1.5 TDCi Business za 6 490 €</span><span class="loc">Levice</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/196800484/ford-grand-c-max-15-tdci-120k-business.php" target="_blank" rel="noopener">Ford Grand C-Max 1.5 TDCi 120k Business</a></h3>
+  <div class="facts">2017 · 157 445 km · 1.5 / 1.6 / 2.0 TDCi 70–125 kW · manuál · Grand C-Max (7 miest) · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">6 490 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">7 170 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+9.5 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:32%"></span></div>
+  <ul class="pc"><li class="pro">1/2017, 1.5 TDCi 88 kW, 6-st. manuál, 157 tis. km</li><li class="pro">Uvedený VIN, úsporný diesel</li><li class="pro">~9 % pod férovou cenou</li><li class="con">Predáva autobazár</li><li class="con">Podľa inzerátu 5 miest – over v TP</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke aspoň 28 dní</p><!-- history-card:end --></article></div>
+<div class="subhead">Lacnejšie C-Maxy do 8 000 €</div>
+<div class="cards">
+<article class="card">
+  <div class="card-head"><span class="tag">C-Max 1.6 EcoBoost Titanium 182 k</span><span class="loc">Topoľčany</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197408066/ford-c-max-16-ecoboost-titanium-182k.php" target="_blank" rel="noopener">Ford C-Max 1.6 Ecoboost Titanium  182k</a></h3>
+  <div class="facts">2013 · 119 450 km · 1.5 / 1.6 EcoBoost 110–134 kW · manuál · C-Max (5 miest) · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazoš</b> · aj na <a href='https://www.autobazar.eu/detail/ford-c-max-16-ecoboost-titanium/AmJOZVPxcuJ/' target='_blank' rel='noopener'>autobazar.eu</a> · aj na <a href='https://auto.bazar.sk/39761279-ford-c-max-1-6-ecoboost-titanium/' target='_blank' rel='noopener'>bazar.sk</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">5 490 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">7 750 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+29.1 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:97%"></span></div>
+  <ul class="pc"><li class="pro">2013, 1.6 EcoBoost 134 kW, 6-st. manuál, výbava Titanium, 119 tis. km</li><li class="pro">Parkovacia kamera</li><li class="pro">~29 % pod férovou cenou</li><li class="con">Predáva firma</li><li class="con">Benzín – vyššia spotreba</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 10 dní (od 11. 11.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">C-Max 1.5 TDCi automat z 2018 za 5 990 €</span><span class="loc">Bratislava</span></div>
+  <h3><a href="https://auto.bazar.sk/39754980-ford-c-max-1-5-tdci-88kw-at-6-2018-aj-na-splatky-protiucet/" target="_blank" rel="noopener">Ford C-Max 1.5 TDCi 88kW AT/6 2018 / AJ NA SPLÁTKY / PROTIÚČET</a></h3>
+  <div class="facts">2018 · 270 500 km · 1.5 / 1.6 / 2.0 TDCi 70–125 kW · automat · C-Max (5 miest) · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazar.sk</b> · aj na <a href='https://www.autobazar.eu/detail/ford-c-max-15-tdci-88kw-at6-2018-aj-na-splatky-protiucet/Am2qhDQkYzX/' target='_blank' rel='noopener'>autobazar.eu</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">5 990 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">7 620 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+21.4 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:71%"></span></div>
+  <ul class="pc"><li class="pro">10/2018, 1.5 TDCi 88 kW, 6-st. automat, 271 tis. km</li><li class="pro">Uvedený VIN</li><li class="pro">~21 % pod férovou cenou</li><li class="con">Veľmi vysoký nájazd</li><li class="con">Predáva autobazár</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 19 dní (od 2. 11.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">C-Max 1.0 EcoBoost Trend s 85 tis. km</span><span class="loc">Skalica</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/196395207/predam-ford-c-max.php" target="_blank" rel="noopener">Predám Ford c-max</a></h3>
+  <div class="facts">2015 · 85 000 km · 1.0 EcoBoost 74–92 kW · prevodovka ? · C-Max (5 miest) · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">5 500 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">6 440 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+14.6 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:49%"></span></div>
+  <ul class="pc"><li class="pro">2/2015, 1.0 EcoBoost, výbava Trend, 85 tis. km</li><li class="pro">Spotreba ~5,3 l</li><li class="pro">~15 % pod férovou cenou</li><li class="con">Predajca neistý</li><li class="con">1.0 EcoBoost – over chladenie</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke aspoň 41 dní</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">C-Max 2.0 TDCi automat po nových rozvodoch a repase prevodovky</span><span class="loc">Senec</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/196793360/ford-cmax-20cdti-85kw-a6-r2013.php" target="_blank" rel="noopener">Ford C-MAX 2,0CDTI 85kW A6 r.2013</a></h3>
+  <div class="facts">2013 · 202 000 km · 1.5 / 1.6 / 2.0 TDCi 70–125 kW · prevodovka ? · C-Max (5 miest) · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">4 700 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">5 470 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+14.0 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:47%"></span></div>
+  <ul class="pc"><li class="pro">2013, 2.0 TDCi 85 kW, 6-st. automat, 202 tis. km</li><li class="pro">Nové rozvody, vodná pumpa, repas prevodovky v autorizovanom servise, servisná kniha</li><li class="pro">~14 % pod férovou cenou</li><li class="con">Vysoký nájazd</li><li class="con">Predajca neistý</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke aspoň 29 dní</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">C-Max 1.0 EcoBoost od 1. majiteľa z SR</span><span class="loc">Martin</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197672714/ford-c-max-10-ecoboost.php" target="_blank" rel="noopener">Ford C-MAX 1.0 EcoBoost</a></h3>
+  <div class="facts">2012 · 145 783 km · 1.0 EcoBoost 74–92 kW · manuál · C-Max (5 miest) · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazoš</b> · kúpené v SR · aj na <a href='https://www.autobazar.eu/detail/ford-c-max-10-ecoboost-scti-trend/AmEj4sYcCQL/' target='_blank' rel='noopener'>autobazar.eu</a> · aj na <a href='https://auto.bazar.sk/39596061-ford-c-max-1-0-ecoboost-scti-trend/' target='_blank' rel='noopener'>bazar.sk</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">3 300 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">3 510 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+6.0 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:20%"></span></div>
+  <ul class="pc"><li class="pro">12/2012, 1.0 EcoBoost 74 kW, 6-st. manuál, výbava Trend, 146 tis. km</li><li class="pro">Kúpené v SR, 1. majiteľ, uvedený VIN</li><li class="con">Predáva autobazár</li><li class="con">1.0 EcoBoost – over chladenie</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 3 dni (od 18. 11.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Súkromník: C-Max 1.5 TDCi s novými rozvodmi</span><span class="loc">Trnava</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/ford-c-max-c-max-15-tdci-duratorq-business-70kw95hp-m6/AeH4YmAk4HA/" target="_blank" rel="noopener">Ford C-Max C-MAX 1.5 TDCi Duratorq Business 70kW95HP M6</a></h3>
+  <div class="facts">2017 · 200 732 km · 1.5 / 1.6 / 2.0 TDCi 70–125 kW · manuál · C-Max (5 miest) · súkromník</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · dovezené</div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">4 999 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">5 620 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+11.1 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:37%"></span></div>
+  <ul class="pc"><li class="pro">2017, 1.5 TDCi 70 kW, 6-st. manuál, 201 tis. km</li><li class="pro">Kompletná elektronická servisná história, nové rozvody, zimné pneumatiky</li><li class="pro">~11 % pod férovou cenou</li><li class="con">Dovoz z Rakúska – prihlásenie ~380 €</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 9 dní (od 12. 11.)</p><!-- history-card:end --></article></div>
+<div class="subhead">Špeciálne prípady</div>
+<div class="cards"></div>
+
+<h2>Cena vs. nájazd: celý trh na jednom grafe</h2>
+<p class="section-lead">Každý bod je jeden inzerát. Čím nižšie bod leží oproti ostatným s podobným nájazdom, tým je auto lacnejšie.
+Krúžkom sú označené odporúčané ponuky. Prejdi myšou na bod a uvidíš detail.</p>
+<div class="chart-wrap" id="chartWrap">
+  <div class="legend" id="legend"></div>
+  <svg id="chart" width="100%" height="420" role="img" aria-label="Bodový graf ceny a nájazdu inzerátov"></svg>
+  <div class="tip" id="tip"></div>
+</div>
+
+<h2>Porovnanie motorov</h2>
+<p class="section-lead">Hodnotenie (hviezdičky) zohľadňuje spoľahlivosť, spoľahlivosť a náklady na prevádzku a pomer cena/výkon.
+Číselné stĺpce sú mediány z ohodnotených inzerátov.</p>
+<div class="table-scroll">
+<table>
+  <thead><tr><th>Motor</th><th>Hodnotenie</th><th class="num">Ponúk</th><th class="num">Medián ceny</th><th class="num">Medián roku</th><th class="num">Medián km</th></tr></thead>
+  <tbody>
+<tr>
+  <td><b>1.5 / 1.6 / 2.0 TDCi 70–125 kW</b><div class="sub">Diesel 95–170 k. Úsporný a ťahavý; over DPF, dvojhmotu a pri automate PowerShift.</div></td>
+  <td><span class="stars" aria-label="4 z 5">★★★★<span class="off">★</span></span></td>
+  <td class="num">49</td>
+  <td class="num"><div class="cellbar"><span style="width:57%"></span></div>5 300 €</td>
+  <td class="num">2014</td>
+  <td class="num">208 606 km</td>
+</tr>
+<tr>
+  <td><b>1.0 EcoBoost 74–92 kW</b><div class="sub">3-valec s turbom 100–125 k. Úsporný, ale problémy s chladením a hlavou motora – over doklad o oprave/výmene.</div></td>
+  <td><span class="stars" aria-label="2 z 5">★★<span class="off">★★★</span></span></td>
+  <td class="num">41</td>
+  <td class="num"><div class="cellbar"><span style="width:59%"></span></div>5 500 €</td>
+  <td class="num">2016</td>
+  <td class="num">124 289 km</td>
+</tr>
+<tr>
+  <td><b>1.5 / 1.6 EcoBoost 110–134 kW</b><div class="sub">4-valcové turbo 150–182 k. Svižné, ale smädnejšie.</div></td>
+  <td><span class="stars" aria-label="3 z 5">★★★<span class="off">★★</span></span></td>
+  <td class="num">4</td>
+  <td class="num"><div class="cellbar"><span style="width:100%"></span></div>9 350 €</td>
+  <td class="num">2016</td>
+  <td class="num">120 775 km</td>
+</tr>
+<tr>
+  <td><b>1.6 Ti-VCT 63–92 kW</b><div class="sub">Atmosférický 4-valec 85–125 k. Jednoduchý a spoľahlivý; vhodný na LPG.</div></td>
+  <td><span class="stars" aria-label="4 z 5">★★★★<span class="off">★</span></span></td>
+  <td class="num">2</td>
+  <td class="num"><div class="cellbar"><span style="width:36%"></span></div>3 375 €</td>
+  <td class="num">2015</td>
+  <td class="num">251 140 km</td>
+</tr></tbody>
+</table>
+</div>
+<div class="explain">
+  <p><b>C-Max II</b> (2010–2019, facelift 2015) je kompaktné MPV na základe Focusu. Má verziu <b>C-Max</b> (5 miest)
+  a dlhší <b>Grand C-Max</b> so 7 miestami a posuvnými zadnými dverami.</p>
+  <p><b>Ktorý motor zvoliť?</b> Na veľa km <b>1.5 / 2.0 TDCi</b>. Atmosférický <b>1.6</b> je jednoduchý. Pri <b>1.0 EcoBoost</b>
+  pýtaj doklad o oprave chladenia – motor je citlivý na prehriatie.</p>
+</div>
+
+<h2>Na čo si dať pozor</h2>
+<div class="warn">
+  <p><b>Lacné kvôli extrémnemu nájazdu</b> (viac ako 35 tis. km ročne, typicky flotila alebo taxi):</p>
+  <ul><li>Žiadne výrazné prípady.</li></ul>
+  <p><b>Podozrivo nízky nájazd na vek</b> – preklep alebo stočené km, over cez Cebiu:</p><ul><li><a href='https://auto.bazar.sk/23118709-ford-c-max-1-0-ecoboost-scti-trend-74kw-m6-5d/' target='_blank' rel='noopener'>Ford C-MAX 1.0 EcoBoost SCTi Trend, 74kW, M6, 5d.</a> (13 000 €): rok 2013 a len 45 000 km</li></ul><p><b>Ďalšie veci, ktoré sme v inzerátoch našli:</b></p><ul><li>Tretina C-Maxov má <b>1.0 EcoBoost</b> – pri ňom pýtaj doklad o servise chladenia; prehriatie môže poškodiť hlavu motora.</li><li>C-Max zo Chorvátskeho Grobu môže byť aukčné auto – kupuj len po dôkladnej kontrole.</li><li>Pri inzerátoch AAA AUTO je uvedená <b>cena pri financovaní</b> – pri platbe v hotovosti môže byť vyššia.</li></ul><p><b>Prvá generácia C-Max (do 2010), S-Max / Galaxy / Focus a iné modely z vyhľadávania, inzeráty s chybným nájazdom</b> (30 inzerátov) sme z rebríčka vynechali.</p>
+  <p>Ďalších <b>17</b> inzerátov nemá v texte rok alebo kilometre, takže ich nebolo možné ohodnotiť.
+  Ak ťa niektorý zaujme, predajcu sa na tieto údaje opýtaj.</p>
+</div>
+
+<h2>Kompletný rebríček</h2>
+<p class="section-lead">Všetky ohodnotené inzeráty. Kliknutím na hlavičku stĺpca zoraďuješ, filtrom zužuješ výber.</p>
+<div class="filters">
+  <select id="fEngine"><option value="">Všetky motory</option></select>
+  <select id="fTrans"><option value="">Každá prevodovka</option><option value="automatic">Automat</option><option value="manual">Manuál</option></select>
+  <select id="fSeller"><option value="">Všetci predajcovia</option><option value="nodealer">Bez autobazárov</option></select>
+  <select id="fSource"><option value="">Všetky portály</option><option value="bazos">bazoš</option><option value="autobazar">autobazar.eu</option><option value="bazarsk">bazar.sk</option></select>
+  <select id="fBody"><option value="">Všetky verzie</option><option value="mpv">C-max (5 miest)</option><option value="grand">Grand c-max (7 miest)</option></select>
+  <select id="fOrigin"><option value="">Akýkoľvek pôvod</option><option value="SR">Kúpené v SR</option><option value="dovoz">Dovoz</option></select>
+  <input id="fMax" type="number" placeholder="Max. cena €" step="500" min="0" style="width:120px">
+  <span class="count" id="count"></span>
+</div>
+<div class="table-scroll">
+<table id="tbl">
+  <thead><tr>
+    <th class="sortable" data-k="title">Inzerát</th>
+    <th class="sortable num" data-k="year">Rok</th>
+    <th class="sortable num" data-k="km">Km</th>
+    <th class="sortable num" data-k="price_gross">Cena</th>
+    <th class="sortable num" data-k="fair_price">Férová</th>
+    <th class="sortable num" data-k="discount_pct">Pod trhom ▾</th>
+  </tr></thead>
+  <tbody></tbody>
+</table>
+</div>
+
+<h2>Pred kúpou over</h2>
+<ul class="check">
+  <li>VIN cez Cebia / autoDNA (história km, havárie)</li>
+  <li>Servisná história – Ford dealer ju vie podľa VIN vytiahnuť</li>
+  <li>1.0 EcoBoost: hladina chladiacej kvapaliny, doklad o výmene hadíc / hlavy</li>
+  <li>Automat PowerShift: plynulé radenie bez trhania</li>
+  <li>TDCi: DPF, dvojhmotový zotrvačník</li>
+  <li>Grand C-Max: posuvné dvere a sklápanie 3. radu</li>
+  <li>STK/EK protokol a dátum platnosti</li>
+</ul>
+
+<footer>
+  Zdroj: auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (len ponuky zo Slovenska, to isté auto na viacerých portáloch je započítané raz), sťahované cez lokálny MCP server bazos-mcp (nástroj <code>fair_price</code>), 21. 11. 2026.
+  Model: ridge regresia log(ceny s DPH) podľa veku, veku², km, km², prevodovky, typu predajcu, motora, karosérie, pohonu 4x4, pôvodu (SR / dovoz) a portálu. Vzorka 96
+  inzerátov, R² 82 %. Parametre sú vyťažené z textu inzerátov, a preto môžu obsahovať chyby. Odporúčané ponuky sme overili
+  prečítaním celého inzerátu. Hodnotenie motorov je odborný odhad, nie výsledok modelu.
+</footer>
+</main>
+
+<script>
+const DATA = [{"id": "bs-39035837", "url": "https://auto.bazar.sk/39035837-ford-c-max-1-6-tdci-dpf-115k-titanium/", "title": "Ford C-Max 1.6 TDCi DPF 115k Titanium", "price": 3500, "price_gross": 3500, "fair_price": 5720.0, "discount_pct": 38.9, "verdict": "výrazne pod trhom – over prečo", "year": 2011, "km": 142750, "km_per_year": 9300.0, "eg": "1.5 / 1.6 / 2.0 TDCi 70–125 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava I - Staré Mesto", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "196804703", "url": "https://auto.bazos.sk/inzerat/196804703/ford-grand-c-max.php", "title": "Ford Grand c-max", "price": 2550, "price_gross": 2550, "fair_price": 3790.0, "discount_pct": 32.6, "verdict": "výrazne pod trhom – over prečo", "year": 2016, "km": 312052, "km_per_year": 30200.0, "eg": "1.6 Ti-VCT 63–92 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Banská Bystrica", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "grand"}, {"id": "197408066", "url": "https://auto.bazos.sk/inzerat/197408066/ford-c-max-16-ecoboost-titanium-182k.php", "title": "Ford C-Max 1.6 Ecoboost Titanium  182k", "price": 5490, "price_gross": 5490, "fair_price": 7750.0, "discount_pct": 29.1, "verdict": "výrazne pod trhom – over prečo", "year": 2013, "km": 119450, "km_per_year": 9000.0, "eg": "1.5 / 1.6 EcoBoost 110–134 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Topoľčany", "flags": [], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmJOZVPxcuJ", "url": "https://www.autobazar.eu/detail/ford-c-max-16-ecoboost-titanium/AmJOZVPxcuJ/", "price": 5490}, {"source": "bazarsk", "id": "bs-39761279", "url": "https://auto.bazar.sk/39761279-ford-c-max-1-6-ecoboost-titanium/", "price": 5490}], "body": "mpv"}, {"id": "ab-AeluA8TBlEx", "url": "https://www.autobazar.eu/detail/ford-c-max-10-ecoboost-klima-tempomat-po-stk/AeluA8TBlEx/", "title": "Ford C-Max 1.0 EcoBoost, Klíma, Tempomat, po STK", "price": 2500, "price_gross": 2500, "fair_price": 3390.0, "discount_pct": 26.2, "verdict": "výrazne pod trhom – over prečo", "year": 2013, "km": 191841, "km_per_year": 14400.0, "eg": "1.0 EcoBoost 74–92 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Trenčiansky kraj", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AeX0A26dLNn", "url": "https://www.autobazar.eu/detail/ford-c-max-10-ecoboost-servkniha-klima-tempomat/AeX0A26dLNn/", "title": "Ford C-Max 1.0 EcoBoost, Serv.kniha, Klíma, Tempomat", "price": 2700, "price_gross": 2700, "fair_price": 3630.0, "discount_pct": 25.6, "verdict": "výrazne pod trhom – over prečo", "year": 2013, "km": 168378, "km_per_year": 12600.0, "eg": "1.0 EcoBoost 74–92 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Banská Bystrica", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197069476", "url": "https://auto.bazos.sk/inzerat/197069476/predam-ford-c-max-10-l-74kw-100-k-1-majitel-top-stav.php", "title": "Predám Ford C-Max 1.0 l 74kW (100 k) | 1. majiteľ | TOP stav", "price": 4750, "price_gross": 4750, "fair_price": 6160.0, "discount_pct": 22.9, "verdict": "výrazne pod trhom – over prečo", "year": 2018, "km": 133700, "km_per_year": 16000.0, "eg": "1.0 EcoBoost 74–92 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Košice-okolie", "flags": [], "pick": "top", "source": "bazos", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AeqeB_IJpMM", "url": "https://www.autobazar.eu/detail/ford-c-max-c-max-10-ecoboost-trend-x-74kw100hp-m6/AeqeB_IJpMM/", "price": 4750}], "body": "mpv"}, {"id": "197648241", "url": "https://auto.bazos.sk/inzerat/197648241/ford-grand-c-max.php", "title": "Ford Grand c-max", "price": 5000, "price_gross": 5000, "fair_price": 6380.0, "discount_pct": 21.7, "verdict": "výrazne pod trhom – over prečo", "year": 2017, "km": 99400, "km_per_year": 10700.0, "eg": "1.0 EcoBoost 74–92 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Žiar nad Hronom", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "grand"}, {"id": "bs-39754980", "url": "https://auto.bazar.sk/39754980-ford-c-max-1-5-tdci-88kw-at-6-2018-aj-na-splatky-protiucet/", "title": "Ford C-Max 1.5 TDCi 88kW AT/6 2018 / AJ NA SPLÁTKY / PROTIÚČET", "price": 5990, "price_gross": 5990, "fair_price": 7620.0, "discount_pct": 21.4, "verdict": "výrazne pod trhom – over prečo", "year": 2018, "km": 270500, "km_per_year": 32500.0, "eg": "1.5 / 1.6 / 2.0 TDCi 70–125 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": "budget", "source": "bazarsk", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-Am2qhDQkYzX", "url": "https://www.autobazar.eu/detail/ford-c-max-15-tdci-88kw-at6-2018-aj-na-splatky-protiucet/Am2qhDQkYzX/", "price": 5990}], "body": "mpv"}, {"id": "197135223", "url": "https://auto.bazos.sk/inzerat/197135223/peugeot-508-20bluehdi-120kw-eat8-kuze-gps-dph-2020.php", "title": "FORD GRAND C-MAX 1,0 ECO 92kw CZauto Tažné 07/2016", "price": 5000, "price_gross": 5000, "fair_price": 6360.0, "discount_pct": 21.3, "verdict": "výrazne pod trhom – over prečo", "year": 2016, "km": 133833, "km_per_year": 13000.0, "eg": "1.0 EcoBoost 74–92 kW", "cg": 0, "transmission": null, "seller_type": "dealer", "location": "Zahraničie", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "grand"}, {"id": "197544617", "url": "https://auto.bazos.sk/inzerat/197544617/ford-c-max-10-ecoboost-74-kw-2015.php", "title": "Ford C-Max 1.0 EcoBoost 74 kW • 2015", "price": 3500, "price_gross": 3500, "fair_price": 4350.0, "discount_pct": 19.6, "verdict": "výrazne pod trhom – over prečo", "year": 2015, "km": 179776, "km_per_year": 15900.0, "eg": "1.0 EcoBoost 74–92 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Trenčín", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197149644", "url": "https://auto.bazos.sk/inzerat/197149644/64-109-km-ford-c-max-c-max-10-ecoboost-92kw.php", "title": "65 100 km, Ford C-MAX 1.0 EcoBoost 92kW", "price": 4990, "price_gross": 4990, "fair_price": 6200.0, "discount_pct": 19.5, "verdict": "výrazne pod trhom – over prečo", "year": 2016, "km": 65100, "km_per_year": 6300.0, "eg": "1.0 EcoBoost 74–92 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Zvolen", "flags": [], "pick": "top", "source": "bazos", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "ab-AeNOy3_07T2", "url": "https://www.autobazar.eu/detail/ford-c-max-10-ecoboost-sr2maj-klima-tempomat/AeNOy3_07T2/", "title": "Ford C-Max 1.0 EcoBoost, SR,2.maj, Klíma, Tempomat", "price": 6700, "price_gross": 6700, "fair_price": 8310.0, "discount_pct": 19.4, "verdict": "výrazne pod trhom – over prečo", "year": 2019, "km": 71045, "km_per_year": 9700.0, "eg": "1.0 EcoBoost 74–92 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Košický kraj", "flags": [], "pick": "top", "source": "autobazar", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AeiGNPFSItY", "url": "https://www.autobazar.eu/detail/ford-c-max-10-ecoboost-sr1maj-servkniha-klima/AeiGNPFSItY/", "title": "Ford C-Max 1.0 EcoBoost, SR,1.maj, Serv.kniha, Klíma", "price": 6000, "price_gross": 6000, "fair_price": 7330.0, "discount_pct": 18.2, "verdict": "výrazne pod trhom – over prečo", "year": 2019, "km": 109960, "km_per_year": 15000.0, "eg": "1.0 EcoBoost 74–92 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": "top", "source": "autobazar", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-Ae-6hcOWUcC", "url": "https://www.autobazar.eu/detail/ford-c-max-c-max-10-ecoboost-scti-125k-titanium-92kw124hp-m6/Ae-6hcOWUcC/", "title": "Ford C-Max C-MAX 1.0 EcoBoost SCTi 125k Titanium 92kW124HP M6", "price": 2900, "price_gross": 2900, "fair_price": 3510.0, "discount_pct": 17.4, "verdict": "výrazne pod trhom – over prečo", "year": 2014, "km": 173000, "km_per_year": 14000.0, "eg": "1.0 EcoBoost 74–92 kW", "cg": 0, "transmission": "manual", "seller_type": "private", "location": "Chorvátsky Grob", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "195862689", "url": "https://auto.bazos.sk/inzerat/195862689/ford-c-max-20-tdci85-kwmod2014-7miestna-verzia-automat.php", "title": "Ford Grand C-MAX.2.0 TDCI.85 KW.rok.2013- 7.miestny-vymena", "price": 3590, "price_gross": 3590, "fair_price": 4280.0, "discount_pct": 16.1, "verdict": "výrazne pod trhom – over prečo", "year": 2013, "km": 202000, "km_per_year": 15200.0, "eg": "1.5 / 1.6 / 2.0 TDCi 70–125 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Košice-okolie", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "grand"}, {"id": "196395207", "url": "https://auto.bazos.sk/inzerat/196395207/predam-ford-c-max.php", "title": "Predám Ford c-max", "price": 5500, "price_gross": 5500, "fair_price": 6440.0, "discount_pct": 14.6, "verdict": "pod trhom", "year": 2015, "km": 85000, "km_per_year": 7500.0, "eg": "1.0 EcoBoost 74–92 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Skalica", "flags": ["prevodovka nezistená"], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "196793360", "url": "https://auto.bazos.sk/inzerat/196793360/ford-cmax-20cdti-85kw-a6-r2013.php", "title": "Ford C-MAX 2,0CDTI 85kW A6 r.2013", "price": 4700, "price_gross": 4700, "fair_price": 5470.0, "discount_pct": 14.0, "verdict": "pod trhom", "year": 2013, "km": 202000, "km_per_year": 15200.0, "eg": "1.5 / 1.6 / 2.0 TDCi 70–125 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Senec", "flags": ["prevodovka nezistená"], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197190467", "url": "https://auto.bazos.sk/inzerat/197190467/predam-ford-grand-c-max-10-ecoboost-74-kw.php", "title": "Predám Ford Grand C-Max 1.0 EcoBoost (74 kW)", "price": 3600, "price_gross": 3600, "fair_price": 4150.0, "discount_pct": 13.2, "verdict": "pod trhom", "year": 2013, "km": 125000, "km_per_year": 9400.0, "eg": "1.0 EcoBoost 74–92 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Štúrovo", "flags": [], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "grand"}, {"id": "ab-AeTsR9kfLvP", "url": "https://www.autobazar.eu/detail/ford-c-max-c-max-10-ecoboost-125k-business-92kw124hp-m6/AeTsR9kfLvP/", "title": "Ford C-Max C-MAX 1.0 EcoBoost 125k Business 92kW124HP M6", "price": 3500, "price_gross": 3500, "fair_price": 4000.0, "discount_pct": 12.5, "verdict": "pod trhom", "year": 2016, "km": 189000, "km_per_year": 18300.0, "eg": "1.0 EcoBoost 74–92 kW", "cg": 0, "transmission": "manual", "seller_type": "private", "location": "Nitra", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "195905409", "url": "https://auto.bazos.sk/inzerat/195905409/ford-c-max-10-ecoboost-125.php", "price": 3500}], "body": "mpv"}, {"id": "ab-AemMWG0XexT", "url": "https://www.autobazar.eu/detail/ford-c-max-10-ecoboost-sr2maj-klima-tempomat/AemMWG0XexT/", "title": "Ford C-Max 1.0 EcoBoost, SR,2.maj, Klíma, Tempomat", "price": 3700, "price_gross": 3700, "fair_price": 4220.0, "discount_pct": 12.3, "verdict": "pod trhom", "year": 2014, "km": 142824, "km_per_year": 11600.0, "eg": "1.0 EcoBoost 74–92 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Žilinský kraj", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "bs-39769404", "url": "https://auto.bazar.sk/39769404-ford-c-max-1-5-ecoboost-a-t-110kw-2017-aj-na-splatky-protiucet/", "title": "Ford C-Max 1.5 Ecoboost A/T, 110kW (2017) / AJ NA SPLÁTKY / PROTIÚČET /", "price": 9990, "price_gross": 9990, "fair_price": 11390.0, "discount_pct": 12.3, "verdict": "pod trhom", "year": 2017, "km": 114687, "km_per_year": 12300.0, "eg": "1.5 / 1.6 EcoBoost 110–134 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": "top", "source": "bazarsk", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AmFtajkJIoj", "url": "https://www.autobazar.eu/detail/ford-c-max-15-ecoboost-at-110kw-2017-aj-na-splatky-protiucet/AmFtajkJIoj/", "price": 9990}, {"source": "bazos", "id": "197521488", "url": "https://auto.bazos.sk/inzerat/197521488/ford-c-max-15-ecoboost-at-110kw-2017.php", "price": 9990}], "body": "mpv"}, {"id": "ab-Aebwl5VM8Le", "url": "https://www.autobazar.eu/detail/ford-c-max-10-ecoboost-sr2maj-servkniha-po-stk/Aebwl5VM8Le/", "title": "Ford C-Max 1.0 EcoBoost, SR,2.maj, Serv.kniha, Klíma", "price": 7000, "price_gross": 7000, "fair_price": 7970.0, "discount_pct": 12.2, "verdict": "pod trhom", "year": 2018, "km": 54946, "km_per_year": 6600.0, "eg": "1.0 EcoBoost 74–92 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": "top", "source": "autobazar", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AeH4YmAk4HA", "url": "https://www.autobazar.eu/detail/ford-c-max-c-max-15-tdci-duratorq-business-70kw95hp-m6/AeH4YmAk4HA/", "title": "Ford C-Max C-MAX 1.5 TDCi Duratorq Business 70kW95HP M6", "price": 4999, "price_gross": 4999, "fair_price": 5620.0, "discount_pct": 11.1, "verdict": "pod trhom", "year": 2017, "km": 200732, "km_per_year": 21500.0, "eg": "1.5 / 1.6 / 2.0 TDCi 70–125 kW", "cg": 1, "transmission": "manual", "seller_type": "private", "location": "Trnava", "flags": [], "pick": "budget", "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "mpv"}, {"id": "196800484", "url": "https://auto.bazos.sk/inzerat/196800484/ford-grand-c-max-15-tdci-120k-business.php", "title": "Ford Grand C-Max 1.5 TDCi 120k Business", "price": 6490, "price_gross": 6490, "fair_price": 7170.0, "discount_pct": 9.5, "verdict": "pod trhom", "year": 2017, "km": 157445, "km_per_year": 16900.0, "eg": "1.5 / 1.6 / 2.0 TDCi 70–125 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Levice", "flags": [], "pick": "top", "source": "bazos", "origin": null, "also_listed": [], "body": "grand"}, {"id": "195936661", "url": "https://auto.bazos.sk/inzerat/195936661/ford-c-max.php", "title": "Ford C-MAX", "price": 3290, "price_gross": 3290, "fair_price": 3630.0, "discount_pct": 9.3, "verdict": "pod trhom", "year": 2011, "km": 270000, "km_per_year": 17600.0, "eg": "1.5 / 1.6 / 2.0 TDCi 70–125 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Levice", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "196146587", "url": "https://auto.bazos.sk/inzerat/196146587/predam-ford-c-max-20-tdci.php", "title": "Predám Ford C-Max 2.0 Tdci", "price": 5299, "price_gross": 5299, "fair_price": 5730.0, "discount_pct": 7.5, "verdict": "pod trhom", "year": 2015, "km": 212000, "km_per_year": 18700.0, "eg": "1.5 / 1.6 / 2.0 TDCi 70–125 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Komárno", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197614293", "url": "https://auto.bazos.sk/inzerat/197614293/ford-c-max-20tdci-120kw-duratorq-at6.php", "title": "Ford C-Max 2.0TDCi 120kW Duratorq AT/6", "price": 5990, "price_gross": 5990, "fair_price": 6460.0, "discount_pct": 7.3, "verdict": "pod trhom", "year": 2014, "km": 162912, "km_per_year": 13200.0, "eg": "1.5 / 1.6 / 2.0 TDCi 70–125 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Prešov", "flags": [], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "mpv"}, {"id": "ab-AeyaVFXEEve", "url": "https://www.autobazar.eu/detail/ford-c-max-16-tdci-klima-vyhrivani-sedacek/AeyaVFXEEve/", "title": "Ford C-Max 1.6 TDCi, Klíma, Vyhřívání sedaček", "price": 3000, "price_gross": 3000, "fair_price": 3230.0, "discount_pct": 7.2, "verdict": "pod trhom", "year": 2011, "km": 260953, "km_per_year": 17000.0, "eg": "1.5 / 1.6 / 2.0 TDCi 70–125 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Trnava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "bs-39436490", "url": "https://auto.bazar.sk/39436490-ford-c-max-1-6-tdci-dpf-115k-trend/", "title": "Ford C-Max 1.6 TDCi DPF 115k Trend", "price": 3999, "price_gross": 3999, "fair_price": 4290.0, "discount_pct": 6.9, "verdict": "férová cena", "year": 2011, "km": 292816, "km_per_year": 19100.0, "eg": "1.5 / 1.6 / 2.0 TDCi 70–125 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Stará Ľubovňa", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "196323302", "url": "https://auto.bazos.sk/inzerat/196323302/ford-c-max-2016.php", "title": "Ford C MAX 2016", "price": 5499, "price_gross": 5499, "fair_price": 5890.0, "discount_pct": 6.6, "verdict": "férová cena", "year": 2016, "km": 230000, "km_per_year": 22300.0, "eg": "1.5 / 1.6 / 2.0 TDCi 70–125 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Bratislava", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AeWd93BKLjr", "url": "https://www.autobazar.eu/detail/ford-c-max-c-max-16-tdci-dpf-115k-titanium-85kw116hp-m6/AeWd93BKLjr/", "title": "Ford C-Max C-MAX 1.6 TDCi DPF 115k Titanium 85kW116HP M6", "price": 3200, "price_gross": 3200, "fair_price": 3420.0, "discount_pct": 6.4, "verdict": "férová cena", "year": 2011, "km": 221473, "km_per_year": 14400.0, "eg": "1.5 / 1.6 / 2.0 TDCi 70–125 kW", "cg": 1, "transmission": "manual", "seller_type": "private", "location": "Šaľa", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "mpv"}, {"id": "197672714", "url": "https://auto.bazos.sk/inzerat/197672714/ford-c-max-10-ecoboost.php", "title": "Ford C-MAX 1.0 EcoBoost", "price": 3300, "price_gross": 3300, "fair_price": 3510.0, "discount_pct": 6.0, "verdict": "férová cena", "year": 2012, "km": 145783, "km_per_year": 10200.0, "eg": "1.0 EcoBoost 74–92 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Martin", "flags": [], "pick": "budget", "source": "bazos", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AmEj4sYcCQL", "url": "https://www.autobazar.eu/detail/ford-c-max-10-ecoboost-scti-trend/AmEj4sYcCQL/", "price": 3300}, {"source": "bazarsk", "id": "bs-39596061", "url": "https://auto.bazar.sk/39596061-ford-c-max-1-0-ecoboost-scti-trend/", "price": 3300}], "body": "mpv"}, {"id": "197634852", "url": "https://auto.bazos.sk/inzerat/197634852/ford-c-max-16tdci-85kw-m6-2012.php", "title": "Ford C-Max 1.6TDCi 85kW M6 2012", "price": 4490, "price_gross": 4490, "fair_price": 4770.0, "discount_pct": 6.0, "verdict": "férová cena", "year": 2012, "km": 164786, "km_per_year": 11500.0, "eg": "1.5 / 1.6 / 2.0 TDCi 70–125 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Námestovo", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39637788", "url": "https://auto.bazar.sk/39637788-ford-c-max-1-6tdci-85kw-m6-2012/", "price": 4490}, {"source": "autobazar", "id": "ab-Ami0JDHCEj2", "url": "https://www.autobazar.eu/detail/ford-c-max-16-tdci-dpf-115k-titanium-x/Ami0JDHCEj2/", "price": 4490}], "body": "mpv"}, {"id": "ab-Aegu1xxmDl5", "url": "https://www.autobazar.eu/detail/ford-c-max-10-ecoboost-sr2maj-klima-tempomat/Aegu1xxmDl5/", "title": "Ford C-Max 1.0 EcoBoost, SR,2.maj, Klíma, Tempomat", "price": 6000, "price_gross": 6000, "fair_price": 6370.0, "discount_pct": 5.9, "verdict": "férová cena", "year": 2018, "km": 124289, "km_per_year": 14900.0, "eg": "1.0 EcoBoost 74–92 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Dunajská Streda", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "196258503", "url": "https://auto.bazos.sk/inzerat/196258503/grand-c-max-16-tdci-dpf-115k-champion-x.php", "title": "Grand C-MAX 1.6 TDCi DPF 115k Champion X", "price": 3100, "price_gross": 3100, "fair_price": 3290.0, "discount_pct": 5.8, "verdict": "férová cena", "year": 2012, "km": 296000, "km_per_year": 20700.0, "eg": "1.5 / 1.6 / 2.0 TDCi 70–125 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Spišská Nová Ves", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "grand"}, {"id": "196639781", "url": "https://auto.bazos.sk/inzerat/196639781/predam-ford-grand-c-max-15tdci-2018-7miest.php", "title": "Predám Ford Grand C-max 1,5TDCi, 2018, 99750km, 7miest", "price": 9000, "price_gross": 9000, "fair_price": 9540.0, "discount_pct": 5.7, "verdict": "férová cena", "year": 2018, "km": 99750, "km_per_year": 12000.0, "eg": "1.5 / 1.6 / 2.0 TDCi 70–125 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Námestovo", "flags": [], "pick": "top", "source": "bazos", "origin": null, "also_listed": [], "body": "grand"}, {"id": "196498269", "url": "https://auto.bazos.sk/inzerat/196498269/ford-c-max-16-tdci-70kw.php", "title": "Ford C-Max 1.6 TDCI - 70kW", "price": 3050, "price_gross": 3050, "fair_price": 3230.0, "discount_pct": 5.5, "verdict": "férová cena", "year": 2011, "km": 265576, "km_per_year": 17300.0, "eg": "1.5 / 1.6 / 2.0 TDCi 70–125 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Bratislava", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "196614394", "url": "https://auto.bazos.sk/inzerat/196614394/ford-c-max-16-tdci-dpf-115k-champion-x.php", "title": "Ford C-Max 1.6 TDCi DPF 115k Champion X", "price": 2950, "price_gross": 2950, "fair_price": 3100.0, "discount_pct": 4.8, "verdict": "férová cena", "year": 2011, "km": 282869, "km_per_year": 18400.0, "eg": "1.5 / 1.6 / 2.0 TDCi 70–125 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Michalovce", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "ab-AmmvKDbG6CW", "url": "https://www.autobazar.eu/detail/ford-c-max-15-tdci-servkniha-navigacia-klima/AmmvKDbG6CW/", "title": "Ford C-Max 1.5 TDCi Serv.kniha, Navigácia, Klíma", "price": 5800, "price_gross": 5800, "fair_price": 6090.0, "discount_pct": 4.8, "verdict": "férová cena", "year": 2017, "km": 194794, "km_per_year": 20900.0, "eg": "1.5 / 1.6 / 2.0 TDCi 70–125 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39691240", "url": "https://auto.bazar.sk/39691240-ford-c-max-1-5-tdci-serv-kniha-navigacia-klima/", "price": 5800}], "body": "mpv"}, {"id": "197657356", "url": "https://auto.bazos.sk/inzerat/197657356/ford-grand-c-max-10-ecoboost-92-kw-benzin.php", "title": "Ford Grand C-Max 1.0 EcoBoost ,,možná výmena za 7 miestne", "price": 5590, "price_gross": 5590, "fair_price": 5870.0, "discount_pct": 4.7, "verdict": "férová cena", "year": 2016, "km": 109000, "km_per_year": 10500.0, "eg": "1.0 EcoBoost 74–92 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Brezno", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "grand"}, {"id": "196849741", "url": "https://auto.bazos.sk/inzerat/196849741/ford-grand-c-max-20-tdci-titanium-powershift.php", "title": "Ford Grand C-Max 2.0 TDCi Titanium PowerShift", "price": 4990, "price_gross": 4990, "fair_price": 5180.0, "discount_pct": 3.7, "verdict": "férová cena", "year": 2013, "km": 175000, "km_per_year": 13100.0, "eg": "1.5 / 1.6 / 2.0 TDCi 70–125 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Žarnovica", "flags": [], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "grand"}, {"id": "196479025", "url": "https://auto.bazos.sk/inzerat/196479025/ford-c-max-10-ecoboost.php", "title": "Ford C-Max 1.0 Ecoboost", "price": 4850, "price_gross": 4850, "fair_price": 5030.0, "discount_pct": 3.6, "verdict": "férová cena", "year": 2015, "km": 132000, "km_per_year": 11600.0, "eg": "1.0 EcoBoost 74–92 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Šaľa", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197353609", "url": "https://auto.bazos.sk/inzerat/197353609/ford-grand-c-max-20-tdci-at-110kw-2015.php", "title": "Ford Grand C-Max 2.0 TDCi A/T, 110kW (2015)", "price": 5500, "price_gross": 5500, "fair_price": 5700.0, "discount_pct": 3.6, "verdict": "férová cena", "year": 2015, "km": 279054, "km_per_year": 24600.0, "eg": "1.5 / 1.6 / 2.0 TDCi 70–125 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Prešov", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "grand"}, {"id": "196882446", "url": "https://auto.bazos.sk/inzerat/196882446/ford-c-max-16-tdci-dpf-trend.php", "title": "Ford C-Max 1.6 TDCi DPF Trend", "price": 2999, "price_gross": 2999, "fair_price": 3090.0, "discount_pct": 3.0, "verdict": "férová cena", "year": 2011, "km": 304018, "km_per_year": 19800.0, "eg": "1.5 / 1.6 / 2.0 TDCi 70–125 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Kežmarok", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-Amu3ojl_Rb7", "url": "https://www.autobazar.eu/detail/ford-c-max-16-tdci-dpf-trend/Amu3ojl_Rb7/", "price": 2999}, {"source": "bazarsk", "id": "bs-39744871", "url": "https://auto.bazar.sk/39744871-ford-c-max-1-6-tdci-dpf-trend/", "price": 2999}], "body": "mpv"}, {"id": "ab-AeXYPEyRUwP", "url": "https://www.autobazar.eu/detail/ford-c-max-c-max-20-tdci-dpf-140k-titanium-powershift-103kw140hp-a6/AeXYPEyRUwP/", "title": "Ford C-Max C-MAX 2.0 TDCi DPF 140k Titanium PowerShift 103kW140HP A6", "price": 3400, "price_gross": 3400, "fair_price": 3490.0, "discount_pct": 2.6, "verdict": "férová cena", "year": 2011, "km": 231000, "km_per_year": 15100.0, "eg": "1.5 / 1.6 / 2.0 TDCi 70–125 kW", "cg": 1, "transmission": "automatic", "seller_type": "private", "location": "Kúty", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "197068201", "url": "https://auto.bazos.sk/inzerat/197068201/ford-grand-c-max.php", "title": "Ford Grand C-MAX", "price": 3500, "price_gross": 3500, "fair_price": 3570.0, "discount_pct": 1.9, "verdict": "férová cena", "year": 2011, "km": 248000, "km_per_year": 16200.0, "eg": "1.5 / 1.6 / 2.0 TDCi 70–125 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Lučenec", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "grand"}, {"id": "bs-39772865", "url": "https://auto.bazar.sk/39772865-ford-c-max-1-0-ecoboost-125k-trend/", "title": "Ford C-Max 1.0 EcoBoost 125k Trend", "price": 7750, "price_gross": 7750, "fair_price": 7870.0, "discount_pct": 1.6, "verdict": "férová cena", "year": 2016, "km": 73134, "km_per_year": 7100.0, "eg": "1.0 EcoBoost 74–92 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Bratislava", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AmZQuuyhzCG", "url": "https://www.autobazar.eu/detail/ford-c-max-10-ecoboost-125k-trend/AmZQuuyhzCG/", "price": 7750}, {"source": "bazos", "id": "196333990", "url": "https://auto.bazos.sk/inzerat/196333990/ford-c-max-10-ecoboost-92-kw-125-k-6-st-manual-benzin.php", "price": 6750}], "body": "mpv"}, {"id": "197737754", "url": "https://auto.bazos.sk/inzerat/197737754/ford-grand-c-max-2017-150-tdci-business.php", "title": "Ford Grand C-Max 2017 1.50 TDCi Business", "price": 6999, "price_gross": 6999, "fair_price": 7080.0, "discount_pct": 1.1, "verdict": "férová cena", "year": 2017, "km": 165760, "km_per_year": 17800.0, "eg": "1.5 / 1.6 / 2.0 TDCi 70–125 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "grand"}, {"id": "196989304", "url": "https://auto.bazos.sk/inzerat/196989304/ford-c-max.php", "title": "Ford C-max", "price": 6000, "price_gross": 6000, "fair_price": 6070.0, "discount_pct": 1.1, "verdict": "férová cena", "year": 2015, "km": 69000, "km_per_year": 6100.0, "eg": "1.0 EcoBoost 74–92 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Bratislava", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "bs-39394272", "url": "https://auto.bazar.sk/39394272-ford-c-max-1-5-tdci-duratorq-trend/", "title": "Ford C-Max 1.5 TDCi Duratorq Trend", "price": 8600, "price_gross": 8600, "fair_price": 8670.0, "discount_pct": 0.8, "verdict": "férová cena", "year": 2016, "km": 149444, "km_per_year": 14500.0, "eg": "1.5 / 1.6 / 2.0 TDCi 70–125 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Bratislava I - Staré Mesto", "flags": [], "pick": null, "source": "bazarsk", "origin": "dovoz", "also_listed": [], "body": "mpv"}, {"id": "196118728", "url": "https://auto.bazos.sk/inzerat/196118728/ford-c-max-123-000-km-nove-rozvody.php", "title": "Ford C-MAX | 123 000 km| Nové rozvody", "price": 5999, "price_gross": 5999, "fair_price": 6040.0, "discount_pct": 0.6, "verdict": "férová cena", "year": 2017, "km": 123000, "km_per_year": 13200.0, "eg": "1.0 EcoBoost 74–92 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Poprad", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AeaJ_Wl6lw3", "url": "https://www.autobazar.eu/detail/ford-c-max-10-ecoboost-sr-klima-tempomat-tazne/AeaJ_Wl6lw3/", "title": "Ford C-Max 1.0 EcoBoost, SR, klíma, tempomat, ťažné", "price": 5200, "price_gross": 5200, "fair_price": 5210.0, "discount_pct": 0.3, "verdict": "férová cena", "year": 2015, "km": 103500, "km_per_year": 9100.0, "eg": "1.0 EcoBoost 74–92 kW", "cg": 0, "transmission": "manual", "seller_type": "private", "location": "Nitra", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AesgDdBobOP", "url": "https://www.autobazar.eu/detail/ford-c-max-10-ecoboostservkniha-navigacia-klima/AesgDdBobOP/", "title": "Ford C-Max 1.0 EcoBoostServ.kniha, Navigácia, Klíma", "price": 6000, "price_gross": 6000, "fair_price": 5980.0, "discount_pct": -0.3, "verdict": "férová cena", "year": 2018, "km": 144815, "km_per_year": 17400.0, "eg": "1.0 EcoBoost 74–92 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197542319", "url": "https://auto.bazos.sk/inzerat/197542319/ford-c-max-10-ecoboost-86-100-km-1-majitel-top-stav.php", "title": "Ford C-Max 1.0 EcoBoost – 86 100 km – 1. majiteľ – TOP stav", "price": 6390, "price_gross": 6390, "fair_price": 6350.0, "discount_pct": -0.6, "verdict": "férová cena", "year": 2017, "km": 86100, "km_per_year": 9200.0, "eg": "1.0 EcoBoost 74–92 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Michalovce", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "196508362", "url": "https://auto.bazos.sk/inzerat/196508362/predam-ford-c-max.php", "title": "Predám Ford C-MAX", "price": 5500, "price_gross": 5500, "fair_price": 5370.0, "discount_pct": -2.5, "verdict": "férová cena", "year": 2015, "km": 93701, "km_per_year": 8300.0, "eg": "1.0 EcoBoost 74–92 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Partizánske", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AeeEbS74GCz", "url": "https://www.autobazar.eu/detail/ford-c-max-ford-grand-c-max/AeeEbS74GCz/", "title": "Ford C-Max Ford Grand C-Max", "price": 7500, "price_gross": 7500, "fair_price": 7310.0, "discount_pct": -2.6, "verdict": "férová cena", "year": 2019, "km": 208606, "km_per_year": 28400.0, "eg": "1.5 / 1.6 / 2.0 TDCi 70–125 kW", "cg": 1, "transmission": "automatic", "seller_type": "private", "location": "Humenné", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "195946625", "url": "https://auto.bazos.sk/inzerat/195946625/predam-ford-grand-c-max.php", "price": 7500}], "body": "grand"}, {"id": "ab-AeK9JLfFCBf", "url": "https://www.autobazar.eu/detail/ford-c-max-10-ecoboost-sr1maj-klima-tempomat/AeK9JLfFCBf/", "title": "Ford C-Max 1.0 EcoBoost, SR,1.maj, Klíma, Tempomat", "price": 6300, "price_gross": 6300, "fair_price": 6110.0, "discount_pct": -3.1, "verdict": "férová cena", "year": 2017, "km": 108790, "km_per_year": 11700.0, "eg": "1.0 EcoBoost 74–92 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Košice", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "196400451", "url": "https://auto.bazos.sk/inzerat/196400451/predam-ford-c-max-16-tdci-85kw116-koni-rv122014.php", "title": "PREDÁM Ford C-Max 1.6 TDCi 85KW/116 koní R.V.12/2014", "price": 5300, "price_gross": 5300, "fair_price": 5110.0, "discount_pct": -3.7, "verdict": "férová cena", "year": 2014, "km": 187200, "km_per_year": 15200.0, "eg": "1.5 / 1.6 / 2.0 TDCi 70–125 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Skalica", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "195937874", "url": "https://auto.bazos.sk/inzerat/195937874/ford-grand-c-max-16-tdci-7-miestne-177000km.php", "title": "Ford Grand C-Max 1.6 TDCi (7-miestne, 177.000km)", "price": 5500, "price_gross": 5500, "fair_price": 5300.0, "discount_pct": -3.7, "verdict": "férová cena", "year": 2014, "km": 177000, "km_per_year": 14400.0, "eg": "1.5 / 1.6 / 2.0 TDCi 70–125 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Veľký Krtíš", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "grand"}, {"id": "ab-Aem2-kXYsMT", "url": "https://www.autobazar.eu/detail/ford-c-max-10-ecoboost-sr2maj-klima-tempomat/Aem2-kXYsMT/", "title": "Ford C-Max 1.0 EcoBoost, SR,2.maj, Klíma, Tempomat", "price": 8000, "price_gross": 8000, "fair_price": 7710.0, "discount_pct": -3.8, "verdict": "férová cena", "year": 2018, "km": 65124, "km_per_year": 7800.0, "eg": "1.0 EcoBoost 74–92 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-Ae9R4nTm5s4", "url": "https://www.autobazar.eu/detail/ford-c-max-c-max-10-ecoboost-business-74kw100hp-m6/Ae9R4nTm5s4/", "title": "Ford C-Max C-MAX 1.0 EcoBoost Business 74kW100HP M6", "price": 4590, "price_gross": 4590, "fair_price": 4410.0, "discount_pct": -4.0, "verdict": "férová cena", "year": 2015, "km": 142100, "km_per_year": 12500.0, "eg": "1.0 EcoBoost 74–92 kW", "cg": 0, "transmission": "manual", "seller_type": "private", "location": "Kysucké Nové Mesto", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "mpv"}, {"id": "197151227", "url": "https://auto.bazos.sk/inzerat/197151227/ford-c-max-20-tdci-rv2011-226000.php", "title": "FORD C MAX 2.0 TDCi, r.v.2011, 226000", "price": 4300, "price_gross": 4300, "fair_price": 4130.0, "discount_pct": -4.1, "verdict": "férová cena", "year": 2011, "km": 226000, "km_per_year": 14700.0, "eg": "1.5 / 1.6 / 2.0 TDCi 70–125 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Bratislava", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197351634", "url": "https://auto.bazos.sk/inzerat/197351634/ford-grand-c-max-15-tdci-7-miestn.php", "title": "Ford Grand C-Max 1.5 TDCi 7 miestn", "price": 13650, "price_gross": 13650, "fair_price": 12880.0, "discount_pct": -6.0, "verdict": "férová cena", "year": 2019, "km": 63500, "km_per_year": 8700.0, "eg": "1.5 / 1.6 / 2.0 TDCi 70–125 kW", "cg": 1, "transmission": null, "seller_type": "dealer", "location": "Galanta", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "grand"}, {"id": "bs-39295491", "url": "https://auto.bazar.sk/39295491-ford-c-max/", "title": "Ford C-Max", "price": 5499, "price_gross": 5499, "fair_price": 5180.0, "discount_pct": -6.2, "verdict": "férová cena", "year": 2014, "km": 217943, "km_per_year": 17700.0, "eg": "1.5 / 1.6 / 2.0 TDCi 70–125 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava I - Staré Mesto", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "ab-AmGzqftr7re", "url": "https://www.autobazar.eu/detail/ford-c-max-10-ecoboost-125k-family-edition-plus/AmGzqftr7re/", "title": "Ford C-Max 1.0 EcoBoost 125k Family Edition Plus", "price": 6400, "price_gross": 6400, "fair_price": 6020.0, "discount_pct": -6.3, "verdict": "férová cena", "year": 2019, "km": 145735, "km_per_year": 19900.0, "eg": "1.0 EcoBoost 74–92 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava-Staré Mesto", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-39699904", "url": "https://auto.bazar.sk/39699904-ford-c-max-1-0-ecoboost-125k-family-edition-plus/", "price": 6400}], "body": "mpv"}, {"id": "196447290", "url": "https://auto.bazos.sk/inzerat/196447290/ford-c-max-7-miestny-20-diesel-120kw.php", "title": "Ford C-Max 7 miestny 2.0 diesel 120Kw", "price": 4200, "price_gross": 4200, "fair_price": 3920.0, "discount_pct": -7.2, "verdict": "nad trhom", "year": 2012, "km": 306000, "km_per_year": 21300.0, "eg": "1.5 / 1.6 / 2.0 TDCi 70–125 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Michalovce", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-Amw7PcUz4mg", "url": "https://www.autobazar.eu/detail/ford-c-max-15-tdci-duratorq-trend/Amw7PcUz4mg/", "title": "Ford C-Max 1.5 TDCi Duratorq Trend", "price": 7500, "price_gross": 7500, "fair_price": 6990.0, "discount_pct": -7.3, "verdict": "nad trhom", "year": 2017, "km": 145000, "km_per_year": 15500.0, "eg": "1.5 / 1.6 / 2.0 TDCi 70–125 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Dunajská Streda", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39676626", "url": "https://auto.bazar.sk/39676626-ford-c-max-1-5-tdci-duratorq-trend/", "price": 7500}], "body": "mpv"}, {"id": "196441517", "url": "https://auto.bazos.sk/inzerat/196441517/ford-c-max-16-tdci-85-kw-2011-172-700-km-stkek-042027.php", "title": "Ford C-MAX 1.6 TDCi 85 kW, 2011, 172 700 km, STK/EK 04/2027", "price": 5200, "price_gross": 5200, "fair_price": 4810.0, "discount_pct": -8.1, "verdict": "nad trhom", "year": 2011, "km": 172700, "km_per_year": 11300.0, "eg": "1.5 / 1.6 / 2.0 TDCi 70–125 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Komárno", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "196963030", "url": "https://auto.bazos.sk/inzerat/196963030/ford-c-max-10-ecoboost-125-k-2016-stkek-do-052028.php", "title": "Ford C-Max 1.0 EcoBoost 125 k, 2016 – STK/EK do 05/2028", "price": 4990, "price_gross": 4990, "fair_price": 4600.0, "discount_pct": -8.5, "verdict": "nad trhom", "year": 2016, "km": 189298, "km_per_year": 18300.0, "eg": "1.0 EcoBoost 74–92 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Liptovský Mikuláš", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197453589", "url": "https://auto.bazos.sk/inzerat/197453589/ford-c-max.php", "title": "Ford C Max", "price": 6000, "price_gross": 6000, "fair_price": 5510.0, "discount_pct": -8.9, "verdict": "nad trhom", "year": 2016, "km": 254438, "km_per_year": 24600.0, "eg": "1.5 / 1.6 / 2.0 TDCi 70–125 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Spišská Nová Ves", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "196428113", "url": "https://auto.bazos.sk/inzerat/196428113/ford-grand-c-max-10-ecoboost-92-kw-125-k-sk.php", "title": "FORD Grand C-MAX 1.0 EcoBoost 92 kW (125 k), SK", "price": 6990, "price_gross": 6990, "fair_price": 6410.0, "discount_pct": -9.0, "verdict": "nad trhom", "year": 2016, "km": 83703, "km_per_year": 8100.0, "eg": "1.0 EcoBoost 74–92 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Michalovce", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "grand"}, {"id": "ab-AecXVUEhzS8", "url": "https://www.autobazar.eu/detail/ford-c-max-10-ecoboost-sr2maj-po-stk/AecXVUEhzS8/", "title": "Ford C-Max 1.0 EcoBoost, SR,2.maj, Klíma, Tempomat", "price": 6500, "price_gross": 6500, "fair_price": 5960.0, "discount_pct": -9.1, "verdict": "nad trhom", "year": 2015, "km": 64690, "km_per_year": 5700.0, "eg": "1.0 EcoBoost 74–92 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Trenčiansky kraj", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "195789462", "url": "https://auto.bazos.sk/inzerat/195789462/ford-c-max-20-tdci-titanium-automat.php", "title": "FORD C-MAX 2,0 TDCI Titanium automat", "price": 6800, "price_gross": 6800, "fair_price": 6230.0, "discount_pct": -9.1, "verdict": "nad trhom", "year": 2013, "km": 165600, "km_per_year": 12400.0, "eg": "1.5 / 1.6 / 2.0 TDCi 70–125 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Michalovce", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197084448", "url": "https://auto.bazos.sk/inzerat/197084448/ford-grand-c-max-15-tdci.php", "title": "Ford Grand C-Max 1,5 TDCi", "price": 9500, "price_gross": 9500, "fair_price": 8690.0, "discount_pct": -9.3, "verdict": "nad trhom", "year": 2019, "km": 164000, "km_per_year": 22400.0, "eg": "1.5 / 1.6 / 2.0 TDCi 70–125 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Košice-okolie", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "grand"}, {"id": "197744522", "url": "https://auto.bazos.sk/inzerat/197744522/ford-grand-c-max-15-tdci-7-miestny.php", "title": "Ford Grand C-Max 1.5 TDCi 7 miestny", "price": 11650, "price_gross": 11650, "fair_price": 10580.0, "discount_pct": -10.1, "verdict": "nad trhom", "year": 2019, "km": 124652, "km_per_year": 17000.0, "eg": "1.5 / 1.6 / 2.0 TDCi 70–125 kW", "cg": 1, "transmission": null, "seller_type": "dealer", "location": "Galanta", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "grand"}, {"id": "196337152", "url": "https://auto.bazos.sk/inzerat/196337152/ford-c-max-10-ecoboost-92-kw-titanium.php", "title": "Ford C-MAX 1.0 EcoBoost 92 kW, Titanium", "price": 5000, "price_gross": 5000, "fair_price": 4540.0, "discount_pct": -10.2, "verdict": "nad trhom", "year": 2015, "km": 137600, "km_per_year": 12100.0, "eg": "1.0 EcoBoost 74–92 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Nitra", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "196591393", "url": "https://auto.bazos.sk/inzerat/196591393/ford-grand-c-max.php", "title": "Ford Grand C-max", "price": 3500, "price_gross": 3500, "fair_price": 3160.0, "discount_pct": -10.7, "verdict": "nad trhom", "year": 2012, "km": 305000, "km_per_year": 21300.0, "eg": "1.5 / 1.6 / 2.0 TDCi 70–125 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Rožňava", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "grand"}, {"id": "196226780", "url": "https://auto.bazos.sk/inzerat/196226780/ford-c-max-20-tdci-duratorq-titanium-plus-at.php", "title": "Ford C-Max 2.0 TDCi Duratorq Titanium Plus A/T", "price": 11000, "price_gross": 11000, "fair_price": 9770.0, "discount_pct": -12.6, "verdict": "nad trhom", "year": 2017, "km": 148400, "km_per_year": 15900.0, "eg": "1.5 / 1.6 / 2.0 TDCi 70–125 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Rimavská Sobota", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmhgkB4e3Op", "url": "https://www.autobazar.eu/detail/ford-c-max-20-tdci-duratorq-titanium-plus-at/AmhgkB4e3Op/", "price": 11000}, {"source": "bazarsk", "id": "bs-39631312", "url": "https://auto.bazar.sk/39631312-ford-c-max-2-0-tdci-duratorq-titanium-plus-a-t/", "price": 11000}], "body": "mpv"}, {"id": "197251151", "url": "https://auto.bazos.sk/inzerat/197251151/ford-grand-c-max-grand-c-max-20diesetitaniumautomat-110kw.php", "title": "Ford Grand C-Max 2.0diesel,Titanium, Automat 110kW,7sedadiel", "price": 6900, "price_gross": 6900, "fair_price": 6120.0, "discount_pct": -12.7, "verdict": "nad trhom", "year": 2015, "km": 252588, "km_per_year": 22300.0, "eg": "1.5 / 1.6 / 2.0 TDCi 70–125 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Senec", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "grand"}, {"id": "196835678", "url": "https://auto.bazos.sk/inzerat/196835678/grand-c-max.php", "title": "Grand c-max", "price": 5000, "price_gross": 5000, "fair_price": 4410.0, "discount_pct": -13.4, "verdict": "nad trhom", "year": 2013, "km": 210000, "km_per_year": 15800.0, "eg": "1.5 / 1.6 / 2.0 TDCi 70–125 kW", "cg": 1, "transmission": "manual", "seller_type": "private", "location": "Snina", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "grand"}, {"id": "197293601", "url": "https://auto.bazos.sk/inzerat/197293601/ford-grand-c-max-easy.php", "title": "Ford Grand C-Max Easy", "price": 4200, "price_gross": 4200, "fair_price": 3660.0, "discount_pct": -14.9, "verdict": "nad trhom", "year": 2014, "km": 190227, "km_per_year": 15400.0, "eg": "1.6 Ti-VCT 63–92 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Topoľčany", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "grand"}, {"id": "197230329", "url": "https://auto.bazos.sk/inzerat/197230329/ford-c-max-2019-85000km-1-majitel.php", "title": "Ford C-Max 2019, 85000KM, 1. majitel", "price": 8450, "price_gross": 8450, "fair_price": 7230.0, "discount_pct": -16.8, "verdict": "výrazne nad trhom", "year": 2019, "km": 84000, "km_per_year": 11500.0, "eg": "1.0 EcoBoost 74–92 kW", "cg": 0, "transmission": "manual", "seller_type": "private", "location": "Žilina", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "ab-AmS8y9Ce5GH", "url": "https://www.autobazar.eu/detail/ford-c-max-16-tdci-dpf-115k-titanium/AmS8y9Ce5GH/", "title": "Ford C-Max 1.6 TDCi DPF 115k Titanium", "price": 3490, "price_gross": 3490, "fair_price": 2940.0, "discount_pct": -18.9, "verdict": "výrazne nad trhom", "year": 2011, "km": 299046, "km_per_year": 19500.0, "eg": "1.5 / 1.6 / 2.0 TDCi 70–125 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Tvrdošín", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "197401739", "url": "https://auto.bazos.sk/inzerat/197401739/ford-c-max-16-tdci-dpf-115k-titanium.php", "price": 3490}, {"source": "bazarsk", "id": "bs-39766073", "url": "https://auto.bazar.sk/39766073-ford-c-max-1-6-tdci-dpf-115k-titanium/", "price": 3490}], "body": "mpv"}, {"id": "bs-36236145", "url": "https://auto.bazar.sk/36236145-ford-c-max-1-0-ecoboost-trend/", "title": "Ford C-Max 1.0 EcoBoost Trend", "price": 12290, "price_gross": 12290, "fair_price": 10070.0, "discount_pct": -22.0, "verdict": "výrazne nad trhom", "year": 2018, "km": 51854, "km_per_year": 6200.0, "eg": "1.0 EcoBoost 74–92 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Humenné", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "ab-AeuUtmQxXFK", "url": "https://www.autobazar.eu/detail/ford-c-max-c-max-15-ecoboost-titanium-110kw150hp-m6/AeuUtmQxXFK/", "title": "Ford C-Max C-MAX 1.5 EcoBoost Titanium 110kW150HP M6", "price": 8900, "price_gross": 8900, "fair_price": 7240.0, "discount_pct": -22.9, "verdict": "výrazne nad trhom", "year": 2016, "km": 122100, "km_per_year": 11800.0, "eg": "1.5 / 1.6 EcoBoost 110–134 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Hlohovec", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "ab-AmHLABwa8y5", "url": "https://www.autobazar.eu/detail/ford-c-max-10-ecoboost-scti-125k-trend/AmHLABwa8y5/", "title": "Ford C-Max 1.0 EcoBoost SCTi 125k Trend", "price": 4750, "price_gross": 4750, "fair_price": 3850.0, "discount_pct": -23.4, "verdict": "výrazne nad trhom", "year": 2013, "km": 149297, "km_per_year": 11200.0, "eg": "1.0 EcoBoost 74–92 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Nové Zámky", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39722541", "url": "https://auto.bazar.sk/39722541-ford-c-max-1-0-ecoboost-scti-125k-trend/", "price": 4750}], "body": "mpv"}, {"id": "197524476", "url": "https://auto.bazos.sk/inzerat/197524476/ford-c-max-20-tdci-125kw170k-titanium.php", "title": "Ford C-Max 2.0 TDCi 125kW/170k Titanium", "price": 7990, "price_gross": 7990, "fair_price": 6440.0, "discount_pct": -24.1, "verdict": "výrazne nad trhom", "year": 2015, "km": 195827, "km_per_year": 17300.0, "eg": "1.5 / 1.6 / 2.0 TDCi 70–125 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Trenčín", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-Am80SWKcrKn", "url": "https://www.autobazar.eu/detail/ford-c-max-20-tdci-duratorq-170k-titanium/Am80SWKcrKn/", "price": 7990}], "body": "mpv"}, {"id": "ab-Ae4UP8cQwgD", "url": "https://www.autobazar.eu/detail/ford-c-max-c-max-10-ecoboost-business-74kw100hp-m6/Ae4UP8cQwgD/", "title": "Ford C-Max C-MAX 1.0 EcoBoost Business 74kW100HP M6", "price": 4800, "price_gross": 4800, "fair_price": 3860.0, "discount_pct": -24.4, "verdict": "výrazne nad trhom", "year": 2015, "km": 173000, "km_per_year": 15300.0, "eg": "1.0 EcoBoost 74–92 kW", "cg": 0, "transmission": "manual", "seller_type": "private", "location": "Rožňava", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "ab-AeT3SPKcBKg", "url": "https://www.autobazar.eu/detail/ford-c-max-c-max-15-tdci-duratorq-120k-titanium-88kw120hp-m6/AeT3SPKcBKg/", "title": "Ford C-Max C-MAX 1.5 TDCi Duratorq 120k Titanium 88kW120HP M6 NOVÁ STK", "price": 6190, "price_gross": 6190, "fair_price": 4780.0, "discount_pct": -29.6, "verdict": "výrazne nad trhom", "year": 2016, "km": 219473, "km_per_year": 21200.0, "eg": "1.5 / 1.6 / 2.0 TDCi 70–125 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Prešov", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "196490461", "url": "https://auto.bazos.sk/inzerat/196490461/ford-c-max-15tdci-duratorq-88kw-m6-titanium-nova-stk.php", "price": 6190}], "body": "mpv"}, {"id": "196445192", "url": "https://auto.bazos.sk/inzerat/196445192/grand-c-max-2019-10-7-miestne-128000-km-rozvodovaretaz.php", "title": "Grand C-Max 2019, 1.0, 7 miestne, 128.000 km, reťaz", "price": 9900, "price_gross": 9900, "fair_price": 7610.0, "discount_pct": -30.2, "verdict": "výrazne nad trhom", "year": 2019, "km": 128000, "km_per_year": 17500.0, "eg": "1.0 EcoBoost 74–92 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Kysucké Nové Mesto", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "grand"}, {"id": "bs-23464326", "url": "https://auto.bazar.sk/23464326-ford-c-max-1-6-tdci-dpf-115k-titanium-85kw-m6-5d/", "title": "Ford C-MAX 1.6 TDCi DPF 115k Titanium, 85kW, M6, 5d.", "price": 8600, "price_gross": 8600, "fair_price": 6590.0, "discount_pct": -30.5, "verdict": "výrazne nad trhom", "year": 2011, "km": 122700, "km_per_year": 8000.0, "eg": "1.5 / 1.6 / 2.0 TDCi 70–125 kW", "cg": 1, "transmission": "manual", "seller_type": "private", "location": "Bratislava", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "195960861", "url": "https://auto.bazos.sk/inzerat/195960861/ford-c-max-20.php", "title": "Ford c-max 2.0", "price": 9800, "price_gross": 9800, "fair_price": 7260.0, "discount_pct": -35.0, "verdict": "výrazne nad trhom", "year": 2017, "km": 164000, "km_per_year": 17600.0, "eg": "1.5 / 1.6 EcoBoost 110–134 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Námestovo", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "195840200", "url": "https://auto.bazos.sk/inzerat/195840200/ford-c-max-16-tdci-70-kw-titanium.php", "title": "Ford C-Max 1,6 TDCi 70 kW TITANIUM", "price": 5190, "price_gross": 5190, "fair_price": 3720.0, "discount_pct": -39.7, "verdict": "výrazne nad trhom", "year": 2011, "km": 254527, "km_per_year": 16600.0, "eg": "1.5 / 1.6 / 2.0 TDCi 70–125 kW", "cg": 1, "transmission": null, "seller_type": "dealer", "location": "Martin", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197209892", "url": "https://auto.bazos.sk/inzerat/197209892/ford-grand-c-max-10-ecoboost-125k-business.php", "title": "Ford Grand C-Max 1.0 EcoBoost 125k Business", "price": 7490, "price_gross": 7490, "fair_price": 5250.0, "discount_pct": -42.7, "verdict": "výrazne nad trhom", "year": 2016, "km": 147353, "km_per_year": 14300.0, "eg": "1.0 EcoBoost 74–92 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Nové Zámky", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "grand"}, {"id": "bs-23541148", "url": "https://auto.bazar.sk/23541148-ford-c-max-1-6-tdci-dpf-115k-edition-x-85kw-m6-5d/", "title": "Ford C-MAX 1.6 TDCi DPF 115k Edition X, 85kW, M6, 5d.", "price": 12000, "price_gross": 12000, "fair_price": 7660.0, "discount_pct": -56.6, "verdict": "výrazne nad trhom", "year": 2014, "km": 140400, "km_per_year": 11400.0, "eg": "1.5 / 1.6 / 2.0 TDCi 70–125 kW", "cg": 1, "transmission": "manual", "seller_type": "private", "location": "Skalica", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "bs-23118709", "url": "https://auto.bazar.sk/23118709-ford-c-max-1-0-ecoboost-scti-trend-74kw-m6-5d/", "title": "Ford C-MAX 1.0 EcoBoost SCTi Trend, 74kW, M6, 5d.", "price": 13000, "price_gross": 13000, "fair_price": 7320.0, "discount_pct": -77.5, "verdict": "výrazne nad trhom", "year": 2013, "km": 45000, "km_per_year": 3400.0, "eg": "1.0 EcoBoost 74–92 kW", "cg": 0, "transmission": "manual", "seller_type": "private", "location": "Bratislava", "flags": ["nezvyčajne nízky nájazd na vek (45 000 km) – over  či nejde o preklep"], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "mpv"}];
+const GROUPS = ["Benzín", "Diesel TDCi", "LPG, hybrid a nezistený"];
+const BODY = {"mpv": "C-Max (5 miest)", "grand": "Grand C-Max (7 miest)"};
+const fmt = n => Math.round(n).toLocaleString("sk-SK");
+const eur = n => fmt(n) + " €";
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const TRANS = {automatic: "automat", manual: "manuál"};
+const SRC = {bazos: "bazoš", autobazar: "autobazar.eu", bazarsk: "bazar.sk"};
+
+// --- theme toggle ---------------------------------------------------------
+document.getElementById("themeBtn").onclick = () => {
+  const root = document.documentElement;
+  const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  drawChart();
+};
+
+// --- scatter chart --------------------------------------------------------
+const legend = document.getElementById("legend");
+legend.innerHTML = GROUPS.map((g, i) => `<span><i style="background:var(--s${i+1})"></i>${g}</span>`).join("")
+  + `<span><i class="ring"></i>odporúčaná ponuka</span>`;
+
+function drawChart() {
+  const svg = document.getElementById("chart"), wrap = document.getElementById("chartWrap"), tip = document.getElementById("tip");
+  const W = svg.clientWidth, H = 420, m = {l: 56, r: 16, t: 10, b: 40};
+  const pts = DATA.filter(d => d.km && d.price_gross);
+  const xMax = Math.ceil(Math.max(...pts.map(d => d.km)) / 50000) * 50000;
+  const yMax = Math.ceil(Math.max(...pts.map(d => d.price_gross)) / 5000) * 5000;
+  const x = v => m.l + v / xMax * (W - m.l - m.r), y = v => H - m.b - v / yMax * (H - m.t - m.b);
+  let s = "";
+  for (let v = 0; v <= yMax; v += 5000)
+    s += `<line x1="${m.l}" x2="${W-m.r}" y1="${y(v)}" y2="${y(v)}" stroke="var(--grid)"/><text x="${m.l-8}" y="${y(v)+4}" text-anchor="end">${v/1000} tis. €</text>`;
+  const step = W < 520 ? 100000 : 50000;
+  for (let v = 0; v <= xMax; v += step)
+    s += `<text x="${x(v)}" y="${H-m.b+18}" text-anchor="middle">${v/1000} tis.</text>`;
+  s += `<text x="${(W+m.l)/2}" y="${H-6}" text-anchor="middle">nájazd (km)</text>`;
+  const order = [...pts].sort((a, b) => (a.pick ? 1 : 0) - (b.pick ? 1 : 0));
+  order.forEach(d => {
+    const cx = x(d.km), cy = y(d.price_gross);
+    if (d.pick) s += `<circle cx="${cx}" cy="${cy}" r="9" fill="none" stroke="var(--text)" stroke-width="2"/>`;
+    s += `<circle class="pt" data-id="${d.id}" cx="${cx}" cy="${cy}" r="5" fill="var(--s${d.cg+1})" stroke="var(--surface)" stroke-width="2"/>`;
+  });
+  // invisible bigger hit targets
+  order.forEach(d => s += `<circle class="hit" data-id="${d.id}" cx="${x(d.km)}" cy="${y(d.price_gross)}" r="11" fill="transparent" style="cursor:pointer"/>`);
+  svg.innerHTML = s;
+  const byId = Object.fromEntries(pts.map(d => [d.id, d]));
+  svg.querySelectorAll(".hit").forEach(c => {
+    c.onmouseenter = c.onmousemove = ev => {
+      const d = byId[c.dataset.id];
+      tip.innerHTML = `<b>${esc(d.title)}</b>
+        <div class="row"><span>Cena</span><span>${eur(d.price_gross)}</span></div>
+        <div class="row"><span>Férová cena</span><span>${eur(d.fair_price)}</span></div>
+        <div class="row"><span>Pod trhom</span><span>${d.discount_pct > 0 ? "+" : ""}${d.discount_pct.toLocaleString("sk-SK")} %</span></div>
+        <div class="row"><span>Zdroj</span><span>${SRC[d.source]}${d.also_listed.length ? " + " + d.also_listed.map(a => SRC[a.source]).join(", ") : ""}</span></div>
+        <div class="row"><span>Rok · km</span><span>${d.year} · ${fmt(d.km)}</span></div>
+        <div class="row"><span>Motor</span><span>${esc(d.eg)} ${TRANS[d.transmission] || ""}</span></div>`;
+      tip.style.display = "block";
+      const r = wrap.getBoundingClientRect();
+      let lx = ev.clientX - r.left + 14, ly = ev.clientY - r.top + 14;
+      if (lx + 290 > r.width) lx = ev.clientX - r.left - 290;
+      tip.style.left = lx + "px"; tip.style.top = ly + "px";
+    };
+    c.onmouseleave = () => tip.style.display = "none";
+    c.onclick = () => window.open(byId[c.dataset.id].url, "_blank", "noopener");
+  });
+}
+drawChart();
+addEventListener("resize", drawChart);
+
+// --- full table -----------------------------------------------------------
+const fEngine = document.getElementById("fEngine");
+[...new Set(DATA.map(d => d.eg))].sort().forEach(g => fEngine.insertAdjacentHTML("beforeend", `<option>${esc(g)}</option>`));
+let sortK = "discount_pct", sortDir = -1;
+function discCell(v) {
+  const w = Math.min(Math.abs(v), 30) / 30 * 50;
+  const bar = v >= 0 ? `left:50%;width:${w}%;background:var(--pos)` : `right:50%;width:${w}%;background:var(--neg)`;
+  return `<span class="disc">${v > 0 ? "+" : ""}${v.toLocaleString("sk-SK")} %<span class="dbar"><span style="${bar}"></span></span></span>`;
+}
+function renderTable() {
+  const max = parseFloat(document.getElementById("fMax").value) || Infinity;
+  const tr = document.getElementById("fTrans").value, se = document.getElementById("fSeller").value, en = fEngine.value;
+  const so = document.getElementById("fSource").value, og = document.getElementById("fOrigin").value;
+  const bo = document.getElementById("fBody").value;
+  const rows = DATA.filter(d => (!en || d.eg === en) && (!tr || d.transmission === tr)
+    && (!se || d.seller_type !== "dealer") && d.price_gross <= max
+    && (!so || d.source === so || d.also_listed.some(a => a.source === so)) && (!og || d.origin === og) && (!bo || d.body === bo))
+    .sort((a, b) => { const A = a[sortK], B = b[sortK]; return (typeof A === "string" ? A.localeCompare(B) : A - B) * sortDir; });
+  document.getElementById("count").textContent = `${rows.length} z ${DATA.length} inzerátov`;
+  document.querySelector("#tbl tbody").innerHTML = rows.map(d => `<tr>
+    <td><a href="${d.url}" target="_blank" rel="noopener">${esc(d.title)}</a> ${d.pick ? '<span class="badge pick">odporúčané</span>' : ""}
+      <div class="sub">${BODY[d.body] || "karoséria ?"} · ${esc(d.eg)} · ${TRANS[d.transmission] || "prevodovka ?"} · ${esc(d.location)} · ${d.seller_type === "dealer" ? "predajca/firma" : d.seller_type === "private" ? "súkromník" : "neisté"} · ${SRC[d.source]}${d.origin === "SR" ? " · kúpené v SR" : d.origin === "dovoz" ? " · dovoz" : ""}${d.also_listed.map(a => ` · <a href="${a.url}" target="_blank" rel="noopener">aj na ${SRC[a.source]}</a>`).join("")}</div>
+      ${d.flags.filter(f => !f.startsWith("prevodovka")).map(f => `<div class="flag">⚠ ${esc(f)}</div>`).join("")}</td>
+    <td class="num">${d.year}</td><td class="num">${fmt(d.km)}</td>
+    <td class="num">${eur(d.price_gross)}</td><td class="num">${eur(d.fair_price)}</td>
+    <td class="num">${discCell(d.discount_pct)}</td></tr>`).join("");
+  document.querySelectorAll("#tbl th.sortable").forEach(th => {
+    const base = th.textContent.replace(/ [▾▴]$/, "");
+    th.textContent = base + (th.dataset.k === sortK ? (sortDir < 0 ? " ▾" : " ▴") : "");
+  });
+}
+document.querySelectorAll("#tbl th.sortable").forEach(th => th.onclick = () => {
+  if (sortK === th.dataset.k) sortDir *= -1; else { sortK = th.dataset.k; sortDir = th.dataset.k === "title" ? 1 : -1; }
+  renderTable();
+});
+["fEngine", "fTrans", "fSeller", "fSource", "fBody", "fOrigin", "fMax"].forEach(id => document.getElementById(id).addEventListener("input", renderTable));
+renderTable();
+</script>
+<!-- ferovka-theme --><script defer src="/analytics-config.js"></script><script defer src="/analytics.js"></script><script id="ferovka-chart">/* Férovka – chart → ad links, injected into every report by sync-reports.mjs.
+ *
+ * The reports draw one invisible 11px "hit" circle per ad. In dense charts (and always on a narrow phone) those
+ * circles overlap and the one drawn last wins, so a click/tap often opened a neighbouring ad. Here the pointer is
+ * always resolved to the NEAREST point, the report's own tooltip is shown for that point, and a click opens its ad.
+ * Touch: the first tap shows the tooltip (with a hint), a second tap on the same point opens the ad.
+ */
+(() => {
+  let rows;
+  try { rows = DATA; } catch { return; } // eslint-disable-line no-undef
+  if (!Array.isArray(rows) || !rows.length || !("url" in rows[0])) return;
+  const byId = new Map(rows.map((d) => [String(d.id), d]));
+  const MOUSE = ["mouseover", "mouseout", "mouseenter", "mouseleave", "mousemove", "mousedown", "mouseup", "click"];
+  let lastPointer = "mouse", down = null;
+  // the finger position as it was – Chrome "snaps" the later click of a tap to the centre of a nearby clickable element
+  addEventListener("pointerdown", (e) => { lastPointer = e.pointerType || "mouse"; down = { clientX: e.clientX, clientY: e.clientY }; }, true);
+
+  // the old per-point hit circles must not be targets (they overlap, and touch snapping aims at them)
+  document.head.insertAdjacentHTML("beforeend", "<style>svg circle.hit[data-id],svg circle.pt[data-id]{pointer-events:none}</style>");
+
+  function nearest(svg, ev, radius) {
+    let best = null, bd = Infinity;
+    for (const c of svg.querySelectorAll("circle.pt[data-id]")) {
+      const r = c.getBoundingClientRect();
+      const dx = r.left + r.width / 2 - ev.clientX, dy = r.top + r.height / 2 - ev.clientY;
+      const d = dx * dx + dy * dy;
+      if (d <= bd) { bd = d; best = c; } // ties: the point drawn on top (later) wins – that is the one you see
+    }
+    return best && bd <= radius * radius ? best : null;
+  }
+
+  function bind(svg) {
+    if (svg.__fvLinks) return;
+    svg.__fvLinks = true;
+    let current = null, armed = null;
+    const hitOf = (pt) => pt && svg.querySelector(`circle.hit[data-id="${CSS.escape(pt.dataset.id)}"]`);
+    const fire = (el, type, ev) => {
+      if (!el) return;
+      const e = new MouseEvent(type, { clientX: ev.clientX, clientY: ev.clientY, bubbles: false });
+      e.__fv = true;
+      el.dispatchEvent(e);
+    };
+    const tip = () => (svg.parentElement && svg.parentElement.querySelector("#tip, .tip")) || document.getElementById("tip");
+    const mark = (pt) => {
+      if (current === pt) return;
+      if (current) current.setAttribute("r", current.__r || "5");
+      current = pt;
+      if (pt) { pt.__r = pt.__r || pt.getAttribute("r"); pt.setAttribute("r", String(+pt.__r + 2)); }
+    };
+    const show = (pt, ev, hint) => {
+      mark(pt);
+      if (!pt) { const t = tip(); if (t) t.style.display = "none"; return; }
+      fire(hitOf(pt), "mousemove", ev); // the report's own tooltip, for the nearest point
+      const t = tip();
+      if (t && hint) t.insertAdjacentHTML("beforeend", `<div class="fv-hint">Ťukni ešte raz – otvorí sa inzerát ↗</div>`);
+    };
+    const open = (pt) => {
+      const d = byId.get(pt.dataset.id);
+      if (d && d.url) {
+        try { window.FerovkaAnalytics?.listingClick(d.url, "chart"); } catch { /* analytics must never block an ad */ }
+        window.open(d.url, "_blank", "noopener");
+      }
+    };
+
+    // the per-circle handlers of the report never see real mouse events – only our synthetic ones
+    for (const type of MOUSE) {
+      svg.addEventListener(type, (ev) => {
+        if (ev.__fv) return;
+        ev.stopImmediatePropagation();
+        if (type === "mousemove" && lastPointer === "mouse") {
+          show(nearest(svg, ev, 18), ev, false);
+          svg.style.cursor = current ? "pointer" : "";
+        } else if (type === "mouseleave" && ev.target === svg && lastPointer === "mouse") {
+          show(null, ev);
+        } else if (type === "click") {
+          const touch = lastPointer !== "mouse";
+          const at = touch && down ? down : ev;
+          const pt = nearest(svg, at, touch ? 26 : 18);
+          if (!pt) { armed = null; show(null, ev); return; }
+          if (!touch || armed === pt) { armed = null; open(pt); }
+          else { armed = pt; show(pt, at, true); }
+        }
+      }, true);
+    }
+  }
+
+  const scan = () => document.querySelectorAll("svg").forEach((s) => s.querySelector("circle.pt[data-id]") && bind(s));
+  scan();
+  new MutationObserver(scan).observe(document.body, { childList: true, subtree: true });
+})();
+</script><script id="ferovka-filters">/* Férovka – filters for the whole report, injected into every model report by sync-reports.mjs.
+ *
+ * The reports render the chart (drawChart) and the full ranking (renderTable) from the global DATA array; their own
+ * filter bar only filters the table. Here the filter bar (kept in its place above the ranking) gets more filters (year, price from/to,
+ * km, fuel, discount, picks only, text search) and every filter applies to the chart and the ranking together: DATA is
+ * refilled in place with the matching ads and both are drawn again. "</script" can't occur inside this file.
+ */
+(() => {
+  let data;
+  try { data = DATA; } catch { return; } // eslint-disable-line no-undef
+  if (!Array.isArray(data) || !data.length || typeof renderTable !== "function") return; // eslint-disable-line no-undef
+  const bar = document.querySelector(".filters");
+  if (!bar || bar.dataset.fv) return;
+  bar.dataset.fv = "1";
+  const ALL = data.slice();
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+  const fmt = (n) => Math.round(n).toLocaleString("sk-SK");
+  const norm = (s) => String(s ?? "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+  let groups = null;
+  try { groups = GROUPS; } catch { /* report without groups */ } // eslint-disable-line no-undef
+
+  const FUEL = { diesel: "Diesel", petrol: "Benzín", hybrid: "Hybrid", "plug-in hybrid": "Plug-in hybrid", electric: "Elektro", lpg: "LPG", cng: "CNG" };
+  const fuelOf = (d) => {
+    const e = norm(d.eg);
+    if (/tdi|crdi|dci|hdi|diesel|\bd\b|cdi|\d+d\b|blue/.test(e)) return "Diesel";
+    if (/plug-in|phev|e-hybrid|recharge|\bgte\b|\bt8\b|\b\d{2}e\b|\b\d{3} ?e\b/.test(e)) return "Plug-in hybrid";
+    if (/elektro|electric|\bev\b/.test(e)) return "Elektro";
+    if (/cng|lpg|g-tec|g-tron|tgi|ecofuel/.test(e)) return "Plyn (CNG/LPG)";
+    if (/mild|mhev/.test(e)) return "Benzín"; // mild-hybrid petrol (the diesel ones say TDI / d above)
+    if (/hybrid|hev/.test(e)) return "Hybrid";
+    if (/tsi|tfsi|mpi|fsi|benzin|gdi|dpi|htp|12v|\bt\d\b|\bb[56]\b|\d+i\b|turbo|tce|\bs4\b|rs ?\d|amg|competition|\bm\d{2,3}i?\b|gti|\bx5 m\b/.test(e)) return "Benzín";
+    return d.fuel ? FUEL[d.fuel] || String(d.fuel) : null;
+  };
+
+  // --- controls ---------------------------------------------------------------------------------------------------
+  const years = ALL.map((d) => d.year).filter(Boolean);
+  const yMin = Math.min(...years), yMax = Math.max(...years);
+  const yearOpts = (label) => `<option value="">${label}</option>` +
+    Array.from({ length: yMax - yMin + 1 }, (_, i) => yMax - i).map((y) => `<option>${y}</option>`).join("");
+  const kms = [30000, 50000, 75000, 100000, 150000, 200000, 250000, 300000];
+  const fuels = [...new Set(ALL.map(fuelOf).filter(Boolean))].sort((a, b) => a.localeCompare(b, "sk"));
+  const showGroups = Array.isArray(groups) && groups.length > 1 && ALL.some((d) => Number.isInteger(d.cg));
+
+  const maxInput = $("fMax");
+  if (maxInput) { maxInput.placeholder = "Cena do €"; maxInput.title = "Najvyššia cena (s DPH)"; }
+  const html =
+    `<select id="fvYearFrom" title="Rok výroby od">${yearOpts("Rok od")}</select>` +
+    `<select id="fvYearTo" title="Rok výroby do">${yearOpts("Rok do")}</select>` +
+    `<input id="fvPriceMin" type="number" placeholder="Cena od €" step="500" min="0" title="Najnižšia cena (s DPH)" style="width:110px">`;
+  if (maxInput) maxInput.insertAdjacentHTML("beforebegin", html);
+  else bar.insertAdjacentHTML("afterbegin", html);
+  const more =
+    `<select id="fvKm" title="Najviac najazdených km"><option value="">Nájazd – všetky</option>${kms.map((k) => `<option value="${k}">do ${fmt(k)} km</option>`).join("")}</select>` +
+    (fuels.length > 1 ? `<select id="fvFuel" title="Palivo"><option value="">Všetky palivá</option>${fuels.map((f) => `<option>${esc(f)}</option>`).join("")}</select>` : "") +
+    (showGroups ? `<select id="fvGroup" title="Skupina motorov (farba v grafe)"><option value="">Všetky skupiny</option>${groups.map((g, i) => `<option value="${i}">${esc(g)}</option>`).join("")}</select>` : "") +
+    `<select id="fvDisc" title="O koľko je auto lacnejšie ako férová cena"><option value="">Cena – všetky</option><option value="0">pod férovou cenou</option><option value="10">aspoň 10 % pod trhom</option><option value="20">aspoň 20 % pod trhom</option></select>` +
+    `<input id="fvText" type="search" placeholder="Hľadať (výbava, mesto…)" title="Hľadá v názve inzerátu, motore a lokalite" style="width:170px">` +
+    `<label class="fv-check"><input id="fvPick" type="checkbox"> len odporúčané</label>` +
+    `<button type="button" id="fvReset" class="fv-reset">Zrušiť filtre</button>`;
+  const count = $("count");
+  if (count) count.insertAdjacentHTML("beforebegin", more);
+  else bar.insertAdjacentHTML("beforeend", more);
+
+  // the bar stays where it was – right above the ranking – and also drives the chart; the chart gets a pointer to it
+  const chart = $("chartWrap");
+  const box = document.createElement("div");
+  box.className = "fv-filters";
+  box.id = "filtre";
+  bar.before(box);
+  box.innerHTML = `<div class="fv-head"><b>Filtre</b><span>platia pre rebríček aj graf vyššie</span></div>`;
+  box.appendChild(bar);
+  const note = document.createElement("div");
+  note.className = "fv-note";
+  chart?.before(note);
+
+  document.head.insertAdjacentHTML("beforeend", `<style id="fv-filters-css">
+.fv-filters{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 14px 4px;margin:24px 0 8px}
+.fv-filters .fv-head{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;margin-bottom:8px}
+.fv-filters .fv-head span{color:var(--muted);font-size:13px}
+.fv-filters .filters{margin-bottom:8px}
+.fv-filters .filters .count{flex-basis:100%;margin-left:0}
+.fv-check{display:inline-flex;gap:6px;align-items:center;font-size:13px;color:var(--text-2,var(--text));white-space:nowrap}
+.fv-reset{background:none;border:1px solid var(--border);color:var(--text);border-radius:8px;padding:6px 10px;font:inherit;font-size:13px;cursor:pointer}
+.fv-reset:hover{background:var(--surface-2,var(--surface))}
+.fv-note{color:var(--muted);font-size:13px;margin:0 0 8px}
+.fv-note a{color:inherit}
+.fv-empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:14px;pointer-events:none}
+@media (max-width:600px){.fv-filters .filters select,.fv-filters .filters input[type=number],.fv-filters .filters input[type=search]{flex:1 1 calc(50% - 8px);min-width:0;width:auto!important}}
+</style>`);
+
+  // --- filtering --------------------------------------------------------------------------------------------------
+  const val = (id) => ($(id) ? $(id).value : "");
+  const num = (id) => { const v = parseFloat(val(id)); return Number.isFinite(v) ? v : null; };
+  function matches(d) {
+    const yf = num("fvYearFrom"), yt = num("fvYearTo"), pmin = num("fvPriceMin"), pmax = num("fMax"), km = num("fvKm"), disc = num("fvDisc");
+    const fuel = val("fvFuel"), grp = val("fvGroup"), q = norm(val("fvText")).trim();
+    if (yf != null && !(d.year >= yf)) return false;
+    if (yt != null && !(d.year <= yt)) return false;
+    if (pmin != null && !(d.price_gross >= pmin)) return false;
+    if (pmax != null && !(d.price_gross <= pmax)) return false;
+    if (km != null && !(d.km <= km)) return false;
+    if (disc != null && !(d.discount_pct > disc || (disc > 0 && d.discount_pct >= disc))) return false;
+    if (fuel && fuelOf(d) !== fuel) return false;
+    if (grp !== "" && String(d.cg) !== grp) return false;
+    if ($("fvPick")?.checked && !d.pick) return false;
+    if (q && !q.split(/\s+/).every((w) => norm(`${d.title} ${d.eg ?? ""} ${d.engine ?? ""} ${d.location ?? ""}`).includes(w))) return false;
+    // the report's own filters (engine, gearbox, seller, portal, body, origin) – same rules as its renderTable
+    const en = val("fEngine"), tr = val("fTrans"), se = val("fSeller"), so = val("fSource"), og = val("fOrigin"), bo = val("fBody");
+    if (en && d.eg !== en) return false;
+    if (tr && d.transmission !== tr) return false;
+    if (se && d.seller_type === "dealer") return false;
+    if (so && !(d.source === so || (d.also_listed || []).some((a) => a.source === so))) return false;
+    if (og && d.origin !== og) return false;
+    if (bo && d.body !== bo) return false;
+    return true;
+  }
+  const active = () => [...box.querySelectorAll("select, input")].filter((el) => (el.type === "checkbox" ? el.checked : el.value !== "")).length;
+
+  let drawing = false;
+  function apply() {
+    if (drawing) return;
+    drawing = true;
+    const rows = ALL.filter(matches);
+    data.length = 0;
+    data.push(...rows);
+    const wrap = $("chartWrap");
+    wrap?.querySelector(".fv-empty")?.remove();
+    const plotted = rows.filter((d) => d.km && d.price_gross).length;
+    try {
+      if (typeof drawChart === "function") { // eslint-disable-line no-undef
+        if (plotted) drawChart(); // eslint-disable-line no-undef
+        else { const svg = $("chart"); if (svg) svg.innerHTML = ""; }
+      }
+    } catch (e) { console.warn("chart", e); }
+    if (wrap && !plotted) {
+      if (getComputedStyle(wrap).position === "static") wrap.style.position = "relative";
+      wrap.insertAdjacentHTML("beforeend", `<div class="fv-empty">Filtrom nezodpovedá žiadny inzerát</div>`);
+    }
+    try { renderTable(); } catch (e) { console.warn("table", e); } // eslint-disable-line no-undef
+    const n = active();
+    if (count) count.textContent = `Zobrazených ${fmt(rows.length)} z ${fmt(ALL.length)} inzerátov` + (n ? ` · aktívne filtre: ${n}` : "");
+    note.innerHTML = n
+      ? `Zobrazených ${fmt(rows.length)} z ${fmt(ALL.length)} inzerátov podľa <a href="#filtre">filtrov pri rebríčku</a>.`
+      : `Filtre (rok, cena, nájazd, palivo…) nájdeš <a href="#filtre">pri kompletnom rebríčku</a> – platia aj pre tento graf.`;
+    drawing = false;
+  }
+  box.querySelectorAll("select, input").forEach((el) => el.addEventListener("input", apply));
+  $("fvPick")?.addEventListener("change", apply);
+  $("fvReset").addEventListener("click", () => {
+    box.querySelectorAll("select, input").forEach((el) => { if (el.type === "checkbox") el.checked = false; else el.value = ""; });
+    apply();
+  });
+  apply();
+})();
+</script><!-- /ferovka-theme -->
+</body>
+</html>
