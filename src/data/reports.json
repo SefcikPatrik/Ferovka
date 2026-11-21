@@ -537,7 +537,7 @@
     "median": "4 000 €",
     "r2": "85 %",
     "history": {
-      "updated_at": "2026-11-21T17:57:03",
+      "updated_at": "2026-11-21T19:38:44",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 157,
@@ -569,7 +569,7 @@
     "median": "5 500 €",
     "r2": "90 %",
     "history": {
-      "updated_at": "2026-11-21T17:57:03",
+      "updated_at": "2026-11-21T19:38:44",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 493,
@@ -601,7 +601,7 @@
     "median": "14 000 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-21T17:57:03",
+      "updated_at": "2026-11-21T19:38:44",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 357,
@@ -633,7 +633,7 @@
     "median": "7 200 €",
     "r2": "91 %",
     "history": {
-      "updated_at": "2026-11-21T17:57:03",
+      "updated_at": "2026-11-21T19:38:44",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 311,
@@ -650,6 +650,38 @@
       "seen_median": 7200,
       "seen_price_count": 311,
       "last_observed_at": "2026-11-21T17:27:55"
+    }
+  },
+  {
+    "slug": "ford-s-max",
+    "file": "ford-s-max-analyza.html",
+    "name": "Ford S-Max",
+    "brand": "Ford",
+    "model": "S-Max",
+    "kind": "model",
+    "date": "2026-11-21",
+    "summary": "Analýza aktuálnych inzerátov Ford S-Max (prvá generácia po facelifte a druhá generácia, 2010–2023, 5 aj 7 miest) od 3 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 389 inzerátov (140 na bazoši, 153 na autobazar.eu, 96 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 230 rôznych áut zo Slovenska.",
+    "ads": 230,
+    "median": "10 499 €",
+    "r2": "87 %",
+    "history": {
+      "updated_at": "2026-11-21T19:38:44",
+      "as_of": "2026-11-21",
+      "coverage": "partial",
+      "baseline_count": 175,
+      "total_count": 175,
+      "active_count": 175,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 175,
+      "paired_median_change_pct": 0,
+      "historical_median": 10499,
+      "seen_median": 10499,
+      "seen_price_count": 175,
+      "last_observed_at": "2026-11-21T19:37:40"
     }
   },
   {
