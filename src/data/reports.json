@@ -441,7 +441,7 @@
     "median": "9 700 €",
     "r2": "92 %",
     "history": {
-      "updated_at": "2026-11-21T19:55:22",
+      "updated_at": "2026-11-21T20:49:00",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 182,
@@ -458,6 +458,38 @@
       "seen_median": 9700,
       "seen_price_count": 182,
       "last_observed_at": "2026-11-21T19:54:28"
+    }
+  },
+  {
+    "slug": "citroen-c3",
+    "file": "citroen-c3-analyza.html",
+    "name": "Citroën C3",
+    "brand": "Citroën",
+    "model": "C3",
+    "kind": "model",
+    "date": "2026-11-21",
+    "summary": "Analýza aktuálnych inzerátov Citroën C3 (ojazdené 2013–2025, bez C3 Aircross, Picasso a nových áut z 2026) od 3 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 941 inzerátov (197 na bazoši, 364 na autobazar.eu, 380 na bazar.sk) – prezreli sme 91 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 522 rôznych áut zo Slovenska.",
+    "ads": 522,
+    "median": "8 195 €",
+    "r2": "95 %",
+    "history": {
+      "updated_at": "2026-11-21T20:49:00",
+      "as_of": "2026-11-21",
+      "coverage": "partial",
+      "baseline_count": 188,
+      "total_count": 188,
+      "active_count": 188,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 188,
+      "paired_median_change_pct": 0,
+      "historical_median": 8195,
+      "seen_median": 8195,
+      "seen_price_count": 188,
+      "last_observed_at": "2026-11-21T20:46:36"
     }
   },
   {
