@@ -663,7 +663,26 @@
     "summary": "Analýza aktuálnych inzerátov Honda Civic (8. až 11. generácia, hatchback, sedan aj kombi Tourer, bez Type R) od 1 500 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 266 inzerátov (129 na bazoši, 73 na autobazar.eu, 64 na bazar.sk) – prezreli sme 89 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 173 rôznych áut zo Slovenska.",
     "ads": 173,
     "median": "7 700 €",
-    "r2": "94 %"
+    "r2": "94 %",
+    "history": {
+      "updated_at": "2026-11-21T18:27:28",
+      "as_of": "2026-11-21",
+      "coverage": "partial",
+      "baseline_count": 93,
+      "total_count": 93,
+      "active_count": 93,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 93,
+      "paired_median_change_pct": 0,
+      "historical_median": 7700,
+      "seen_median": 7700,
+      "seen_price_count": 93,
+      "last_observed_at": "2026-11-21T18:25:09"
+    }
   },
   {
     "slug": "hyundai-i20",
@@ -760,6 +779,19 @@
       "seen_price_count": 823,
       "last_observed_at": "2026-11-21T11:26:44"
     }
+  },
+  {
+    "slug": "kia-picanto",
+    "file": "kia-picanto-analyza.html",
+    "name": "Kia Picanto",
+    "brand": "Kia",
+    "model": "Picanto",
+    "kind": "model",
+    "date": "2026-11-21",
+    "summary": "Analýza aktuálnych inzerátov Kia Picanto (SA, TA a JA, benzín aj LPG) od 1 500 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 88 inzerátov (12 na bazoši, 45 na autobazar.eu, 31 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 49 rôznych áut zo Slovenska.",
+    "ads": 49,
+    "median": "11 950 €",
+    "r2": "99 %"
   },
   {
     "slug": "kia-rio",
