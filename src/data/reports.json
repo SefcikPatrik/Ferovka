@@ -1293,6 +1293,38 @@
     }
   },
   {
+    "slug": "renault-kadjar",
+    "file": "renault-kadjar-analyza.html",
+    "name": "Renault Kadjar",
+    "brand": "Renault",
+    "model": "Kadjar",
+    "kind": "model",
+    "date": "2026-11-21",
+    "summary": "Analýza aktuálnych inzerátov Renault Kadjar (2015–2022, benzín aj diesel) od 4 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 101 inzerátov (26 na bazoši, 45 na autobazar.eu, 30 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 54 rôznych áut zo Slovenska.",
+    "ads": 54,
+    "median": "11 000 €",
+    "r2": "78 %",
+    "history": {
+      "updated_at": "2026-11-21T19:22:44",
+      "as_of": "2026-11-21",
+      "coverage": "partial",
+      "baseline_count": 43,
+      "total_count": 43,
+      "active_count": 43,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 43,
+      "paired_median_change_pct": 0,
+      "historical_median": 11000,
+      "seen_median": 11000,
+      "seen_price_count": 43,
+      "last_observed_at": "2026-11-21T19:21:40"
+    }
+  },
+  {
     "slug": "seat-alhambra",
     "file": "seat-alhambra-analyza.html",
     "name": "Seat Alhambra",
@@ -2329,7 +2361,7 @@
     "median": "14 500 €",
     "r2": "97 %",
     "history": {
-      "updated_at": "2026-11-21T15:25:51",
+      "updated_at": "2026-11-21T19:22:44",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 102,
@@ -2361,7 +2393,7 @@
     "median": "7 000 €",
     "r2": "96 %",
     "history": {
-      "updated_at": "2026-11-21T15:25:51",
+      "updated_at": "2026-11-21T19:22:44",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 181,
@@ -2393,7 +2425,7 @@
     "median": "6 299 €",
     "r2": "90 %",
     "history": {
-      "updated_at": "2026-11-21T15:25:51",
+      "updated_at": "2026-11-21T19:22:44",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 210,
