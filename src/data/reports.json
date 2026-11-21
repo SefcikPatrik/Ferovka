@@ -505,7 +505,7 @@
     "median": "5 500 €",
     "r2": "90 %",
     "history": {
-      "updated_at": "2026-11-21T16:22:30",
+      "updated_at": "2026-11-21T16:58:18",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 493,
@@ -522,6 +522,38 @@
       "seen_median": 5500,
       "seen_price_count": 493,
       "last_observed_at": "2026-11-21T16:18:38"
+    }
+  },
+  {
+    "slug": "ford-kuga",
+    "file": "ford-kuga-analyza.html",
+    "name": "Ford Kuga",
+    "brand": "Ford",
+    "model": "Kuga",
+    "kind": "model",
+    "date": "2026-11-21",
+    "summary": "Analýza aktuálnych inzerátov Ford Kuga (Kuga I až III, 4x2 aj 4x4, vrátane hybridov) od 3 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 860 inzerátov (249 na bazoši, 355 na autobazar.eu, 256 na bazar.sk) – prezreli sme 96 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 441 rôznych áut zo Slovenska.",
+    "ads": 441,
+    "median": "14 000 €",
+    "r2": "94 %",
+    "history": {
+      "updated_at": "2026-11-21T16:58:18",
+      "as_of": "2026-11-21",
+      "coverage": "partial",
+      "baseline_count": 357,
+      "total_count": 357,
+      "active_count": 357,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 357,
+      "paired_median_change_pct": 0,
+      "historical_median": 14000,
+      "seen_median": 14000,
+      "seen_price_count": 357,
+      "last_observed_at": "2026-11-21T16:57:21"
     }
   },
   {

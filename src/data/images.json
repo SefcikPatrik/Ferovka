@@ -362,5 +362,12 @@
     "author": "Harvey Bold",
     "license": "CC BY 4.0",
     "source": "https://commons.wikimedia.org/wiki/File:2019_Nissan_Qashqai_Acenta_Premium_DIG-T_-_1332cc_1.3_(140PS)_Petrol_-_Grey_-_05-2024,_Front.jpg"
+  },
+  "ford-kuga": {
+    "src": "/img/ford-kuga.jpg",
+    "file": "File:2020 Ford Kuga Titanium Plug-In Hybrid Front.jpg",
+    "author": "Vauxford",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:2020_Ford_Kuga_Titanium_Plug-In_Hybrid_Front.jpg"
   }
 }
