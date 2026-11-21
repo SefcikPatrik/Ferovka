@@ -1485,6 +1485,38 @@
     }
   },
   {
+    "slug": "opel-crossland",
+    "file": "opel-crossland-analyza.html",
+    "name": "Opel Crossland",
+    "brand": "Opel",
+    "model": "Crossland",
+    "kind": "model",
+    "date": "2026-11-21",
+    "summary": "Analýza aktuálnych inzerátov Opel Crossland (Crossland X a Crossland, 2017–2024) od 5 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 261 inzerátov (54 na bazoši, 143 na autobazar.eu, 64 na bazar.sk) – prezreli sme 95 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 130 rôznych áut zo Slovenska.",
+    "ads": 130,
+    "median": "9 500 €",
+    "r2": "81 %",
+    "history": {
+      "updated_at": "2026-11-21T20:34:28",
+      "as_of": "2026-11-21",
+      "coverage": "partial",
+      "baseline_count": 115,
+      "total_count": 115,
+      "active_count": 115,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 115,
+      "paired_median_change_pct": 0,
+      "historical_median": 9500,
+      "seen_median": 9500,
+      "seen_price_count": 115,
+      "last_observed_at": "2026-11-21T20:33:37"
+    }
+  },
+  {
     "slug": "peugeot-208",
     "file": "peugeot-208-analyza.html",
     "name": "Peugeot 208",
@@ -2649,7 +2681,7 @@
     "median": "5 500 €",
     "r2": "92 %",
     "history": {
-      "updated_at": "2026-11-21T15:25:51",
+      "updated_at": "2026-11-21T20:34:28",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 567,
@@ -2681,7 +2713,7 @@
     "median": "6 300 €",
     "r2": "92 %",
     "history": {
-      "updated_at": "2026-11-21T15:25:51",
+      "updated_at": "2026-11-21T20:34:28",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 210,
@@ -2713,7 +2745,7 @@
     "median": "16 190 €",
     "r2": "95 %",
     "history": {
-      "updated_at": "2026-11-21T15:25:51",
+      "updated_at": "2026-11-21T20:34:28",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 92,
@@ -2745,7 +2777,7 @@
     "median": "7 500 €",
     "r2": "87 %",
     "history": {
-      "updated_at": "2026-11-21T15:25:51",
+      "updated_at": "2026-11-21T20:34:28",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 352,
@@ -2777,7 +2809,7 @@
     "median": "14 528 €",
     "r2": "96 %",
     "history": {
-      "updated_at": "2026-11-21T15:25:51",
+      "updated_at": "2026-11-21T20:34:28",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 109,
@@ -2809,7 +2841,7 @@
     "median": "5 700 €",
     "r2": "95 %",
     "history": {
-      "updated_at": "2026-11-21T15:25:51",
+      "updated_at": "2026-11-21T20:34:28",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 142,
