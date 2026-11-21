@@ -985,7 +985,7 @@
     "median": "24 050 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-21T19:13:15",
+      "updated_at": "2026-11-21T20:15:33",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 34,
@@ -1017,7 +1017,7 @@
     "median": "5 900 €",
     "r2": "90 %",
     "history": {
-      "updated_at": "2026-11-21T19:13:15",
+      "updated_at": "2026-11-21T20:15:33",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 147,
@@ -1037,6 +1037,38 @@
     }
   },
   {
+    "slug": "kia-sorento",
+    "file": "kia-sorento-analyza.html",
+    "name": "Kia Sorento",
+    "brand": "Kia",
+    "model": "Sorento",
+    "kind": "model",
+    "date": "2026-11-21",
+    "summary": "Analýza aktuálnych inzerátov Kia Sorento (druhá až štvrtá generácia, 2012–2025, 5 aj 7 miest) od 6 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 384 inzerátov (100 na bazoši, 156 na autobazar.eu, 128 na bazar.sk) – prezreli sme 94 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 238 rôznych áut zo Slovenska.",
+    "ads": 238,
+    "median": "25 300 €",
+    "r2": "97 %",
+    "history": {
+      "updated_at": "2026-11-21T20:15:33",
+      "as_of": "2026-11-21",
+      "coverage": "partial",
+      "baseline_count": 167,
+      "total_count": 167,
+      "active_count": 167,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 167,
+      "paired_median_change_pct": 0,
+      "historical_median": 25300,
+      "seen_median": 25300,
+      "seen_price_count": 167,
+      "last_observed_at": "2026-11-21T20:14:43"
+    }
+  },
+  {
     "slug": "kia-sportage",
     "file": "kia-sportage-analyza.html",
     "name": "Kia Sportage",
@@ -1049,7 +1081,7 @@
     "median": "15 900 €",
     "r2": "95 %",
     "history": {
-      "updated_at": "2026-11-21T19:13:15",
+      "updated_at": "2026-11-21T20:15:33",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 487,
@@ -2489,7 +2521,7 @@
     "median": "12 985 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-21T19:13:15",
+      "updated_at": "2026-11-21T20:15:33",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 176,
