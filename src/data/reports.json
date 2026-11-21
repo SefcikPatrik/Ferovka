@@ -2041,7 +2041,7 @@
     "median": "14 490 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-21T20:11:52",
+      "updated_at": "2026-11-21T21:41:23",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 63,
@@ -2061,6 +2061,38 @@
     }
   },
   {
+    "slug": "suzuki-swift",
+    "file": "suzuki-swift-analyza.html",
+    "name": "Suzuki Swift",
+    "brand": "Suzuki",
+    "model": "Swift",
+    "kind": "model",
+    "date": "2026-11-21",
+    "summary": "Analýza aktuálnych inzerátov Suzuki Swift (tretia až piata generácia, 2010–2025, bez nových áut z 2026) od 3 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 182 inzerátov (50 na bazoši, 68 na autobazar.eu, 64 na bazar.sk) – prezreli sme 93 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 112 rôznych áut zo Slovenska.",
+    "ads": 112,
+    "median": "6 600 €",
+    "r2": "94 %",
+    "history": {
+      "updated_at": "2026-11-21T21:41:23",
+      "as_of": "2026-11-21",
+      "coverage": "partial",
+      "baseline_count": 51,
+      "total_count": 51,
+      "active_count": 51,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 51,
+      "paired_median_change_pct": 0,
+      "historical_median": 6600,
+      "seen_median": 6600,
+      "seen_price_count": 51,
+      "last_observed_at": "2026-11-21T21:40:13"
+    }
+  },
+  {
     "slug": "suzuki-vitara",
     "file": "suzuki-vitara-analyza.html",
     "name": "Suzuki Vitara",
@@ -2073,7 +2105,7 @@
     "median": "14 300 €",
     "r2": "93 %",
     "history": {
-      "updated_at": "2026-11-21T20:11:52",
+      "updated_at": "2026-11-21T21:41:23",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 162,
