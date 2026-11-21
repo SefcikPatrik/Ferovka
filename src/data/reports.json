@@ -697,7 +697,7 @@
     "median": "12 500 €",
     "r2": "93 %",
     "history": {
-      "updated_at": "2026-11-21T15:25:51",
+      "updated_at": "2026-11-21T16:04:42",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 1346,
@@ -717,6 +717,38 @@
     }
   },
   {
+    "slug": "vw-polo",
+    "file": "vw-polo-analyza.html",
+    "name": "Volkswagen Polo",
+    "brand": "Volkswagen",
+    "model": "Polo",
+    "kind": "model",
+    "date": "2026-11-21",
+    "summary": "Analýza aktuálnych inzerátov Volkswagen Polo (Polo IV až VI, vrátane GTI) od 1 500 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 522 inzerátov (232 na bazoši, 162 na autobazar.eu, 128 na bazar.sk) – prezreli sme 93 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 308 rôznych áut zo Slovenska.",
+    "ads": 308,
+    "median": "5 999 €",
+    "r2": "90 %",
+    "history": {
+      "updated_at": "2026-11-21T16:04:42",
+      "as_of": "2026-11-21",
+      "coverage": "partial",
+      "baseline_count": 219,
+      "total_count": 219,
+      "active_count": 219,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 219,
+      "paired_median_change_pct": 0,
+      "historical_median": 5999,
+      "seen_median": 5999,
+      "seen_price_count": 219,
+      "last_observed_at": "2026-11-21T16:03:28"
+    }
+  },
+  {
     "slug": "vw-tiguan",
     "file": "vw-tiguan-analyza.html",
     "name": "Volkswagen Tiguan",
@@ -729,7 +761,7 @@
     "median": "19 800 €",
     "r2": "92 %",
     "history": {
-      "updated_at": "2026-11-21T15:25:51",
+      "updated_at": "2026-11-21T16:04:42",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 893,
@@ -761,7 +793,7 @@
     "median": "8 500 €",
     "r2": "93 %",
     "history": {
-      "updated_at": "2026-11-21T15:25:51",
+      "updated_at": "2026-11-21T16:04:42",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 463,
@@ -1369,7 +1401,7 @@
     "median": "9 999 €",
     "r2": "92 %",
     "history": {
-      "updated_at": "2026-11-21T15:25:51",
+      "updated_at": "2026-11-21T16:04:42",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 1577,

@@ -299,5 +299,12 @@
     "author": "M 93",
     "license": "CC BY-SA 3.0 de",
     "source": "https://commons.wikimedia.org/wiki/File:Skoda_Rapid_1.2_TSI_Ambition_%E2%80%93_Frontansicht,_31._Dezember_2012,_D%C3%BCsseldorf.jpg"
+  },
+  "vw-polo": {
+    "src": "/img/vw-polo.jpg",
+    "file": "File:Volkswagen Polo II Classic IMG 4492.jpg",
+    "author": "Alexander Migl",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Volkswagen_Polo_II_Classic_IMG_4492.jpg"
   }
 }
