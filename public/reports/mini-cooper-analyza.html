@@ -1,0 +1,916 @@
+<!doctype html>
+<html lang="sk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mini Cooper – analýza ponúk</title>
+<style>
+:root {
+  color-scheme: light;
+  --bg: #f6f6f4; --surface: #fcfcfb; --surface-2: #f0efec; --border: #e2e1dc;
+  --text: #0b0b0b; --text-2: #52514e; --muted: #7a7974;
+  --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a;
+  --pos: #2a78d6; --neg: #eb6834; --accent: #2a78d6;
+  --good: #1d7f4e; --bad: #b4332f; --grid: #e8e7e3;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #121211; --surface: #1a1a19; --surface-2: #232321; --border: #33332f;
+    --text: #f0efec; --text-2: #c3c2b7; --muted: #8f8e86;
+    --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+    --pos: #3987e5; --neg: #d95926; --accent: #5598e7;
+    --good: #4cc38a; --bad: #f07a76; --grid: #2a2a27;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #121211; --surface: #1a1a19; --surface-2: #232321; --border: #33332f;
+  --text: #f0efec; --text-2: #c3c2b7; --muted: #8f8e86;
+  --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+  --pos: #3987e5; --neg: #d95926; --accent: #5598e7;
+  --good: #4cc38a; --bad: #f07a76; --grid: #2a2a27;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text);
+  font: 15px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+main { max-width: 1120px; margin: 0 auto; padding: 32px 16px 64px; }
+a { color: var(--accent); text-decoration: none; } a:hover { text-decoration: underline; }
+h1 { font-size: 30px; margin: 0 0 4px; letter-spacing: -.01em; }
+h2 { font-size: 21px; margin: 48px 0 6px; }
+h3 { font-size: 15px; margin: 6px 0 4px; line-height: 1.35; }
+.lead { color: var(--text-2); margin: 0 0 20px; max-width: 760px; }
+.section-lead { color: var(--text-2); margin: 0 0 16px; max-width: 800px; }
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
+.kpi { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+.kpi .v { font-size: 26px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.kpi .l { color: var(--text-2); font-size: 13px; }
+.explain { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; margin-top: 12px; }
+.explain p { margin: 6px 0; color: var(--text-2); }
+.explain b { color: var(--text); }
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; }
+.card-head { display: flex; justify-content: space-between; gap: 8px; font-size: 12px; }
+.tag { font-weight: 600; color: var(--accent); }
+.loc { color: var(--muted); }
+.facts { color: var(--text-2); font-size: 13px; }
+.prices { display: grid; grid-template-columns: 1.2fr 1fr .8fr; gap: 8px; margin: 12px 0 8px; }
+.lbl { display: block; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+.big { font-size: 22px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.mid { font-size: 16px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.good { color: var(--good); }
+.meter { height: 6px; background: var(--surface-2); border-radius: 4px; overflow: hidden; }
+.meter span { display: block; height: 100%; background: var(--s1); border-radius: 4px; }
+.news ul { margin: 6px 0 0; padding-left: 20px; } .news li { margin: 4px 0; } .news .down { color: var(--good, #1baf7a); font-weight: 600; }
+.note { font-size: 12.5px; background: var(--surface-2); border-radius: 6px; padding: 6px 8px; margin-top: 8px; color: var(--text-2); }
+.pc { list-style: none; padding: 0; margin: 10px 0 0; font-size: 13.5px; }
+.pc li { padding-left: 20px; position: relative; margin: 3px 0; }
+.pc li.pro::before { content: "+"; position: absolute; left: 4px; color: var(--good); font-weight: 700; }
+.pc li.con::before { content: "–"; position: absolute; left: 4px; color: var(--bad); font-weight: 700; }
+.subhead { font-size: 15px; color: var(--text-2); margin: 22px 0 10px; font-weight: 600; }
+.chart-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 14px 8px; position: relative; }
+.legend { display: flex; flex-wrap: wrap; gap: 16px; font-size: 13px; color: var(--text-2); margin: 0 0 6px 4px; }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; }
+.legend .ring { background: transparent; border: 2px solid var(--text); width: 12px; height: 12px; }
+svg text { fill: var(--muted); font-size: 11px; }
+.tip { position: absolute; pointer-events: none; background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+  padding: 8px 10px; font-size: 12.5px; box-shadow: 0 6px 20px rgba(0,0,0,.15); max-width: 280px; display: none; z-index: 5; }
+.tip b { display: block; margin-bottom: 2px; }
+.tip .row { display: flex; justify-content: space-between; gap: 12px; color: var(--text-2); }
+.tip .row span:last-child { color: var(--text); font-variant-numeric: tabular-nums; }
+table { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; font-size: 13.5px; }
+th, td { padding: 9px 10px; border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; }
+th { font-size: 12px; color: var(--text-2); font-weight: 600; background: var(--surface-2); white-space: nowrap; }
+th.sortable { cursor: pointer; user-select: none; } th.sortable:hover { color: var(--text); }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+.sub { color: var(--text-2); font-size: 12.5px; margin-top: 2px; }
+.stars { color: #c98500; letter-spacing: 1px; white-space: nowrap; } .stars .off { color: var(--border); }
+.cellbar { height: 5px; background: var(--surface-2); border-radius: 3px; margin-bottom: 4px; }
+.cellbar span { display: block; height: 100%; background: var(--s1); border-radius: 3px; }
+.disc { display: inline-flex; align-items: center; gap: 6px; justify-content: flex-end; }
+.dbar { width: 54px; height: 6px; background: var(--surface-2); border-radius: 3px; position: relative; }
+.dbar span { position: absolute; top: 0; height: 100%; border-radius: 3px; }
+.filters { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 10px; align-items: center; }
+.filters select, .filters input { background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 6px 8px; font: inherit; font-size: 13px; }
+.filters .count { color: var(--muted); font-size: 13px; margin-left: auto; }
+.table-scroll { overflow-x: auto; border-radius: 12px; }
+.badge { font-size: 11px; padding: 1px 6px; border-radius: 10px; background: var(--surface-2); color: var(--text-2); white-space: nowrap; }
+.badge.pick { background: var(--s1); color: #fff; }
+.flag { color: var(--bad); font-size: 12px; }
+.warn { background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--neg); border-radius: 10px; padding: 12px 16px; }
+.warn li { margin: 4px 0; }
+.check { columns: 2 300px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px 14px 34px; margin: 0; }
+.check li { margin: 4px 0; break-inside: avoid; }
+footer { color: var(--muted); font-size: 12.5px; margin-top: 48px; border-top: 1px solid var(--border); padding-top: 14px; }
+.theme-btn { float: right; background: var(--surface); color: var(--text-2); border: 1px solid var(--border); border-radius: 8px; padding: 5px 10px; cursor: pointer; font: inherit; font-size: 13px; }
+@media (max-width: 640px) { h1 { font-size: 24px; } .prices { grid-template-columns: 1fr 1fr 1fr; } .big { font-size: 18px; } th, td { padding: 7px 6px; } }
+</style>
+<!-- ferovka-theme --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"><style id="ferovka-theme">/* Férovka look for the generated analyses – injected by sync-reports.mjs after each report's own <style>.
+   Same palette and type as the site; chart colours (--s1..--s3) stay the validated set. */
+:root {
+  --bg: #f5f4ef; --surface: #fdfdfb; --surface-2: #eeede6; --border: #e1dfd6;
+  --text: #0f1513; --text-2: #4f5551; --muted: #6f746f;
+  --accent: #0b8a56; --good: #0b7a4b; --grid: #e6e4dc; --win: #dff3e9;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d110f; --surface: #151a17; --surface-2: #1d2420; --border: #2a322d;
+    --text: #eef1ec; --text-2: #b6bdb6; --muted: #8f978f;
+    --accent: #2fc583; --good: #4cd08f; --grid: #1f2622; --win: #143223;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d110f; --surface: #151a17; --surface-2: #1d2420; --border: #2a322d;
+  --text: #eef1ec; --text-2: #b6bdb6; --muted: #8f978f;
+  --accent: #2fc583; --good: #4cd08f; --grid: #1f2622; --win: #143223;
+}
+
+body { font-family: "Manrope", system-ui, sans-serif; }
+h1, h2 { letter-spacing: -0.02em; font-weight: 800; }
+.tag { color: var(--accent); }
+
+/* photo header (removed by the site's viewer, which shows its own) */
+.fv-hero { position: relative; margin: 0 0 26px; border-radius: 20px; overflow: hidden; aspect-ratio: 21 / 8; background: #0d110f; display: flex; }
+.fv-hero img { flex: 1; min-width: 0; height: 100%; object-fit: cover; animation: fv-zoom 1.4s cubic-bezier(.2,.7,.2,1) both; }
+.fv-collage img + img { border-left: 3px solid #0d110f; }
+.fv-hero::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(180deg, transparent 55%, rgb(13 17 15 / .75)),
+    repeating-linear-gradient(90deg, rgb(47 197 131 / .06) 0 1px, transparent 1px 48px); }
+.fv-hero figcaption { position: absolute; right: 12px; bottom: 8px; z-index: 1; font-size: 11px; color: rgb(255 255 255 / .75); }
+.fv-hero figcaption a { color: inherit; }
+
+/* cards & panels: softer, lift on hover */
+.card, .kpi, .explain, .chart-wrap, .box { border-radius: 16px; }
+.card { transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease; }
+.card:hover { transform: translateY(-3px); border-color: var(--accent); box-shadow: 0 14px 30px -18px rgb(0 0 0 / .45); }
+.badge.pick { background: var(--accent); }
+
+/* entrance animation */
+@keyframes fv-up { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes fv-zoom { from { transform: scale(1.08); filter: brightness(.6); } to { transform: none; filter: none; } }
+h1, .lead, .kpis, .cards .card { animation: fv-up .6s cubic-bezier(.2,.7,.2,1) both; }
+.lead { animation-delay: .08s; }
+.kpis { animation-delay: .16s; }
+.cards .card:nth-child(2) { animation-delay: .06s; }
+.cards .card:nth-child(3) { animation-delay: .12s; }
+.cards .card:nth-child(4) { animation-delay: .18s; }
+.cards .card:nth-child(5) { animation-delay: .24s; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+@media (max-width: 640px) { .fv-hero { aspect-ratio: 16 / 9; border-radius: 14px; } }
+
+/* touch: hint under the chart tooltip (report-chart.js) */
+.fv-hint { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--border, rgba(127,127,127,.3)); font-weight: 700; color: var(--accent, #2fc583); }
+</style><!-- /ferovka-theme -->
+</head>
+<body>
+<main><!-- ferovka-theme --><!-- /ferovka-theme -->
+<button class="theme-btn" id="themeBtn" type="button">Svetlý / tmavý</button>
+<h1>Mini Cooper – ktorá ponuka sa oplatí</h1>
+<p class="lead">Analýza aktuálnych inzerátov Mini Cooper (hatchback 3 aj 5 dverí a kabriolet, 2010–2025, bez Countryman / Clubman / Paceman a nových áut z 2026) od 4 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 632 inzerátov (149 na bazoši, 109 na autobazar.eu, 374 na bazar.sk) – prezreli sme 53 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 233 rôznych áut zo Slovenska. Každé auto sme porovnali
+s <b>férovou cenou</b>: tú vypočítal model naučený na celom trhu podľa veku, nájazdu, motora, prevodovky a typu predajcu.</p>
+
+<div class="kpis">
+  <div class="kpi"><div class="v">233</div><div class="l">inzerátov Mini (nad 4 000 €)</div></div>
+  <div class="kpi"><div class="v">89</div><div class="l">ohodnotených (majú rok aj km)</div></div>
+  <div class="kpi"><div class="v">14 490 €</div><div class="l">medián ceny s DPH</div></div>
+  <div class="kpi"><div class="v">94 %</div><div class="l">rozdielov v cenách vysvetlí model</div></div>
+</div>
+
+
+<h2>Odkiaľ sú dáta: bazoš, autobazar.eu a bazar.sk</h2>
+<div class="kpis">
+  <div class="kpi"><div class="v">36</div><div class="l">ohodnotených z bazoša</div></div>
+  <div class="kpi"><div class="v">38</div><div class="l">ohodnotených z autobazar.eu</div></div><div class="kpi"><div class="v">15</div><div class="l">ohodnotených z bazar.sk</div></div>
+  <div class="kpi"><div class="v">82</div><div class="l">áut bolo na viacerých portáloch – započítané raz</div></div>
+  <div class="kpi"><div class="v">19 / 26</div><div class="l">s uvedeným pôvodom SR / dovoz</div></div>
+</div>
+<div class="explain">
+  <p><b>Tri portály, jeden trh.</b> Bazoš prehľadal 142 inzerátov, autobazar.eu
+  109, bazar.sk 85. Ponuky z Česka (na autobazar.eu ich je veľa) sme vynechali. Autobazáre často dávajú
+  to isté auto na viac portálov. Takéto dvojice (29 v rebríčku) sme spojili podľa VIN alebo zhody roku, km a ceny,
+  aby sa v modeli nerátali dvakrát. Pri aute nájdeš odkaz na všetky ponuky – niekedy sa líšia cenou.</p>
+  <p><b>Rozdiel medzi portálmi:</b> rovnaké auto je na autobazar.eu v priemere -14,1 %
+  oproti bazošu. Na autobazar.eu predávajú hlavne firmy (21 z 38 ohodnotených). Na bazar.sk je rovnaké auto v priemere -10,3 % oproti bazošu.</p>
+  <p><b>Kúpené v SR vs. dovoz:</b> autá s uvedeným pôvodom zo SR sú oproti autám bez uvedeného pôvodu
+  -2,0 %, dovezené -0,8 %
+  (pri rovnakom veku, nájazde a motore). Pôvod zo SR je výhoda pri overovaní histórie, trh zaň však nepripláca – väčšina
+  inzerátov pôvod jednoducho neuvádza. V tabulke dole si môžeš nechať zobraziť len autá kúpené v SR.</p>
+</div>
+
+<h2>Čo hýbe cenou Mini</h2>
+<p class="section-lead">Toto sa model naučil z trhu. Keď porovnávaš dve autá, tieto čísla ti povedia, koľko má byť
+rozdiel v cene, aby to bolo fér.</p>
+<div class="kpis">
+  <div class="kpi"><div class="v">-2,3 %</div><div class="l">každých ďalších 10 000 km</div></div>
+  <div class="kpi"><div class="v">-8,7 %</div><div class="l">každý rok veku navyše</div></div>
+  <div class="kpi"><div class="v">+13 %</div><div class="l">príplatok za automat (DSG)</div></div>
+  <div class="kpi"><div class="v">-4,7 %</div><div class="l">príplatok u predajcu / firmy</div></div>
+  <div class="kpi"><div class="v">-29,7 %</div><div class="l">Mini tretej generácie (2014+) oproti cene podľa veku</div></div>
+  <div class="kpi"><div class="v">+13,0 %</div><div class="l">príplatok za automat</div></div>
+</div>
+<div class="explain">
+  <p><b>Príklad:</b> dve rovnaké Mini Cooper 1.5 z roku 2018, jedno má 60 tis. km, druhé 120 tis. km. Druhé má byť
+  približne o 14 % lacnejšie (6 × -2,3 %). Ak je lacnejšie len o 5 %, preplácaš kilometre.</p>
+  <p><b>Ako čítať „pod trhom“:</b> +15 % znamená, že auto stojí o 15 % menej, než by malo podľa trhu. Bežný rozptyl
+  cien je asi ±21 %, takže až zľava nad ~10–15 % je naozaj výnimočná. Pri takej zľave vždy zisti, prečo je auto lacné
+  (stav, história, nájazd).</p>
+  <p><b>DPH:</b> ceny uvedené bez DPH (napr. „10 300 € netto“) sme prepočítali na cenu s DPH, ktorú zaplatí súkromná osoba.</p>
+</div>
+
+<h2>Odporúčané ponuky</h2>
+<p class="section-lead">Kandidáti s najlepším pomerom cena / vek / nájazd, ktorých celý inzerát sme prečítali.
+Zoradené podľa toho, ako ich odporúčame.</p>
+<div class="subhead">Mini tretej generácie (2014+) – najlepší pomer cena / vek</div>
+<div class="cards">
+<article class="card">
+  <div class="card-head"><span class="tag">Elektrické Mini Cooper SE za 15 500 €</span><span class="loc">Zborov nad Bystricou</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/mini-cooper-s-se-135kw-harman-kardon-trim-l-tepelne-c-dovoz/AeauEvoAVch/" target="_blank" rel="noopener">Mini Cooper S SE 135kw Harman Kardon Trim L Tepelné č. DOVOZ</a></h3>
+  <div class="facts">2020 · 31 500 km · Mini Electric (Cooper SE) 135 kW · automat · Hatchback · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · dovezené · aj na <a href='https://auto.bazar.sk/39775665-mini-cooper-s-se-135kw-harman-kardon-trim-l-tepelne-c-dovoz/' target='_blank' rel='noopener'>bazar.sk</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">15 500 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">21 070 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+26.4 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:88%"></span></div>
+  <ul class="pc"><li class="pro">2020, Cooper SE 135 kW, automat, výbava Trim L, 31 tis. km</li><li class="pro">Tepelné čerpadlo, Harman Kardon</li><li class="pro">~26 % pod férovou cenou</li><li class="con">Dovoz – cena bez prihlásenia (+350 €)</li><li class="con">Predáva autobazár</li><li class="con">Dojazd ~200 km</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 3 dni (od 19. 11.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Mini Cooper 1.5 automat Yours Edition</span><span class="loc">Pezinok</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/196839802/mini-cooper-yours-mini-edition.php" target="_blank" rel="noopener">MINI Cooper Yours Mini Edition | 2022 | 28 000 km</a></h3>
+  <div class="facts">2022 · 28 000 km · 1.2 / 1.5 One / Cooper 55–115 kW · automat · Hatchback · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b> · dovezené</div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">19 990 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">24 280 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+17.7 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:59%"></span></div>
+  <ul class="pc"><li class="pro">2022, Cooper 1.5, 7-st. automat, 28 tis. km</li><li class="pro">Špeciálna edícia Yours: biela koža, head-up displej</li><li class="pro">~18 % pod férovou cenou</li><li class="con">Dovoz z Nemecka</li><li class="con">Predajca neistý</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke aspoň 28 dní</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Mini Cooper S 141 kW z 2020</span><span class="loc">Bratislava V - Petržalka</span></div>
+  <h3><a href="https://auto.bazar.sk/39636443-mini-3-door-cooper-s/" target="_blank" rel="noopener">MINI 3-door Cooper S</a></h3>
+  <div class="facts">2020 · 39 508 km · Cooper S / JCW (1.6 / 2.0 Turbo) 120–170 kW · automat · Hatchback · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazar.sk</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">18 000 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">22 120 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+18.6 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:62%"></span></div>
+  <ul class="pc"><li class="pro">2020, Cooper S 2.0 141 kW, automat, 40 tis. km</li><li class="pro">Kamera, prémiové audio, bezdrôtové nabíjanie</li><li class="pro">~19 % pod férovou cenou</li><li class="con">Pravdepodobne AAA AUTO – over cenu v hotovosti</li><li class="con">Predáva autobazár</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">Nový inzerát</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Súkromník: Mini Cooper 1.5 automat</span><span class="loc">Banská Bystrica</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/mini-cooper-15-100kw-automat/AeOnCDNkav4/" target="_blank" rel="noopener">Mini Cooper 1,5 100kW, automat</a></h3>
+  <div class="facts">2020 · 104 971 km · 1.2 / 1.5 One / Cooper 55–115 kW · automat · Hatchback · súkromník</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · dovezené · aj na <a href='https://auto.bazos.sk/inzerat/197072582/mini-cooper-15-100kw-automat-benzin.php' target='_blank' rel='noopener'>bazoš</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">14 800 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">17 220 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+14.0 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:47%"></span></div>
+  <ul class="pc"><li class="pro">2020, Cooper 1.5 100 kW, automat, 105 tis. km</li><li class="pro">Navigácia, samoparkovanie, 2 sady kolies, 2 kľúče; pri 99 tis. km olej v prevodovke a vodná pumpa</li><li class="pro">~14 % pod férovou cenou</li><li class="con">Dovoz</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke aspoň 21 dní</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Mini Cooper 5-dverové od 1. majiteľa</span><span class="loc">Bratislava-Devín</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/mini-cooper-5-door-100kw/Aep9LCEGbK3/" target="_blank" rel="noopener">Mini Cooper 5 door 100kw</a></h3>
+  <div class="facts">2023 · 44 000 km · 1.2 / 1.5 One / Cooper 55–115 kW · automat · Hatchback · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">18 500 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">21 430 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+13.7 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:46%"></span></div>
+  <ul class="pc"><li class="pro">2023, Cooper 1.5 100 kW, automat, 5 dverí, 44 tis. km</li><li class="pro">Kúpené v SR (Auto Palace), 1. majiteľ, limitovaná edícia</li><li class="pro">~14 % pod férovou cenou</li><li class="con">Predajca vedený ako autobazár</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 96 dní (od 18. 8.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Mini Cooper S 2.0 manuál za 13 000 €</span><span class="loc">Skalica</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197339759/mini-cooper-s-20-141kw-m6-benzin-2018-povodny-lak.php" target="_blank" rel="noopener">Mini Cooper S 2.0, 141kW, M6</a></h3>
+  <div class="facts">2018 · 164 579 km · Cooper S / JCW (1.6 / 2.0 Turbo) 120–170 kW · manuál · Hatchback · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazoš</b> · dovezené · aj na <a href='https://www.autobazar.eu/detail/mini-cooper-s-20-141kw-m6-aj-na-splatky-protiucet/AmcxGKSdI_E/' target='_blank' rel='noopener'>autobazar.eu</a> · aj na <a href='https://auto.bazar.sk/39759389-mini-cooper-s-2-0-141kw-m6-aj-na-splatky-protiucet/' target='_blank' rel='noopener'>bazar.sk</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">12 999 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">14 940 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+13.0 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:43%"></span></div>
+  <ul class="pc"><li class="pro">5/2018, Cooper S 2.0 141 kW, 6-st. manuál, 165 tis. km</li><li class="pro">Uvedený VIN, STK do 04/2027</li><li class="pro">~13 % pod férovou cenou</li><li class="con">Dovoz</li><li class="con">Vysoký nájazd</li><li class="con">Predáva autobazár</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 17 dní (od 5. 11.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Mini Cooper SE s tepelným čerpadlom</span><span class="loc">Zborov nad Bystricou</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/mini-cooper-se-135kw-tepelne-cerpadlo-dovoz/AmixwnYzKOR/" target="_blank" rel="noopener">Mini Cooper SE 135kw Tepelné čerpadlo Dovoz</a></h3>
+  <div class="facts">2022 · 52 125 km · Mini Electric (Cooper SE) 135 kW · automat · Hatchback · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · dovezené · aj na <a href='https://auto.bazar.sk/39746459-mini-cooper-se-135kw-tepelne-cerpadlo-dovoz/' target='_blank' rel='noopener'>bazar.sk</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">15 900 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">18 070 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+12.0 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:40%"></span></div>
+  <ul class="pc"><li class="pro">2022, Cooper SE 135 kW, automat, 52 tis. km</li><li class="pro">Digitálna servisná história MINI, 2 kľúče, záruka na batériu 8 rokov / 160 tis. km</li><li class="pro">~12 % pod férovou cenou</li><li class="con">Dovoz zo Španielska</li><li class="con">Predáva autobazár</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 27 dní (od 26. 10.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Mini John Cooper Works 170 kW s 7 tis. km</span><span class="loc">Nitra</span></div>
+  <h3><a href="https://auto.bazar.sk/38774760-mini-cooper-john-works-170kw-automat-1-majitel-7100km/" target="_blank" rel="noopener">Mini Cooper JOHN WORKS 170KW AUTOMAT 1 MAJITEL 7100KM !!!!!!</a></h3>
+  <div class="facts">2024 · 7 100 km · Cooper S / JCW (1.6 / 2.0 Turbo) 120–170 kW · automat · Hatchback · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazar.sk</b> · kúpené v SR</div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">30 990 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">34 830 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+11.0 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:37%"></span></div>
+  <ul class="pc"><li class="pro">1/2024, JCW 2.0 170 kW, automat, 7 tis. km</li><li class="pro">Kúpené v SR, 1. majiteľ, možný odpočet DPH</li><li class="pro">~11 % pod férovou cenou</li><li class="con">Predáva autobazár</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">Nový inzerát</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Mini One 5-dverové so 6 tis. km</span><span class="loc">Žilina</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197502000/mini-cooper-one-15-benzin-75kw.php" target="_blank" rel="noopener">MINI Cooper ONE 1,5 benzin 75kw</a></h3>
+  <div class="facts">2021 · 6 000 km · 1.2 / 1.5 One / Cooper 55–115 kW · manuál · Hatchback · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b> · kúpené v SR</div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">16 999 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">19 000 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+10.5 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:35%"></span></div>
+  <ul class="pc"><li class="pro">12/2021, One 1.5 75 kW, manuál, 5 dverí, 6 tis. km</li><li class="pro">Kúpené v SR, servis len v autorizovanom servise MINI, nebúrané</li><li class="pro">~11 % pod férovou cenou</li><li class="con">Veľmi nízky nájazd – over históriu km</li><li class="con">Predajca neistý</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 8 dní (od 14. 11.)</p><!-- history-card:end --></article></div>
+<div class="subhead">Lacnejšie Mini do 12 000 €</div>
+<div class="cards">
+<article class="card">
+  <div class="card-head"><span class="tag">Mini Cooper 1.5 automat za 6 500 €</span><span class="loc">Púchov</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/196748156/mini-cooper-15-100kw.php" target="_blank" rel="noopener">Mini cooper 1.5 100kw</a></h3>
+  <div class="facts">2014 · 130 000 km · 1.2 / 1.5 One / Cooper 55–115 kW · automat · Hatchback · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">6 500 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">10 140 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+35.9 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:100%"></span></div>
+  <ul class="pc"><li class="pro">2014, Cooper 1.5 Turbo 100 kW, automat, 130 tis. km</li><li class="pro">~36 % pod férovou cenou</li><li class="con">Výrazne pod trhom – over stav a históriu</li><li class="con">Predajca neistý</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke aspoň 20 dní</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Mini Cooper D automat za 4 500 €</span><span class="loc">Žilina</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/mini-cooper-d-82-kw-20-at/AeeDhrhR47H/" target="_blank" rel="noopener">Mini Cooper D 82 kW 2.0 AT</a></h3>
+  <div class="facts">2014 · 184 800 km · 1.5 / 1.6 / 2.0 diesel (One D, Cooper D/SD) 70–125 kW · automat · Hatchback · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · dovezené · aj na <a href='https://auto.bazos.sk/inzerat/197658402/mini-cooper-d-82-kw-20-at.php' target='_blank' rel='noopener'>bazoš</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">4 500 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">7 330 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+38.6 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:100%"></span></div>
+  <ul class="pc"><li class="pro">2014, Cooper D 2.0 82 kW, automat, 185 tis. km</li><li class="pro">~39 % pod férovou cenou</li><li class="con">Výrazne pod trhom a inzerát bez textu – over stav</li><li class="con">Dovoz</li><li class="con">Predáva autobazár</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 4 dni (od 18. 11.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Mini One 1.4 s novou STK</span><span class="loc">Turčianske Teplice</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/195958041/predam-mini-cooper-one-r56.php" target="_blank" rel="noopener">Predám MINI Cooper ONE R56</a></h3>
+  <div class="facts">2011 · 125 600 km · 1.4 / 1.6 benzín (R56) 55–90 kW · manuál · Hatchback · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">5 500 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">7 740 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+28.9 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:96%"></span></div>
+  <ul class="pc"><li class="pro">2010/2011, One 1.4 55 kW, 6-st. manuál, 126 tis. km</li><li class="pro">STK/EK do 07/2028, 2 kľúče, letné aj zimné pneumatiky</li><li class="pro">~29 % pod férovou cenou</li><li class="con">Slabší motor 75 k</li><li class="con">Predajca neistý</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke aspoň 56 dní</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Mini Cooper S R56 za 5 300 €</span><span class="loc">Stará Ľubovňa</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197731736/mini-cooper-s.php" target="_blank" rel="noopener">Mini Cooper S</a></h3>
+  <div class="facts">2010 · 153 925 km · Cooper S / JCW (1.6 / 2.0 Turbo) 120–170 kW · manuál · Hatchback · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">5 290 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">7 110 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+25.6 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:85%"></span></div>
+  <ul class="pc"><li class="pro">5/2010, Cooper S 1.6 Turbo 135 kW, 6-st. manuál, 154 tis. km</li><li class="pro">Xenóny, panoramatická strecha, koža, vyhrievané sedadlá</li><li class="pro">~26 % pod férovou cenou</li><li class="con">R56 1.6 Turbo – over rozvodovú reťaz a spotrebu oleja</li><li class="con">Predáva autobazár</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 2 dni (od 20. 11.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Mini Cooper 1.6 za 4 800 €</span><span class="loc">Zlaté Moravce</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/195900850/mini-cooper-16-90-kw-122-ps-2011-benzin.php" target="_blank" rel="noopener">❤️🐞 MINI Cooper 1.6 | 90 kW | 122 PS | 2011 | BENZÍN</a></h3>
+  <div class="facts">2011 · 179 817 km · 1.4 / 1.6 benzín (R56) 55–90 kW · manuál · Hatchback · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">4 800 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">5 840 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+17.8 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:59%"></span></div>
+  <ul class="pc"><li class="pro">2011, Cooper 1.6 90 kW, 6-st. manuál, 180 tis. km</li><li class="pro">~18 % pod férovou cenou</li><li class="con">Vysoký nájazd</li><li class="con">Predajca neistý</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke aspoň 58 dní</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Mini One D 5-dverové za 7 200 €</span><span class="loc">Ilava</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197472885/mini-cooper-d-f55-diesel-rocnik-2015.php" target="_blank" rel="noopener">Mini Cooper D F55 diesel ročník 2015</a></h3>
+  <div class="facts">2015 · 180 000 km · 1.5 / 1.6 / 2.0 diesel (One D, Cooper D/SD) 70–125 kW · manuál · Hatchback · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazoš</b> · dovezené</div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">7 200 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">8 390 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+14.2 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:47%"></span></div>
+  <ul class="pc"><li class="pro">2015, One D 1.5 diesel 85 kW, manuál, 5 dverí, 180 tis. km</li><li class="pro">Automatická klíma</li><li class="pro">~14 % pod férovou cenou</li><li class="con">Dovoz</li><li class="con">Vysoký nájazd</li><li class="con">Predáva autobazár</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 9 dní (od 13. 11.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Mini Cooper SD 2.0 automat</span><span class="loc">Trnava</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197418375/mini-cooper-sd-120kw-20d-rv2016.php" target="_blank" rel="noopener">MINI Cooper SD 120KW, 2.0D, r.v.2016</a></h3>
+  <div class="facts">2016 · 171 200 km · 1.5 / 1.6 / 2.0 diesel (One D, Cooper D/SD) 70–125 kW · automat · Hatchback · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b> · aj na <a href='https://www.autobazar.eu/detail/mini-cooper-s-120kw-20d-6stautprevodovka/AesWIDKYK2X/' target='_blank' rel='noopener'>autobazar.eu</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">9 800 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">11 130 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+12.0 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:40%"></span></div>
+  <ul class="pc"><li class="pro">2016, Cooper SD 2.0 diesel 120 kW, automat, 171 tis. km</li><li class="pro">Strešné okno, vyhrievané čelné sklo, Android Auto</li><li class="pro">~12 % pod férovou cenou</li><li class="con">Vysoký nájazd</li><li class="con">Predajca neistý</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 11 dní (od 11. 11.)</p><!-- history-card:end --></article></div>
+<div class="subhead">Špeciálne prípady</div>
+<div class="cards"></div>
+
+<h2>Cena vs. nájazd: celý trh na jednom grafe</h2>
+<p class="section-lead">Každý bod je jeden inzerát. Čím nižšie bod leží oproti ostatným s podobným nájazdom, tým je auto lacnejšie.
+Krúžkom sú označené odporúčané ponuky. Prejdi myšou na bod a uvidíš detail.</p>
+<div class="chart-wrap" id="chartWrap">
+  <div class="legend" id="legend"></div>
+  <svg id="chart" width="100%" height="420" role="img" aria-label="Bodový graf ceny a nájazdu inzerátov"></svg>
+  <div class="tip" id="tip"></div>
+</div>
+
+<h2>Porovnanie motorov</h2>
+<p class="section-lead">Hodnotenie (hviezdičky) zohľadňuje spoľahlivosť, spoľahlivosť a náklady na prevádzku a pomer cena/výkon.
+Číselné stĺpce sú mediány z ohodnotených inzerátov.</p>
+<div class="table-scroll">
+<table>
+  <thead><tr><th>Motor</th><th>Hodnotenie</th><th class="num">Ponúk</th><th class="num">Medián ceny</th><th class="num">Medián roku</th><th class="num">Medián km</th></tr></thead>
+  <tbody>
+<tr>
+  <td><b>Mini Electric (Cooper SE) 135 kW</b><div class="sub">Elektro (2020+) s dojazdom ~200 km. Do mesta.</div></td>
+  <td><span class="stars" aria-label="3 z 5">★★★<span class="off">★★</span></span></td>
+  <td class="num">8</td>
+  <td class="num"><div class="cellbar"><span style="width:98%"></span></div>17 490 €</td>
+  <td class="num">2022</td>
+  <td class="num">41 329 km</td>
+</tr>
+<tr>
+  <td><b>1.5 / 1.6 / 2.0 diesel (One D, Cooper D/SD) 70–125 kW</b><div class="sub">Diesel 95–170 k. Úsporný, ale v malom aute drahší na servis.</div></td>
+  <td><span class="stars" aria-label="3 z 5">★★★<span class="off">★★</span></span></td>
+  <td class="num">7</td>
+  <td class="num"><div class="cellbar"><span style="width:53%"></span></div>9 500 €</td>
+  <td class="num">2015</td>
+  <td class="num">184 800 km</td>
+</tr>
+<tr>
+  <td><b>Cooper S / JCW (1.6 / 2.0 Turbo) 120–170 kW</b><div class="sub">Turbobenzín 163–231 k. Veľmi rýchly, drahší na údržbu a poistenie; pri R56 1.6 Turbo over reťaz a spotrebu oleja.</div></td>
+  <td><span class="stars" aria-label="3 z 5">★★★<span class="off">★★</span></span></td>
+  <td class="num">43</td>
+  <td class="num"><div class="cellbar"><span style="width:100%"></span></div>17 890 €</td>
+  <td class="num">2018</td>
+  <td class="num">83 663 km</td>
+</tr>
+<tr>
+  <td><b>1.2 / 1.5 One / Cooper 55–115 kW</b><div class="sub">3-valcové turbo 75–156 k (2014+). Svižné a úsporné.</div></td>
+  <td><span class="stars" aria-label="4 z 5">★★★★<span class="off">★</span></span></td>
+  <td class="num">23</td>
+  <td class="num"><div class="cellbar"><span style="width:69%"></span></div>12 399 €</td>
+  <td class="num">2018</td>
+  <td class="num">129 101 km</td>
+</tr>
+<tr>
+  <td><b>1.4 / 1.6 benzín (R56) 55–90 kW</b><div class="sub">Starší 1.4 / 1.6 (2010–2014). Pozor na rozvodovú reťaz a spotrebu oleja.</div></td>
+  <td><span class="stars" aria-label="2 z 5">★★<span class="off">★★★</span></span></td>
+  <td class="num">8</td>
+  <td class="num"><div class="cellbar"><span style="width:32%"></span></div>5 645 €</td>
+  <td class="num">2012</td>
+  <td class="num">167 734 km</td>
+</tr></tbody>
+</table>
+</div>
+<div class="explain">
+  <p><b>Generácie:</b> <b>Mini R56</b> (2006–2014) a <b>Mini F56 / F55</b> (2014–2024, 3 aj 5 dverí, aj kabriolet F57).
+  Je to prémiové malé auto s technikou BMW a športovým podvozkom.</p>
+  <p><b>Ktorý motor zvoliť?</b> Najrozumnejší je <b>Cooper 1.5</b> (136 k, 2014+). Pri starších R56 s motorom <b>1.6</b> pýtaj doklad
+  o výmene rozvodovej reťaze – je to ich slabé miesto.</p>
+</div>
+
+<h2>Na čo si dať pozor</h2>
+<div class="warn">
+  <p><b>Lacné kvôli extrémnemu nájazdu</b> (viac ako 35 tis. km ročne, typicky flotila alebo taxi):</p>
+  <ul><li><a href='https://auto.bazar.sk/39678000-mini-cooper-1-5/' target='_blank' rel='noopener'>Mini Cooper 1.5</a>: 2022, 154 618 km → 36 000 km/rok. Lacné je kvôli nájazdu.</li></ul>
+  <p><b>Ďalšie veci, ktoré sme v inzerátoch našli:</b></p><ul><li>Takmer polovica ponúk sú výkonné <b>Cooper S / JCW</b> – rozumné Cooper 1.5 sú vzácnejšie.</li><li>Pri Mini z rokov 2010–2013 (R56) s motorom 1.6 si pýtaj doklad o výmene rozvodovej reťaze.</li><li>Lacný JCW z 2011 sa predáva s odstúpením leasingu – uvedená cena nemusí byť celková, preto ho neodporúčame.</li><li>Pri inzerátoch AAA AUTO je uvedená <b>cena pri financovaní</b> – pri platbe v hotovosti môže byť iná.</li></ul><p><b>Vyradené z porovnania</b> (poškodené autá alebo nezmyselné údaje – model ich nehodnotí):</p><ul><li><a href='https://auto.bazos.sk/inzerat/197724386/mini-cooper-s-countryman-all4-steptronic.php' target='_blank' rel='noopener'>Mini Cooper S Countryman ALL4 Steptronic</a> (7 999 €): havarované / poškodené – cena nie je porovnateľná s trhom</li><li><a href='https://auto.bazos.sk/inzerat/197448672/mini-cooper-12-turbo-f56-rok-2017-80348km.php' target='_blank' rel='noopener'>MINI COOPER 1.2 TURBO, F56, Rok 2017 -80348km-</a> (5 700 €): cena je o 54 % pod trhom – havarované, na diely, záloha/splátka namiesto ceny alebo podvod</li><li><a href='https://www.autobazar.eu/detail/mini-cooper-1-5-100kw-m6/AbnzMcTzpCZ/' target='_blank' rel='noopener'>Mini Cooper 1, 5 100kW M6</a> (11 499 €): havarované / poškodené – cena nie je porovnateľná s trhom</li><li><a href='https://www.autobazar.eu/detail/mini-cooper-1-5-100kw-m6/AbNdAoluvuR/' target='_blank' rel='noopener'>Mini Cooper 1, 5 100kW M6</a> (11 999 €): havarované / poškodené – cena nie je porovnateľná s trhom</li><li><a href='https://auto.bazar.sk/39453979-mini-cooper/' target='_blank' rel='noopener'>Mini Cooper</a> (11 999 €): podozrivo nízky nájazd</li></ul><p><b>Countryman, Clubman, Paceman, nové autá z 2026 a iné modely z vyhľadávania, inzeráty s chybným nájazdom</b> (87 inzerátov) sme z rebríčka vynechali.</p>
+  <p>Ďalších <b>44</b> inzerátov nemá v texte rok alebo kilometre, takže ich nebolo možné ohodnotiť.
+  Ak ťa niektorý zaujme, predajcu sa na tieto údaje opýtaj.</p>
+</div>
+
+<h2>Kompletný rebríček</h2>
+<p class="section-lead">Všetky ohodnotené inzeráty. Kliknutím na hlavičku stĺpca zoraďuješ, filtrom zužuješ výber.</p>
+<div class="filters">
+  <select id="fEngine"><option value="">Všetky motory</option></select>
+  <select id="fTrans"><option value="">Každá prevodovka</option><option value="automatic">Automat</option><option value="manual">Manuál</option></select>
+  <select id="fSeller"><option value="">Všetci predajcovia</option><option value="nodealer">Bez autobazárov</option></select>
+  <select id="fSource"><option value="">Všetky portály</option><option value="bazos">bazoš</option><option value="autobazar">autobazar.eu</option><option value="bazarsk">bazar.sk</option></select>
+  <select id="fBody"><option value="">Všetky karosérie</option><option value="hatchback">Hatchback</option><option value="cabrio">Kabriolet</option></select>
+  <select id="fOrigin"><option value="">Akýkoľvek pôvod</option><option value="SR">Kúpené v SR</option><option value="dovoz">Dovoz</option></select>
+  <input id="fMax" type="number" placeholder="Max. cena €" step="500" min="0" style="width:120px">
+  <span class="count" id="count"></span>
+</div>
+<div class="table-scroll">
+<table id="tbl">
+  <thead><tr>
+    <th class="sortable" data-k="title">Inzerát</th>
+    <th class="sortable num" data-k="year">Rok</th>
+    <th class="sortable num" data-k="km">Km</th>
+    <th class="sortable num" data-k="price_gross">Cena</th>
+    <th class="sortable num" data-k="fair_price">Férová</th>
+    <th class="sortable num" data-k="discount_pct">Pod trhom ▾</th>
+  </tr></thead>
+  <tbody></tbody>
+</table>
+</div>
+
+<h2>Pred kúpou over</h2>
+<ul class="check">
+  <li>VIN cez Cebia / autoDNA (história km, havárie)</li>
+  <li>Servisná história – BMW/Mini dealer ju vie podľa VIN vytiahnuť</li>
+  <li>R56 1.6: hluk rozvodovej reťaze pri studenom štarte, spotreba oleja</li>
+  <li>Automat: plynulé radenie</li>
+  <li>Kabriolet: stav strechy a odvodnenia</li>
+  <li>STK/EK protokol a dátum platnosti</li>
+</ul>
+
+<footer>
+  Zdroj: auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (len ponuky zo Slovenska, to isté auto na viacerých portáloch je započítané raz), sťahované cez lokálny MCP server bazos-mcp (nástroj <code>fair_price</code>), 22. 11. 2026.
+  Model: ridge regresia log(ceny s DPH) podľa veku, veku², km, km², prevodovky, typu predajcu, motora, karosérie, pohonu 4x4, pôvodu (SR / dovoz) a portálu. Vzorka 89
+  inzerátov, R² 94 %. Parametre sú vyťažené z textu inzerátov, a preto môžu obsahovať chyby. Odporúčané ponuky sme overili
+  prečítaním celého inzerátu. Hodnotenie motorov je odborný odhad, nie výsledok modelu.
+</footer>
+</main>
+
+<script>
+const DATA = [{"id": "ab-AeeDhrhR47H", "url": "https://www.autobazar.eu/detail/mini-cooper-d-82-kw-20-at/AeeDhrhR47H/", "title": "Mini Cooper D 82 kW 2.0 AT", "price": 4500, "price_gross": 4500, "fair_price": 7330.0, "discount_pct": 38.6, "verdict": "výrazne pod trhom – over prečo", "year": 2014, "km": 184800, "km_per_year": 15000.0, "eg": "1.5 / 1.6 / 2.0 diesel (One D, Cooper D/SD) 70–125 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Žilina", "flags": [], "pick": "budget", "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "197658402", "url": "https://auto.bazos.sk/inzerat/197658402/mini-cooper-d-82-kw-20-at.php", "price": 4500}], "body": "hatchback"}, {"id": "196748156", "url": "https://auto.bazos.sk/inzerat/196748156/mini-cooper-15-100kw.php", "title": "Mini cooper 1.5 100kw", "price": 6500, "price_gross": 6500, "fair_price": 10140.0, "discount_pct": 35.9, "verdict": "výrazne pod trhom – over prečo", "year": 2014, "km": 130000, "km_per_year": 10500.0, "eg": "1.2 / 1.5 One / Cooper 55–115 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Púchov", "flags": [], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "195958041", "url": "https://auto.bazos.sk/inzerat/195958041/predam-mini-cooper-one-r56.php", "title": "Predám MINI Cooper ONE R56", "price": 5500, "price_gross": 5500, "fair_price": 7740.0, "discount_pct": 28.9, "verdict": "výrazne pod trhom – over prečo", "year": 2011, "km": 125600, "km_per_year": 8200.0, "eg": "1.4 / 1.6 benzín (R56) 55–90 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Turčianske Teplice", "flags": [], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "ab-AeauEvoAVch", "url": "https://www.autobazar.eu/detail/mini-cooper-s-se-135kw-harman-kardon-trim-l-tepelne-c-dovoz/AeauEvoAVch/", "title": "Mini Cooper S SE 135kw Harman Kardon Trim L Tepelné č. DOVOZ", "price": 15500, "price_gross": 15500, "fair_price": 21070.0, "discount_pct": 26.4, "verdict": "výrazne pod trhom – over prečo", "year": 2020, "km": 31500, "km_per_year": 5000.0, "eg": "Mini Electric (Cooper SE) 135 kW", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Zborov nad Bystricou", "flags": [], "pick": "top", "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazarsk", "id": "bs-39775665", "url": "https://auto.bazar.sk/39775665-mini-cooper-s-se-135kw-harman-kardon-trim-l-tepelne-c-dovoz/", "price": 15500}], "body": "hatchback"}, {"id": "197731736", "url": "https://auto.bazos.sk/inzerat/197731736/mini-cooper-s.php", "title": "Mini Cooper S", "price": 5290, "price_gross": 5290, "fair_price": 7110.0, "discount_pct": 25.6, "verdict": "výrazne pod trhom – over prečo", "year": 2010, "km": 153925, "km_per_year": 9400.0, "eg": "Cooper S / JCW (1.6 / 2.0 Turbo) 120–170 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Stará Ľubovňa", "flags": [], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "bs-34666400", "url": "https://auto.bazar.sk/34666400-mini-cooper-jcw/", "title": "Mini Cooper JCW", "price": 5000, "price_gross": 5000, "fair_price": 6640.0, "discount_pct": 24.7, "verdict": "výrazne pod trhom – over prečo", "year": 2011, "km": 131819, "km_per_year": 8600.0, "eg": "Cooper S / JCW (1.6 / 2.0 Turbo) 120–170 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Banská Bystrica", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "bs-39636443", "url": "https://auto.bazar.sk/39636443-mini-3-door-cooper-s/", "title": "MINI 3-door Cooper S", "price": 18000, "price_gross": 18000, "fair_price": 22120.0, "discount_pct": 18.6, "verdict": "výrazne pod trhom – over prečo", "year": 2020, "km": 39508, "km_per_year": 6200.0, "eg": "Cooper S / JCW (1.6 / 2.0 Turbo) 120–170 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava V - Petržalka", "flags": [], "pick": "top", "source": "bazarsk", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "195900850", "url": "https://auto.bazos.sk/inzerat/195900850/mini-cooper-16-90-kw-122-ps-2011-benzin.php", "title": "❤️🐞 MINI Cooper 1.6 | 90 kW | 122 PS | 2011 | BENZÍN", "price": 4800, "price_gross": 4800, "fair_price": 5840.0, "discount_pct": 17.8, "verdict": "výrazne pod trhom – over prečo", "year": 2011, "km": 179817, "km_per_year": 11700.0, "eg": "1.4 / 1.6 benzín (R56) 55–90 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Zlaté Moravce", "flags": [], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "196839802", "url": "https://auto.bazos.sk/inzerat/196839802/mini-cooper-yours-mini-edition.php", "title": "MINI Cooper Yours Mini Edition | 2022 | 28 000 km", "price": 19990, "price_gross": 19990, "fair_price": 24280.0, "discount_pct": 17.7, "verdict": "výrazne pod trhom – over prečo", "year": 2022, "km": 28000, "km_per_year": 6500.0, "eg": "1.2 / 1.5 One / Cooper 55–115 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Pezinok", "flags": [], "pick": "top", "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "hatchback"}, {"id": "196371487", "url": "https://auto.bazos.sk/inzerat/196371487/mini-one-cooper-jcw-paket-75kw-benzin.php", "title": "Mini One ( Cooper ) JCW-Paket 75kw Benzin", "price": 7900, "price_gross": 7900, "fair_price": 9380.0, "discount_pct": 15.8, "verdict": "výrazne pod trhom – over prečo", "year": 2017, "km": 225000, "km_per_year": 24100.0, "eg": "1.2 / 1.5 One / Cooper 55–115 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Topoľčany", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "197566916", "url": "https://auto.bazos.sk/inzerat/197566916/mini-cooper-16i-r56-2012-55kw.php", "title": "MINI Cooper 1.6i R56 2012 55kw", "price": 4490, "price_gross": 4490, "fair_price": 5240.0, "discount_pct": 14.3, "verdict": "pod trhom", "year": 2012, "km": 176157, "km_per_year": 12300.0, "eg": "1.4 / 1.6 benzín (R56) 55–90 kW", "cg": 0, "transmission": null, "seller_type": "dealer", "location": "Levice", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "hatchback"}, {"id": "197472885", "url": "https://auto.bazos.sk/inzerat/197472885/mini-cooper-d-f55-diesel-rocnik-2015.php", "title": "Mini Cooper D F55 diesel ročník 2015", "price": 7200, "price_gross": 7200, "fair_price": 8390.0, "discount_pct": 14.2, "verdict": "pod trhom", "year": 2015, "km": 180000, "km_per_year": 15900.0, "eg": "1.5 / 1.6 / 2.0 diesel (One D, Cooper D/SD) 70–125 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Ilava", "flags": [], "pick": "budget", "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "hatchback"}, {"id": "ab-AeOnCDNkav4", "url": "https://www.autobazar.eu/detail/mini-cooper-15-100kw-automat/AeOnCDNkav4/", "title": "Mini Cooper 1,5 100kW, automat", "price": 14800, "price_gross": 14800, "fair_price": 17220.0, "discount_pct": 14.0, "verdict": "pod trhom", "year": 2020, "km": 104971, "km_per_year": 16600.0, "eg": "1.2 / 1.5 One / Cooper 55–115 kW", "cg": 0, "transmission": "automatic", "seller_type": "private", "location": "Banská Bystrica", "flags": [], "pick": "top", "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "197072582", "url": "https://auto.bazos.sk/inzerat/197072582/mini-cooper-15-100kw-automat-benzin.php", "price": 14800}], "body": "hatchback"}, {"id": "ab-Aep9LCEGbK3", "url": "https://www.autobazar.eu/detail/mini-cooper-5-door-100kw/Aep9LCEGbK3/", "title": "Mini Cooper 5 door 100kw", "price": 18500, "price_gross": 18500, "fair_price": 21430.0, "discount_pct": 13.7, "verdict": "pod trhom", "year": 2023, "km": 44000, "km_per_year": 13200.0, "eg": "1.2 / 1.5 One / Cooper 55–115 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava-Devín", "flags": [], "pick": "top", "source": "autobazar", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "197339759", "url": "https://auto.bazos.sk/inzerat/197339759/mini-cooper-s-20-141kw-m6-benzin-2018-povodny-lak.php", "title": "Mini Cooper S 2.0, 141kW, M6", "price": 12999, "price_gross": 12999, "fair_price": 14940.0, "discount_pct": 13.0, "verdict": "pod trhom", "year": 2018, "km": 164579, "km_per_year": 19700.0, "eg": "Cooper S / JCW (1.6 / 2.0 Turbo) 120–170 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Skalica", "flags": [], "pick": "top", "source": "bazos", "origin": "dovoz", "also_listed": [{"source": "autobazar", "id": "ab-AmcxGKSdI_E", "url": "https://www.autobazar.eu/detail/mini-cooper-s-20-141kw-m6-aj-na-splatky-protiucet/AmcxGKSdI_E/", "price": 12999}, {"source": "bazarsk", "id": "bs-39759389", "url": "https://auto.bazar.sk/39759389-mini-cooper-s-2-0-141kw-m6-aj-na-splatky-protiucet/", "price": 12999}], "body": "hatchback"}, {"id": "197418375", "url": "https://auto.bazos.sk/inzerat/197418375/mini-cooper-sd-120kw-20d-rv2016.php", "title": "MINI Cooper SD 120KW, 2.0D, r.v.2016", "price": 9800, "price_gross": 9800, "fair_price": 11130.0, "discount_pct": 12.0, "verdict": "pod trhom", "year": 2016, "km": 171200, "km_per_year": 16600.0, "eg": "1.5 / 1.6 / 2.0 diesel (One D, Cooper D/SD) 70–125 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Trnava", "flags": [], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AesWIDKYK2X", "url": "https://www.autobazar.eu/detail/mini-cooper-s-120kw-20d-6stautprevodovka/AesWIDKYK2X/", "price": 9800}], "body": "hatchback"}, {"id": "ab-AmixwnYzKOR", "url": "https://www.autobazar.eu/detail/mini-cooper-se-135kw-tepelne-cerpadlo-dovoz/AmixwnYzKOR/", "title": "Mini Cooper SE 135kw Tepelné čerpadlo Dovoz", "price": 15900, "price_gross": 15900, "fair_price": 18070.0, "discount_pct": 12.0, "verdict": "pod trhom", "year": 2022, "km": 52125, "km_per_year": 12000.0, "eg": "Mini Electric (Cooper SE) 135 kW", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Zborov nad Bystricou", "flags": [], "pick": "top", "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazarsk", "id": "bs-39746459", "url": "https://auto.bazar.sk/39746459-mini-cooper-se-135kw-tepelne-cerpadlo-dovoz/", "price": 15900}], "body": "hatchback"}, {"id": "bs-38774760", "url": "https://auto.bazar.sk/38774760-mini-cooper-john-works-170kw-automat-1-majitel-7100km/", "title": "Mini Cooper JOHN WORKS 170KW AUTOMAT 1 MAJITEL 7100KM !!!!!!", "price": 30990, "price_gross": 30990, "fair_price": 34830.0, "discount_pct": 11.0, "verdict": "pod trhom", "year": 2024, "km": 7100, "km_per_year": 3000.0, "eg": "Cooper S / JCW (1.6 / 2.0 Turbo) 120–170 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Nitra", "flags": [], "pick": "top", "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "hatchback"}, {"id": "ab-AeKz3ld3iGJ", "url": "https://www.autobazar.eu/detail/mini-cooper-s-135kw/AeKz3ld3iGJ/", "title": "Mini Cooper S 135kw", "price": 7300, "price_gross": 7300, "fair_price": 8180.0, "discount_pct": 10.7, "verdict": "pod trhom", "year": 2011, "km": 125000, "km_per_year": 8200.0, "eg": "Cooper S / JCW (1.6 / 2.0 Turbo) 120–170 kW", "cg": 0, "transmission": "automatic", "seller_type": "private", "location": "Komárno", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "197348134", "url": "https://auto.bazos.sk/inzerat/197348134/mini-cooper-s.php", "price": 7500}], "body": "hatchback"}, {"id": "197502000", "url": "https://auto.bazos.sk/inzerat/197502000/mini-cooper-one-15-benzin-75kw.php", "title": "MINI Cooper ONE 1,5 benzin 75kw", "price": 16999, "price_gross": 16999, "fair_price": 19000.0, "discount_pct": 10.5, "verdict": "pod trhom", "year": 2021, "km": 6000, "km_per_year": 1100.0, "eg": "1.2 / 1.5 One / Cooper 55–115 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Žilina", "flags": [], "pick": "top", "source": "bazos", "origin": "SR", "also_listed": [], "body": "hatchback"}, {"id": "197725700", "url": "https://auto.bazos.sk/inzerat/197725700/mini-cooper-16-90-kw-m6-kupsr-aj-vymena.php", "title": "Mini Cooper 1.6 90 kw M6 kup.SR aj vymena", "price": 5690, "price_gross": 5690, "fair_price": 6310.0, "discount_pct": 9.8, "verdict": "pod trhom", "year": 2013, "km": 221000, "km_per_year": 16600.0, "eg": "1.4 / 1.6 benzín (R56) 55–90 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Bratislava", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "ab-AmUuRhWufEb", "url": "https://www.autobazar.eu/detail/mini-cooper/AmUuRhWufEb/", "title": "Mini Cooper", "price": 12399, "price_gross": 12399, "fair_price": 13680.0, "discount_pct": 9.4, "verdict": "pod trhom", "year": 2022, "km": 130000, "km_per_year": 30000.0, "eg": "1.2 / 1.5 One / Cooper 55–115 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-39597421", "url": "https://auto.bazar.sk/39597421-mini-cooper/", "price": 12399}], "body": "hatchback"}, {"id": "ab-AeflqiwvQCx", "url": "https://www.autobazar.eu/detail/mini-cooperservkniha-navigacia-klima/AeflqiwvQCx/", "title": "MINI CooperServ.kniha, Navigácia, Klíma", "price": 6900, "price_gross": 6900, "fair_price": 7430.0, "discount_pct": 7.1, "verdict": "pod trhom", "year": 2015, "km": 185226, "km_per_year": 16300.0, "eg": "1.2 / 1.5 One / Cooper 55–115 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Trnava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "196421624", "url": "https://auto.bazos.sk/inzerat/196421624/mini-cooper-15-benzin-100kw-m6-3d.php", "title": "Mini Cooper 1,5 benzín, 100KW, M6, 3D", "price": 6990, "price_gross": 6990, "fair_price": 7520.0, "discount_pct": 7.1, "verdict": "pod trhom", "year": 2014, "km": 189829, "km_per_year": 15400.0, "eg": "1.2 / 1.5 One / Cooper 55–115 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Košice", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "197575714", "url": "https://auto.bazos.sk/inzerat/197575714/mini-cooper-one-16i-16v-black-white.php", "title": "Mini Cooper ONE 1.6i 16V - BLACK WHITE", "price": 5600, "price_gross": 5600, "fair_price": 6010.0, "discount_pct": 6.9, "verdict": "férová cena", "year": 2010, "km": 113552, "km_per_year": 7000.0, "eg": "1.4 / 1.6 benzín (R56) 55–90 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Košice", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmcEwg7D_eu", "url": "https://www.autobazar.eu/detail/mini-cooper-one-16i-16v-black-and-white/AmcEwg7D_eu/", "price": 5600}, {"source": "bazarsk", "id": "bs-39533899", "url": "https://auto.bazar.sk/39533899-mini-cooper-one-1-6i-16v-black-white/", "price": 5600}], "body": "hatchback"}, {"id": "ab-AmB-41I_e_b", "url": "https://www.autobazar.eu/detail/mini-cooper-s/AmB-41I_e_b/", "title": "Mini Cooper S", "price": 26990, "price_gross": 26990, "fair_price": 28880.0, "discount_pct": 6.5, "verdict": "férová cena", "year": 2024, "km": 19700, "km_per_year": 8400.0, "eg": "Cooper S / JCW (1.6 / 2.0 Turbo) 120–170 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-39588689", "url": "https://auto.bazar.sk/39588689-mini-cooper-s/", "price": 26990}], "body": "hatchback"}, {"id": "197209522", "url": "https://auto.bazos.sk/inzerat/197209522/mini-cooper-f56-15-turbo-s-paket.php", "title": "Mini Cooper F56 1.5 Turbo S-Paket", "price": 9300, "price_gross": 9300, "fair_price": 9910.0, "discount_pct": 6.2, "verdict": "férová cena", "year": 2014, "km": 124000, "km_per_year": 10100.0, "eg": "1.2 / 1.5 One / Cooper 55–115 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Malacky", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "197123286", "url": "https://auto.bazos.sk/inzerat/197123286/mini-cooper-s-f56.php", "title": "Mini cooper S F56", "price": 9990, "price_gross": 9990, "fair_price": 10610.0, "discount_pct": 5.8, "verdict": "férová cena", "year": 2015, "km": 102000, "km_per_year": 9000.0, "eg": "Cooper S / JCW (1.6 / 2.0 Turbo) 120–170 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Galanta", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "ab-AemkPtS91pf", "url": "https://www.autobazar.eu/detail/mini-cooper-se-32-kwh-automat-servkniha/AemkPtS91pf/", "title": "MINI Cooper SE 32 kWh, Automat, Serv.kniha", "price": 18500, "price_gross": 18500, "fair_price": 19560.0, "discount_pct": 5.4, "verdict": "férová cena", "year": 2022, "km": 28351, "km_per_year": 6500.0, "eg": "Mini Electric (Cooper SE) 135 kW", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Prešovský kraj", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "197748515", "url": "https://auto.bazos.sk/inzerat/197748515/mini-cooper-cabrio-15-benzin-100kw.php", "title": "Mini cooper cabrio 1,5 benzín 100kW", "price": 17800, "price_gross": 17800, "fair_price": 18730.0, "discount_pct": 5.0, "verdict": "férová cena", "year": 2022, "km": 54000, "km_per_year": 12500.0, "eg": "1.2 / 1.5 One / Cooper 55–115 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Tvrdošín", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "cabrio"}, {"id": "bs-37583263", "url": "https://auto.bazar.sk/37583263-mini-cooper-s-2-0-automat-koza-serviska/", "title": "Mini Cooper S 2.0 automat, koža,serviska", "price": 12999, "price_gross": 12999, "fair_price": 13680.0, "discount_pct": 5.0, "verdict": "férová cena", "year": 2015, "km": 83663, "km_per_year": 7400.0, "eg": "Cooper S / JCW (1.6 / 2.0 Turbo) 120–170 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava IV - Karlova Ves", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "ab-AeLbGsLSq6C", "url": "https://www.autobazar.eu/detail/mini-cooper-navigacia-klima-tempomat/AeLbGsLSq6C/", "title": "MINI Cooper, Navigácia, Klíma, Tempomat", "price": 9000, "price_gross": 9000, "fair_price": 9400.0, "discount_pct": 4.2, "verdict": "férová cena", "year": 2017, "km": 166008, "km_per_year": 17800.0, "eg": "1.2 / 1.5 One / Cooper 55–115 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Dunajská Streda", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "196755223", "url": "https://auto.bazos.sk/inzerat/196755223/mini-cooper-16.php", "title": "Mini Cooper 1.6", "price": 5990, "price_gross": 5990, "fair_price": 6250.0, "discount_pct": 4.1, "verdict": "férová cena", "year": 2012, "km": 173312, "km_per_year": 12100.0, "eg": "1.4 / 1.6 benzín (R56) 55–90 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Hlohovec", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "bs-39374350", "url": "https://auto.bazar.sk/39374350-mini-cooper-john-works-170-kw-at/", "title": "Mini Cooper John Works 170 kW AT", "price": 32899, "price_gross": 32899, "fair_price": 34120.0, "discount_pct": 3.6, "verdict": "férová cena", "year": 2024, "km": 13488, "km_per_year": 5800.0, "eg": "Cooper S / JCW (1.6 / 2.0 Turbo) 120–170 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava I - Staré Mesto", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "hatchback"}, {"id": "ab-Ae00pGnZW3S", "url": "https://www.autobazar.eu/detail/mini-cooper-mini-cooper/Ae00pGnZW3S/", "title": "Mini Cooper 1.5 benzín,AT,100KW", "price": 16500, "price_gross": 16500, "fair_price": 16930.0, "discount_pct": 2.6, "verdict": "férová cena", "year": 2022, "km": 100500, "km_per_year": 23200.0, "eg": "1.2 / 1.5 One / Cooper 55–115 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Žilina", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "hatchback"}, {"id": "ab-Aer1n6sX3XX", "url": "https://www.autobazar.eu/detail/mini-cooper-s-automat-sr2maj/Aer1n6sX3XX/", "title": "MINI Cooper S, Automat, SR,2.maj", "price": 23500, "price_gross": 23500, "fair_price": 24060.0, "discount_pct": 2.3, "verdict": "férová cena", "year": 2023, "km": 37717, "km_per_year": 11300.0, "eg": "Cooper S / JCW (1.6 / 2.0 Turbo) 120–170 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Prešovský kraj", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "197333158", "url": "https://auto.bazos.sk/inzerat/197333158/mini-cooper-s-20141-kw-jcw.php", "title": "Mini Cooper S 2.0/141 KW JCW", "price": 14490, "price_gross": 14490, "fair_price": 14770.0, "discount_pct": 1.9, "verdict": "férová cena", "year": 2016, "km": 134138, "km_per_year": 13000.0, "eg": "Cooper S / JCW (1.6 / 2.0 Turbo) 120–170 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Poprad", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "bs-39763597", "url": "https://auto.bazar.sk/39763597-mini-cooper/", "title": "Mini Cooper", "price": 33950, "price_gross": 33950, "fair_price": 34590.0, "discount_pct": 1.8, "verdict": "férová cena", "year": 2025, "km": 1792, "km_per_year": 1300.0, "eg": "Cooper S / JCW (1.6 / 2.0 Turbo) 120–170 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava II - Ružinov", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AbXsm5ThPNa", "url": "https://www.autobazar.eu/detail/mini-cooper-s/AbXsm5ThPNa/", "price": 33950}], "body": "hatchback"}, {"id": "bs-39376672", "url": "https://auto.bazar.sk/39376672-mini-cooper/", "title": "Mini Cooper", "price": 28400, "price_gross": 28400, "fair_price": 28760.0, "discount_pct": 1.2, "verdict": "férová cena", "year": 2024, "km": 11406, "km_per_year": 4900.0, "eg": "Cooper S / JCW (1.6 / 2.0 Turbo) 120–170 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava II - Ružinov", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AbAxlvQEVGs", "url": "https://www.autobazar.eu/detail/mini-cooper-s/AbAxlvQEVGs/", "price": 28400}], "body": "hatchback"}, {"id": "ab-AmckyyeOebW", "url": "https://www.autobazar.eu/detail/mini-cooper-100kw-2015-aj-na-splatky-protiucet/AmckyyeOebW/", "title": "Mini Cooper 100kW, 2015 / AJ NA SPLÁTKY / PROTIÚČET /", "price": 8290, "price_gross": 8290, "fair_price": 8330.0, "discount_pct": 0.5, "verdict": "férová cena", "year": 2015, "km": 129101, "km_per_year": 11400.0, "eg": "1.2 / 1.5 One / Cooper 55–115 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Trenčín", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazarsk", "id": "bs-39759101", "url": "https://auto.bazar.sk/39759101-mini-cooper-100kw-2015-aj-na-splatky-protiucet/", "price": 8290}, {"source": "bazos", "id": "197558388", "url": "https://auto.bazos.sk/inzerat/197558388/mini-cooper-f56-2015.php", "price": 8290}], "body": "hatchback"}, {"id": "ab-Ae8bTi1IXYG", "url": "https://www.autobazar.eu/detail/mini-cooper-15i-100kw/Ae8bTi1IXYG/", "title": "Mini Cooper 1.5i 100kW", "price": 15000, "price_gross": 15000, "fair_price": 15080.0, "discount_pct": 0.5, "verdict": "férová cena", "year": 2018, "km": 90000, "km_per_year": 10800.0, "eg": "1.2 / 1.5 One / Cooper 55–115 kW", "cg": 0, "transmission": "automatic", "seller_type": "private", "location": "Podolínec", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "hatchback"}, {"id": "ab-AebIdt-N1rH", "url": "https://www.autobazar.eu/detail/mini-cooper-16-benzin/AebIdt-N1rH/", "title": "Mini Cooper 1.6 benzin", "price": 9000, "price_gross": 9000, "fair_price": 9000.0, "discount_pct": 0.0, "verdict": "férová cena", "year": 2015, "km": 137000, "km_per_year": 12100.0, "eg": "1.2 / 1.5 One / Cooper 55–115 kW", "cg": 0, "transmission": "automatic", "seller_type": "private", "location": "Námestovo", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "hatchback"}, {"id": "ab-AmVQu0Ftqgs", "url": "https://www.autobazar.eu/detail/mini-cooper-s-20141-kw-jcw/AmVQu0Ftqgs/", "title": "Mini Cooper S 2.0/141 KW JCW", "price": 17590, "price_gross": 17590, "fair_price": 17500.0, "discount_pct": -0.5, "verdict": "férová cena", "year": 2017, "km": 43972, "km_per_year": 4700.0, "eg": "Cooper S / JCW (1.6 / 2.0 Turbo) 120–170 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Nové Zámky", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197411018", "url": "https://auto.bazos.sk/inzerat/197411018/mini-cooper-s-20141-kw-jcw.php", "price": 17590}, {"source": "bazarsk", "id": "bs-39498762", "url": "https://auto.bazar.sk/39498762-mini-cooper-s-2-0-141-kw-jcw/", "price": 17590}], "body": "hatchback"}, {"id": "bs-39376370", "url": "https://auto.bazar.sk/39376370-mini-cooper-cabrio-john-works-cabrio-170-kw-at/", "title": "Mini Cooper Cabrio John Works Cabrio 170 kW AT", "price": 34399, "price_gross": 34399, "fair_price": 34240.0, "discount_pct": -0.5, "verdict": "férová cena", "year": 2024, "km": 12420, "km_per_year": 5300.0, "eg": "Cooper S / JCW (1.6 / 2.0 Turbo) 120–170 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava I - Staré Mesto", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "cabrio"}, {"id": "bs-39690030", "url": "https://auto.bazar.sk/39690030-mini-cooper-s-2-0t-at-h-k-acc-navi/", "title": "Mini Cooper S 2.0T AT H/K ACC NAVI", "price": 20421, "price_gross": 20421, "fair_price": 20140.0, "discount_pct": -1.4, "verdict": "férová cena", "year": 2021, "km": 61708, "km_per_year": 11600.0, "eg": "Cooper S / JCW (1.6 / 2.0 Turbo) 120–170 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Dyje", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AbYl6ycDn5H", "url": "https://www.autobazar.eu/detail/mini-cooper-s-20t-at-hk-acc-navi/AbYl6ycDn5H/", "price": 20421}], "body": "hatchback"}, {"id": "197754120", "url": "https://auto.bazos.sk/inzerat/197754120/mini-cooper-john-works.php", "title": "MINI Cooper John Works", "price": 19500, "price_gross": 19500, "fair_price": 19180.0, "discount_pct": -1.6, "verdict": "férová cena", "year": 2021, "km": 133200, "km_per_year": 25000.0, "eg": "Cooper S / JCW (1.6 / 2.0 Turbo) 120–170 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Námestovo", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "ab-Ae35o9o1unf", "url": "https://www.autobazar.eu/detail/mini-cooper-mini-cooper/Ae35o9o1unf/", "title": "Mini Cooper Mini Cooper", "price": 19900, "price_gross": 19900, "fair_price": 19560.0, "discount_pct": -1.7, "verdict": "férová cena", "year": 2020, "km": 27100, "km_per_year": 4300.0, "eg": "1.2 / 1.5 One / Cooper 55–115 kW", "cg": 0, "transmission": "manual", "seller_type": "private", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "hatchback"}, {"id": "196670514", "url": "https://auto.bazos.sk/inzerat/196670514/mini-cooper-s-r56-16-turbo-benzin-facelift-135kw-2011.php", "title": "Mini Cooper S R56 1.6 turbo benzín facelift 135kw 2011", "price": 6550, "price_gross": 6550, "fair_price": 6400.0, "discount_pct": -2.3, "verdict": "férová cena", "year": 2011, "km": 211000, "km_per_year": 13800.0, "eg": "Cooper S / JCW (1.6 / 2.0 Turbo) 120–170 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Žiar nad Hronom", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "bs-39535440", "url": "https://auto.bazar.sk/39535440-mini-cooper-s-2-0-141-kw/", "title": "Mini Cooper S 2.0 141 kW", "price": 9000, "price_gross": 9000, "fair_price": 8740.0, "discount_pct": -3.0, "verdict": "férová cena", "year": 2014, "km": 181616, "km_per_year": 14700.0, "eg": "Cooper S / JCW (1.6 / 2.0 Turbo) 120–170 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Žilina", "flags": [], "pick": null, "source": "bazarsk", "origin": "dovoz", "also_listed": [{"source": "autobazar", "id": "ab-AmNPATTXC6u", "url": "https://www.autobazar.eu/detail/mini-cooper-s/AmNPATTXC6u/", "price": 9000}], "body": "hatchback"}, {"id": "ab-AmdLN6B1onr", "url": "https://www.autobazar.eu/detail/mini-cooper-s-20-at-131kw-a7-aj-na-splatky-protiucet/AmdLN6B1onr/", "title": "Mini Cooper S 2.0 A/T, 131kW, A7 / AJ NA SPLÁTKY / PROTIÚČET /", "price": 21290, "price_gross": 21290, "fair_price": 20640.0, "discount_pct": -3.2, "verdict": "férová cena", "year": 2022, "km": 68368, "km_per_year": 15800.0, "eg": "Cooper S / JCW (1.6 / 2.0 Turbo) 120–170 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197638348", "url": "https://auto.bazos.sk/inzerat/197638348/mini-cooper-s-20-at-131kw-a7-2022-kupene-na-sk.php", "price": 21290}, {"source": "bazarsk", "id": "bs-39756906", "url": "https://auto.bazar.sk/39756906-mini-cooper-s-2-0-a-t-131kw-a7-aj-na-splatky-protiucet/", "price": 21290}], "body": "hatchback"}, {"id": "ab-AerndtcGSQk", "url": "https://www.autobazar.eu/detail/mini-cooper-2024/AerndtcGSQk/", "title": "Mini Cooper John Works", "price": 36600, "price_gross": 36600, "fair_price": 35420.0, "discount_pct": -3.3, "verdict": "férová cena", "year": 2024, "km": 9845, "km_per_year": 4200.0, "eg": "Cooper S / JCW (1.6 / 2.0 Turbo) 120–170 kW", "cg": 0, "transmission": "automatic", "seller_type": "private", "location": "Trnava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "196233417", "url": "https://auto.bazos.sk/inzerat/196233417/mini-cooper-s-f56.php", "title": "Mini Cooper S F56", "price": 13490, "price_gross": 13490, "fair_price": 13050.0, "discount_pct": -3.3, "verdict": "férová cena", "year": 2016, "km": 154000, "km_per_year": 14900.0, "eg": "Cooper S / JCW (1.6 / 2.0 Turbo) 120–170 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Bratislava", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "196636751", "url": "https://auto.bazos.sk/inzerat/196636751/mini-cooper-s-f56-141kw-at-2015.php", "title": "Mini Cooper S F56 141kw AT 2015", "price": 12500, "price_gross": 12500, "fair_price": 12010.0, "discount_pct": -4.1, "verdict": "férová cena", "year": 2015, "km": 161000, "km_per_year": 14200.0, "eg": "Cooper S / JCW (1.6 / 2.0 Turbo) 120–170 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Piešťany", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "196997440", "url": "https://auto.bazos.sk/inzerat/196997440/mini-cooper-s-20-141kw-m6-benzinm6.php", "title": "Mini Cooper S 2.0, 141kW, M6, Benzin,M6.", "price": 11499, "price_gross": 11499, "fair_price": 11000.0, "discount_pct": -4.6, "verdict": "férová cena", "year": 2015, "km": 169579, "km_per_year": 15000.0, "eg": "Cooper S / JCW (1.6 / 2.0 Turbo) 120–170 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Kežmarok", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "bs-39775969", "url": "https://auto.bazar.sk/39775969-mini-cooper-5-dverove-s/", "title": "MINI Cooper 5-dverové S", "price": 36200, "price_gross": 36200, "fair_price": 34550.0, "discount_pct": -4.8, "verdict": "férová cena", "year": 2025, "km": 2156, "km_per_year": 1600.0, "eg": "Cooper S / JCW (1.6 / 2.0 Turbo) 120–170 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava II - Ružinov", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "hatchback"}, {"id": "ab-Ae8XTzFUanR", "url": "https://www.autobazar.eu/detail/mini-cooper-john-cooper-works-cabrio-f57-231-koni-rocnik-2019/Ae8XTzFUanR/", "title": "Mini Cooper John Cooper Works Cabrio F57. 231 koní, ročník 2019", "price": 22900, "price_gross": 22900, "fair_price": 21780.0, "discount_pct": -5.1, "verdict": "férová cena", "year": 2019, "km": 66000, "km_per_year": 9000.0, "eg": "Cooper S / JCW (1.6 / 2.0 Turbo) 120–170 kW", "cg": 0, "transmission": "automatic", "seller_type": "private", "location": "Bratislava-Ružinov", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "cabrio"}, {"id": "197385717", "url": "https://auto.bazos.sk/inzerat/197385717/mini-cooper-s-f56.php", "title": "Mini Cooper S F56", "price": 12300, "price_gross": 12300, "fair_price": 11640.0, "discount_pct": -5.7, "verdict": "férová cena", "year": 2016, "km": 141000, "km_per_year": 13600.0, "eg": "Cooper S / JCW (1.6 / 2.0 Turbo) 120–170 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Poprad", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "196232441", "url": "https://auto.bazos.sk/inzerat/196232441/mini-cooper-s.php", "title": "Mini Cooper S", "price": 17900, "price_gross": 17900, "fair_price": 16820.0, "discount_pct": -6.4, "verdict": "férová cena", "year": 2018, "km": 77800, "km_per_year": 9300.0, "eg": "Cooper S / JCW (1.6 / 2.0 Turbo) 120–170 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39536903", "url": "https://auto.bazar.sk/39536903-mini-cooper-s-2-0/", "price": 17900}], "body": "hatchback"}, {"id": "ab-AeiQqp3U1AB", "url": "https://www.autobazar.eu/detail/mini-cooper-s-mini-cooper/AeiQqp3U1AB/", "title": "Mini Cooper S Mini Cooper", "price": 27999, "price_gross": 27999, "fair_price": 26290.0, "discount_pct": -6.5, "verdict": "férová cena", "year": 2024, "km": 42000, "km_per_year": 18000.0, "eg": "Cooper S / JCW (1.6 / 2.0 Turbo) 120–170 kW", "cg": 0, "transmission": "automatic", "seller_type": "private", "location": "Považská Bystrica", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197349095", "url": "https://auto.bazos.sk/inzerat/197349095/mini-cooper-s.php", "price": 27999}], "body": "hatchback"}, {"id": "ab-AeQkj8oj2W7", "url": "https://www.autobazar.eu/detail/mini-cooper-hatchback-135kw-automat/AeQkj8oj2W7/", "title": "Mini Cooper Hatchback 135kw Automat", "price": 16990, "price_gross": 16990, "fair_price": 15950.0, "discount_pct": -6.5, "verdict": "férová cena", "year": 2021, "km": 49000, "km_per_year": 9200.0, "eg": "Mini Electric (Cooper SE) 135 kW", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Marianka", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "hatchback"}, {"id": "196719334", "url": "https://auto.bazos.sk/inzerat/196719334/mini-cooper-jcw-f56-2019.php", "title": "MINI Cooper JCW F56 2019", "price": 17000, "price_gross": 20910, "fair_price": 19640.0, "discount_pct": -6.5, "verdict": "férová cena", "year": 2019, "km": 170000, "km_per_year": 23200.0, "eg": "Cooper S / JCW (1.6 / 2.0 Turbo) 120–170 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Košice", "flags": ["inzerovaná cena 17000 € je bez DPH – porovnáva sa cena s DPH 20910 €"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "ab-AeXYoDEMqeh", "url": "https://www.autobazar.eu/detail/mini-cooper-e-electric-novej-generacie-j01-elektro/AeXYoDEMqeh/", "title": "Mini Cooper E Electric novej generácie J01 Elektro", "price": 23800, "price_gross": 29274, "fair_price": 27430.0, "discount_pct": -6.7, "verdict": "férová cena", "year": 2024, "km": 25000, "km_per_year": 10700.0, "eg": "Mini Electric (Cooper SE) 135 kW", "cg": 2, "transmission": "automatic", "seller_type": "uncertain", "location": "Senec", "flags": ["inzerovaná cena 23800 € je bez DPH – porovnáva sa cena s DPH 29274 €"], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "hatchback"}, {"id": "ab-AmIGL4TkGpo", "url": "https://www.autobazar.eu/detail/mini-cooper-s-se-135kw-32kwh/AmIGL4TkGpo/", "title": "Mini Cooper S SE 135kw 32kWh", "price": 17990, "price_gross": 17990, "fair_price": 16700.0, "discount_pct": -7.7, "verdict": "nad trhom", "year": 2021, "km": 33658, "km_per_year": 6300.0, "eg": "Mini Electric (Cooper SE) 135 kW", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazarsk", "id": "bs-39627679", "url": "https://auto.bazar.sk/39627679-mini-cooper-s-se-135kw-32kwh/", "price": 17990}, {"source": "bazarsk", "id": "bs-39598078", "url": "https://auto.bazar.sk/39598078-mini-cooper-s-se-135kw-32kwh/", "price": 17990}], "body": "hatchback"}, {"id": "ab-AmYV-BkGUoD", "url": "https://www.autobazar.eu/detail/mini-cooper-15-100kw-2019-aj-na-splatky-protiucet/AmYV-BkGUoD/", "title": "Mini Cooper 1.5, 100kW (2019) / AJ NA SPLÁTKY / PROTIÚČET /", "price": 18800, "price_gross": 18800, "fair_price": 17370.0, "discount_pct": -8.2, "verdict": "nad trhom", "year": 2019, "km": 36730, "km_per_year": 5000.0, "eg": "1.2 / 1.5 One / Cooper 55–115 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197253284", "url": "https://auto.bazos.sk/inzerat/197253284/mini-cooper-15-100kw-2019.php", "price": 18800}, {"source": "bazarsk", "id": "bs-39754577", "url": "https://auto.bazar.sk/39754577-mini-cooper-1-5-100kw-2019-aj-na-splatky-protiucet/", "price": 18800}], "body": "hatchback"}, {"id": "196155403", "url": "https://auto.bazos.sk/inzerat/196155403/mini-cooper-s-f56-141kw-manual-full-led-jcw.php", "title": "Mini Cooper S f56 141kw manual Full LED JCW", "price": 9700, "price_gross": 9700, "fair_price": 8950.0, "discount_pct": -8.4, "verdict": "nad trhom", "year": 2015, "km": 221000, "km_per_year": 19500.0, "eg": "Cooper S / JCW (1.6 / 2.0 Turbo) 120–170 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "hatchback"}, {"id": "197549854", "url": "https://auto.bazos.sk/inzerat/197549854/mini-cooper-s-r57-135-kw-68-000km-akontacia-od-0.php", "title": "Mini Cooper S R57 | 135 kW | 68 000KM | Akontácia od 0%", "price": 10990, "price_gross": 10990, "fair_price": 10050.0, "discount_pct": -9.3, "verdict": "nad trhom", "year": 2012, "km": 68000, "km_per_year": 4700.0, "eg": "Cooper S / JCW (1.6 / 2.0 Turbo) 120–170 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Trenčín", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmGbQ9JD3Sh", "url": "https://www.autobazar.eu/detail/mini-cooper-s-r57-2012-67800km/AmGbQ9JD3Sh/", "price": 10990}, {"source": "bazarsk", "id": "bs-39699721", "url": "https://auto.bazar.sk/39699721-mini-cooper-s-r57-2012-67800km/", "price": 10990}], "body": "cabrio"}, {"id": "ab-AeVbfojC6zA", "url": "https://www.autobazar.eu/detail/mini-cooper-el/AeVbfojC6zA/", "title": "Mini Cooper EL", "price": 19500, "price_gross": 19500, "fair_price": 17730.0, "discount_pct": -10.0, "verdict": "nad trhom", "year": 2022, "km": 95666, "km_per_year": 22100.0, "eg": "Mini Electric (Cooper SE) 135 kW", "cg": 2, "transmission": "automatic", "seller_type": "private", "location": "Bratislava-Podunajské Biskupice", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "bs-39678000", "url": "https://auto.bazar.sk/39678000-mini-cooper-1-5/", "title": "Mini Cooper 1.5", "price": 16890, "price_gross": 16890, "fair_price": 15350.0, "discount_pct": -10.0, "verdict": "nad trhom", "year": 2022, "km": 154618, "km_per_year": 35700.0, "eg": "1.2 / 1.5 One / Cooper 55–115 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Bratislava II - Podunajské Biskupice", "flags": ["vysoký nájazd 36000 km/rok – flotila / taxi?"], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "ab-AesTMPjqdNd", "url": "https://www.autobazar.eu/detail/mini-cooper-s-mini-cooper-s/AesTMPjqdNd/", "title": "Mini Cooper S Mini Cooper S", "price": 17890, "price_gross": 17890, "fair_price": 16240.0, "discount_pct": -10.2, "verdict": "nad trhom", "year": 2019, "km": 92000, "km_per_year": 12500.0, "eg": "Cooper S / JCW (1.6 / 2.0 Turbo) 120–170 kW", "cg": 0, "transmission": "manual", "seller_type": "private", "location": "Košice", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "196577542", "url": "https://auto.bazos.sk/inzerat/196577542/mini-cooper-s-2019.php", "price": 17800}], "body": "hatchback"}, {"id": "197356017", "url": "https://auto.bazos.sk/inzerat/197356017/mini-cooper-sd.php", "title": "Mini Cooper SD", "price": 8500, "price_gross": 8500, "fair_price": 7660.0, "discount_pct": -11.0, "verdict": "nad trhom", "year": 2012, "km": 215000, "km_per_year": 15000.0, "eg": "1.5 / 1.6 / 2.0 diesel (One D, Cooper D/SD) 70–125 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Kysucké Nové Mesto", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "ab-AeRgf_BxEGk", "url": "https://www.autobazar.eu/detail/mini-cooper-s-john-cooper-works/AeRgf_BxEGk/", "title": "Mini Cooper S John Cooper Works", "price": 26990, "price_gross": 26990, "fair_price": 24150.0, "discount_pct": -11.8, "verdict": "nad trhom", "year": 2023, "km": 30000, "km_per_year": 9000.0, "eg": "Cooper S / JCW (1.6 / 2.0 Turbo) 120–170 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Revúca", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "hatchback"}, {"id": "ab-Am7D5BrH_84", "url": "https://www.autobazar.eu/detail/mini-cooper-john-works-iii-cabrio-170kw-model-2023/Am7D5BrH_84/", "title": "Mini John  Works III Cabrio 170kW, model 2023", "price": 30999, "price_gross": 30999, "fair_price": 27670.0, "discount_pct": -12.0, "verdict": "nad trhom", "year": 2023, "km": 19753, "km_per_year": 5900.0, "eg": "Cooper S / JCW (1.6 / 2.0 Turbo) 120–170 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "cabrio"}, {"id": "ab-AmlbN88NC7c", "url": "https://www.autobazar.eu/detail/mini-cooper-s-se-trim-m-184ps-32kwh/AmlbN88NC7c/", "title": "Mini Cooper S SE Trim M , 184PS,  32kWh", "price": 16990, "price_gross": 16990, "fair_price": 15050.0, "discount_pct": -12.9, "verdict": "nad trhom", "year": 2021, "km": 69094, "km_per_year": 13000.0, "eg": "Mini Electric (Cooper SE) 135 kW", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava-Nové Mesto", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazarsk", "id": "bs-39598164", "url": "https://auto.bazar.sk/39598164-mini-cooper-s-se-trim-m-184ps-32kwh/", "price": 16990}, {"source": "bazos", "id": "197563710", "url": "https://auto.bazos.sk/inzerat/197563710/mini-cooper-s-se-135kw184ps-32kwh-full-electric.php", "price": 16990}], "body": "hatchback"}, {"id": "196564327", "url": "https://auto.bazos.sk/inzerat/196564327/predam-mini-cooper-16-benzin-90kw.php", "title": "Predám  Mini Cooper 1,6 benzín, 90kW", "price": 6490, "price_gross": 6490, "fair_price": 5740.0, "discount_pct": -13.1, "verdict": "nad trhom", "year": 2010, "km": 162156, "km_per_year": 9900.0, "eg": "1.4 / 1.6 benzín (R56) 55–90 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Košice", "flags": [], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [{"source": "autobazar", "id": "ab-AmUABtU8Jt1", "url": "https://www.autobazar.eu/detail/mini-cooper-16-benzin-90kw/AmUABtU8Jt1/", "price": 6490}, {"source": "bazos", "id": "197337657", "url": "https://auto.bazos.sk/inzerat/197337657/mini-cooper-16-benzin-90kw.php", "price": 6490}, {"source": "bazos", "id": "196717642", "url": "https://auto.bazos.sk/inzerat/196717642/mini-cooper-16-benzin-90kw.php", "price": 6490}, {"source": "bazarsk", "id": "bs-39756100", "url": "https://auto.bazar.sk/39756100-mini-cooper-1-6-benzin-90kw/", "price": 6490}], "body": "hatchback"}, {"id": "197720889", "url": "https://auto.bazos.sk/inzerat/197720889/mini-cooper-s-20turbo-ben.php", "title": "Mini Cooper S 2.0Turbo Ben.", "price": 13500, "price_gross": 13500, "fair_price": 11920.0, "discount_pct": -13.3, "verdict": "nad trhom", "year": 2015, "km": 135000, "km_per_year": 11900.0, "eg": "Cooper S / JCW (1.6 / 2.0 Turbo) 120–170 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Pezinok", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "ab-AmsjLLi1g62", "url": "https://www.autobazar.eu/detail/mini-cooper-s-cabrio/AmsjLLi1g62/", "title": "Mini Cooper S Cabrio", "price": 29500, "price_gross": 29500, "fair_price": 26030.0, "discount_pct": -13.3, "verdict": "nad trhom", "year": 2023, "km": 6241, "km_per_year": 1900.0, "eg": "Cooper S / JCW (1.6 / 2.0 Turbo) 120–170 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Trnava", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-39735424", "url": "https://auto.bazar.sk/39735424-mini-cooper-s-cabrio/", "price": 29500}], "body": "cabrio"}, {"id": "ab-AeQp-NSPM4Y", "url": "https://www.autobazar.eu/detail/mini-cooper-15-2014/AeQp-NSPM4Y/", "title": "Mini Cooper 1,5 2014", "price": 7990, "price_gross": 7990, "fair_price": 6990.0, "discount_pct": -14.3, "verdict": "nad trhom", "year": 2014, "km": 174700, "km_per_year": 14200.0, "eg": "1.2 / 1.5 One / Cooper 55–115 kW", "cg": 0, "transmission": "manual", "seller_type": "private", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "ab-Ae2PkY27NFM", "url": "https://www.autobazar.eu/detail/mini-cooper-d-mini-cooper-d/Ae2PkY27NFM/", "title": "Mini Cooper D Mini Cooper D", "price": 9500, "price_gross": 9500, "fair_price": 8150.0, "discount_pct": -16.5, "verdict": "výrazne nad trhom", "year": 2015, "km": 198000, "km_per_year": 17500.0, "eg": "1.5 / 1.6 / 2.0 diesel (One D, Cooper D/SD) 70–125 kW", "cg": 1, "transmission": "automatic", "seller_type": "private", "location": "Rovinka", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "hatchback"}, {"id": "197212171", "url": "https://auto.bazos.sk/inzerat/197212171/mini-cooper-15.php", "title": "Mini Cooper 1.5", "price": 9700, "price_gross": 9700, "fair_price": 8270.0, "discount_pct": -17.3, "verdict": "výrazne nad trhom", "year": 2016, "km": 201000, "km_per_year": 19500.0, "eg": "1.2 / 1.5 One / Cooper 55–115 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Spišská Nová Ves", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "ab-Aey2MKN_pVF", "url": "https://www.autobazar.eu/detail/mini-cooper-16-automat/Aey2MKN_pVF/", "title": "Mini Cooper 1.6 - automat", "price": 9000, "price_gross": 9000, "fair_price": 7610.0, "discount_pct": -18.2, "verdict": "výrazne nad trhom", "year": 2013, "km": 109600, "km_per_year": 8200.0, "eg": "1.4 / 1.6 benzín (R56) 55–90 kW", "cg": 0, "transmission": "automatic", "seller_type": "private", "location": "Bratislava-Petržalka", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "hatchback"}, {"id": "ab-Ae2BQYTWjqL", "url": "https://www.autobazar.eu/detail/mini-cooper-20-diesel-105kw-automat-prevodovka-4x4/Ae2BQYTWjqL/", "title": "Mini Cooper 2.0 Diesel 105kW Automat. prevodovka 4x4", "price": 9990, "price_gross": 9990, "fair_price": 8380.0, "discount_pct": -19.2, "verdict": "výrazne nad trhom", "year": 2014, "km": 210000, "km_per_year": 17000.0, "eg": "1.5 / 1.6 / 2.0 diesel (One D, Cooper D/SD) 70–125 kW", "cg": 1, "transmission": "automatic", "seller_type": "private", "location": "Martin", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "ab-AeDC1d4ON_O", "url": "https://www.autobazar.eu/detail/mini-cooper-s-sd-f56/AeDC1d4ON_O/", "title": "Mini Cooper S SD F56 Automat", "price": 10999, "price_gross": 10999, "fair_price": 9100.0, "discount_pct": -20.9, "verdict": "výrazne nad trhom", "year": 2015, "km": 180000, "km_per_year": 15900.0, "eg": "1.5 / 1.6 / 2.0 diesel (One D, Cooper D/SD) 70–125 kW", "cg": 1, "transmission": "automatic", "seller_type": "private", "location": "Rabča", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "bs-36282928", "url": "https://auto.bazar.sk/36282928-mini-cooper/", "title": "Mini Cooper", "price": 24000, "price_gross": 24000, "fair_price": 19800.0, "discount_pct": -21.2, "verdict": "výrazne nad trhom", "year": 2019, "km": 25726, "km_per_year": 3500.0, "eg": "1.2 / 1.5 One / Cooper 55–115 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Banská Bystrica", "flags": [], "pick": null, "source": "bazarsk", "origin": "dovoz", "also_listed": [], "body": "hatchback"}, {"id": "ab-AmoQIqmJLn0", "url": "https://www.autobazar.eu/detail/mini-cooper-s-20i-chili-harman-kardon-adaptiv-suspension/AmoQIqmJLn0/", "title": "Mini Cooper S 2.0i Chili Harman Kardon Adaptiv Suspension", "price": 13500, "price_gross": 13500, "fair_price": 10990.0, "discount_pct": -22.8, "verdict": "výrazne nad trhom", "year": 2015, "km": 101367, "km_per_year": 8900.0, "eg": "Cooper S / JCW (1.6 / 2.0 Turbo) 120–170 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Zborov nad Bystricou", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazarsk", "id": "bs-39713341", "url": "https://auto.bazar.sk/39713341-mini-cooper-s-2-0i-chili-harman-kardon-adaptiv-suspension/", "price": 13500}], "body": "hatchback"}, {"id": "197514801", "url": "https://auto.bazos.sk/inzerat/197514801/mini-cooper-john-cooper-works.php", "title": "Mini cooper John Cooper Works", "price": 14800, "price_gross": 14800, "fair_price": 11790.0, "discount_pct": -25.5, "verdict": "výrazne nad trhom", "year": 2015, "km": 192000, "km_per_year": 16900.0, "eg": "Cooper S / JCW (1.6 / 2.0 Turbo) 120–170 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Žilina", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatchback"}, {"id": "bs-39680675", "url": "https://auto.bazar.sk/39680675-mini-cooper-s-ac-schnitzer/", "title": "Mini Cooper S AC SCHNITZER", "price": 44414, "price_gross": 44414, "fair_price": 34280.0, "discount_pct": -29.5, "verdict": "výrazne nad trhom", "year": 2025, "km": 8591, "km_per_year": 6400.0, "eg": "Cooper S / JCW (1.6 / 2.0 Turbo) 120–170 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Ostrava", "flags": [], "pick": null, "source": "bazarsk", "origin": "dovoz", "also_listed": [{"source": "autobazar", "id": "ab-AbbLjIfxnJs", "url": "https://www.autobazar.eu/detail/mini-cooper-s-ac-schnitzer/AbbLjIfxnJs/", "price": 44414}], "body": "hatchback"}, {"id": "197105294", "url": "https://auto.bazos.sk/inzerat/197105294/mini-cooper-s.php", "title": "Mini Cooper S", "price": 10000, "price_gross": 10000, "fair_price": 7620.0, "discount_pct": -31.2, "verdict": "výrazne nad trhom", "year": 2011, "km": 173414, "km_per_year": 11300.0, "eg": "Cooper S / JCW (1.6 / 2.0 Turbo) 120–170 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Liptovský Mikuláš", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "cabrio"}, {"id": "196786441", "url": "https://auto.bazos.sk/inzerat/196786441/mini-john-cooper-works-cabrio-155-kw-manual-84-900-km.php", "title": "MINI John Cooper Works Cabrio | 155 kW | manuál | 84 900 km", "price": 16490, "price_gross": 16490, "fair_price": 11970.0, "discount_pct": -37.8, "verdict": "výrazne nad trhom", "year": 2015, "km": 84900, "km_per_year": 7500.0, "eg": "Cooper S / JCW (1.6 / 2.0 Turbo) 120–170 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Brezno", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "cabrio"}, {"id": "bs-39414889", "url": "https://auto.bazar.sk/39414889-mini-cooper-2016-1-5-100kw/", "title": "Mini Cooper 2016 1.5 100kW", "price": 10990, "price_gross": 10990, "fair_price": 7860.0, "discount_pct": -39.7, "verdict": "výrazne nad trhom", "year": 2016, "km": 201123, "km_per_year": 19500.0, "eg": "1.2 / 1.5 One / Cooper 55–115 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Spišská Nová Ves", "flags": [], "pick": null, "source": "bazarsk", "origin": "dovoz", "also_listed": [{"source": "autobazar", "id": "ab-AmpmPVatpiT", "url": "https://www.autobazar.eu/detail/mini-cooper-2016-15-100kw/AmpmPVatpiT/", "price": 10990}], "body": "hatchback"}];
+const GROUPS = ["Benzín", "Diesel", "Elektro a nezistený"];
+const BODY = {"hatchback": "Hatchback", "cabrio": "Kabriolet"};
+const fmt = n => Math.round(n).toLocaleString("sk-SK");
+const eur = n => fmt(n) + " €";
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const TRANS = {automatic: "automat", manual: "manuál"};
+const SRC = {bazos: "bazoš", autobazar: "autobazar.eu", bazarsk: "bazar.sk"};
+
+// --- theme toggle ---------------------------------------------------------
+document.getElementById("themeBtn").onclick = () => {
+  const root = document.documentElement;
+  const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  drawChart();
+};
+
+// --- scatter chart --------------------------------------------------------
+const legend = document.getElementById("legend");
+legend.innerHTML = GROUPS.map((g, i) => `<span><i style="background:var(--s${i+1})"></i>${g}</span>`).join("")
+  + `<span><i class="ring"></i>odporúčaná ponuka</span>`;
+
+function drawChart() {
+  const svg = document.getElementById("chart"), wrap = document.getElementById("chartWrap"), tip = document.getElementById("tip");
+  const W = svg.clientWidth, H = 420, m = {l: 56, r: 16, t: 10, b: 40};
+  const pts = DATA.filter(d => d.km && d.price_gross);
+  const xMax = Math.ceil(Math.max(...pts.map(d => d.km)) / 50000) * 50000;
+  const yMax = Math.ceil(Math.max(...pts.map(d => d.price_gross)) / 5000) * 5000;
+  const x = v => m.l + v / xMax * (W - m.l - m.r), y = v => H - m.b - v / yMax * (H - m.t - m.b);
+  let s = "";
+  for (let v = 0; v <= yMax; v += 5000)
+    s += `<line x1="${m.l}" x2="${W-m.r}" y1="${y(v)}" y2="${y(v)}" stroke="var(--grid)"/><text x="${m.l-8}" y="${y(v)+4}" text-anchor="end">${v/1000} tis. €</text>`;
+  const step = W < 520 ? 100000 : 50000;
+  for (let v = 0; v <= xMax; v += step)
+    s += `<text x="${x(v)}" y="${H-m.b+18}" text-anchor="middle">${v/1000} tis.</text>`;
+  s += `<text x="${(W+m.l)/2}" y="${H-6}" text-anchor="middle">nájazd (km)</text>`;
+  const order = [...pts].sort((a, b) => (a.pick ? 1 : 0) - (b.pick ? 1 : 0));
+  order.forEach(d => {
+    const cx = x(d.km), cy = y(d.price_gross);
+    if (d.pick) s += `<circle cx="${cx}" cy="${cy}" r="9" fill="none" stroke="var(--text)" stroke-width="2"/>`;
+    s += `<circle class="pt" data-id="${d.id}" cx="${cx}" cy="${cy}" r="5" fill="var(--s${d.cg+1})" stroke="var(--surface)" stroke-width="2"/>`;
+  });
+  // invisible bigger hit targets
+  order.forEach(d => s += `<circle class="hit" data-id="${d.id}" cx="${x(d.km)}" cy="${y(d.price_gross)}" r="11" fill="transparent" style="cursor:pointer"/>`);
+  svg.innerHTML = s;
+  const byId = Object.fromEntries(pts.map(d => [d.id, d]));
+  svg.querySelectorAll(".hit").forEach(c => {
+    c.onmouseenter = c.onmousemove = ev => {
+      const d = byId[c.dataset.id];
+      tip.innerHTML = `<b>${esc(d.title)}</b>
+        <div class="row"><span>Cena</span><span>${eur(d.price_gross)}</span></div>
+        <div class="row"><span>Férová cena</span><span>${eur(d.fair_price)}</span></div>
+        <div class="row"><span>Pod trhom</span><span>${d.discount_pct > 0 ? "+" : ""}${d.discount_pct.toLocaleString("sk-SK")} %</span></div>
+        <div class="row"><span>Zdroj</span><span>${SRC[d.source]}${d.also_listed.length ? " + " + d.also_listed.map(a => SRC[a.source]).join(", ") : ""}</span></div>
+        <div class="row"><span>Rok · km</span><span>${d.year} · ${fmt(d.km)}</span></div>
+        <div class="row"><span>Motor</span><span>${esc(d.eg)} ${TRANS[d.transmission] || ""}</span></div>`;
+      tip.style.display = "block";
+      const r = wrap.getBoundingClientRect();
+      let lx = ev.clientX - r.left + 14, ly = ev.clientY - r.top + 14;
+      if (lx + 290 > r.width) lx = ev.clientX - r.left - 290;
+      tip.style.left = lx + "px"; tip.style.top = ly + "px";
+    };
+    c.onmouseleave = () => tip.style.display = "none";
+    c.onclick = () => window.open(byId[c.dataset.id].url, "_blank", "noopener");
+  });
+}
+drawChart();
+addEventListener("resize", drawChart);
+
+// --- full table -----------------------------------------------------------
+const fEngine = document.getElementById("fEngine");
+[...new Set(DATA.map(d => d.eg))].sort().forEach(g => fEngine.insertAdjacentHTML("beforeend", `<option>${esc(g)}</option>`));
+let sortK = "discount_pct", sortDir = -1;
+function discCell(v) {
+  const w = Math.min(Math.abs(v), 30) / 30 * 50;
+  const bar = v >= 0 ? `left:50%;width:${w}%;background:var(--pos)` : `right:50%;width:${w}%;background:var(--neg)`;
+  return `<span class="disc">${v > 0 ? "+" : ""}${v.toLocaleString("sk-SK")} %<span class="dbar"><span style="${bar}"></span></span></span>`;
+}
+function renderTable() {
+  const max = parseFloat(document.getElementById("fMax").value) || Infinity;
+  const tr = document.getElementById("fTrans").value, se = document.getElementById("fSeller").value, en = fEngine.value;
+  const so = document.getElementById("fSource").value, og = document.getElementById("fOrigin").value;
+  const bo = document.getElementById("fBody").value;
+  const rows = DATA.filter(d => (!en || d.eg === en) && (!tr || d.transmission === tr)
+    && (!se || d.seller_type !== "dealer") && d.price_gross <= max
+    && (!so || d.source === so || d.also_listed.some(a => a.source === so)) && (!og || d.origin === og) && (!bo || d.body === bo))
+    .sort((a, b) => { const A = a[sortK], B = b[sortK]; return (typeof A === "string" ? A.localeCompare(B) : A - B) * sortDir; });
+  document.getElementById("count").textContent = `${rows.length} z ${DATA.length} inzerátov`;
+  document.querySelector("#tbl tbody").innerHTML = rows.map(d => `<tr>
+    <td><a href="${d.url}" target="_blank" rel="noopener">${esc(d.title)}</a> ${d.pick ? '<span class="badge pick">odporúčané</span>' : ""}
+      <div class="sub">${BODY[d.body] || "karoséria ?"} · ${esc(d.eg)} · ${TRANS[d.transmission] || "prevodovka ?"} · ${esc(d.location)} · ${d.seller_type === "dealer" ? "predajca/firma" : d.seller_type === "private" ? "súkromník" : "neisté"} · ${SRC[d.source]}${d.origin === "SR" ? " · kúpené v SR" : d.origin === "dovoz" ? " · dovoz" : ""}${d.also_listed.map(a => ` · <a href="${a.url}" target="_blank" rel="noopener">aj na ${SRC[a.source]}</a>`).join("")}</div>
+      ${d.flags.filter(f => !f.startsWith("prevodovka")).map(f => `<div class="flag">⚠ ${esc(f)}</div>`).join("")}</td>
+    <td class="num">${d.year}</td><td class="num">${fmt(d.km)}</td>
+    <td class="num">${eur(d.price_gross)}</td><td class="num">${eur(d.fair_price)}</td>
+    <td class="num">${discCell(d.discount_pct)}</td></tr>`).join("");
+  document.querySelectorAll("#tbl th.sortable").forEach(th => {
+    const base = th.textContent.replace(/ [▾▴]$/, "");
+    th.textContent = base + (th.dataset.k === sortK ? (sortDir < 0 ? " ▾" : " ▴") : "");
+  });
+}
+document.querySelectorAll("#tbl th.sortable").forEach(th => th.onclick = () => {
+  if (sortK === th.dataset.k) sortDir *= -1; else { sortK = th.dataset.k; sortDir = th.dataset.k === "title" ? 1 : -1; }
+  renderTable();
+});
+["fEngine", "fTrans", "fSeller", "fSource", "fBody", "fOrigin", "fMax"].forEach(id => document.getElementById(id).addEventListener("input", renderTable));
+renderTable();
+</script>
+<!-- ferovka-theme --><script defer src="/analytics-config.js"></script><script defer src="/analytics.js"></script><script id="ferovka-chart">/* Férovka – chart → ad links, injected into every report by sync-reports.mjs.
+ *
+ * The reports draw one invisible 11px "hit" circle per ad. In dense charts (and always on a narrow phone) those
+ * circles overlap and the one drawn last wins, so a click/tap often opened a neighbouring ad. Here the pointer is
+ * always resolved to the NEAREST point, the report's own tooltip is shown for that point, and a click opens its ad.
+ * Touch: the first tap shows the tooltip (with a hint), a second tap on the same point opens the ad.
+ */
+(() => {
+  let rows;
+  try { rows = DATA; } catch { return; } // eslint-disable-line no-undef
+  if (!Array.isArray(rows) || !rows.length || !("url" in rows[0])) return;
+  const byId = new Map(rows.map((d) => [String(d.id), d]));
+  const MOUSE = ["mouseover", "mouseout", "mouseenter", "mouseleave", "mousemove", "mousedown", "mouseup", "click"];
+  let lastPointer = "mouse", down = null;
+  // the finger position as it was – Chrome "snaps" the later click of a tap to the centre of a nearby clickable element
+  addEventListener("pointerdown", (e) => { lastPointer = e.pointerType || "mouse"; down = { clientX: e.clientX, clientY: e.clientY }; }, true);
+
+  // the old per-point hit circles must not be targets (they overlap, and touch snapping aims at them)
+  document.head.insertAdjacentHTML("beforeend", "<style>svg circle.hit[data-id],svg circle.pt[data-id]{pointer-events:none}</style>");
+
+  function nearest(svg, ev, radius) {
+    let best = null, bd = Infinity;
+    for (const c of svg.querySelectorAll("circle.pt[data-id]")) {
+      const r = c.getBoundingClientRect();
+      const dx = r.left + r.width / 2 - ev.clientX, dy = r.top + r.height / 2 - ev.clientY;
+      const d = dx * dx + dy * dy;
+      if (d <= bd) { bd = d; best = c; } // ties: the point drawn on top (later) wins – that is the one you see
+    }
+    return best && bd <= radius * radius ? best : null;
+  }
+
+  function bind(svg) {
+    if (svg.__fvLinks) return;
+    svg.__fvLinks = true;
+    let current = null, armed = null;
+    const hitOf = (pt) => pt && svg.querySelector(`circle.hit[data-id="${CSS.escape(pt.dataset.id)}"]`);
+    const fire = (el, type, ev) => {
+      if (!el) return;
+      const e = new MouseEvent(type, { clientX: ev.clientX, clientY: ev.clientY, bubbles: false });
+      e.__fv = true;
+      el.dispatchEvent(e);
+    };
+    const tip = () => (svg.parentElement && svg.parentElement.querySelector("#tip, .tip")) || document.getElementById("tip");
+    const mark = (pt) => {
+      if (current === pt) return;
+      if (current) current.setAttribute("r", current.__r || "5");
+      current = pt;
+      if (pt) { pt.__r = pt.__r || pt.getAttribute("r"); pt.setAttribute("r", String(+pt.__r + 2)); }
+    };
+    const show = (pt, ev, hint) => {
+      mark(pt);
+      if (!pt) { const t = tip(); if (t) t.style.display = "none"; return; }
+      fire(hitOf(pt), "mousemove", ev); // the report's own tooltip, for the nearest point
+      const t = tip();
+      if (t && hint) t.insertAdjacentHTML("beforeend", `<div class="fv-hint">Ťukni ešte raz – otvorí sa inzerát ↗</div>`);
+    };
+    const open = (pt) => {
+      const d = byId.get(pt.dataset.id);
+      if (d && d.url) {
+        try { window.FerovkaAnalytics?.listingClick(d.url, "chart"); } catch { /* analytics must never block an ad */ }
+        window.open(d.url, "_blank", "noopener");
+      }
+    };
+
+    // the per-circle handlers of the report never see real mouse events – only our synthetic ones
+    for (const type of MOUSE) {
+      svg.addEventListener(type, (ev) => {
+        if (ev.__fv) return;
+        ev.stopImmediatePropagation();
+        if (type === "mousemove" && lastPointer === "mouse") {
+          show(nearest(svg, ev, 18), ev, false);
+          svg.style.cursor = current ? "pointer" : "";
+        } else if (type === "mouseleave" && ev.target === svg && lastPointer === "mouse") {
+          show(null, ev);
+        } else if (type === "click") {
+          const touch = lastPointer !== "mouse";
+          const at = touch && down ? down : ev;
+          const pt = nearest(svg, at, touch ? 26 : 18);
+          if (!pt) { armed = null; show(null, ev); return; }
+          if (!touch || armed === pt) { armed = null; open(pt); }
+          else { armed = pt; show(pt, at, true); }
+        }
+      }, true);
+    }
+  }
+
+  const scan = () => document.querySelectorAll("svg").forEach((s) => s.querySelector("circle.pt[data-id]") && bind(s));
+  scan();
+  new MutationObserver(scan).observe(document.body, { childList: true, subtree: true });
+})();
+</script><script id="ferovka-filters">/* Férovka – filters for the whole report, injected into every model report by sync-reports.mjs.
+ *
+ * The reports render the chart (drawChart) and the full ranking (renderTable) from the global DATA array; their own
+ * filter bar only filters the table. Here the filter bar (kept in its place above the ranking) gets more filters (year, price from/to,
+ * km, fuel, discount, picks only, text search) and every filter applies to the chart and the ranking together: DATA is
+ * refilled in place with the matching ads and both are drawn again. "</script" can't occur inside this file.
+ */
+(() => {
+  let data;
+  try { data = DATA; } catch { return; } // eslint-disable-line no-undef
+  if (!Array.isArray(data) || !data.length || typeof renderTable !== "function") return; // eslint-disable-line no-undef
+  const bar = document.querySelector(".filters");
+  if (!bar || bar.dataset.fv) return;
+  bar.dataset.fv = "1";
+  const ALL = data.slice();
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+  const fmt = (n) => Math.round(n).toLocaleString("sk-SK");
+  const norm = (s) => String(s ?? "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+  let groups = null;
+  try { groups = GROUPS; } catch { /* report without groups */ } // eslint-disable-line no-undef
+
+  const FUEL = { diesel: "Diesel", petrol: "Benzín", hybrid: "Hybrid", "plug-in hybrid": "Plug-in hybrid", electric: "Elektro", lpg: "LPG", cng: "CNG" };
+  const fuelOf = (d) => {
+    const e = norm(d.eg);
+    if (/tdi|crdi|dci|hdi|diesel|\bd\b|cdi|\d+d\b|blue/.test(e)) return "Diesel";
+    if (/plug-in|phev|e-hybrid|recharge|\bgte\b|\bt8\b|\b\d{2}e\b|\b\d{3} ?e\b/.test(e)) return "Plug-in hybrid";
+    if (/elektro|electric|\bev\b/.test(e)) return "Elektro";
+    if (/cng|lpg|g-tec|g-tron|tgi|ecofuel/.test(e)) return "Plyn (CNG/LPG)";
+    if (/mild|mhev/.test(e)) return "Benzín"; // mild-hybrid petrol (the diesel ones say TDI / d above)
+    if (/hybrid|hev/.test(e)) return "Hybrid";
+    if (/tsi|tfsi|mpi|fsi|benzin|gdi|dpi|htp|12v|\bt\d\b|\bb[56]\b|\d+i\b|turbo|tce|\bs4\b|rs ?\d|amg|competition|\bm\d{2,3}i?\b|gti|\bx5 m\b/.test(e)) return "Benzín";
+    return d.fuel ? FUEL[d.fuel] || String(d.fuel) : null;
+  };
+
+  // --- controls ---------------------------------------------------------------------------------------------------
+  const years = ALL.map((d) => d.year).filter(Boolean);
+  const yMin = Math.min(...years), yMax = Math.max(...years);
+  const yearOpts = (label) => `<option value="">${label}</option>` +
+    Array.from({ length: yMax - yMin + 1 }, (_, i) => yMax - i).map((y) => `<option>${y}</option>`).join("");
+  const kms = [30000, 50000, 75000, 100000, 150000, 200000, 250000, 300000];
+  const fuels = [...new Set(ALL.map(fuelOf).filter(Boolean))].sort((a, b) => a.localeCompare(b, "sk"));
+  const showGroups = Array.isArray(groups) && groups.length > 1 && ALL.some((d) => Number.isInteger(d.cg));
+
+  const maxInput = $("fMax");
+  if (maxInput) { maxInput.placeholder = "Cena do €"; maxInput.title = "Najvyššia cena (s DPH)"; }
+  const html =
+    `<select id="fvYearFrom" title="Rok výroby od">${yearOpts("Rok od")}</select>` +
+    `<select id="fvYearTo" title="Rok výroby do">${yearOpts("Rok do")}</select>` +
+    `<input id="fvPriceMin" type="number" placeholder="Cena od €" step="500" min="0" title="Najnižšia cena (s DPH)" style="width:110px">`;
+  if (maxInput) maxInput.insertAdjacentHTML("beforebegin", html);
+  else bar.insertAdjacentHTML("afterbegin", html);
+  const more =
+    `<select id="fvKm" title="Najviac najazdených km"><option value="">Nájazd – všetky</option>${kms.map((k) => `<option value="${k}">do ${fmt(k)} km</option>`).join("")}</select>` +
+    (fuels.length > 1 ? `<select id="fvFuel" title="Palivo"><option value="">Všetky palivá</option>${fuels.map((f) => `<option>${esc(f)}</option>`).join("")}</select>` : "") +
+    (showGroups ? `<select id="fvGroup" title="Skupina motorov (farba v grafe)"><option value="">Všetky skupiny</option>${groups.map((g, i) => `<option value="${i}">${esc(g)}</option>`).join("")}</select>` : "") +
+    `<select id="fvDisc" title="O koľko je auto lacnejšie ako férová cena"><option value="">Cena – všetky</option><option value="0">pod férovou cenou</option><option value="10">aspoň 10 % pod trhom</option><option value="20">aspoň 20 % pod trhom</option></select>` +
+    `<input id="fvText" type="search" placeholder="Hľadať (výbava, mesto…)" title="Hľadá v názve inzerátu, motore a lokalite" style="width:170px">` +
+    `<label class="fv-check"><input id="fvPick" type="checkbox"> len odporúčané</label>` +
+    `<button type="button" id="fvReset" class="fv-reset">Zrušiť filtre</button>`;
+  const count = $("count");
+  if (count) count.insertAdjacentHTML("beforebegin", more);
+  else bar.insertAdjacentHTML("beforeend", more);
+
+  // the bar stays where it was – right above the ranking – and also drives the chart; the chart gets a pointer to it
+  const chart = $("chartWrap");
+  const box = document.createElement("div");
+  box.className = "fv-filters";
+  box.id = "filtre";
+  bar.before(box);
+  box.innerHTML = `<div class="fv-head"><b>Filtre</b><span>platia pre rebríček aj graf vyššie</span></div>`;
+  box.appendChild(bar);
+  const note = document.createElement("div");
+  note.className = "fv-note";
+  chart?.before(note);
+
+  document.head.insertAdjacentHTML("beforeend", `<style id="fv-filters-css">
+.fv-filters{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 14px 4px;margin:24px 0 8px}
+.fv-filters .fv-head{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;margin-bottom:8px}
+.fv-filters .fv-head span{color:var(--muted);font-size:13px}
+.fv-filters .filters{margin-bottom:8px}
+.fv-filters .filters .count{flex-basis:100%;margin-left:0}
+.fv-check{display:inline-flex;gap:6px;align-items:center;font-size:13px;color:var(--text-2,var(--text));white-space:nowrap}
+.fv-reset{background:none;border:1px solid var(--border);color:var(--text);border-radius:8px;padding:6px 10px;font:inherit;font-size:13px;cursor:pointer}
+.fv-reset:hover{background:var(--surface-2,var(--surface))}
+.fv-note{color:var(--muted);font-size:13px;margin:0 0 8px}
+.fv-note a{color:inherit}
+.fv-empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:14px;pointer-events:none}
+@media (max-width:600px){.fv-filters .filters select,.fv-filters .filters input[type=number],.fv-filters .filters input[type=search]{flex:1 1 calc(50% - 8px);min-width:0;width:auto!important}}
+</style>`);
+
+  // --- filtering --------------------------------------------------------------------------------------------------
+  const val = (id) => ($(id) ? $(id).value : "");
+  const num = (id) => { const v = parseFloat(val(id)); return Number.isFinite(v) ? v : null; };
+  function matches(d) {
+    const yf = num("fvYearFrom"), yt = num("fvYearTo"), pmin = num("fvPriceMin"), pmax = num("fMax"), km = num("fvKm"), disc = num("fvDisc");
+    const fuel = val("fvFuel"), grp = val("fvGroup"), q = norm(val("fvText")).trim();
+    if (yf != null && !(d.year >= yf)) return false;
+    if (yt != null && !(d.year <= yt)) return false;
+    if (pmin != null && !(d.price_gross >= pmin)) return false;
+    if (pmax != null && !(d.price_gross <= pmax)) return false;
+    if (km != null && !(d.km <= km)) return false;
+    if (disc != null && !(d.discount_pct > disc || (disc > 0 && d.discount_pct >= disc))) return false;
+    if (fuel && fuelOf(d) !== fuel) return false;
+    if (grp !== "" && String(d.cg) !== grp) return false;
+    if ($("fvPick")?.checked && !d.pick) return false;
+    if (q && !q.split(/\s+/).every((w) => norm(`${d.title} ${d.eg ?? ""} ${d.engine ?? ""} ${d.location ?? ""}`).includes(w))) return false;
+    // the report's own filters (engine, gearbox, seller, portal, body, origin) – same rules as its renderTable
+    const en = val("fEngine"), tr = val("fTrans"), se = val("fSeller"), so = val("fSource"), og = val("fOrigin"), bo = val("fBody");
+    if (en && d.eg !== en) return false;
+    if (tr && d.transmission !== tr) return false;
+    if (se && d.seller_type === "dealer") return false;
+    if (so && !(d.source === so || (d.also_listed || []).some((a) => a.source === so))) return false;
+    if (og && d.origin !== og) return false;
+    if (bo && d.body !== bo) return false;
+    return true;
+  }
+  const active = () => [...box.querySelectorAll("select, input")].filter((el) => (el.type === "checkbox" ? el.checked : el.value !== "")).length;
+
+  let drawing = false;
+  function apply() {
+    if (drawing) return;
+    drawing = true;
+    const rows = ALL.filter(matches);
+    data.length = 0;
+    data.push(...rows);
+    const wrap = $("chartWrap");
+    wrap?.querySelector(".fv-empty")?.remove();
+    const plotted = rows.filter((d) => d.km && d.price_gross).length;
+    try {
+      if (typeof drawChart === "function") { // eslint-disable-line no-undef
+        if (plotted) drawChart(); // eslint-disable-line no-undef
+        else { const svg = $("chart"); if (svg) svg.innerHTML = ""; }
+      }
+    } catch (e) { console.warn("chart", e); }
+    if (wrap && !plotted) {
+      if (getComputedStyle(wrap).position === "static") wrap.style.position = "relative";
+      wrap.insertAdjacentHTML("beforeend", `<div class="fv-empty">Filtrom nezodpovedá žiadny inzerát</div>`);
+    }
+    try { renderTable(); } catch (e) { console.warn("table", e); } // eslint-disable-line no-undef
+    const n = active();
+    if (count) count.textContent = `Zobrazených ${fmt(rows.length)} z ${fmt(ALL.length)} inzerátov` + (n ? ` · aktívne filtre: ${n}` : "");
+    note.innerHTML = n
+      ? `Zobrazených ${fmt(rows.length)} z ${fmt(ALL.length)} inzerátov podľa <a href="#filtre">filtrov pri rebríčku</a>.`
+      : `Filtre (rok, cena, nájazd, palivo…) nájdeš <a href="#filtre">pri kompletnom rebríčku</a> – platia aj pre tento graf.`;
+    drawing = false;
+  }
+  box.querySelectorAll("select, input").forEach((el) => el.addEventListener("input", apply));
+  $("fvPick")?.addEventListener("change", apply);
+  $("fvReset").addEventListener("click", () => {
+    box.querySelectorAll("select, input").forEach((el) => { if (el.type === "checkbox") el.checked = false; else el.value = ""; });
+    apply();
+  });
+  apply();
+})();
+</script><!-- /ferovka-theme -->
+</body>
+</html>

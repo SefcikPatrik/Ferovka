@@ -1,5 +1,31 @@
 [
   {
+    "slug": "citroen-c5-aircross",
+    "file": "citroen-c5-aircross-analyza.html",
+    "name": "Citroën C5 Aircross",
+    "brand": "Citroën",
+    "model": "C5 Aircross",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Citroën C5 Aircross (2018–2025, bez nových áut z 2026) od 8 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 215 inzerátov (39 na bazoši, 99 na autobazar.eu, 77 na bazar.sk) – prezreli sme 66 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 102 rôznych áut zo Slovenska.",
+    "ads": 102,
+    "median": "16 895 €",
+    "r2": "97 %"
+  },
+  {
+    "slug": "hyundai-i40",
+    "file": "hyundai-i40-analyza.html",
+    "name": "Hyundai i40",
+    "brand": "Hyundai",
+    "model": "i40",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Hyundai i40 (2011–2019, sedan aj kombi) od 2 500 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 150 inzerátov (59 na bazoši, 60 na autobazar.eu, 31 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 97 rôznych áut zo Slovenska.",
+    "ads": 97,
+    "median": "7 290 €",
+    "r2": "88 %"
+  },
+  {
     "slug": "mazda-2",
     "file": "mazda-2-analyza.html",
     "name": "Mazda 2",
@@ -29,6 +55,38 @@
       "seen_median": 7790,
       "seen_price_count": 21,
       "last_observed_at": "2026-11-22T00:03:05"
+    }
+  },
+  {
+    "slug": "mini-cooper",
+    "file": "mini-cooper-analyza.html",
+    "name": "Mini Cooper",
+    "brand": "Mini",
+    "model": "Cooper",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Mini Cooper (hatchback 3 aj 5 dverí a kabriolet, 2010–2025, bez Countryman / Clubman / Paceman a nových áut z 2026) od 4 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 632 inzerátov (149 na bazoši, 109 na autobazar.eu, 374 na bazar.sk) – prezreli sme 53 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 233 rôznych áut zo Slovenska.",
+    "ads": 233,
+    "median": "14 490 €",
+    "r2": "94 %",
+    "history": {
+      "updated_at": "2026-11-22T00:13:43",
+      "as_of": "2026-11-22",
+      "coverage": "partial",
+      "baseline_count": 89,
+      "total_count": 89,
+      "active_count": 89,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 89,
+      "paired_median_change_pct": 0,
+      "historical_median": 14490,
+      "seen_median": 14490,
+      "seen_price_count": 89,
+      "last_observed_at": "2026-11-22T00:09:53"
     }
   },
   {
