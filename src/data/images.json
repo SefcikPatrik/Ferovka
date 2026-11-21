@@ -334,5 +334,12 @@
     "author": "M 93",
     "license": "CC BY-SA 3.0 de",
     "source": "https://commons.wikimedia.org/wiki/File:Peugeot_308_82_VTi_Active_(II)_%E2%80%93_Frontansicht,_4._Januar_2014,_D%C3%BCsseldorf.jpg"
+  },
+  "dacia-duster": {
+    "src": "/img/dacia-duster.jpg",
+    "file": "File:Dacia Duster Mk2 - Front View.jpg",
+    "author": "(G)jabz",
+    "license": "CC BY 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Dacia_Duster_Mk2_-_Front_View.jpg"
   }
 }

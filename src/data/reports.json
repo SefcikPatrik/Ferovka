@@ -429,6 +429,38 @@
     }
   },
   {
+    "slug": "dacia-duster",
+    "file": "dacia-duster-analyza.html",
+    "name": "Dacia Duster",
+    "brand": "Dacia",
+    "model": "Duster",
+    "kind": "model",
+    "date": "2026-11-21",
+    "summary": "Analýza aktuálnych inzerátov Dacia Duster (Duster I až III, 4x2 aj 4x4) od 3 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 525 inzerátov (147 na bazoši, 314 na autobazar.eu, 64 na bazar.sk) – prezreli sme 95 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 309 rôznych áut zo Slovenska.",
+    "ads": 309,
+    "median": "10 999 €",
+    "r2": "94 %",
+    "history": {
+      "updated_at": "2026-11-21T16:37:22",
+      "as_of": "2026-11-21",
+      "coverage": "partial",
+      "baseline_count": 245,
+      "total_count": 245,
+      "active_count": 245,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 245,
+      "paired_median_change_pct": 0,
+      "historical_median": 10999,
+      "seen_median": 10999,
+      "seen_price_count": 245,
+      "last_observed_at": "2026-11-21T16:36:31"
+    }
+  },
+  {
     "slug": "ford-focus",
     "file": "ford-focus-analyza.html",
     "name": "Ford Focus",
