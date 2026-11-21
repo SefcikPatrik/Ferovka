@@ -845,6 +845,38 @@
     }
   },
   {
+    "slug": "hyundai-i10",
+    "file": "hyundai-i10-analyza.html",
+    "name": "Hyundai i10",
+    "brand": "Hyundai",
+    "model": "i10",
+    "kind": "model",
+    "date": "2026-11-21",
+    "summary": "Analýza aktuálnych inzerátov Hyundai i10 (druhá a tretia generácia, 2014–2025) od 2 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 92 inzerátov (18 na bazoši, 49 na autobazar.eu, 25 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 42 rôznych áut zo Slovenska.",
+    "ads": 42,
+    "median": "6 299 €",
+    "r2": "98 %",
+    "history": {
+      "updated_at": "2026-11-21T20:40:39",
+      "as_of": "2026-11-21",
+      "coverage": "partial",
+      "baseline_count": 23,
+      "total_count": 23,
+      "active_count": 23,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 23,
+      "paired_median_change_pct": 0,
+      "historical_median": 6299,
+      "seen_median": 6299,
+      "seen_price_count": 23,
+      "last_observed_at": "2026-11-21T20:39:34"
+    }
+  },
+  {
     "slug": "hyundai-i20",
     "file": "hyundai-i20-analyza.html",
     "name": "Hyundai i20",
@@ -857,7 +889,7 @@
     "median": "8 990 €",
     "r2": "96 %",
     "history": {
-      "updated_at": "2026-11-21T20:07:20",
+      "updated_at": "2026-11-21T20:40:39",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 213,
@@ -889,7 +921,7 @@
     "median": "6 500 €",
     "r2": "66 %",
     "history": {
-      "updated_at": "2026-11-21T20:07:20",
+      "updated_at": "2026-11-21T20:40:39",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 93,
@@ -921,7 +953,7 @@
     "median": "17 490 €",
     "r2": "96 %",
     "history": {
-      "updated_at": "2026-11-21T20:07:20",
+      "updated_at": "2026-11-21T20:40:39",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 125,
@@ -953,7 +985,7 @@
     "median": "24 945 €",
     "r2": "88 %",
     "history": {
-      "updated_at": "2026-11-21T20:07:20",
+      "updated_at": "2026-11-21T20:40:39",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 190,
@@ -985,7 +1017,7 @@
     "median": "17 299 €",
     "r2": "89 %",
     "history": {
-      "updated_at": "2026-11-21T20:07:20",
+      "updated_at": "2026-11-21T20:40:39",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 464,
@@ -2617,7 +2649,7 @@
     "median": "11 390 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-21T20:07:20",
+      "updated_at": "2026-11-21T20:40:39",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 274,
