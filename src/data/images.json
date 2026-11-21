@@ -404,5 +404,19 @@
     "author": "Vauxford",
     "license": "CC BY-SA 4.0",
     "source": "https://commons.wikimedia.org/wiki/File:2021_Hyundai_Kona_Premium_T-GDi_MHEV_1.0_facelift_Front.jpg"
+  },
+  "dacia-sandero": {
+    "src": "/img/dacia-sandero.jpg",
+    "file": "File:2021 Dacia Sandero Stepway Prestige TCE 1.0 Front.jpg",
+    "author": "Vauxford",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:2021_Dacia_Sandero_Stepway_Prestige_TCE_1.0_Front.jpg"
+  },
+  "ford-mondeo": {
+    "src": "/img/ford-mondeo.jpg",
+    "file": "File:2001 Ford Mondeo ST200 1.jpg",
+    "author": "Calreyn88",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:2001_Ford_Mondeo_ST200_1.jpg"
   }
 }

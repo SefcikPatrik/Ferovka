@@ -473,7 +473,7 @@
     "median": "10 999 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-21T16:37:22",
+      "updated_at": "2026-11-21T17:28:13",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 245,
@@ -490,6 +490,38 @@
       "seen_median": 10999,
       "seen_price_count": 245,
       "last_observed_at": "2026-11-21T16:36:31"
+    }
+  },
+  {
+    "slug": "dacia-sandero",
+    "file": "dacia-sandero-analyza.html",
+    "name": "Dacia Sandero",
+    "brand": "Dacia",
+    "model": "Sandero",
+    "kind": "model",
+    "date": "2026-11-21",
+    "summary": "Analýza aktuálnych inzerátov Dacia Sandero (Sandero I až III, vrátane Stepway) od 2 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 340 inzerátov (80 na bazoši, 164 na autobazar.eu, 96 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 190 rôznych áut zo Slovenska.",
+    "ads": 190,
+    "median": "7 099 €",
+    "r2": "93 %",
+    "history": {
+      "updated_at": "2026-11-21T17:28:13",
+      "as_of": "2026-11-21",
+      "coverage": "partial",
+      "baseline_count": 153,
+      "total_count": 153,
+      "active_count": 153,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 153,
+      "paired_median_change_pct": 0,
+      "historical_median": 7099,
+      "seen_median": 7099,
+      "seen_price_count": 153,
+      "last_observed_at": "2026-11-21T17:23:40"
     }
   },
   {
@@ -555,6 +587,19 @@
       "seen_price_count": 357,
       "last_observed_at": "2026-11-21T16:57:21"
     }
+  },
+  {
+    "slug": "ford-mondeo",
+    "file": "ford-mondeo-analyza.html",
+    "name": "Ford Mondeo",
+    "brand": "Ford",
+    "model": "Mondeo",
+    "kind": "model",
+    "date": "2026-11-21",
+    "summary": "Analýza aktuálnych inzerátov Ford Mondeo (Mondeo Mk4 a Mk5, liftback, sedan aj kombi) od 1 500 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 629 inzerátov (255 na bazoši, 214 na autobazar.eu, 160 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 401 rôznych áut zo Slovenska.",
+    "ads": 401,
+    "median": "7 100 €",
+    "r2": "91 %"
   },
   {
     "slug": "hyundai-i20",
