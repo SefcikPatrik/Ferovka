@@ -781,6 +781,19 @@
     }
   },
   {
+    "slug": "mazda-3",
+    "file": "mazda-3-analyza.html",
+    "name": "Mazda 3",
+    "brand": "Mazda",
+    "model": "3",
+    "kind": "model",
+    "date": "2026-11-21",
+    "summary": "Analýza aktuálnych inzerátov Mazda 3 (BK, BL, BM/BN a BP, hatchback aj sedan, bez MPS) od 1 500 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 1 009 inzerátov (749 na bazoši, 132 na autobazar.eu, 128 na bazar.sk) – prezreli sme 34 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 208 rôznych áut zo Slovenska.",
+    "ads": 208,
+    "median": "9 145 €",
+    "r2": "95 %"
+  },
+  {
     "slug": "mazda-cx-5",
     "file": "mazda-cx-5-analyza.html",
     "name": "Mazda CX-5",
@@ -918,8 +931,27 @@
     "date": "2026-11-21",
     "summary": "Analýza aktuálnych inzerátov Peugeot 208 (prvá generácia 2012–2019 a druhá od 2019, aj elektrický e-208, bez GTi) od 2 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 663 inzerátov (191 na bazoši, 280 na autobazar.eu, 192 na bazar.sk) – prezreli sme 95 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 348 rôznych áut zo Slovenska.",
     "ads": 348,
-    "median": "8 500 €",
-    "r2": "92 %"
+    "median": "8 700 €",
+    "r2": "92 %",
+    "history": {
+      "updated_at": "2026-11-21T18:03:44",
+      "as_of": "2026-11-21",
+      "coverage": "partial",
+      "baseline_count": 279,
+      "total_count": 279,
+      "active_count": 279,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 279,
+      "paired_median_change_pct": 0,
+      "historical_median": 8700,
+      "seen_median": 8700,
+      "seen_price_count": 279,
+      "last_observed_at": "2026-11-21T17:59:40"
+    }
   },
   {
     "slug": "peugeot-3008",
@@ -934,7 +966,7 @@
     "median": "13 990 €",
     "r2": "96 %",
     "history": {
-      "updated_at": "2026-11-21T17:10:35",
+      "updated_at": "2026-11-21T18:03:44",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 359,
@@ -966,7 +998,7 @@
     "median": "7 570 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-21T17:10:35",
+      "updated_at": "2026-11-21T18:03:44",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 440,
