@@ -825,7 +825,7 @@
     "median": "8 990 €",
     "r2": "96 %",
     "history": {
-      "updated_at": "2026-11-21T18:51:58",
+      "updated_at": "2026-11-21T20:07:20",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 213,
@@ -857,7 +857,7 @@
     "median": "6 500 €",
     "r2": "66 %",
     "history": {
-      "updated_at": "2026-11-21T18:51:58",
+      "updated_at": "2026-11-21T20:07:20",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 93,
@@ -889,7 +889,7 @@
     "median": "17 490 €",
     "r2": "96 %",
     "history": {
-      "updated_at": "2026-11-21T18:51:58",
+      "updated_at": "2026-11-21T20:07:20",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 125,
@@ -909,6 +909,38 @@
     }
   },
   {
+    "slug": "hyundai-santa-fe",
+    "file": "hyundai-santa-fe-analyza.html",
+    "name": "Hyundai Santa Fe",
+    "brand": "Hyundai",
+    "model": "Santa Fe",
+    "kind": "model",
+    "date": "2026-11-21",
+    "summary": "Analýza aktuálnych inzerátov Hyundai Santa Fe (tretia až piata generácia, 2012–2025, 5 aj 7 miest) od 6 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 389 inzerátov (111 na bazoši, 150 na autobazar.eu, 128 na bazar.sk) – prezreli sme 95 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 244 rôznych áut zo Slovenska.",
+    "ads": 244,
+    "median": "24 945 €",
+    "r2": "88 %",
+    "history": {
+      "updated_at": "2026-11-21T20:07:20",
+      "as_of": "2026-11-21",
+      "coverage": "partial",
+      "baseline_count": 190,
+      "total_count": 190,
+      "active_count": 190,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 190,
+      "paired_median_change_pct": 0,
+      "historical_median": 24945,
+      "seen_median": 24945,
+      "seen_price_count": 190,
+      "last_observed_at": "2026-11-21T20:06:17"
+    }
+  },
+  {
     "slug": "hyundai-tucson",
     "file": "hyundai-tucson-analyza.html",
     "name": "Hyundai Tucson",
@@ -921,23 +953,23 @@
     "median": "17 299 €",
     "r2": "89 %",
     "history": {
-      "updated_at": "2026-11-21T18:51:58",
+      "updated_at": "2026-11-21T20:07:20",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 464,
       "total_count": 1116,
-      "active_count": 834,
+      "active_count": 835,
       "inactive_count": 0,
-      "unverified_count": 282,
+      "unverified_count": 281,
       "new_count": 652,
-      "price_changed_count": 73,
+      "price_changed_count": 74,
       "price_lowered_count": 72,
-      "paired_count": 279,
+      "paired_count": 280,
       "paired_median_change_pct": 0,
       "historical_median": 17990,
       "seen_median": 17990,
-      "seen_price_count": 823,
-      "last_observed_at": "2026-11-21T11:26:44"
+      "seen_price_count": 824,
+      "last_observed_at": "2026-11-21T19:28:50"
     }
   },
   {
@@ -2393,7 +2425,7 @@
     "median": "11 390 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-21T18:51:58",
+      "updated_at": "2026-11-21T20:07:20",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 274,
