@@ -13,6 +13,38 @@
     "r2": null
   },
   {
+    "slug": "audi-a3",
+    "file": "audi-a3-analyza.html",
+    "name": "Audi A3",
+    "brand": "Audi",
+    "model": "A3",
+    "kind": "model",
+    "date": "2026-11-21",
+    "summary": "Analýza aktuálnych inzerátov Audi A3 (A3 8P, 8V a 8Y – Sportback, 3-dverové, sedan aj kabriolet, vrátane S3 / RS3) od 2 500 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 652 inzerátov (290 na bazoši, 202 na autobazar.eu, 160 na bazar.sk) – prezreli sme 97 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 431 rôznych áut zo Slovenska.",
+    "ads": 431,
+    "median": "8 990 €",
+    "r2": "92 %",
+    "history": {
+      "updated_at": "2026-11-21T16:47:02",
+      "as_of": "2026-11-21",
+      "coverage": "partial",
+      "baseline_count": 332,
+      "total_count": 332,
+      "active_count": 332,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 332,
+      "paired_median_change_pct": 0,
+      "historical_median": 8990,
+      "seen_median": 8990,
+      "seen_price_count": 332,
+      "last_observed_at": "2026-11-21T16:45:57"
+    }
+  },
+  {
     "slug": "audi-a4",
     "file": "audi-a4-analyza.html",
     "name": "Audi A4",
@@ -25,7 +57,7 @@
     "median": "14 600 €",
     "r2": "88 %",
     "history": {
-      "updated_at": "2026-11-21T15:25:51",
+      "updated_at": "2026-11-21T16:47:02",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 519,
@@ -57,7 +89,7 @@
     "median": "13 450 €",
     "r2": "90 %",
     "history": {
-      "updated_at": "2026-11-21T15:25:51",
+      "updated_at": "2026-11-21T16:47:02",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 221,
@@ -89,23 +121,23 @@
     "median": "17 150 €",
     "r2": "93 %",
     "history": {
-      "updated_at": "2026-11-21T15:25:51",
+      "updated_at": "2026-11-21T16:47:02",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 705,
-      "total_count": 1452,
-      "active_count": 1137,
+      "total_count": 1455,
+      "active_count": 1140,
       "inactive_count": 0,
       "unverified_count": 315,
-      "new_count": 747,
+      "new_count": 750,
       "price_changed_count": 133,
       "price_lowered_count": 123,
       "paired_count": 477,
       "paired_median_change_pct": 0,
       "historical_median": 16700,
-      "seen_median": 17850,
-      "seen_price_count": 1104,
-      "last_observed_at": "2026-11-21T11:07:42"
+      "seen_median": 17700,
+      "seen_price_count": 1107,
+      "last_observed_at": "2026-11-21T16:42:42"
     }
   },
   {
@@ -121,7 +153,7 @@
     "median": "24 600 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-21T15:25:51",
+      "updated_at": "2026-11-21T16:47:02",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 209,
@@ -153,7 +185,7 @@
     "median": "26 495 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-21T15:25:51",
+      "updated_at": "2026-11-21T16:47:02",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 263,

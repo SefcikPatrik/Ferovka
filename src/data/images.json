@@ -348,5 +348,12 @@
     "author": "Rutger van der Maar",
     "license": "CC BY 2.0",
     "source": "https://commons.wikimedia.org/wiki/File:2020_Hyundai_i20_1.2_MPI_(BC3).jpg"
+  },
+  "audi-a3": {
+    "src": "/img/audi-a3.jpg",
+    "file": "File:Audi A3 Sportback 2.0 TDI Ambition (8V) – Frontansicht, 11. August 2013, Wuppertal.jpg",
+    "author": "M 93",
+    "license": "CC BY-SA 3.0 de",
+    "source": "https://commons.wikimedia.org/wiki/File:Audi_A3_Sportback_2.0_TDI_Ambition_(8V)_%E2%80%93_Frontansicht,_11._August_2013,_Wuppertal.jpg"
   }
 }
