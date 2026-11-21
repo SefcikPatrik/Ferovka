@@ -1005,6 +1005,38 @@
     }
   },
   {
+    "slug": "hyundai-bayon",
+    "file": "hyundai-bayon-analyza.html",
+    "name": "Hyundai Bayon",
+    "brand": "Hyundai",
+    "model": "Bayon",
+    "kind": "model",
+    "date": "2026-11-21",
+    "summary": "Analýza aktuálnych inzerátov Hyundai Bayon (2021–2025, bez nových áut z 2026) od 7 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 97 inzerátov (12 na bazoši, 56 na autobazar.eu, 29 na bazar.sk) – prezreli sme 77 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 47 rôznych áut zo Slovenska.",
+    "ads": 47,
+    "median": "13 900 €",
+    "r2": "92 %",
+    "history": {
+      "updated_at": "2026-11-21T22:38:01",
+      "as_of": "2026-11-21",
+      "coverage": "partial",
+      "baseline_count": 29,
+      "total_count": 29,
+      "active_count": 29,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 29,
+      "paired_median_change_pct": 0,
+      "historical_median": 13900,
+      "seen_median": 13900,
+      "seen_price_count": 29,
+      "last_observed_at": "2026-11-21T22:36:33"
+    }
+  },
+  {
     "slug": "hyundai-i10",
     "file": "hyundai-i10-analyza.html",
     "name": "Hyundai i10",
@@ -1017,7 +1049,7 @@
     "median": "6 299 €",
     "r2": "98 %",
     "history": {
-      "updated_at": "2026-11-21T20:40:39",
+      "updated_at": "2026-11-21T22:38:01",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 23,
@@ -1049,7 +1081,7 @@
     "median": "8 990 €",
     "r2": "96 %",
     "history": {
-      "updated_at": "2026-11-21T20:40:39",
+      "updated_at": "2026-11-21T22:38:01",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 213,
@@ -1081,7 +1113,7 @@
     "median": "6 500 €",
     "r2": "66 %",
     "history": {
-      "updated_at": "2026-11-21T20:40:39",
+      "updated_at": "2026-11-21T22:38:01",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 93,
@@ -1113,7 +1145,7 @@
     "median": "17 490 €",
     "r2": "96 %",
     "history": {
-      "updated_at": "2026-11-21T20:40:39",
+      "updated_at": "2026-11-21T22:38:01",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 125,
@@ -1145,7 +1177,7 @@
     "median": "24 945 €",
     "r2": "88 %",
     "history": {
-      "updated_at": "2026-11-21T20:40:39",
+      "updated_at": "2026-11-21T22:38:01",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 190,
@@ -1177,7 +1209,7 @@
     "median": "17 299 €",
     "r2": "89 %",
     "history": {
-      "updated_at": "2026-11-21T20:40:39",
+      "updated_at": "2026-11-21T22:38:01",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 464,
@@ -3097,7 +3129,7 @@
     "median": "11 390 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-21T20:40:39",
+      "updated_at": "2026-11-21T22:38:01",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 274,
