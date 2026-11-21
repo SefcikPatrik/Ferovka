@@ -2221,6 +2221,38 @@
     }
   },
   {
+    "slug": "volvo-v60",
+    "file": "volvo-v60-analyza.html",
+    "name": "Volvo V60",
+    "brand": "Volvo",
+    "model": "V60",
+    "kind": "model",
+    "date": "2026-11-21",
+    "summary": "Analýza aktuálnych inzerátov Volvo V60 (prvá a druhá generácia, 2011–2025, kombi aj Cross Country) od 5 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 451 inzerátov (104 na bazoši, 199 na autobazar.eu, 148 na bazar.sk) – prezreli sme 68 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 187 rôznych áut zo Slovenska.",
+    "ads": 187,
+    "median": "19 990 €",
+    "r2": "95 %",
+    "history": {
+      "updated_at": "2026-11-21T19:51:19",
+      "as_of": "2026-11-21",
+      "coverage": "partial",
+      "baseline_count": 142,
+      "total_count": 142,
+      "active_count": 142,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 142,
+      "paired_median_change_pct": 0,
+      "historical_median": 19990,
+      "seen_median": 19990,
+      "seen_price_count": 142,
+      "last_observed_at": "2026-11-21T19:50:13"
+    }
+  },
+  {
     "slug": "volvo-xc60",
     "file": "volvo-xc60-analyza.html",
     "name": "Volvo XC60",
@@ -2233,23 +2265,23 @@
     "median": "37 900 €",
     "r2": "95 %",
     "history": {
-      "updated_at": "2026-11-21T15:25:51",
+      "updated_at": "2026-11-21T19:51:19",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 230,
-      "total_count": 671,
-      "active_count": 596,
+      "total_count": 672,
+      "active_count": 597,
       "inactive_count": 0,
       "unverified_count": 75,
-      "new_count": 441,
+      "new_count": 442,
       "price_changed_count": 46,
       "price_lowered_count": 46,
       "paired_count": 184,
       "paired_median_change_pct": 0,
       "historical_median": 40990,
       "seen_median": 42900,
-      "seen_price_count": 592,
-      "last_observed_at": "2026-11-21T11:38:34"
+      "seen_price_count": 593,
+      "last_observed_at": "2026-11-21T19:48:45"
     }
   },
   {
