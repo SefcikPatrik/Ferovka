@@ -1069,6 +1069,38 @@
     }
   },
   {
+    "slug": "nissan-juke",
+    "file": "nissan-juke-analyza.html",
+    "name": "Nissan Juke",
+    "brand": "Nissan",
+    "model": "Juke",
+    "kind": "model",
+    "date": "2026-11-21",
+    "summary": "Analýza aktuálnych inzerátov Nissan Juke (Juke F15 a F16, 2010–2025, bez Juke-R a Nismo RS) od 2 500 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 202 inzerátov (44 na bazoši, 94 na autobazar.eu, 64 na bazar.sk) – prezreli sme 89 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 111 rôznych áut zo Slovenska.",
+    "ads": 111,
+    "median": "8 600 €",
+    "r2": "93 %",
+    "history": {
+      "updated_at": "2026-11-21T19:08:55",
+      "as_of": "2026-11-21",
+      "coverage": "partial",
+      "baseline_count": 91,
+      "total_count": 91,
+      "active_count": 91,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 91,
+      "paired_median_change_pct": 0,
+      "historical_median": 8600,
+      "seen_median": 8600,
+      "seen_price_count": 91,
+      "last_observed_at": "2026-11-21T19:07:40"
+    }
+  },
+  {
     "slug": "nissan-qashqai",
     "file": "nissan-qashqai-analyza.html",
     "name": "Nissan Qashqai",
@@ -1081,7 +1113,7 @@
     "median": "11 990 €",
     "r2": "97 %",
     "history": {
-      "updated_at": "2026-11-21T16:53:40",
+      "updated_at": "2026-11-21T19:08:55",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 338,

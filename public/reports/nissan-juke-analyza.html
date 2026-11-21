@@ -1,0 +1,890 @@
+<!doctype html>
+<html lang="sk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nissan Juke – analýza ponúk</title>
+<style>
+:root {
+  color-scheme: light;
+  --bg: #f6f6f4; --surface: #fcfcfb; --surface-2: #f0efec; --border: #e2e1dc;
+  --text: #0b0b0b; --text-2: #52514e; --muted: #7a7974;
+  --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a;
+  --pos: #2a78d6; --neg: #eb6834; --accent: #2a78d6;
+  --good: #1d7f4e; --bad: #b4332f; --grid: #e8e7e3;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #121211; --surface: #1a1a19; --surface-2: #232321; --border: #33332f;
+    --text: #f0efec; --text-2: #c3c2b7; --muted: #8f8e86;
+    --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+    --pos: #3987e5; --neg: #d95926; --accent: #5598e7;
+    --good: #4cc38a; --bad: #f07a76; --grid: #2a2a27;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #121211; --surface: #1a1a19; --surface-2: #232321; --border: #33332f;
+  --text: #f0efec; --text-2: #c3c2b7; --muted: #8f8e86;
+  --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+  --pos: #3987e5; --neg: #d95926; --accent: #5598e7;
+  --good: #4cc38a; --bad: #f07a76; --grid: #2a2a27;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text);
+  font: 15px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+main { max-width: 1120px; margin: 0 auto; padding: 32px 16px 64px; }
+a { color: var(--accent); text-decoration: none; } a:hover { text-decoration: underline; }
+h1 { font-size: 30px; margin: 0 0 4px; letter-spacing: -.01em; }
+h2 { font-size: 21px; margin: 48px 0 6px; }
+h3 { font-size: 15px; margin: 6px 0 4px; line-height: 1.35; }
+.lead { color: var(--text-2); margin: 0 0 20px; max-width: 760px; }
+.section-lead { color: var(--text-2); margin: 0 0 16px; max-width: 800px; }
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
+.kpi { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+.kpi .v { font-size: 26px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.kpi .l { color: var(--text-2); font-size: 13px; }
+.explain { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; margin-top: 12px; }
+.explain p { margin: 6px 0; color: var(--text-2); }
+.explain b { color: var(--text); }
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; }
+.card-head { display: flex; justify-content: space-between; gap: 8px; font-size: 12px; }
+.tag { font-weight: 600; color: var(--accent); }
+.loc { color: var(--muted); }
+.facts { color: var(--text-2); font-size: 13px; }
+.prices { display: grid; grid-template-columns: 1.2fr 1fr .8fr; gap: 8px; margin: 12px 0 8px; }
+.lbl { display: block; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+.big { font-size: 22px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.mid { font-size: 16px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.good { color: var(--good); }
+.meter { height: 6px; background: var(--surface-2); border-radius: 4px; overflow: hidden; }
+.meter span { display: block; height: 100%; background: var(--s1); border-radius: 4px; }
+.news ul { margin: 6px 0 0; padding-left: 20px; } .news li { margin: 4px 0; } .news .down { color: var(--good, #1baf7a); font-weight: 600; }
+.note { font-size: 12.5px; background: var(--surface-2); border-radius: 6px; padding: 6px 8px; margin-top: 8px; color: var(--text-2); }
+.pc { list-style: none; padding: 0; margin: 10px 0 0; font-size: 13.5px; }
+.pc li { padding-left: 20px; position: relative; margin: 3px 0; }
+.pc li.pro::before { content: "+"; position: absolute; left: 4px; color: var(--good); font-weight: 700; }
+.pc li.con::before { content: "–"; position: absolute; left: 4px; color: var(--bad); font-weight: 700; }
+.subhead { font-size: 15px; color: var(--text-2); margin: 22px 0 10px; font-weight: 600; }
+.chart-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 14px 8px; position: relative; }
+.legend { display: flex; flex-wrap: wrap; gap: 16px; font-size: 13px; color: var(--text-2); margin: 0 0 6px 4px; }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; }
+.legend .ring { background: transparent; border: 2px solid var(--text); width: 12px; height: 12px; }
+svg text { fill: var(--muted); font-size: 11px; }
+.tip { position: absolute; pointer-events: none; background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+  padding: 8px 10px; font-size: 12.5px; box-shadow: 0 6px 20px rgba(0,0,0,.15); max-width: 280px; display: none; z-index: 5; }
+.tip b { display: block; margin-bottom: 2px; }
+.tip .row { display: flex; justify-content: space-between; gap: 12px; color: var(--text-2); }
+.tip .row span:last-child { color: var(--text); font-variant-numeric: tabular-nums; }
+table { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; font-size: 13.5px; }
+th, td { padding: 9px 10px; border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; }
+th { font-size: 12px; color: var(--text-2); font-weight: 600; background: var(--surface-2); white-space: nowrap; }
+th.sortable { cursor: pointer; user-select: none; } th.sortable:hover { color: var(--text); }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+.sub { color: var(--text-2); font-size: 12.5px; margin-top: 2px; }
+.stars { color: #c98500; letter-spacing: 1px; white-space: nowrap; } .stars .off { color: var(--border); }
+.cellbar { height: 5px; background: var(--surface-2); border-radius: 3px; margin-bottom: 4px; }
+.cellbar span { display: block; height: 100%; background: var(--s1); border-radius: 3px; }
+.disc { display: inline-flex; align-items: center; gap: 6px; justify-content: flex-end; }
+.dbar { width: 54px; height: 6px; background: var(--surface-2); border-radius: 3px; position: relative; }
+.dbar span { position: absolute; top: 0; height: 100%; border-radius: 3px; }
+.filters { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 10px; align-items: center; }
+.filters select, .filters input { background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 6px 8px; font: inherit; font-size: 13px; }
+.filters .count { color: var(--muted); font-size: 13px; margin-left: auto; }
+.table-scroll { overflow-x: auto; border-radius: 12px; }
+.badge { font-size: 11px; padding: 1px 6px; border-radius: 10px; background: var(--surface-2); color: var(--text-2); white-space: nowrap; }
+.badge.pick { background: var(--s1); color: #fff; }
+.flag { color: var(--bad); font-size: 12px; }
+.warn { background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--neg); border-radius: 10px; padding: 12px 16px; }
+.warn li { margin: 4px 0; }
+.check { columns: 2 300px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px 14px 34px; margin: 0; }
+.check li { margin: 4px 0; break-inside: avoid; }
+footer { color: var(--muted); font-size: 12.5px; margin-top: 48px; border-top: 1px solid var(--border); padding-top: 14px; }
+.theme-btn { float: right; background: var(--surface); color: var(--text-2); border: 1px solid var(--border); border-radius: 8px; padding: 5px 10px; cursor: pointer; font: inherit; font-size: 13px; }
+@media (max-width: 640px) { h1 { font-size: 24px; } .prices { grid-template-columns: 1fr 1fr 1fr; } .big { font-size: 18px; } th, td { padding: 7px 6px; } }
+</style>
+<!-- ferovka-theme --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"><style id="ferovka-theme">/* Férovka look for the generated analyses – injected by sync-reports.mjs after each report's own <style>.
+   Same palette and type as the site; chart colours (--s1..--s3) stay the validated set. */
+:root {
+  --bg: #f5f4ef; --surface: #fdfdfb; --surface-2: #eeede6; --border: #e1dfd6;
+  --text: #0f1513; --text-2: #4f5551; --muted: #6f746f;
+  --accent: #0b8a56; --good: #0b7a4b; --grid: #e6e4dc; --win: #dff3e9;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d110f; --surface: #151a17; --surface-2: #1d2420; --border: #2a322d;
+    --text: #eef1ec; --text-2: #b6bdb6; --muted: #8f978f;
+    --accent: #2fc583; --good: #4cd08f; --grid: #1f2622; --win: #143223;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d110f; --surface: #151a17; --surface-2: #1d2420; --border: #2a322d;
+  --text: #eef1ec; --text-2: #b6bdb6; --muted: #8f978f;
+  --accent: #2fc583; --good: #4cd08f; --grid: #1f2622; --win: #143223;
+}
+
+body { font-family: "Manrope", system-ui, sans-serif; }
+h1, h2 { letter-spacing: -0.02em; font-weight: 800; }
+.tag { color: var(--accent); }
+
+/* photo header (removed by the site's viewer, which shows its own) */
+.fv-hero { position: relative; margin: 0 0 26px; border-radius: 20px; overflow: hidden; aspect-ratio: 21 / 8; background: #0d110f; display: flex; }
+.fv-hero img { flex: 1; min-width: 0; height: 100%; object-fit: cover; animation: fv-zoom 1.4s cubic-bezier(.2,.7,.2,1) both; }
+.fv-collage img + img { border-left: 3px solid #0d110f; }
+.fv-hero::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(180deg, transparent 55%, rgb(13 17 15 / .75)),
+    repeating-linear-gradient(90deg, rgb(47 197 131 / .06) 0 1px, transparent 1px 48px); }
+.fv-hero figcaption { position: absolute; right: 12px; bottom: 8px; z-index: 1; font-size: 11px; color: rgb(255 255 255 / .75); }
+.fv-hero figcaption a { color: inherit; }
+
+/* cards & panels: softer, lift on hover */
+.card, .kpi, .explain, .chart-wrap, .box { border-radius: 16px; }
+.card { transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease; }
+.card:hover { transform: translateY(-3px); border-color: var(--accent); box-shadow: 0 14px 30px -18px rgb(0 0 0 / .45); }
+.badge.pick { background: var(--accent); }
+
+/* entrance animation */
+@keyframes fv-up { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes fv-zoom { from { transform: scale(1.08); filter: brightness(.6); } to { transform: none; filter: none; } }
+h1, .lead, .kpis, .cards .card { animation: fv-up .6s cubic-bezier(.2,.7,.2,1) both; }
+.lead { animation-delay: .08s; }
+.kpis { animation-delay: .16s; }
+.cards .card:nth-child(2) { animation-delay: .06s; }
+.cards .card:nth-child(3) { animation-delay: .12s; }
+.cards .card:nth-child(4) { animation-delay: .18s; }
+.cards .card:nth-child(5) { animation-delay: .24s; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+@media (max-width: 640px) { .fv-hero { aspect-ratio: 16 / 9; border-radius: 14px; } }
+
+/* touch: hint under the chart tooltip (report-chart.js) */
+.fv-hint { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--border, rgba(127,127,127,.3)); font-weight: 700; color: var(--accent, #2fc583); }
+</style><!-- /ferovka-theme -->
+</head>
+<body>
+<main><!-- ferovka-theme --><!-- /ferovka-theme -->
+<button class="theme-btn" id="themeBtn" type="button">Svetlý / tmavý</button>
+<h1>Nissan Juke – ktorá ponuka sa oplatí</h1>
+<p class="lead">Analýza aktuálnych inzerátov Nissan Juke (Juke F15 a F16, 2010–2025, bez Juke-R a Nismo RS) od 2 500 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 202 inzerátov (44 na bazoši, 94 na autobazar.eu, 64 na bazar.sk) – prezreli sme 89 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 111 rôznych áut zo Slovenska. Každé auto sme porovnali
+s <b>férovou cenou</b>: tú vypočítal model naučený na celom trhu podľa veku, nájazdu, motora, prevodovky a typu predajcu.</p>
+
+<div class="kpis">
+  <div class="kpi"><div class="v">111</div><div class="l">inzerátov Juku (nad 2 500 €)</div></div>
+  <div class="kpi"><div class="v">91</div><div class="l">ohodnotených (majú rok aj km)</div></div>
+  <div class="kpi"><div class="v">8 600 €</div><div class="l">medián ceny s DPH</div></div>
+  <div class="kpi"><div class="v">93 %</div><div class="l">rozdielov v cenách vysvetlí model</div></div>
+</div>
+
+
+<h2>Odkiaľ sú dáta: bazoš, autobazar.eu a bazar.sk</h2>
+<div class="kpis">
+  <div class="kpi"><div class="v">27</div><div class="l">ohodnotených z bazoša</div></div>
+  <div class="kpi"><div class="v">46</div><div class="l">ohodnotených z autobazar.eu</div></div><div class="kpi"><div class="v">18</div><div class="l">ohodnotených z bazar.sk</div></div>
+  <div class="kpi"><div class="v">39</div><div class="l">áut bolo na viacerých portáloch – započítané raz</div></div>
+  <div class="kpi"><div class="v">36 / 7</div><div class="l">s uvedeným pôvodom SR / dovoz</div></div>
+</div>
+<div class="explain">
+  <p><b>Tri portály, jeden trh.</b> Bazoš prehľadal 44 inzerátov, autobazar.eu
+  94, bazar.sk 41. Ponuky z Česka (na autobazar.eu ich je veľa) sme vynechali. Autobazáre často dávajú
+  to isté auto na viac portálov. Takéto dvojice (25 v rebríčku) sme spojili podľa VIN alebo zhody roku, km a ceny,
+  aby sa v modeli nerátali dvakrát. Pri aute nájdeš odkaz na všetky ponuky – niekedy sa líšia cenou.</p>
+  <p><b>Rozdiel medzi portálmi:</b> rovnaké auto je na autobazar.eu v priemere -7,9 %
+  oproti bazošu. Na autobazar.eu predávajú hlavne firmy (40 z 46 ohodnotených). Na bazar.sk je rovnaké auto v priemere +4,4 % oproti bazošu.</p>
+  <p><b>Kúpené v SR vs. dovoz:</b> autá s uvedeným pôvodom zo SR sú oproti autám bez uvedeného pôvodu
+  +3,5 %, dovezené -12,5 %
+  (pri rovnakom veku, nájazde a motore). Pôvod zo SR je výhoda pri overovaní histórie, trh zaň však nepripláca – väčšina
+  inzerátov pôvod jednoducho neuvádza. V tabulke dole si môžeš nechať zobraziť len autá kúpené v SR.</p>
+</div>
+
+<h2>Čo hýbe cenou Juku</h2>
+<p class="section-lead">Toto sa model naučil z trhu. Keď porovnávaš dve autá, tieto čísla ti povedia, koľko má byť
+rozdiel v cene, aby to bolo fér.</p>
+<div class="kpis">
+  <div class="kpi"><div class="v">-3,1 %</div><div class="l">každých ďalších 10 000 km</div></div>
+  <div class="kpi"><div class="v">-4,4 %</div><div class="l">každý rok veku navyše</div></div>
+  <div class="kpi"><div class="v">+8 %</div><div class="l">príplatok za automat (DSG)</div></div>
+  <div class="kpi"><div class="v">-2,8 %</div><div class="l">príplatok u predajcu / firmy</div></div>
+  <div class="kpi"><div class="v">+38,1 %</div><div class="l">Juke F16 (2020+) oproti cene podľa veku</div></div>
+  <div class="kpi"><div class="v">+7,8 %</div><div class="l">príplatok za automat</div></div>
+</div>
+<div class="explain">
+  <p><b>Príklad:</b> dva rovnaké Juky 1.0 DIG-T z roku 2021, jedno má 60 tis. km, druhé 120 tis. km. Druhé má byť
+  približne o 19 % lacnejšie (6 × -3,1 %). Ak je lacnejšie len o 5 %, preplácaš kilometre.</p>
+  <p><b>Ako čítať „pod trhom“:</b> +15 % znamená, že auto stojí o 15 % menej, než by malo podľa trhu. Bežný rozptyl
+  cien je asi ±17 %, takže až zľava nad ~10–15 % je naozaj výnimočná. Pri takej zľave vždy zisti, prečo je auto lacné
+  (stav, história, nájazd).</p>
+  <p><b>DPH:</b> ceny uvedené bez DPH (napr. „10 300 € netto“) sme prepočítali na cenu s DPH, ktorú zaplatí súkromná osoba.</p>
+</div>
+
+<h2>Odporúčané ponuky</h2>
+<p class="section-lead">Kandidáti s najlepším pomerom cena / vek / nájazd, ktorých celý inzerát sme prečítali.
+Zoradené podľa toho, ako ich odporúčame.</p>
+<div class="subhead">Juke druhej generácie (2020+) – najlepší pomer cena / vek</div>
+<div class="cards">
+<article class="card">
+  <div class="card-head"><span class="tag">Juke 1.0 DIG-T s automatom za 12 990 €</span><span class="loc">Košice II - Západ</span></div>
+  <h3><a href="https://auto.bazar.sk/39348673-nissan-juke-1-0-dig-t-114-n-connecta-dtc/" target="_blank" rel="noopener">Nissan Juke 1.0 DIG-T 114 N-Connecta DTC</a></h3>
+  <div class="facts">2021 · 41 940 km · 1.0 DIG-T 84–86 kW · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazar.sk</b> · aj na <a href='https://auto.bazos.sk/inzerat/197338941/nissan-juke-10-dig-t-114-n-connecta-dtc.php' target='_blank' rel='noopener'>bazoš</a> za 12 900 € · aj na <a href='https://www.autobazar.eu/detail/nissan-juke-10-dig-t-114-n-connecta-dtc/AmSUdmSCaQx/' target='_blank' rel='noopener'>autobazar.eu</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">12 990 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">16 680 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+22.1 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:74%"></span></div>
+  <ul class="pc"><li class="pro">11/2021, 1.0 DIG-T 84 kW, automat DCT, výbava N-Connecta, 42 tis. km</li><li class="pro">Adaptívny tempomat, uvedený VIN</li><li class="pro">~22 % pod férovou cenou</li><li class="con">Predáva autobazár</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 2 dni (od 19. 11.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Juke DIG-T 117 DCT N-Connecta z SR</span><span class="loc">Martin</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197655517/nissan-juke.php" target="_blank" rel="noopener">Nissan Juke</a></h3>
+  <div class="facts">2020 · 33 600 km · 1.0 DIG-T 84–86 kW · automat · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b> · kúpené v SR</div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">14 650 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">15 810 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+7.4 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:25%"></span></div>
+  <ul class="pc"><li class="pro">2020, 1.0 DIG-T, 7-st. DCT, 34 tis. km</li><li class="pro">Kúpené v SR; navigácia, vyhrievané čelné sklo, kamera, 19&quot; disky</li><li class="con">Predajca neistý</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 3 dni (od 18. 11.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Juke 1.0 DIG-T automat od 1. majiteľa z SR</span><span class="loc">Bratislava</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197746438/nissan-juke-2020-100-dig-t-n-connecta-automat-sr-1-majitel.php" target="_blank" rel="noopener">Nissan Juke 2020 1.00 DIG-T N-Connecta Automat SR 1. Majitel</a></h3>
+  <div class="facts">2020 · 50 400 km · 1.0 DIG-T 84–86 kW · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazoš</b> · kúpené v SR · aj na <a href='https://www.autobazar.eu/detail/nissan-juke-100-dig-t-n-connecta-automat-sr-1-majitel/AmNi8Em8XUg/' target='_blank' rel='noopener'>autobazar.eu</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">13 999 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">14 480 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+3.3 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:11%"></span></div>
+  <ul class="pc"><li class="pro">2020, 1.0 DIG-T, automat, výbava N-Connecta, 50 tis. km</li><li class="pro">1. majiteľ, nehavarované, servis 8/2026 aj s olejom v prevodovke</li><li class="con">Predáva firma</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">Nový inzerát</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Juke 1.0 DIG-T DCT z 2023 po servise</span><span class="loc">Bratislava</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/nissan-juke-10-dig-t-n-connecta-7dct/Abcajr7BCnq/" target="_blank" rel="noopener">Nissan Juke 1.0 DIG-T, N-Connecta 7DCT</a></h3>
+  <div class="facts">2023 · 29 405 km · 1.0 DIG-T 84–86 kW · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · aj na <a href='https://auto.bazar.sk/39765753-nissan-juke-1-0-dig-t-n-connecta-7dct/' target='_blank' rel='noopener'>bazar.sk</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">14 990 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">17 240 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+13.0 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:43%"></span></div>
+  <ul class="pc"><li class="pro">2023, 1.0 DIG-T, 7-st. DCT, výbava N-Connecta, 29 tis. km</li><li class="pro">Čerstvý servis s výmenou oleja a filtrov</li><li class="con">Predáva autobazár</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 11 dní (od 10. 11.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Juke Hybrid N-Design z SR</span><span class="loc">Bratislava</span></div>
+  <h3><a href="https://auto.bazar.sk/39747608-nissan-juke-1-6-n-design/" target="_blank" rel="noopener">Nissan Juke 1,6 N-DESIGN</a></h3>
+  <div class="facts">2023 · 45 129 km · 1.6 Hybrid 105 kW · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazar.sk</b> · kúpené v SR</div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">19 890 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">22 260 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+10.6 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:35%"></span></div>
+  <ul class="pc"><li class="pro">8/2023, 1.6 Hybrid 105 kW, automat, 45 tis. km</li><li class="pro">Kúpené v SR, adaptívny tempomat, elektrické sedadlá, uvedený VIN</li><li class="con">Predáva autobazár</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">Nový inzerát</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Juke 1.0 DIG-T automat z SR so servisom</span><span class="loc">Nové Zámky</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/nissan-juke-10-dig-t-automat-sr2maj/AeD-ZYR5gNk/" target="_blank" rel="noopener">Nissan Juke 1.0 DIG-T, Automat, SR,2.maj</a></h3>
+  <div class="facts">2023 · 25 485 km · 1.0 DIG-T 84–86 kW · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">16 400 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">17 490 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+6.2 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:21%"></span></div>
+  <ul class="pc"><li class="pro">2023, 1.0 DIG-T, automat, 25 tis. km</li><li class="pro">Kúpené v SR, 2. majiteľ, servis v autorizovanom servise</li><li class="con">AAA AUTO – uvedená cena pri financovaní</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 21 dní (od 31. 10.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Takmer nový Juke z 2024 s 10 tis. km</span><span class="loc">Košice</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/nissan-juke-10-dig-t-automat-sr2maj/Ae5SHm4cFkc/" target="_blank" rel="noopener">Nissan Juke 1.0 DIG-T, N-Connecta, Automat, SR</a></h3>
+  <div class="facts">2024 · 10 165 km · 1.0 DIG-T 84–86 kW · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">17 800 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">19 690 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+9.6 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:32%"></span></div>
+  <ul class="pc"><li class="pro">2024, 1.0 DIG-T, automat, výbava N-Connecta, 10 tis. km</li><li class="pro">Kúpené v SR</li><li class="con">AAA AUTO – uvedená cena pri financovaní</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 7 dní (od 14. 11.)</p><!-- history-card:end --></article></div>
+<div class="subhead">Lacnejšie Juky do 8 000 €</div>
+<div class="cards">
+<article class="card">
+  <div class="card-head"><span class="tag">Juke 1.6 z 2018 s 55 tis. km za 5 500 €</span><span class="loc">Bratislava - Vajnory</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/nissan-juke-16-l-visia/AmwDmAYJxNI/" target="_blank" rel="noopener">Nissan Juke 1.6 l Visia</a></h3>
+  <div class="facts">2018 · 55 000 km · 1.6 16V 69–86 kW · manuál · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · kúpené v SR</div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">5 500 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">8 100 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+32.1 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:100%"></span></div>
+  <ul class="pc"><li class="pro">2018, 1.6 16V, manuál, 55 tis. km</li><li class="pro">Kúpené v SR</li><li class="pro">~32 % pod férovou cenou</li><li class="con">Inzerát takmer bez textu – over stav a dôvod nízkej ceny</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 73 dní (od 9. 9.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Juke 1.6 s automatom CVT</span><span class="loc">Spišská Nová Ves</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197087356/nissan-juke-16-automat-cvt-122017.php" target="_blank" rel="noopener">Nissan Juke 1,6 automat CVT, 12/2017</a></h3>
+  <div class="facts">2017 · 117 146 km · 1.6 16V 69–86 kW · automat · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">7 000 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">8 560 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+18.2 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:61%"></span></div>
+  <ul class="pc"><li class="pro">12/2017, 1.6 16V 86 kW, CVT, 117 tis. km</li><li class="pro">Podrobný inzerát</li><li class="con">Predajca neistý</li><li class="con">Over výmenu oleja v CVT</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke aspoň 20 dní</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Juke 1.2 DIG-T s 62 tis. km a zárukou</span><span class="loc">Košice-Pereš</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/nissan-juke-12-dig-t-115-n-connecta-85kw-m6-zaruka-aj-na-splatky-protiucet/AmCqyK4FDCI/" target="_blank" rel="noopener">Nissan Juke 1.2 DIG-T 115 N-Connecta / 85kW / M6 / ZÁRUKA / AJ NA SPLÁTKY / PROTIÚČET</a></h3>
+  <div class="facts">2016 · 62 214 km · 1.2 / 1.6 DIG-T 85–140 kW · manuál · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · kúpené v SR · aj na <a href='https://auto.bazos.sk/inzerat/197301641/nissan-juke-12-dig-t-115-n-connecta-85kw-m6-2016.php' target='_blank' rel='noopener'>bazoš</a> · aj na <a href='https://auto.bazar.sk/39758018-nissan-juke-1-2-dig-t-115-n-connecta-85kw-m6-zaruka-aj-na-splatky-protiucet/' target='_blank' rel='noopener'>bazar.sk</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">6 990 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">8 470 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+17.5 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:58%"></span></div>
+  <ul class="pc"><li class="pro">2016, 1.2 DIG-T 85 kW, 6-st. manuál, 62 tis. km</li><li class="pro">Kúpené v SR, záruka od predajcu</li><li class="con">Predáva autobazár</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 17 dní (od 4. 11.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Súkromník: Juke DIG-T 115 Acenta s 84 tis. km</span><span class="loc">Miloslavov</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/nissan-juke-dig-t-115-acenta-85kw115hp-m6/Aeyciv4TRVJ/" target="_blank" rel="noopener">Nissan Juke DIG-T 115 Acenta 85kW115HP M6</a></h3>
+  <div class="facts">2015 · 84 000 km · 1.2 / 1.6 DIG-T 85–140 kW · manuál · súkromník</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">6 490 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">7 250 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+10.4 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:35%"></span></div>
+  <ul class="pc"><li class="pro">2015, 1.2 DIG-T 85 kW, 6-st. manuál, 84 tis. km</li><li class="pro">Predáva súkromník</li><li class="con">Inzerát bez textu</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 55 dní (od 27. 9.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Juke 1.5 dCi Tekna po veľkom servise</span><span class="loc">Žiar nad Hronom</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/195917739/nissan-juke-15-dci-tekna-velky-servis-2x-alu.php" target="_blank" rel="noopener">Nissan Juke 1.5 dCi TEKNA – veľký servis + 2x ALU</a></h3>
+  <div class="facts">2011 · 271 000 km · 1.5 dCi 81–85 kW · manuál · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b> · kúpené v SR</div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">4 000 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">5 070 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+21.0 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:70%"></span></div>
+  <ul class="pc"><li class="pro">2011, 1.5 dCi 81 kW, 6-st. manuál, najvyššia výbava Tekna</li><li class="pro">Kúpené v SR; nová spojka, dvojhmota, vstrekovač, batéria</li><li class="con">Veľmi vysoký nájazd 271 tis. km</li><li class="con">Predajca neistý</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke aspoň 56 dní</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Juke 1.5 dCi so servisnou knižkou</span><span class="loc">Prešov</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197731136/nissan-juke-15-dci.php" target="_blank" rel="noopener">Nissan Juke 1.5 Dci</a></h3>
+  <div class="facts">2013 · 168 000 km · 1.5 dCi 81–85 kW · prevodovka ? · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b> · dovezené</div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">3 900 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">5 040 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+22.6 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:75%"></span></div>
+  <ul class="pc"><li class="pro">6/2013, 1.5 dCi 81 kW, 168 tis. km</li><li class="pro">Servisná knižka, 2 kľúče, digitálna klíma</li><li class="con">Dovoz</li><li class="con">Predajca neistý</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 1 deň (od 20. 11.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Juke 1.6 z SR s 93 tis. km</span><span class="loc">Nové Zámky</span></div>
+  <h3><a href="https://auto.bazar.sk/33187325-nissan-juke-1-6-i/" target="_blank" rel="noopener">Nissan Juke 1.6 i</a></h3>
+  <div class="facts">2012 · 92 836 km · 1.6 16V 69–86 kW · manuál · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazar.sk</b> · kúpené v SR</div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">6 300 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">7 360 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+14.4 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:48%"></span></div>
+  <ul class="pc"><li class="pro">2012, 1.6 16V 86 kW, manuál, 93 tis. km</li><li class="pro">Kúpené v SR, uvedený VIN</li><li class="con">Predáva autobazár</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">Nový inzerát</p><!-- history-card:end --></article></div>
+<div class="subhead">Špeciálne prípady</div>
+<div class="cards"></div>
+
+<h2>Cena vs. nájazd: celý trh na jednom grafe</h2>
+<p class="section-lead">Každý bod je jeden inzerát. Čím nižšie bod leží oproti ostatným s podobným nájazdom, tým je auto lacnejšie.
+Krúžkom sú označené odporúčané ponuky. Prejdi myšou na bod a uvidíš detail.</p>
+<div class="chart-wrap" id="chartWrap">
+  <div class="legend" id="legend"></div>
+  <svg id="chart" width="100%" height="420" role="img" aria-label="Bodový graf ceny a nájazdu inzerátov"></svg>
+  <div class="tip" id="tip"></div>
+</div>
+
+<h2>Porovnanie motorov</h2>
+<p class="section-lead">Hodnotenie (hviezdičky) zohľadňuje spoľahlivosť, spoľahlivosť a náklady na prevádzku a pomer cena/výkon.
+Číselné stĺpce sú mediány z ohodnotených inzerátov.</p>
+<div class="table-scroll">
+<table>
+  <thead><tr><th>Motor</th><th>Hodnotenie</th><th class="num">Ponúk</th><th class="num">Medián ceny</th><th class="num">Medián roku</th><th class="num">Medián km</th></tr></thead>
+  <tbody>
+<tr>
+  <td><b>1.6 Hybrid 105 kW</b><div class="sub">Plný hybrid 143 k (2022+) s automatom. Najúspornejší Juke v meste, bez externého nabíjania.</div></td>
+  <td><span class="stars" aria-label="4 z 5">★★★★<span class="off">★</span></span></td>
+  <td class="num">5</td>
+  <td class="num"><div class="cellbar"><span style="width:100%"></span></div>21 290 €</td>
+  <td class="num">2024</td>
+  <td class="num">23 000 km</td>
+</tr>
+<tr>
+  <td><b>1.5 dCi 81–85 kW</b><div class="sub">Renault diesel 110 k (do 2019). Veľmi úsporný a odolný; over DPF a vstrekovače.</div></td>
+  <td><span class="stars" aria-label="4 z 5">★★★★<span class="off">★</span></span></td>
+  <td class="num">4</td>
+  <td class="num"><div class="cellbar"><span style="width:25%"></span></div>5 250 €</td>
+  <td class="num">2012</td>
+  <td class="num">208 500 km</td>
+</tr>
+<tr>
+  <td><b>1.0 DIG-T 84–86 kW</b><div class="sub">3-valec s turbom 114–117 k (2020+), manuál alebo DCT. Najčastejší motor novej generácie.</div></td>
+  <td><span class="stars" aria-label="4 z 5">★★★★<span class="off">★</span></span></td>
+  <td class="num">23</td>
+  <td class="num"><div class="cellbar"><span style="width:77%"></span></div>16 400 €</td>
+  <td class="num">2023</td>
+  <td class="num">33 600 km</td>
+</tr>
+<tr>
+  <td><b>1.2 / 1.6 DIG-T 85–140 kW</b><div class="sub">Turbobenzíny F15 (1.2 DIG-T 115 k, 1.6 DIG-T 190 k). Svižné; pri 1.6 DIG-T over spotrebu oleja a turbo.</div></td>
+  <td><span class="stars" aria-label="3 z 5">★★★<span class="off">★★</span></span></td>
+  <td class="num">31</td>
+  <td class="num"><div class="cellbar"><span style="width:36%"></span></div>7 700 €</td>
+  <td class="num">2016</td>
+  <td class="num">92 000 km</td>
+</tr>
+<tr>
+  <td><b>1.6 16V 69–86 kW</b><div class="sub">Atmosférický benzín 94–117 k (aj s CVT). Jednoduchý a odolný, vhodný na LPG.</div></td>
+  <td><span class="stars" aria-label="4 z 5">★★★★<span class="off">★</span></span></td>
+  <td class="num">28</td>
+  <td class="num"><div class="cellbar"><span style="width:34%"></span></div>7 145 €</td>
+  <td class="num">2016</td>
+  <td class="num">94 466 km</td>
+</tr></tbody>
+</table>
+</div>
+<div class="explain">
+  <p><b>Generácie:</b> <b>Juke F15</b> (2010–2019, facelift 2014) je malé crossover SUV s výrazným dizajnom. <b>Juke F16</b>
+  (od 2020) je väčší, modernejší a od 2022 aj ako hybrid.</p>
+  <p><b>Ktorý motor zvoliť?</b> Pri F15 jednoduchý <b>1.6 16V</b> alebo úsporný <b>1.5 dCi</b>. Pri F16 <b>1.0 DIG-T</b>, v meste
+  najúspornejší <b>hybrid</b>. CVT pri F15 over – pri zanedbanom servise býva drahá.</p>
+</div>
+
+<h2>Na čo si dať pozor</h2>
+<div class="warn">
+  <p><b>Lacné kvôli extrémnemu nájazdu</b> (viac ako 35 tis. km ročne, typicky flotila alebo taxi):</p>
+  <ul><li>Žiadne výrazné prípady.</li></ul>
+  <p><b>Podozrivo nízky nájazd na vek</b> – preklep alebo stočené km, over cez Cebiu:</p><ul><li><a href='https://www.autobazar.eu/detail/nissan-juke-12-dig-t-sr2maj-servkniha-koza/AeeR-KxkCJj/' target='_blank' rel='noopener'>Nissan Juke 1.2 DIG-T, SR,2.maj, Serv.kniha, Koža</a> (9 600 €): rok 2017 a len 33 156 km</li></ul><p><b>Ďalšie veci, ktoré sme v inzerátoch našli:</b></p><ul><li>Niektoré autobazáre ponúkajú aj <b>nové Juky z 2026</b> so zľavou – v porovnaní ojazdených ich neodporúčame ako výhodnú kúpu.</li><li>Pri inzerátoch AAA AUTO je uvedená <b>cena pri financovaní</b> – pri platbe v hotovosti môže byť vyššia.</li><li>Juke F15 s automatom má prevodovku <b>CVT</b> – pýtaj doklad o výmene oleja v prevodovke.</li></ul><p><b>Vyradené z porovnania</b> (poškodené autá alebo nezmyselné údaje – model ich nehodnotí):</p><ul><li><a href='https://www.autobazar.eu/detail/nissan-juke-10-dig-t-114-at-n-connecta/AmAw5RxXGJQ/' target='_blank' rel='noopener'>Nissan Juke 1.0 DIG-T 114 AT N-CONNECTA + NAVI + WARM</a> (21 580 €): podozrivo nízky nájazd</li><li><a href='https://auto.bazar.sk/39758828-nissan-juke-1-6hev-k360-led-navi-kessy/' target='_blank' rel='noopener'>Nissan Juke 1.6HEV K360° LED NAVI KESSY</a> (23 332 €): podozrivo nízky nájazd</li><li><a href='https://auto.bazar.sk/36547803-nissan-juke-dig-t-114-visia/' target='_blank' rel='noopener'>Nissan Juke DIG-T 114 Visia</a> (19 990 €): podozrivo nízky nájazd</li><li><a href='https://auto.bazar.sk/36449512-nissan-juke-hybrid-1-6-hev-143-at-n-connecta/' target='_blank' rel='noopener'>Nissan Juke HYBRID 1,6 HEV 143 AT N-CONNECTA</a> (29 680 €): podozrivo nízky nájazd</li></ul>
+  <p>Ďalších <b>10</b> inzerátov nemá v texte rok alebo kilometre, takže ich nebolo možné ohodnotiť.
+  Ak ťa niektorý zaujme, predajcu sa na tieto údaje opýtaj.</p>
+</div>
+
+<h2>Kompletný rebríček</h2>
+<p class="section-lead">Všetky ohodnotené inzeráty. Kliknutím na hlavičku stĺpca zoraďuješ, filtrom zužuješ výber.</p>
+<div class="filters">
+  <select id="fEngine"><option value="">Všetky motory</option></select>
+  <select id="fTrans"><option value="">Každá prevodovka</option><option value="automatic">Automat</option><option value="manual">Manuál</option></select>
+  <select id="fSeller"><option value="">Všetci predajcovia</option><option value="nodealer">Bez autobazárov</option></select>
+  <select id="fSource"><option value="">Všetky portály</option><option value="bazos">bazoš</option><option value="autobazar">autobazar.eu</option><option value="bazarsk">bazar.sk</option></select>
+  <select id="fBody" hidden><option value=""></option></select>
+  <select id="fOrigin"><option value="">Akýkoľvek pôvod</option><option value="SR">Kúpené v SR</option><option value="dovoz">Dovoz</option></select>
+  <input id="fMax" type="number" placeholder="Max. cena €" step="500" min="0" style="width:120px">
+  <span class="count" id="count"></span>
+</div>
+<div class="table-scroll">
+<table id="tbl">
+  <thead><tr>
+    <th class="sortable" data-k="title">Inzerát</th>
+    <th class="sortable num" data-k="year">Rok</th>
+    <th class="sortable num" data-k="km">Km</th>
+    <th class="sortable num" data-k="price_gross">Cena</th>
+    <th class="sortable num" data-k="fair_price">Férová</th>
+    <th class="sortable num" data-k="discount_pct">Pod trhom ▾</th>
+  </tr></thead>
+  <tbody></tbody>
+</table>
+</div>
+
+<h2>Pred kúpou over</h2>
+<ul class="check">
+  <li>VIN cez Cebia / autoDNA (história km, havárie)</li>
+  <li>Servisná história – Nissan dealer ju vie podľa VIN vytiahnuť</li>
+  <li>CVT (F15): plynulý rozjazd, výmena oleja v prevodovke; DCT (F16): rozjazd bez trhania</li>
+  <li>1.6 DIG-T: spotreba oleja, turbo; 1.5 dCi: DPF, vstrekovače</li>
+  <li>Hrdza na podvozku a lemoch blatníkov (F15)</li>
+  <li>STK/EK protokol a dátum platnosti</li>
+</ul>
+
+<footer>
+  Zdroj: auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (len ponuky zo Slovenska, to isté auto na viacerých portáloch je započítané raz), sťahované cez lokálny MCP server bazos-mcp (nástroj <code>fair_price</code>), 21. 11. 2026.
+  Model: ridge regresia log(ceny s DPH) podľa veku, veku², km, km², prevodovky, typu predajcu, motora, karosérie, pohonu 4x4, pôvodu (SR / dovoz) a portálu. Vzorka 91
+  inzerátov, R² 93 %. Parametre sú vyťažené z textu inzerátov, a preto môžu obsahovať chyby. Odporúčané ponuky sme overili
+  prečítaním celého inzerátu. Hodnotenie motorov je odborný odhad, nie výsledok modelu.
+</footer>
+</main>
+
+<script>
+const DATA = [{"id": "ab-AmwDmAYJxNI", "url": "https://www.autobazar.eu/detail/nissan-juke-16-l-visia/AmwDmAYJxNI/", "title": "Nissan Juke 1.6 l Visia", "price": 5500, "price_gross": 5500, "fair_price": 8100.0, "discount_pct": 32.1, "verdict": "výrazne pod trhom – over prečo", "year": 2018, "km": 55000, "km_per_year": 6600.0, "eg": "1.6 16V 69–86 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava - Vajnory", "flags": [], "pick": "budget", "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "ab-Ae0sjOxoO9l", "url": "https://www.autobazar.eu/detail/nissan-juke-16-i-sr2maj-po-stk/Ae0sjOxoO9l/", "title": "Nissan Juke 1.6 i, SR,2.maj, Klíma", "price": 3500, "price_gross": 3500, "fair_price": 4620.0, "discount_pct": 24.3, "verdict": "výrazne pod trhom – over prečo", "year": 2014, "km": 192340, "km_per_year": 15600.0, "eg": "1.6 16V 69–86 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "197731136", "url": "https://auto.bazos.sk/inzerat/197731136/nissan-juke-15-dci.php", "title": "Nissan Juke 1.5 Dci", "price": 3900, "price_gross": 3900, "fair_price": 5040.0, "discount_pct": 22.6, "verdict": "výrazne pod trhom – over prečo", "year": 2013, "km": 168000, "km_per_year": 12600.0, "eg": "1.5 dCi 81–85 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Prešov", "flags": ["prevodovka nezistená"], "pick": "budget", "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "suv"}, {"id": "bs-39348673", "url": "https://auto.bazar.sk/39348673-nissan-juke-1-0-dig-t-114-n-connecta-dtc/", "title": "Nissan Juke 1.0 DIG-T 114 N-Connecta DTC", "price": 12990, "price_gross": 12990, "fair_price": 16680.0, "discount_pct": 22.1, "verdict": "výrazne pod trhom – over prečo", "year": 2021, "km": 41940, "km_per_year": 7900.0, "eg": "1.0 DIG-T 84–86 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Košice II - Západ", "flags": [], "pick": "top", "source": "bazarsk", "origin": null, "also_listed": [{"source": "bazos", "id": "197338941", "url": "https://auto.bazos.sk/inzerat/197338941/nissan-juke-10-dig-t-114-n-connecta-dtc.php", "price": 12900}, {"source": "autobazar", "id": "ab-AmSUdmSCaQx", "url": "https://www.autobazar.eu/detail/nissan-juke-10-dig-t-114-n-connecta-dtc/AmSUdmSCaQx/", "price": 12990}], "body": "suv"}, {"id": "ab-AeOERh4NI0q", "url": "https://www.autobazar.eu/detail/nissan-juke-12-dig-t-sr2maj-servkniha/AeOERh4NI0q/", "title": "Nissan Juke 1.2 DIG-T, SR,2.maj, Serv.kniha", "price": 4700, "price_gross": 4700, "fair_price": 5980.0, "discount_pct": 21.4, "verdict": "výrazne pod trhom – over prečo", "year": 2015, "km": 161986, "km_per_year": 14300.0, "eg": "1.2 / 1.6 DIG-T 85–140 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Nitriansky kraj", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "195917739", "url": "https://auto.bazos.sk/inzerat/195917739/nissan-juke-15-dci-tekna-velky-servis-2x-alu.php", "title": "Nissan Juke 1.5 dCi TEKNA – veľký servis + 2x ALU", "price": 4000, "price_gross": 4000, "fair_price": 5070.0, "discount_pct": 21.0, "verdict": "výrazne pod trhom – over prečo", "year": 2011, "km": 271000, "km_per_year": 17700.0, "eg": "1.5 dCi 81–85 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Žiar nad Hronom", "flags": [], "pick": "budget", "source": "bazos", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "196768626", "url": "https://auto.bazos.sk/inzerat/196768626/nissan-juke-juke-dig-t-115-fun-edition-85kw115hp-m6.php", "title": "Nissan Juke Juke DIG-T 115 Fun Edition 85kW115HP M6", "price": 5500, "price_gross": 5500, "fair_price": 6900.0, "discount_pct": 20.3, "verdict": "výrazne pod trhom – over prečo", "year": 2017, "km": 186000, "km_per_year": 19900.0, "eg": "1.2 / 1.6 DIG-T 85–140 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Bratislava", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "bs-39728284", "url": "https://auto.bazar.sk/39728284-nissan-juke-1-6-l-shiro-cvt/", "title": "Nissan Juke 1.6 l Shiro CVT", "price": 5500, "price_gross": 5500, "fair_price": 6790.0, "discount_pct": 19.0, "verdict": "výrazne pod trhom – over prečo", "year": 2012, "km": 152544, "km_per_year": 10600.0, "eg": "1.6 16V 69–86 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Stará Ľubovňa", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "197087356", "url": "https://auto.bazos.sk/inzerat/197087356/nissan-juke-16-automat-cvt-122017.php", "title": "Nissan Juke 1,6 automat CVT, 12/2017", "price": 7000, "price_gross": 7000, "fair_price": 8560.0, "discount_pct": 18.2, "verdict": "výrazne pod trhom – over prečo", "year": 2017, "km": 117146, "km_per_year": 12600.0, "eg": "1.6 16V 69–86 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Spišská Nová Ves", "flags": [], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AmCqyK4FDCI", "url": "https://www.autobazar.eu/detail/nissan-juke-12-dig-t-115-n-connecta-85kw-m6-zaruka-aj-na-splatky-protiucet/AmCqyK4FDCI/", "title": "Nissan Juke 1.2 DIG-T 115 N-Connecta / 85kW / M6 / ZÁRUKA / AJ NA SPLÁTKY / PROTIÚČET", "price": 6990, "price_gross": 6990, "fair_price": 8470.0, "discount_pct": 17.5, "verdict": "výrazne pod trhom – over prečo", "year": 2016, "km": 62214, "km_per_year": 6000.0, "eg": "1.2 / 1.6 DIG-T 85–140 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Košice-Pereš", "flags": [], "pick": "budget", "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197301641", "url": "https://auto.bazos.sk/inzerat/197301641/nissan-juke-12-dig-t-115-n-connecta-85kw-m6-2016.php", "price": 6990}, {"source": "bazarsk", "id": "bs-39758018", "url": "https://auto.bazar.sk/39758018-nissan-juke-1-2-dig-t-115-n-connecta-85kw-m6-zaruka-aj-na-splatky-protiucet/", "price": 6990}], "body": "suv"}, {"id": "bs-33187325", "url": "https://auto.bazar.sk/33187325-nissan-juke-1-6-i/", "title": "Nissan Juke 1.6 i", "price": 6300, "price_gross": 6300, "fair_price": 7360.0, "discount_pct": 14.4, "verdict": "pod trhom", "year": 2012, "km": 92836, "km_per_year": 6500.0, "eg": "1.6 16V 69–86 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Nové Zámky", "flags": [], "pick": "budget", "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "ab-AeZbh_fT9TU3", "url": "https://www.autobazar.eu/detail/nissan-juke-12-dig-t-sr2maj-servkniha/AeZbh_fT9TU3/", "title": "Nissan Juke 1.2 DIG-T, SR,2.maj, Serv.kniha", "price": 6600, "price_gross": 6600, "fair_price": 7700.0, "discount_pct": 14.3, "verdict": "pod trhom", "year": 2016, "km": 81103, "km_per_year": 7800.0, "eg": "1.2 / 1.6 DIG-T 85–140 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Prešovský kraj", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-Abcajr7BCnq", "url": "https://www.autobazar.eu/detail/nissan-juke-10-dig-t-n-connecta-7dct/Abcajr7BCnq/", "title": "Nissan Juke 1.0 DIG-T, N-Connecta 7DCT", "price": 14990, "price_gross": 14990, "fair_price": 17240.0, "discount_pct": 13.0, "verdict": "pod trhom", "year": 2023, "km": 29405, "km_per_year": 8800.0, "eg": "1.0 DIG-T 84–86 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": "top", "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39765753", "url": "https://auto.bazar.sk/39765753-nissan-juke-1-0-dig-t-n-connecta-7dct/", "price": 14990}], "body": "suv"}, {"id": "bs-39770887", "url": "https://auto.bazar.sk/39770887-nissan-juke-1-6i-86kw-aut-cz/", "title": "Nissan Juke 1.6i 86kW AUT CZ", "price": 7329, "price_gross": 7328, "fair_price": 8370.0, "discount_pct": 12.5, "verdict": "pod trhom", "year": 2017, "km": 83111, "km_per_year": 8900.0, "eg": "1.6 16V 69–86 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Čestlice", "flags": [], "pick": null, "source": "bazarsk", "origin": "dovoz", "also_listed": [{"source": "autobazar", "id": "ab-Ab26VAMtsnP", "url": "https://www.autobazar.eu/detail/nissan-juke-16i-86kw-aut-cz/Ab26VAMtsnP/", "price": 7329}], "body": "suv"}, {"id": "bs-39747608", "url": "https://auto.bazar.sk/39747608-nissan-juke-1-6-n-design/", "title": "Nissan Juke 1,6 N-DESIGN", "price": 19890, "price_gross": 19890, "fair_price": 22260.0, "discount_pct": 10.6, "verdict": "pod trhom", "year": 2023, "km": 45129, "km_per_year": 13500.0, "eg": "1.6 Hybrid 105 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": "top", "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "ab-Aeyciv4TRVJ", "url": "https://www.autobazar.eu/detail/nissan-juke-dig-t-115-acenta-85kw115hp-m6/Aeyciv4TRVJ/", "title": "Nissan Juke DIG-T 115 Acenta 85kW115HP M6", "price": 6490, "price_gross": 6490, "fair_price": 7250.0, "discount_pct": 10.4, "verdict": "pod trhom", "year": 2015, "km": 84000, "km_per_year": 7400.0, "eg": "1.2 / 1.6 DIG-T 85–140 kW", "cg": 0, "transmission": "manual", "seller_type": "private", "location": "Miloslavov", "flags": [], "pick": "budget", "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-Ae5SHm4cFkc", "url": "https://www.autobazar.eu/detail/nissan-juke-10-dig-t-automat-sr2maj/Ae5SHm4cFkc/", "title": "Nissan Juke 1.0 DIG-T, N-Connecta, Automat, SR", "price": 17800, "price_gross": 17800, "fair_price": 19690.0, "discount_pct": 9.6, "verdict": "pod trhom", "year": 2024, "km": 10165, "km_per_year": 4400.0, "eg": "1.0 DIG-T 84–86 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Košice", "flags": [], "pick": "top", "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "197596975", "url": "https://auto.bazos.sk/inzerat/197596975/nissan-juke.php", "title": "Nissan Juke", "price": 4300, "price_gross": 4300, "fair_price": 4700.0, "discount_pct": 8.5, "verdict": "pod trhom", "year": 2014, "km": 248349, "km_per_year": 20100.0, "eg": "1.6 16V 69–86 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Michalovce", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AekYeeeFIMD", "url": "https://www.autobazar.eu/detail/nissan-juke-nissan-juke-10dig-t-114k-acenta-automat/AekYeeeFIMD/", "title": "Nissan Juke Nissan JUKE 1,0DIG-T 114k Acenta Automat", "price": 20490, "price_gross": 20490, "fair_price": 22330.0, "discount_pct": 8.2, "verdict": "pod trhom", "year": 2026, "km": 10500, "km_per_year": 31500.0, "eg": "1.0 DIG-T 84–86 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava-Petržalka", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "197387622", "url": "https://auto.bazos.sk/inzerat/197387622/nissan-juke-12-benzin.php", "title": "Nissan Juke 1.2 Benzin", "price": 7450, "price_gross": 7450, "fair_price": 8070.0, "discount_pct": 7.7, "verdict": "pod trhom", "year": 2015, "km": 87350, "km_per_year": 7700.0, "eg": "1.2 / 1.6 DIG-T 85–140 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Prievidza", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "197655517", "url": "https://auto.bazos.sk/inzerat/197655517/nissan-juke.php", "title": "Nissan Juke", "price": 14650, "price_gross": 14650, "fair_price": 15810.0, "discount_pct": 7.4, "verdict": "pod trhom", "year": 2020, "km": 33600, "km_per_year": 5300.0, "eg": "1.0 DIG-T 84–86 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Martin", "flags": [], "pick": "top", "source": "bazos", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "196816582", "url": "https://auto.bazos.sk/inzerat/196816582/nissan-juke-12-facelift.php", "title": "Nissan Juke 1.2 Facelift", "price": 7290, "price_gross": 7290, "fair_price": 7810.0, "discount_pct": 6.7, "verdict": "férová cena", "year": 2017, "km": 116731, "km_per_year": 12500.0, "eg": "1.2 / 1.6 DIG-T 85–140 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Trenčín", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AeD-ZYR5gNk", "url": "https://www.autobazar.eu/detail/nissan-juke-10-dig-t-automat-sr2maj/AeD-ZYR5gNk/", "title": "Nissan Juke 1.0 DIG-T, Automat, SR,2.maj", "price": 16400, "price_gross": 16400, "fair_price": 17490.0, "discount_pct": 6.2, "verdict": "férová cena", "year": 2023, "km": 25485, "km_per_year": 7600.0, "eg": "1.0 DIG-T 84–86 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Nové Zámky", "flags": [], "pick": "top", "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-Aeevqa4ptl3", "url": "https://www.autobazar.eu/detail/nissan-juke-16-l-shiro-86kw117hp-m5/Aeevqa4ptl3/", "title": "Nissan Juke 1.6 l Shiro 86kW117HP M5", "price": 5200, "price_gross": 5200, "fair_price": 5420.0, "discount_pct": 4.1, "verdict": "férová cena", "year": 2013, "km": 196000, "km_per_year": 14700.0, "eg": "1.6 16V 69–86 kW", "cg": 0, "transmission": "manual", "seller_type": "private", "location": "Trnava", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197173349", "url": "https://auto.bazos.sk/inzerat/197173349/nissan-juke-16-benzin.php", "price": 5300}], "body": "suv"}, {"id": "ab-Am5asAWCGkW", "url": "https://www.autobazar.eu/detail/nissan-juke-10-dig-t-115hp-7dct-acenta-balik-comfort/Am5asAWCGkW/", "title": "Nissan Juke 1.0 DIG-T 115HP 7DCT ACENTA + Balík Comfort", "price": 22340, "price_gross": 22340, "fair_price": 23280.0, "discount_pct": 4.0, "verdict": "férová cena", "year": 2026, "km": 5, "km_per_year": 0.0, "eg": "1.0 DIG-T 84–86 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bojnice", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39534452", "url": "https://auto.bazar.sk/39534452-nissan-juke-1-0-dig-t-115hp-7dct-acenta-balik-comfort/", "price": 22340}], "body": "suv"}, {"id": "197623632", "url": "https://auto.bazos.sk/inzerat/197623632/nissan-juke-dig-t-12-dig-t.php", "title": "Nissan Juke DIG-T 1.2 DIG-T", "price": 8600, "price_gross": 8600, "fair_price": 8930.0, "discount_pct": 3.7, "verdict": "férová cena", "year": 2016, "km": 71460, "km_per_year": 6900.0, "eg": "1.2 / 1.6 DIG-T 85–140 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Bánovce nad Bebravou", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "197746438", "url": "https://auto.bazos.sk/inzerat/197746438/nissan-juke-2020-100-dig-t-n-connecta-automat-sr-1-majitel.php", "title": "Nissan Juke 2020 1.00 DIG-T N-Connecta Automat SR 1. Majitel", "price": 13999, "price_gross": 13999, "fair_price": 14480.0, "discount_pct": 3.3, "verdict": "férová cena", "year": 2020, "km": 50400, "km_per_year": 8000.0, "eg": "1.0 DIG-T 84–86 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": "top", "source": "bazos", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AmNi8Em8XUg", "url": "https://www.autobazar.eu/detail/nissan-juke-100-dig-t-n-connecta-automat-sr-1-majitel/AmNi8Em8XUg/", "price": 13999}], "body": "suv"}, {"id": "ab-Aeth-KBGKzk", "url": "https://www.autobazar.eu/detail/nissan-juke-10-dig-t-n-connecta-automat-sr/Aeth-KBGKzk/", "title": "Nissan Juke 1.0 DIG-T, N-Connecta, Automat, SR", "price": 17000, "price_gross": 17000, "fair_price": 17570.0, "discount_pct": 3.2, "verdict": "férová cena", "year": 2023, "km": 24252, "km_per_year": 7300.0, "eg": "1.0 DIG-T 84–86 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Lučenec", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AedFe8Nl-c6", "url": "https://www.autobazar.eu/detail/nissan-juke-16-dig-t-n-connecta-automat-sr/AedFe8Nl-c6/", "title": "Nissan Juke 1.6 DIG-T, N-Connecta, 4X4, Automat", "price": 9800, "price_gross": 9800, "fair_price": 10080.0, "discount_pct": 2.8, "verdict": "férová cena", "year": 2017, "km": 53621, "km_per_year": 5700.0, "eg": "1.2 / 1.6 DIG-T 85–140 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Trnava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-Am5DF0KfDj1", "url": "https://www.autobazar.eu/detail/nissan-juke-10-dig-t-114-acenta-7dct-84kw-a-5d/Am5DF0KfDj1/", "title": "Nissan Juke 1.0 DIG-T 114 Acenta 7DCT, 84kW, A, 5d.", "price": 22640, "price_gross": 22640, "fair_price": 23280.0, "discount_pct": 2.8, "verdict": "férová cena", "year": 2026, "km": 5, "km_per_year": 0.0, "eg": "1.0 DIG-T 84–86 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Tovarníky", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AerZ3vnSaRm", "url": "https://www.autobazar.eu/detail/nissan-juke-16-i-automat-sr2maj/AerZ3vnSaRm/", "title": "Nissan Juke 1.6 i, Automat, SR,2.maj", "price": 6200, "price_gross": 6200, "fair_price": 6370.0, "discount_pct": 2.7, "verdict": "férová cena", "year": 2011, "km": 101886, "km_per_year": 6600.0, "eg": "1.6 16V 69–86 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Košice", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AmJcWogMk5a", "url": "https://www.autobazar.eu/detail/nissan-juke-10-dig-t-117-visia/AmJcWogMk5a/", "title": "Nissan Juke 1.0 DIG-T 117 Visia", "price": 11490, "price_gross": 11490, "fair_price": 11760.0, "discount_pct": 2.3, "verdict": "férová cena", "year": 2020, "km": 36552, "km_per_year": 5800.0, "eg": "1.0 DIG-T 84–86 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Levice", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "197379768", "url": "https://auto.bazos.sk/inzerat/197379768/nissan-juke-10-dig-t-visia-benzin-manual-len-36-552-km.php", "price": 11490}, {"source": "bazarsk", "id": "bs-39672526", "url": "https://auto.bazar.sk/39672526-nissan-juke-1-0-dig-t-117-visia/", "price": 11490}], "body": "suv"}, {"id": "ab-AmXYMbMcE9D", "url": "https://www.autobazar.eu/detail/nissan-juke-10-dig-t-114-6mt-acenta-plus-balik-warm/AmXYMbMcE9D/", "title": "Nissan Juke (MY24) 1.0 DIG-T 114 6MT ACENTA + Balík Warm", "price": 19490, "price_gross": 19490, "fair_price": 19840.0, "discount_pct": 1.7, "verdict": "férová cena", "year": 2025, "km": 5200, "km_per_year": 3900.0, "eg": "1.0 DIG-T 84–86 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Bojnice", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-38808771", "url": "https://auto.bazar.sk/38808771-nissan-juke-my24-1-0-dig-t-114-6mt-acenta-balik-warm/", "price": 19490}], "body": "suv"}, {"id": "bs-39003529", "url": "https://auto.bazar.sk/39003529-nissan-juke-n-connecta-1-0-dig-t-114-manual/", "title": "Nissan Juke N-Connecta 1.0 DIG-T 114 Manuál", "price": 16490, "price_gross": 16490, "fair_price": 16670.0, "discount_pct": 1.1, "verdict": "férová cena", "year": 2023, "km": 63496, "km_per_year": 19000.0, "eg": "1.0 DIG-T 84–86 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AeZlZ-8Xu_tL", "url": "https://www.autobazar.eu/detail/nissan-juke-n-connecta-10-dig-t-114-manual/AeZlZ-8Xu_tL/", "price": 16490}], "body": "suv"}, {"id": "197677845", "url": "https://auto.bazos.sk/inzerat/197677845/nissan-juke-automat-59tiskm.php", "title": "Nissan Juke AUTOMAT 59tis.km", "price": 13900, "price_gross": 13900, "fair_price": 14040.0, "discount_pct": 1.0, "verdict": "férová cena", "year": 2020, "km": 59490, "km_per_year": 9400.0, "eg": "1.0 DIG-T 84–86 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Nitra", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "ab-AesS5_AWHfA", "url": "https://www.autobazar.eu/detail/nissan-juke-16-i-sr2maj-servkniha-koza/AesS5_AWHfA/", "title": "Nissan Juke 1.6 i, SR,2.maj, Serv.kniha, Koža", "price": 9000, "price_gross": 9000, "fair_price": 9090.0, "discount_pct": 1.0, "verdict": "férová cena", "year": 2018, "km": 82079, "km_per_year": 9800.0, "eg": "1.6 16V 69–86 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Prešovský kraj", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AmdF6EnWMZW", "url": "https://www.autobazar.eu/detail/nissan-juke-16-hev-143-at-n-connectanavigacia/AmdF6EnWMZW/", "title": "Nissan Juke 1.6 HEV 143 AT, N-CONNECTA+Navigácia", "price": 26900, "price_gross": 26900, "fair_price": 27100.0, "discount_pct": 0.7, "verdict": "férová cena", "year": 2026, "km": 5, "km_per_year": 0.0, "eg": "1.6 Hybrid 105 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Banská Bystrica", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "197186436", "url": "https://auto.bazos.sk/inzerat/197186436/ponuka-na-predaj.php", "title": "Ponuka na predaj", "price": 8000, "price_gross": 8000, "fair_price": 8010.0, "discount_pct": 0.1, "verdict": "férová cena", "year": 2017, "km": 87000, "km_per_year": 9300.0, "eg": "1.6 16V 69–86 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Vranov nad Topľou", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "197476621", "url": "https://auto.bazos.sk/inzerat/197476621/nissan-juke-12-dig-t-2015-360-kamera-2-sady-kolies.php", "title": "Nissan Juke 1.2 DIG-T, 2015, 360° kamera, 2 sady kolies", "price": 7990, "price_gross": 7990, "fair_price": 7990.0, "discount_pct": 0.0, "verdict": "férová cena", "year": 2015, "km": 92000, "km_per_year": 8100.0, "eg": "1.2 / 1.6 DIG-T 85–140 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Prešov", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "bs-39771966", "url": "https://auto.bazar.sk/39771966-nissan-juke-1-0-dig-t-a-t-acc-vyhrev-navi/", "title": "Nissan Juke 1,0 DIG-T A/T ACC VÝHŘEV NAVI", "price": 20052, "price_gross": 20051, "fair_price": 19960.0, "discount_pct": -0.4, "verdict": "férová cena", "year": 2024, "km": 4642, "km_per_year": 2000.0, "eg": "1.0 DIG-T 84–86 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Dyje", "flags": [], "pick": null, "source": "bazarsk", "origin": "dovoz", "also_listed": [{"source": "autobazar", "id": "ab-Abg8ECTFcli", "url": "https://www.autobazar.eu/detail/nissan-juke-10-dig-t-at-acc-vyhrev-navi/Abg8ECTFcli/", "price": 20052}], "body": "suv"}, {"id": "ab-Aeoli49PDAx", "url": "https://www.autobazar.eu/detail/nissan-juke-16-i-automat-sr2maj/Aeoli49PDAx/", "title": "Nissan Juke 1.6 i, Automat, SR,2.maj", "price": 7900, "price_gross": 7900, "fair_price": 7860.0, "discount_pct": -0.5, "verdict": "férová cena", "year": 2015, "km": 78898, "km_per_year": 7000.0, "eg": "1.6 16V 69–86 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-Ae_ocUYWGyG", "url": "https://www.autobazar.eu/detail/nissan-juke-16-i-sr1maj-servkniha-po-stk/Ae_ocUYWGyG/", "title": "Nissan Juke 1.6 i, SR,1.maj, Serv.kniha", "price": 6100, "price_gross": 6100, "fair_price": 6060.0, "discount_pct": -0.6, "verdict": "férová cena", "year": 2014, "km": 130749, "km_per_year": 10600.0, "eg": "1.6 16V 69–86 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Žilinský kraj", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "197710416", "url": "https://auto.bazos.sk/inzerat/197710416/nissan-juke-16-l-visia-69kw.php", "title": "Nissan Juke 1.6 l Visia 69kw", "price": 6590, "price_gross": 6590, "fair_price": 6550.0, "discount_pct": -0.7, "verdict": "férová cena", "year": 2015, "km": 96096, "km_per_year": 8500.0, "eg": "1.6 16V 69–86 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Martin", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmDvvb6OweQ", "url": "https://www.autobazar.eu/detail/nissan-juke-16-l-visia/AmDvvb6OweQ/", "price": 6590}, {"source": "bazarsk", "id": "bs-39704082", "url": "https://auto.bazar.sk/39704082-nissan-juke-1-6-l-visia/", "price": 6590}], "body": "suv"}, {"id": "ab-AeNsHWfJHwI", "url": "https://www.autobazar.eu/detail/nissan-juke-12-dig-t-acenta-koza-navigacia/AeNsHWfJHwI/", "title": "Nissan Juke 1.2 DIG-T, Acenta, Koža, Navigácia", "price": 7000, "price_gross": 7000, "fair_price": 6920.0, "discount_pct": -1.2, "verdict": "férová cena", "year": 2018, "km": 154963, "km_per_year": 18600.0, "eg": "1.2 / 1.6 DIG-T 85–140 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Banská Bystrica", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AeCOkgA2cYf", "url": "https://www.autobazar.eu/detail/nissan-juke-10-dig-t-automat-sr2maj-klima/AeCOkgA2cYf/", "title": "Nissan Juke 1.0 DIG-T, Automat, SR,2.maj, Klíma", "price": 13600, "price_gross": 13600, "fair_price": 13430.0, "discount_pct": -1.3, "verdict": "férová cena", "year": 2020, "km": 58320, "km_per_year": 9200.0, "eg": "1.0 DIG-T 84–86 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Košice", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AeeR-KxkCJj", "url": "https://www.autobazar.eu/detail/nissan-juke-12-dig-t-sr2maj-servkniha-koza/AeeR-KxkCJj/", "title": "Nissan Juke 1.2 DIG-T, SR,2.maj, Serv.kniha, Koža", "price": 9600, "price_gross": 9600, "fair_price": 9460.0, "discount_pct": -1.5, "verdict": "férová cena", "year": 2017, "km": 33156, "km_per_year": 3600.0, "eg": "1.2 / 1.6 DIG-T 85–140 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava", "flags": ["nezvyčajne nízky nájazd na vek (33 156 km) – over  či nejde o preklep"], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "196691470", "url": "https://auto.bazos.sk/inzerat/196691470/nissan-juke-16-tekna-x-tronic-automat-kamera-360.php", "title": "Nissan Juke 1.6 Tekna X-Tronic, automat, kamera 360°", "price": 9999, "price_gross": 9999, "fair_price": 9840.0, "discount_pct": -1.6, "verdict": "férová cena", "year": 2018, "km": 121826, "km_per_year": 14600.0, "eg": "1.6 16V 69–86 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Pezinok", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "bs-34352921", "url": "https://auto.bazar.sk/34352921-nissan-juke-1-2-dig-t/", "title": "Nissan Juke 1.2 DIG-T", "price": 9300, "price_gross": 9300, "fair_price": 9140.0, "discount_pct": -1.7, "verdict": "férová cena", "year": 2015, "km": 73572, "km_per_year": 6500.0, "eg": "1.2 / 1.6 DIG-T 85–140 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Nové Zámky", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "ab-AetDDnw1X-h", "url": "https://www.autobazar.eu/detail/nissan-juke-dig-t-115-tekna-85kw115hp-m6/AetDDnw1X-h/", "title": "Nissan Juke DIG-T 115 Tekna 85kW115HP M6", "price": 7500, "price_gross": 7500, "fair_price": 7370.0, "discount_pct": -1.8, "verdict": "férová cena", "year": 2017, "km": 120000, "km_per_year": 12900.0, "eg": "1.2 / 1.6 DIG-T 85–140 kW", "cg": 0, "transmission": "manual", "seller_type": "private", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "196551035", "url": "https://auto.bazos.sk/inzerat/196551035/predam-nissan-juke.php", "price": 7500}], "body": "suv"}, {"id": "bs-35017210", "url": "https://auto.bazar.sk/35017210-nissan-juke-1-6-l-dig-t-tekna/", "title": "Nissan Juke 1.6 l DIG-T Tekna", "price": 7900, "price_gross": 7900, "fair_price": 7760.0, "discount_pct": -1.8, "verdict": "férová cena", "year": 2011, "km": 109525, "km_per_year": 7100.0, "eg": "1.2 / 1.6 DIG-T 85–140 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Banská Bystrica", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AmElva5_IYF", "url": "https://www.autobazar.eu/detail/nissan-juke-10-dig-t-114-n-design-dtc/AmElva5_IYF/", "title": "Nissan Juke 1.0 DIG-T 114 N-Design DTC", "price": 14990, "price_gross": 14990, "fair_price": 14700.0, "discount_pct": -2.0, "verdict": "férová cena", "year": 2020, "km": 37120, "km_per_year": 5900.0, "eg": "1.0 DIG-T 84–86 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Banská Bystrica", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-39768584", "url": "https://auto.bazar.sk/39768584-nissan-juke-1-0-dig-t-114-n-design-dtc/", "price": 14990}], "body": "suv"}, {"id": "196254176", "url": "https://auto.bazos.sk/inzerat/196254176/juke-12-dig-t-rv-102014.php", "title": "Juke 1.2 dig-t  r.v .10.2014", "price": 7000, "price_gross": 7000, "fair_price": 6850.0, "discount_pct": -2.3, "verdict": "férová cena", "year": 2014, "km": 114000, "km_per_year": 9200.0, "eg": "1.2 / 1.6 DIG-T 85–140 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Veľký Krtíš", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "bs-33411582", "url": "https://auto.bazar.sk/33411582-nissan-juke-tekna-1-2-dig-t/", "title": "Nissan Juke Tekna 1.2 DIG-T", "price": 9700, "price_gross": 9700, "fair_price": 9450.0, "discount_pct": -2.7, "verdict": "férová cena", "year": 2015, "km": 63504, "km_per_year": 5600.0, "eg": "1.2 / 1.6 DIG-T 85–140 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Nové Zámky", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "197464272", "url": "https://auto.bazos.sk/inzerat/197464272/nissan-juke.php", "title": "Nissan Juke", "price": 6000, "price_gross": 6000, "fair_price": 5820.0, "discount_pct": -3.1, "verdict": "férová cena", "year": 2012, "km": 145000, "km_per_year": 10100.0, "eg": "1.2 / 1.6 DIG-T 85–140 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Zvolen", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "197306603", "url": "https://auto.bazos.sk/inzerat/197306603/nissan-juke-12-dig-t-115benzin80656kmacenta.php", "title": "NISSAN JUKE 1.2 DIG-T 115,Benzin,80656km,ACENTA,manual 6,SK", "price": 8850, "price_gross": 8850, "fair_price": 8570.0, "discount_pct": -3.3, "verdict": "férová cena", "year": 2015, "km": 80656, "km_per_year": 7100.0, "eg": "1.2 / 1.6 DIG-T 85–140 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Lučenec", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "ab-AmrVckfTc--", "url": "https://www.autobazar.eu/detail/nissan-juke-16-hev-143-at-n-design-technology-pack-cold-pack-sound-and-go-pack/AmrVckfTc--/", "title": "Nissan Juke 1.6 HEV 143 AT N-DESIGN + Technology pack + Cold pack + Sound & Go Pack", "price": 24990, "price_gross": 24990, "fair_price": 24130.0, "discount_pct": -3.6, "verdict": "férová cena", "year": 2024, "km": 5980, "km_per_year": 2600.0, "eg": "1.6 Hybrid 105 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Galanta", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-39518598", "url": "https://auto.bazar.sk/39518598-nissan-juke-1-6-hev-143-at-n-design-technology-pack-cold-pack-sound-go-pack/", "price": 24990}], "body": "suv"}, {"id": "ab-AeOfaCy5V_n", "url": "https://www.autobazar.eu/detail/nissan-juke-16-i-klima-po-stk-klima/AeOfaCy5V_n/", "title": "Nissan Juke 1.6 i, Klíma, po STK, Klíma", "price": 5000, "price_gross": 5000, "fair_price": 4820.0, "discount_pct": -3.7, "verdict": "férová cena", "year": 2016, "km": 215047, "km_per_year": 20800.0, "eg": "1.6 16V 69–86 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Nové Zámky", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "196889598", "url": "https://auto.bazos.sk/inzerat/196889598/nissan-juke-hibryd.php", "title": "Nissan Juke 2024, hibryd 143 koni, 23000 kilometrov", "price": 20777, "price_gross": 20777, "fair_price": 20010.0, "discount_pct": -3.8, "verdict": "férová cena", "year": 2024, "km": 23000, "km_per_year": 9900.0, "eg": "1.6 Hybrid 105 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Žilina", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-Ae9_21N1etI", "url": "https://www.autobazar.eu/detail/nissan-juke-16-i-automat-sr2maj-po-stk/Ae9_21N1etI/", "title": "Nissan Juke 1.6 i, Automat, SR,2.maj, Koža", "price": 8400, "price_gross": 8400, "fair_price": 8080.0, "discount_pct": -4.0, "verdict": "férová cena", "year": 2016, "km": 83454, "km_per_year": 8100.0, "eg": "1.6 16V 69–86 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Trenčiansky kraj", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "bs-34353545", "url": "https://auto.bazar.sk/34353545-nissan-juke-1-2-dig-t/", "title": "Nissan Juke 1.2 DIG-T", "price": 11000, "price_gross": 11000, "fair_price": 10550.0, "discount_pct": -4.3, "verdict": "férová cena", "year": 2016, "km": 43167, "km_per_year": 4200.0, "eg": "1.2 / 1.6 DIG-T 85–140 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Nové Zámky", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "bs-34351130", "url": "https://auto.bazar.sk/34351130-nissan-juke-1-6-i/", "title": "Nissan Juke 1.6 i", "price": 8000, "price_gross": 8000, "fair_price": 7580.0, "discount_pct": -5.5, "verdict": "férová cena", "year": 2014, "km": 70152, "km_per_year": 5700.0, "eg": "1.6 16V 69–86 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Nové Zámky", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "196266475", "url": "https://auto.bazos.sk/inzerat/196266475/predam-nissan-juke-12-benzin.php", "title": "Predám Nissan juke 1,2 benzín", "price": 7100, "price_gross": 7100, "fair_price": 6690.0, "discount_pct": -6.1, "verdict": "férová cena", "year": 2015, "km": 138000, "km_per_year": 12200.0, "eg": "1.2 / 1.6 DIG-T 85–140 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Pezinok", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AeLDRfcG2nT", "url": "https://www.autobazar.eu/detail/nissan-juke-16-i-automat-servkniha-koza/AeLDRfcG2nT/", "title": "Nissan Juke 1.6 i, Automat, Serv.kniha, Koža", "price": 9300, "price_gross": 9300, "fair_price": 8710.0, "discount_pct": -6.8, "verdict": "férová cena", "year": 2017, "km": 73197, "km_per_year": 7800.0, "eg": "1.6 16V 69–86 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Prešovský kraj", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-Aec_b1ign5R", "url": "https://www.autobazar.eu/detail/nissan-juke-12-dig-t2maj-klima-tempomat/Aec_b1ign5R/", "title": "Nissan Juke 1.2 DIG-T,2.maj, Klíma, Tempomat", "price": 7800, "price_gross": 7800, "fair_price": 7280.0, "discount_pct": -7.2, "verdict": "nad trhom", "year": 2017, "km": 70489, "km_per_year": 7600.0, "eg": "1.2 / 1.6 DIG-T 85–140 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Nové Zámky", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "suv"}, {"id": "ab-AetE33vftrg", "url": "https://www.autobazar.eu/detail/nissan-juke-12-dig-t-sr2maj-servkniha/AetE33vftrg/", "title": "Nissan Juke 1.2 DIG-T, SR,2.maj, Serv.kniha", "price": 6600, "price_gross": 6600, "fair_price": 6140.0, "discount_pct": -7.5, "verdict": "nad trhom", "year": 2016, "km": 169065, "km_per_year": 16400.0, "eg": "1.2 / 1.6 DIG-T 85–140 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Dunajská Streda", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AeU_BFnaJAb", "url": "https://www.autobazar.eu/detail/nissan-juke-16-l-acenta-cvt-86kw117hp-a1/AeU_BFnaJAb/", "title": "Nissan Juke 1.6 l Acenta CVT 86kW117HP A1", "price": 6300, "price_gross": 6300, "fair_price": 5850.0, "discount_pct": -7.7, "verdict": "nad trhom", "year": 2011, "km": 161462, "km_per_year": 10500.0, "eg": "1.6 16V 69–86 kW", "cg": 0, "transmission": "automatic", "seller_type": "private", "location": "Košice-Ťahanovce", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "197713191", "url": "https://auto.bazos.sk/inzerat/197713191/nissan-juke-16i-visia-69kw-2016-75-000-km-1majitel.php", "title": "NISSAN JUKE 1.6i VISIA 69kW / 2016 / 75 000 km / 1.MAJITEĽ", "price": 8200, "price_gross": 8200, "fair_price": 7530.0, "discount_pct": -8.9, "verdict": "nad trhom", "year": 2016, "km": 75000, "km_per_year": 7300.0, "eg": "1.6 16V 69–86 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Nové Zámky", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "ab-AekgPVj6GwV", "url": "https://www.autobazar.eu/detail/nissan-juke-12-dig-t-navigacia-klima-tempomat/AekgPVj6GwV/", "title": "Nissan Juke 1.2 DIG-T, Navigácia, Klíma, Tempomat", "price": 6500, "price_gross": 6500, "fair_price": 5970.0, "discount_pct": -8.9, "verdict": "nad trhom", "year": 2014, "km": 145409, "km_per_year": 11800.0, "eg": "1.2 / 1.6 DIG-T 85–140 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Prešovský kraj", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AeFaD-Hr-EQ", "url": "https://www.autobazar.eu/detail/nissan-juke-15-dci-servkniha-navigacia/AeFaD-Hr-EQ/", "title": "Nissan Juke 1.5 dCi, Serv.kniha, Navigácia", "price": 6500, "price_gross": 6500, "fair_price": 5970.0, "discount_pct": -8.9, "verdict": "nad trhom", "year": 2014, "km": 142856, "km_per_year": 11600.0, "eg": "1.5 dCi 81–85 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Prešovský kraj", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "bs-23527140", "url": "https://auto.bazar.sk/23527140-nissan-juke-1-6-l-dig-t-tekna-140kw-m6-5d/", "title": "Nissan Juke 1.6 l DIG-T Tekna, 140kW, M6, 5d.", "price": 10500, "price_gross": 10500, "fair_price": 9640.0, "discount_pct": -8.9, "verdict": "nad trhom", "year": 2013, "km": 60000, "km_per_year": 4500.0, "eg": "1.2 / 1.6 DIG-T 85–140 kW", "cg": 0, "transmission": "manual", "seller_type": "private", "location": "Rovinka", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-Amn662B8dyi", "url": "https://www.autobazar.eu/detail/juke-dig-t-114-7dct-n-sport/Amn662B8dyi/", "title": "JUKE DIG-T 114 7DCT N-SPORT", "price": 26990, "price_gross": 26990, "fair_price": 24540.0, "discount_pct": -10.0, "verdict": "nad trhom", "year": 2026, "km": 300, "km_per_year": 900.0, "eg": "1.0 DIG-T 84–86 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Trenčín", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39499678", "url": "https://auto.bazar.sk/39499678-juke-dig-t-114-7dct-n-sport/", "price": 26990}], "body": "suv"}, {"id": "ab-AeQu7_0wCT8", "url": "https://www.autobazar.eu/detail/nissan-juke-12-dig-t-sr2maj-servkniha-koza/AeQu7_0wCT8/", "title": "Nissan Juke 1.2 DIG-T, SR,2.maj, Serv.kniha, Koža", "price": 7200, "price_gross": 7200, "fair_price": 6520.0, "discount_pct": -10.4, "verdict": "nad trhom", "year": 2016, "km": 141868, "km_per_year": 13700.0, "eg": "1.2 / 1.6 DIG-T 85–140 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Nitriansky kraj", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "bs-39692003", "url": "https://auto.bazar.sk/39692003-nissan-juke-dig-t-115-tekna/", "title": "Nissan Juke DIG-T 115 Tekna", "price": 8500, "price_gross": 8500, "fair_price": 7680.0, "discount_pct": -10.6, "verdict": "nad trhom", "year": 2015, "km": 119668, "km_per_year": 10600.0, "eg": "1.2 / 1.6 DIG-T 85–140 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Pezinok", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-Amiuksa7CK9", "url": "https://www.autobazar.eu/detail/nissan-juke-dig-t-115-tekna/Amiuksa7CK9/", "price": 8500}, {"source": "bazos", "id": "197439622", "url": "https://auto.bazos.sk/inzerat/197439622/nissan-juke-15-benzin.php", "price": 8500}], "body": "suv"}, {"id": "196993018", "url": "https://auto.bazos.sk/inzerat/196993018/nissan-juke-16-benzin-automat-2019-n-connecta.php", "title": "Nissan Juke 1.6 Benzín Automat, 2019, N-Connecta", "price": 12000, "price_gross": 12000, "fair_price": 10820.0, "discount_pct": -10.9, "verdict": "nad trhom", "year": 2019, "km": 80505, "km_per_year": 11000.0, "eg": "1.6 16V 69–86 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Bratislava", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "ab-AeHUr5K6ZTo", "url": "https://www.autobazar.eu/detail/nissan-juke-10-dig-t-114-n-design-dtc-84kw114hp-a7/AeHUr5K6ZTo/", "title": "Nissan Juke 1.0 DIG-T 114 N-Design DTC 84kW/114HP A7", "price": 15799, "price_gross": 15799, "fair_price": 14130.0, "discount_pct": -11.8, "verdict": "nad trhom", "year": 2021, "km": 63991, "km_per_year": 12000.0, "eg": "1.0 DIG-T 84–86 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Nitra", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-39776345", "url": "https://auto.bazar.sk/39776345-nissan-juke-1-0-dig-t-114-n-design-dtc-84kw-114hp-a7/", "price": 15799}], "body": "suv"}, {"id": "bs-34351705", "url": "https://auto.bazar.sk/34351705-nissan-juke-1-6-i/", "title": "Nissan Juke 1.6 i", "price": 6799, "price_gross": 6799, "fair_price": 6020.0, "discount_pct": -12.8, "verdict": "nad trhom", "year": 2011, "km": 155426, "km_per_year": 10100.0, "eg": "1.6 16V 69–86 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Nové Zámky", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "suv"}, {"id": "197578769", "url": "https://auto.bazos.sk/inzerat/197578769/nissan-juke-tekna-16-benzin-automat-092018-91424-km.php", "title": "Nissan Juke Tekna 1.6 benzín automat, 09/2018, 91424 km", "price": 11690, "price_gross": 11690, "fair_price": 10340.0, "discount_pct": -13.0, "verdict": "nad trhom", "year": 2018, "km": 91424, "km_per_year": 11000.0, "eg": "1.6 16V 69–86 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Michalovce", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AeXAH4hfPYw", "url": "https://www.autobazar.eu/detail/nissan-juke-10-dig-t-114-n-design-84kw114hp-m6/AeXAH4hfPYw/", "title": "Nissan Juke 1.0 DIG-T 114 N-Design 84kW114HP M6", "price": 12700, "price_gross": 12700, "fair_price": 11240.0, "discount_pct": -13.0, "verdict": "nad trhom", "year": 2020, "km": 106700, "km_per_year": 16800.0, "eg": "1.0 DIG-T 84–86 kW", "cg": 0, "transmission": "manual", "seller_type": "private", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "197698488", "url": "https://auto.bazos.sk/inzerat/197698488/nissan-juke-16-automat.php", "title": "Nissan Juke 1.6 Automat", "price": 7000, "price_gross": 7000, "fair_price": 6180.0, "discount_pct": -13.3, "verdict": "nad trhom", "year": 2016, "km": 292244, "km_per_year": 28300.0, "eg": "1.6 16V 69–86 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Nové Zámky", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "ab-AmUS2cooZTw", "url": "https://www.autobazar.eu/detail/nissan-juke-hybrid-n-desing-16-at-143/AmUS2cooZTw/", "title": "Nissan Juke HYBRID N-DESING 1,6 A/T 143", "price": 21290, "price_gross": 21290, "fair_price": 18670.0, "discount_pct": -14.0, "verdict": "nad trhom", "year": 2022, "km": 43000, "km_per_year": 9900.0, "eg": "1.6 Hybrid 105 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Trenčín", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-39434973", "url": "https://auto.bazar.sk/39434973-nissan-juke-hybrid-n-desing-1-6-a-t-143/", "price": 21290}], "body": "suv"}, {"id": "195917307", "url": "https://auto.bazos.sk/inzerat/195917307/nissan-juke.php", "title": "Nissan Juke", "price": 7700, "price_gross": 7700, "fair_price": 6760.0, "discount_pct": -14.0, "verdict": "nad trhom", "year": 2017, "km": 109739, "km_per_year": 11800.0, "eg": "1.2 / 1.6 DIG-T 85–140 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Humenné", "flags": [], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "suv"}, {"id": "bs-39510398", "url": "https://auto.bazar.sk/39510398-nissan-juke-1-6-l-dig-t-tekna/", "title": "Nissan Juke 1.6 l DIG-T Tekna", "price": 8600, "price_gross": 8600, "fair_price": 7530.0, "discount_pct": -14.2, "verdict": "nad trhom", "year": 2012, "km": 135593, "km_per_year": 9500.0, "eg": "1.2 / 1.6 DIG-T 85–140 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava I - Staré Mesto", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [{"source": "bazos", "id": "195828576", "url": "https://auto.bazos.sk/inzerat/195828576/nissan-juke-16-l-dig-t-tekna-140kw-190hp-m6-silnejsi-motor.php", "price": 8600}], "body": "suv"}, {"id": "ab-Aew54P7wri1", "url": "https://www.autobazar.eu/detail/nissan-juke-16-l-visia-69kw94hp-m5/Aew54P7wri1/", "title": "Nissan Juke 1.6 l Visia 69kW94HP M5", "price": 9200, "price_gross": 9200, "fair_price": 8040.0, "discount_pct": -14.4, "verdict": "nad trhom", "year": 2017, "km": 52000, "km_per_year": 5600.0, "eg": "1.6 16V 69–86 kW", "cg": 0, "transmission": "manual", "seller_type": "private", "location": "Bratislava-Ružinov", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197279876", "url": "https://auto.bazos.sk/inzerat/197279876/nissan-juke-16-benzin-manual-52-000-km-1-majitel-rv2017.php", "price": 9200}], "body": "suv"}, {"id": "196473731", "url": "https://auto.bazos.sk/inzerat/196473731/nissan-juke-16-benzin.php", "title": "Nissan Juke 1.6 benzin", "price": 7290, "price_gross": 7290, "fair_price": 6350.0, "discount_pct": -14.7, "verdict": "nad trhom", "year": 2014, "km": 150000, "km_per_year": 12200.0, "eg": "1.6 16V 69–86 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Komárno", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-Am6KDTHEIJ9", "url": "https://www.autobazar.eu/detail/nissan-juke-10-dig-t-114-n-connecta-dtc/Am6KDTHEIJ9/", "title": "Nissan Juke 1.0 DIG-T 114 N-Connecta DTC", "price": 15900, "price_gross": 15900, "fair_price": 13850.0, "discount_pct": -14.8, "verdict": "nad trhom", "year": 2021, "km": 69957, "km_per_year": 13100.0, "eg": "1.0 DIG-T 84–86 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Banská Bystrica", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "bs-39637539", "url": "https://auto.bazar.sk/39637539-nissan-juke-dig-t-115-n-connecta/", "title": "Nissan Juke DIG-T 115 N-Connecta", "price": 8990, "price_gross": 8990, "fair_price": 7800.0, "discount_pct": -15.3, "verdict": "výrazne nad trhom", "year": 2017, "km": 75754, "km_per_year": 8100.0, "eg": "1.2 / 1.6 DIG-T 85–140 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Tornaľa", "flags": [], "pick": null, "source": "bazarsk", "origin": "dovoz", "also_listed": [{"source": "autobazar", "id": "ab-Am65Mzv6a9w", "url": "https://www.autobazar.eu/detail/nissan-juke-dig-t-115-n-connecta/Am65Mzv6a9w/", "price": 8990}, {"source": "bazos", "id": "196289137", "url": "https://auto.bazos.sk/inzerat/196289137/nissan-juke-12-dig-t-85kw115k-n-connecta.php", "price": 8990}], "body": "suv"}, {"id": "ab-AmiVe7Ng43j", "url": "https://www.autobazar.eu/detail/nissan-juke-10-dig-t-114-tekna-dtc/AmiVe7Ng43j/", "title": "Nissan Juke 1.0 DIG-T 114 N-Design DTC", "price": 16490, "price_gross": 16490, "fair_price": 14220.0, "discount_pct": -16.0, "verdict": "výrazne nad trhom", "year": 2021, "km": 62000, "km_per_year": 11600.0, "eg": "1.0 DIG-T 84–86 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Levice", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197714258", "url": "https://auto.bazos.sk/inzerat/197714258/nissan-juke-10-dig-t-114-n-design-dtc-84kw114hp-a7-automat.php", "price": 15799}, {"source": "bazarsk", "id": "bs-39600465", "url": "https://auto.bazar.sk/39600465-nissan-juke-1-0-dig-t-114-n-design-dtc/", "price": 16490}], "body": "suv"}, {"id": "bs-34352459", "url": "https://auto.bazar.sk/34352459-nissan-juke-1-2-dig-t/", "title": "Nissan Juke 1.2 DIG-T", "price": 11299, "price_gross": 11299, "fair_price": 9710.0, "discount_pct": -16.3, "verdict": "výrazne nad trhom", "year": 2016, "km": 57050, "km_per_year": 5500.0, "eg": "1.2 / 1.6 DIG-T 85–140 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Nové Zámky", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AmM6my6i0dl", "url": "https://www.autobazar.eu/detail/nissan-juke-n-connecta-16i-86kw-automat/AmM6my6i0dl/", "title": "Nissan Juke N-Connecta 1,6i 86kW, Automat", "price": 11500, "price_gross": 11500, "fair_price": 9800.0, "discount_pct": -17.3, "verdict": "výrazne nad trhom", "year": 2018, "km": 61625, "km_per_year": 7400.0, "eg": "1.6 16V 69–86 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Prešov", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "ab-AmChBYKw_cS", "url": "https://www.autobazar.eu/detail/nissan-juke-10-dig-t-114k-at-tekna/AmChBYKw_cS/", "title": "Nissan Juke 1,0 DIG-T 114k AT Tekna", "price": 27790, "price_gross": 27790, "fair_price": 23220.0, "discount_pct": -19.7, "verdict": "výrazne nad trhom", "year": 2026, "km": 654, "km_per_year": 2000.0, "eg": "1.0 DIG-T 84–86 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Žilina", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39684107", "url": "https://auto.bazar.sk/39684107-nissan-juke-1-0-dig-t-114k-at-tekna/", "price": 27790}], "body": "suv"}, {"id": "197548296", "url": "https://auto.bazos.sk/inzerat/197548296/nissan-juke-15-dci-tekna.php", "title": "Nissan Juke 1.5 dCi Tekna", "price": 7699, "price_gross": 7699, "fair_price": 5020.0, "discount_pct": -53.5, "verdict": "výrazne nad trhom", "year": 2012, "km": 249000, "km_per_year": 17400.0, "eg": "1.5 dCi 81–85 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Dunajská Streda", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39770297", "url": "https://auto.bazar.sk/39770297-nissan-juke-1-5-dci-tekna/", "price": 7700}, {"source": "autobazar", "id": "ab-AmluvQx7P-P", "url": "https://www.autobazar.eu/detail/nissan-juke-15-dci-tekna/AmluvQx7P-P/", "price": 7700}], "body": "suv"}];
+const GROUPS = ["Benzín", "Diesel a hybrid", "LPG a nezistený"];
+const BODY = {"suv": "SUV"};
+const fmt = n => Math.round(n).toLocaleString("sk-SK");
+const eur = n => fmt(n) + " €";
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const TRANS = {automatic: "automat", manual: "manuál"};
+const SRC = {bazos: "bazoš", autobazar: "autobazar.eu", bazarsk: "bazar.sk"};
+
+// --- theme toggle ---------------------------------------------------------
+document.getElementById("themeBtn").onclick = () => {
+  const root = document.documentElement;
+  const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  drawChart();
+};
+
+// --- scatter chart --------------------------------------------------------
+const legend = document.getElementById("legend");
+legend.innerHTML = GROUPS.map((g, i) => `<span><i style="background:var(--s${i+1})"></i>${g}</span>`).join("")
+  + `<span><i class="ring"></i>odporúčaná ponuka</span>`;
+
+function drawChart() {
+  const svg = document.getElementById("chart"), wrap = document.getElementById("chartWrap"), tip = document.getElementById("tip");
+  const W = svg.clientWidth, H = 420, m = {l: 56, r: 16, t: 10, b: 40};
+  const pts = DATA.filter(d => d.km && d.price_gross);
+  const xMax = Math.ceil(Math.max(...pts.map(d => d.km)) / 50000) * 50000;
+  const yMax = Math.ceil(Math.max(...pts.map(d => d.price_gross)) / 5000) * 5000;
+  const x = v => m.l + v / xMax * (W - m.l - m.r), y = v => H - m.b - v / yMax * (H - m.t - m.b);
+  let s = "";
+  for (let v = 0; v <= yMax; v += 5000)
+    s += `<line x1="${m.l}" x2="${W-m.r}" y1="${y(v)}" y2="${y(v)}" stroke="var(--grid)"/><text x="${m.l-8}" y="${y(v)+4}" text-anchor="end">${v/1000} tis. €</text>`;
+  const step = W < 520 ? 100000 : 50000;
+  for (let v = 0; v <= xMax; v += step)
+    s += `<text x="${x(v)}" y="${H-m.b+18}" text-anchor="middle">${v/1000} tis.</text>`;
+  s += `<text x="${(W+m.l)/2}" y="${H-6}" text-anchor="middle">nájazd (km)</text>`;
+  const order = [...pts].sort((a, b) => (a.pick ? 1 : 0) - (b.pick ? 1 : 0));
+  order.forEach(d => {
+    const cx = x(d.km), cy = y(d.price_gross);
+    if (d.pick) s += `<circle cx="${cx}" cy="${cy}" r="9" fill="none" stroke="var(--text)" stroke-width="2"/>`;
+    s += `<circle class="pt" data-id="${d.id}" cx="${cx}" cy="${cy}" r="5" fill="var(--s${d.cg+1})" stroke="var(--surface)" stroke-width="2"/>`;
+  });
+  // invisible bigger hit targets
+  order.forEach(d => s += `<circle class="hit" data-id="${d.id}" cx="${x(d.km)}" cy="${y(d.price_gross)}" r="11" fill="transparent" style="cursor:pointer"/>`);
+  svg.innerHTML = s;
+  const byId = Object.fromEntries(pts.map(d => [d.id, d]));
+  svg.querySelectorAll(".hit").forEach(c => {
+    c.onmouseenter = c.onmousemove = ev => {
+      const d = byId[c.dataset.id];
+      tip.innerHTML = `<b>${esc(d.title)}</b>
+        <div class="row"><span>Cena</span><span>${eur(d.price_gross)}</span></div>
+        <div class="row"><span>Férová cena</span><span>${eur(d.fair_price)}</span></div>
+        <div class="row"><span>Pod trhom</span><span>${d.discount_pct > 0 ? "+" : ""}${d.discount_pct.toLocaleString("sk-SK")} %</span></div>
+        <div class="row"><span>Zdroj</span><span>${SRC[d.source]}${d.also_listed.length ? " + " + d.also_listed.map(a => SRC[a.source]).join(", ") : ""}</span></div>
+        <div class="row"><span>Rok · km</span><span>${d.year} · ${fmt(d.km)}</span></div>
+        <div class="row"><span>Motor</span><span>${esc(d.eg)} ${TRANS[d.transmission] || ""}</span></div>`;
+      tip.style.display = "block";
+      const r = wrap.getBoundingClientRect();
+      let lx = ev.clientX - r.left + 14, ly = ev.clientY - r.top + 14;
+      if (lx + 290 > r.width) lx = ev.clientX - r.left - 290;
+      tip.style.left = lx + "px"; tip.style.top = ly + "px";
+    };
+    c.onmouseleave = () => tip.style.display = "none";
+    c.onclick = () => window.open(byId[c.dataset.id].url, "_blank", "noopener");
+  });
+}
+drawChart();
+addEventListener("resize", drawChart);
+
+// --- full table -----------------------------------------------------------
+const fEngine = document.getElementById("fEngine");
+[...new Set(DATA.map(d => d.eg))].sort().forEach(g => fEngine.insertAdjacentHTML("beforeend", `<option>${esc(g)}</option>`));
+let sortK = "discount_pct", sortDir = -1;
+function discCell(v) {
+  const w = Math.min(Math.abs(v), 30) / 30 * 50;
+  const bar = v >= 0 ? `left:50%;width:${w}%;background:var(--pos)` : `right:50%;width:${w}%;background:var(--neg)`;
+  return `<span class="disc">${v > 0 ? "+" : ""}${v.toLocaleString("sk-SK")} %<span class="dbar"><span style="${bar}"></span></span></span>`;
+}
+function renderTable() {
+  const max = parseFloat(document.getElementById("fMax").value) || Infinity;
+  const tr = document.getElementById("fTrans").value, se = document.getElementById("fSeller").value, en = fEngine.value;
+  const so = document.getElementById("fSource").value, og = document.getElementById("fOrigin").value;
+  const bo = document.getElementById("fBody").value;
+  const rows = DATA.filter(d => (!en || d.eg === en) && (!tr || d.transmission === tr)
+    && (!se || d.seller_type !== "dealer") && d.price_gross <= max
+    && (!so || d.source === so || d.also_listed.some(a => a.source === so)) && (!og || d.origin === og) && (!bo || d.body === bo))
+    .sort((a, b) => { const A = a[sortK], B = b[sortK]; return (typeof A === "string" ? A.localeCompare(B) : A - B) * sortDir; });
+  document.getElementById("count").textContent = `${rows.length} z ${DATA.length} inzerátov`;
+  document.querySelector("#tbl tbody").innerHTML = rows.map(d => `<tr>
+    <td><a href="${d.url}" target="_blank" rel="noopener">${esc(d.title)}</a> ${d.pick ? '<span class="badge pick">odporúčané</span>' : ""}
+      <div class="sub">${BODY[d.body] || "karoséria ?"} · ${esc(d.eg)} · ${TRANS[d.transmission] || "prevodovka ?"} · ${esc(d.location)} · ${d.seller_type === "dealer" ? "predajca/firma" : d.seller_type === "private" ? "súkromník" : "neisté"} · ${SRC[d.source]}${d.origin === "SR" ? " · kúpené v SR" : d.origin === "dovoz" ? " · dovoz" : ""}${d.also_listed.map(a => ` · <a href="${a.url}" target="_blank" rel="noopener">aj na ${SRC[a.source]}</a>`).join("")}</div>
+      ${d.flags.filter(f => !f.startsWith("prevodovka")).map(f => `<div class="flag">⚠ ${esc(f)}</div>`).join("")}</td>
+    <td class="num">${d.year}</td><td class="num">${fmt(d.km)}</td>
+    <td class="num">${eur(d.price_gross)}</td><td class="num">${eur(d.fair_price)}</td>
+    <td class="num">${discCell(d.discount_pct)}</td></tr>`).join("");
+  document.querySelectorAll("#tbl th.sortable").forEach(th => {
+    const base = th.textContent.replace(/ [▾▴]$/, "");
+    th.textContent = base + (th.dataset.k === sortK ? (sortDir < 0 ? " ▾" : " ▴") : "");
+  });
+}
+document.querySelectorAll("#tbl th.sortable").forEach(th => th.onclick = () => {
+  if (sortK === th.dataset.k) sortDir *= -1; else { sortK = th.dataset.k; sortDir = th.dataset.k === "title" ? 1 : -1; }
+  renderTable();
+});
+["fEngine", "fTrans", "fSeller", "fSource", "fBody", "fOrigin", "fMax"].forEach(id => document.getElementById(id).addEventListener("input", renderTable));
+renderTable();
+</script>
+<!-- ferovka-theme --><script defer src="/analytics-config.js"></script><script defer src="/analytics.js"></script><script id="ferovka-chart">/* Férovka – chart → ad links, injected into every report by sync-reports.mjs.
+ *
+ * The reports draw one invisible 11px "hit" circle per ad. In dense charts (and always on a narrow phone) those
+ * circles overlap and the one drawn last wins, so a click/tap often opened a neighbouring ad. Here the pointer is
+ * always resolved to the NEAREST point, the report's own tooltip is shown for that point, and a click opens its ad.
+ * Touch: the first tap shows the tooltip (with a hint), a second tap on the same point opens the ad.
+ */
+(() => {
+  let rows;
+  try { rows = DATA; } catch { return; } // eslint-disable-line no-undef
+  if (!Array.isArray(rows) || !rows.length || !("url" in rows[0])) return;
+  const byId = new Map(rows.map((d) => [String(d.id), d]));
+  const MOUSE = ["mouseover", "mouseout", "mouseenter", "mouseleave", "mousemove", "mousedown", "mouseup", "click"];
+  let lastPointer = "mouse", down = null;
+  // the finger position as it was – Chrome "snaps" the later click of a tap to the centre of a nearby clickable element
+  addEventListener("pointerdown", (e) => { lastPointer = e.pointerType || "mouse"; down = { clientX: e.clientX, clientY: e.clientY }; }, true);
+
+  // the old per-point hit circles must not be targets (they overlap, and touch snapping aims at them)
+  document.head.insertAdjacentHTML("beforeend", "<style>svg circle.hit[data-id],svg circle.pt[data-id]{pointer-events:none}</style>");
+
+  function nearest(svg, ev, radius) {
+    let best = null, bd = Infinity;
+    for (const c of svg.querySelectorAll("circle.pt[data-id]")) {
+      const r = c.getBoundingClientRect();
+      const dx = r.left + r.width / 2 - ev.clientX, dy = r.top + r.height / 2 - ev.clientY;
+      const d = dx * dx + dy * dy;
+      if (d <= bd) { bd = d; best = c; } // ties: the point drawn on top (later) wins – that is the one you see
+    }
+    return best && bd <= radius * radius ? best : null;
+  }
+
+  function bind(svg) {
+    if (svg.__fvLinks) return;
+    svg.__fvLinks = true;
+    let current = null, armed = null;
+    const hitOf = (pt) => pt && svg.querySelector(`circle.hit[data-id="${CSS.escape(pt.dataset.id)}"]`);
+    const fire = (el, type, ev) => {
+      if (!el) return;
+      const e = new MouseEvent(type, { clientX: ev.clientX, clientY: ev.clientY, bubbles: false });
+      e.__fv = true;
+      el.dispatchEvent(e);
+    };
+    const tip = () => (svg.parentElement && svg.parentElement.querySelector("#tip, .tip")) || document.getElementById("tip");
+    const mark = (pt) => {
+      if (current === pt) return;
+      if (current) current.setAttribute("r", current.__r || "5");
+      current = pt;
+      if (pt) { pt.__r = pt.__r || pt.getAttribute("r"); pt.setAttribute("r", String(+pt.__r + 2)); }
+    };
+    const show = (pt, ev, hint) => {
+      mark(pt);
+      if (!pt) { const t = tip(); if (t) t.style.display = "none"; return; }
+      fire(hitOf(pt), "mousemove", ev); // the report's own tooltip, for the nearest point
+      const t = tip();
+      if (t && hint) t.insertAdjacentHTML("beforeend", `<div class="fv-hint">Ťukni ešte raz – otvorí sa inzerát ↗</div>`);
+    };
+    const open = (pt) => {
+      const d = byId.get(pt.dataset.id);
+      if (d && d.url) {
+        try { window.FerovkaAnalytics?.listingClick(d.url, "chart"); } catch { /* analytics must never block an ad */ }
+        window.open(d.url, "_blank", "noopener");
+      }
+    };
+
+    // the per-circle handlers of the report never see real mouse events – only our synthetic ones
+    for (const type of MOUSE) {
+      svg.addEventListener(type, (ev) => {
+        if (ev.__fv) return;
+        ev.stopImmediatePropagation();
+        if (type === "mousemove" && lastPointer === "mouse") {
+          show(nearest(svg, ev, 18), ev, false);
+          svg.style.cursor = current ? "pointer" : "";
+        } else if (type === "mouseleave" && ev.target === svg && lastPointer === "mouse") {
+          show(null, ev);
+        } else if (type === "click") {
+          const touch = lastPointer !== "mouse";
+          const at = touch && down ? down : ev;
+          const pt = nearest(svg, at, touch ? 26 : 18);
+          if (!pt) { armed = null; show(null, ev); return; }
+          if (!touch || armed === pt) { armed = null; open(pt); }
+          else { armed = pt; show(pt, at, true); }
+        }
+      }, true);
+    }
+  }
+
+  const scan = () => document.querySelectorAll("svg").forEach((s) => s.querySelector("circle.pt[data-id]") && bind(s));
+  scan();
+  new MutationObserver(scan).observe(document.body, { childList: true, subtree: true });
+})();
+</script><script id="ferovka-filters">/* Férovka – filters for the whole report, injected into every model report by sync-reports.mjs.
+ *
+ * The reports render the chart (drawChart) and the full ranking (renderTable) from the global DATA array; their own
+ * filter bar only filters the table. Here the filter bar (kept in its place above the ranking) gets more filters (year, price from/to,
+ * km, fuel, discount, picks only, text search) and every filter applies to the chart and the ranking together: DATA is
+ * refilled in place with the matching ads and both are drawn again. "</script" can't occur inside this file.
+ */
+(() => {
+  let data;
+  try { data = DATA; } catch { return; } // eslint-disable-line no-undef
+  if (!Array.isArray(data) || !data.length || typeof renderTable !== "function") return; // eslint-disable-line no-undef
+  const bar = document.querySelector(".filters");
+  if (!bar || bar.dataset.fv) return;
+  bar.dataset.fv = "1";
+  const ALL = data.slice();
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+  const fmt = (n) => Math.round(n).toLocaleString("sk-SK");
+  const norm = (s) => String(s ?? "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+  let groups = null;
+  try { groups = GROUPS; } catch { /* report without groups */ } // eslint-disable-line no-undef
+
+  const FUEL = { diesel: "Diesel", petrol: "Benzín", hybrid: "Hybrid", "plug-in hybrid": "Plug-in hybrid", electric: "Elektro", lpg: "LPG", cng: "CNG" };
+  const fuelOf = (d) => {
+    const e = norm(d.eg);
+    if (/tdi|crdi|dci|hdi|diesel|\bd\b|cdi|\d+d\b|blue/.test(e)) return "Diesel";
+    if (/plug-in|phev|e-hybrid|recharge|\bgte\b|\bt8\b|\b\d{2}e\b|\b\d{3} ?e\b/.test(e)) return "Plug-in hybrid";
+    if (/elektro|electric|\bev\b/.test(e)) return "Elektro";
+    if (/cng|lpg|g-tec|g-tron|tgi|ecofuel/.test(e)) return "Plyn (CNG/LPG)";
+    if (/mild|mhev/.test(e)) return "Benzín"; // mild-hybrid petrol (the diesel ones say TDI / d above)
+    if (/hybrid|hev/.test(e)) return "Hybrid";
+    if (/tsi|tfsi|mpi|fsi|benzin|gdi|dpi|htp|12v|\bt\d\b|\bb[56]\b|\d+i\b|turbo|tce|\bs4\b|rs ?\d|amg|competition|\bm\d{2,3}i?\b|gti|\bx5 m\b/.test(e)) return "Benzín";
+    return d.fuel ? FUEL[d.fuel] || String(d.fuel) : null;
+  };
+
+  // --- controls ---------------------------------------------------------------------------------------------------
+  const years = ALL.map((d) => d.year).filter(Boolean);
+  const yMin = Math.min(...years), yMax = Math.max(...years);
+  const yearOpts = (label) => `<option value="">${label}</option>` +
+    Array.from({ length: yMax - yMin + 1 }, (_, i) => yMax - i).map((y) => `<option>${y}</option>`).join("");
+  const kms = [30000, 50000, 75000, 100000, 150000, 200000, 250000, 300000];
+  const fuels = [...new Set(ALL.map(fuelOf).filter(Boolean))].sort((a, b) => a.localeCompare(b, "sk"));
+  const showGroups = Array.isArray(groups) && groups.length > 1 && ALL.some((d) => Number.isInteger(d.cg));
+
+  const maxInput = $("fMax");
+  if (maxInput) { maxInput.placeholder = "Cena do €"; maxInput.title = "Najvyššia cena (s DPH)"; }
+  const html =
+    `<select id="fvYearFrom" title="Rok výroby od">${yearOpts("Rok od")}</select>` +
+    `<select id="fvYearTo" title="Rok výroby do">${yearOpts("Rok do")}</select>` +
+    `<input id="fvPriceMin" type="number" placeholder="Cena od €" step="500" min="0" title="Najnižšia cena (s DPH)" style="width:110px">`;
+  if (maxInput) maxInput.insertAdjacentHTML("beforebegin", html);
+  else bar.insertAdjacentHTML("afterbegin", html);
+  const more =
+    `<select id="fvKm" title="Najviac najazdených km"><option value="">Nájazd – všetky</option>${kms.map((k) => `<option value="${k}">do ${fmt(k)} km</option>`).join("")}</select>` +
+    (fuels.length > 1 ? `<select id="fvFuel" title="Palivo"><option value="">Všetky palivá</option>${fuels.map((f) => `<option>${esc(f)}</option>`).join("")}</select>` : "") +
+    (showGroups ? `<select id="fvGroup" title="Skupina motorov (farba v grafe)"><option value="">Všetky skupiny</option>${groups.map((g, i) => `<option value="${i}">${esc(g)}</option>`).join("")}</select>` : "") +
+    `<select id="fvDisc" title="O koľko je auto lacnejšie ako férová cena"><option value="">Cena – všetky</option><option value="0">pod férovou cenou</option><option value="10">aspoň 10 % pod trhom</option><option value="20">aspoň 20 % pod trhom</option></select>` +
+    `<input id="fvText" type="search" placeholder="Hľadať (výbava, mesto…)" title="Hľadá v názve inzerátu, motore a lokalite" style="width:170px">` +
+    `<label class="fv-check"><input id="fvPick" type="checkbox"> len odporúčané</label>` +
+    `<button type="button" id="fvReset" class="fv-reset">Zrušiť filtre</button>`;
+  const count = $("count");
+  if (count) count.insertAdjacentHTML("beforebegin", more);
+  else bar.insertAdjacentHTML("beforeend", more);
+
+  // the bar stays where it was – right above the ranking – and also drives the chart; the chart gets a pointer to it
+  const chart = $("chartWrap");
+  const box = document.createElement("div");
+  box.className = "fv-filters";
+  box.id = "filtre";
+  bar.before(box);
+  box.innerHTML = `<div class="fv-head"><b>Filtre</b><span>platia pre rebríček aj graf vyššie</span></div>`;
+  box.appendChild(bar);
+  const note = document.createElement("div");
+  note.className = "fv-note";
+  chart?.before(note);
+
+  document.head.insertAdjacentHTML("beforeend", `<style id="fv-filters-css">
+.fv-filters{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 14px 4px;margin:24px 0 8px}
+.fv-filters .fv-head{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;margin-bottom:8px}
+.fv-filters .fv-head span{color:var(--muted);font-size:13px}
+.fv-filters .filters{margin-bottom:8px}
+.fv-filters .filters .count{flex-basis:100%;margin-left:0}
+.fv-check{display:inline-flex;gap:6px;align-items:center;font-size:13px;color:var(--text-2,var(--text));white-space:nowrap}
+.fv-reset{background:none;border:1px solid var(--border);color:var(--text);border-radius:8px;padding:6px 10px;font:inherit;font-size:13px;cursor:pointer}
+.fv-reset:hover{background:var(--surface-2,var(--surface))}
+.fv-note{color:var(--muted);font-size:13px;margin:0 0 8px}
+.fv-note a{color:inherit}
+.fv-empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:14px;pointer-events:none}
+@media (max-width:600px){.fv-filters .filters select,.fv-filters .filters input[type=number],.fv-filters .filters input[type=search]{flex:1 1 calc(50% - 8px);min-width:0;width:auto!important}}
+</style>`);
+
+  // --- filtering --------------------------------------------------------------------------------------------------
+  const val = (id) => ($(id) ? $(id).value : "");
+  const num = (id) => { const v = parseFloat(val(id)); return Number.isFinite(v) ? v : null; };
+  function matches(d) {
+    const yf = num("fvYearFrom"), yt = num("fvYearTo"), pmin = num("fvPriceMin"), pmax = num("fMax"), km = num("fvKm"), disc = num("fvDisc");
+    const fuel = val("fvFuel"), grp = val("fvGroup"), q = norm(val("fvText")).trim();
+    if (yf != null && !(d.year >= yf)) return false;
+    if (yt != null && !(d.year <= yt)) return false;
+    if (pmin != null && !(d.price_gross >= pmin)) return false;
+    if (pmax != null && !(d.price_gross <= pmax)) return false;
+    if (km != null && !(d.km <= km)) return false;
+    if (disc != null && !(d.discount_pct > disc || (disc > 0 && d.discount_pct >= disc))) return false;
+    if (fuel && fuelOf(d) !== fuel) return false;
+    if (grp !== "" && String(d.cg) !== grp) return false;
+    if ($("fvPick")?.checked && !d.pick) return false;
+    if (q && !q.split(/\s+/).every((w) => norm(`${d.title} ${d.eg ?? ""} ${d.engine ?? ""} ${d.location ?? ""}`).includes(w))) return false;
+    // the report's own filters (engine, gearbox, seller, portal, body, origin) – same rules as its renderTable
+    const en = val("fEngine"), tr = val("fTrans"), se = val("fSeller"), so = val("fSource"), og = val("fOrigin"), bo = val("fBody");
+    if (en && d.eg !== en) return false;
+    if (tr && d.transmission !== tr) return false;
+    if (se && d.seller_type === "dealer") return false;
+    if (so && !(d.source === so || (d.also_listed || []).some((a) => a.source === so))) return false;
+    if (og && d.origin !== og) return false;
+    if (bo && d.body !== bo) return false;
+    return true;
+  }
+  const active = () => [...box.querySelectorAll("select, input")].filter((el) => (el.type === "checkbox" ? el.checked : el.value !== "")).length;
+
+  let drawing = false;
+  function apply() {
+    if (drawing) return;
+    drawing = true;
+    const rows = ALL.filter(matches);
+    data.length = 0;
+    data.push(...rows);
+    const wrap = $("chartWrap");
+    wrap?.querySelector(".fv-empty")?.remove();
+    const plotted = rows.filter((d) => d.km && d.price_gross).length;
+    try {
+      if (typeof drawChart === "function") { // eslint-disable-line no-undef
+        if (plotted) drawChart(); // eslint-disable-line no-undef
+        else { const svg = $("chart"); if (svg) svg.innerHTML = ""; }
+      }
+    } catch (e) { console.warn("chart", e); }
+    if (wrap && !plotted) {
+      if (getComputedStyle(wrap).position === "static") wrap.style.position = "relative";
+      wrap.insertAdjacentHTML("beforeend", `<div class="fv-empty">Filtrom nezodpovedá žiadny inzerát</div>`);
+    }
+    try { renderTable(); } catch (e) { console.warn("table", e); } // eslint-disable-line no-undef
+    const n = active();
+    if (count) count.textContent = `Zobrazených ${fmt(rows.length)} z ${fmt(ALL.length)} inzerátov` + (n ? ` · aktívne filtre: ${n}` : "");
+    note.innerHTML = n
+      ? `Zobrazených ${fmt(rows.length)} z ${fmt(ALL.length)} inzerátov podľa <a href="#filtre">filtrov pri rebríčku</a>.`
+      : `Filtre (rok, cena, nájazd, palivo…) nájdeš <a href="#filtre">pri kompletnom rebríčku</a> – platia aj pre tento graf.`;
+    drawing = false;
+  }
+  box.querySelectorAll("select, input").forEach((el) => el.addEventListener("input", apply));
+  $("fvPick")?.addEventListener("change", apply);
+  $("fvReset").addEventListener("click", () => {
+    box.querySelectorAll("select, input").forEach((el) => { if (el.type === "checkbox") el.checked = false; else el.value = ""; });
+    apply();
+  });
+  apply();
+})();
+</script><!-- /ferovka-theme -->
+</body>
+</html>
