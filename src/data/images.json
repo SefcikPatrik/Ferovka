@@ -390,5 +390,12 @@
     "author": "Charles from Port Chester, New York",
     "license": "CC BY 2.0",
     "source": "https://commons.wikimedia.org/wiki/File:Peugeot_3008_II_BlueHDi_130_(2022)_(53326635256).jpg"
+  },
+  "toyota-yaris": {
+    "src": "/img/toyota-yaris.jpg",
+    "file": "File:Toyota Yaris Hybrid GR Sport (XP210) Automesse Ludwigsburg 2022 1X7A5891.jpg",
+    "author": "Alexander Migl",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Toyota_Yaris_Hybrid_GR_Sport_(XP210)_Automesse_Ludwigsburg_2022_1X7A5891.jpg"
   }
 }

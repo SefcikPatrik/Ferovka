@@ -985,7 +985,7 @@
     "median": "18 000 €",
     "r2": "96 %",
     "history": {
-      "updated_at": "2026-11-21T17:02:07",
+      "updated_at": "2026-11-21T17:16:10",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 254,
@@ -1017,7 +1017,7 @@
     "median": "22 700 €",
     "r2": "97 %",
     "history": {
-      "updated_at": "2026-11-21T17:02:07",
+      "updated_at": "2026-11-21T17:16:10",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 246,
@@ -1034,6 +1034,38 @@
       "seen_median": 22700,
       "seen_price_count": 246,
       "last_observed_at": "2026-11-21T17:01:02"
+    }
+  },
+  {
+    "slug": "toyota-yaris",
+    "file": "toyota-yaris-analyza.html",
+    "name": "Toyota Yaris",
+    "brand": "Toyota",
+    "model": "Yaris",
+    "kind": "model",
+    "date": "2026-11-21",
+    "summary": "Analýza aktuálnych inzerátov Toyota Yaris (Yaris XP90, XP130 a XP210, bez Yaris Cross a GR Yaris) od 1 500 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 535 inzerátov (116 na bazoši, 259 na autobazar.eu, 160 na bazar.sk) – prezreli sme 94 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 330 rôznych áut zo Slovenska.",
+    "ads": 330,
+    "median": "12 000 €",
+    "r2": "95 %",
+    "history": {
+      "updated_at": "2026-11-21T17:16:10",
+      "as_of": "2026-11-21",
+      "coverage": "partial",
+      "baseline_count": 186,
+      "total_count": 186,
+      "active_count": 186,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 186,
+      "paired_median_change_pct": 0,
+      "historical_median": 12000,
+      "seen_median": 12000,
+      "seen_price_count": 186,
+      "last_observed_at": "2026-11-21T17:14:30"
     }
   },
   {
