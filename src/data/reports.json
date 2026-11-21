@@ -950,8 +950,27 @@
     "date": "2026-11-21",
     "summary": "Analýza aktuálnych inzerátov Seat Ibiza (Ibiza 6L, 6J a KJ, hatchback aj kombi ST, bez Cupra) od 1 500 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 276 inzerátov (147 na bazoši, 65 na autobazar.eu, 64 na bazar.sk) – prezreli sme 88 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 182 rôznych áut zo Slovenska.",
     "ads": 182,
-    "median": "3 750 €",
-    "r2": "86 %"
+    "median": "3 764 €",
+    "r2": "86 %",
+    "history": {
+      "updated_at": "2026-11-21T17:34:55",
+      "as_of": "2026-11-21",
+      "coverage": "partial",
+      "baseline_count": 126,
+      "total_count": 126,
+      "active_count": 126,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 126,
+      "paired_median_change_pct": 0,
+      "historical_median": 3764,
+      "seen_median": 3764,
+      "seen_price_count": 126,
+      "last_observed_at": "2026-11-21T17:31:38"
+    }
   },
   {
     "slug": "skoda-kamiq",
@@ -1080,6 +1099,19 @@
       "seen_price_count": 587,
       "last_observed_at": "2026-11-21T15:52:03"
     }
+  },
+  {
+    "slug": "skoda-yeti",
+    "file": "skoda-yeti-analyza.html",
+    "name": "Škoda Yeti",
+    "brand": "Škoda",
+    "model": "Yeti",
+    "kind": "model",
+    "date": "2026-11-21",
+    "summary": "Analýza aktuálnych inzerátov Škoda Yeti (2009–2017, 4x2 aj 4x4, Outdoor aj City) od 2 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 525 inzerátov (162 na bazoši, 203 na autobazar.eu, 160 na bazar.sk) – prezreli sme 94 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 265 rôznych áut zo Slovenska.",
+    "ads": 265,
+    "median": "7 900 €",
+    "r2": "87 %"
   },
   {
     "slug": "toyota-corolla",
@@ -1734,7 +1766,7 @@
     "median": "16 999 €",
     "r2": "89 %",
     "history": {
-      "updated_at": "2026-11-21T15:25:51",
+      "updated_at": "2026-11-21T17:34:55",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 178,
@@ -1766,7 +1798,7 @@
     "median": "9 994 €",
     "r2": "92 %",
     "history": {
-      "updated_at": "2026-11-21T15:25:51",
+      "updated_at": "2026-11-21T17:34:55",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 463,
