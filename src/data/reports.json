@@ -1177,7 +1177,7 @@
     "median": "24 050 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-21T20:24:31",
+      "updated_at": "2026-11-21T21:32:05",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 34,
@@ -1209,7 +1209,7 @@
     "median": "5 900 €",
     "r2": "90 %",
     "history": {
-      "updated_at": "2026-11-21T20:24:31",
+      "updated_at": "2026-11-21T21:32:05",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 147,
@@ -1241,7 +1241,7 @@
     "median": "25 300 €",
     "r2": "97 %",
     "history": {
-      "updated_at": "2026-11-21T20:24:31",
+      "updated_at": "2026-11-21T21:32:05",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 167,
@@ -1273,7 +1273,7 @@
     "median": "15 900 €",
     "r2": "95 %",
     "history": {
-      "updated_at": "2026-11-21T20:24:31",
+      "updated_at": "2026-11-21T21:32:05",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 487,
@@ -1305,7 +1305,7 @@
     "median": "12 500 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-21T20:24:31",
+      "updated_at": "2026-11-21T21:32:05",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 42,
@@ -1322,6 +1322,38 @@
       "seen_median": 12500,
       "seen_price_count": 42,
       "last_observed_at": "2026-11-21T20:23:02"
+    }
+  },
+  {
+    "slug": "kia-xceed",
+    "file": "kia-xceed-analyza.html",
+    "name": "Kia XCeed",
+    "brand": "Kia",
+    "model": "XCeed",
+    "kind": "model",
+    "date": "2026-11-21",
+    "summary": "Analýza aktuálnych inzerátov Kia XCeed (2019–2025, bez nových áut z 2026) od 7 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 295 inzerátov (56 na bazoši, 157 na autobazar.eu, 82 na bazar.sk) – prezreli sme 75 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 174 rôznych áut zo Slovenska.",
+    "ads": 174,
+    "median": "19 490 €",
+    "r2": "90 %",
+    "history": {
+      "updated_at": "2026-11-21T21:32:05",
+      "as_of": "2026-11-21",
+      "coverage": "partial",
+      "baseline_count": 81,
+      "total_count": 81,
+      "active_count": 81,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 81,
+      "paired_median_change_pct": 0,
+      "historical_median": 19490,
+      "seen_median": 19490,
+      "seen_price_count": 81,
+      "last_observed_at": "2026-11-21T21:30:51"
     }
   },
   {
@@ -2950,7 +2982,7 @@
     "median": "12 985 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-21T20:24:31",
+      "updated_at": "2026-11-21T21:32:05",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 176,
