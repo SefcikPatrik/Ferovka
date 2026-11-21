@@ -428,7 +428,7 @@
     "median": "9 700 €",
     "r2": "92 %",
     "history": {
-      "updated_at": "2026-11-21T20:49:00",
+      "updated_at": "2026-11-21T23:50:04",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 182,
@@ -460,7 +460,7 @@
     "median": "8 195 €",
     "r2": "95 %",
     "history": {
-      "updated_at": "2026-11-21T20:49:00",
+      "updated_at": "2026-11-21T23:50:04",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 188,
@@ -476,7 +476,39 @@
       "historical_median": 8195,
       "seen_median": 8195,
       "seen_price_count": 188,
-      "last_observed_at": "2026-11-21T20:46:36"
+      "last_observed_at": "2026-11-21T23:48:16"
+    }
+  },
+  {
+    "slug": "citroen-c4-picasso",
+    "file": "citroen-c4-picasso-analyza.html",
+    "name": "Citroën C4 Picasso",
+    "brand": "Citroën",
+    "model": "C4 Picasso",
+    "kind": "model",
+    "date": "2026-11-21",
+    "summary": "Analýza aktuálnych inzerátov Citroën C4 Picasso (druhá generácia 2013–2022, aj 7-miestny Grand Picasso a C4 SpaceTourer) od 2 500 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 1 464 inzerátov (140 na bazoši, 1 210 na autobazar.eu, 114 na bazar.sk) – prezreli sme 20 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 185 rôznych áut zo Slovenska.",
+    "ads": 185,
+    "median": "6 100 €",
+    "r2": "80 %",
+    "history": {
+      "updated_at": "2026-11-21T23:50:04",
+      "as_of": "2026-11-21",
+      "coverage": "partial",
+      "baseline_count": 84,
+      "total_count": 84,
+      "active_count": 84,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 84,
+      "paired_median_change_pct": 0,
+      "historical_median": 6100,
+      "seen_median": 6100,
+      "seen_price_count": 84,
+      "last_observed_at": "2026-11-21T23:48:13"
     }
   },
   {
