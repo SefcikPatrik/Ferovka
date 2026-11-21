@@ -697,7 +697,7 @@
     "median": "7 700 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-21T18:27:28",
+      "updated_at": "2026-11-21T19:47:30",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 93,
@@ -714,6 +714,38 @@
       "seen_median": 7700,
       "seen_price_count": 93,
       "last_observed_at": "2026-11-21T18:25:09"
+    }
+  },
+  {
+    "slug": "honda-cr-v",
+    "file": "honda-cr-v-analyza.html",
+    "name": "Honda CR-V",
+    "brand": "Honda",
+    "model": "CR-V",
+    "kind": "model",
+    "date": "2026-11-21",
+    "summary": "Analýza aktuálnych inzerátov Honda CR-V (štvrtá až šiesta generácia, 2012–2025) od 5 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 364 inzerátov (130 na bazoši, 106 na autobazar.eu, 128 na bazar.sk) – prezreli sme 91 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 240 rôznych áut zo Slovenska.",
+    "ads": 240,
+    "median": "13 830 €",
+    "r2": "96 %",
+    "history": {
+      "updated_at": "2026-11-21T19:47:30",
+      "as_of": "2026-11-21",
+      "coverage": "partial",
+      "baseline_count": 154,
+      "total_count": 154,
+      "active_count": 154,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 154,
+      "paired_median_change_pct": 0,
+      "historical_median": 13830,
+      "seen_median": 13830,
+      "seen_price_count": 154,
+      "last_observed_at": "2026-11-21T19:46:21"
     }
   },
   {
