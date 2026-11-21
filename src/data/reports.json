@@ -1,18 +1,5 @@
 [
   {
-    "slug": "porovnanie-ceed-i30-octavia",
-    "file": "porovnanie-ceed-i30-octavia.html",
-    "name": "Ceed vs i30 vs Octavia",
-    "brand": "Porovnanie",
-    "model": "Ceed vs i30 vs Octavia",
-    "kind": "comparison",
-    "date": "2026-11-09",
-    "summary": "Porovnanie 3 086 aktuálnych inzerátov z auto.bazos.sk, www.autobazar.eu a bazar.sk (9. 11. 2026) pre mladého vodiča: nízka spotreba, spoľahlivosť a čo najnižšie náklady na údržbu.",
-    "ads": 3086,
-    "median": null,
-    "r2": null
-  },
-  {
     "slug": "audi-a3",
     "file": "audi-a3-analyza.html",
     "name": "Audi A3",
@@ -426,38 +413,6 @@
       "seen_median": 43990,
       "seen_price_count": 858,
       "last_observed_at": "2026-11-21T11:19:42"
-    }
-  },
-  {
-    "slug": "bmw-x5-m50d",
-    "file": "bmw-x5-m50d-analyza.html",
-    "name": "BMW X5 M50d",
-    "brand": "BMW",
-    "model": "X5 M50d",
-    "kind": "model",
-    "date": "2026-11-21",
-    "summary": "Analýza aktuálnych inzerátov BMW X5 M50d (F15 a G05, od roku 2014) na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Z približne 430 inzerátov BMW X5 zo Slovenska je M50d 35 áut (33 má rok aj kilometre). Férovú cenu počíta model natrénovaný na celom trhu X5, v ktorom má M50d vlastný príplatok – samotných M50d je na štatistiku príliš málo.",
-    "ads": 46,
-    "median": "37 250 €",
-    "r2": "94 %",
-    "history": {
-      "updated_at": "2026-11-21T15:25:51",
-      "as_of": "2026-11-21",
-      "coverage": "partial",
-      "baseline_count": 31,
-      "total_count": 62,
-      "active_count": 53,
-      "inactive_count": 0,
-      "unverified_count": 9,
-      "new_count": 31,
-      "price_changed_count": 4,
-      "price_lowered_count": 4,
-      "paired_count": 25,
-      "paired_median_change_pct": 0,
-      "historical_median": 34922,
-      "seen_median": 34922,
-      "seen_price_count": 52,
-      "last_observed_at": "2026-11-21T11:19:33"
     }
   },
   {
@@ -2586,6 +2541,38 @@
     }
   },
   {
+    "slug": "tesla-model-3",
+    "file": "tesla-model-3-analyza.html",
+    "name": "Tesla Model 3",
+    "brand": "Tesla",
+    "model": "Model 3",
+    "kind": "model",
+    "date": "2026-11-21",
+    "summary": "Analýza aktuálnych inzerátov Tesla Model 3 (2019–2025, všetky verzie, bez nových áut z 2026) od 12 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 371 inzerátov (312 na bazoši, 0 na autobazar.eu, 59 na bazar.sk) – prezreli sme 38 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 137 rôznych áut zo Slovenska.",
+    "ads": 137,
+    "median": "27 890 €",
+    "r2": "88 %",
+    "history": {
+      "updated_at": "2026-11-21T23:31:35",
+      "as_of": "2026-11-21",
+      "coverage": "partial",
+      "baseline_count": 86,
+      "total_count": 86,
+      "active_count": 86,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 86,
+      "paired_median_change_pct": 0,
+      "historical_median": 27690,
+      "seen_median": 27690,
+      "seen_price_count": 86,
+      "last_observed_at": "2026-11-21T23:26:11"
+    }
+  },
+  {
     "slug": "toyota-auris",
     "file": "toyota-auris-analyza.html",
     "name": "Toyota Auris",
@@ -3096,6 +3083,19 @@
       "seen_price_count": 773,
       "last_observed_at": "2026-11-21T11:47:27"
     }
+  },
+  {
+    "slug": "vw-up",
+    "file": "vw-up-analyza.html",
+    "name": "Volkswagen up!",
+    "brand": "Volkswagen",
+    "model": "up!",
+    "kind": "model",
+    "date": "2026-11-21",
+    "summary": "Analýza aktuálnych inzerátov Volkswagen up! (2012–2023, aj elektrický e-up! a CNG eco up!) od 2 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 1 638 inzerátov (92 na bazoši, 34 na autobazar.eu, 1 512 na bazar.sk) – prezreli sme 5 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 50 rôznych áut zo Slovenska.",
+    "ads": 50,
+    "median": "5 500 €",
+    "r2": "89 %"
   },
   {
     "slug": "volvo-v60",
