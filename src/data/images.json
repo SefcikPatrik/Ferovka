@@ -313,5 +313,12 @@
     "author": "Alexander Migl",
     "license": "CC BY-SA 4.0",
     "source": "https://commons.wikimedia.org/wiki/File:Volkswagen_T-Roc_(2021)_1X7A0330.jpg"
+  },
+  "ford-focus": {
+    "src": "/img/ford-focus.jpg",
+    "file": "File:2018 Ford Focus Titanium Ecoboost 1.0 Front.jpg",
+    "author": "Vauxford",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:2018_Ford_Focus_Titanium_Ecoboost_1.0_Front.jpg"
   }
 }

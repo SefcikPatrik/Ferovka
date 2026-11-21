@@ -429,6 +429,38 @@
     }
   },
   {
+    "slug": "ford-focus",
+    "file": "ford-focus-analyza.html",
+    "name": "Ford Focus",
+    "brand": "Ford",
+    "model": "Focus",
+    "kind": "model",
+    "date": "2026-11-21",
+    "summary": "Analýza aktuálnych inzerátov Ford Focus (Focus II až IV, hatchback, kombi aj sedan, bez ST a RS) od 1 500 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 1 109 inzerátov (431 na bazoši, 390 na autobazar.eu, 288 na bazar.sk) – prezreli sme 97 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 702 rôznych áut zo Slovenska.",
+    "ads": 702,
+    "median": "5 500 €",
+    "r2": "90 %",
+    "history": {
+      "updated_at": "2026-11-21T16:22:30",
+      "as_of": "2026-11-21",
+      "coverage": "partial",
+      "baseline_count": 493,
+      "total_count": 493,
+      "active_count": 493,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 493,
+      "paired_median_change_pct": 0,
+      "historical_median": 5500,
+      "seen_median": 5500,
+      "seen_price_count": 493,
+      "last_observed_at": "2026-11-21T16:18:38"
+    }
+  },
+  {
     "slug": "hyundai-tucson",
     "file": "hyundai-tucson-analyza.html",
     "name": "Hyundai Tucson",
