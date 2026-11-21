@@ -1165,6 +1165,19 @@
     }
   },
   {
+    "slug": "hyundai-ix20",
+    "file": "hyundai-ix20-analyza.html",
+    "name": "Hyundai ix20",
+    "brand": "Hyundai",
+    "model": "ix20",
+    "kind": "model",
+    "date": "2026-11-21",
+    "summary": "Analýza aktuálnych inzerátov Hyundai ix20 (2010–2019) od 2 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 88 inzerátov (33 na bazoši, 29 na autobazar.eu, 26 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 58 rôznych áut zo Slovenska.",
+    "ads": 58,
+    "median": "5 990 €",
+    "r2": "90 %"
+  },
+  {
     "slug": "hyundai-ix35",
     "file": "hyundai-ix35-analyza.html",
     "name": "Hyundai ix35",
@@ -1879,7 +1892,26 @@
     "summary": "Analýza aktuálnych inzerátov Opel Combo (osobný Combo Tour / Combo Life, 2012–2025, bez dodávky Cargo / Van) od 3 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 266 inzerátov (69 na bazoši, 69 na autobazar.eu, 128 na bazar.sk) – prezreli sme 87 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 160 rôznych áut zo Slovenska.",
     "ads": 160,
     "median": "10 990 €",
-    "r2": "94 %"
+    "r2": "94 %",
+    "history": {
+      "updated_at": "2026-11-21T23:56:33",
+      "as_of": "2026-11-21",
+      "coverage": "partial",
+      "baseline_count": 59,
+      "total_count": 59,
+      "active_count": 59,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 59,
+      "paired_median_change_pct": 0,
+      "historical_median": 10990,
+      "seen_median": 10990,
+      "seen_price_count": 59,
+      "last_observed_at": "2026-11-21T22:45:36"
+    }
   },
   {
     "slug": "opel-crossland",
@@ -1894,7 +1926,7 @@
     "median": "9 500 €",
     "r2": "81 %",
     "history": {
-      "updated_at": "2026-11-21T20:34:28",
+      "updated_at": "2026-11-21T23:56:33",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 115,
@@ -1911,6 +1943,38 @@
       "seen_median": 9500,
       "seen_price_count": 115,
       "last_observed_at": "2026-11-21T20:33:37"
+    }
+  },
+  {
+    "slug": "opel-meriva",
+    "file": "opel-meriva-analyza.html",
+    "name": "Opel Meriva",
+    "brand": "Opel",
+    "model": "Meriva",
+    "kind": "model",
+    "date": "2026-11-21",
+    "summary": "Analýza aktuálnych inzerátov Opel Meriva (druhá generácia Meriva B, 2010–2017) od 2 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 175 inzerátov (48 na bazoši, 63 na autobazar.eu, 64 na bazar.sk) – prezreli sme 81 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 76 rôznych áut zo Slovenska.",
+    "ads": 76,
+    "median": "4 825 €",
+    "r2": "78 %",
+    "history": {
+      "updated_at": "2026-11-21T23:56:33",
+      "as_of": "2026-11-21",
+      "coverage": "partial",
+      "baseline_count": 50,
+      "total_count": 50,
+      "active_count": 50,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 50,
+      "paired_median_change_pct": 0,
+      "historical_median": 4825,
+      "seen_median": 4825,
+      "seen_price_count": 50,
+      "last_observed_at": "2026-11-21T23:52:33"
     }
   },
   {
@@ -3411,23 +3475,23 @@
     "median": "5 500 €",
     "r2": "92 %",
     "history": {
-      "updated_at": "2026-11-21T20:34:28",
+      "updated_at": "2026-11-21T23:56:33",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 567,
-      "total_count": 679,
-      "active_count": 0,
+      "total_count": 680,
+      "active_count": 1,
       "inactive_count": 0,
       "unverified_count": 679,
-      "new_count": 112,
+      "new_count": 113,
       "price_changed_count": 0,
       "price_lowered_count": 0,
       "paired_count": 0,
       "paired_median_change_pct": null,
       "historical_median": 5490,
-      "seen_median": null,
-      "seen_price_count": 0,
-      "last_observed_at": "2026-11-20T19:46:36"
+      "seen_median": 2800,
+      "seen_price_count": 1,
+      "last_observed_at": "2026-11-21T23:52:15"
     }
   },
   {
@@ -3443,23 +3507,23 @@
     "median": "6 300 €",
     "r2": "92 %",
     "history": {
-      "updated_at": "2026-11-21T20:34:28",
+      "updated_at": "2026-11-21T23:56:33",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 210,
-      "total_count": 263,
-      "active_count": 0,
+      "total_count": 264,
+      "active_count": 1,
       "inactive_count": 0,
       "unverified_count": 263,
-      "new_count": 53,
+      "new_count": 54,
       "price_changed_count": 0,
       "price_lowered_count": 0,
       "paired_count": 0,
       "paired_median_change_pct": null,
-      "historical_median": 6200,
-      "seen_median": null,
-      "seen_price_count": 0,
-      "last_observed_at": "2026-11-20T20:17:24"
+      "historical_median": 6100,
+      "seen_median": 2800,
+      "seen_price_count": 1,
+      "last_observed_at": "2026-11-21T23:52:15"
     }
   },
   {
@@ -3475,7 +3539,7 @@
     "median": "16 190 €",
     "r2": "95 %",
     "history": {
-      "updated_at": "2026-11-21T20:34:28",
+      "updated_at": "2026-11-21T23:56:33",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 92,
@@ -3507,23 +3571,23 @@
     "median": "7 500 €",
     "r2": "87 %",
     "history": {
-      "updated_at": "2026-11-21T20:34:28",
+      "updated_at": "2026-11-21T23:56:33",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 352,
-      "total_count": 443,
-      "active_count": 0,
+      "total_count": 444,
+      "active_count": 1,
       "inactive_count": 0,
       "unverified_count": 443,
-      "new_count": 91,
+      "new_count": 92,
       "price_changed_count": 0,
       "price_lowered_count": 0,
       "paired_count": 0,
       "paired_median_change_pct": null,
-      "historical_median": 7490,
-      "seen_median": null,
-      "seen_price_count": 0,
-      "last_observed_at": "2026-11-20T20:14:22"
+      "historical_median": 7430,
+      "seen_median": 2800,
+      "seen_price_count": 1,
+      "last_observed_at": "2026-11-21T23:52:15"
     }
   },
   {
@@ -3539,7 +3603,7 @@
     "median": "14 528 €",
     "r2": "96 %",
     "history": {
-      "updated_at": "2026-11-21T20:34:28",
+      "updated_at": "2026-11-21T23:56:33",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 109,
@@ -3571,23 +3635,23 @@
     "median": "5 700 €",
     "r2": "95 %",
     "history": {
-      "updated_at": "2026-11-21T20:34:28",
+      "updated_at": "2026-11-21T23:56:33",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 142,
-      "total_count": 183,
-      "active_count": 0,
+      "total_count": 184,
+      "active_count": 1,
       "inactive_count": 0,
       "unverified_count": 183,
-      "new_count": 41,
+      "new_count": 42,
       "price_changed_count": 0,
       "price_lowered_count": 0,
       "paired_count": 0,
       "paired_median_change_pct": null,
-      "historical_median": 5700,
-      "seen_median": null,
-      "seen_price_count": 0,
-      "last_observed_at": "2026-11-20T20:20:27"
+      "historical_median": 5650,
+      "seen_median": 2800,
+      "seen_price_count": 1,
+      "last_observed_at": "2026-11-21T23:52:15"
     }
   },
   {
