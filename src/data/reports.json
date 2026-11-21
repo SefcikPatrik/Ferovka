@@ -985,7 +985,7 @@
     "median": "24 050 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-21T20:15:33",
+      "updated_at": "2026-11-21T20:24:31",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 34,
@@ -1017,7 +1017,7 @@
     "median": "5 900 €",
     "r2": "90 %",
     "history": {
-      "updated_at": "2026-11-21T20:15:33",
+      "updated_at": "2026-11-21T20:24:31",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 147,
@@ -1049,7 +1049,7 @@
     "median": "25 300 €",
     "r2": "97 %",
     "history": {
-      "updated_at": "2026-11-21T20:15:33",
+      "updated_at": "2026-11-21T20:24:31",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 167,
@@ -1081,7 +1081,7 @@
     "median": "15 900 €",
     "r2": "95 %",
     "history": {
-      "updated_at": "2026-11-21T20:15:33",
+      "updated_at": "2026-11-21T20:24:31",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 487,
@@ -1098,6 +1098,38 @@
       "seen_median": 16445,
       "seen_price_count": 898,
       "last_observed_at": "2026-11-21T11:25:21"
+    }
+  },
+  {
+    "slug": "kia-stonic",
+    "file": "kia-stonic-analyza.html",
+    "name": "Kia Stonic",
+    "brand": "Kia",
+    "model": "Stonic",
+    "kind": "model",
+    "date": "2026-11-21",
+    "summary": "Analýza aktuálnych inzerátov Kia Stonic (ojazdené 2017–2025, bez nových áut z 2026) od 5 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 250 inzerátov (33 na bazoši, 121 na autobazar.eu, 96 na bazar.sk) – prezreli sme 95 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 132 rôznych áut zo Slovenska.",
+    "ads": 132,
+    "median": "12 500 €",
+    "r2": "94 %",
+    "history": {
+      "updated_at": "2026-11-21T20:24:31",
+      "as_of": "2026-11-21",
+      "coverage": "partial",
+      "baseline_count": 42,
+      "total_count": 42,
+      "active_count": 42,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 42,
+      "paired_median_change_pct": 0,
+      "historical_median": 12500,
+      "seen_median": 12500,
+      "seen_price_count": 42,
+      "last_observed_at": "2026-11-21T20:23:02"
     }
   },
   {
@@ -2553,7 +2585,7 @@
     "median": "12 985 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-21T20:15:33",
+      "updated_at": "2026-11-21T20:24:31",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 176,
