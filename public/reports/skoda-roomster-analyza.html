@@ -1,0 +1,880 @@
+<!doctype html>
+<html lang="sk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Škoda Roomster – analýza ponúk</title>
+<style>
+:root {
+  color-scheme: light;
+  --bg: #f6f6f4; --surface: #fcfcfb; --surface-2: #f0efec; --border: #e2e1dc;
+  --text: #0b0b0b; --text-2: #52514e; --muted: #7a7974;
+  --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a;
+  --pos: #2a78d6; --neg: #eb6834; --accent: #2a78d6;
+  --good: #1d7f4e; --bad: #b4332f; --grid: #e8e7e3;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #121211; --surface: #1a1a19; --surface-2: #232321; --border: #33332f;
+    --text: #f0efec; --text-2: #c3c2b7; --muted: #8f8e86;
+    --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+    --pos: #3987e5; --neg: #d95926; --accent: #5598e7;
+    --good: #4cc38a; --bad: #f07a76; --grid: #2a2a27;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #121211; --surface: #1a1a19; --surface-2: #232321; --border: #33332f;
+  --text: #f0efec; --text-2: #c3c2b7; --muted: #8f8e86;
+  --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+  --pos: #3987e5; --neg: #d95926; --accent: #5598e7;
+  --good: #4cc38a; --bad: #f07a76; --grid: #2a2a27;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text);
+  font: 15px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+main { max-width: 1120px; margin: 0 auto; padding: 32px 16px 64px; }
+a { color: var(--accent); text-decoration: none; } a:hover { text-decoration: underline; }
+h1 { font-size: 30px; margin: 0 0 4px; letter-spacing: -.01em; }
+h2 { font-size: 21px; margin: 48px 0 6px; }
+h3 { font-size: 15px; margin: 6px 0 4px; line-height: 1.35; }
+.lead { color: var(--text-2); margin: 0 0 20px; max-width: 760px; }
+.section-lead { color: var(--text-2); margin: 0 0 16px; max-width: 800px; }
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
+.kpi { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+.kpi .v { font-size: 26px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.kpi .l { color: var(--text-2); font-size: 13px; }
+.explain { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; margin-top: 12px; }
+.explain p { margin: 6px 0; color: var(--text-2); }
+.explain b { color: var(--text); }
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; }
+.card-head { display: flex; justify-content: space-between; gap: 8px; font-size: 12px; }
+.tag { font-weight: 600; color: var(--accent); }
+.loc { color: var(--muted); }
+.facts { color: var(--text-2); font-size: 13px; }
+.prices { display: grid; grid-template-columns: 1.2fr 1fr .8fr; gap: 8px; margin: 12px 0 8px; }
+.lbl { display: block; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+.big { font-size: 22px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.mid { font-size: 16px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.good { color: var(--good); }
+.meter { height: 6px; background: var(--surface-2); border-radius: 4px; overflow: hidden; }
+.meter span { display: block; height: 100%; background: var(--s1); border-radius: 4px; }
+.news ul { margin: 6px 0 0; padding-left: 20px; } .news li { margin: 4px 0; } .news .down { color: var(--good, #1baf7a); font-weight: 600; }
+.note { font-size: 12.5px; background: var(--surface-2); border-radius: 6px; padding: 6px 8px; margin-top: 8px; color: var(--text-2); }
+.pc { list-style: none; padding: 0; margin: 10px 0 0; font-size: 13.5px; }
+.pc li { padding-left: 20px; position: relative; margin: 3px 0; }
+.pc li.pro::before { content: "+"; position: absolute; left: 4px; color: var(--good); font-weight: 700; }
+.pc li.con::before { content: "–"; position: absolute; left: 4px; color: var(--bad); font-weight: 700; }
+.subhead { font-size: 15px; color: var(--text-2); margin: 22px 0 10px; font-weight: 600; }
+.chart-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 14px 8px; position: relative; }
+.legend { display: flex; flex-wrap: wrap; gap: 16px; font-size: 13px; color: var(--text-2); margin: 0 0 6px 4px; }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; }
+.legend .ring { background: transparent; border: 2px solid var(--text); width: 12px; height: 12px; }
+svg text { fill: var(--muted); font-size: 11px; }
+.tip { position: absolute; pointer-events: none; background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+  padding: 8px 10px; font-size: 12.5px; box-shadow: 0 6px 20px rgba(0,0,0,.15); max-width: 280px; display: none; z-index: 5; }
+.tip b { display: block; margin-bottom: 2px; }
+.tip .row { display: flex; justify-content: space-between; gap: 12px; color: var(--text-2); }
+.tip .row span:last-child { color: var(--text); font-variant-numeric: tabular-nums; }
+table { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; font-size: 13.5px; }
+th, td { padding: 9px 10px; border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; }
+th { font-size: 12px; color: var(--text-2); font-weight: 600; background: var(--surface-2); white-space: nowrap; }
+th.sortable { cursor: pointer; user-select: none; } th.sortable:hover { color: var(--text); }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+.sub { color: var(--text-2); font-size: 12.5px; margin-top: 2px; }
+.stars { color: #c98500; letter-spacing: 1px; white-space: nowrap; } .stars .off { color: var(--border); }
+.cellbar { height: 5px; background: var(--surface-2); border-radius: 3px; margin-bottom: 4px; }
+.cellbar span { display: block; height: 100%; background: var(--s1); border-radius: 3px; }
+.disc { display: inline-flex; align-items: center; gap: 6px; justify-content: flex-end; }
+.dbar { width: 54px; height: 6px; background: var(--surface-2); border-radius: 3px; position: relative; }
+.dbar span { position: absolute; top: 0; height: 100%; border-radius: 3px; }
+.filters { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 10px; align-items: center; }
+.filters select, .filters input { background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 6px 8px; font: inherit; font-size: 13px; }
+.filters .count { color: var(--muted); font-size: 13px; margin-left: auto; }
+.table-scroll { overflow-x: auto; border-radius: 12px; }
+.badge { font-size: 11px; padding: 1px 6px; border-radius: 10px; background: var(--surface-2); color: var(--text-2); white-space: nowrap; }
+.badge.pick { background: var(--s1); color: #fff; }
+.flag { color: var(--bad); font-size: 12px; }
+.warn { background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--neg); border-radius: 10px; padding: 12px 16px; }
+.warn li { margin: 4px 0; }
+.check { columns: 2 300px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px 14px 34px; margin: 0; }
+.check li { margin: 4px 0; break-inside: avoid; }
+footer { color: var(--muted); font-size: 12.5px; margin-top: 48px; border-top: 1px solid var(--border); padding-top: 14px; }
+.theme-btn { float: right; background: var(--surface); color: var(--text-2); border: 1px solid var(--border); border-radius: 8px; padding: 5px 10px; cursor: pointer; font: inherit; font-size: 13px; }
+@media (max-width: 640px) { h1 { font-size: 24px; } .prices { grid-template-columns: 1fr 1fr 1fr; } .big { font-size: 18px; } th, td { padding: 7px 6px; } }
+</style>
+<!-- ferovka-theme --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"><style id="ferovka-theme">/* Férovka look for the generated analyses – injected by sync-reports.mjs after each report's own <style>.
+   Same palette and type as the site; chart colours (--s1..--s3) stay the validated set. */
+:root {
+  --bg: #f5f4ef; --surface: #fdfdfb; --surface-2: #eeede6; --border: #e1dfd6;
+  --text: #0f1513; --text-2: #4f5551; --muted: #6f746f;
+  --accent: #0b8a56; --good: #0b7a4b; --grid: #e6e4dc; --win: #dff3e9;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d110f; --surface: #151a17; --surface-2: #1d2420; --border: #2a322d;
+    --text: #eef1ec; --text-2: #b6bdb6; --muted: #8f978f;
+    --accent: #2fc583; --good: #4cd08f; --grid: #1f2622; --win: #143223;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d110f; --surface: #151a17; --surface-2: #1d2420; --border: #2a322d;
+  --text: #eef1ec; --text-2: #b6bdb6; --muted: #8f978f;
+  --accent: #2fc583; --good: #4cd08f; --grid: #1f2622; --win: #143223;
+}
+
+body { font-family: "Manrope", system-ui, sans-serif; }
+h1, h2 { letter-spacing: -0.02em; font-weight: 800; }
+.tag { color: var(--accent); }
+
+/* photo header (removed by the site's viewer, which shows its own) */
+.fv-hero { position: relative; margin: 0 0 26px; border-radius: 20px; overflow: hidden; aspect-ratio: 21 / 8; background: #0d110f; display: flex; }
+.fv-hero img { flex: 1; min-width: 0; height: 100%; object-fit: cover; animation: fv-zoom 1.4s cubic-bezier(.2,.7,.2,1) both; }
+.fv-collage img + img { border-left: 3px solid #0d110f; }
+.fv-hero::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(180deg, transparent 55%, rgb(13 17 15 / .75)),
+    repeating-linear-gradient(90deg, rgb(47 197 131 / .06) 0 1px, transparent 1px 48px); }
+.fv-hero figcaption { position: absolute; right: 12px; bottom: 8px; z-index: 1; font-size: 11px; color: rgb(255 255 255 / .75); }
+.fv-hero figcaption a { color: inherit; }
+
+/* cards & panels: softer, lift on hover */
+.card, .kpi, .explain, .chart-wrap, .box { border-radius: 16px; }
+.card { transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease; }
+.card:hover { transform: translateY(-3px); border-color: var(--accent); box-shadow: 0 14px 30px -18px rgb(0 0 0 / .45); }
+.badge.pick { background: var(--accent); }
+
+/* entrance animation */
+@keyframes fv-up { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes fv-zoom { from { transform: scale(1.08); filter: brightness(.6); } to { transform: none; filter: none; } }
+h1, .lead, .kpis, .cards .card { animation: fv-up .6s cubic-bezier(.2,.7,.2,1) both; }
+.lead { animation-delay: .08s; }
+.kpis { animation-delay: .16s; }
+.cards .card:nth-child(2) { animation-delay: .06s; }
+.cards .card:nth-child(3) { animation-delay: .12s; }
+.cards .card:nth-child(4) { animation-delay: .18s; }
+.cards .card:nth-child(5) { animation-delay: .24s; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+@media (max-width: 640px) { .fv-hero { aspect-ratio: 16 / 9; border-radius: 14px; } }
+
+/* touch: hint under the chart tooltip (report-chart.js) */
+.fv-hint { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--border, rgba(127,127,127,.3)); font-weight: 700; color: var(--accent, #2fc583); }
+</style><!-- /ferovka-theme -->
+</head>
+<body>
+<main><!-- ferovka-theme --><!-- /ferovka-theme -->
+<button class="theme-btn" id="themeBtn" type="button">Svetlý / tmavý</button>
+<h1>Škoda Roomster – ktorá ponuka sa oplatí</h1>
+<p class="lead">Analýza aktuálnych inzerátov Škoda Roomster (2006–2015, osobný aj Scout, bez úžitkového Praktik) od 1 500 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 268 inzerátov (110 na bazoši, 94 na autobazar.eu, 64 na bazar.sk) – prezreli sme 92 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 141 rôznych áut zo Slovenska. Každé auto sme porovnali
+s <b>férovou cenou</b>: tú vypočítal model naučený na celom trhu podľa veku, nájazdu, motora, prevodovky a typu predajcu.</p>
+
+<div class="kpis">
+  <div class="kpi"><div class="v">141</div><div class="l">inzerátov Roomstera (nad 1 500 €)</div></div>
+  <div class="kpi"><div class="v">115</div><div class="l">ohodnotených (majú rok aj km)</div></div>
+  <div class="kpi"><div class="v">3 990 €</div><div class="l">medián ceny s DPH</div></div>
+  <div class="kpi"><div class="v">78 %</div><div class="l">rozdielov v cenách vysvetlí model</div></div>
+</div>
+
+
+<h2>Odkiaľ sú dáta: bazoš, autobazar.eu a bazar.sk</h2>
+<div class="kpis">
+  <div class="kpi"><div class="v">59</div><div class="l">ohodnotených z bazoša</div></div>
+  <div class="kpi"><div class="v">18</div><div class="l">ohodnotených z autobazar.eu</div></div><div class="kpi"><div class="v">38</div><div class="l">ohodnotených z bazar.sk</div></div>
+  <div class="kpi"><div class="v">34</div><div class="l">áut bolo na viacerých portáloch – započítané raz</div></div>
+  <div class="kpi"><div class="v">18 / 22</div><div class="l">s uvedeným pôvodom SR / dovoz</div></div>
+</div>
+<div class="explain">
+  <p><b>Tri portály, jeden trh.</b> Bazoš prehľadal 106 inzerátov, autobazar.eu
+  94, bazar.sk 46. Ponuky z Česka (na autobazar.eu ich je veľa) sme vynechali. Autobazáre často dávajú
+  to isté auto na viac portálov. Takéto dvojice (23 v rebríčku) sme spojili podľa VIN alebo zhody roku, km a ceny,
+  aby sa v modeli nerátali dvakrát. Pri aute nájdeš odkaz na všetky ponuky – niekedy sa líšia cenou.</p>
+  <p><b>Rozdiel medzi portálmi:</b> rovnaké auto je na autobazar.eu v priemere +4,7 %
+  oproti bazošu. Na autobazar.eu predávajú hlavne firmy (13 z 18 ohodnotených). Na bazar.sk je rovnaké auto v priemere +14,2 % oproti bazošu.</p>
+  <p><b>Kúpené v SR vs. dovoz:</b> autá s uvedeným pôvodom zo SR sú oproti autám bez uvedeného pôvodu
+  +2,4 %, dovezené +9,2 %
+  (pri rovnakom veku, nájazde a motore). Pôvod zo SR je výhoda pri overovaní histórie, trh zaň však nepripláca – väčšina
+  inzerátov pôvod jednoducho neuvádza. V tabulke dole si môžeš nechať zobraziť len autá kúpené v SR.</p>
+</div>
+
+<h2>Čo hýbe cenou Roomstera</h2>
+<p class="section-lead">Toto sa model naučil z trhu. Keď porovnávaš dve autá, tieto čísla ti povedia, koľko má byť
+rozdiel v cene, aby to bolo fér.</p>
+<div class="kpis">
+  <div class="kpi"><div class="v">-2,9 %</div><div class="l">každých ďalších 10 000 km</div></div>
+  <div class="kpi"><div class="v">-4,2 %</div><div class="l">každý rok veku navyše</div></div>
+  <div class="kpi"><div class="v">+34 %</div><div class="l">príplatok za automat (DSG)</div></div>
+  <div class="kpi"><div class="v">-0,2 %</div><div class="l">príplatok u predajcu / firmy</div></div>
+  <div class="kpi"><div class="v">+10,1 %</div><div class="l">Roomster po facelifte (2010+) oproti cene podľa veku</div></div>
+  <div class="kpi"><div class="v">+33,9 %</div><div class="l">príplatok za automat</div></div>
+</div>
+<div class="explain">
+  <p><b>Príklad:</b> dva rovnaké Roomstery 1.2 TSI z roku 2013, jedno má 60 tis. km, druhé 120 tis. km. Druhé má byť
+  približne o 17 % lacnejšie (6 × -2,9 %). Ak je lacnejšie len o 5 %, preplácaš kilometre.</p>
+  <p><b>Ako čítať „pod trhom“:</b> +15 % znamená, že auto stojí o 15 % menej, než by malo podľa trhu. Bežný rozptyl
+  cien je asi ±24 %, takže až zľava nad ~10–15 % je naozaj výnimočná. Pri takej zľave vždy zisti, prečo je auto lacné
+  (stav, história, nájazd).</p>
+  <p><b>DPH:</b> ceny uvedené bez DPH (napr. „10 300 € netto“) sme prepočítali na cenu s DPH, ktorú zaplatí súkromná osoba.</p>
+</div>
+
+<h2>Odporúčané ponuky</h2>
+<p class="section-lead">Kandidáti s najlepším pomerom cena / vek / nájazd, ktorých celý inzerát sme prečítali.
+Zoradené podľa toho, ako ich odporúčame.</p>
+<div class="subhead">Roomster po facelifte (2010+) – najlepší pomer cena / vek</div>
+<div class="cards">
+<article class="card">
+  <div class="card-head"><span class="tag">Roomster 1.2 TSI so 115 tis. km</span><span class="loc">Levice</span></div>
+  <h3><a href="https://auto.bazar.sk/23242599-skoda-roomster-1-2-tsi-63kw-m5-5d/" target="_blank" rel="noopener">Škoda Roomster 1.2 TSI, 63kW, M5, 5d.</a></h3>
+  <div class="facts">2013 · 115 000 km · 1.2 TSI 63–77 kW · manuál · neisté</div>
+  <div class="facts src">zdroj: <b>bazar.sk</b> · kúpené v SR</div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">4 399 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">6 030 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+27.0 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:90%"></span></div>
+  <ul class="pc"><li class="pro">2013, 1.2 TSI 63 kW, 5-st. manuál, 115 tis. km</li><li class="pro">Kúpené v SR</li><li class="pro">~27 % pod férovou cenou</li><li class="con">Predajca neistý</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">Nový inzerát</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Roomster 1.6 TDI Scout s panorámou a Car-Passom</span><span class="loc">Rimavská Sobota</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/196283161/skoda-roomster-16-tdi-scout-panorama.php" target="_blank" rel="noopener">Škoda roomster 1,6 TDI SCOUT Panorama</a></h3>
+  <div class="facts">2012 · 186 000 km · 1.6 TDI CR 55–77 kW · prevodovka ? · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b> · dovezené</div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">3 950 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">5 340 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+26.0 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:87%"></span></div>
+  <ul class="pc"><li class="pro">2012, 1.6 TDI CR 66 kW, výbava Scout, panoramatická strecha, 186 tis. km</li><li class="pro">Car-Pass s výpisom km, faktúry zo servisu</li><li class="con">Dovoz z Belgicka</li><li class="con">Predajca neistý</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke aspoň 45 dní</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Roomster 1.6 TDI za 2 900 €</span><span class="loc">Žilina</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/196337635/skoda-roomster-16-tdi-2011.php" target="_blank" rel="noopener">ŠKODA Roomster 1.6 TDi 2011</a></h3>
+  <div class="facts">2011 · 205 547 km · 1.6 TDI CR 55–77 kW · manuál · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">2 900 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">3 890 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+25.4 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:85%"></span></div>
+  <ul class="pc"><li class="pro">2011, 1.6 TDI CR 66 kW, 5-st. manuál, 206 tis. km</li><li class="pro">Celoročné pneumatiky na hliníkových diskoch</li><li class="con">Predajca neistý</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke aspoň 43 dní</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Roomster 1.4 16V s STK do 2027</span><span class="loc">Lučenec</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/196012950/skoda-roomster-14.php" target="_blank" rel="noopener">Skoda Roomster 1.4</a></h3>
+  <div class="facts">2012 · 168 294 km · 1.4 16V / 1.6 16V · prevodovka ? · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">2 777 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">4 220 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+34.1 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:100%"></span></div>
+  <ul class="pc"><li class="pro">2012, 1.4 16V 63 kW (86 k), 168 tis. km</li><li class="pro">Odolný 4-valec, STK/EK do 11/2027</li><li class="pro">~34 % pod férovou cenou</li><li class="con">Predajca neistý</li><li class="con">Krátky inzerát</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke aspoň 31 dní</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Roomster 1.2 TSI Ambition so servisnou históriou</span><span class="loc">Levice</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197557796/skoda-roomster-12-tsi-ambition-2013-151531-km.php" target="_blank" rel="noopener">Škoda Roomster 1.2 TSI Ambition 2013  151531 KM</a></h3>
+  <div class="facts">2013 · 151 531 km · 1.2 TSI 63–77 kW · manuál · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">3 990 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">4 570 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+12.7 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:42%"></span></div>
+  <ul class="pc"><li class="pro">2013, 1.2 TSI 63 kW, 5-st. manuál, 152 tis. km</li><li class="pro">Pravidelne servisované</li><li class="con">Predáva autobazár</li><li class="con">Over hluk rozvodovej reťaze</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 6 dní (od 15. 11.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Roomster 1.2 TSI z 2015 – posledný ročník</span><span class="loc">Púchov</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197124096/skoda-roomster-12-tsi-63kw-ambiente-klima-model-2015.php" target="_blank" rel="noopener">Škoda Roomster 1.2 TSI 63kw Ambiente KLÍMA MODEL 2015</a></h3>
+  <div class="facts">2015 · 226 000 km · 1.2 TSI 63–77 kW · prevodovka ? · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">3 500 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">4 450 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+21.4 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:71%"></span></div>
+  <ul class="pc"><li class="pro">2015, 1.2 TSI 63 kW, výbava Ambition, 226 tis. km</li><li class="pro">Klimatizácia</li><li class="con">Predáva autobazár</li><li class="con">Vysoký nájazd</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke aspoň 19 dní</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Roomster 1.2 TSI z SR za 2 990 €</span><span class="loc">Bratislava</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/skoda-roomster-12-tsi/AbYO3pCXCIn/" target="_blank" rel="noopener">Škoda Roomster 1.2 TSI</a></h3>
+  <div class="facts">2011 · 197 050 km · 1.2 TSI 63–77 kW · manuál · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · kúpené v SR · aj na <a href='https://auto.bazar.sk/39777096-skoda-roomster-1-2-tsi/' target='_blank' rel='noopener'>bazar.sk</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">2 990 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">3 900 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+23.4 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:78%"></span></div>
+  <ul class="pc"><li class="pro">2011, 1.2 TSI, manuál, 197 tis. km</li><li class="pro">Kúpené v SR</li><li class="con">Predáva autobazár</li><li class="con">Inzerát bez textu</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 1 deň (od 20. 11.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Roomster 1.2 TSI od 1. majiteľa z SR</span><span class="loc">Nitriansky kraj</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/skoda-roomster-12-tsi-sr1maj-klima-tempomat/AekGN1_XxAg/" target="_blank" rel="noopener">Skoda Roomster 1.2 TSI, SR,1.maj, Klíma, Tempomat</a></h3>
+  <div class="facts">2014 · 303 415 km · 1.2 TSI 63–77 kW · manuál · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">2 300 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">3 270 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+29.6 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:99%"></span></div>
+  <ul class="pc"><li class="pro">2014, 1.2 TSI 63 kW, 1. majiteľ, klíma, tempomat</li><li class="pro">Kúpené v SR, možný odpočet DPH</li><li class="con">Veľmi vysoký nájazd 303 tis. km</li><li class="con">AAA AUTO – uvedená cena pri financovaní</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 8 dní (od 13. 11.)</p><!-- history-card:end --></article></div>
+<div class="subhead">Lacnejšie Roomstery do 5 000 €</div>
+<div class="cards">
+<article class="card">
+  <div class="card-head"><span class="tag">Roomster Scout 1.4 TDI s novou STK za 2 000 €</span><span class="loc">Prievidza</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197628447/predam-skoda-roomster-scout.php" target="_blank" rel="noopener">Predam Skoda Roomster Scout</a></h3>
+  <div class="facts">2007 · 153 000 km · 1.4 / 1.9 TDI PD 51–77 kW · prevodovka ? · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">2 000 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">2 890 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+30.8 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:100%"></span></div>
+  <ul class="pc"><li class="pro">2007, 1.4 TDI 59 kW, výbava Scout, 153 tis. km</li><li class="pro">Nová STK/EK</li><li class="con">Predajca neistý</li><li class="con">Krátky inzerát</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 4 dni (od 17. 11.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Roomster 1.4 TDI so 80 tis. km</span><span class="loc">Bratislava</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/196874453/skoda-roomster-14-tdi-59kw.php" target="_blank" rel="noopener">Škoda Roomster 1.4 TDI 59kW</a></h3>
+  <div class="facts">2009 · 79 659 km · 1.4 / 1.9 TDI PD 51–77 kW · prevodovka ? · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">3 500 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">4 620 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+24.3 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:81%"></span></div>
+  <ul class="pc"><li class="pro">2009, 1.4 TDI 59 kW, 80 tis. km</li><li class="pro">STK do 08/2027, zimné pneumatiky, uvedený VIN</li><li class="con">Prasknutý zadný nárazník</li><li class="con">Nízky nájazd – over históriu km cez VIN</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke aspoň 26 dní</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Roomster 1.6 TDI za 3 350 €</span><span class="loc">Banská Bystrica</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/skoda-roomster-16-tdi-family/AmiPJZ8qIAz/" target="_blank" rel="noopener">Škoda Roomster 1.6 TDI</a></h3>
+  <div class="facts">2012 · 232 000 km · 1.6 TDI CR 55–77 kW · manuál · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · dovezené · aj na <a href='https://auto.bazos.sk/inzerat/197163941/skoda-roomster-16-tdi.php' target='_blank' rel='noopener'>bazoš</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">3 350 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">4 300 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+22.1 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:74%"></span></div>
+  <ul class="pc"><li class="pro">2012, 1.6 TDI CR, manuál, 232 tis. km</li><li class="con">Dovoz</li><li class="con">Predáva firma</li><li class="con">Vysoký nájazd</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 261 dní (od 5. 3.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Najlacnejší Roomster: 1.2 HTP za 1 800 €</span><span class="loc">Bratislava-Devínska Nová Ves</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/skoda-roomster-12-htp-12v-active-51kw69hp-m5/AepeAVjWaE_/" target="_blank" rel="noopener">Škoda Roomster 1.2 HTP 12V Active 51kW69HP M5</a></h3>
+  <div class="facts">2012 · 222 000 km · 1.2 HTP 47–51 kW · manuál · neisté</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">1 800 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">2 880 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+37.5 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:100%"></span></div>
+  <ul class="pc"><li class="pro">2012, 1.2 HTP 51 kW, 5-st. manuál, 222 tis. km</li><li class="pro">~37 % pod férovou cenou</li><li class="con">Slabý motor pre Roomster</li><li class="con">Inzerát bez textu – over stav</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 45 dní (od 7. 10.)</p><!-- history-card:end --></article></div>
+<div class="subhead">Špeciálne prípady</div>
+<div class="cards"></div>
+
+<h2>Cena vs. nájazd: celý trh na jednom grafe</h2>
+<p class="section-lead">Každý bod je jeden inzerát. Čím nižšie bod leží oproti ostatným s podobným nájazdom, tým je auto lacnejšie.
+Krúžkom sú označené odporúčané ponuky. Prejdi myšou na bod a uvidíš detail.</p>
+<div class="chart-wrap" id="chartWrap">
+  <div class="legend" id="legend"></div>
+  <svg id="chart" width="100%" height="420" role="img" aria-label="Bodový graf ceny a nájazdu inzerátov"></svg>
+  <div class="tip" id="tip"></div>
+</div>
+
+<h2>Porovnanie motorov</h2>
+<p class="section-lead">Hodnotenie (hviezdičky) zohľadňuje spoľahlivosť, spoľahlivosť a náklady na prevádzku a pomer cena/výkon.
+Číselné stĺpce sú mediány z ohodnotených inzerátov.</p>
+<div class="table-scroll">
+<table>
+  <thead><tr><th>Motor</th><th>Hodnotenie</th><th class="num">Ponúk</th><th class="num">Medián ceny</th><th class="num">Medián roku</th><th class="num">Medián km</th></tr></thead>
+  <tbody>
+<tr>
+  <td><b>LPG</b><div class="sub">Dodatočne montované LPG (najčastejšie na 1.4 16V / 1.6). Lacná jazda; over revíziu a zápis v TP.</div></td>
+  <td><span class="stars" aria-label="4 z 5">★★★★<span class="off">★</span></span></td>
+  <td class="num">2</td>
+  <td class="num"><div class="cellbar"><span style="width:51%"></span></div>2 550 €</td>
+  <td class="num">2008</td>
+  <td class="num">284 400 km</td>
+</tr>
+<tr>
+  <td><b>1.6 TDI CR 55–77 kW</b><div class="sub">Common-rail diesel (2010+). Úsporný a tichší; over DPF a EGR.</div></td>
+  <td><span class="stars" aria-label="4 z 5">★★★★<span class="off">★</span></span></td>
+  <td class="num">21</td>
+  <td class="num"><div class="cellbar"><span style="width:80%"></span></div>4 000 €</td>
+  <td class="num">2011</td>
+  <td class="num">230 000 km</td>
+</tr>
+<tr>
+  <td><b>1.4 / 1.9 TDI PD 51–77 kW</b><div class="sub">Staršie diesely čerpadlo-dýza (do 2010). Odolné a ťahavé, hlučnejšie.</div></td>
+  <td><span class="stars" aria-label="4 z 5">★★★★<span class="off">★</span></span></td>
+  <td class="num">20</td>
+  <td class="num"><div class="cellbar"><span style="width:71%"></span></div>3 550 €</td>
+  <td class="num">2008</td>
+  <td class="num">210 500 km</td>
+</tr>
+<tr>
+  <td><b>1.2 TSI 63–77 kW</b><div class="sub">Turbobenzín (2010+). Svižný a úsporný, ale do 2014 s reťazou (naťahovanie) – over hluk pri studenom štarte.</div></td>
+  <td><span class="stars" aria-label="3 z 5">★★★<span class="off">★★</span></span></td>
+  <td class="num">42</td>
+  <td class="num"><div class="cellbar"><span style="width:100%"></span></div>4 990 €</td>
+  <td class="num">2013</td>
+  <td class="num">175 466 km</td>
+</tr>
+<tr>
+  <td><b>1.2 HTP 47–51 kW</b><div class="sub">Atmosférický 3-valec. Lacný, ale pre Roomster slabý; reťaz a hlučnosť.</div></td>
+  <td><span class="stars" aria-label="3 z 5">★★★<span class="off">★★</span></span></td>
+  <td class="num">8</td>
+  <td class="num"><div class="cellbar"><span style="width:53%"></span></div>2 625 €</td>
+  <td class="num">2008</td>
+  <td class="num">181 918 km</td>
+</tr>
+<tr>
+  <td><b>1.4 16V / 1.6 16V</b><div class="sub">Atmosférické 4-valce 63–77 kW. Jednoduché a odolné, vhodné na LPG.</div></td>
+  <td><span class="stars" aria-label="4 z 5">★★★★<span class="off">★</span></span></td>
+  <td class="num">18</td>
+  <td class="num"><div class="cellbar"><span style="width:69%"></span></div>3 445 €</td>
+  <td class="num">2008</td>
+  <td class="num">213 350 km</td>
+</tr>
+<tr>
+  <td><b>benzín (výkon neuvedený)</b><div class="sub">Benzín bez uvedeného objemu – over v TP.</div></td>
+  <td><span class="stars" aria-label="3 z 5">★★★<span class="off">★★</span></span></td>
+  <td class="num">4</td>
+  <td class="num"><div class="cellbar"><span style="width:75%"></span></div>3 721 €</td>
+  <td class="num">2010</td>
+  <td class="num">163 000 km</td>
+</tr></tbody>
+</table>
+</div>
+<div class="explain">
+  <p><b>Roomster</b> (2006–2015, facelift 2010) je praktické malé MPV s vyberateľnými zadnými sedadlami VarioFlex a veľkým
+  kufrom. Technicky vychádza z Fabie II. Je lacný na údržbu – vhodný ako rodinné auto s malým rozpočtom.</p>
+  <p><b>Ktorý motor zvoliť?</b> Najodolnejšie sú <b>1.4 16V / 1.6 16V</b> (aj s LPG) a diesely <b>1.9 TDI</b> či <b>1.6 TDI CR</b>.
+  <b>1.2 TSI</b> je svižný, ale do 2014 over rozvodovú reťaz. Slabý <b>1.2 HTP</b> sa do Roomstera veľmi nehodí.</p>
+</div>
+
+<h2>Na čo si dať pozor</h2>
+<div class="warn">
+  <p><b>Lacné kvôli extrémnemu nájazdu</b> (viac ako 35 tis. km ročne, typicky flotila alebo taxi):</p>
+  <ul><li>Žiadne výrazné prípady.</li></ul>
+  <p><b>Podozrivo nízky nájazd na vek</b> – preklep alebo stočené km, over cez Cebiu:</p><ul><li><a href='https://auto.bazar.sk/34350863-skoda-roomster-scout-1-2-tsi/' target='_blank' rel='noopener'>Skoda Roomster Scout 1.2 TSI</a> (7 899 €): rok 2012 a len 20 184 km</li></ul><p><b>Ďalšie veci, ktoré sme v inzerátoch našli:</b></p><ul><li>Úžitkový <b>Roomster Praktik</b> (bez zadných sedadiel, N1) sme do porovnania nezahrnuli.</li><li>Rovnaký Roomster 1.2 TSI z 2014 (303 tis. km) ponúka AAA AUTO za 2 300 € a bazár v Petržalke za 2 500 € – porovnaj ich.</li><li>Pri jednom Roomsteri z 2007 sa nájazd v parametroch (180 tis. km) líši od textu (219 tis. km) – do porovnania sme ho nezahrnuli.</li><li>Roomster sa vyrábal do 2015 – väčšina ponúk má nad 150 tis. km. Pri 1.2 TSI do 2014 over hluk rozvodovej reťaze.</li></ul><p><b>Vyradené z porovnania</b> (poškodené autá alebo nezmyselné údaje – model ich nehodnotí):</p><ul><li><a href='https://auto.bazos.sk/inzerat/196868306/skoda-roomster-na-elektronoch.php' target='_blank' rel='noopener'>Škoda Roomster, zimné aj letné elektróny</a> (4 999 €): 654000 km/rok je nereálne – skontroluj rok a km</li><li><a href='https://auto.bazos.sk/inzerat/195976157/skoda-roomster-16l-benzin-plyn.php' target='_blank' rel='noopener'>Škoda Roomster 1,6l benzín + plyn</a> (1 900 €): havarované / poškodené – cena nie je porovnateľná s trhom</li><li><a href='https://auto.bazos.sk/inzerat/197379347/roomster-super-vybava-zimne-aj-letne-elektrony.php' target='_blank' rel='noopener'>Roomster, super výbava, zimné aj letné elektróny</a> (4 999 €): 654000 km/rok je nereálne – skontroluj rok a km</li></ul><p><b>Úžitkový Roomster Praktik, iné modely z vyhľadávania a inzeráty s chybným nájazdom</b> (7 inzerátov) sme z rebríčka vynechali.</p>
+  <p>Ďalších <b>15</b> inzerátov nemá v texte rok alebo kilometre, takže ich nebolo možné ohodnotiť.
+  Ak ťa niektorý zaujme, predajcu sa na tieto údaje opýtaj.</p>
+</div>
+
+<h2>Kompletný rebríček</h2>
+<p class="section-lead">Všetky ohodnotené inzeráty. Kliknutím na hlavičku stĺpca zoraďuješ, filtrom zužuješ výber.</p>
+<div class="filters">
+  <select id="fEngine"><option value="">Všetky motory</option></select>
+  <select id="fTrans"><option value="">Každá prevodovka</option><option value="automatic">Automat</option><option value="manual">Manuál</option></select>
+  <select id="fSeller"><option value="">Všetci predajcovia</option><option value="nodealer">Bez autobazárov</option></select>
+  <select id="fSource"><option value="">Všetky portály</option><option value="bazos">bazoš</option><option value="autobazar">autobazar.eu</option><option value="bazarsk">bazar.sk</option></select>
+  <select id="fBody" hidden><option value=""></option></select>
+  <select id="fOrigin"><option value="">Akýkoľvek pôvod</option><option value="SR">Kúpené v SR</option><option value="dovoz">Dovoz</option></select>
+  <input id="fMax" type="number" placeholder="Max. cena €" step="500" min="0" style="width:120px">
+  <span class="count" id="count"></span>
+</div>
+<div class="table-scroll">
+<table id="tbl">
+  <thead><tr>
+    <th class="sortable" data-k="title">Inzerát</th>
+    <th class="sortable num" data-k="year">Rok</th>
+    <th class="sortable num" data-k="km">Km</th>
+    <th class="sortable num" data-k="price_gross">Cena</th>
+    <th class="sortable num" data-k="fair_price">Férová</th>
+    <th class="sortable num" data-k="discount_pct">Pod trhom ▾</th>
+  </tr></thead>
+  <tbody></tbody>
+</table>
+</div>
+
+<h2>Pred kúpou over</h2>
+<ul class="check">
+  <li>VIN cez Cebia / autoDNA (história km, havárie)</li>
+  <li>Servisná história u Škody – dealer ju vie podľa VIN vytiahnuť</li>
+  <li>1.2 HTP / 1.2 TSI do 2014: hluk reťaze pri studenom štarte</li>
+  <li>TDI: štartovanie za studena, DPF (CR), dvojhmotový zotrvačník</li>
+  <li>Hrdza na prahoch, podbehoch a piatych dverách</li>
+  <li>STK/EK protokol a dátum platnosti</li>
+</ul>
+
+<footer>
+  Zdroj: auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (len ponuky zo Slovenska, to isté auto na viacerých portáloch je započítané raz), sťahované cez lokálny MCP server bazos-mcp (nástroj <code>fair_price</code>), 21. 11. 2026.
+  Model: ridge regresia log(ceny s DPH) podľa veku, veku², km, km², prevodovky, typu predajcu, motora, karosérie, pohonu 4x4, pôvodu (SR / dovoz) a portálu. Vzorka 115
+  inzerátov, R² 78 %. Parametre sú vyťažené z textu inzerátov, a preto môžu obsahovať chyby. Odporúčané ponuky sme overili
+  prečítaním celého inzerátu. Hodnotenie motorov je odborný odhad, nie výsledok modelu.
+</footer>
+</main>
+
+<script>
+const DATA = [{"id": "ab-AepeAVjWaE_", "url": "https://www.autobazar.eu/detail/skoda-roomster-12-htp-12v-active-51kw69hp-m5/AepeAVjWaE_/", "title": "Škoda Roomster 1.2 HTP 12V Active 51kW69HP M5", "price": 1800, "price_gross": 1800, "fair_price": 2880.0, "discount_pct": 37.5, "verdict": "výrazne pod trhom – over prečo", "year": 2012, "km": 222000, "km_per_year": 15500.0, "eg": "1.2 HTP 47–51 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Bratislava-Devínska Nová Ves", "flags": [], "pick": "budget", "source": "autobazar", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "196012950", "url": "https://auto.bazos.sk/inzerat/196012950/skoda-roomster-14.php", "title": "Skoda Roomster 1.4", "price": 2777, "price_gross": 2777, "fair_price": 4220.0, "discount_pct": 34.1, "verdict": "výrazne pod trhom – over prečo", "year": 2012, "km": 168294, "km_per_year": 11700.0, "eg": "1.4 16V / 1.6 16V", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Lučenec", "flags": ["prevodovka nezistená"], "pick": "top", "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197628447", "url": "https://auto.bazos.sk/inzerat/197628447/predam-skoda-roomster-scout.php", "title": "Predam Skoda Roomster Scout", "price": 2000, "price_gross": 2000, "fair_price": 2890.0, "discount_pct": 30.8, "verdict": "výrazne pod trhom – over prečo", "year": 2007, "km": 153000, "km_per_year": 7900.0, "eg": "1.4 / 1.9 TDI PD 51–77 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Prievidza", "flags": ["prevodovka nezistená"], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AekGN1_XxAg", "url": "https://www.autobazar.eu/detail/skoda-roomster-12-tsi-sr1maj-klima-tempomat/AekGN1_XxAg/", "title": "Skoda Roomster 1.2 TSI, SR,1.maj, Klíma, Tempomat", "price": 2300, "price_gross": 2300, "fair_price": 3270.0, "discount_pct": 29.6, "verdict": "výrazne pod trhom – over prečo", "year": 2014, "km": 303415, "km_per_year": 24600.0, "eg": "1.2 TSI 63–77 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Nitriansky kraj", "flags": [], "pick": "top", "source": "autobazar", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "bs-23242599", "url": "https://auto.bazar.sk/23242599-skoda-roomster-1-2-tsi-63kw-m5-5d/", "title": "Škoda Roomster 1.2 TSI, 63kW, M5, 5d.", "price": 4399, "price_gross": 4399, "fair_price": 6030.0, "discount_pct": 27.0, "verdict": "výrazne pod trhom – over prečo", "year": 2013, "km": 115000, "km_per_year": 8600.0, "eg": "1.2 TSI 63–77 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Levice", "flags": [], "pick": "top", "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "196283161", "url": "https://auto.bazos.sk/inzerat/196283161/skoda-roomster-16-tdi-scout-panorama.php", "title": "Škoda roomster 1,6 TDI SCOUT Panorama", "price": 3950, "price_gross": 3950, "fair_price": 5340.0, "discount_pct": 26.0, "verdict": "výrazne pod trhom – over prečo", "year": 2012, "km": 186000, "km_per_year": 13000.0, "eg": "1.6 TDI CR 55–77 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Rimavská Sobota", "flags": ["prevodovka nezistená"], "pick": "top", "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "mpv"}, {"id": "196337635", "url": "https://auto.bazos.sk/inzerat/196337635/skoda-roomster-16-tdi-2011.php", "title": "ŠKODA Roomster 1.6 TDi 2011", "price": 2900, "price_gross": 2900, "fair_price": 3890.0, "discount_pct": 25.4, "verdict": "výrazne pod trhom – over prečo", "year": 2011, "km": 205547, "km_per_year": 13400.0, "eg": "1.6 TDI CR 55–77 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Žilina", "flags": [], "pick": "top", "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "bs-39729352", "url": "https://auto.bazar.sk/39729352-skoda-roomster-1-2-tsi/", "title": "Skoda Roomster 1.2 TSI", "price": 2500, "price_gross": 2500, "fair_price": 3340.0, "discount_pct": 25.2, "verdict": "výrazne pod trhom – over prečo", "year": 2014, "km": 303415, "km_per_year": 24600.0, "eg": "1.2 TSI 63–77 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava V - Petržalka", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "196874453", "url": "https://auto.bazos.sk/inzerat/196874453/skoda-roomster-14-tdi-59kw.php", "title": "Škoda Roomster 1.4 TDI 59kW", "price": 3500, "price_gross": 3500, "fair_price": 4620.0, "discount_pct": 24.3, "verdict": "výrazne pod trhom – over prečo", "year": 2009, "km": 79659, "km_per_year": 4600.0, "eg": "1.4 / 1.9 TDI PD 51–77 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Bratislava", "flags": ["prevodovka nezistená"], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AbYO3pCXCIn", "url": "https://www.autobazar.eu/detail/skoda-roomster-12-tsi/AbYO3pCXCIn/", "title": "Škoda Roomster 1.2 TSI", "price": 2990, "price_gross": 2990, "fair_price": 3900.0, "discount_pct": 23.4, "verdict": "výrazne pod trhom – over prečo", "year": 2011, "km": 197050, "km_per_year": 12900.0, "eg": "1.2 TSI 63–77 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": "top", "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-39777096", "url": "https://auto.bazar.sk/39777096-skoda-roomster-1-2-tsi/", "price": 2990}], "body": "mpv"}, {"id": "ab-AmiPJZ8qIAz", "url": "https://www.autobazar.eu/detail/skoda-roomster-16-tdi-family/AmiPJZ8qIAz/", "title": "Škoda Roomster 1.6 TDI", "price": 3350, "price_gross": 3350, "fair_price": 4300.0, "discount_pct": 22.1, "verdict": "výrazne pod trhom – over prečo", "year": 2012, "km": 232000, "km_per_year": 16200.0, "eg": "1.6 TDI CR 55–77 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Banská Bystrica", "flags": [], "pick": "budget", "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "197163941", "url": "https://auto.bazos.sk/inzerat/197163941/skoda-roomster-16-tdi.php", "price": 3350}], "body": "mpv"}, {"id": "197124096", "url": "https://auto.bazos.sk/inzerat/197124096/skoda-roomster-12-tsi-63kw-ambiente-klima-model-2015.php", "title": "Škoda Roomster 1.2 TSI 63kw Ambiente KLÍMA MODEL 2015", "price": 3500, "price_gross": 3500, "fair_price": 4450.0, "discount_pct": 21.4, "verdict": "výrazne pod trhom – over prečo", "year": 2015, "km": 226000, "km_per_year": 19900.0, "eg": "1.2 TSI 63–77 kW", "cg": 0, "transmission": null, "seller_type": "dealer", "location": "Púchov", "flags": ["prevodovka nezistená"], "pick": "top", "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "196596043", "url": "https://auto.bazos.sk/inzerat/196596043/skoda-roomster-14-tdi.php", "title": "Škoda Roomster 1.4 tdi", "price": 1900, "price_gross": 1900, "fair_price": 2410.0, "discount_pct": 21.1, "verdict": "výrazne pod trhom – over prečo", "year": 2007, "km": 270000, "km_per_year": 14000.0, "eg": "1.4 / 1.9 TDI PD 51–77 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Liptovský Mikuláš", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "bs-39657589", "url": "https://auto.bazar.sk/39657589-skoda-roomster-1-2-tsi-105k-active/", "title": "Škoda Roomster 1.2 TSI 105k Active", "price": 2500, "price_gross": 2500, "fair_price": 3100.0, "discount_pct": 19.4, "verdict": "výrazne pod trhom – over prečo", "year": 2015, "km": 326811, "km_per_year": 28800.0, "eg": "1.2 TSI 63–77 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Pezinok", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AmcgKPpKpg4", "url": "https://www.autobazar.eu/detail/skoda-roomster-12-tsi-105k-active/AmcgKPpKpg4/", "price": 2500}, {"source": "bazos", "id": "197016127", "url": "https://auto.bazos.sk/inzerat/197016127/skoda-roomster-12-tsi-105k-active.php", "price": 2500}], "body": "mpv"}, {"id": "bs-34353978", "url": "https://auto.bazar.sk/34353978-skoda-roomster-1-4-tdi/", "title": "Skoda Roomster 1.4 TDi", "price": 2200, "price_gross": 2200, "fair_price": 2680.0, "discount_pct": 18.0, "verdict": "výrazne pod trhom – over prečo", "year": 2009, "km": 275024, "km_per_year": 15900.0, "eg": "1.4 / 1.9 TDI PD 51–77 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Nové Zámky", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "bs-39520111", "url": "https://auto.bazar.sk/39520111-skoda-roomster-1-6-16v-style-a-t/", "title": "Škoda Roomster 1.6 16V Style A/T", "price": 3910, "price_gross": 3910, "fair_price": 4760.0, "discount_pct": 17.9, "verdict": "výrazne pod trhom – over prečo", "year": 2007, "km": 224471, "km_per_year": 11600.0, "eg": "1.4 16V / 1.6 16V", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Veľký Krtíš", "flags": [], "pick": null, "source": "bazarsk", "origin": "dovoz", "also_listed": [{"source": "autobazar", "id": "ab-AmvBviazNEs", "url": "https://www.autobazar.eu/detail/skoda-roomster-16-16v-style-at/AmvBviazNEs/", "price": 3910}, {"source": "bazos", "id": "197364525", "url": "https://auto.bazos.sk/inzerat/197364525/skoda-roomster-16-16v-automat-benzin-taznestk.php", "price": 3910}], "body": "mpv"}, {"id": "bs-39320140", "url": "https://auto.bazar.sk/39320140-skoda-roomster-1-9-tdi-77-kw-style-klima-ohrev-sedaciek/", "title": "Škoda Roomster 1.9 TDI 77 KW Style...Klíma,Ohrev sedačiek", "price": 3690, "price_gross": 3690, "fair_price": 4320.0, "discount_pct": 14.6, "verdict": "pod trhom", "year": 2008, "km": 149650, "km_per_year": 8200.0, "eg": "1.4 / 1.9 TDI PD 51–77 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Detva", "flags": [], "pick": null, "source": "bazarsk", "origin": "dovoz", "also_listed": [{"source": "autobazar", "id": "ab-Am3SRQHSps1", "url": "https://www.autobazar.eu/detail/skoda-roomster-19-tdi-77-kw-style/Am3SRQHSps1/", "price": 3690}, {"source": "bazos", "id": "197436509", "url": "https://auto.bazos.sk/inzerat/197436509/predam-skoda-roomster-19-tdi-77-kw-styleklimaohrev-sedac.php", "price": 3690}], "body": "mpv"}, {"id": "196411178", "url": "https://auto.bazos.sk/inzerat/196411178/predam-skoda-roomster-14-16v.php", "title": "Predám Škoda Roomster 1,4  16V", "price": 2200, "price_gross": 2200, "fair_price": 2560.0, "discount_pct": 14.1, "verdict": "pod trhom", "year": 2007, "km": 236438, "km_per_year": 12200.0, "eg": "1.4 16V / 1.6 16V", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Vranov nad Topľou", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "bs-39738838", "url": "https://auto.bazar.sk/39738838-skoda-roomster-1-2-12v/", "title": "Skoda Roomster 1.2 12V", "price": 2800, "price_gross": 2800, "fair_price": 3230.0, "discount_pct": 13.4, "verdict": "pod trhom", "year": 2009, "km": 178836, "km_per_year": 10300.0, "eg": "1.2 HTP 47–51 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava V - Petržalka", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197557796", "url": "https://auto.bazos.sk/inzerat/197557796/skoda-roomster-12-tsi-ambition-2013-151531-km.php", "title": "Škoda Roomster 1.2 TSI Ambition 2013  151531 KM", "price": 3990, "price_gross": 3990, "fair_price": 4570.0, "discount_pct": 12.7, "verdict": "pod trhom", "year": 2013, "km": 151531, "km_per_year": 11400.0, "eg": "1.2 TSI 63–77 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Levice", "flags": [], "pick": "top", "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197297687", "url": "https://auto.bazos.sk/inzerat/197297687/skoda-roomster-19-tdi.php", "title": "Škoda roomster 1.9 tdi", "price": 1500, "price_gross": 1500, "fair_price": 1710.0, "discount_pct": 12.5, "verdict": "pod trhom", "year": 2009, "km": 446415, "km_per_year": 25800.0, "eg": "1.4 / 1.9 TDI PD 51–77 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Bratislava", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "196895263", "url": "https://auto.bazos.sk/inzerat/196895263/skoda-roomster.php", "title": "Škoda roomster", "price": 1900, "price_gross": 1900, "fair_price": 2110.0, "discount_pct": 9.9, "verdict": "pod trhom", "year": 2010, "km": 313339, "km_per_year": 19200.0, "eg": "1.2 TSI 63–77 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Partizánske", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-Aelg03g3bTQ", "url": "https://www.autobazar.eu/detail/skoda-roomster-14-16v-63kw86hp-m5/Aelg03g3bTQ/", "title": "Škoda Roomster 1.4 16V 63kW86HP M5", "price": 2599, "price_gross": 2599, "fair_price": 2880.0, "discount_pct": 9.7, "verdict": "pod trhom", "year": 2007, "km": 219700, "km_per_year": 11400.0, "eg": "1.4 16V / 1.6 16V", "cg": 0, "transmission": "manual", "seller_type": "private", "location": "Dražkovce", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197048530", "url": "https://auto.bazos.sk/inzerat/197048530/skoda-roomster-14-16v-mpi-63kw-193-tis-km.php", "title": "Škoda Roomster 1.4 16V MPI 63kw 193 tis KM", "price": 2700, "price_gross": 2700, "fair_price": 2970.0, "discount_pct": 9.1, "verdict": "pod trhom", "year": 2007, "km": 193139, "km_per_year": 10000.0, "eg": "1.4 16V / 1.6 16V", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Kežmarok", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197427715", "url": "https://auto.bazos.sk/inzerat/197427715/predam-skoda-roomster-19-tdi-2007.php", "title": "Predám Škoda Roomster 1.9 TDI – 2007", "price": 2300, "price_gross": 2300, "fair_price": 2530.0, "discount_pct": 9.1, "verdict": "pod trhom", "year": 2007, "km": 240000, "km_per_year": 12400.0, "eg": "1.4 / 1.9 TDI PD 51–77 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Sabinov", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197515130", "url": "https://auto.bazos.sk/inzerat/197515130/skoda-roomster-scout-12-tsi.php", "title": "Škoda Roomster Scout 1,2 TSI", "price": 3300, "price_gross": 3300, "fair_price": 3620.0, "discount_pct": 8.9, "verdict": "pod trhom", "year": 2013, "km": 200000, "km_per_year": 15000.0, "eg": "1.2 TSI 63–77 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Topoľčany", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "bs-39452889", "url": "https://auto.bazar.sk/39452889-skoda-roomster-1-2-tsi-77kw-klima-parking/", "title": "Škoda Roomster 1, 2 TSI, 77KW, KLIMA, PARKING", "price": 3451, "price_gross": 3450, "fair_price": 3750.0, "discount_pct": 8.1, "verdict": "pod trhom", "year": 2010, "km": 163000, "km_per_year": 10000.0, "eg": "benzín (výkon neuvedený)", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Uherský Brod", "flags": [], "pick": null, "source": "bazarsk", "origin": "dovoz", "also_listed": [{"source": "autobazar", "id": "ab-Ab1DR5wK9xs", "url": "https://www.autobazar.eu/detail/skoda-roomster-1-2-tsi-77kw-klima-parking/Ab1DR5wK9xs/", "price": 3451}], "body": "mpv"}, {"id": "bs-39594259", "url": "https://auto.bazar.sk/39594259-skoda-roomster-1-2-tsi-63kw-klima-serviska/", "title": "Škoda Roomster 1, 2 TSI, 63KW, KLIMA, SERVISKA", "price": 5117, "price_gross": 5117, "fair_price": 5540.0, "discount_pct": 7.6, "verdict": "pod trhom", "year": 2015, "km": 106000, "km_per_year": 9400.0, "eg": "benzín (výkon neuvedený)", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Uherský Brod", "flags": [], "pick": null, "source": "bazarsk", "origin": "dovoz", "also_listed": [{"source": "autobazar", "id": "ab-Ab4Tqka-qlJ", "url": "https://www.autobazar.eu/detail/skoda-roomster-1-2-tsi-63kw-klima/Ab4Tqka-qlJ/", "price": 5117}], "body": "mpv"}, {"id": "197255141", "url": "https://auto.bazos.sk/inzerat/197255141/skoda-roomster-19tdi.php", "title": "Skoda Roomster 1.9tdi", "price": 1890, "price_gross": 1890, "fair_price": 2030.0, "discount_pct": 7.1, "verdict": "pod trhom", "year": 2009, "km": 365000, "km_per_year": 21100.0, "eg": "1.4 / 1.9 TDI PD 51–77 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Michalovce", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "196935847", "url": "https://auto.bazos.sk/inzerat/196935847/skoda-roomster-12-htp-47-kw-2006-nova-stkek-bohata-vyb.php", "title": "Škoda Roomster 1.2 HTP 47 kW – 2006, nová STK/EK", "price": 1800, "price_gross": 1800, "fair_price": 1900.0, "discount_pct": 5.3, "verdict": "férová cena", "year": 2006, "km": 277000, "km_per_year": 13600.0, "eg": "1.2 HTP 47–51 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Bratislava", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AeQFugwNNkD", "url": "https://www.autobazar.eu/detail/skoda-roomster-diesel-nitra/AeQFugwNNkD/", "title": "Škoda Roomster diesel Nitra", "price": 3000, "price_gross": 3000, "fair_price": 3140.0, "discount_pct": 4.6, "verdict": "férová cena", "year": 2011, "km": 218000, "km_per_year": 14200.0, "eg": "1.6 TDI CR 55–77 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Nitra", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "197705454", "url": "https://auto.bazos.sk/inzerat/197705454/skoda-roomster.php", "title": "šKODA  ROOMSTER", "price": 3100, "price_gross": 3100, "fair_price": 3240.0, "discount_pct": 4.3, "verdict": "férová cena", "year": 2009, "km": 201000, "km_per_year": 11600.0, "eg": "1.4 16V / 1.6 16V", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Topoľčany", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197018166", "url": "https://auto.bazos.sk/inzerat/197018166/skoda-roomster-12-diesel-2013.php", "title": "Škoda Roomster 1.2 diesel 2013", "price": 3990, "price_gross": 3990, "fair_price": 4150.0, "discount_pct": 3.8, "verdict": "férová cena", "year": 2013, "km": 155700, "km_per_year": 11700.0, "eg": "1.4 / 1.9 TDI PD 51–77 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Spišská Nová Ves", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197455551", "url": "https://auto.bazos.sk/inzerat/197455551/skoda-roomster-16-tdi.php", "title": "Škoda Roomster 1.6 TDI", "price": 3590, "price_gross": 3590, "fair_price": 3710.0, "discount_pct": 3.4, "verdict": "férová cena", "year": 2013, "km": 254000, "km_per_year": 19100.0, "eg": "1.6 TDI CR 55–77 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Rimavská Sobota", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "bs-34351806", "url": "https://auto.bazar.sk/34351806-skoda-roomster-1-2-tsi/", "title": "Skoda Roomster 1.2 TSI", "price": 5300, "price_gross": 5300, "fair_price": 5490.0, "discount_pct": 3.4, "verdict": "férová cena", "year": 2013, "km": 143598, "km_per_year": 10800.0, "eg": "1.2 TSI 63–77 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Nové Zámky", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "bs-34352727", "url": "https://auto.bazar.sk/34352727-skoda-roomster-1-2-tsi/", "title": "Skoda Roomster 1.2 TSI", "price": 5300, "price_gross": 5300, "fair_price": 5480.0, "discount_pct": 3.2, "verdict": "férová cena", "year": 2011, "km": 117233, "km_per_year": 7600.0, "eg": "1.2 TSI 63–77 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Nové Zámky", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "bs-34351771", "url": "https://auto.bazar.sk/34351771-skoda-roomster-1-6-tdi/", "title": "Skoda Roomster 1.6 TDI", "price": 5000, "price_gross": 5000, "fair_price": 5160.0, "discount_pct": 3.0, "verdict": "férová cena", "year": 2011, "km": 163046, "km_per_year": 10600.0, "eg": "1.6 TDI CR 55–77 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Nové Zámky", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "197407556", "url": "https://auto.bazos.sk/inzerat/197407556/skoda-roomster-12-tsi-comfort-dsg-mozny-leasing.php", "title": "Škoda Roomster 1.2 TSI Comfort DSG Možný Leasing", "price": 4990, "price_gross": 4990, "fair_price": 5130.0, "discount_pct": 2.8, "verdict": "férová cena", "year": 2010, "km": 131394, "km_per_year": 8000.0, "eg": "1.2 TSI 63–77 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Komárno", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AeZazSngfaW", "url": "https://www.autobazar.eu/detail/skoda-roomster-12-tsi-105k-comfort-dsg-77kw105hp-a7/AeZazSngfaW/", "price": 4990}, {"source": "bazarsk", "id": "bs-39766240", "url": "https://auto.bazar.sk/39766240-skoda-roomster-1-2-tsi-105k-comfort-dsg-77kw105hp-a7/", "price": 4990}], "body": "mpv"}, {"id": "bs-39737463", "url": "https://auto.bazar.sk/39737463-skoda-roomster-1-2-tsi-63kw-2015/", "title": "Škoda Roomster 1.2 TSI 63kW 2015", "price": 6990, "price_gross": 6990, "fair_price": 7180.0, "discount_pct": 2.7, "verdict": "férová cena", "year": 2015, "km": 108740, "km_per_year": 9600.0, "eg": "1.2 TSI 63–77 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Spišská Nová Ves", "flags": [], "pick": null, "source": "bazarsk", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "196581486", "url": "https://auto.bazos.sk/inzerat/196581486/skoda-roomster-12-tsi-63kw-2015.php", "price": 6990}, {"source": "autobazar", "id": "ab-Amb9jPXw4Kn", "url": "https://www.autobazar.eu/detail/skoda-roomster-12-tsi-63kw-2015/Amb9jPXw4Kn/", "price": 6990}], "body": "mpv"}, {"id": "bs-39704293", "url": "https://auto.bazar.sk/39704293-skoda-roomster-1-2-tsi/", "title": "Skoda Roomster 1.2 TSI", "price": 6000, "price_gross": 6000, "fair_price": 6160.0, "discount_pct": 2.5, "verdict": "férová cena", "year": 2015, "km": 109400, "km_per_year": 9700.0, "eg": "1.2 TSI 63–77 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava V - Petržalka", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "196852326", "url": "https://auto.bazos.sk/inzerat/196852326/skoda-roomster-16-tdi-ambition.php", "title": "Škoda Roomster 1.6 TDI Ambition", "price": 3590, "price_gross": 3590, "fair_price": 3670.0, "discount_pct": 2.2, "verdict": "férová cena", "year": 2013, "km": 291000, "km_per_year": 21800.0, "eg": "1.6 TDI CR 55–77 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Žarnovica", "flags": [], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "mpv"}, {"id": "bs-34350863", "url": "https://auto.bazar.sk/34350863-skoda-roomster-scout-1-2-tsi/", "title": "Skoda Roomster Scout 1.2 TSI", "price": 7899, "price_gross": 7899, "fair_price": 8080.0, "discount_pct": 2.2, "verdict": "férová cena", "year": 2012, "km": 20184, "km_per_year": 1400.0, "eg": "1.2 TSI 63–77 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Nové Zámky", "flags": ["nezvyčajne nízky nájazd na vek (20 184 km) – over  či nejde o preklep"], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "bs-39742234", "url": "https://auto.bazar.sk/39742234-skoda-roomster-1-2-tsi-active/", "title": "Škoda Roomster 1.2 TSI Active", "price": 4650, "price_gross": 4650, "fair_price": 4740.0, "discount_pct": 2.0, "verdict": "férová cena", "year": 2013, "km": 175700, "km_per_year": 13200.0, "eg": "1.2 TSI 63–77 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Pezinok", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AmBv6IH2u4l", "url": "https://www.autobazar.eu/detail/skoda-roomster-12-tsi-active/AmBv6IH2u4l/", "price": 4650}, {"source": "bazos", "id": "196720874", "url": "https://auto.bazos.sk/inzerat/196720874/skoda-roomster-12-tsi-active.php", "price": 4650}], "body": "mpv"}, {"id": "196189572", "url": "https://auto.bazos.sk/inzerat/196189572/skoda-roomster.php", "title": "Škoda Roomster", "price": 2500, "price_gross": 2500, "fair_price": 2540.0, "discount_pct": 1.7, "verdict": "férová cena", "year": 2011, "km": 340000, "km_per_year": 22200.0, "eg": "1.6 TDI CR 55–77 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Trenčín", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "bs-29666744", "url": "https://auto.bazar.sk/29666744-skoda-roomster-1-6-tdi-elegance/", "title": "Škoda Roomster 1.6 TDI Elegance", "price": 4750, "price_gross": 4750, "fair_price": 4830.0, "discount_pct": 1.6, "verdict": "férová cena", "year": 2011, "km": 196350, "km_per_year": 12800.0, "eg": "1.6 TDI CR 55–77 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Trnava", "flags": [], "pick": null, "source": "bazarsk", "origin": "dovoz", "also_listed": [], "body": "mpv"}, {"id": "bs-39758518", "url": "https://auto.bazar.sk/39758518-skoda-roomster-1-2-tsi-105k-comfort/", "title": "Škoda Roomster 1.2 TSI 105k Comfort", "price": 4650, "price_gross": 4650, "fair_price": 4720.0, "discount_pct": 1.5, "verdict": "férová cena", "year": 2014, "km": 177250, "km_per_year": 14400.0, "eg": "1.2 TSI 63–77 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Pezinok", "flags": [], "pick": null, "source": "bazarsk", "origin": "dovoz", "also_listed": [{"source": "autobazar", "id": "ab-AmRcwTVTh_F", "url": "https://www.autobazar.eu/detail/skoda-roomster-12-tsi-105k-comfort/AmRcwTVTh_F/", "price": 4650}, {"source": "bazos", "id": "197183683", "url": "https://auto.bazos.sk/inzerat/197183683/skoda-roomster-12-tsi-105k-comfort.php", "price": 4650}], "body": "mpv"}, {"id": "197751160", "url": "https://auto.bazos.sk/inzerat/197751160/skoda-roomster-12-tsi-105k-dsg-150-000-km-automat-rv2010.php", "title": "Škoda Roomster 1.2 TSI 105k DSG 150 000 km AUTOMAT rv.2010==", "price": 4999, "price_gross": 4999, "fair_price": 5060.0, "discount_pct": 1.2, "verdict": "férová cena", "year": 2010, "km": 150000, "km_per_year": 9200.0, "eg": "1.2 TSI 63–77 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Prešov", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197427573", "url": "https://auto.bazos.sk/inzerat/197427573/skoda-roomster-16-77kw-a6-benzin-plyn.php", "title": "Škoda Roomster 1.6 77kW, A6, Benzín + Plyn", "price": 3990, "price_gross": 3990, "fair_price": 4040.0, "discount_pct": 1.2, "verdict": "férová cena", "year": 2009, "km": 233025, "km_per_year": 13400.0, "eg": "1.4 16V / 1.6 16V", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Stará Ľubovňa", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "bs-23522487", "url": "https://auto.bazar.sk/23522487-skoda-roomster-1-9-tdi-sport-77kw-m5-5d/", "title": "Škoda Roomster 1.9 TDI Sport, 77kW, M5, 5d.", "price": 4500, "price_gross": 4500, "fair_price": 4550.0, "discount_pct": 1.2, "verdict": "férová cena", "year": 2007, "km": 96000, "km_per_year": 5000.0, "eg": "1.4 / 1.9 TDI PD 51–77 kW", "cg": 1, "transmission": "manual", "seller_type": "private", "location": "Levice", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "bs-23257116", "url": "https://auto.bazar.sk/23257116-skoda-roomster-1-9-tdi-sport-77kw-m5-5d/", "title": "Škoda Roomster 1.9 TDI Sport, 77kW, M5, 5d.", "price": 4500, "price_gross": 4500, "fair_price": 4550.0, "discount_pct": 1.2, "verdict": "férová cena", "year": 2007, "km": 96000, "km_per_year": 5000.0, "eg": "1.4 / 1.9 TDI PD 51–77 kW", "cg": 1, "transmission": "manual", "seller_type": "private", "location": "Levice", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "196045055", "url": "https://auto.bazos.sk/inzerat/196045055/skoda-roomster-12.php", "title": "Skoda roomster 1.2,ťažne tazne zariadenie", "price": 2390, "price_gross": 2390, "fair_price": 2420.0, "discount_pct": 1.1, "verdict": "férová cena", "year": 2007, "km": 257000, "km_per_year": 13300.0, "eg": "1.2 HTP 47–51 kW", "cg": 0, "transmission": null, "seller_type": "dealer", "location": "Rimavská Sobota", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "bs-34351984", "url": "https://auto.bazar.sk/34351984-skoda-roomster-1-2-tsi/", "title": "Skoda Roomster 1.2 TSI", "price": 5500, "price_gross": 5500, "fair_price": 5540.0, "discount_pct": 0.8, "verdict": "férová cena", "year": 2013, "km": 140369, "km_per_year": 10500.0, "eg": "1.2 TSI 63–77 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Nové Zámky", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "ab-Ae82-lTTtbl", "url": "https://www.autobazar.eu/detail/skoda-roomster-16-tdi-105k-ambition-77kw105hp-m5/Ae82-lTTtbl/", "title": "Škoda Roomster 1.6 TDI 105k Ambition 77kW/105HP M5", "price": 4000, "price_gross": 4000, "fair_price": 4020.0, "discount_pct": 0.4, "verdict": "férová cena", "year": 2012, "km": 226040, "km_per_year": 15800.0, "eg": "1.6 TDI CR 55–77 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Galanta", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazos", "id": "197562952", "url": "https://auto.bazos.sk/inzerat/197562952/volkswagen-passat-variant-20-tdi-evo-dsg7-150k-busines.php", "price": 4000}, {"source": "bazarsk", "id": "bs-39774961", "url": "https://auto.bazar.sk/39774961-skoda-roomster-1-6-tdi-105k-ambition-77kw-105hp-m5/", "price": 4000}], "body": "mpv"}, {"id": "ab-AeN60SddRK4", "url": "https://www.autobazar.eu/detail/skoda-roomster-12-12v-klima-park-senzory/AeN60SddRK4/", "title": "Skoda Roomster 1.2 12V, Klíma, Park. senzory", "price": 2600, "price_gross": 2600, "fair_price": 2610.0, "discount_pct": 0.4, "verdict": "férová cena", "year": 2009, "km": 178836, "km_per_year": 10300.0, "eg": "1.2 HTP 47–51 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Nové Zámky", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "bs-34351534", "url": "https://auto.bazar.sk/34351534-skoda-roomster-1-2-tsi/", "title": "Skoda Roomster 1.2 TSI", "price": 5199, "price_gross": 5199, "fair_price": 5200.0, "discount_pct": 0.1, "verdict": "férová cena", "year": 2010, "km": 112674, "km_per_year": 6900.0, "eg": "1.2 TSI 63–77 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Nové Zámky", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "bs-39756186", "url": "https://auto.bazar.sk/39756186-skoda-roomster-1-2-tsi-scout/", "title": "Škoda Roomster 1.2 TSI Scout", "price": 4950, "price_gross": 4950, "fair_price": 4950.0, "discount_pct": -0.1, "verdict": "férová cena", "year": 2012, "km": 176300, "km_per_year": 12300.0, "eg": "1.2 TSI 63–77 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Pezinok", "flags": [], "pick": null, "source": "bazarsk", "origin": "dovoz", "also_listed": [{"source": "autobazar", "id": "ab-Amywccem983", "url": "https://www.autobazar.eu/detail/skoda-roomster-12-tsi-scout/Amywccem983/", "price": 4950}, {"source": "bazos", "id": "197142303", "url": "https://auto.bazos.sk/inzerat/197142303/skoda-roomster-12-tsi-scout-nove-brzdy-nova-bateria.php", "price": 4950}], "body": "mpv"}, {"id": "196896515", "url": "https://auto.bazos.sk/inzerat/196896515/skoda-roomster-14-tdi.php", "title": "Škoda roomster 1.4 TDi", "price": 2950, "price_gross": 2950, "fair_price": 2940.0, "discount_pct": -0.4, "verdict": "férová cena", "year": 2010, "km": 238000, "km_per_year": 14600.0, "eg": "1.4 / 1.9 TDI PD 51–77 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Žiar nad Hronom", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "196011771", "url": "https://auto.bazos.sk/inzerat/196011771/predam-skoda-roomster-16.php", "title": "Predám Škoda Roomster 1.6", "price": 2000, "price_gross": 2000, "fair_price": 1980.0, "discount_pct": -1.0, "verdict": "férová cena", "year": 2006, "km": 330000, "km_per_year": 16200.0, "eg": "1.4 16V / 1.6 16V", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Ilava", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197374174", "url": "https://auto.bazos.sk/inzerat/197374174/skoda-roomster-16.php", "title": "Škoda Roomster 1.6", "price": 3400, "price_gross": 3400, "fair_price": 3360.0, "discount_pct": -1.2, "verdict": "férová cena", "year": 2009, "km": 196200, "km_per_year": 11300.0, "eg": "1.4 16V / 1.6 16V", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Bratislava", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197575440", "url": "https://auto.bazos.sk/inzerat/197575440/skoda-roomster-14-tdi-style.php", "title": "Škoda Roomster 1.4 TDI Style", "price": 3700, "price_gross": 3700, "fair_price": 3650.0, "discount_pct": -1.5, "verdict": "férová cena", "year": 2008, "km": 126094, "km_per_year": 6900.0, "eg": "1.4 / 1.9 TDI PD 51–77 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Košice", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "bs-34352718", "url": "https://auto.bazar.sk/34352718-skoda-roomster-1-2-tsi/", "title": "Skoda Roomster 1.2 TSI", "price": 5300, "price_gross": 5300, "fair_price": 5220.0, "discount_pct": -1.5, "verdict": "férová cena", "year": 2010, "km": 118821, "km_per_year": 7300.0, "eg": "1.2 TSI 63–77 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Nové Zámky", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "197494857", "url": "https://auto.bazos.sk/inzerat/197494857/skoda-roomster-16tdirv2012.php", "title": "Škoda Roomster 1.6TDi,r.v.2012", "price": 3900, "price_gross": 3900, "fair_price": 3800.0, "discount_pct": -2.7, "verdict": "férová cena", "year": 2012, "km": 267330, "km_per_year": 18700.0, "eg": "1.6 TDI CR 55–77 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Partizánske", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AmSpsUDShBp", "url": "https://www.autobazar.eu/detail/skoda-roomster-14-16v-style/AmSpsUDShBp/", "title": "Škoda Roomster 1.4 16V Style", "price": 3990, "price_gross": 3990, "fair_price": 3880.0, "discount_pct": -2.9, "verdict": "férová cena", "year": 2009, "km": 146801, "km_per_year": 8500.0, "eg": "1.4 16V / 1.6 16V", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Dlhá nad Váhom", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "bs-39732577", "url": "https://auto.bazar.sk/39732577-skoda-roomster-1-2-tsi-105k-ambition/", "title": "Škoda Roomster 1.2 TSI 105k Ambition", "price": 4999, "price_gross": 4999, "fair_price": 4840.0, "discount_pct": -3.4, "verdict": "férová cena", "year": 2015, "km": 177887, "km_per_year": 15700.0, "eg": "1.2 TSI 63–77 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Nitra", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AmDOOE-oJds", "url": "https://www.autobazar.eu/detail/skoda-roomster-12-tsi-105k-ambition/AmDOOE-oJds/", "price": 4999}], "body": "mpv"}, {"id": "bs-39635427", "url": "https://auto.bazar.sk/39635427-skoda-roomster-1-6-tdi/", "title": "Skoda Roomster 1.6 TDI", "price": 4100, "price_gross": 4100, "fair_price": 3950.0, "discount_pct": -3.8, "verdict": "férová cena", "year": 2012, "km": 251716, "km_per_year": 17600.0, "eg": "1.6 TDI CR 55–77 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava V - Petržalka", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "196656311", "url": "https://auto.bazos.sk/inzerat/196656311/skoda-roomster-12htp-12v-rv2007.php", "title": "Škoda Roomster 1.2htp 12V rv.2007", "price": 2650, "price_gross": 2650, "fair_price": 2550.0, "discount_pct": -3.9, "verdict": "férová cena", "year": 2007, "km": 185000, "km_per_year": 9600.0, "eg": "1.2 HTP 47–51 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Pezinok", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "bs-30118402", "url": "https://auto.bazar.sk/30118402-skoda-roomster-1-2-tsi-63-kw-ambition-plus/", "title": "Škoda Roomster 1,2 TSI / 63 kW Ambition Plus", "price": 8931, "price_gross": 8931, "fair_price": 8580.0, "discount_pct": -4.1, "verdict": "férová cena", "year": 2015, "km": 57775, "km_per_year": 5100.0, "eg": "1.2 TSI 63–77 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Prostějov", "flags": [], "pick": null, "source": "bazarsk", "origin": "dovoz", "also_listed": [], "body": "mpv"}, {"id": "bs-39088080", "url": "https://auto.bazar.sk/39088080-skoda-roomster-1-2-tsi-63kw-klima-vyhrev/", "title": "Škoda Roomster 1, 2 TSI, 63KW, KLIMA, VÝHŘEV", "price": 3842, "price_gross": 3842, "fair_price": 3680.0, "discount_pct": -4.3, "verdict": "férová cena", "year": 2010, "km": 163000, "km_per_year": 10000.0, "eg": "benzín (výkon neuvedený)", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Uherský Brod", "flags": [], "pick": null, "source": "bazarsk", "origin": "dovoz", "also_listed": [{"source": "autobazar", "id": "ab-AbfCWQ3511fV", "url": "https://www.autobazar.eu/detail/skoda-roomster-1-2-tsi-63kw-klima-vyhrev/AbfCWQ3511fV/", "price": 3842}], "body": "mpv"}, {"id": "197064746", "url": "https://auto.bazos.sk/inzerat/197064746/skoda-roomster-12-tsi.php", "title": "Škoda Roomster 1.2 TSI", "price": 3800, "price_gross": 3800, "fair_price": 3630.0, "discount_pct": -4.7, "verdict": "férová cena", "year": 2011, "km": 235000, "km_per_year": 15300.0, "eg": "1.2 TSI 63–77 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Banská Bystrica", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "196717738", "url": "https://auto.bazos.sk/inzerat/196717738/skoda-roomster-12-tdi-55kw.php", "title": "Škoda Roomster Diesel 55kw", "price": 3700, "price_gross": 3700, "fair_price": 3480.0, "discount_pct": -6.4, "verdict": "férová cena", "year": 2013, "km": 198000, "km_per_year": 14900.0, "eg": "1.4 / 1.9 TDI PD 51–77 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Komárno", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197079868", "url": "https://auto.bazos.sk/inzerat/197079868/skoda-roomster.php", "title": "Škoda Roomster", "price": 3500, "price_gross": 3500, "fair_price": 3260.0, "discount_pct": -7.3, "verdict": "nad trhom", "year": 2007, "km": 207000, "km_per_year": 10700.0, "eg": "1.4 16V / 1.6 16V", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Malacky", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AmPzzO9lxdR", "url": "https://www.autobazar.eu/detail/skoda-roomster-12-tsi-active/AmPzzO9lxdR/", "title": "Škoda Roomster 1.2 TSI Active", "price": 5400, "price_gross": 5400, "fair_price": 5000.0, "discount_pct": -8.1, "verdict": "nad trhom", "year": 2013, "km": 151800, "km_per_year": 11400.0, "eg": "1.2 TSI 63–77 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Nové Zámky", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazarsk", "id": "bs-39689152", "url": "https://auto.bazar.sk/39689152-skoda-roomster-1-2-tsi-active/", "price": 5400}], "body": "mpv"}, {"id": "196362559", "url": "https://auto.bazos.sk/inzerat/196362559/skoda-roomster-16-benzin.php", "title": "Škoda Roomster 1.6 benzín", "price": 2799, "price_gross": 2799, "fair_price": 2580.0, "discount_pct": -8.5, "verdict": "nad trhom", "year": 2007, "km": 262200, "km_per_year": 13600.0, "eg": "1.4 16V / 1.6 16V", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Pezinok", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197576812", "url": "https://auto.bazos.sk/inzerat/197576812/skoda-roomster-12-tsi-77kw-dsg-2013-navitempomat.php", "title": "Škoda Roomster 1,2 TSi 77kw DSG 2013 Navi,tempomat", "price": 6499, "price_gross": 6499, "fair_price": 5900.0, "discount_pct": -10.2, "verdict": "nad trhom", "year": 2013, "km": 156322, "km_per_year": 11700.0, "eg": "1.2 TSI 63–77 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Martin", "flags": [], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "mpv"}, {"id": "ab-AmczCgT8VfK", "url": "https://www.autobazar.eu/detail/skoda-roomster-12-tsi-ambition/AmczCgT8VfK/", "title": "Škoda Roomster 1.2 TSI Ambition", "price": 3990, "price_gross": 3990, "fair_price": 3610.0, "discount_pct": -10.5, "verdict": "nad trhom", "year": 2012, "km": 223904, "km_per_year": 15600.0, "eg": "1.2 TSI 63–77 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Banská Bystrica", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-39720207", "url": "https://auto.bazar.sk/39720207-skoda-roomster-1-2-tsi-ambition/", "price": 3990}], "body": "mpv"}, {"id": "ab-AefmQYEP8Vz", "url": "https://www.autobazar.eu/detail/skoda-roomster-14-16v-lpg-63kw/AefmQYEP8Vz/", "title": "Škoda Roomster 1.4 16V LPG 63kW", "price": 2600, "price_gross": 2600, "fair_price": 2350.0, "discount_pct": -10.6, "verdict": "nad trhom", "year": 2009, "km": 268800, "km_per_year": 15500.0, "eg": "LPG", "cg": 2, "transmission": "manual", "seller_type": "private", "location": "Šemša", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "197631590", "url": "https://auto.bazos.sk/inzerat/197631590/skoda-roomster-14-16v-2010.php", "title": "Škoda Roomster 1.4 16V | 2010", "price": 3490, "price_gross": 3490, "fair_price": 3150.0, "discount_pct": -10.8, "verdict": "nad trhom", "year": 2010, "km": 248000, "km_per_year": 15200.0, "eg": "1.4 16V / 1.6 16V", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Žarnovica", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "bs-39759301", "url": "https://auto.bazar.sk/39759301-skoda-roomster-1-6-tdi-77kw-2010-aj-na-splatky-protiucet/", "title": "Škoda Roomster 1.6 TDI, 77kW (2010) / AJ NA SPLÁTKY / PROTIÚČET /", "price": 4799, "price_gross": 4799, "fair_price": 4330.0, "discount_pct": -10.9, "verdict": "nad trhom", "year": 2010, "km": 231031, "km_per_year": 14100.0, "eg": "1.6 TDI CR 55–77 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Stará Turá", "flags": [], "pick": null, "source": "bazarsk", "origin": "dovoz", "also_listed": [{"source": "autobazar", "id": "ab-AmEUDAsCcek", "url": "https://www.autobazar.eu/detail/skoda-roomster-16-tdi-77kw-2010-aj-na-splatky-protiucet/AmEUDAsCcek/", "price": 4799}, {"source": "bazos", "id": "197571502", "url": "https://auto.bazos.sk/inzerat/197571502/skoda-roomster-16-tdi-77kw-2010.php", "price": 4799}], "body": "mpv"}, {"id": "bs-23236266", "url": "https://auto.bazar.sk/23236266-skoda-roomster-1-6-tdi-comfort-66kw-m5-5d/", "title": "Škoda Roomster 1.6 TDI Comfort, 66kW, M5, 5d.", "price": 4400, "price_gross": 4400, "fair_price": 3970.0, "discount_pct": -10.9, "verdict": "nad trhom", "year": 2010, "km": 230000, "km_per_year": 14100.0, "eg": "1.6 TDI CR 55–77 kW", "cg": 1, "transmission": "manual", "seller_type": "private", "location": "Šaľa", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AmKNGYAQXcd", "url": "https://www.autobazar.eu/detail/skoda-roomster-12-tsi-comfort/AmKNGYAQXcd/", "title": "Škoda Roomster 1.2 TSI Comfort", "price": 4990, "price_gross": 4990, "fair_price": 4480.0, "discount_pct": -11.3, "verdict": "nad trhom", "year": 2011, "km": 172162, "km_per_year": 11200.0, "eg": "1.2 TSI 63–77 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Kalná nad Hronom", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazarsk", "id": "bs-38651327", "url": "https://auto.bazar.sk/38651327-skoda-roomster-1-2-tsi-comfort/", "price": 4990}], "body": "mpv"}, {"id": "197234237", "url": "https://auto.bazos.sk/inzerat/197234237/skoda-roomster-12-tsi-family.php", "title": "Škoda Roomster 1.2 TSI Family -", "price": 4990, "price_gross": 4990, "fair_price": 4440.0, "discount_pct": -12.3, "verdict": "nad trhom", "year": 2014, "km": 175231, "km_per_year": 14200.0, "eg": "1.2 TSI 63–77 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Šaľa", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmFRioL9orC", "url": "https://www.autobazar.eu/detail/skoda-roomster-12-tsi-family/AmFRioL9orC/", "price": 4990}], "body": "mpv"}, {"id": "ab-AeNzCSODuGV", "url": "https://www.autobazar.eu/detail/skoda-roomster-partizanske-sb/AeNzCSODuGV/", "title": "Škoda Roomster Partizánske SB", "price": 2500, "price_gross": 2500, "fair_price": 2220.0, "discount_pct": -12.4, "verdict": "nad trhom", "year": 2008, "km": 300000, "km_per_year": 16400.0, "eg": "LPG", "cg": 2, "transmission": "manual", "seller_type": "private", "location": "Partizánske", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "mpv"}, {"id": "197334197", "url": "https://auto.bazos.sk/inzerat/197334197/skoda-roomster-5j-2008.php", "title": "Škoda Roomster 5j 2008", "price": 3600, "price_gross": 3600, "fair_price": 3200.0, "discount_pct": -12.6, "verdict": "nad trhom", "year": 2008, "km": 223000, "km_per_year": 12200.0, "eg": "benzín (výkon neuvedený)", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Žilina", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "195964173", "url": "https://auto.bazos.sk/inzerat/195964173/skoda-roomster-12-tsi.php", "title": "Škoda Roomster 1.2 TSI", "price": 6200, "price_gross": 6200, "fair_price": 5510.0, "discount_pct": -12.6, "verdict": "nad trhom", "year": 2015, "km": 123103, "km_per_year": 10900.0, "eg": "1.2 TSI 63–77 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Levice", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "196244179", "url": "https://auto.bazos.sk/inzerat/196244179/skoda-roomster-12-tsi.php", "title": "ŠKODA ROOMSTER 1.2 TSI", "price": 5900, "price_gross": 5900, "fair_price": 5180.0, "discount_pct": -13.8, "verdict": "nad trhom", "year": 2013, "km": 151800, "km_per_year": 11400.0, "eg": "1.2 TSI 63–77 kW", "cg": 0, "transmission": null, "seller_type": "dealer", "location": "Nové Zámky", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "mpv"}, {"id": "bs-34353670", "url": "https://auto.bazar.sk/34353670-skoda-roomster-1-2-tsi/", "title": "Skoda Roomster 1.2 TSI", "price": 4500, "price_gross": 4500, "fair_price": 3950.0, "discount_pct": -13.9, "verdict": "nad trhom", "year": 2011, "km": 185696, "km_per_year": 12100.0, "eg": "1.2 TSI 63–77 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Nové Zámky", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "ab-Ae93oh20w8B", "url": "https://www.autobazar.eu/detail/skoda-roomster-12-tsi-scout-sr2maj-klima/Ae93oh20w8B/", "title": "Skoda Roomster 1.2 TSI, Scout, SR,2.maj, Klíma", "price": 4800, "price_gross": 4800, "fair_price": 4180.0, "discount_pct": -14.8, "verdict": "nad trhom", "year": 2015, "km": 236343, "km_per_year": 20900.0, "eg": "1.2 TSI 63–77 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Košice", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "196230186", "url": "https://auto.bazos.sk/inzerat/196230186/skoda-roomster-12-tsi.php", "title": "Škoda Roomster 1.2 TSI", "price": 4490, "price_gross": 4490, "fair_price": 3900.0, "discount_pct": -15.1, "verdict": "výrazne nad trhom", "year": 2014, "km": 219303, "km_per_year": 17800.0, "eg": "1.2 TSI 63–77 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Levice", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197497842", "url": "https://auto.bazos.sk/inzerat/197497842/roomster-14-16v-63kw-benzin.php", "title": "Roomster 1.4 16v 63kw benzin", "price": 4300, "price_gross": 4300, "fair_price": 3730.0, "discount_pct": -15.4, "verdict": "výrazne nad trhom", "year": 2009, "km": 178000, "km_per_year": 10300.0, "eg": "1.4 16V / 1.6 16V", "cg": 0, "transmission": null, "seller_type": "dealer", "location": "Nové Mesto n.Váhom", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "196275551", "url": "https://auto.bazos.sk/inzerat/196275551/skoda-roomster-14-rv-2011.php", "title": "Škoda Roomster 1.4 /r.v. 2011", "price": 1900, "price_gross": 1900, "fair_price": 1630.0, "discount_pct": -16.3, "verdict": "výrazne nad trhom", "year": 2011, "km": 522711, "km_per_year": 34100.0, "eg": "1.4 16V / 1.6 16V", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Nové Zámky", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "196936874", "url": "https://auto.bazos.sk/inzerat/196936874/skoda-roomster-12tsi-105k-dsg-panorama-navi.php", "title": "Škoda Roomster 1.2TSi 105k DSG Panorama, Navi", "price": 5890, "price_gross": 5890, "fair_price": 5060.0, "discount_pct": -16.5, "verdict": "výrazne nad trhom", "year": 2012, "km": 157911, "km_per_year": 11000.0, "eg": "1.2 TSI 63–77 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Revúca", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197328762", "url": "https://auto.bazos.sk/inzerat/197328762/skoda-roomster-19-tdi-77-kw-tempomat-nova-klimatizacia.php", "title": "NOVA STK /EK Škoda Roomster 1.9 TDI 77 kW | Ťažne", "price": 3000, "price_gross": 3000, "fair_price": 2570.0, "discount_pct": -16.6, "verdict": "výrazne nad trhom", "year": 2007, "km": 276367, "km_per_year": 14300.0, "eg": "1.4 / 1.9 TDI PD 51–77 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Nitra", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197612618", "url": "https://auto.bazos.sk/inzerat/197612618/skoda-roomster.php", "title": "Škoda Roomster", "price": 5990, "price_gross": 5990, "fair_price": 5140.0, "discount_pct": -16.6, "verdict": "výrazne nad trhom", "year": 2015, "km": 177000, "km_per_year": 15600.0, "eg": "1.6 TDI CR 55–77 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Trebišov", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "mpv"}, {"id": "197290055", "url": "https://auto.bazos.sk/inzerat/197290055/skoda-roomster.php", "title": "Škoda Roomster", "price": 5590, "price_gross": 5590, "fair_price": 4780.0, "discount_pct": -16.9, "verdict": "výrazne nad trhom", "year": 2013, "km": 170000, "km_per_year": 12800.0, "eg": "1.6 TDI CR 55–77 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Trebišov", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "mpv"}, {"id": "195954338", "url": "https://auto.bazos.sk/inzerat/195954338/skoda-roomster-14tdi-59kw.php", "title": "Škoda Roomster 1.4TDi 59kW", "price": 2500, "price_gross": 2500, "fair_price": 2120.0, "discount_pct": -17.7, "verdict": "výrazne nad trhom", "year": 2009, "km": 350845, "km_per_year": 20200.0, "eg": "1.4 / 1.9 TDI PD 51–77 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Michalovce", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197666643", "url": "https://auto.bazos.sk/inzerat/197666643/skoda-roomster-12-tsi-63kw-2015-black-edition.php", "title": "Skoda Roomster 1.2 TSI 63kw 2015 Black Edition", "price": 5900, "price_gross": 5900, "fair_price": 4980.0, "discount_pct": -18.5, "verdict": "výrazne nad trhom", "year": 2015, "km": 182000, "km_per_year": 16100.0, "eg": "1.2 TSI 63–77 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Poprad", "flags": [], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "mpv"}, {"id": "bs-32980968", "url": "https://auto.bazar.sk/32980968-skoda-roomster-1-6-tdi-66-kw/", "title": "Škoda Roomster 1,6 TDi 66 kW", "price": 5990, "price_gross": 5990, "fair_price": 5010.0, "discount_pct": -19.6, "verdict": "výrazne nad trhom", "year": 2011, "km": 164960, "km_per_year": 10800.0, "eg": "1.6 TDI CR 55–77 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Prešov", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "bs-39693696", "url": "https://auto.bazar.sk/39693696-skoda-roomster-1-2-tsi/", "title": "Skoda Roomster 1.2 TSI", "price": 5000, "price_gross": 5000, "fair_price": 4170.0, "discount_pct": -19.9, "verdict": "výrazne nad trhom", "year": 2015, "km": 236343, "km_per_year": 20900.0, "eg": "1.2 TSI 63–77 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava V - Petržalka", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "bs-29999559", "url": "https://auto.bazar.sk/29999559-skoda-roomster-1-2-tsi-63-kw-style/", "title": "Škoda Roomster 1,2 TSI / 63 kW Style", "price": 6597, "price_gross": 6596, "fair_price": 5500.0, "discount_pct": -19.9, "verdict": "výrazne nad trhom", "year": 2011, "km": 108268, "km_per_year": 7100.0, "eg": "1.2 TSI 63–77 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Prostějov", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AmYlALJoyHU", "url": "https://www.autobazar.eu/detail/skoda-roomster-16-tdi/AmYlALJoyHU/", "title": "Škoda Roomster 1.6 TDi", "price": 4990, "price_gross": 4990, "fair_price": 4140.0, "discount_pct": -20.5, "verdict": "výrazne nad trhom", "year": 2011, "km": 199151, "km_per_year": 13000.0, "eg": "1.6 TDI CR 55–77 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Bodza", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39628148", "url": "https://auto.bazar.sk/39628148-skoda-roomster-1-6-tdi/", "price": 4990}], "body": "mpv"}, {"id": "197582395", "url": "https://auto.bazos.sk/inzerat/197582395/skoda-roomster-12tsi-2013.php", "title": "Škoda ROOMSTER 1,2TSi  2013", "price": 4400, "price_gross": 4400, "fair_price": 3640.0, "discount_pct": -20.8, "verdict": "výrazne nad trhom", "year": 2013, "km": 260300, "km_per_year": 19500.0, "eg": "1.2 TSI 63–77 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Levice", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "bs-34353849", "url": "https://auto.bazar.sk/34353849-skoda-roomster-1-4-16v/", "title": "Skoda Roomster 1.4 16V", "price": 4899, "price_gross": 4899, "fair_price": 4040.0, "discount_pct": -21.2, "verdict": "výrazne nad trhom", "year": 2008, "km": 148929, "km_per_year": 8100.0, "eg": "1.4 16V / 1.6 16V", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Nové Zámky", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "196779472", "url": "https://auto.bazos.sk/inzerat/196779472/skoda-roomster-scout-16-tdifaceliftpanoramanova-stk.php", "title": "SKODA ROOMSTER SCOUT 1.6 TDI•FACELIFT•PANORÁMA•STK 2028", "price": 3950, "price_gross": 3950, "fair_price": 3260.0, "discount_pct": -21.3, "verdict": "výrazne nad trhom", "year": 2011, "km": 279000, "km_per_year": 18200.0, "eg": "1.6 TDI CR 55–77 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Rimavská Sobota", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "bs-34352005", "url": "https://auto.bazar.sk/34352005-skoda-roomster-scout-1-2-12v/", "title": "Skoda Roomster Scout 1.2 12V", "price": 5800, "price_gross": 5800, "fair_price": 4760.0, "discount_pct": -21.7, "verdict": "výrazne nad trhom", "year": 2015, "km": 145043, "km_per_year": 12800.0, "eg": "1.2 HTP 47–51 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Nové Zámky", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "bs-35303186", "url": "https://auto.bazar.sk/35303186-skoda-roomster/", "title": "Škoda Roomster", "price": 3990, "price_gross": 3990, "fair_price": 3210.0, "discount_pct": -24.4, "verdict": "výrazne nad trhom", "year": 2011, "km": 220000, "km_per_year": 14300.0, "eg": "1.2 TSI 63–77 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Teplička nad Váhom", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-Amu8e6flCQHp", "url": "https://www.autobazar.eu/detail/skoda-roomster/Amu8e6flCQHp/", "price": 3990}], "body": "mpv"}, {"id": "197689577", "url": "https://auto.bazos.sk/inzerat/197689577/skoda-roomster-16-77kw-style-plus-edition.php", "title": "Skoda Roomster1.6iStyle Plus Edition Tažne,Klima,Vyh sedačky", "price": 3800, "price_gross": 3800, "fair_price": 3020.0, "discount_pct": -25.8, "verdict": "výrazne nad trhom", "year": 2009, "km": 233131, "km_per_year": 13400.0, "eg": "1.4 16V / 1.6 16V", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Prešov", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "195825094", "url": "https://auto.bazos.sk/inzerat/195825094/skoda-roomster-5j-2008-14-tdi.php", "title": "Škoda Roomster 5j 2008 1.4 TDI", "price": 3600, "price_gross": 3600, "fair_price": 2850.0, "discount_pct": -26.4, "verdict": "výrazne nad trhom", "year": 2008, "km": 223000, "km_per_year": 12200.0, "eg": "1.4 / 1.9 TDI PD 51–77 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Ilava", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "196155003", "url": "https://auto.bazos.sk/inzerat/196155003/skoda-roomster-scout-16tdi.php", "title": "Škoda Roomster Scout 1.6TDI", "price": 4499, "price_gross": 4499, "fair_price": 3440.0, "discount_pct": -30.8, "verdict": "výrazne nad trhom", "year": 2010, "km": 281500, "km_per_year": 17200.0, "eg": "1.6 TDI CR 55–77 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Rimavská Sobota", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197430633", "url": "https://auto.bazos.sk/inzerat/197430633/skoda-roomster-14-16v-benzin.php", "title": "Škoda Roomster 1,4 16V benzín", "price": 4150, "price_gross": 4150, "fair_price": 3160.0, "discount_pct": -31.1, "verdict": "výrazne nad trhom", "year": 2006, "km": 202000, "km_per_year": 9900.0, "eg": "1.4 16V / 1.6 16V", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Košice-okolie", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "197492659", "url": "https://auto.bazos.sk/inzerat/197492659/skoda-roomster.php", "title": "Škoda Roomster", "price": 3700, "price_gross": 3700, "fair_price": 2750.0, "discount_pct": -34.3, "verdict": "výrazne nad trhom", "year": 2012, "km": 315000, "km_per_year": 22000.0, "eg": "1.6 TDI CR 55–77 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Šaľa", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "196015263", "url": "https://auto.bazos.sk/inzerat/196015263/skoda-roomster-14-tdi-59-kw.php", "title": "Škoda Roomster 1,4 TDi 59 kW", "price": 3990, "price_gross": 3990, "fair_price": 2970.0, "discount_pct": -34.4, "verdict": "výrazne nad trhom", "year": 2007, "km": 191513, "km_per_year": 9900.0, "eg": "1.4 / 1.9 TDI PD 51–77 kW", "cg": 1, "transmission": null, "seller_type": "dealer", "location": "Martin", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "196540725", "url": "https://auto.bazos.sk/inzerat/196540725/skoda-roomster-14-tdi-2009.php", "title": "Škoda Roomster 1.4 TDI 2009", "price": 3600, "price_gross": 3600, "fair_price": 2650.0, "discount_pct": -36.0, "verdict": "výrazne nad trhom", "year": 2009, "km": 286000, "km_per_year": 16500.0, "eg": "1.4 / 1.9 TDI PD 51–77 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Prešov", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "bs-34353884", "url": "https://auto.bazar.sk/34353884-skoda-roomster-1-2-12v/", "title": "Skoda Roomster 1.2 12V", "price": 4999, "price_gross": 4999, "fair_price": 3640.0, "discount_pct": -37.2, "verdict": "výrazne nad trhom", "year": 2008, "km": 90884, "km_per_year": 5000.0, "eg": "1.2 HTP 47–51 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Nové Zámky", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AmJKy_3v7Jy", "url": "https://www.autobazar.eu/detail/skoda-roomster-19-tdi-comfort/AmJKy_3v7Jy/", "title": "Škoda Roomster 1.9 TDI Comfort", "price": 4350, "price_gross": 4350, "fair_price": 3130.0, "discount_pct": -38.9, "verdict": "výrazne nad trhom", "year": 2008, "km": 197883, "km_per_year": 10800.0, "eg": "1.4 / 1.9 TDI PD 51–77 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Vranov nad Topľou", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazos", "id": "197098546", "url": "https://auto.bazos.sk/inzerat/197098546/skoda-roomster-19-tdi-bsw-bez-dpf-nova-stkek-klimatizacia.php", "price": 4350}], "body": "mpv"}, {"id": "ab-AeUS2V6SzT4", "url": "https://www.autobazar.eu/detail/skoda-roomster-12-tsi-comfort-63kw85hp-m5/AeUS2V6SzT4/", "title": "Škoda Roomster 1.2 TSI Comfort 63kW85HP M5", "price": 5600, "price_gross": 5600, "fair_price": 4020.0, "discount_pct": -39.4, "verdict": "výrazne nad trhom", "year": 2013, "km": 218000, "km_per_year": 16400.0, "eg": "1.2 TSI 63–77 kW", "cg": 0, "transmission": "manual", "seller_type": "private", "location": "Bratislava-Rača", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "mpv"}];
+const GROUPS = ["Benzín", "Diesel TDI", "LPG a nezistený"];
+const BODY = {"mpv": "MPV"};
+const fmt = n => Math.round(n).toLocaleString("sk-SK");
+const eur = n => fmt(n) + " €";
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const TRANS = {automatic: "automat", manual: "manuál"};
+const SRC = {bazos: "bazoš", autobazar: "autobazar.eu", bazarsk: "bazar.sk"};
+
+// --- theme toggle ---------------------------------------------------------
+document.getElementById("themeBtn").onclick = () => {
+  const root = document.documentElement;
+  const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  drawChart();
+};
+
+// --- scatter chart --------------------------------------------------------
+const legend = document.getElementById("legend");
+legend.innerHTML = GROUPS.map((g, i) => `<span><i style="background:var(--s${i+1})"></i>${g}</span>`).join("")
+  + `<span><i class="ring"></i>odporúčaná ponuka</span>`;
+
+function drawChart() {
+  const svg = document.getElementById("chart"), wrap = document.getElementById("chartWrap"), tip = document.getElementById("tip");
+  const W = svg.clientWidth, H = 420, m = {l: 56, r: 16, t: 10, b: 40};
+  const pts = DATA.filter(d => d.km && d.price_gross);
+  const xMax = Math.ceil(Math.max(...pts.map(d => d.km)) / 50000) * 50000;
+  const yMax = Math.ceil(Math.max(...pts.map(d => d.price_gross)) / 5000) * 5000;
+  const x = v => m.l + v / xMax * (W - m.l - m.r), y = v => H - m.b - v / yMax * (H - m.t - m.b);
+  let s = "";
+  for (let v = 0; v <= yMax; v += 5000)
+    s += `<line x1="${m.l}" x2="${W-m.r}" y1="${y(v)}" y2="${y(v)}" stroke="var(--grid)"/><text x="${m.l-8}" y="${y(v)+4}" text-anchor="end">${v/1000} tis. €</text>`;
+  const step = W < 520 ? 100000 : 50000;
+  for (let v = 0; v <= xMax; v += step)
+    s += `<text x="${x(v)}" y="${H-m.b+18}" text-anchor="middle">${v/1000} tis.</text>`;
+  s += `<text x="${(W+m.l)/2}" y="${H-6}" text-anchor="middle">nájazd (km)</text>`;
+  const order = [...pts].sort((a, b) => (a.pick ? 1 : 0) - (b.pick ? 1 : 0));
+  order.forEach(d => {
+    const cx = x(d.km), cy = y(d.price_gross);
+    if (d.pick) s += `<circle cx="${cx}" cy="${cy}" r="9" fill="none" stroke="var(--text)" stroke-width="2"/>`;
+    s += `<circle class="pt" data-id="${d.id}" cx="${cx}" cy="${cy}" r="5" fill="var(--s${d.cg+1})" stroke="var(--surface)" stroke-width="2"/>`;
+  });
+  // invisible bigger hit targets
+  order.forEach(d => s += `<circle class="hit" data-id="${d.id}" cx="${x(d.km)}" cy="${y(d.price_gross)}" r="11" fill="transparent" style="cursor:pointer"/>`);
+  svg.innerHTML = s;
+  const byId = Object.fromEntries(pts.map(d => [d.id, d]));
+  svg.querySelectorAll(".hit").forEach(c => {
+    c.onmouseenter = c.onmousemove = ev => {
+      const d = byId[c.dataset.id];
+      tip.innerHTML = `<b>${esc(d.title)}</b>
+        <div class="row"><span>Cena</span><span>${eur(d.price_gross)}</span></div>
+        <div class="row"><span>Férová cena</span><span>${eur(d.fair_price)}</span></div>
+        <div class="row"><span>Pod trhom</span><span>${d.discount_pct > 0 ? "+" : ""}${d.discount_pct.toLocaleString("sk-SK")} %</span></div>
+        <div class="row"><span>Zdroj</span><span>${SRC[d.source]}${d.also_listed.length ? " + " + d.also_listed.map(a => SRC[a.source]).join(", ") : ""}</span></div>
+        <div class="row"><span>Rok · km</span><span>${d.year} · ${fmt(d.km)}</span></div>
+        <div class="row"><span>Motor</span><span>${esc(d.eg)} ${TRANS[d.transmission] || ""}</span></div>`;
+      tip.style.display = "block";
+      const r = wrap.getBoundingClientRect();
+      let lx = ev.clientX - r.left + 14, ly = ev.clientY - r.top + 14;
+      if (lx + 290 > r.width) lx = ev.clientX - r.left - 290;
+      tip.style.left = lx + "px"; tip.style.top = ly + "px";
+    };
+    c.onmouseleave = () => tip.style.display = "none";
+    c.onclick = () => window.open(byId[c.dataset.id].url, "_blank", "noopener");
+  });
+}
+drawChart();
+addEventListener("resize", drawChart);
+
+// --- full table -----------------------------------------------------------
+const fEngine = document.getElementById("fEngine");
+[...new Set(DATA.map(d => d.eg))].sort().forEach(g => fEngine.insertAdjacentHTML("beforeend", `<option>${esc(g)}</option>`));
+let sortK = "discount_pct", sortDir = -1;
+function discCell(v) {
+  const w = Math.min(Math.abs(v), 30) / 30 * 50;
+  const bar = v >= 0 ? `left:50%;width:${w}%;background:var(--pos)` : `right:50%;width:${w}%;background:var(--neg)`;
+  return `<span class="disc">${v > 0 ? "+" : ""}${v.toLocaleString("sk-SK")} %<span class="dbar"><span style="${bar}"></span></span></span>`;
+}
+function renderTable() {
+  const max = parseFloat(document.getElementById("fMax").value) || Infinity;
+  const tr = document.getElementById("fTrans").value, se = document.getElementById("fSeller").value, en = fEngine.value;
+  const so = document.getElementById("fSource").value, og = document.getElementById("fOrigin").value;
+  const bo = document.getElementById("fBody").value;
+  const rows = DATA.filter(d => (!en || d.eg === en) && (!tr || d.transmission === tr)
+    && (!se || d.seller_type !== "dealer") && d.price_gross <= max
+    && (!so || d.source === so || d.also_listed.some(a => a.source === so)) && (!og || d.origin === og) && (!bo || d.body === bo))
+    .sort((a, b) => { const A = a[sortK], B = b[sortK]; return (typeof A === "string" ? A.localeCompare(B) : A - B) * sortDir; });
+  document.getElementById("count").textContent = `${rows.length} z ${DATA.length} inzerátov`;
+  document.querySelector("#tbl tbody").innerHTML = rows.map(d => `<tr>
+    <td><a href="${d.url}" target="_blank" rel="noopener">${esc(d.title)}</a> ${d.pick ? '<span class="badge pick">odporúčané</span>' : ""}
+      <div class="sub">${BODY[d.body] || "karoséria ?"} · ${esc(d.eg)} · ${TRANS[d.transmission] || "prevodovka ?"} · ${esc(d.location)} · ${d.seller_type === "dealer" ? "predajca/firma" : d.seller_type === "private" ? "súkromník" : "neisté"} · ${SRC[d.source]}${d.origin === "SR" ? " · kúpené v SR" : d.origin === "dovoz" ? " · dovoz" : ""}${d.also_listed.map(a => ` · <a href="${a.url}" target="_blank" rel="noopener">aj na ${SRC[a.source]}</a>`).join("")}</div>
+      ${d.flags.filter(f => !f.startsWith("prevodovka")).map(f => `<div class="flag">⚠ ${esc(f)}</div>`).join("")}</td>
+    <td class="num">${d.year}</td><td class="num">${fmt(d.km)}</td>
+    <td class="num">${eur(d.price_gross)}</td><td class="num">${eur(d.fair_price)}</td>
+    <td class="num">${discCell(d.discount_pct)}</td></tr>`).join("");
+  document.querySelectorAll("#tbl th.sortable").forEach(th => {
+    const base = th.textContent.replace(/ [▾▴]$/, "");
+    th.textContent = base + (th.dataset.k === sortK ? (sortDir < 0 ? " ▾" : " ▴") : "");
+  });
+}
+document.querySelectorAll("#tbl th.sortable").forEach(th => th.onclick = () => {
+  if (sortK === th.dataset.k) sortDir *= -1; else { sortK = th.dataset.k; sortDir = th.dataset.k === "title" ? 1 : -1; }
+  renderTable();
+});
+["fEngine", "fTrans", "fSeller", "fSource", "fBody", "fOrigin", "fMax"].forEach(id => document.getElementById(id).addEventListener("input", renderTable));
+renderTable();
+</script>
+<!-- ferovka-theme --><script defer src="/analytics-config.js"></script><script defer src="/analytics.js"></script><script id="ferovka-chart">/* Férovka – chart → ad links, injected into every report by sync-reports.mjs.
+ *
+ * The reports draw one invisible 11px "hit" circle per ad. In dense charts (and always on a narrow phone) those
+ * circles overlap and the one drawn last wins, so a click/tap often opened a neighbouring ad. Here the pointer is
+ * always resolved to the NEAREST point, the report's own tooltip is shown for that point, and a click opens its ad.
+ * Touch: the first tap shows the tooltip (with a hint), a second tap on the same point opens the ad.
+ */
+(() => {
+  let rows;
+  try { rows = DATA; } catch { return; } // eslint-disable-line no-undef
+  if (!Array.isArray(rows) || !rows.length || !("url" in rows[0])) return;
+  const byId = new Map(rows.map((d) => [String(d.id), d]));
+  const MOUSE = ["mouseover", "mouseout", "mouseenter", "mouseleave", "mousemove", "mousedown", "mouseup", "click"];
+  let lastPointer = "mouse", down = null;
+  // the finger position as it was – Chrome "snaps" the later click of a tap to the centre of a nearby clickable element
+  addEventListener("pointerdown", (e) => { lastPointer = e.pointerType || "mouse"; down = { clientX: e.clientX, clientY: e.clientY }; }, true);
+
+  // the old per-point hit circles must not be targets (they overlap, and touch snapping aims at them)
+  document.head.insertAdjacentHTML("beforeend", "<style>svg circle.hit[data-id],svg circle.pt[data-id]{pointer-events:none}</style>");
+
+  function nearest(svg, ev, radius) {
+    let best = null, bd = Infinity;
+    for (const c of svg.querySelectorAll("circle.pt[data-id]")) {
+      const r = c.getBoundingClientRect();
+      const dx = r.left + r.width / 2 - ev.clientX, dy = r.top + r.height / 2 - ev.clientY;
+      const d = dx * dx + dy * dy;
+      if (d <= bd) { bd = d; best = c; } // ties: the point drawn on top (later) wins – that is the one you see
+    }
+    return best && bd <= radius * radius ? best : null;
+  }
+
+  function bind(svg) {
+    if (svg.__fvLinks) return;
+    svg.__fvLinks = true;
+    let current = null, armed = null;
+    const hitOf = (pt) => pt && svg.querySelector(`circle.hit[data-id="${CSS.escape(pt.dataset.id)}"]`);
+    const fire = (el, type, ev) => {
+      if (!el) return;
+      const e = new MouseEvent(type, { clientX: ev.clientX, clientY: ev.clientY, bubbles: false });
+      e.__fv = true;
+      el.dispatchEvent(e);
+    };
+    const tip = () => (svg.parentElement && svg.parentElement.querySelector("#tip, .tip")) || document.getElementById("tip");
+    const mark = (pt) => {
+      if (current === pt) return;
+      if (current) current.setAttribute("r", current.__r || "5");
+      current = pt;
+      if (pt) { pt.__r = pt.__r || pt.getAttribute("r"); pt.setAttribute("r", String(+pt.__r + 2)); }
+    };
+    const show = (pt, ev, hint) => {
+      mark(pt);
+      if (!pt) { const t = tip(); if (t) t.style.display = "none"; return; }
+      fire(hitOf(pt), "mousemove", ev); // the report's own tooltip, for the nearest point
+      const t = tip();
+      if (t && hint) t.insertAdjacentHTML("beforeend", `<div class="fv-hint">Ťukni ešte raz – otvorí sa inzerát ↗</div>`);
+    };
+    const open = (pt) => {
+      const d = byId.get(pt.dataset.id);
+      if (d && d.url) {
+        try { window.FerovkaAnalytics?.listingClick(d.url, "chart"); } catch { /* analytics must never block an ad */ }
+        window.open(d.url, "_blank", "noopener");
+      }
+    };
+
+    // the per-circle handlers of the report never see real mouse events – only our synthetic ones
+    for (const type of MOUSE) {
+      svg.addEventListener(type, (ev) => {
+        if (ev.__fv) return;
+        ev.stopImmediatePropagation();
+        if (type === "mousemove" && lastPointer === "mouse") {
+          show(nearest(svg, ev, 18), ev, false);
+          svg.style.cursor = current ? "pointer" : "";
+        } else if (type === "mouseleave" && ev.target === svg && lastPointer === "mouse") {
+          show(null, ev);
+        } else if (type === "click") {
+          const touch = lastPointer !== "mouse";
+          const at = touch && down ? down : ev;
+          const pt = nearest(svg, at, touch ? 26 : 18);
+          if (!pt) { armed = null; show(null, ev); return; }
+          if (!touch || armed === pt) { armed = null; open(pt); }
+          else { armed = pt; show(pt, at, true); }
+        }
+      }, true);
+    }
+  }
+
+  const scan = () => document.querySelectorAll("svg").forEach((s) => s.querySelector("circle.pt[data-id]") && bind(s));
+  scan();
+  new MutationObserver(scan).observe(document.body, { childList: true, subtree: true });
+})();
+</script><script id="ferovka-filters">/* Férovka – filters for the whole report, injected into every model report by sync-reports.mjs.
+ *
+ * The reports render the chart (drawChart) and the full ranking (renderTable) from the global DATA array; their own
+ * filter bar only filters the table. Here the filter bar (kept in its place above the ranking) gets more filters (year, price from/to,
+ * km, fuel, discount, picks only, text search) and every filter applies to the chart and the ranking together: DATA is
+ * refilled in place with the matching ads and both are drawn again. "</script" can't occur inside this file.
+ */
+(() => {
+  let data;
+  try { data = DATA; } catch { return; } // eslint-disable-line no-undef
+  if (!Array.isArray(data) || !data.length || typeof renderTable !== "function") return; // eslint-disable-line no-undef
+  const bar = document.querySelector(".filters");
+  if (!bar || bar.dataset.fv) return;
+  bar.dataset.fv = "1";
+  const ALL = data.slice();
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+  const fmt = (n) => Math.round(n).toLocaleString("sk-SK");
+  const norm = (s) => String(s ?? "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+  let groups = null;
+  try { groups = GROUPS; } catch { /* report without groups */ } // eslint-disable-line no-undef
+
+  const FUEL = { diesel: "Diesel", petrol: "Benzín", hybrid: "Hybrid", "plug-in hybrid": "Plug-in hybrid", electric: "Elektro", lpg: "LPG", cng: "CNG" };
+  const fuelOf = (d) => {
+    const e = norm(d.eg);
+    if (/tdi|crdi|dci|hdi|diesel|\bd\b|cdi|\d+d\b|blue/.test(e)) return "Diesel";
+    if (/plug-in|phev|e-hybrid|recharge|\bgte\b|\bt8\b|\b\d{2}e\b|\b\d{3} ?e\b/.test(e)) return "Plug-in hybrid";
+    if (/elektro|electric|\bev\b/.test(e)) return "Elektro";
+    if (/cng|lpg|g-tec|g-tron|tgi|ecofuel/.test(e)) return "Plyn (CNG/LPG)";
+    if (/mild|mhev/.test(e)) return "Benzín"; // mild-hybrid petrol (the diesel ones say TDI / d above)
+    if (/hybrid|hev/.test(e)) return "Hybrid";
+    if (/tsi|tfsi|mpi|fsi|benzin|gdi|dpi|htp|12v|\bt\d\b|\bb[56]\b|\d+i\b|turbo|tce|\bs4\b|rs ?\d|amg|competition|\bm\d{2,3}i?\b|gti|\bx5 m\b/.test(e)) return "Benzín";
+    return d.fuel ? FUEL[d.fuel] || String(d.fuel) : null;
+  };
+
+  // --- controls ---------------------------------------------------------------------------------------------------
+  const years = ALL.map((d) => d.year).filter(Boolean);
+  const yMin = Math.min(...years), yMax = Math.max(...years);
+  const yearOpts = (label) => `<option value="">${label}</option>` +
+    Array.from({ length: yMax - yMin + 1 }, (_, i) => yMax - i).map((y) => `<option>${y}</option>`).join("");
+  const kms = [30000, 50000, 75000, 100000, 150000, 200000, 250000, 300000];
+  const fuels = [...new Set(ALL.map(fuelOf).filter(Boolean))].sort((a, b) => a.localeCompare(b, "sk"));
+  const showGroups = Array.isArray(groups) && groups.length > 1 && ALL.some((d) => Number.isInteger(d.cg));
+
+  const maxInput = $("fMax");
+  if (maxInput) { maxInput.placeholder = "Cena do €"; maxInput.title = "Najvyššia cena (s DPH)"; }
+  const html =
+    `<select id="fvYearFrom" title="Rok výroby od">${yearOpts("Rok od")}</select>` +
+    `<select id="fvYearTo" title="Rok výroby do">${yearOpts("Rok do")}</select>` +
+    `<input id="fvPriceMin" type="number" placeholder="Cena od €" step="500" min="0" title="Najnižšia cena (s DPH)" style="width:110px">`;
+  if (maxInput) maxInput.insertAdjacentHTML("beforebegin", html);
+  else bar.insertAdjacentHTML("afterbegin", html);
+  const more =
+    `<select id="fvKm" title="Najviac najazdených km"><option value="">Nájazd – všetky</option>${kms.map((k) => `<option value="${k}">do ${fmt(k)} km</option>`).join("")}</select>` +
+    (fuels.length > 1 ? `<select id="fvFuel" title="Palivo"><option value="">Všetky palivá</option>${fuels.map((f) => `<option>${esc(f)}</option>`).join("")}</select>` : "") +
+    (showGroups ? `<select id="fvGroup" title="Skupina motorov (farba v grafe)"><option value="">Všetky skupiny</option>${groups.map((g, i) => `<option value="${i}">${esc(g)}</option>`).join("")}</select>` : "") +
+    `<select id="fvDisc" title="O koľko je auto lacnejšie ako férová cena"><option value="">Cena – všetky</option><option value="0">pod férovou cenou</option><option value="10">aspoň 10 % pod trhom</option><option value="20">aspoň 20 % pod trhom</option></select>` +
+    `<input id="fvText" type="search" placeholder="Hľadať (výbava, mesto…)" title="Hľadá v názve inzerátu, motore a lokalite" style="width:170px">` +
+    `<label class="fv-check"><input id="fvPick" type="checkbox"> len odporúčané</label>` +
+    `<button type="button" id="fvReset" class="fv-reset">Zrušiť filtre</button>`;
+  const count = $("count");
+  if (count) count.insertAdjacentHTML("beforebegin", more);
+  else bar.insertAdjacentHTML("beforeend", more);
+
+  // the bar stays where it was – right above the ranking – and also drives the chart; the chart gets a pointer to it
+  const chart = $("chartWrap");
+  const box = document.createElement("div");
+  box.className = "fv-filters";
+  box.id = "filtre";
+  bar.before(box);
+  box.innerHTML = `<div class="fv-head"><b>Filtre</b><span>platia pre rebríček aj graf vyššie</span></div>`;
+  box.appendChild(bar);
+  const note = document.createElement("div");
+  note.className = "fv-note";
+  chart?.before(note);
+
+  document.head.insertAdjacentHTML("beforeend", `<style id="fv-filters-css">
+.fv-filters{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 14px 4px;margin:24px 0 8px}
+.fv-filters .fv-head{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;margin-bottom:8px}
+.fv-filters .fv-head span{color:var(--muted);font-size:13px}
+.fv-filters .filters{margin-bottom:8px}
+.fv-filters .filters .count{flex-basis:100%;margin-left:0}
+.fv-check{display:inline-flex;gap:6px;align-items:center;font-size:13px;color:var(--text-2,var(--text));white-space:nowrap}
+.fv-reset{background:none;border:1px solid var(--border);color:var(--text);border-radius:8px;padding:6px 10px;font:inherit;font-size:13px;cursor:pointer}
+.fv-reset:hover{background:var(--surface-2,var(--surface))}
+.fv-note{color:var(--muted);font-size:13px;margin:0 0 8px}
+.fv-note a{color:inherit}
+.fv-empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:14px;pointer-events:none}
+@media (max-width:600px){.fv-filters .filters select,.fv-filters .filters input[type=number],.fv-filters .filters input[type=search]{flex:1 1 calc(50% - 8px);min-width:0;width:auto!important}}
+</style>`);
+
+  // --- filtering --------------------------------------------------------------------------------------------------
+  const val = (id) => ($(id) ? $(id).value : "");
+  const num = (id) => { const v = parseFloat(val(id)); return Number.isFinite(v) ? v : null; };
+  function matches(d) {
+    const yf = num("fvYearFrom"), yt = num("fvYearTo"), pmin = num("fvPriceMin"), pmax = num("fMax"), km = num("fvKm"), disc = num("fvDisc");
+    const fuel = val("fvFuel"), grp = val("fvGroup"), q = norm(val("fvText")).trim();
+    if (yf != null && !(d.year >= yf)) return false;
+    if (yt != null && !(d.year <= yt)) return false;
+    if (pmin != null && !(d.price_gross >= pmin)) return false;
+    if (pmax != null && !(d.price_gross <= pmax)) return false;
+    if (km != null && !(d.km <= km)) return false;
+    if (disc != null && !(d.discount_pct > disc || (disc > 0 && d.discount_pct >= disc))) return false;
+    if (fuel && fuelOf(d) !== fuel) return false;
+    if (grp !== "" && String(d.cg) !== grp) return false;
+    if ($("fvPick")?.checked && !d.pick) return false;
+    if (q && !q.split(/\s+/).every((w) => norm(`${d.title} ${d.eg ?? ""} ${d.engine ?? ""} ${d.location ?? ""}`).includes(w))) return false;
+    // the report's own filters (engine, gearbox, seller, portal, body, origin) – same rules as its renderTable
+    const en = val("fEngine"), tr = val("fTrans"), se = val("fSeller"), so = val("fSource"), og = val("fOrigin"), bo = val("fBody");
+    if (en && d.eg !== en) return false;
+    if (tr && d.transmission !== tr) return false;
+    if (se && d.seller_type === "dealer") return false;
+    if (so && !(d.source === so || (d.also_listed || []).some((a) => a.source === so))) return false;
+    if (og && d.origin !== og) return false;
+    if (bo && d.body !== bo) return false;
+    return true;
+  }
+  const active = () => [...box.querySelectorAll("select, input")].filter((el) => (el.type === "checkbox" ? el.checked : el.value !== "")).length;
+
+  let drawing = false;
+  function apply() {
+    if (drawing) return;
+    drawing = true;
+    const rows = ALL.filter(matches);
+    data.length = 0;
+    data.push(...rows);
+    const wrap = $("chartWrap");
+    wrap?.querySelector(".fv-empty")?.remove();
+    const plotted = rows.filter((d) => d.km && d.price_gross).length;
+    try {
+      if (typeof drawChart === "function") { // eslint-disable-line no-undef
+        if (plotted) drawChart(); // eslint-disable-line no-undef
+        else { const svg = $("chart"); if (svg) svg.innerHTML = ""; }
+      }
+    } catch (e) { console.warn("chart", e); }
+    if (wrap && !plotted) {
+      if (getComputedStyle(wrap).position === "static") wrap.style.position = "relative";
+      wrap.insertAdjacentHTML("beforeend", `<div class="fv-empty">Filtrom nezodpovedá žiadny inzerát</div>`);
+    }
+    try { renderTable(); } catch (e) { console.warn("table", e); } // eslint-disable-line no-undef
+    const n = active();
+    if (count) count.textContent = `Zobrazených ${fmt(rows.length)} z ${fmt(ALL.length)} inzerátov` + (n ? ` · aktívne filtre: ${n}` : "");
+    note.innerHTML = n
+      ? `Zobrazených ${fmt(rows.length)} z ${fmt(ALL.length)} inzerátov podľa <a href="#filtre">filtrov pri rebríčku</a>.`
+      : `Filtre (rok, cena, nájazd, palivo…) nájdeš <a href="#filtre">pri kompletnom rebríčku</a> – platia aj pre tento graf.`;
+    drawing = false;
+  }
+  box.querySelectorAll("select, input").forEach((el) => el.addEventListener("input", apply));
+  $("fvPick")?.addEventListener("change", apply);
+  $("fvReset").addEventListener("click", () => {
+    box.querySelectorAll("select, input").forEach((el) => { if (el.type === "checkbox") el.checked = false; else el.value = ""; });
+    apply();
+  });
+  apply();
+})();
+</script><!-- /ferovka-theme -->
+</body>
+</html>

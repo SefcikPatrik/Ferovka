@@ -1337,7 +1337,7 @@
     "median": "6 084 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-21T18:38:30",
+      "updated_at": "2026-11-21T19:01:38",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 42,
@@ -1369,7 +1369,7 @@
     "median": "18 432 €",
     "r2": "86 %",
     "history": {
-      "updated_at": "2026-11-21T18:38:30",
+      "updated_at": "2026-11-21T19:01:38",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 301,
@@ -1401,7 +1401,7 @@
     "median": "19 489 €",
     "r2": "89 %",
     "history": {
-      "updated_at": "2026-11-21T18:38:30",
+      "updated_at": "2026-11-21T19:01:38",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 504,
@@ -1433,7 +1433,7 @@
     "median": "7 000 €",
     "r2": "81 %",
     "history": {
-      "updated_at": "2026-11-21T18:38:30",
+      "updated_at": "2026-11-21T19:01:38",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 308,
@@ -1453,6 +1453,38 @@
     }
   },
   {
+    "slug": "skoda-roomster",
+    "file": "skoda-roomster-analyza.html",
+    "name": "Škoda Roomster",
+    "brand": "Škoda",
+    "model": "Roomster",
+    "kind": "model",
+    "date": "2026-11-21",
+    "summary": "Analýza aktuálnych inzerátov Škoda Roomster (2006–2015, osobný aj Scout, bez úžitkového Praktik) od 1 500 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 268 inzerátov (110 na bazoši, 94 na autobazar.eu, 64 na bazar.sk) – prezreli sme 92 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 141 rôznych áut zo Slovenska.",
+    "ads": 141,
+    "median": "3 990 €",
+    "r2": "78 %",
+    "history": {
+      "updated_at": "2026-11-21T19:01:38",
+      "as_of": "2026-11-21",
+      "coverage": "partial",
+      "baseline_count": 115,
+      "total_count": 115,
+      "active_count": 115,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 115,
+      "paired_median_change_pct": 0,
+      "historical_median": 3990,
+      "seen_median": 3990,
+      "seen_price_count": 115,
+      "last_observed_at": "2026-11-21T19:00:39"
+    }
+  },
+  {
     "slug": "skoda-scala",
     "file": "skoda-scala-analyza.html",
     "name": "Škoda Scala",
@@ -1465,7 +1497,7 @@
     "median": "16 590 €",
     "r2": "91 %",
     "history": {
-      "updated_at": "2026-11-21T18:38:30",
+      "updated_at": "2026-11-21T19:01:38",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 282,
@@ -1497,7 +1529,7 @@
     "median": "7 900 €",
     "r2": "87 %",
     "history": {
-      "updated_at": "2026-11-21T18:38:30",
+      "updated_at": "2026-11-21T19:01:38",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 228,
@@ -2361,7 +2393,7 @@
     "median": "5 945 €",
     "r2": "93 %",
     "history": {
-      "updated_at": "2026-11-21T18:38:30",
+      "updated_at": "2026-11-21T19:01:38",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 1030,
@@ -2393,7 +2425,7 @@
     "median": "24 490 €",
     "r2": "89 %",
     "history": {
-      "updated_at": "2026-11-21T18:38:30",
+      "updated_at": "2026-11-21T19:01:38",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 1084,
@@ -2425,7 +2457,7 @@
     "median": "10 900 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-21T18:38:30",
+      "updated_at": "2026-11-21T19:01:38",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 3448,
@@ -2457,7 +2489,7 @@
     "median": "16 000 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-21T18:38:30",
+      "updated_at": "2026-11-21T19:01:38",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 1346,
