@@ -1850,6 +1850,38 @@
     }
   },
   {
+    "slug": "peugeot-2008",
+    "file": "peugeot-2008-analyza.html",
+    "name": "Peugeot 2008",
+    "brand": "Peugeot",
+    "model": "2008",
+    "kind": "model",
+    "date": "2026-11-21",
+    "summary": "Analýza aktuálnych inzerátov Peugeot 2008 (prvá aj druhá generácia, 2013–2025, aj elektrický e-2008, bez nových áut z 2026) od 3 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 2 168 inzerátov (1 557 na bazoši, 355 na autobazar.eu, 256 na bazar.sk) – prezreli sme 35 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 422 rôznych áut zo Slovenska.",
+    "ads": 422,
+    "median": "12 499 €",
+    "r2": "94 %",
+    "history": {
+      "updated_at": "2026-11-21T23:15:06",
+      "as_of": "2026-11-21",
+      "coverage": "partial",
+      "baseline_count": 261,
+      "total_count": 261,
+      "active_count": 261,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 261,
+      "paired_median_change_pct": 0,
+      "historical_median": 12499,
+      "seen_median": 12499,
+      "seen_price_count": 261,
+      "last_observed_at": "2026-11-21T23:13:19"
+    }
+  },
+  {
     "slug": "peugeot-208",
     "file": "peugeot-208-analyza.html",
     "name": "Peugeot 208",
@@ -1862,7 +1894,7 @@
     "median": "8 700 €",
     "r2": "92 %",
     "history": {
-      "updated_at": "2026-11-21T19:18:17",
+      "updated_at": "2026-11-21T23:15:06",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 279,
@@ -1894,7 +1926,7 @@
     "median": "13 990 €",
     "r2": "96 %",
     "history": {
-      "updated_at": "2026-11-21T19:18:17",
+      "updated_at": "2026-11-21T23:15:06",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 359,
@@ -1926,7 +1958,7 @@
     "median": "7 570 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-21T19:18:17",
+      "updated_at": "2026-11-21T23:15:06",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 440,
@@ -1958,7 +1990,7 @@
     "median": "15 900 €",
     "r2": "93 %",
     "history": {
-      "updated_at": "2026-11-21T19:18:17",
+      "updated_at": "2026-11-21T23:15:06",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 126,
