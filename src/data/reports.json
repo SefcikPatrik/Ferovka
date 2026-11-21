@@ -1133,6 +1133,38 @@
     }
   },
   {
+    "slug": "seat-alhambra",
+    "file": "seat-alhambra-analyza.html",
+    "name": "Seat Alhambra",
+    "brand": "Seat",
+    "model": "Alhambra",
+    "kind": "model",
+    "date": "2026-11-21",
+    "summary": "Analýza aktuálnych inzerátov Seat Alhambra (Alhambra II 710, 2010–2020, 5 aj 7 miest) od 3 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 448 inzerátov (222 na bazoši, 130 na autobazar.eu, 96 na bazar.sk) – prezreli sme 94 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 263 rôznych áut zo Slovenska.",
+    "ads": 263,
+    "median": "10 500 €",
+    "r2": "89 %",
+    "history": {
+      "updated_at": "2026-11-21T18:46:47",
+      "as_of": "2026-11-21",
+      "coverage": "partial",
+      "baseline_count": 198,
+      "total_count": 198,
+      "active_count": 198,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 198,
+      "paired_median_change_pct": 0,
+      "historical_median": 10500,
+      "seen_median": 10500,
+      "seen_price_count": 198,
+      "last_observed_at": "2026-11-21T18:45:56"
+    }
+  },
+  {
     "slug": "seat-arona",
     "file": "seat-arona-analyza.html",
     "name": "Seat Arona",
@@ -1145,7 +1177,7 @@
     "median": "13 500 €",
     "r2": "92 %",
     "history": {
-      "updated_at": "2026-11-21T18:14:35",
+      "updated_at": "2026-11-21T18:46:47",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 58,
@@ -1177,7 +1209,7 @@
     "median": "3 764 €",
     "r2": "86 %",
     "history": {
-      "updated_at": "2026-11-21T18:14:35",
+      "updated_at": "2026-11-21T18:46:47",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 126,
@@ -2201,7 +2233,7 @@
     "median": "16 999 €",
     "r2": "89 %",
     "history": {
-      "updated_at": "2026-11-21T18:14:35",
+      "updated_at": "2026-11-21T18:46:47",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 178,
@@ -2233,7 +2265,7 @@
     "median": "9 994 €",
     "r2": "92 %",
     "history": {
-      "updated_at": "2026-11-21T18:14:35",
+      "updated_at": "2026-11-21T18:46:47",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 463,
