@@ -1305,7 +1305,7 @@
     "median": "9 145 €",
     "r2": "95 %",
     "history": {
-      "updated_at": "2026-11-21T18:25:23",
+      "updated_at": "2026-11-21T21:24:37",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 164,
@@ -1337,7 +1337,7 @@
     "median": "8 500 €",
     "r2": "90 %",
     "history": {
-      "updated_at": "2026-11-21T18:25:23",
+      "updated_at": "2026-11-21T21:24:37",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 190,
@@ -1357,6 +1357,38 @@
     }
   },
   {
+    "slug": "mazda-cx-30",
+    "file": "mazda-cx-30-analyza.html",
+    "name": "Mazda CX-30",
+    "brand": "Mazda",
+    "model": "CX-30",
+    "kind": "model",
+    "date": "2026-11-21",
+    "summary": "Analýza aktuálnych inzerátov Mazda CX-30 (2019–2025, bez nových áut z 2026) od 8 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 135 inzerátov (24 na bazoši, 63 na autobazar.eu, 48 na bazar.sk) – prezreli sme 64 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 64 rôznych áut zo Slovenska.",
+    "ads": 64,
+    "median": "19 990 €",
+    "r2": "96 %",
+    "history": {
+      "updated_at": "2026-11-21T21:24:37",
+      "as_of": "2026-11-21",
+      "coverage": "partial",
+      "baseline_count": 36,
+      "total_count": 36,
+      "active_count": 36,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 36,
+      "paired_median_change_pct": 0,
+      "historical_median": 19990,
+      "seen_median": 19990,
+      "seen_price_count": 36,
+      "last_observed_at": "2026-11-21T21:23:31"
+    }
+  },
+  {
     "slug": "mazda-cx-5",
     "file": "mazda-cx-5-analyza.html",
     "name": "Mazda CX-5",
@@ -1369,7 +1401,7 @@
     "median": "12 990 €",
     "r2": "95 %",
     "history": {
-      "updated_at": "2026-11-21T18:25:23",
+      "updated_at": "2026-11-21T21:24:37",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 191,
