@@ -1113,7 +1113,7 @@
     "median": "8 600 €",
     "r2": "93 %",
     "history": {
-      "updated_at": "2026-11-21T19:08:55",
+      "updated_at": "2026-11-21T19:27:31",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 91,
@@ -1145,7 +1145,7 @@
     "median": "11 990 €",
     "r2": "97 %",
     "history": {
-      "updated_at": "2026-11-21T19:08:55",
+      "updated_at": "2026-11-21T19:27:31",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 338,
@@ -1162,6 +1162,38 @@
       "seen_median": 11990,
       "seen_price_count": 338,
       "last_observed_at": "2026-11-21T16:52:37"
+    }
+  },
+  {
+    "slug": "nissan-x-trail",
+    "file": "nissan-x-trail-analyza.html",
+    "name": "Nissan X-Trail",
+    "brand": "Nissan",
+    "model": "X-Trail",
+    "kind": "model",
+    "date": "2026-11-21",
+    "summary": "Analýza aktuálnych inzerátov Nissan X-Trail (X-Trail T32 a T33, 2014–2025, 5 aj 7 miest) od 5 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 277 inzerátov (64 na bazoši, 117 na autobazar.eu, 96 na bazar.sk) – prezreli sme 94 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 169 rôznych áut zo Slovenska.",
+    "ads": 169,
+    "median": "16 995 €",
+    "r2": "97 %",
+    "history": {
+      "updated_at": "2026-11-21T19:27:31",
+      "as_of": "2026-11-21",
+      "coverage": "partial",
+      "baseline_count": 120,
+      "total_count": 120,
+      "active_count": 120,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 120,
+      "paired_median_change_pct": 0,
+      "historical_median": 16995,
+      "seen_median": 16995,
+      "seen_price_count": 120,
+      "last_observed_at": "2026-11-21T19:26:31"
     }
   },
   {
