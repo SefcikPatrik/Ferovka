@@ -569,7 +569,7 @@
     "median": "10 999 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-21T19:58:08",
+      "updated_at": "2026-11-21T22:49:16",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 245,
@@ -589,6 +589,38 @@
     }
   },
   {
+    "slug": "dacia-jogger",
+    "file": "dacia-jogger-analyza.html",
+    "name": "Dacia Jogger",
+    "brand": "Dacia",
+    "model": "Jogger",
+    "kind": "model",
+    "date": "2026-11-21",
+    "summary": "Analýza aktuálnych inzerátov Dacia Jogger (2022–2025, 5 aj 7 miest, bez nových áut z 2026) od 8 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 199 inzerátov (25 na bazoši, 98 na autobazar.eu, 76 na bazar.sk) – prezreli sme 68 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 109 rôznych áut zo Slovenska.",
+    "ads": 109,
+    "median": "14 600 €",
+    "r2": "92 %",
+    "history": {
+      "updated_at": "2026-11-21T22:49:16",
+      "as_of": "2026-11-21",
+      "coverage": "partial",
+      "baseline_count": 38,
+      "total_count": 38,
+      "active_count": 38,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 38,
+      "paired_median_change_pct": 0,
+      "historical_median": 14600,
+      "seen_median": 14600,
+      "seen_price_count": 38,
+      "last_observed_at": "2026-11-21T22:43:02"
+    }
+  },
+  {
     "slug": "dacia-logan",
     "file": "dacia-logan-analyza.html",
     "name": "Dacia Logan",
@@ -601,7 +633,7 @@
     "median": "4 500 €",
     "r2": "80 %",
     "history": {
-      "updated_at": "2026-11-21T19:58:08",
+      "updated_at": "2026-11-21T22:49:16",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 77,
@@ -633,7 +665,7 @@
     "median": "7 099 €",
     "r2": "93 %",
     "history": {
-      "updated_at": "2026-11-21T19:58:08",
+      "updated_at": "2026-11-21T22:49:16",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 153,
@@ -1771,6 +1803,19 @@
       "seen_price_count": 120,
       "last_observed_at": "2026-11-21T19:26:31"
     }
+  },
+  {
+    "slug": "opel-combo",
+    "file": "opel-combo-analyza.html",
+    "name": "Opel Combo",
+    "brand": "Opel",
+    "model": "Combo",
+    "kind": "model",
+    "date": "2026-11-21",
+    "summary": "Analýza aktuálnych inzerátov Opel Combo (osobný Combo Tour / Combo Life, 2012–2025, bez dodávky Cargo / Van) od 3 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 266 inzerátov (69 na bazoši, 69 na autobazar.eu, 128 na bazar.sk) – prezreli sme 87 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 160 rôznych áut zo Slovenska.",
+    "ads": 160,
+    "median": "10 990 €",
+    "r2": "94 %"
   },
   {
     "slug": "opel-crossland",
