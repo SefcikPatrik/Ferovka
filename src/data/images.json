@@ -369,5 +369,12 @@
     "author": "Vauxford",
     "license": "CC BY-SA 4.0",
     "source": "https://commons.wikimedia.org/wiki/File:2020_Ford_Kuga_Titanium_Plug-In_Hybrid_Front.jpg"
+  },
+  "toyota-rav4": {
+    "src": "/img/toyota-rav4.jpg",
+    "file": "File:Toyota RAV4 2019 (XA50) CUV Quarter Front.jpg",
+    "author": "Alistair Fernandez",
+    "license": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Toyota_RAV4_2019_(XA50)_CUV_Quarter_Front.jpg"
   }
 }

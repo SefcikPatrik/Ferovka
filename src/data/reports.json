@@ -921,7 +921,7 @@
     "median": "18 000 €",
     "r2": "96 %",
     "history": {
-      "updated_at": "2026-11-21T16:26:56",
+      "updated_at": "2026-11-21T17:02:07",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 254,
@@ -938,6 +938,38 @@
       "seen_median": 18000,
       "seen_price_count": 254,
       "last_observed_at": "2026-11-21T16:25:33"
+    }
+  },
+  {
+    "slug": "toyota-rav4",
+    "file": "toyota-rav4-analyza.html",
+    "name": "Toyota RAV4",
+    "brand": "Toyota",
+    "model": "RAV4",
+    "kind": "model",
+    "date": "2026-11-21",
+    "summary": "Analýza aktuálnych inzerátov Toyota RAV4 (XA30 až XA50, 4x2 aj 4x4, vrátane hybridov) od 4 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 532 inzerátov (155 na bazoši, 217 na autobazar.eu, 160 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 314 rôznych áut zo Slovenska.",
+    "ads": 314,
+    "median": "22 700 €",
+    "r2": "97 %",
+    "history": {
+      "updated_at": "2026-11-21T17:02:07",
+      "as_of": "2026-11-21",
+      "coverage": "partial",
+      "baseline_count": 246,
+      "total_count": 246,
+      "active_count": 246,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 246,
+      "paired_median_change_pct": 0,
+      "historical_median": 22700,
+      "seen_median": 22700,
+      "seen_price_count": 246,
+      "last_observed_at": "2026-11-21T17:01:02"
     }
   },
   {
