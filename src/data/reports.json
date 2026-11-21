@@ -791,7 +791,26 @@
     "summary": "Analýza aktuálnych inzerátov Mazda 3 (BK, BL, BM/BN a BP, hatchback aj sedan, bez MPS) od 1 500 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 1 009 inzerátov (749 na bazoši, 132 na autobazar.eu, 128 na bazar.sk) – prezreli sme 34 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 208 rôznych áut zo Slovenska.",
     "ads": 208,
     "median": "9 145 €",
-    "r2": "95 %"
+    "r2": "95 %",
+    "history": {
+      "updated_at": "2026-11-21T18:05:37",
+      "as_of": "2026-11-21",
+      "coverage": "partial",
+      "baseline_count": 164,
+      "total_count": 164,
+      "active_count": 164,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 164,
+      "paired_median_change_pct": 0,
+      "historical_median": 9145,
+      "seen_median": 9145,
+      "seen_price_count": 164,
+      "last_observed_at": "2026-11-21T18:03:30"
+    }
   },
   {
     "slug": "mazda-cx-5",
@@ -806,7 +825,7 @@
     "median": "12 990 €",
     "r2": "95 %",
     "history": {
-      "updated_at": "2026-11-21T17:06:05",
+      "updated_at": "2026-11-21T18:05:37",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 191,
