@@ -1894,7 +1894,7 @@
     "median": "12 499 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-21T23:15:06",
+      "updated_at": "2026-11-21T23:41:21",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 261,
@@ -1926,7 +1926,7 @@
     "median": "8 700 €",
     "r2": "92 %",
     "history": {
-      "updated_at": "2026-11-21T23:15:06",
+      "updated_at": "2026-11-21T23:41:21",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 279,
@@ -1958,7 +1958,7 @@
     "median": "13 990 €",
     "r2": "96 %",
     "history": {
-      "updated_at": "2026-11-21T23:15:06",
+      "updated_at": "2026-11-21T23:41:21",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 359,
@@ -1990,7 +1990,7 @@
     "median": "7 570 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-21T23:15:06",
+      "updated_at": "2026-11-21T23:41:21",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 440,
@@ -2022,7 +2022,7 @@
     "median": "15 900 €",
     "r2": "93 %",
     "history": {
-      "updated_at": "2026-11-21T23:15:06",
+      "updated_at": "2026-11-21T23:41:21",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 126,
@@ -2039,6 +2039,38 @@
       "seen_median": 15900,
       "seen_price_count": 126,
       "last_observed_at": "2026-11-21T19:16:57"
+    }
+  },
+  {
+    "slug": "peugeot-508",
+    "file": "peugeot-508-analyza.html",
+    "name": "Peugeot 508",
+    "brand": "Peugeot",
+    "model": "508",
+    "kind": "model",
+    "date": "2026-11-21",
+    "summary": "Analýza aktuálnych inzerátov Peugeot 508 (prvá aj druhá generácia, 2011–2025, sedan/fastback aj kombi SW, bez nových áut z 2026) od 3 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 292 inzerátov (131 na bazoši, 97 na autobazar.eu, 64 na bazar.sk) – prezreli sme 89 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 176 rôznych áut zo Slovenska.",
+    "ads": 176,
+    "median": "7 925 €",
+    "r2": "92 %",
+    "history": {
+      "updated_at": "2026-11-21T23:41:21",
+      "as_of": "2026-11-21",
+      "coverage": "partial",
+      "baseline_count": 148,
+      "total_count": 148,
+      "active_count": 148,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 148,
+      "paired_median_change_pct": 0,
+      "historical_median": 7925,
+      "seen_median": 7925,
+      "seen_price_count": 148,
+      "last_observed_at": "2026-11-21T23:39:31"
     }
   },
   {

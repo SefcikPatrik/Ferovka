@@ -1,0 +1,903 @@
+<!doctype html>
+<html lang="sk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Peugeot 508 – analýza ponúk</title>
+<style>
+:root {
+  color-scheme: light;
+  --bg: #f6f6f4; --surface: #fcfcfb; --surface-2: #f0efec; --border: #e2e1dc;
+  --text: #0b0b0b; --text-2: #52514e; --muted: #7a7974;
+  --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a;
+  --pos: #2a78d6; --neg: #eb6834; --accent: #2a78d6;
+  --good: #1d7f4e; --bad: #b4332f; --grid: #e8e7e3;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #121211; --surface: #1a1a19; --surface-2: #232321; --border: #33332f;
+    --text: #f0efec; --text-2: #c3c2b7; --muted: #8f8e86;
+    --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+    --pos: #3987e5; --neg: #d95926; --accent: #5598e7;
+    --good: #4cc38a; --bad: #f07a76; --grid: #2a2a27;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #121211; --surface: #1a1a19; --surface-2: #232321; --border: #33332f;
+  --text: #f0efec; --text-2: #c3c2b7; --muted: #8f8e86;
+  --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+  --pos: #3987e5; --neg: #d95926; --accent: #5598e7;
+  --good: #4cc38a; --bad: #f07a76; --grid: #2a2a27;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text);
+  font: 15px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+main { max-width: 1120px; margin: 0 auto; padding: 32px 16px 64px; }
+a { color: var(--accent); text-decoration: none; } a:hover { text-decoration: underline; }
+h1 { font-size: 30px; margin: 0 0 4px; letter-spacing: -.01em; }
+h2 { font-size: 21px; margin: 48px 0 6px; }
+h3 { font-size: 15px; margin: 6px 0 4px; line-height: 1.35; }
+.lead { color: var(--text-2); margin: 0 0 20px; max-width: 760px; }
+.section-lead { color: var(--text-2); margin: 0 0 16px; max-width: 800px; }
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
+.kpi { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+.kpi .v { font-size: 26px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.kpi .l { color: var(--text-2); font-size: 13px; }
+.explain { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; margin-top: 12px; }
+.explain p { margin: 6px 0; color: var(--text-2); }
+.explain b { color: var(--text); }
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; }
+.card-head { display: flex; justify-content: space-between; gap: 8px; font-size: 12px; }
+.tag { font-weight: 600; color: var(--accent); }
+.loc { color: var(--muted); }
+.facts { color: var(--text-2); font-size: 13px; }
+.prices { display: grid; grid-template-columns: 1.2fr 1fr .8fr; gap: 8px; margin: 12px 0 8px; }
+.lbl { display: block; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+.big { font-size: 22px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.mid { font-size: 16px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.good { color: var(--good); }
+.meter { height: 6px; background: var(--surface-2); border-radius: 4px; overflow: hidden; }
+.meter span { display: block; height: 100%; background: var(--s1); border-radius: 4px; }
+.news ul { margin: 6px 0 0; padding-left: 20px; } .news li { margin: 4px 0; } .news .down { color: var(--good, #1baf7a); font-weight: 600; }
+.note { font-size: 12.5px; background: var(--surface-2); border-radius: 6px; padding: 6px 8px; margin-top: 8px; color: var(--text-2); }
+.pc { list-style: none; padding: 0; margin: 10px 0 0; font-size: 13.5px; }
+.pc li { padding-left: 20px; position: relative; margin: 3px 0; }
+.pc li.pro::before { content: "+"; position: absolute; left: 4px; color: var(--good); font-weight: 700; }
+.pc li.con::before { content: "–"; position: absolute; left: 4px; color: var(--bad); font-weight: 700; }
+.subhead { font-size: 15px; color: var(--text-2); margin: 22px 0 10px; font-weight: 600; }
+.chart-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 14px 8px; position: relative; }
+.legend { display: flex; flex-wrap: wrap; gap: 16px; font-size: 13px; color: var(--text-2); margin: 0 0 6px 4px; }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; }
+.legend .ring { background: transparent; border: 2px solid var(--text); width: 12px; height: 12px; }
+svg text { fill: var(--muted); font-size: 11px; }
+.tip { position: absolute; pointer-events: none; background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+  padding: 8px 10px; font-size: 12.5px; box-shadow: 0 6px 20px rgba(0,0,0,.15); max-width: 280px; display: none; z-index: 5; }
+.tip b { display: block; margin-bottom: 2px; }
+.tip .row { display: flex; justify-content: space-between; gap: 12px; color: var(--text-2); }
+.tip .row span:last-child { color: var(--text); font-variant-numeric: tabular-nums; }
+table { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; font-size: 13.5px; }
+th, td { padding: 9px 10px; border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; }
+th { font-size: 12px; color: var(--text-2); font-weight: 600; background: var(--surface-2); white-space: nowrap; }
+th.sortable { cursor: pointer; user-select: none; } th.sortable:hover { color: var(--text); }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+.sub { color: var(--text-2); font-size: 12.5px; margin-top: 2px; }
+.stars { color: #c98500; letter-spacing: 1px; white-space: nowrap; } .stars .off { color: var(--border); }
+.cellbar { height: 5px; background: var(--surface-2); border-radius: 3px; margin-bottom: 4px; }
+.cellbar span { display: block; height: 100%; background: var(--s1); border-radius: 3px; }
+.disc { display: inline-flex; align-items: center; gap: 6px; justify-content: flex-end; }
+.dbar { width: 54px; height: 6px; background: var(--surface-2); border-radius: 3px; position: relative; }
+.dbar span { position: absolute; top: 0; height: 100%; border-radius: 3px; }
+.filters { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 10px; align-items: center; }
+.filters select, .filters input { background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 6px 8px; font: inherit; font-size: 13px; }
+.filters .count { color: var(--muted); font-size: 13px; margin-left: auto; }
+.table-scroll { overflow-x: auto; border-radius: 12px; }
+.badge { font-size: 11px; padding: 1px 6px; border-radius: 10px; background: var(--surface-2); color: var(--text-2); white-space: nowrap; }
+.badge.pick { background: var(--s1); color: #fff; }
+.flag { color: var(--bad); font-size: 12px; }
+.warn { background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--neg); border-radius: 10px; padding: 12px 16px; }
+.warn li { margin: 4px 0; }
+.check { columns: 2 300px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px 14px 34px; margin: 0; }
+.check li { margin: 4px 0; break-inside: avoid; }
+footer { color: var(--muted); font-size: 12.5px; margin-top: 48px; border-top: 1px solid var(--border); padding-top: 14px; }
+.theme-btn { float: right; background: var(--surface); color: var(--text-2); border: 1px solid var(--border); border-radius: 8px; padding: 5px 10px; cursor: pointer; font: inherit; font-size: 13px; }
+@media (max-width: 640px) { h1 { font-size: 24px; } .prices { grid-template-columns: 1fr 1fr 1fr; } .big { font-size: 18px; } th, td { padding: 7px 6px; } }
+</style>
+<!-- ferovka-theme --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"><style id="ferovka-theme">/* Férovka look for the generated analyses – injected by sync-reports.mjs after each report's own <style>.
+   Same palette and type as the site; chart colours (--s1..--s3) stay the validated set. */
+:root {
+  --bg: #f5f4ef; --surface: #fdfdfb; --surface-2: #eeede6; --border: #e1dfd6;
+  --text: #0f1513; --text-2: #4f5551; --muted: #6f746f;
+  --accent: #0b8a56; --good: #0b7a4b; --grid: #e6e4dc; --win: #dff3e9;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d110f; --surface: #151a17; --surface-2: #1d2420; --border: #2a322d;
+    --text: #eef1ec; --text-2: #b6bdb6; --muted: #8f978f;
+    --accent: #2fc583; --good: #4cd08f; --grid: #1f2622; --win: #143223;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d110f; --surface: #151a17; --surface-2: #1d2420; --border: #2a322d;
+  --text: #eef1ec; --text-2: #b6bdb6; --muted: #8f978f;
+  --accent: #2fc583; --good: #4cd08f; --grid: #1f2622; --win: #143223;
+}
+
+body { font-family: "Manrope", system-ui, sans-serif; }
+h1, h2 { letter-spacing: -0.02em; font-weight: 800; }
+.tag { color: var(--accent); }
+
+/* photo header (removed by the site's viewer, which shows its own) */
+.fv-hero { position: relative; margin: 0 0 26px; border-radius: 20px; overflow: hidden; aspect-ratio: 21 / 8; background: #0d110f; display: flex; }
+.fv-hero img { flex: 1; min-width: 0; height: 100%; object-fit: cover; animation: fv-zoom 1.4s cubic-bezier(.2,.7,.2,1) both; }
+.fv-collage img + img { border-left: 3px solid #0d110f; }
+.fv-hero::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(180deg, transparent 55%, rgb(13 17 15 / .75)),
+    repeating-linear-gradient(90deg, rgb(47 197 131 / .06) 0 1px, transparent 1px 48px); }
+.fv-hero figcaption { position: absolute; right: 12px; bottom: 8px; z-index: 1; font-size: 11px; color: rgb(255 255 255 / .75); }
+.fv-hero figcaption a { color: inherit; }
+
+/* cards & panels: softer, lift on hover */
+.card, .kpi, .explain, .chart-wrap, .box { border-radius: 16px; }
+.card { transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease; }
+.card:hover { transform: translateY(-3px); border-color: var(--accent); box-shadow: 0 14px 30px -18px rgb(0 0 0 / .45); }
+.badge.pick { background: var(--accent); }
+
+/* entrance animation */
+@keyframes fv-up { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes fv-zoom { from { transform: scale(1.08); filter: brightness(.6); } to { transform: none; filter: none; } }
+h1, .lead, .kpis, .cards .card { animation: fv-up .6s cubic-bezier(.2,.7,.2,1) both; }
+.lead { animation-delay: .08s; }
+.kpis { animation-delay: .16s; }
+.cards .card:nth-child(2) { animation-delay: .06s; }
+.cards .card:nth-child(3) { animation-delay: .12s; }
+.cards .card:nth-child(4) { animation-delay: .18s; }
+.cards .card:nth-child(5) { animation-delay: .24s; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+@media (max-width: 640px) { .fv-hero { aspect-ratio: 16 / 9; border-radius: 14px; } }
+
+/* touch: hint under the chart tooltip (report-chart.js) */
+.fv-hint { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--border, rgba(127,127,127,.3)); font-weight: 700; color: var(--accent, #2fc583); }
+</style><!-- /ferovka-theme -->
+</head>
+<body>
+<main><!-- ferovka-theme --><!-- /ferovka-theme -->
+<button class="theme-btn" id="themeBtn" type="button">Svetlý / tmavý</button>
+<h1>Peugeot 508 – ktorá ponuka sa oplatí</h1>
+<p class="lead">Analýza aktuálnych inzerátov Peugeot 508 (prvá aj druhá generácia, 2011–2025, sedan/fastback aj kombi SW, bez nových áut z 2026) od 3 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 292 inzerátov (131 na bazoši, 97 na autobazar.eu, 64 na bazar.sk) – prezreli sme 89 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 176 rôznych áut zo Slovenska. Každé auto sme porovnali
+s <b>férovou cenou</b>: tú vypočítal model naučený na celom trhu podľa veku, nájazdu, motora, prevodovky a typu predajcu.</p>
+
+<div class="kpis">
+  <div class="kpi"><div class="v">176</div><div class="l">inzerátov Peugeotu 508 (nad 3 000 €)</div></div>
+  <div class="kpi"><div class="v">148</div><div class="l">ohodnotených (majú rok aj km)</div></div>
+  <div class="kpi"><div class="v">7 925 €</div><div class="l">medián ceny s DPH</div></div>
+  <div class="kpi"><div class="v">92 %</div><div class="l">rozdielov v cenách vysvetlí model</div></div>
+</div>
+
+
+<h2>Odkiaľ sú dáta: bazoš, autobazar.eu a bazar.sk</h2>
+<div class="kpis">
+  <div class="kpi"><div class="v">71</div><div class="l">ohodnotených z bazoša</div></div>
+  <div class="kpi"><div class="v">38</div><div class="l">ohodnotených z autobazar.eu</div></div><div class="kpi"><div class="v">39</div><div class="l">ohodnotených z bazar.sk</div></div>
+  <div class="kpi"><div class="v">54</div><div class="l">áut bolo na viacerých portáloch – započítané raz</div></div>
+  <div class="kpi"><div class="v">31 / 17</div><div class="l">s uvedeným pôvodom SR / dovoz</div></div>
+</div>
+<div class="explain">
+  <p><b>Tri portály, jeden trh.</b> Bazoš prehľadal 110 inzerátov, autobazar.eu
+  97, bazar.sk 52. Ponuky z Česka (na autobazar.eu ich je veľa) sme vynechali. Autobazáre často dávajú
+  to isté auto na viac portálov. Takéto dvojice (34 v rebríčku) sme spojili podľa VIN alebo zhody roku, km a ceny,
+  aby sa v modeli nerátali dvakrát. Pri aute nájdeš odkaz na všetky ponuky – niekedy sa líšia cenou.</p>
+  <p><b>Rozdiel medzi portálmi:</b> rovnaké auto je na autobazar.eu v priemere -6,3 %
+  oproti bazošu. Na autobazar.eu predávajú hlavne firmy (30 z 38 ohodnotených). Na bazar.sk je rovnaké auto v priemere +11,0 % oproti bazošu.</p>
+  <p><b>Kúpené v SR vs. dovoz:</b> autá s uvedeným pôvodom zo SR sú oproti autám bez uvedeného pôvodu
+  +10,8 %, dovezené -3,1 %
+  (pri rovnakom veku, nájazde a motore). Pôvod zo SR je výhoda pri overovaní histórie, trh zaň však nepripláca – väčšina
+  inzerátov pôvod jednoducho neuvádza. V tabulke dole si môžeš nechať zobraziť len autá kúpené v SR.</p>
+</div>
+
+<h2>Čo hýbe cenou Peugeotu 508</h2>
+<p class="section-lead">Toto sa model naučil z trhu. Keď porovnávaš dve autá, tieto čísla ti povedia, koľko má byť
+rozdiel v cene, aby to bolo fér.</p>
+<div class="kpis">
+  <div class="kpi"><div class="v">-2,7 %</div><div class="l">každých ďalších 10 000 km</div></div>
+  <div class="kpi"><div class="v">-6,2 %</div><div class="l">každý rok veku navyše</div></div>
+  <div class="kpi"><div class="v">+8 %</div><div class="l">príplatok za automat (DSG)</div></div>
+  <div class="kpi"><div class="v">-5,6 %</div><div class="l">príplatok u predajcu / firmy</div></div>
+  <div class="kpi"><div class="v">+27,0 %</div><div class="l">Druhá generácia (2018+) oproti cene podľa veku</div></div>
+  <div class="kpi"><div class="v">+7,6 %</div><div class="l">príplatok za automat</div></div>
+</div>
+<div class="explain">
+  <p><b>Príklad:</b> dva rovnaké Peugeoty 508 SW 2.0 BlueHDi z roku 2019, jedno má 60 tis. km, druhé 120 tis. km. Druhé má byť
+  približne o 16 % lacnejšie (6 × -2,7 %). Ak je lacnejšie len o 5 %, preplácaš kilometre.</p>
+  <p><b>Ako čítať „pod trhom“:</b> +15 % znamená, že auto stojí o 15 % menej, než by malo podľa trhu. Bežný rozptyl
+  cien je asi ±20 %, takže až zľava nad ~10–15 % je naozaj výnimočná. Pri takej zľave vždy zisti, prečo je auto lacné
+  (stav, história, nájazd).</p>
+  <p><b>DPH:</b> ceny uvedené bez DPH (napr. „10 300 € netto“) sme prepočítali na cenu s DPH, ktorú zaplatí súkromná osoba.</p>
+</div>
+
+<h2>Odporúčané ponuky</h2>
+<p class="section-lead">Kandidáti s najlepším pomerom cena / vek / nájazd, ktorých celý inzerát sme prečítali.
+Zoradené podľa toho, ako ich odporúčame.</p>
+<div class="subhead">Druhá generácia (2018+) – najlepší pomer cena / vek</div>
+<div class="cards">
+<article class="card">
+  <div class="card-head"><span class="tag">508 1.6 PureTech EAT8 Allure z 2019 so 57 tis. km</span><span class="loc">Žilina</span></div>
+  <h3><a href="https://auto.bazar.sk/39692709-peugeot-508-1-6-puretech-allure-eat8/" target="_blank" rel="noopener">Peugeot 508 1.6 PureTech Allure EAT8</a></h3>
+  <div class="facts">2019 · 57 264 km · 1.2 / 1.6 PureTech / THP 96–165 kW · automat · Sedan / fastback · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazar.sk</b> · dovezené · aj na <a href='https://www.autobazar.eu/detail/peugeot-508-16-puretech-allure-eat8/Amu34O6xqVQ/' target='_blank' rel='noopener'>autobazar.eu</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">12 990 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">17 960 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+27.7 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:92%"></span></div>
+  <ul class="pc"><li class="pro">7/2019, 1.6 PureTech 133 kW, 8-st. automat, výbava Allure, 57 tis. km</li><li class="pro">Uvedený VIN, STK do 08/2027</li><li class="pro">~28 % pod férovou cenou</li><li class="con">Dovoz</li><li class="con">Predáva autobazár</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 11 dní (od 10. 11.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">508 1.2 PureTech EAT8 z 2021 s novými rozvodmi</span><span class="loc">Pezinok</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/peugeot-508-12-puretech-110kw-at8/AmrSGyi1UUH/" target="_blank" rel="noopener">Peugeot 508 1,2 PureTech 96kW AT8</a></h3>
+  <div class="facts">2021 · 103 299 km · 1.2 / 1.6 PureTech / THP 96–165 kW · automat · Sedan / fastback · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · dovezené · aj na <a href='https://auto.bazar.sk/39675138-peugeot-508-1-2-puretech-96kw-at8/' target='_blank' rel='noopener'>bazar.sk</a> · aj na <a href='https://auto.bazos.sk/inzerat/196243937/peugeot-508-12-puretech-96kw-at8.php' target='_blank' rel='noopener'>bazoš</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">11 990 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">15 620 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+23.2 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:77%"></span></div>
+  <ul class="pc"><li class="pro">2021, 1.2 PureTech 96 kW, 8-st. automat, 103 tis. km</li><li class="pro">Po servise, vymenené rozvody (hrubší remeň)</li><li class="pro">~23 % pod férovou cenou</li><li class="con">Dovoz</li><li class="con">Predáva autobazár</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 85 dní (od 28. 8.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">508 SW 1.5 BlueHDi EAT8 z 2021 za 11 490 €</span><span class="loc">Bratislava</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/peugeot-508-sw-15-bluehdi-active-pack-eat8-96kw130hp-a8/AeeTTKKdyE3/" target="_blank" rel="noopener">Peugeot 508 SW 1.5 BlueHDi Active Pack EAT8 96kW130HP A8</a></h3>
+  <div class="facts">2021 · 106 224 km · 1.5 BlueHDi 96 kW · automat · Kombi SW · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · dovezené · aj na <a href='https://auto.bazos.sk/inzerat/197067633/peugeot-508-sw-15-hdi-active-pack-diesel-automat-96kw.php' target='_blank' rel='noopener'>bazoš</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">11 490 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">14 860 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+22.7 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:76%"></span></div>
+  <ul class="pc"><li class="pro">2021, 1.5 BlueHDi 96 kW, 8-st. automat, výbava Active Pack, 106 tis. km</li><li class="pro">STK, EK a poplatok v cene, kontrola v servise podľa výberu</li><li class="pro">~23 % pod férovou cenou</li><li class="con">Dovoz – ešte na prevozných značkách</li><li class="con">Predáva autobazár</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke aspoň 20 dní</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">508 SW GT 1.5 BlueHDi automat z 2022</span><span class="loc">Bratislava</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/peugeot-508-sw-combi-15-bluehdi-gt-automat-sr2maj/Aez9QlYq_J3/" target="_blank" rel="noopener">Peugeot 508 SW (Combi) 1.5 BlueHDi, GT, Automat, SR,2.maj, Koža</a></h3>
+  <div class="facts">2022 · 78 868 km · 1.5 BlueHDi 96 kW · automat · Kombi SW · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">14 700 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">18 200 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+19.2 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:64%"></span></div>
+  <ul class="pc"><li class="pro">2022, 1.5 BlueHDi, automat, výbava GT, koža, 79 tis. km</li><li class="pro">Kúpené v SR u autorizovaného predajcu, 2. majiteľ, odpočet DPH</li><li class="pro">~19 % pod férovou cenou</li><li class="con">AAA AUTO – over cenu v hotovosti</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 11 dní (od 10. 11.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">508 SW GT 1.5 BlueHDi z 2022 s 55 tis. km</span><span class="loc">Nové Zámky</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/196629832/peugeot-508-gt-sw-2022.php" target="_blank" rel="noopener">Peugeot 508 GT SW 2022</a></h3>
+  <div class="facts">2022 · 55 000 km · 1.5 BlueHDi 96 kW · automat · Kombi SW · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">18 900 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">22 570 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+16.3 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:54%"></span></div>
+  <ul class="pc"><li class="pro">2022, 1.5 BlueHDi 96 kW, automat, výbava GT, 55 tis. km</li><li class="pro">Maximálne zachovalé podľa predajcu</li><li class="pro">~16 % pod férovou cenou</li><li class="con">Predajca neistý</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke aspoň 34 dní</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">508 SW 1.5 BlueHDi EAT8 Allure z 2019</span><span class="loc">Horná Kráľová</span></div>
+  <h3><a href="https://auto.bazar.sk/39735733-peugeot-508-sw-1-5-bluehdi-allure-eat8/" target="_blank" rel="noopener">Peugeot 508 SW 1.5 BlueHDi Allure EAT8</a></h3>
+  <div class="facts">2019 · 102 000 km · 1.5 BlueHDi 96 kW · automat · Kombi SW · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazar.sk</b> · aj na <a href='https://auto.bazos.sk/inzerat/196528598/peugeot-508-sw-15-bluehdi-allure-eat8-odpocet-dph.php' target='_blank' rel='noopener'>bazoš</a> · aj na <a href='https://www.autobazar.eu/detail/peugeot-508-sw-15-bluehdi-allure-eat8/AmY24IH6JC7/' target='_blank' rel='noopener'>autobazar.eu</a> · aj na <a href='https://www.autobazar.eu/detail/peugeot-508-sw-combi-15-bluehdi-automat-koza-klima/Ae6CDaGWF33/' target='_blank' rel='noopener'>autobazar.eu</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">13 600 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">16 100 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+15.5 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:52%"></span></div>
+  <ul class="pc"><li class="pro">7/2019, 1.5 BlueHDi 96 kW, 8-st. automat, výbava Allure, 102 tis. km</li><li class="pro">~16 % pod férovou cenou</li><li class="con">Predáva autobazár</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 6 dní (od 15. 11.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">508 SW 1.5 BlueHDi Allure Pack EAT8 z 2021</span><span class="loc">Banská Bystrica</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197139383/peugeot-508-sw-15-bluehdi-allure-pack-eat8.php" target="_blank" rel="noopener">Peugeot 508 SW 1.5 BlueHDi Allure Pack EAT8</a></h3>
+  <div class="facts">2021 · 94 500 km · 1.5 BlueHDi 96 kW · automat · Kombi SW · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazoš</b> · aj na <a href='https://www.autobazar.eu/detail/peugeot-508-sw-15-bluehdi-allure-pack-eat8/AmrrZ7ExgZh/' target='_blank' rel='noopener'>autobazar.eu</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">14 590 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">17 090 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+14.6 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:49%"></span></div>
+  <ul class="pc"><li class="pro">6/2021, 1.5 BlueHDi 96 kW, 8-st. automat, výbava Allure Pack, 95 tis. km</li><li class="pro">Uvedený VIN, na slovenských ŠPZ</li><li class="pro">~15 % pod férovou cenou</li><li class="con">Predáva autobazár</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 18 dní (od 3. 11.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">508 2.0 BlueHDi EAT8 GT Line z SR</span><span class="loc">Bratislava I - Staré Mesto</span></div>
+  <h3><a href="https://auto.bazar.sk/39321496-peugeot-508-2-0-bluehdi-eat8-gt-line/" target="_blank" rel="noopener">Peugeot 508 2.0 BlueHDi EAT8 GT Line</a></h3>
+  <div class="facts">2019 · 89 667 km · 2.0 / 2.2 HDi / BlueHDi 103–150 kW · automat · Sedan / fastback · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazar.sk</b> · kúpené v SR</div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">17 999 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">20 560 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+12.5 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:42%"></span></div>
+  <ul class="pc"><li class="pro">7/2019, 2.0 BlueHDi 130 kW, 8-st. automat, výbava GT Line, 90 tis. km</li><li class="pro">Kúpené v SR, uvedený VIN, odpočet DPH</li><li class="pro">~12 % pod férovou cenou</li><li class="con">Predáva autobazár</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">Nový inzerát</p><!-- history-card:end --></article></div>
+<div class="subhead">Lacnejšie Peugeoty 508 do 10 000 €</div>
+<div class="cards">
+<article class="card">
+  <div class="card-head"><span class="tag">508 2.0 BlueHDi 180 k EAT6 Allure z SR</span><span class="loc">Bánovce nad Bebravou</span></div>
+  <h3><a href="https://auto.bazar.sk/39775648-peugeot-508-2-0-bluehdi-allure-ss-eat6-133kw-180hp-a6/" target="_blank" rel="noopener">Peugeot 508 2.0 BlueHDi Allure S&amp;S EAT6 133kW/180HP A6</a></h3>
+  <div class="facts">2016 · 138 000 km · 2.0 / 2.2 HDi / BlueHDi 103–150 kW · automat · Sedan / fastback · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazar.sk</b> · kúpené v SR · aj na <a href='https://www.autobazar.eu/detail/peugeot-508-20-bluehdi-allure-sands-eat6-133kw180hp-a6/Aen3cq2bawF/' target='_blank' rel='noopener'>autobazar.eu</a> · aj na <a href='https://auto.bazos.sk/inzerat/197697335/peugeot-508-20hdi-2016-at-138000km.php' target='_blank' rel='noopener'>bazoš</a> · aj na <a href='https://www.autobazar.eu/detail/peugeot-508-20-bluehdi-gt-ss-eat6-133kw180hp-a6/AeC0-LJIwlJ/' target='_blank' rel='noopener'>autobazar.eu</a> za 8 900 €</div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">8 690 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">11 390 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+23.7 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:79%"></span></div>
+  <ul class="pc"><li class="pro">3/2016, 2.0 BlueHDi 133 kW, 6-st. automat, výbava Allure, 138 tis. km</li><li class="pro">Kúpené v SR, uvedený VIN, STK do 08/2028</li><li class="pro">~24 % pod férovou cenou</li><li class="con">Predáva autobazár</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 13 dní (od 8. 11.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">508 SW 1.6 BlueHDi z 2018 za 6 999 €</span><span class="loc">Turany</span></div>
+  <h3><a href="https://auto.bazar.sk/39198094-peugeot-508-sw-1-6-bluehdi-ss-active/" target="_blank" rel="noopener">Peugeot 508 SW 1.6 BlueHDi S&amp;S Active</a></h3>
+  <div class="facts">2018 · 167 261 km · 1.6 HDi / BlueHDi 82–88 kW · manuál · Kombi SW · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazar.sk</b> · kúpené v SR · aj na <a href='https://www.autobazar.eu/detail/peugeot-508-sw-16-bluehdi-sands-active/AmsZ3PjhlyXi/' target='_blank' rel='noopener'>autobazar.eu</a> · aj na <a href='https://auto.bazos.sk/inzerat/196563103/peugeot-508-sw-16-bluehdi-ss-active.php' target='_blank' rel='noopener'>bazoš</a> za 7 290 €</div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">6 999 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">9 680 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+27.7 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:92%"></span></div>
+  <ul class="pc"><li class="pro">3/2018, 1.6 BlueHDi 88 kW, manuál, výbava Active, 167 tis. km</li><li class="pro">Kúpené v SR, uvedený VIN, STK do 02/2028</li><li class="pro">~28 % pod férovou cenou</li><li class="con">Predáva autobazár</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke aspoň 36 dní</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">508 SW 1.6 BlueHDi EAT6 za 6 990 €</span><span class="loc">Bratislava V - Petržalka</span></div>
+  <h3><a href="https://auto.bazar.sk/39369859-peugeot-508-sw-1-6-bluehdi-ss-active-eat6/" target="_blank" rel="noopener">Peugeot 508 SW 1.6 BlueHDi S&amp;S Active EAT6</a></h3>
+  <div class="facts">2017 · 167 000 km · 1.6 HDi / BlueHDi 82–88 kW · automat · Kombi SW · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazar.sk</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">6 990 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">8 810 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+20.6 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:69%"></span></div>
+  <ul class="pc"><li class="pro">11/2017, 1.6 BlueHDi 88 kW, 6-st. automat, výbava Active, 167 tis. km</li><li class="pro">Uvedený VIN</li><li class="pro">~21 % pod férovou cenou</li><li class="con">Predáva autobazár</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">Nový inzerát</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">508 2.0 BlueHDi 180 k EAT6 z SR za 5 999 €</span><span class="loc">Stará Ľubovňa</span></div>
+  <h3><a href="https://auto.bazar.sk/39473608-peugeot-508-2-0-bluehdi-allure-ss-eat6/" target="_blank" rel="noopener">Peugeot 508 2.0 BlueHDi Allure S&amp;S EAT6</a></h3>
+  <div class="facts">2015 · 256 615 km · 2.0 / 2.2 HDi / BlueHDi 103–150 kW · automat · Sedan / fastback · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazar.sk</b> · kúpené v SR</div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">5 999 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">7 720 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+22.3 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:74%"></span></div>
+  <ul class="pc"><li class="pro">6/2015, 2.0 BlueHDi 133 kW, 6-st. automat, výbava Allure, 257 tis. km</li><li class="pro">Kúpené v SR, uvedený VIN</li><li class="pro">~22 % pod férovou cenou</li><li class="con">Vysoký nájazd</li><li class="con">Predáva autobazár</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">Nový inzerát</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">508 SW 2.0 HDi automat s novými rozvodmi</span><span class="loc">Košice-okolie</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197634315/peugeot-508-sw-20-hdi-120kw.php" target="_blank" rel="noopener">Peugeot 508 sw 2.0 hdi 120kw</a></h3>
+  <div class="facts">2014 · 319 000 km · 2.0 / 2.2 HDi / BlueHDi 103–150 kW · automat · Kombi SW · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">4 100 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">5 450 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+24.7 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:82%"></span></div>
+  <ul class="pc"><li class="pro">2014, 2.0 HDi 120 kW, 6-st. automat Aisin, 319 tis. km</li><li class="pro">Rozvody s vodnou pumpou vymenené 07/2026, nové predné brzdy, bez hrdze, STK do 03/2028</li><li class="pro">~25 % pod férovou cenou</li><li class="con">Veľmi vysoký nájazd</li><li class="con">Predajca neistý</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 3 dni (od 18. 11.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">508 2.0 HDi 163 k po výmene rozvodov</span><span class="loc">Nitra</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197504462/peugeot-508-20hdi-120kw.php" target="_blank" rel="noopener">Peugeot 508 2.0HDi 120kw</a></h3>
+  <div class="facts">2011 · 269 000 km · 2.0 / 2.2 HDi / BlueHDi 103–150 kW · manuál · Sedan / fastback · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b> · kúpené v SR</div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">4 150 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">4 870 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+14.7 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:49%"></span></div>
+  <ul class="pc"><li class="pro">2011, 2.0 HDi 120 kW, manuál, 269 tis. km</li><li class="pro">Kúpené v SR, rozvody, olej a filtre vymenené 02/2026</li><li class="pro">~15 % pod férovou cenou</li><li class="con">Vysoký nájazd</li><li class="con">Predajca neistý</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 7 dní (od 14. 11.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">508 SW 2.0 HDi so servisnou knižkou</span><span class="loc">Trenčiansky kraj</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/peugeot-508-sw-combi-20-hdi-servkniha-navigacia/AeIDWJ8Z2Ed/" target="_blank" rel="noopener">Peugeot 508 SW (Combi) 2.0 HDi, Serv.kniha, Navigácia</a></h3>
+  <div class="facts">2015 · 155 792 km · 2.0 / 2.2 HDi / BlueHDi 103–150 kW · manuál · Kombi SW · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">5 800 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">6 710 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+13.6 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:45%"></span></div>
+  <ul class="pc"><li class="pro">2015, 2.0 HDi, manuál, navigácia, 156 tis. km</li><li class="pro">Servisná knižka</li><li class="pro">~14 % pod férovou cenou</li><li class="con">AAA AUTO – over cenu v hotovosti</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 20 dní (od 1. 11.)</p><!-- history-card:end --></article></div>
+<div class="subhead">Špeciálne prípady</div>
+<div class="cards"></div>
+
+<h2>Cena vs. nájazd: celý trh na jednom grafe</h2>
+<p class="section-lead">Každý bod je jeden inzerát. Čím nižšie bod leží oproti ostatným s podobným nájazdom, tým je auto lacnejšie.
+Krúžkom sú označené odporúčané ponuky. Prejdi myšou na bod a uvidíš detail.</p>
+<div class="chart-wrap" id="chartWrap">
+  <div class="legend" id="legend"></div>
+  <svg id="chart" width="100%" height="420" role="img" aria-label="Bodový graf ceny a nájazdu inzerátov"></svg>
+  <div class="tip" id="tip"></div>
+</div>
+
+<h2>Porovnanie motorov</h2>
+<p class="section-lead">Hodnotenie (hviezdičky) zohľadňuje spoľahlivosť, spoľahlivosť a náklady na prevádzku a pomer cena/výkon.
+Číselné stĺpce sú mediány z ohodnotených inzerátov.</p>
+<div class="table-scroll">
+<table>
+  <thead><tr><th>Motor</th><th>Hodnotenie</th><th class="num">Ponúk</th><th class="num">Medián ceny</th><th class="num">Medián roku</th><th class="num">Medián km</th></tr></thead>
+  <tbody>
+<tr>
+  <td><b>Hybrid (RXH HYbrid4 / plug-in) 147–265 kW</b><div class="sub">Starší diesel-hybrid RXH 4x4 (2012–2018) alebo plug-in 1.6 PureTech (2019+, ~50 km na elektrinu).</div></td>
+  <td><span class="stars" aria-label="3 z 5">★★★<span class="off">★★</span></span></td>
+  <td class="num">11</td>
+  <td class="num"><div class="cellbar"><span style="width:69%"></span></div>9 000 €</td>
+  <td class="num">2017</td>
+  <td class="num">178 651 km</td>
+</tr>
+<tr>
+  <td><b>1.5 BlueHDi 96 kW</b><div class="sub">Diesel 130 k (2018+). Úsporný (~5 l); over AdBlue a rozvodový remeň v oleji.</div></td>
+  <td><span class="stars" aria-label="4 z 5">★★★★<span class="off">★</span></span></td>
+  <td class="num">25</td>
+  <td class="num"><div class="cellbar"><span style="width:100%"></span></div>12 990 €</td>
+  <td class="num">2020</td>
+  <td class="num">130 091 km</td>
+</tr>
+<tr>
+  <td><b>2.0 / 2.2 HDi / BlueHDi 103–150 kW</b><div class="sub">Silný diesel 140–204 k, často automat. Ťahavý; over DPF a AdBlue.</div></td>
+  <td><span class="stars" aria-label="4 z 5">★★★★<span class="off">★</span></span></td>
+  <td class="num">82</td>
+  <td class="num"><div class="cellbar"><span style="width:54%"></span></div>6 995 €</td>
+  <td class="num">2015</td>
+  <td class="num">216 900 km</td>
+</tr>
+<tr>
+  <td><b>1.6 HDi / BlueHDi 82–88 kW</b><div class="sub">Diesel 112–120 k (do 2018). Over DPF, vstrekovače a turbo.</div></td>
+  <td><span class="stars" aria-label="3 z 5">★★★<span class="off">★★</span></span></td>
+  <td class="num">18</td>
+  <td class="num"><div class="cellbar"><span style="width:46%"></span></div>6 000 €</td>
+  <td class="num">2013</td>
+  <td class="num">236 750 km</td>
+</tr>
+<tr>
+  <td><b>1.2 / 1.6 PureTech / THP 96–165 kW</b><div class="sub">Turbobenzín 150–225 k (aj automat). Svižný, ale smädnejší.</div></td>
+  <td><span class="stars" aria-label="3 z 5">★★★<span class="off">★★</span></span></td>
+  <td class="num">12</td>
+  <td class="num"><div class="cellbar"><span style="width:96%"></span></div>12 490 €</td>
+  <td class="num">2018</td>
+  <td class="num">135 000 km</td>
+</tr></tbody>
+</table>
+</div>
+<div class="explain">
+  <p><b>Generácie:</b> <b>508 I</b> (2011–2018, facelift 2014) je klasický sedan a kombi SW, aj RXH 4x4 hybrid.
+  <b>508 II</b> (od 2018, facelift 2023) je nízky fastback a kombi SW s modernou kabínou i-Cockpit.</p>
+  <p><b>Ktorý motor zvoliť?</b> Na veľa km <b>2.0 BlueHDi</b> (150–180 k) alebo úspornejší <b>1.5 BlueHDi</b>.
+  Pri staršom <b>1.6 HDi</b> over DPF a turbo.</p>
+</div>
+
+<h2>Na čo si dať pozor</h2>
+<div class="warn">
+  <p><b>Lacné kvôli extrémnemu nájazdu</b> (viac ako 35 tis. km ročne, typicky flotila alebo taxi):</p>
+  <ul><li><a href='https://auto.bazos.sk/inzerat/197094479/peugeot-508-15-bluehdi-allure-2021.php' target='_blank' rel='noopener'>Peugeot 508 1.5 BlueHDi Allure, 2021, automat 8st.</a>: 2021, 270 000 km → 51 000 km/rok. Lacné je kvôli nájazdu.</li><li><a href='https://auto.bazos.sk/inzerat/197539829/ford-fusion-14i-59kw-cz-klimat-vyhrev-servis-2008.php' target='_blank' rel='noopener'>PEUGEOT 508 2,0BlueHDi 120kw AT8 Kůže GPS DPH 2020</a>: 2020, 286 644 km → 45 000 km/rok. Lacné je kvôli nájazdu.</li><li><a href='https://auto.bazos.sk/inzerat/196138124/peugeot-508-sw-20-bluehdi-at-2016-automat-133kw180ks.php' target='_blank' rel='noopener'>Peugeot 508 SW 2.0 BlueHDi AT 2016 Automat (133kw/180ks)</a>: 2016, 447 000 km → 43 000 km/rok. Lacné je kvôli nájazdu.</li><li><a href='https://auto.bazos.sk/inzerat/196986222/peugeot-508-sw-20-bluehdi-eat8-gt.php' target='_blank' rel='noopener'>Peugeot 508 SW 2.0 BlueHDi EAT8 GT</a>: 2020, 221 995 km → 35 000 km/rok. Lacné je kvôli nájazdu.</li></ul>
+  <p><b>Ďalšie veci, ktoré sme v inzerátoch našli:</b></p><ul><li>Väčšina starších 508 má nájazd nad 250 tis. km – pri nich over rozvody, turbo a automat.</li><li>Mladšie 508 druhej generácie sú často dovezené – over históriu cez VIN.</li><li>Pri inzerátoch AAA AUTO je uvedená <b>cena pri financovaní</b> – pri platbe v hotovosti môže byť iná.</li></ul><p><b>Vyradené z porovnania</b> (poškodené autá alebo nezmyselné údaje – model ich nehodnotí):</p><ul><li><a href='https://www.autobazar.eu/detail/peugeot-508-15-bluehdi-gt-line-eat8/AmY4rUua401/' target='_blank' rel='noopener'>Peugeot 508 1.5 BlueHDi GT Line EAT8</a> (5 190 €): cena je o 66 % pod trhom – havarované, na diely, záloha/splátka namiesto ceny alebo podvod</li></ul><p><b>Nové autá z 2026, Peugeot 5008 / 408 a iné modely z vyhľadávania, inzeráty s chybným nájazdom</b> (3 inzerátov) sme z rebríčka vynechali.</p>
+  <p>Ďalších <b>19</b> inzerátov nemá v texte rok alebo kilometre, takže ich nebolo možné ohodnotiť.
+  Ak ťa niektorý zaujme, predajcu sa na tieto údaje opýtaj.</p>
+</div>
+
+<h2>Kompletný rebríček</h2>
+<p class="section-lead">Všetky ohodnotené inzeráty. Kliknutím na hlavičku stĺpca zoraďuješ, filtrom zužuješ výber.</p>
+<div class="filters">
+  <select id="fEngine"><option value="">Všetky motory</option></select>
+  <select id="fTrans"><option value="">Každá prevodovka</option><option value="automatic">Automat</option><option value="manual">Manuál</option></select>
+  <select id="fSeller"><option value="">Všetci predajcovia</option><option value="nodealer">Bez autobazárov</option></select>
+  <select id="fSource"><option value="">Všetky portály</option><option value="bazos">bazoš</option><option value="autobazar">autobazar.eu</option><option value="bazarsk">bazar.sk</option></select>
+  <select id="fBody"><option value="">Všetky karosérie</option><option value="liftback">Sedan / fastback</option><option value="wagon">Kombi sw</option></select>
+  <select id="fOrigin"><option value="">Akýkoľvek pôvod</option><option value="SR">Kúpené v SR</option><option value="dovoz">Dovoz</option></select>
+  <input id="fMax" type="number" placeholder="Max. cena €" step="500" min="0" style="width:120px">
+  <span class="count" id="count"></span>
+</div>
+<div class="table-scroll">
+<table id="tbl">
+  <thead><tr>
+    <th class="sortable" data-k="title">Inzerát</th>
+    <th class="sortable num" data-k="year">Rok</th>
+    <th class="sortable num" data-k="km">Km</th>
+    <th class="sortable num" data-k="price_gross">Cena</th>
+    <th class="sortable num" data-k="fair_price">Férová</th>
+    <th class="sortable num" data-k="discount_pct">Pod trhom ▾</th>
+  </tr></thead>
+  <tbody></tbody>
+</table>
+</div>
+
+<h2>Pred kúpou over</h2>
+<ul class="check">
+  <li>VIN cez Cebia / autoDNA (história km, havárie)</li>
+  <li>Servisná história – Peugeot dealer ju vie podľa VIN vytiahnuť</li>
+  <li>Automat EAT6 / EAT8: plynulé radenie</li>
+  <li>BlueHDi: DPF, AdBlue; 1.5 BlueHDi a 1.6 PureTech: rozvodový remeň</li>
+  <li>Elektronika: displej, parkovacie senzory, svetlá</li>
+  <li>STK/EK protokol a dátum platnosti</li>
+</ul>
+
+<footer>
+  Zdroj: auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (len ponuky zo Slovenska, to isté auto na viacerých portáloch je započítané raz), sťahované cez lokálny MCP server bazos-mcp (nástroj <code>fair_price</code>), 21. 11. 2026.
+  Model: ridge regresia log(ceny s DPH) podľa veku, veku², km, km², prevodovky, typu predajcu, motora, karosérie, pohonu 4x4, pôvodu (SR / dovoz) a portálu. Vzorka 148
+  inzerátov, R² 92 %. Parametre sú vyťažené z textu inzerátov, a preto môžu obsahovať chyby. Odporúčané ponuky sme overili
+  prečítaním celého inzerátu. Hodnotenie motorov je odborný odhad, nie výsledok modelu.
+</footer>
+</main>
+
+<script>
+const DATA = [{"id": "197692893", "url": "https://auto.bazos.sk/inzerat/197692893/peugeot-508.php", "title": "Peugeot 508", "price": 3300, "price_gross": 3300, "fair_price": 4960.0, "discount_pct": 33.5, "verdict": "výrazne pod trhom – over prečo", "year": 2011, "km": 142000, "km_per_year": 9300.0, "eg": "1.2 / 1.6 PureTech / THP 96–165 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Nové Zámky", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "liftback"}, {"id": "196138124", "url": "https://auto.bazos.sk/inzerat/196138124/peugeot-508-sw-20-bluehdi-at-2016-automat-133kw180ks.php", "title": "Peugeot 508 SW 2.0 BlueHDi AT 2016 Automat (133kw/180ks)", "price": 4000, "price_gross": 4000, "fair_price": 5810.0, "discount_pct": 31.2, "verdict": "výrazne pod trhom – over prečo", "year": 2016, "km": 447000, "km_per_year": 43300.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Bratislava", "flags": ["vysoký nájazd 43000 km/rok – flotila / taxi?"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "bs-39692709", "url": "https://auto.bazar.sk/39692709-peugeot-508-1-6-puretech-allure-eat8/", "title": "Peugeot 508 1.6 PureTech Allure EAT8", "price": 12990, "price_gross": 12990, "fair_price": 17960.0, "discount_pct": 27.7, "verdict": "výrazne pod trhom – over prečo", "year": 2019, "km": 57264, "km_per_year": 7800.0, "eg": "1.2 / 1.6 PureTech / THP 96–165 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Žilina", "flags": [], "pick": "top", "source": "bazarsk", "origin": "dovoz", "also_listed": [{"source": "autobazar", "id": "ab-Amu34O6xqVQ", "url": "https://www.autobazar.eu/detail/peugeot-508-16-puretech-allure-eat8/Amu34O6xqVQ/", "price": 12990}], "body": "liftback"}, {"id": "bs-39198094", "url": "https://auto.bazar.sk/39198094-peugeot-508-sw-1-6-bluehdi-ss-active/", "title": "Peugeot 508 SW 1.6 BlueHDi S&S Active", "price": 6999, "price_gross": 6999, "fair_price": 9680.0, "discount_pct": 27.7, "verdict": "výrazne pod trhom – over prečo", "year": 2018, "km": 167261, "km_per_year": 20100.0, "eg": "1.6 HDi / BlueHDi 82–88 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Turany", "flags": [], "pick": "budget", "source": "bazarsk", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AmsZ3PjhlyXi", "url": "https://www.autobazar.eu/detail/peugeot-508-sw-16-bluehdi-sands-active/AmsZ3PjhlyXi/", "price": 6999}, {"source": "bazos", "id": "196563103", "url": "https://auto.bazos.sk/inzerat/196563103/peugeot-508-sw-16-bluehdi-ss-active.php", "price": 7290}], "body": "wagon"}, {"id": "197634315", "url": "https://auto.bazos.sk/inzerat/197634315/peugeot-508-sw-20-hdi-120kw.php", "title": "Peugeot 508 sw 2.0 hdi 120kw", "price": 4100, "price_gross": 4100, "fair_price": 5450.0, "discount_pct": 24.7, "verdict": "výrazne pod trhom – over prečo", "year": 2014, "km": 319000, "km_per_year": 25900.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Košice-okolie", "flags": [], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "bs-39775648", "url": "https://auto.bazar.sk/39775648-peugeot-508-2-0-bluehdi-allure-ss-eat6-133kw-180hp-a6/", "title": "Peugeot 508 2.0 BlueHDi Allure S&S EAT6 133kW/180HP A6", "price": 8690, "price_gross": 8690, "fair_price": 11390.0, "discount_pct": 23.7, "verdict": "výrazne pod trhom – over prečo", "year": 2016, "km": 138000, "km_per_year": 13400.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bánovce nad Bebravou", "flags": [], "pick": "budget", "source": "bazarsk", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-Aen3cq2bawF", "url": "https://www.autobazar.eu/detail/peugeot-508-20-bluehdi-allure-sands-eat6-133kw180hp-a6/Aen3cq2bawF/", "price": 8690}, {"source": "bazos", "id": "197697335", "url": "https://auto.bazos.sk/inzerat/197697335/peugeot-508-20hdi-2016-at-138000km.php", "price": 8690}, {"source": "autobazar", "id": "ab-AeC0-LJIwlJ", "url": "https://www.autobazar.eu/detail/peugeot-508-20-bluehdi-gt-ss-eat6-133kw180hp-a6/AeC0-LJIwlJ/", "price": 8900}], "body": "liftback"}, {"id": "ab-AeYOaUFe1YS", "url": "https://www.autobazar.eu/detail/peugeot-508-sw-combi-20-hdi-navigacia-panoram-strecha/AeYOaUFe1YS/", "title": "Peugeot 508 SW (Combi) 2.0 HDi, Navigácia, panoram. strecha", "price": 3000, "price_gross": 3000, "fair_price": 3930.0, "discount_pct": 23.6, "verdict": "výrazne pod trhom – over prečo", "year": 2013, "km": 334909, "km_per_year": 25100.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Dunajská Streda", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "ab-AmrSGyi1UUH", "url": "https://www.autobazar.eu/detail/peugeot-508-12-puretech-110kw-at8/AmrSGyi1UUH/", "title": "Peugeot 508 1,2 PureTech 96kW AT8", "price": 11990, "price_gross": 11990, "fair_price": 15620.0, "discount_pct": 23.2, "verdict": "výrazne pod trhom – over prečo", "year": 2021, "km": 103299, "km_per_year": 19400.0, "eg": "1.2 / 1.6 PureTech / THP 96–165 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Pezinok", "flags": [], "pick": "top", "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazarsk", "id": "bs-39675138", "url": "https://auto.bazar.sk/39675138-peugeot-508-1-2-puretech-96kw-at8/", "price": 11990}, {"source": "bazos", "id": "196243937", "url": "https://auto.bazos.sk/inzerat/196243937/peugeot-508-12-puretech-96kw-at8.php", "price": 11990}], "body": "liftback"}, {"id": "ab-AeeTTKKdyE3", "url": "https://www.autobazar.eu/detail/peugeot-508-sw-15-bluehdi-active-pack-eat8-96kw130hp-a8/AeeTTKKdyE3/", "title": "Peugeot 508 SW 1.5 BlueHDi Active Pack EAT8 96kW130HP A8", "price": 11490, "price_gross": 11490, "fair_price": 14860.0, "discount_pct": 22.7, "verdict": "výrazne pod trhom – over prečo", "year": 2021, "km": 106224, "km_per_year": 19900.0, "eg": "1.5 BlueHDi 96 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": "top", "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "197067633", "url": "https://auto.bazos.sk/inzerat/197067633/peugeot-508-sw-15-hdi-active-pack-diesel-automat-96kw.php", "price": 11490}], "body": "wagon"}, {"id": "bs-39473608", "url": "https://auto.bazar.sk/39473608-peugeot-508-2-0-bluehdi-allure-ss-eat6/", "title": "Peugeot 508 2.0 BlueHDi Allure S&S EAT6", "price": 5999, "price_gross": 5999, "fair_price": 7720.0, "discount_pct": 22.3, "verdict": "výrazne pod trhom – over prečo", "year": 2015, "km": 256615, "km_per_year": 22600.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Stará Ľubovňa", "flags": [], "pick": "budget", "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "liftback"}, {"id": "ab-AefTfBpSdDS", "url": "https://www.autobazar.eu/detail/peugeot-508-22-hdi-automat-servkniha-po-stk/AefTfBpSdDS/", "title": "Peugeot 508 2.2 HDi, Automat, Serv.kniha, Koža", "price": 3700, "price_gross": 3700, "fair_price": 4750.0, "discount_pct": 22.0, "verdict": "výrazne pod trhom – over prečo", "year": 2014, "km": 325651, "km_per_year": 26400.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Trenčiansky kraj", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "liftback"}, {"id": "197358263", "url": "https://auto.bazos.sk/inzerat/197358263/peugeot-508sw.php", "title": "Peugeot 508sw", "price": 3500, "price_gross": 3500, "fair_price": 4470.0, "discount_pct": 21.6, "verdict": "výrazne pod trhom – over prečo", "year": 2012, "km": 365000, "km_per_year": 25500.0, "eg": "1.6 HDi / BlueHDi 82–88 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Vranov nad Topľou", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "bs-39369859", "url": "https://auto.bazar.sk/39369859-peugeot-508-sw-1-6-bluehdi-ss-active-eat6/", "title": "Peugeot 508 SW 1.6 BlueHDi S&S Active EAT6", "price": 6990, "price_gross": 6990, "fair_price": 8810.0, "discount_pct": 20.6, "verdict": "výrazne pod trhom – over prečo", "year": 2017, "km": 167000, "km_per_year": 17900.0, "eg": "1.6 HDi / BlueHDi 82–88 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava V - Petržalka", "flags": [], "pick": "budget", "source": "bazarsk", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "196393580", "url": "https://auto.bazos.sk/inzerat/196393580/peugeot-508-20hdi-103kw-2012.php", "title": "Peugeot 508 2.0hdi 103kw 2012", "price": 4000, "price_gross": 4000, "fair_price": 5020.0, "discount_pct": 20.4, "verdict": "výrazne pod trhom – over prečo", "year": 2012, "km": 172000, "km_per_year": 12000.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Zlaté Moravce", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "liftback"}, {"id": "ab-Aez9QlYq_J3", "url": "https://www.autobazar.eu/detail/peugeot-508-sw-combi-15-bluehdi-gt-automat-sr2maj/Aez9QlYq_J3/", "title": "Peugeot 508 SW (Combi) 1.5 BlueHDi, GT, Automat, SR,2.maj, Koža", "price": 14700, "price_gross": 14700, "fair_price": 18200.0, "discount_pct": 19.2, "verdict": "výrazne pod trhom – over prečo", "year": 2022, "km": 78868, "km_per_year": 18200.0, "eg": "1.5 BlueHDi 96 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": "top", "source": "autobazar", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "197622263", "url": "https://auto.bazos.sk/inzerat/197622263/peugeot-508-20-120-kw-r-v-2012-automat-aisin.php", "title": "Peugeot 508 2.0 HDI (120 kW), r. v. 2012, automat (Aisin)", "price": 4250, "price_gross": 4250, "fair_price": 5240.0, "discount_pct": 18.8, "verdict": "výrazne pod trhom – over prečo", "year": 2012, "km": 250000, "km_per_year": 17400.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Bratislava", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "liftback"}, {"id": "196629832", "url": "https://auto.bazos.sk/inzerat/196629832/peugeot-508-gt-sw-2022.php", "title": "Peugeot 508 GT SW 2022", "price": 18900, "price_gross": 18900, "fair_price": 22570.0, "discount_pct": 16.3, "verdict": "výrazne pod trhom – over prečo", "year": 2022, "km": 55000, "km_per_year": 12700.0, "eg": "1.5 BlueHDi 96 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Nové Zámky", "flags": [], "pick": "top", "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "196111703", "url": "https://auto.bazos.sk/inzerat/196111703/peugeot-508-sw.php", "title": "Peugeot 508sw 2.0HDI 120kw Nová STK 277xxxkm", "price": 4700, "price_gross": 4700, "fair_price": 5610.0, "discount_pct": 16.2, "verdict": "výrazne pod trhom – over prečo", "year": 2014, "km": 277000, "km_per_year": 22500.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Malacky", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "196437428", "url": "https://auto.bazos.sk/inzerat/196437428/predam-peugeot-508-sw-combi.php", "title": "Predám Peugeot 508 SW combi", "price": 3700, "price_gross": 3700, "fair_price": 4390.0, "discount_pct": 15.7, "verdict": "výrazne pod trhom – over prečo", "year": 2012, "km": 296000, "km_per_year": 20700.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Snina", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "bs-39735733", "url": "https://auto.bazar.sk/39735733-peugeot-508-sw-1-5-bluehdi-allure-eat8/", "title": "Peugeot 508 SW 1.5 BlueHDi Allure EAT8", "price": 13600, "price_gross": 13600, "fair_price": 16100.0, "discount_pct": 15.5, "verdict": "výrazne pod trhom – over prečo", "year": 2019, "km": 102000, "km_per_year": 13900.0, "eg": "1.5 BlueHDi 96 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Horná Kráľová", "flags": [], "pick": "top", "source": "bazarsk", "origin": null, "also_listed": [{"source": "bazos", "id": "196528598", "url": "https://auto.bazos.sk/inzerat/196528598/peugeot-508-sw-15-bluehdi-allure-eat8-odpocet-dph.php", "price": 13600}, {"source": "autobazar", "id": "ab-AmY24IH6JC7", "url": "https://www.autobazar.eu/detail/peugeot-508-sw-15-bluehdi-allure-eat8/AmY24IH6JC7/", "price": 13600}, {"source": "autobazar", "id": "ab-Ae6CDaGWF33", "url": "https://www.autobazar.eu/detail/peugeot-508-sw-combi-15-bluehdi-automat-koza-klima/Ae6CDaGWF33/", "price": 13600}], "body": "wagon"}, {"id": "197504462", "url": "https://auto.bazos.sk/inzerat/197504462/peugeot-508-20hdi-120kw.php", "title": "Peugeot 508 2.0HDi 120kw", "price": 4150, "price_gross": 4150, "fair_price": 4870.0, "discount_pct": 14.7, "verdict": "pod trhom", "year": 2011, "km": 269000, "km_per_year": 17500.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Nitra", "flags": [], "pick": "budget", "source": "bazos", "origin": "SR", "also_listed": [], "body": "liftback"}, {"id": "197139383", "url": "https://auto.bazos.sk/inzerat/197139383/peugeot-508-sw-15-bluehdi-allure-pack-eat8.php", "title": "Peugeot 508 SW 1.5 BlueHDi Allure Pack EAT8", "price": 14590, "price_gross": 14590, "fair_price": 17090.0, "discount_pct": 14.6, "verdict": "pod trhom", "year": 2021, "km": 94500, "km_per_year": 17700.0, "eg": "1.5 BlueHDi 96 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Banská Bystrica", "flags": [], "pick": "top", "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmrrZ7ExgZh", "url": "https://www.autobazar.eu/detail/peugeot-508-sw-15-bluehdi-allure-pack-eat8/AmrrZ7ExgZh/", "price": 14590}], "body": "wagon"}, {"id": "197688070", "url": "https://auto.bazos.sk/inzerat/197688070/peugeot-508-sw.php", "title": "Peugeot 508 sw", "price": 3400, "price_gross": 3400, "fair_price": 3960.0, "discount_pct": 14.2, "verdict": "pod trhom", "year": 2011, "km": 320000, "km_per_year": 20900.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Bratislava", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "ab-AeIDWJ8Z2Ed", "url": "https://www.autobazar.eu/detail/peugeot-508-sw-combi-20-hdi-servkniha-navigacia/AeIDWJ8Z2Ed/", "title": "Peugeot 508 SW (Combi) 2.0 HDi, Serv.kniha, Navigácia", "price": 5800, "price_gross": 5800, "fair_price": 6710.0, "discount_pct": 13.6, "verdict": "pod trhom", "year": 2015, "km": 155792, "km_per_year": 13700.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Trenčiansky kraj", "flags": [], "pick": "budget", "source": "autobazar", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "ab-Ae71QTuxm4e", "url": "https://www.autobazar.eu/detail/peugeot-508-sw-20-hdi-163k-allure-bva6-120kw163hp-a6/Ae71QTuxm4e/", "title": "Peugeot 508 SW 2.0 HDi 163k Allure BVA6 120kW/163HP A6", "price": 5990, "price_gross": 5990, "fair_price": 6870.0, "discount_pct": 12.8, "verdict": "pod trhom", "year": 2015, "km": 226269, "km_per_year": 20000.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava-Ružinov", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "wagon"}, {"id": "ab-Ae1i4sG87MN", "url": "https://www.autobazar.eu/detail/peugeot-508-sw-combi-hybrid4-rxh-4x4-automat-koza/Ae1i4sG87MN/", "title": "Peugeot 508 SW (Combi) HYbrid4 RXH, 4X4, Automat, Koža", "price": 6800, "price_gross": 6800, "fair_price": 7800.0, "discount_pct": 12.8, "verdict": "pod trhom", "year": 2017, "km": 204534, "km_per_year": 21900.0, "eg": "Hybrid (RXH HYbrid4 / plug-in) 147–265 kW", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Banská Bystrica", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "bs-39321496", "url": "https://auto.bazar.sk/39321496-peugeot-508-2-0-bluehdi-eat8-gt-line/", "title": "Peugeot 508 2.0 BlueHDi EAT8 GT Line", "price": 17999, "price_gross": 17999, "fair_price": 20560.0, "discount_pct": 12.5, "verdict": "pod trhom", "year": 2019, "km": 89667, "km_per_year": 12200.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava I - Staré Mesto", "flags": [], "pick": "top", "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "liftback"}, {"id": "196869466", "url": "https://auto.bazos.sk/inzerat/196869466/peugeot-508sw.php", "title": "Peugeot 508SW", "price": 5900, "price_gross": 5900, "fair_price": 6690.0, "discount_pct": 11.9, "verdict": "pod trhom", "year": 2015, "km": 212000, "km_per_year": 18700.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Malacky", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "197754092", "url": "https://auto.bazos.sk/inzerat/197754092/peugeot-508-sw-gt-22-hdi-150-kw-automat.php", "title": "Peugeot 508 SW GT 2.2 HDi 150 kW, automat", "price": 7000, "price_gross": 7000, "fair_price": 7940.0, "discount_pct": 11.8, "verdict": "pod trhom", "year": 2013, "km": 186000, "km_per_year": 14000.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Zvolen", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "wagon"}, {"id": "196596971", "url": "https://auto.bazos.sk/inzerat/196596971/peugeot-508-20-hdi-103-kw-active.php", "title": "Peugeot 508 2.0 HDi 103 kW – Active", "price": 5490, "price_gross": 5490, "fair_price": 6200.0, "discount_pct": 11.5, "verdict": "pod trhom", "year": 2013, "km": 165000, "km_per_year": 12400.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Košice", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AehAuTUQ9Gu", "url": "https://www.autobazar.eu/detail/peugeot-508-20-hdi-fap-bvm6-active-103kw140hp-m6/AehAuTUQ9Gu/", "price": 5490}], "body": "liftback"}, {"id": "bs-34353429", "url": "https://auto.bazar.sk/34353429-peugeot-508-2-0-hdi/", "title": "Peugeot 508 2.0 HDI", "price": 5500, "price_gross": 5500, "fair_price": 6220.0, "discount_pct": 11.5, "verdict": "pod trhom", "year": 2013, "km": 236575, "km_per_year": 17700.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Nové Zámky", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "wagon"}, {"id": "196623148", "url": "https://auto.bazos.sk/inzerat/196623148/peugeot-508-rxh.php", "title": "Peugeot 508 rxh", "price": 4300, "price_gross": 4300, "fair_price": 4820.0, "discount_pct": 10.8, "verdict": "pod trhom", "year": 2014, "km": 368000, "km_per_year": 29800.0, "eg": "Hybrid (RXH HYbrid4 / plug-in) 147–265 kW", "cg": 2, "transmission": "automatic", "seller_type": "uncertain", "location": "Žiar nad Hronom", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "liftback"}, {"id": "bs-39647824", "url": "https://auto.bazar.sk/39647824-peugeot-508-2-0-bluehdi-eat8-gt-line-130kw-automat-sk-povod/", "title": "Peugeot 508 2.0 BlueHDi EAT8 GT-Line 130kW automat SK-pôvod", "price": 16990, "price_gross": 16990, "fair_price": 18920.0, "discount_pct": 10.2, "verdict": "pod trhom", "year": 2019, "km": 112511, "km_per_year": 15300.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Nové Mesto nad Váhom", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "liftback"}, {"id": "197475067", "url": "https://auto.bazos.sk/inzerat/197475067/peugeot-508-15-bluehdi-active-mt6-2021.php", "title": "Peugeot 508 1.5 BlueHDi Active MT6 2021", "price": 11990, "price_gross": 11990, "fair_price": 13160.0, "discount_pct": 8.9, "verdict": "pod trhom", "year": 2021, "km": 135000, "km_per_year": 25300.0, "eg": "1.5 BlueHDi 96 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Nitra", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "liftback"}, {"id": "ab-Ama80QCzNlq", "url": "https://www.autobazar.eu/detail/peugeot-508-20-hdi-hybrid-allure/Ama80QCzNlq/", "title": "Peugeot 508 2.0 HDI HYBRID ALLURE", "price": 4990, "price_gross": 4990, "fair_price": 5480.0, "discount_pct": 8.9, "verdict": "pod trhom", "year": 2012, "km": 219712, "km_per_year": 15300.0, "eg": "Hybrid (RXH HYbrid4 / plug-in) 147–265 kW", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Košice", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39588418", "url": "https://auto.bazar.sk/39588418-peugeot-508-2-0-hdi-hybrid-allure/", "price": 4990}], "body": "liftback"}, {"id": "197169135", "url": "https://auto.bazos.sk/inzerat/197169135/peugeot-508-16-hdi-2013-po-velkom-servise.php", "title": "Peugeot 508 1.6 HDi 2013 po servise, super spotreba", "price": 4299, "price_gross": 4299, "fair_price": 4710.0, "discount_pct": 8.8, "verdict": "pod trhom", "year": 2013, "km": 270000, "km_per_year": 20300.0, "eg": "1.6 HDi / BlueHDi 82–88 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Žilina", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "bs-39743592", "url": "https://auto.bazar.sk/39743592-peugeot-508-sw-hybrid-1-6-puretech/", "title": "Peugeot 508 SW HYbrid 1.6 PureTech", "price": 15999, "price_gross": 15999, "fair_price": 17520.0, "discount_pct": 8.7, "verdict": "pod trhom", "year": 2021, "km": 142088, "km_per_year": 26600.0, "eg": "Hybrid (RXH HYbrid4 / plug-in) 147–265 kW", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Poprad", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmSZXAPR_X9", "url": "https://www.autobazar.eu/detail/peugeot-508-sw/AmSZXAPR_X9/", "price": 15999}], "body": "wagon"}, {"id": "197513484", "url": "https://auto.bazos.sk/inzerat/197513484/peugeot-508-sw.php", "title": "Peugeot 508 SW", "price": 6000, "price_gross": 6000, "fair_price": 6560.0, "discount_pct": 8.6, "verdict": "pod trhom", "year": 2015, "km": 173000, "km_per_year": 15300.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Martin", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "ab-Am0s9kRAFX9", "url": "https://www.autobazar.eu/detail/peugeot-508-sw-gt-plug-in-hybrid-225k-eat8/Am0s9kRAFX9/", "title": "Peugeot 508 SW GT PLUG-IN HYBRID 225k EAT8", "price": 25490, "price_gross": 25490, "fair_price": 27850.0, "discount_pct": 8.5, "verdict": "pod trhom", "year": 2023, "km": 37400, "km_per_year": 11200.0, "eg": "Hybrid (RXH HYbrid4 / plug-in) 147–265 kW", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Košice-Juh", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-39163325", "url": "https://auto.bazar.sk/39163325-peugeot-508-sw-gt-plug-in-hybrid-225k-eat8/", "price": 25490}], "body": "wagon"}, {"id": "bs-34352969", "url": "https://auto.bazar.sk/34352969-peugeot-508-2-0-hdi/", "title": "Peugeot 508 2.0 HDI", "price": 5500, "price_gross": 5500, "fair_price": 6010.0, "discount_pct": 8.5, "verdict": "pod trhom", "year": 2011, "km": 241709, "km_per_year": 15800.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Nové Zámky", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "wagon"}, {"id": "ab-Ae9GFb_DW7b", "url": "https://www.autobazar.eu/detail/peugeot-508-sw-combi-bluehdi-20-automat-sr2maj/Ae9GFb_DW7b/", "title": "Peugeot 508 SW (Combi) BlueHDI 2.0, Automat, SR,2.maj", "price": 8000, "price_gross": 8000, "fair_price": 8740.0, "discount_pct": 8.4, "verdict": "pod trhom", "year": 2017, "km": 171807, "km_per_year": 18400.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Trnava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "197511424", "url": "https://auto.bazos.sk/inzerat/197511424/peugeot-508-sw-20hdi-120kw-at6-2012.php", "title": "Peugeot 508 SW 2.0HDI 120kW AT6 2012", "price": 5900, "price_gross": 5900, "fair_price": 6440.0, "discount_pct": 8.4, "verdict": "pod trhom", "year": 2012, "km": 187000, "km_per_year": 13000.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Košice", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "196477180", "url": "https://auto.bazos.sk/inzerat/196477180/2021-peugeot-508-sw-pse-16-hybrid-360.php", "title": "2021 Peugeot 508 sw pse 1.6 hybrid 360", "price": 20000, "price_gross": 24600, "fair_price": 26800.0, "discount_pct": 8.2, "verdict": "pod trhom", "year": 2021, "km": 74400, "km_per_year": 14000.0, "eg": "Hybrid (RXH HYbrid4 / plug-in) 147–265 kW", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Senica", "flags": ["inzerovaná cena 20000 € je bez DPH – porovnáva sa cena s DPH 24600 €"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "197656548", "url": "https://auto.bazos.sk/inzerat/197656548/predamvymenim-peugeot-508-20hdi-103kw-fap.php", "title": "Predám/vymením Peugeot 508 2.0HDI 103kw FAP", "price": 3200, "price_gross": 3200, "fair_price": 3480.0, "discount_pct": 8.0, "verdict": "pod trhom", "year": 2011, "km": 301500, "km_per_year": 19700.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Kežmarok", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "liftback"}, {"id": "ab-AeJxGmMN9d2", "url": "https://www.autobazar.eu/detail/peugeot-508-20-hdi-fap-163k-bva6-active-120kw163hp-a6/AeJxGmMN9d2/", "title": "Peugeot 508 2.0 HDi FAP 163k BVA6 Active 120kW/163HP A6", "price": 4250, "price_gross": 4250, "fair_price": 4610.0, "discount_pct": 7.9, "verdict": "pod trhom", "year": 2011, "km": 250000, "km_per_year": 16300.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "private", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "liftback"}, {"id": "197688312", "url": "https://auto.bazos.sk/inzerat/197688312/peugeot-508-sw-16-hdi-automat-hydromenic-73-kw-business.php", "title": "Peugeot 508 SW 1,6 HDi AUTOMAT Hydromenič 73 kW BUSINESS", "price": 6990, "price_gross": 6990, "fair_price": 7570.0, "discount_pct": 7.7, "verdict": "pod trhom", "year": 2016, "km": 202089, "km_per_year": 19600.0, "eg": "1.6 HDi / BlueHDi 82–88 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Martin", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "197312821", "url": "https://auto.bazos.sk/inzerat/197312821/peugeot508.php", "title": "Peugeot508", "price": 4000, "price_gross": 4000, "fair_price": 4340.0, "discount_pct": 7.7, "verdict": "pod trhom", "year": 2011, "km": 310000, "km_per_year": 20200.0, "eg": "1.6 HDi / BlueHDi 82–88 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Prievidza", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "liftback"}, {"id": "196496023", "url": "https://auto.bazos.sk/inzerat/196496023/peugeot-508-sw-16-hdi-82kw-6st-manual.php", "title": "Peugeot 508 SW 1.6 HDi 82kW - 6st. manuál", "price": 4299, "price_gross": 4299, "fair_price": 4640.0, "discount_pct": 7.4, "verdict": "pod trhom", "year": 2011, "km": 265513, "km_per_year": 17300.0, "eg": "1.6 HDi / BlueHDi 82–88 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Košice", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "195942718", "url": "https://auto.bazos.sk/inzerat/195942718/peugeot-508-15-bluehdi.php", "title": "Peugeot 508 1.5 BlueHDi", "price": 12300, "price_gross": 12300, "fair_price": 13250.0, "discount_pct": 7.2, "verdict": "pod trhom", "year": 2020, "km": 134085, "km_per_year": 21200.0, "eg": "1.5 BlueHDi 96 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Košice", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "ab-AewjsKoAp_Z", "url": "https://www.autobazar.eu/detail/peugeot-508-sw-combi-20-hdi-automat-koza-navigacia/AewjsKoAp_Z/", "title": "Peugeot 508 SW (Combi) 2.0 HDi, Automat, Koža, Navigácia", "price": 6200, "price_gross": 6200, "fair_price": 6660.0, "discount_pct": 6.9, "verdict": "férová cena", "year": 2014, "km": 176152, "km_per_year": 14300.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Prešovský kraj", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "ab-AeMDS8QSMcR", "url": "https://www.autobazar.eu/detail/peugeot-508-sw-combi-20-hdi-active-automat-navigacia/AeMDS8QSMcR/", "title": "Peugeot 508 SW (Combi) 2.0 HDi, Active, Automat, Navigácia", "price": 6000, "price_gross": 6000, "fair_price": 6440.0, "discount_pct": 6.8, "verdict": "férová cena", "year": 2015, "km": 211375, "km_per_year": 18700.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Košice", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "bs-33375763", "url": "https://auto.bazar.sk/33375763-peugeot-508-2-0-hdi/", "title": "Peugeot 508 2.0 HDI", "price": 13000, "price_gross": 13000, "fair_price": 13950.0, "discount_pct": 6.8, "verdict": "férová cena", "year": 2015, "km": 59843, "km_per_year": 5300.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Nové Zámky", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "wagon"}, {"id": "196671720", "url": "https://auto.bazos.sk/inzerat/196671720/peugeot-508-sw.php", "title": "Peugeot 508 sw", "price": 5500, "price_gross": 5500, "fair_price": 5830.0, "discount_pct": 5.7, "verdict": "férová cena", "year": 2014, "km": 242000, "km_per_year": 19600.0, "eg": "1.2 / 1.6 PureTech / THP 96–165 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Trnava", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "196364695", "url": "https://auto.bazos.sk/inzerat/196364695/peugeot-508-sw.php", "title": "Peugeot 508 SW", "price": 4600, "price_gross": 4600, "fair_price": 4870.0, "discount_pct": 5.6, "verdict": "férová cena", "year": 2016, "km": 303100, "km_per_year": 29300.0, "eg": "1.6 HDi / BlueHDi 82–88 kW", "cg": 1, "transmission": null, "seller_type": "dealer", "location": "Nitra", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "bs-34353840", "url": "https://auto.bazar.sk/34353840-peugeot-508-2-0-hdi/", "title": "Peugeot 508 2.0 HDI", "price": 12099, "price_gross": 12099, "fair_price": 12820.0, "discount_pct": 5.6, "verdict": "férová cena", "year": 2017, "km": 122870, "km_per_year": 13200.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Nové Zámky", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "bs-34353697", "url": "https://auto.bazar.sk/34353697-peugeot-508-1-6-hdi/", "title": "Peugeot 508 1.6 HDi", "price": 5500, "price_gross": 5500, "fair_price": 5820.0, "discount_pct": 5.6, "verdict": "férová cena", "year": 2013, "km": 234747, "km_per_year": 17600.0, "eg": "1.6 HDi / BlueHDi 82–88 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Nové Zámky", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "liftback"}, {"id": "195888890", "url": "https://auto.bazos.sk/inzerat/195888890/peugeot-508-20-hdi-rv13-naj186tiskm.php", "title": "Peugeot 508 2,0 Hdi rv:13 naj.186tis.km", "price": 4790, "price_gross": 4790, "fair_price": 5070.0, "discount_pct": 5.5, "verdict": "férová cena", "year": 2013, "km": 186000, "km_per_year": 14000.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": null, "seller_type": "dealer", "location": "Košice", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "liftback"}, {"id": "ab-AersIwdqsNF", "url": "https://www.autobazar.eu/detail/peugeot-508-sw-20-bluehdi-gt-eat6-133kw180hp-a6/AersIwdqsNF/", "title": "Peugeot 508 SW 2.0 BlueHDi GT EAT6 133kW180HP A6", "price": 6800, "price_gross": 6800, "fair_price": 7170.0, "discount_pct": 5.2, "verdict": "férová cena", "year": 2015, "km": 260200, "km_per_year": 23000.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "private", "location": "Zvolen", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "196136675", "url": "https://auto.bazos.sk/inzerat/196136675/predam-peugeot-508-sw-gt.php", "price": 6800}], "body": "wagon"}, {"id": "197365257", "url": "https://auto.bazos.sk/inzerat/197365257/peugeot-508-sw-20-bluehdi-gt-line-automat.php", "title": "Peugeot 508 2.0 BlueHDI", "price": 8000, "price_gross": 8000, "fair_price": 8420.0, "discount_pct": 5.0, "verdict": "férová cena", "year": 2018, "km": 259000, "km_per_year": 31100.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Trnava", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AefEAELcOKe", "url": "https://www.autobazar.eu/detail/peugeot-508-20-bluehdi-allure-ss-eat6-133kw180hp-a6/AefEAELcOKe/", "price": 8000}], "body": "wagon"}, {"id": "196885673", "url": "https://auto.bazos.sk/inzerat/196885673/peugeot-508-20-bluehdi-110kw-model-2018.php", "title": "Peugeot 508 2,0 BlueHDi 110kW model 2018 FACELIFT", "price": 8190, "price_gross": 8190, "fair_price": 8580.0, "discount_pct": 4.6, "verdict": "férová cena", "year": 2018, "km": 199000, "km_per_year": 23900.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Trnava", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "liftback"}, {"id": "bs-39726016", "url": "https://auto.bazar.sk/39726016-peugeot-508-sw-1-5-bluehdi-gt-line-eat8/", "title": "Peugeot 508 SW 1.5 BlueHDi GT Line EAT8", "price": 13900, "price_gross": 13900, "fair_price": 14550.0, "discount_pct": 4.5, "verdict": "férová cena", "year": 2019, "km": 131000, "km_per_year": 17900.0, "eg": "1.5 BlueHDi 96 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Horná Kráľová", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [{"source": "bazos", "id": "196215932", "url": "https://auto.bazos.sk/inzerat/196215932/peugeot-508-sw-15-bluehdi-gt-line-eat8.php", "price": 13900}, {"source": "autobazar", "id": "ab-AmukLwCSoJ-", "url": "https://www.autobazar.eu/detail/peugeot-508-sw-15-bluehdi-gt-line-eat8/AmukLwCSoJ-/", "price": 13900}], "body": "wagon"}, {"id": "196932161", "url": "https://auto.bazos.sk/inzerat/196932161/peugeot-508.php", "title": "Peugeot 508", "price": 3800, "price_gross": 3800, "fair_price": 3960.0, "discount_pct": 4.1, "verdict": "férová cena", "year": 2011, "km": 220000, "km_per_year": 14300.0, "eg": "1.2 / 1.6 PureTech / THP 96–165 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Martin", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "liftback"}, {"id": "ab-Am5qQpCCjxk", "url": "https://www.autobazar.eu/detail/peugeot-508-sw-rxh-4x4-20hdi-at6-kup-v-sr/Am5qQpCCjxk/", "title": "Peugeot 508 SW RXH 4x4 2.0HDI AT/6 kúp. v SR", "price": 7600, "price_gross": 7600, "fair_price": 7890.0, "discount_pct": 3.6, "verdict": "férová cena", "year": 2012, "km": 131400, "km_per_year": 9200.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Žiar nad Hronom", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "196646475", "url": "https://auto.bazos.sk/inzerat/196646475/peugeot-508-sw-rxh-4x4-20hdi-at6-kup-v-sr-131400km.php", "price": 7600}, {"source": "bazarsk", "id": "bs-39740517", "url": "https://auto.bazar.sk/39740517-peugeot-508-sw-rxh-4x4-2-0hdi-at-6-kup-v-sr/", "price": 7600}], "body": "wagon"}, {"id": "197012007", "url": "https://auto.bazos.sk/inzerat/197012007/peogeot-508-sw-15-bluehdi-96kw-active.php", "title": "Peogeot 508 SW 1.5 BlueHDi 96kw Active", "price": 12799, "price_gross": 12799, "fair_price": 13260.0, "discount_pct": 3.5, "verdict": "férová cena", "year": 2020, "km": 117000, "km_per_year": 18500.0, "eg": "1.5 BlueHDi 96 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Rožňava", "flags": [], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "wagon"}, {"id": "bs-38630513", "url": "https://auto.bazar.sk/38630513-peugeot-508-sw-1-5-bluehdi-allure-eat8/", "title": "Peugeot 508 SW 1.5 BlueHDi Allure EAT8", "price": 16490, "price_gross": 16490, "fair_price": 17060.0, "discount_pct": 3.3, "verdict": "férová cena", "year": 2020, "km": 96077, "km_per_year": 15200.0, "eg": "1.5 BlueHDi 96 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Trnava", "flags": [], "pick": null, "source": "bazarsk", "origin": "dovoz", "also_listed": [{"source": "autobazar", "id": "ab-Am9veY9-CJw", "url": "https://www.autobazar.eu/detail/peugeot-508-sw-15-bluehdi-allure-eat8/Am9veY9-CJw/", "price": 16490}], "body": "wagon"}, {"id": "ab-AekvtKpzc5S", "url": "https://www.autobazar.eu/detail/peugeot-508-bluehdi-20-allure-automat-sr1maj/AekvtKpzc5S/", "title": "Peugeot 508 BlueHDI 2.0, Allure, Automat, SR,1.maj", "price": 7900, "price_gross": 7900, "fair_price": 8150.0, "discount_pct": 3.1, "verdict": "férová cena", "year": 2017, "km": 179415, "km_per_year": 19200.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Žilinský kraj", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "liftback"}, {"id": "ab-AeyOhoLKZlb", "url": "https://www.autobazar.eu/detail/peugeot-508-sw-combi-15-bluehdi-active-automat-sr2maj/AeyOhoLKZlb/", "title": "Peugeot 508 SW (Combi) 1.5 BlueHDi, Active, Automat, SR,2.maj", "price": 10500, "price_gross": 10500, "fair_price": 10810.0, "discount_pct": 2.9, "verdict": "férová cena", "year": 2019, "km": 171275, "km_per_year": 23400.0, "eg": "1.5 BlueHDi 96 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Nitriansky kraj", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "196629586", "url": "https://auto.bazos.sk/inzerat/196629586/predam-peugeot-508-sw-20hdi.php", "title": "Predám Peugeot 508 SW 2.0HDI", "price": 6200, "price_gross": 6200, "fair_price": 6360.0, "discount_pct": 2.6, "verdict": "férová cena", "year": 2014, "km": 240000, "km_per_year": 19500.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Nové Zámky", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "196395642", "url": "https://auto.bazos.sk/inzerat/196395642/peugeot-508-hybrid-gt.php", "title": "Peugeot 508 Hybrid GT", "price": 15900, "price_gross": 15900, "fair_price": 16290.0, "discount_pct": 2.4, "verdict": "férová cena", "year": 2020, "km": 116000, "km_per_year": 18300.0, "eg": "Hybrid (RXH HYbrid4 / plug-in) 147–265 kW", "cg": 2, "transmission": "automatic", "seller_type": "uncertain", "location": "Nitra", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "liftback"}, {"id": "bs-39727991", "url": "https://auto.bazar.sk/39727991-peugeot-508-sw-1-5-bluehdi-gt-line/", "title": "Peugeot 508 SW 1.5 BlueHDi GT Line", "price": 12990, "price_gross": 12990, "fair_price": 13300.0, "discount_pct": 2.4, "verdict": "férová cena", "year": 2019, "km": 136000, "km_per_year": 18500.0, "eg": "1.5 BlueHDi 96 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Horná Kráľová", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [{"source": "bazos", "id": "196280684", "url": "https://auto.bazos.sk/inzerat/196280684/peugeot-508-sw-15-bluehdi-gt-vybava.php", "price": 12990}, {"source": "autobazar", "id": "ab-AmJmx0Y3I-e", "url": "https://www.autobazar.eu/detail/peugeot-508-sw-15-bluehdi-gt-line/AmJmx0Y3I-e/", "price": 12990}], "body": "wagon"}, {"id": "bs-39726979", "url": "https://auto.bazar.sk/39726979-peugeot-508-sw-1-6-puretech-e6d-isc-gt-pack-eat8/", "title": "Peugeot 508 SW 1.6 PureTech E6d-ISC GT Pack EAT8", "price": 16490, "price_gross": 16490, "fair_price": 16850.0, "discount_pct": 2.1, "verdict": "férová cena", "year": 2020, "km": 104000, "km_per_year": 16400.0, "eg": "1.2 / 1.6 PureTech / THP 96–165 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Ružomberok", "flags": [], "pick": null, "source": "bazarsk", "origin": "dovoz", "also_listed": [{"source": "autobazar", "id": "ab-AmxA1W-fbyx", "url": "https://www.autobazar.eu/detail/peugeot-508-sw-16-puretech-e6d-isc-gt-pack-eat8/AmxA1W-fbyx/", "price": 16490}, {"source": "bazos", "id": "196212310", "url": "https://auto.bazos.sk/inzerat/196212310/peugeot-508-sw-16-puretech-gt-104000-km-2020.php", "price": 16490}], "body": "wagon"}, {"id": "196553827", "url": "https://auto.bazos.sk/inzerat/196553827/peugeot-508-sw-20-bluehdi-allure-eat6.php", "title": "Peugeot 508 SW 2.0 BlueHDi Allure EAT6", "price": 8800, "price_gross": 8800, "fair_price": 8940.0, "discount_pct": 1.5, "verdict": "férová cena", "year": 2015, "km": 176820, "km_per_year": 15600.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-39736355", "url": "https://auto.bazar.sk/39736355-peugeot-508-sw-2-0-bluehdi-allure-eat6/", "price": 8800}, {"source": "autobazar", "id": "ab-AmMZcDD0u4t", "url": "https://www.autobazar.eu/detail/peugeot-508-sw-20-bluehdi-allure-eat6/AmMZcDD0u4t/", "price": 8800}], "body": "wagon"}, {"id": "ab-Ae_tcY5MDUr", "url": "https://www.autobazar.eu/detail/peugeot-508-predam-peugeot-508/Ae_tcY5MDUr/", "title": "Peugeot 508 Predám peugeot 508", "price": 4000, "price_gross": 4000, "fair_price": 4050.0, "discount_pct": 1.2, "verdict": "férová cena", "year": 2011, "km": 236000, "km_per_year": 15400.0, "eg": "1.6 HDi / BlueHDi 82–88 kW", "cg": 1, "transmission": "manual", "seller_type": "private", "location": "Michalovce", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "liftback"}, {"id": "196749725", "url": "https://auto.bazos.sk/inzerat/196749725/peugeot-508-sw-15-bluehdi-allure.php", "title": "Peugeot 508 SW 1.5 BlueHDi Allure", "price": 12990, "price_gross": 12990, "fair_price": 13090.0, "discount_pct": 0.7, "verdict": "férová cena", "year": 2020, "km": 130091, "km_per_year": 20500.0, "eg": "1.5 BlueHDi 96 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Trnava", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmKpux6AcAo", "url": "https://www.autobazar.eu/detail/peugeot-508-sw-15-bluehdi-allure/AmKpux6AcAo/", "price": 12990}, {"source": "bazarsk", "id": "bs-38415447", "url": "https://auto.bazar.sk/38415447-peugeot-508-sw-1-5-bluehdi-allure/", "price": 12990}], "body": "wagon"}, {"id": "ab-AeztU7PX3NU", "url": "https://www.autobazar.eu/detail/peugeot-508-bluehdi-20-gt-automat-sr1maj/AeztU7PX3NU/", "title": "Peugeot 508 BlueHDI 2.0, GT, Automat, SR,1.maj", "price": 15600, "price_gross": 15600, "fair_price": 15700.0, "discount_pct": 0.6, "verdict": "férová cena", "year": 2019, "km": 89148, "km_per_year": 12200.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Prešovský kraj", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "liftback"}, {"id": "bs-39759932", "url": "https://auto.bazar.sk/39759932-peugeot-508-sw-2-0-bluehdi-gt-130kw-a8-zaruka-aj-na-splatky-protiucet/", "title": "Peugeot 508 SW 2.0 BlueHDi GT / 130kW / A8 / ZÁRUKA / AJ NA SPLÁTKY / PROTIÚČET", "price": 16500, "price_gross": 16500, "fair_price": 16510.0, "discount_pct": 0.1, "verdict": "férová cena", "year": 2020, "km": 157513, "km_per_year": 24900.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Stará Turá", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [{"source": "bazos", "id": "197545841", "url": "https://auto.bazos.sk/inzerat/197545841/peugeot-508-sw-20-bluehdi-gt-130kw-a8-2020.php", "price": 16500}, {"source": "autobazar", "id": "ab-Amv3JF5k7VE", "url": "https://www.autobazar.eu/detail/peugeot-508-sw-20-bluehdi-gt-130kw-a8-zaruka-aj-na-splatky-protiucet/Amv3JF5k7VE/", "price": 16500}], "body": "wagon"}, {"id": "197545933", "url": "https://auto.bazos.sk/inzerat/197545933/peugeot-508-sw-20-hdi-6-stupnovy-manual.php", "title": "Peugeot 508 SW 2.0 HDi, 6-stupňový manuál", "price": 4200, "price_gross": 4200, "fair_price": 4200.0, "discount_pct": -0.1, "verdict": "férová cena", "year": 2013, "km": 380000, "km_per_year": 28500.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Nitra", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "ab-AmacWITosmJ", "url": "https://www.autobazar.eu/detail/peugeot-508-sw/AmacWITosmJ/", "title": "Peugeot 508 SW", "price": 23950, "price_gross": 23950, "fair_price": 23910.0, "discount_pct": -0.2, "verdict": "férová cena", "year": 2024, "km": 28274, "km_per_year": 12100.0, "eg": "1.5 BlueHDi 96 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Zlatná na Ostrove", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "ab-Aeq6acy5Ynn", "url": "https://www.autobazar.eu/detail/peugeot-508-sw-15-diesel-96kw-automat-prevodovka/Aeq6acy5Ynn/", "title": "Peugeot 508 SW 1.5 Diesel 96kW Automat. prevodovka", "price": 12490, "price_gross": 12490, "fair_price": 12360.0, "discount_pct": -1.1, "verdict": "férová cena", "year": 2020, "km": 140000, "km_per_year": 22100.0, "eg": "1.5 BlueHDi 96 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Malacky", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "196249379", "url": "https://auto.bazos.sk/inzerat/196249379/peugeot-508-sw-15-bluehdi-allure-pack-eat8-top-stav.php", "price": 12490}], "body": "wagon"}, {"id": "196715092", "url": "https://auto.bazos.sk/inzerat/196715092/peugeot-508-rok-2011.php", "title": "Peugeot 508 rok 2011", "price": 4300, "price_gross": 4300, "fair_price": 4260.0, "discount_pct": -1.1, "verdict": "férová cena", "year": 2011, "km": 223000, "km_per_year": 14500.0, "eg": "1.2 / 1.6 PureTech / THP 96–165 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Žilina", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "liftback"}, {"id": "bs-38616587", "url": "https://auto.bazar.sk/38616587-peugeot-508-sw-1-5-allure-96kw-nocnevidenie-navi-kameragarancia-107tkmoverene/", "title": "Peugeot 508 SW 1,5 ALLURE 96kW NočnéVidenie/Navi+Kamera=GARANCIA 107TKM=OVERENÉ", "price": 15499, "price_gross": 15499, "fair_price": 15270.0, "discount_pct": -1.5, "verdict": "férová cena", "year": 2019, "km": 107809, "km_per_year": 14700.0, "eg": "1.5 BlueHDi 96 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Martin", "flags": [], "pick": null, "source": "bazarsk", "origin": "dovoz", "also_listed": [{"source": "autobazar", "id": "ab-AmmZAzUTsYa", "url": "https://www.autobazar.eu/detail/peugeot-508-sw-bluehdi-allure-night-vision-96kw-at-plusf1-navikameragarancia-107tkmoverene/AmmZAzUTsYa/", "price": 15499}, {"source": "bazos", "id": "196706097", "url": "https://auto.bazos.sk/inzerat/196706097/peugeot-508-sw15bluehdi-allure-nocne-videnie.php", "price": 15499}], "body": "wagon"}, {"id": "196298892", "url": "https://auto.bazos.sk/inzerat/196298892/peugeot-508sw-bussines-line-20hdi.php", "title": "Peugeot 508sw Bussines line, 2.0HDI", "price": 6000, "price_gross": 6000, "fair_price": 5870.0, "discount_pct": -2.1, "verdict": "férová cena", "year": 2015, "km": 200000, "km_per_year": 17600.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Žilina", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "bs-34352970", "url": "https://auto.bazar.sk/34352970-peugeot-508-hybrid4-rxh/", "title": "Peugeot 508 HYbrid4 RXH", "price": 9000, "price_gross": 9000, "fair_price": 8810.0, "discount_pct": -2.2, "verdict": "férová cena", "year": 2012, "km": 178651, "km_per_year": 12500.0, "eg": "Hybrid (RXH HYbrid4 / plug-in) 147–265 kW", "cg": 2, "transmission": "automatic", "seller_type": "uncertain", "location": "Nové Zámky", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "liftback"}, {"id": "197343271", "url": "https://auto.bazos.sk/inzerat/197343271/peugeot-508-sw-20-hdi-120-kw-automat.php", "title": "Peugeot 508 SW, 2,0 HDi, 120 kW, Automat", "price": 4490, "price_gross": 4490, "fair_price": 4380.0, "discount_pct": -2.5, "verdict": "férová cena", "year": 2012, "km": 393000, "km_per_year": 27400.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Nitra", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "ab-AeXjQffXeX2", "url": "https://www.autobazar.eu/detail/peugeot-508-sw-combi-15-bluehdi-automat-servkniha-koza/AeXjQffXeX2/", "title": "Peugeot 508 SW (Combi) 1.5 BlueHDi, Automat, Serv.kniha, Koža", "price": 12600, "price_gross": 12600, "fair_price": 12270.0, "discount_pct": -2.7, "verdict": "férová cena", "year": 2020, "km": 152206, "km_per_year": 24000.0, "eg": "1.5 BlueHDi 96 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "ab-AewZs0Sf-qY", "url": "https://www.autobazar.eu/detail/peugeot-508-sw-20-bluehdi-gt-eat6-133kw180hp-a6/AewZs0Sf-qY/", "title": "Peugeot 508 SW 2.0 BlueHDi GT EAT6 133kW180HP A6", "price": 11500, "price_gross": 11500, "fair_price": 11180.0, "discount_pct": -2.8, "verdict": "férová cena", "year": 2017, "km": 143560, "km_per_year": 15400.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "private", "location": "Topoľčany", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "wagon"}, {"id": "196254300", "url": "https://auto.bazos.sk/inzerat/196254300/peugeot-508-gt-22-2015.php", "title": "Peugeot 508 GT 2.2 2015", "price": 6900, "price_gross": 6900, "fair_price": 6690.0, "discount_pct": -3.1, "verdict": "férová cena", "year": 2015, "km": 220000, "km_per_year": 19400.0, "eg": "1.6 HDi / BlueHDi 82–88 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Trnava", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "liftback"}, {"id": "196034190", "url": "https://auto.bazos.sk/inzerat/196034190/peugeot-508-sw-20-blue-hdi-133-kw.php", "title": "Peugeot 508 SW, 2.0 Blue HDi, 133 kw", "price": 7890, "price_gross": 7890, "fair_price": 7650.0, "discount_pct": -3.1, "verdict": "férová cena", "year": 2016, "km": 244000, "km_per_year": 23600.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Košice", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "196875069", "url": "https://auto.bazos.sk/inzerat/196875069/peugeot-508-20hdi-133kw.php", "title": "Peugeot 508 2.0hdi, 133kw", "price": 11000, "price_gross": 11000, "fair_price": 10610.0, "discount_pct": -3.7, "verdict": "férová cena", "year": 2016, "km": 115000, "km_per_year": 11100.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Žilina", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "liftback"}, {"id": "196717694", "url": "https://auto.bazos.sk/inzerat/196717694/peugeot-508-15blue-hdi-eat8rok-vyroby-2019-96kw.php", "title": "Peugeot 508 1,5Blue HDi Allure. EAT8.rok výroby 2019.  96KW.", "price": 13000, "price_gross": 13000, "fair_price": 12460.0, "discount_pct": -4.3, "verdict": "férová cena", "year": 2019, "km": 127500, "km_per_year": 17400.0, "eg": "1.5 BlueHDi 96 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Dolný Kubín", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "liftback"}, {"id": "bs-34351498", "url": "https://auto.bazar.sk/34351498-peugeot-508-allure-2-0-hdi/", "title": "Peugeot 508 Allure 2.0 HDI", "price": 11300, "price_gross": 11300, "fair_price": 10820.0, "discount_pct": -4.4, "verdict": "férová cena", "year": 2015, "km": 131668, "km_per_year": 11600.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Nové Zámky", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "liftback"}, {"id": "196671027", "url": "https://auto.bazos.sk/inzerat/196671027/peugeot-508.php", "title": "Peugeot 508", "price": 4400, "price_gross": 4400, "fair_price": 4210.0, "discount_pct": -4.5, "verdict": "férová cena", "year": 2012, "km": 233000, "km_per_year": 16300.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Vranov nad Topľou", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "liftback"}, {"id": "bs-39759512", "url": "https://auto.bazar.sk/39759512-peugeot-508-2-0-bluehdi-gt-133kw-a6-zaruka-aj-na-splatky-protiucet/", "title": "Peugeot 508 2.0 BlueHDi GT / 133kW / A6 / ZÁRUKA / AJ NA SPLÁTKY / PROTIÚČET", "price": 7990, "price_gross": 7990, "fair_price": 7650.0, "discount_pct": -4.5, "verdict": "férová cena", "year": 2016, "km": 243944, "km_per_year": 23600.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Stará Turá", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [{"source": "bazos", "id": "197467521", "url": "https://auto.bazos.sk/inzerat/197467521/peugeot-508-20-bluehdi-gt-133kw-a6-2016.php", "price": 7990}, {"source": "autobazar", "id": "ab-Am7ub8TWk4m", "url": "https://www.autobazar.eu/detail/peugeot-508-20-bluehdi-gt-133kw-a6-zaruka-aj-na-splatky-protiucet/Am7ub8TWk4m/", "price": 7990}], "body": "liftback"}, {"id": "bs-39278940", "url": "https://auto.bazar.sk/39278940-peugeot-508-2-0-bluehdi-eat8-allure/", "title": "Peugeot 508 2.0 BlueHDi EAT8 Allure", "price": 13290, "price_gross": 13290, "fair_price": 12720.0, "discount_pct": -4.5, "verdict": "férová cena", "year": 2019, "km": 190758, "km_per_year": 26000.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava I - Staré Mesto", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "liftback"}, {"id": "bs-39582837", "url": "https://auto.bazar.sk/39582837-peugeot-508-sw-2-0-bluehdi-eat8-gt-line/", "title": "Peugeot 508 SW 2.0 BlueHDi EAT8 GT Line", "price": 21490, "price_gross": 21490, "fair_price": 20530.0, "discount_pct": -4.7, "verdict": "férová cena", "year": 2020, "km": 84908, "km_per_year": 13400.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Nové Mesto nad Váhom", "flags": [], "pick": null, "source": "bazarsk", "origin": "dovoz", "also_listed": [], "body": "wagon"}, {"id": "ab-AeJ7xTZOoQz", "url": "https://www.autobazar.eu/detail/peugeot-508-20-hdi-servkniha-xenony-klima/AeJ7xTZOoQz/", "title": "Peugeot 508 2.0 HDi, Serv.kniha, Xenóny, Klíma", "price": 4900, "price_gross": 4900, "fair_price": 4670.0, "discount_pct": -4.9, "verdict": "férová cena", "year": 2014, "km": 249449, "km_per_year": 20200.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Trnava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "liftback"}, {"id": "196137192", "url": "https://auto.bazos.sk/inzerat/196137192/peugeot-508-sw.php", "title": "Peugeot 508 SW", "price": 6000, "price_gross": 6000, "fair_price": 5720.0, "discount_pct": -5.0, "verdict": "férová cena", "year": 2015, "km": 224000, "km_per_year": 19800.0, "eg": "1.2 / 1.6 PureTech / THP 96–165 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Spišská Nová Ves", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "ab-AeKLUA4Eoim", "url": "https://www.autobazar.eu/detail/peugeot-508-sw-20-hdi-163k-allure-120kw163hp-m6/AeKLUA4Eoim/", "title": "Peugeot 508 SW 2.0 HDi 163k Allure 120kW163HP M6", "price": 4900, "price_gross": 4900, "fair_price": 4660.0, "discount_pct": -5.1, "verdict": "férová cena", "year": 2014, "km": 330000, "km_per_year": 26800.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": "manual", "seller_type": "private", "location": "Kľúčovec", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "bs-35669583", "url": "https://auto.bazar.sk/35669583-peugeot-508-sw-2-0-bluehdi-allure-eat6/", "title": "Peugeot 508 SW 2.0 BlueHDi Allure EAT6", "price": 11299, "price_gross": 11299, "fair_price": 10720.0, "discount_pct": -5.4, "verdict": "férová cena", "year": 2017, "km": 216800, "km_per_year": 23200.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "private", "location": "Bačkovík", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "wagon"}, {"id": "bs-39052874", "url": "https://auto.bazar.sk/39052874-peugeot-508-sw-pse-1-6-hybrid4-360k-e-eat8/", "title": "Peugeot 508 SW PSE 1.6 Hybrid4 360k e-EAT8", "price": 34490, "price_gross": 34490, "fair_price": 32680.0, "discount_pct": -5.5, "verdict": "férová cena", "year": 2022, "km": 68000, "km_per_year": 15700.0, "eg": "Hybrid (RXH HYbrid4 / plug-in) 147–265 kW", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Košice IV - Juh", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "ab-Am60Ggs3HWC", "url": "https://www.autobazar.eu/detail/peugeot-508-sw-20-hdi-fap-bvm6-allure/Am60Ggs3HWC/", "title": "Peugeot 508 SW 2.0 HDi FAP BVM6 Allure", "price": 4650, "price_gross": 4650, "fair_price": 4400.0, "discount_pct": -5.6, "verdict": "férová cena", "year": 2012, "km": 228013, "km_per_year": 15900.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Michalovce", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "197523103", "url": "https://auto.bazos.sk/inzerat/197523103/peugeot-508-sw-20-hdi-fap-bvm6-allure.php", "price": 4650}, {"source": "bazarsk", "id": "bs-39769863", "url": "https://auto.bazar.sk/39769863-peugeot-508-sw-2-0-hdi-fap-bvm6-allure/", "price": 4650}], "body": "wagon"}, {"id": "197481732", "url": "https://auto.bazos.sk/inzerat/197481732/peugeot-508-allure-15-bluehdi-96kw.php", "title": "Peugeot 508 Allure 1.5 blueHDI 96kw", "price": 11600, "price_gross": 11600, "fair_price": 10960.0, "discount_pct": -5.8, "verdict": "férová cena", "year": 2019, "km": 173000, "km_per_year": 23600.0, "eg": "1.5 BlueHDi 96 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "liftback"}, {"id": "196365000", "url": "https://auto.bazos.sk/inzerat/196365000/peugeot-508-sw-20-hdi-120-kw-163-k-rv-201.php", "title": "Peugeot 508 SW 2.0 HDi (120 kW / 163 k) – rv. 201", "price": 4700, "price_gross": 4700, "fair_price": 4430.0, "discount_pct": -6.0, "verdict": "férová cena", "year": 2012, "km": 256000, "km_per_year": 17900.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Prievidza", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "ab-Amq1OkFRB5R", "url": "https://www.autobazar.eu/detail/peugeot-508-15hdi-96kw-at8-style/Amq1OkFRB5R/", "title": "Peugeot 508 1,5HDI, 96kw, AT/8 Style", "price": 12800, "price_gross": 12800, "fair_price": 12080.0, "discount_pct": -6.0, "verdict": "férová cena", "year": 2019, "km": 122100, "km_per_year": 16700.0, "eg": "1.5 BlueHDi 96 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39610086", "url": "https://auto.bazar.sk/39610086-peugeot-508-1-5hdi-96kw-at-8-style/", "price": 12800}], "body": "liftback"}, {"id": "ab-AmaL2w-vbp2", "url": "https://www.autobazar.eu/detail/peugeot-508-20-hdi-163k-business-line-bmp6/AmaL2w-vbp2/", "title": "Peugeot 508 2.0 HDi 163k Business Line BMP6", "price": 4800, "price_gross": 4800, "fair_price": 4510.0, "discount_pct": -6.3, "verdict": "férová cena", "year": 2014, "km": 352000, "km_per_year": 28500.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Kalná nad Hronom", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-38437084", "url": "https://auto.bazar.sk/38437084-peugeot-508-2-0-hdi-163k-business-line-bmp6/", "price": 4800}], "body": "liftback"}, {"id": "196238274", "url": "https://auto.bazos.sk/inzerat/196238274/peugeot-508sw.php", "title": "Peugeot 508sw", "price": 4300, "price_gross": 4300, "fair_price": 4030.0, "discount_pct": -6.6, "verdict": "férová cena", "year": 2012, "km": 350000, "km_per_year": 24400.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Ilava", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "ab-Aekj9RD2p4Y", "url": "https://www.autobazar.eu/detail/peugeot-508-15-bluehdi-sr2maj-servkniha/Aekj9RD2p4Y/", "title": "Peugeot 508 1.5 BlueHDi, SR,2.maj, Serv.kniha, Koža", "price": 10800, "price_gross": 10800, "fair_price": 10110.0, "discount_pct": -6.8, "verdict": "férová cena", "year": 2019, "km": 154090, "km_per_year": 21000.0, "eg": "1.5 BlueHDi 96 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Košice", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "liftback"}, {"id": "ab-Ae-atqVnB0V", "url": "https://www.autobazar.eu/detail/peugeot-508-sw-combi-16-puretech-gt-line-automat-sr2maj/Ae-atqVnB0V/", "title": "Peugeot 508 SW (Combi) 1.6 PureTech, GT Line, Automat, SR,2.maj", "price": 16300, "price_gross": 16300, "fair_price": 15170.0, "discount_pct": -7.4, "verdict": "nad trhom", "year": 2019, "km": 76984, "km_per_year": 10500.0, "eg": "1.2 / 1.6 PureTech / THP 96–165 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Košice", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "ab-AeomazxuIz9", "url": "https://www.autobazar.eu/detail/peugeot-508-16-puretech-gt-line-eat8-133kw180hp-a8/AeomazxuIz9/", "title": "Peugeot 508 1.6 PureTech GT Line EAT8 133kW180HP A8", "price": 17500, "price_gross": 17500, "fair_price": 16280.0, "discount_pct": -7.5, "verdict": "nad trhom", "year": 2019, "km": 88000, "km_per_year": 12000.0, "eg": "1.2 / 1.6 PureTech / THP 96–165 kW", "cg": 0, "transmission": "automatic", "seller_type": "private", "location": "Bratislava-Rača", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "liftback"}, {"id": "197633942", "url": "https://auto.bazos.sk/inzerat/197633942/peugeot-508-sedan-20-hdi.php", "title": "Peugeot 508 Sedan 2.0 HDi", "price": 6990, "price_gross": 6990, "fair_price": 6490.0, "discount_pct": -7.7, "verdict": "nad trhom", "year": 2014, "km": 231000, "km_per_year": 18700.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Košice", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "wagon"}, {"id": "197539829", "url": "https://auto.bazos.sk/inzerat/197539829/ford-fusion-14i-59kw-cz-klimat-vyhrev-servis-2008.php", "title": "PEUGEOT 508 2,0BlueHDi 120kw AT8 Kůže GPS DPH 2020", "price": 10700, "price_gross": 10700, "fair_price": 9790.0, "discount_pct": -9.2, "verdict": "nad trhom", "year": 2020, "km": 286644, "km_per_year": 45300.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Zahraničie", "flags": ["vysoký nájazd 45000 km/rok – flotila / taxi?"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "liftback"}, {"id": "bs-39682362", "url": "https://auto.bazar.sk/39682362-peugeot-508-diesel-elektrika/", "title": "Peugeot 508 DIESEL ELEKTRIKA", "price": 5199, "price_gross": 5199, "fair_price": 4760.0, "discount_pct": -9.2, "verdict": "nad trhom", "year": 2012, "km": 299691, "km_per_year": 20900.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Turany", "flags": [], "pick": null, "source": "bazarsk", "origin": "dovoz", "also_listed": [{"source": "autobazar", "id": "ab-AmZl61RgC6y", "url": "https://www.autobazar.eu/detail/peugeot-508-diesel-elektrika/AmZl61RgC6y/", "price": 5199}, {"source": "bazos", "id": "196974783", "url": "https://auto.bazos.sk/inzerat/196974783/peugeot-508-diesel-elektrika.php", "price": 5199}], "body": "liftback"}, {"id": "195991246", "url": "https://auto.bazos.sk/inzerat/195991246/peugeot-508-gt.php", "title": "Peugeot 508 GT 2,2 HDi", "price": 9000, "price_gross": 9000, "fair_price": 8230.0, "discount_pct": -9.3, "verdict": "nad trhom", "year": 2015, "km": 166000, "km_per_year": 14600.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Košice", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "liftback"}, {"id": "196612819", "url": "https://auto.bazos.sk/inzerat/196612819/peugeot-508-sw-20-bluehdi-gt-eat6-133kw180hp-a6.php", "title": "Peugeot 508 SW 2.0 BlueHDi GT EAT6 133kW180HP A6", "price": 7100, "price_gross": 7100, "fair_price": 6480.0, "discount_pct": -9.6, "verdict": "nad trhom", "year": 2015, "km": 259700, "km_per_year": 22900.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Zvolen", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "bs-35931601", "url": "https://auto.bazar.sk/35931601-peugeot-508-sw-2-0-hdi-163k-allure-bva6/", "title": "Peugeot 508 SW 2.0 HDi 163k Allure BVA6", "price": 9900, "price_gross": 9900, "fair_price": 9030.0, "discount_pct": -9.7, "verdict": "nad trhom", "year": 2015, "km": 208000, "km_per_year": 18400.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "private", "location": "Banská Bystrica", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "wagon"}, {"id": "197503216", "url": "https://auto.bazos.sk/inzerat/197503216/peugeot-508-sw-20d-120kw.php", "title": "Peugeot 508 SW 2.0D 120kw", "price": 4560, "price_gross": 4560, "fair_price": 4150.0, "discount_pct": -9.9, "verdict": "nad trhom", "year": 2013, "km": 325000, "km_per_year": 24400.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Trenčín", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "197604567", "url": "https://auto.bazos.sk/inzerat/197604567/peugeot-508-sw-20-bluehdi-rxh.php", "title": "Peugeot 508 SW 2.0 BlueHDi RXH", "price": 7400, "price_gross": 7400, "fair_price": 6680.0, "discount_pct": -10.7, "verdict": "nad trhom", "year": 2016, "km": 280500, "km_per_year": 27100.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Levice", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "bs-39047555", "url": "https://auto.bazar.sk/39047555-peugeot-508-1-5-bluehdi-allure-eat8/", "title": "Peugeot 508 1.5 BlueHDi Allure EAT8", "price": 11990, "price_gross": 11990, "fair_price": 10820.0, "discount_pct": -10.8, "verdict": "nad trhom", "year": 2019, "km": 203000, "km_per_year": 27700.0, "eg": "1.5 BlueHDi 96 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava I - Staré Mesto", "flags": [], "pick": null, "source": "bazarsk", "origin": "dovoz", "also_listed": [], "body": "liftback"}, {"id": "197200492", "url": "https://auto.bazos.sk/inzerat/197200492/peugeot-508-sw-20-hdi.php", "title": "Peugeot 508 sw 2,0 HDI", "price": 8500, "price_gross": 8500, "fair_price": 7660.0, "discount_pct": -11.0, "verdict": "nad trhom", "year": 2015, "km": 217000, "km_per_year": 19100.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Trenčín", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "197308176", "url": "https://auto.bazos.sk/inzerat/197308176/peugeot-508.php", "title": "Peugeot 508", "price": 5200, "price_gross": 5200, "fair_price": 4560.0, "discount_pct": -13.9, "verdict": "nad trhom", "year": 2013, "km": 309000, "km_per_year": 23200.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Dunajská Streda", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "bs-34356032", "url": "https://auto.bazar.sk/34356032-peugeot-508-allure-2-0-bluehdi-eat6-stopstart/", "title": "Peugeot 508 ALLURE 2.0 BlueHDi EAT6 STOP&START", "price": 13950, "price_gross": 13950, "fair_price": 12150.0, "discount_pct": -14.8, "verdict": "nad trhom", "year": 2015, "km": 79980, "km_per_year": 7100.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Lučenec", "flags": [], "pick": null, "source": "bazarsk", "origin": "dovoz", "also_listed": [], "body": "liftback"}, {"id": "bs-35844886", "url": "https://auto.bazar.sk/35844886-peugeot-508-sw-1-6-bluehdi-ss-active-eat6/", "title": "Peugeot 508 SW 1.6 BlueHDi S&S Active EAT6", "price": 11850, "price_gross": 11850, "fair_price": 10300.0, "discount_pct": -15.1, "verdict": "výrazne nad trhom", "year": 2017, "km": 149510, "km_per_year": 16000.0, "eg": "1.6 HDi / BlueHDi 82–88 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Hlohovec", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "wagon"}, {"id": "ab-AechaAjdfRC", "url": "https://www.autobazar.eu/detail/peugeot-508-15-bluehdi-automat-servkniha-koza/AechaAjdfRC/", "title": "Peugeot 508 1.5 BlueHDi, Automat, Serv.kniha, Koža", "price": 11600, "price_gross": 11600, "fair_price": 10070.0, "discount_pct": -15.2, "verdict": "výrazne nad trhom", "year": 2019, "km": 179673, "km_per_year": 24500.0, "eg": "1.5 BlueHDi 96 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Prešovský kraj", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "liftback"}, {"id": "197094479", "url": "https://auto.bazos.sk/inzerat/197094479/peugeot-508-15-bluehdi-allure-2021.php", "title": "Peugeot 508 1.5 BlueHDi Allure, 2021, automat 8st.", "price": 13000, "price_gross": 13000, "fair_price": 11260.0, "discount_pct": -15.5, "verdict": "výrazne nad trhom", "year": 2021, "km": 270000, "km_per_year": 50600.0, "eg": "1.5 BlueHDi 96 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Galanta", "flags": ["vysoký nájazd 51000 km/rok – flotila / taxi?"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "liftback"}, {"id": "bs-29429134", "url": "https://auto.bazar.sk/29429134-peugeot-508-2-0-hdi-fap-bvm6-active/", "title": "Peugeot 508 2.0 HDi FAP BVM6 Active", "price": 7950, "price_gross": 7950, "fair_price": 6870.0, "discount_pct": -15.7, "verdict": "výrazne nad trhom", "year": 2011, "km": 130000, "km_per_year": 8500.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Trnava", "flags": [], "pick": null, "source": "bazarsk", "origin": "dovoz", "also_listed": [], "body": "liftback"}, {"id": "196330820", "url": "https://auto.bazos.sk/inzerat/196330820/peugeot-508-20-hdi-103-kw.php", "title": "Peugeot 508 2.0 HDI 103 kw", "price": 4650, "price_gross": 4650, "fair_price": 4000.0, "discount_pct": -16.3, "verdict": "výrazne nad trhom", "year": 2012, "km": 332000, "km_per_year": 23200.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Nové Zámky", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "liftback"}, {"id": "197605918", "url": "https://auto.bazos.sk/inzerat/197605918/peugeot-508-sw-16puretech-eat8.php", "title": "Peugeot 508 SW 1.6PureTech EAT8", "price": 14999, "price_gross": 14999, "fair_price": 12830.0, "discount_pct": -16.9, "verdict": "výrazne nad trhom", "year": 2019, "km": 133000, "km_per_year": 18100.0, "eg": "1.2 / 1.6 PureTech / THP 96–165 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Sabinov", "flags": [], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [{"source": "autobazar", "id": "ab-Amymg2PzlRF", "url": "https://www.autobazar.eu/detail/peugeot-508-20-bluehdi-automat-cr2maj/Amymg2PzlRF/", "price": 14600}, {"source": "autobazar", "id": "ab-Am2npbXvFqL", "url": "https://www.autobazar.eu/detail/peugeot-508-16-puretech-automat-servkniha-kuze/Am2npbXvFqL/", "price": 16400}], "body": "wagon"}, {"id": "ab-AeHvLOS5ZKo", "url": "https://www.autobazar.eu/detail/peugeot-508-20-bluehdi-gt-ss-eat6-133kw180hp-a6/AeHvLOS5ZKo/", "title": "Peugeot 508 2.0 BlueHDi GT SS EAT6 133kW180HP A6", "price": 11200, "price_gross": 11200, "fair_price": 9570.0, "discount_pct": -17.1, "verdict": "výrazne nad trhom", "year": 2018, "km": 203000, "km_per_year": 24400.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "private", "location": "Púchov", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "liftback"}, {"id": "bs-35780070", "url": "https://auto.bazar.sk/35780070-peugeot-508-sw-2-0-bluehdi-eat8-allure/", "title": "Peugeot 508 SW 2.0 BlueHDi EAT8 Allure", "price": 35000, "price_gross": 35000, "fair_price": 29410.0, "discount_pct": -19.0, "verdict": "výrazne nad trhom", "year": 2019, "km": 2906, "km_per_year": 400.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Banská Bystrica", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "wagon"}, {"id": "ab-Amkw0Snicr6", "url": "https://www.autobazar.eu/detail/peugeot-508-sw-16-hdi-fap-bvm5-active/Amkw0Snicr6/", "title": "Peugeot 508 SW 1.6 HDi FAP BVM5 Active", "price": 6750, "price_gross": 6750, "fair_price": 5650.0, "discount_pct": -19.4, "verdict": "výrazne nad trhom", "year": 2013, "km": 195000, "km_per_year": 14600.0, "eg": "1.6 HDi / BlueHDi 82–88 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "wagon"}, {"id": "bs-23190868", "url": "https://auto.bazar.sk/23190868-peugeot-508-sw-2-0-hdi-100kw-m6-exclusive/", "title": "Peugeot 508 SW 2,0 HDI 100KW M6 Exclusive", "price": 10990, "price_gross": 10990, "fair_price": 9190.0, "discount_pct": -19.6, "verdict": "výrazne nad trhom", "year": 2013, "km": 121000, "km_per_year": 9100.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": "manual", "seller_type": "private", "location": "Levice", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "196986222", "url": "https://auto.bazos.sk/inzerat/196986222/peugeot-508-sw-20-bluehdi-eat8-gt.php", "title": "Peugeot 508 SW 2.0 BlueHDi EAT8 GT", "price": 14990, "price_gross": 14990, "fair_price": 12420.0, "discount_pct": -20.7, "verdict": "výrazne nad trhom", "year": 2020, "km": 221995, "km_per_year": 35100.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Nové Zámky", "flags": ["vysoký nájazd 35000 km/rok – flotila / taxi?"], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmFg8fCvYkt", "url": "https://www.autobazar.eu/detail/peugeot-508-sw-20-bluehdi-eat8-gt/AmFg8fCvYkt/", "price": 14990}, {"source": "bazarsk", "id": "bs-39664370", "url": "https://auto.bazar.sk/39664370-peugeot-508-sw-2-0-bluehdi-eat8-gt/", "price": 14990}], "body": "wagon"}, {"id": "bs-34352528", "url": "https://auto.bazar.sk/34352528-peugeot-508-active-2-0-hdi/", "title": "Peugeot 508 Active 2.0 HDI", "price": 7863, "price_gross": 7863, "fair_price": 6460.0, "discount_pct": -21.7, "verdict": "výrazne nad trhom", "year": 2013, "km": 198803, "km_per_year": 14900.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Nové Zámky", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "197436550", "url": "https://auto.bazos.sk/inzerat/197436550/peugeot-508-sedan-84kw-automat.php", "title": "Peugeot 508 Sedan 84kw Automat", "price": 6500, "price_gross": 6500, "fair_price": 5340.0, "discount_pct": -21.8, "verdict": "výrazne nad trhom", "year": 2012, "km": 237500, "km_per_year": 16600.0, "eg": "1.6 HDi / BlueHDi 82–88 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Prievidza", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AehtTsFCox-", "url": "https://www.autobazar.eu/detail/peugeot-508-16-e-hdi-fap-bmp6-stt-access-84kw115hp-a6/AehtTsFCox-/", "price": 6500}], "body": "liftback"}, {"id": "195881782", "url": "https://auto.bazos.sk/inzerat/195881782/peugeot-508-rxh-20hdi-hybrid-4x4.php", "title": "Peugeot 508 rxh 2.0hdi hybrid 4x4", "price": 7100, "price_gross": 7100, "fair_price": 5810.0, "discount_pct": -22.1, "verdict": "výrazne nad trhom", "year": 2012, "km": 270000, "km_per_year": 18800.0, "eg": "Hybrid (RXH HYbrid4 / plug-in) 147–265 kW", "cg": 2, "transmission": "automatic", "seller_type": "uncertain", "location": "Košice", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "liftback"}, {"id": "196064295", "url": "https://auto.bazos.sk/inzerat/196064295/peugeot-508.php", "title": "Peugeot 508", "price": 4900, "price_gross": 4900, "fair_price": 3990.0, "discount_pct": -22.7, "verdict": "výrazne nad trhom", "year": 2011, "km": 250000, "km_per_year": 16300.0, "eg": "1.6 HDi / BlueHDi 82–88 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Vranov nad Topľou", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "liftback"}, {"id": "ab-AeX-e7phxkm", "url": "https://www.autobazar.eu/detail/peugeot-508-bluehdi-20gt-line-automat-servkniha/AeX-e7phxkm/", "title": "Peugeot 508 BlueHDI 2.0GT Line, Automat, Serv.kniha", "price": 13000, "price_gross": 13000, "fair_price": 10480.0, "discount_pct": -24.0, "verdict": "výrazne nad trhom", "year": 2019, "km": 199500, "km_per_year": 27200.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Nové Zámky", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "liftback"}, {"id": "bs-35017571", "url": "https://auto.bazar.sk/35017571-peugeot-508-sw-2-0-hdi-fap-bvm6-allure/", "title": "Peugeot 508 SW 2.0 HDi FAP BVM6 Allure", "price": 7990, "price_gross": 7990, "fair_price": 6410.0, "discount_pct": -24.6, "verdict": "výrazne nad trhom", "year": 2012, "km": 164318, "km_per_year": 11500.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Nitra", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "197532188", "url": "https://auto.bazos.sk/inzerat/197532188/predam-peugeot-508-sw-gt-22-hdi.php", "title": "Predám Peugeot 508 SW GT 2.2 HDi", "price": 8500, "price_gross": 8500, "fair_price": 6790.0, "discount_pct": -25.3, "verdict": "výrazne nad trhom", "year": 2014, "km": 250000, "km_per_year": 20300.0, "eg": "1.6 HDi / BlueHDi 82–88 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Bratislava", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "wagon"}, {"id": "bs-34353400", "url": "https://auto.bazar.sk/34353400-peugeot-508-allure-2-0-hdi/", "title": "Peugeot 508 Allure 2.0 HDI", "price": 12000, "price_gross": 12000, "fair_price": 9540.0, "discount_pct": -25.8, "verdict": "výrazne nad trhom", "year": 2015, "km": 144697, "km_per_year": 12800.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Nové Zámky", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "wagon"}, {"id": "196474747", "url": "https://auto.bazos.sk/inzerat/196474747/peugeot-508-rxh.php", "title": "Peugeot 508 RXH", "price": 7000, "price_gross": 7000, "fair_price": 5430.0, "discount_pct": -29.0, "verdict": "výrazne nad trhom", "year": 2012, "km": 324500, "km_per_year": 22600.0, "eg": "Hybrid (RXH HYbrid4 / plug-in) 147–265 kW", "cg": 2, "transmission": "automatic", "seller_type": "uncertain", "location": "Snina", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AeYaKK95uj0", "url": "https://www.autobazar.eu/detail/peugeot-508-sw-peugeot-508-rxh/AeYaKK95uj0/", "price": 7000}], "body": "wagon"}, {"id": "197579106", "url": "https://auto.bazos.sk/inzerat/197579106/peugeot-508-sw-20-bluehdi-rxh-najvyssia-vybava-automat.php", "title": "Peugeot 508 SW 2.0 BlueHDi RXH - Najvyššia výbava, Automat", "price": 8790, "price_gross": 8790, "fair_price": 6800.0, "discount_pct": -29.2, "verdict": "výrazne nad trhom", "year": 2015, "km": 242000, "km_per_year": 21400.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Senica", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmYpYidvV7Xn", "url": "https://www.autobazar.eu/detail/peugeot-508-sw-20-bluehdi-rxh/AmYpYidvV7Xn/", "price": 8790}, {"source": "bazarsk", "id": "bs-39746456", "url": "https://auto.bazar.sk/39746456-peugeot-508-sw-2-0-bluehdi-rxh/", "price": 8790}], "body": "wagon"}, {"id": "197676939", "url": "https://auto.bazos.sk/inzerat/197676939/peugeot-508-rxh-20-hdi.php", "title": "Peugeot 508 rxh 2.0 hdi", "price": 8900, "price_gross": 8900, "fair_price": 6840.0, "discount_pct": -30.1, "verdict": "výrazne nad trhom", "year": 2016, "km": 274000, "km_per_year": 26500.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Poprad", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "liftback"}, {"id": "bs-34353172", "url": "https://auto.bazar.sk/34353172-peugeot-508-2-0-hdi/", "title": "Peugeot 508 2.0 HDI", "price": 7379, "price_gross": 7379, "fair_price": 5610.0, "discount_pct": -31.5, "verdict": "výrazne nad trhom", "year": 2011, "km": 188977, "km_per_year": 12300.0, "eg": "2.0 / 2.2 HDi / BlueHDi 103–150 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Nové Zámky", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "ab-Ae9KzqEZ6Dl", "url": "https://www.autobazar.eu/detail/peugeot-508-gt-line/Ae9KzqEZ6Dl/", "title": "Peugeot 508 GT line", "price": 14500, "price_gross": 14500, "fair_price": 10000.0, "discount_pct": -45.0, "verdict": "výrazne nad trhom", "year": 2018, "km": 137000, "km_per_year": 16400.0, "eg": "1.2 / 1.6 PureTech / THP 96–165 kW", "cg": 0, "transmission": "automatic", "seller_type": "private", "location": "Teplý Vrch", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "liftback"}, {"id": "196855414", "url": "https://auto.bazos.sk/inzerat/196855414/predam-peugeot-508-sw-combi-fl-diesel-panorama-navigacia.php", "title": "Predám Peugeot 508 SW (combi) FL diesel, panorama, navigácia", "price": 13999, "price_gross": 13999, "fair_price": 9580.0, "discount_pct": -46.1, "verdict": "výrazne nad trhom", "year": 2016, "km": 120000, "km_per_year": 11600.0, "eg": "1.6 HDi / BlueHDi 82–88 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Zvolen", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "197075205", "url": "https://auto.bazos.sk/inzerat/197075205/peugeot-508-sw-16-e-hdi-koza-panorama-po-velkom-servise.php", "title": "Peugeot 508 SW 1.6 e-HDi (2011) –  Automat, Koža, Panoráma", "price": 5500, "price_gross": 5500, "fair_price": 3750.0, "discount_pct": -46.7, "verdict": "výrazne nad trhom", "year": 2011, "km": 500000, "km_per_year": 32600.0, "eg": "1.6 HDi / BlueHDi 82–88 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Pezinok", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "ab-AmdK0gT-j-j", "url": "https://www.autobazar.eu/detail/peugeot-508-gt-15-bluehdi-130k-eat8/AmdK0gT-j-j/", "title": "Peugeot 508  GT 1.5 BlueHDi 130k EAT8", "price": 31990, "price_gross": 31990, "fair_price": 20000.0, "discount_pct": -59.9, "verdict": "výrazne nad trhom", "year": 2023, "km": 60750, "km_per_year": 18200.0, "eg": "1.5 BlueHDi 96 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Nitra", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-38651210", "url": "https://auto.bazar.sk/38651210-peugeot-508-gt-1-5-bluehdi-130k-eat8/", "price": 31990}], "body": "liftback"}];
+const GROUPS = ["Benzín", "Diesel HDi / BlueHDi", "Hybrid, LPG a nezistený"];
+const BODY = {"liftback": "Sedan / fastback", "wagon": "Kombi SW"};
+const fmt = n => Math.round(n).toLocaleString("sk-SK");
+const eur = n => fmt(n) + " €";
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const TRANS = {automatic: "automat", manual: "manuál"};
+const SRC = {bazos: "bazoš", autobazar: "autobazar.eu", bazarsk: "bazar.sk"};
+
+// --- theme toggle ---------------------------------------------------------
+document.getElementById("themeBtn").onclick = () => {
+  const root = document.documentElement;
+  const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  drawChart();
+};
+
+// --- scatter chart --------------------------------------------------------
+const legend = document.getElementById("legend");
+legend.innerHTML = GROUPS.map((g, i) => `<span><i style="background:var(--s${i+1})"></i>${g}</span>`).join("")
+  + `<span><i class="ring"></i>odporúčaná ponuka</span>`;
+
+function drawChart() {
+  const svg = document.getElementById("chart"), wrap = document.getElementById("chartWrap"), tip = document.getElementById("tip");
+  const W = svg.clientWidth, H = 420, m = {l: 56, r: 16, t: 10, b: 40};
+  const pts = DATA.filter(d => d.km && d.price_gross);
+  const xMax = Math.ceil(Math.max(...pts.map(d => d.km)) / 50000) * 50000;
+  const yMax = Math.ceil(Math.max(...pts.map(d => d.price_gross)) / 5000) * 5000;
+  const x = v => m.l + v / xMax * (W - m.l - m.r), y = v => H - m.b - v / yMax * (H - m.t - m.b);
+  let s = "";
+  for (let v = 0; v <= yMax; v += 5000)
+    s += `<line x1="${m.l}" x2="${W-m.r}" y1="${y(v)}" y2="${y(v)}" stroke="var(--grid)"/><text x="${m.l-8}" y="${y(v)+4}" text-anchor="end">${v/1000} tis. €</text>`;
+  const step = W < 520 ? 100000 : 50000;
+  for (let v = 0; v <= xMax; v += step)
+    s += `<text x="${x(v)}" y="${H-m.b+18}" text-anchor="middle">${v/1000} tis.</text>`;
+  s += `<text x="${(W+m.l)/2}" y="${H-6}" text-anchor="middle">nájazd (km)</text>`;
+  const order = [...pts].sort((a, b) => (a.pick ? 1 : 0) - (b.pick ? 1 : 0));
+  order.forEach(d => {
+    const cx = x(d.km), cy = y(d.price_gross);
+    if (d.pick) s += `<circle cx="${cx}" cy="${cy}" r="9" fill="none" stroke="var(--text)" stroke-width="2"/>`;
+    s += `<circle class="pt" data-id="${d.id}" cx="${cx}" cy="${cy}" r="5" fill="var(--s${d.cg+1})" stroke="var(--surface)" stroke-width="2"/>`;
+  });
+  // invisible bigger hit targets
+  order.forEach(d => s += `<circle class="hit" data-id="${d.id}" cx="${x(d.km)}" cy="${y(d.price_gross)}" r="11" fill="transparent" style="cursor:pointer"/>`);
+  svg.innerHTML = s;
+  const byId = Object.fromEntries(pts.map(d => [d.id, d]));
+  svg.querySelectorAll(".hit").forEach(c => {
+    c.onmouseenter = c.onmousemove = ev => {
+      const d = byId[c.dataset.id];
+      tip.innerHTML = `<b>${esc(d.title)}</b>
+        <div class="row"><span>Cena</span><span>${eur(d.price_gross)}</span></div>
+        <div class="row"><span>Férová cena</span><span>${eur(d.fair_price)}</span></div>
+        <div class="row"><span>Pod trhom</span><span>${d.discount_pct > 0 ? "+" : ""}${d.discount_pct.toLocaleString("sk-SK")} %</span></div>
+        <div class="row"><span>Zdroj</span><span>${SRC[d.source]}${d.also_listed.length ? " + " + d.also_listed.map(a => SRC[a.source]).join(", ") : ""}</span></div>
+        <div class="row"><span>Rok · km</span><span>${d.year} · ${fmt(d.km)}</span></div>
+        <div class="row"><span>Motor</span><span>${esc(d.eg)} ${TRANS[d.transmission] || ""}</span></div>`;
+      tip.style.display = "block";
+      const r = wrap.getBoundingClientRect();
+      let lx = ev.clientX - r.left + 14, ly = ev.clientY - r.top + 14;
+      if (lx + 290 > r.width) lx = ev.clientX - r.left - 290;
+      tip.style.left = lx + "px"; tip.style.top = ly + "px";
+    };
+    c.onmouseleave = () => tip.style.display = "none";
+    c.onclick = () => window.open(byId[c.dataset.id].url, "_blank", "noopener");
+  });
+}
+drawChart();
+addEventListener("resize", drawChart);
+
+// --- full table -----------------------------------------------------------
+const fEngine = document.getElementById("fEngine");
+[...new Set(DATA.map(d => d.eg))].sort().forEach(g => fEngine.insertAdjacentHTML("beforeend", `<option>${esc(g)}</option>`));
+let sortK = "discount_pct", sortDir = -1;
+function discCell(v) {
+  const w = Math.min(Math.abs(v), 30) / 30 * 50;
+  const bar = v >= 0 ? `left:50%;width:${w}%;background:var(--pos)` : `right:50%;width:${w}%;background:var(--neg)`;
+  return `<span class="disc">${v > 0 ? "+" : ""}${v.toLocaleString("sk-SK")} %<span class="dbar"><span style="${bar}"></span></span></span>`;
+}
+function renderTable() {
+  const max = parseFloat(document.getElementById("fMax").value) || Infinity;
+  const tr = document.getElementById("fTrans").value, se = document.getElementById("fSeller").value, en = fEngine.value;
+  const so = document.getElementById("fSource").value, og = document.getElementById("fOrigin").value;
+  const bo = document.getElementById("fBody").value;
+  const rows = DATA.filter(d => (!en || d.eg === en) && (!tr || d.transmission === tr)
+    && (!se || d.seller_type !== "dealer") && d.price_gross <= max
+    && (!so || d.source === so || d.also_listed.some(a => a.source === so)) && (!og || d.origin === og) && (!bo || d.body === bo))
+    .sort((a, b) => { const A = a[sortK], B = b[sortK]; return (typeof A === "string" ? A.localeCompare(B) : A - B) * sortDir; });
+  document.getElementById("count").textContent = `${rows.length} z ${DATA.length} inzerátov`;
+  document.querySelector("#tbl tbody").innerHTML = rows.map(d => `<tr>
+    <td><a href="${d.url}" target="_blank" rel="noopener">${esc(d.title)}</a> ${d.pick ? '<span class="badge pick">odporúčané</span>' : ""}
+      <div class="sub">${BODY[d.body] || "karoséria ?"} · ${esc(d.eg)} · ${TRANS[d.transmission] || "prevodovka ?"} · ${esc(d.location)} · ${d.seller_type === "dealer" ? "predajca/firma" : d.seller_type === "private" ? "súkromník" : "neisté"} · ${SRC[d.source]}${d.origin === "SR" ? " · kúpené v SR" : d.origin === "dovoz" ? " · dovoz" : ""}${d.also_listed.map(a => ` · <a href="${a.url}" target="_blank" rel="noopener">aj na ${SRC[a.source]}</a>`).join("")}</div>
+      ${d.flags.filter(f => !f.startsWith("prevodovka")).map(f => `<div class="flag">⚠ ${esc(f)}</div>`).join("")}</td>
+    <td class="num">${d.year}</td><td class="num">${fmt(d.km)}</td>
+    <td class="num">${eur(d.price_gross)}</td><td class="num">${eur(d.fair_price)}</td>
+    <td class="num">${discCell(d.discount_pct)}</td></tr>`).join("");
+  document.querySelectorAll("#tbl th.sortable").forEach(th => {
+    const base = th.textContent.replace(/ [▾▴]$/, "");
+    th.textContent = base + (th.dataset.k === sortK ? (sortDir < 0 ? " ▾" : " ▴") : "");
+  });
+}
+document.querySelectorAll("#tbl th.sortable").forEach(th => th.onclick = () => {
+  if (sortK === th.dataset.k) sortDir *= -1; else { sortK = th.dataset.k; sortDir = th.dataset.k === "title" ? 1 : -1; }
+  renderTable();
+});
+["fEngine", "fTrans", "fSeller", "fSource", "fBody", "fOrigin", "fMax"].forEach(id => document.getElementById(id).addEventListener("input", renderTable));
+renderTable();
+</script>
+<!-- ferovka-theme --><script defer src="/analytics-config.js"></script><script defer src="/analytics.js"></script><script id="ferovka-chart">/* Férovka – chart → ad links, injected into every report by sync-reports.mjs.
+ *
+ * The reports draw one invisible 11px "hit" circle per ad. In dense charts (and always on a narrow phone) those
+ * circles overlap and the one drawn last wins, so a click/tap often opened a neighbouring ad. Here the pointer is
+ * always resolved to the NEAREST point, the report's own tooltip is shown for that point, and a click opens its ad.
+ * Touch: the first tap shows the tooltip (with a hint), a second tap on the same point opens the ad.
+ */
+(() => {
+  let rows;
+  try { rows = DATA; } catch { return; } // eslint-disable-line no-undef
+  if (!Array.isArray(rows) || !rows.length || !("url" in rows[0])) return;
+  const byId = new Map(rows.map((d) => [String(d.id), d]));
+  const MOUSE = ["mouseover", "mouseout", "mouseenter", "mouseleave", "mousemove", "mousedown", "mouseup", "click"];
+  let lastPointer = "mouse", down = null;
+  // the finger position as it was – Chrome "snaps" the later click of a tap to the centre of a nearby clickable element
+  addEventListener("pointerdown", (e) => { lastPointer = e.pointerType || "mouse"; down = { clientX: e.clientX, clientY: e.clientY }; }, true);
+
+  // the old per-point hit circles must not be targets (they overlap, and touch snapping aims at them)
+  document.head.insertAdjacentHTML("beforeend", "<style>svg circle.hit[data-id],svg circle.pt[data-id]{pointer-events:none}</style>");
+
+  function nearest(svg, ev, radius) {
+    let best = null, bd = Infinity;
+    for (const c of svg.querySelectorAll("circle.pt[data-id]")) {
+      const r = c.getBoundingClientRect();
+      const dx = r.left + r.width / 2 - ev.clientX, dy = r.top + r.height / 2 - ev.clientY;
+      const d = dx * dx + dy * dy;
+      if (d <= bd) { bd = d; best = c; } // ties: the point drawn on top (later) wins – that is the one you see
+    }
+    return best && bd <= radius * radius ? best : null;
+  }
+
+  function bind(svg) {
+    if (svg.__fvLinks) return;
+    svg.__fvLinks = true;
+    let current = null, armed = null;
+    const hitOf = (pt) => pt && svg.querySelector(`circle.hit[data-id="${CSS.escape(pt.dataset.id)}"]`);
+    const fire = (el, type, ev) => {
+      if (!el) return;
+      const e = new MouseEvent(type, { clientX: ev.clientX, clientY: ev.clientY, bubbles: false });
+      e.__fv = true;
+      el.dispatchEvent(e);
+    };
+    const tip = () => (svg.parentElement && svg.parentElement.querySelector("#tip, .tip")) || document.getElementById("tip");
+    const mark = (pt) => {
+      if (current === pt) return;
+      if (current) current.setAttribute("r", current.__r || "5");
+      current = pt;
+      if (pt) { pt.__r = pt.__r || pt.getAttribute("r"); pt.setAttribute("r", String(+pt.__r + 2)); }
+    };
+    const show = (pt, ev, hint) => {
+      mark(pt);
+      if (!pt) { const t = tip(); if (t) t.style.display = "none"; return; }
+      fire(hitOf(pt), "mousemove", ev); // the report's own tooltip, for the nearest point
+      const t = tip();
+      if (t && hint) t.insertAdjacentHTML("beforeend", `<div class="fv-hint">Ťukni ešte raz – otvorí sa inzerát ↗</div>`);
+    };
+    const open = (pt) => {
+      const d = byId.get(pt.dataset.id);
+      if (d && d.url) {
+        try { window.FerovkaAnalytics?.listingClick(d.url, "chart"); } catch { /* analytics must never block an ad */ }
+        window.open(d.url, "_blank", "noopener");
+      }
+    };
+
+    // the per-circle handlers of the report never see real mouse events – only our synthetic ones
+    for (const type of MOUSE) {
+      svg.addEventListener(type, (ev) => {
+        if (ev.__fv) return;
+        ev.stopImmediatePropagation();
+        if (type === "mousemove" && lastPointer === "mouse") {
+          show(nearest(svg, ev, 18), ev, false);
+          svg.style.cursor = current ? "pointer" : "";
+        } else if (type === "mouseleave" && ev.target === svg && lastPointer === "mouse") {
+          show(null, ev);
+        } else if (type === "click") {
+          const touch = lastPointer !== "mouse";
+          const at = touch && down ? down : ev;
+          const pt = nearest(svg, at, touch ? 26 : 18);
+          if (!pt) { armed = null; show(null, ev); return; }
+          if (!touch || armed === pt) { armed = null; open(pt); }
+          else { armed = pt; show(pt, at, true); }
+        }
+      }, true);
+    }
+  }
+
+  const scan = () => document.querySelectorAll("svg").forEach((s) => s.querySelector("circle.pt[data-id]") && bind(s));
+  scan();
+  new MutationObserver(scan).observe(document.body, { childList: true, subtree: true });
+})();
+</script><script id="ferovka-filters">/* Férovka – filters for the whole report, injected into every model report by sync-reports.mjs.
+ *
+ * The reports render the chart (drawChart) and the full ranking (renderTable) from the global DATA array; their own
+ * filter bar only filters the table. Here the filter bar (kept in its place above the ranking) gets more filters (year, price from/to,
+ * km, fuel, discount, picks only, text search) and every filter applies to the chart and the ranking together: DATA is
+ * refilled in place with the matching ads and both are drawn again. "</script" can't occur inside this file.
+ */
+(() => {
+  let data;
+  try { data = DATA; } catch { return; } // eslint-disable-line no-undef
+  if (!Array.isArray(data) || !data.length || typeof renderTable !== "function") return; // eslint-disable-line no-undef
+  const bar = document.querySelector(".filters");
+  if (!bar || bar.dataset.fv) return;
+  bar.dataset.fv = "1";
+  const ALL = data.slice();
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+  const fmt = (n) => Math.round(n).toLocaleString("sk-SK");
+  const norm = (s) => String(s ?? "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+  let groups = null;
+  try { groups = GROUPS; } catch { /* report without groups */ } // eslint-disable-line no-undef
+
+  const FUEL = { diesel: "Diesel", petrol: "Benzín", hybrid: "Hybrid", "plug-in hybrid": "Plug-in hybrid", electric: "Elektro", lpg: "LPG", cng: "CNG" };
+  const fuelOf = (d) => {
+    const e = norm(d.eg);
+    if (/tdi|crdi|dci|hdi|diesel|\bd\b|cdi|\d+d\b|blue/.test(e)) return "Diesel";
+    if (/plug-in|phev|e-hybrid|recharge|\bgte\b|\bt8\b|\b\d{2}e\b|\b\d{3} ?e\b/.test(e)) return "Plug-in hybrid";
+    if (/elektro|electric|\bev\b/.test(e)) return "Elektro";
+    if (/cng|lpg|g-tec|g-tron|tgi|ecofuel/.test(e)) return "Plyn (CNG/LPG)";
+    if (/mild|mhev/.test(e)) return "Benzín"; // mild-hybrid petrol (the diesel ones say TDI / d above)
+    if (/hybrid|hev/.test(e)) return "Hybrid";
+    if (/tsi|tfsi|mpi|fsi|benzin|gdi|dpi|htp|12v|\bt\d\b|\bb[56]\b|\d+i\b|turbo|tce|\bs4\b|rs ?\d|amg|competition|\bm\d{2,3}i?\b|gti|\bx5 m\b/.test(e)) return "Benzín";
+    return d.fuel ? FUEL[d.fuel] || String(d.fuel) : null;
+  };
+
+  // --- controls ---------------------------------------------------------------------------------------------------
+  const years = ALL.map((d) => d.year).filter(Boolean);
+  const yMin = Math.min(...years), yMax = Math.max(...years);
+  const yearOpts = (label) => `<option value="">${label}</option>` +
+    Array.from({ length: yMax - yMin + 1 }, (_, i) => yMax - i).map((y) => `<option>${y}</option>`).join("");
+  const kms = [30000, 50000, 75000, 100000, 150000, 200000, 250000, 300000];
+  const fuels = [...new Set(ALL.map(fuelOf).filter(Boolean))].sort((a, b) => a.localeCompare(b, "sk"));
+  const showGroups = Array.isArray(groups) && groups.length > 1 && ALL.some((d) => Number.isInteger(d.cg));
+
+  const maxInput = $("fMax");
+  if (maxInput) { maxInput.placeholder = "Cena do €"; maxInput.title = "Najvyššia cena (s DPH)"; }
+  const html =
+    `<select id="fvYearFrom" title="Rok výroby od">${yearOpts("Rok od")}</select>` +
+    `<select id="fvYearTo" title="Rok výroby do">${yearOpts("Rok do")}</select>` +
+    `<input id="fvPriceMin" type="number" placeholder="Cena od €" step="500" min="0" title="Najnižšia cena (s DPH)" style="width:110px">`;
+  if (maxInput) maxInput.insertAdjacentHTML("beforebegin", html);
+  else bar.insertAdjacentHTML("afterbegin", html);
+  const more =
+    `<select id="fvKm" title="Najviac najazdených km"><option value="">Nájazd – všetky</option>${kms.map((k) => `<option value="${k}">do ${fmt(k)} km</option>`).join("")}</select>` +
+    (fuels.length > 1 ? `<select id="fvFuel" title="Palivo"><option value="">Všetky palivá</option>${fuels.map((f) => `<option>${esc(f)}</option>`).join("")}</select>` : "") +
+    (showGroups ? `<select id="fvGroup" title="Skupina motorov (farba v grafe)"><option value="">Všetky skupiny</option>${groups.map((g, i) => `<option value="${i}">${esc(g)}</option>`).join("")}</select>` : "") +
+    `<select id="fvDisc" title="O koľko je auto lacnejšie ako férová cena"><option value="">Cena – všetky</option><option value="0">pod férovou cenou</option><option value="10">aspoň 10 % pod trhom</option><option value="20">aspoň 20 % pod trhom</option></select>` +
+    `<input id="fvText" type="search" placeholder="Hľadať (výbava, mesto…)" title="Hľadá v názve inzerátu, motore a lokalite" style="width:170px">` +
+    `<label class="fv-check"><input id="fvPick" type="checkbox"> len odporúčané</label>` +
+    `<button type="button" id="fvReset" class="fv-reset">Zrušiť filtre</button>`;
+  const count = $("count");
+  if (count) count.insertAdjacentHTML("beforebegin", more);
+  else bar.insertAdjacentHTML("beforeend", more);
+
+  // the bar stays where it was – right above the ranking – and also drives the chart; the chart gets a pointer to it
+  const chart = $("chartWrap");
+  const box = document.createElement("div");
+  box.className = "fv-filters";
+  box.id = "filtre";
+  bar.before(box);
+  box.innerHTML = `<div class="fv-head"><b>Filtre</b><span>platia pre rebríček aj graf vyššie</span></div>`;
+  box.appendChild(bar);
+  const note = document.createElement("div");
+  note.className = "fv-note";
+  chart?.before(note);
+
+  document.head.insertAdjacentHTML("beforeend", `<style id="fv-filters-css">
+.fv-filters{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 14px 4px;margin:24px 0 8px}
+.fv-filters .fv-head{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;margin-bottom:8px}
+.fv-filters .fv-head span{color:var(--muted);font-size:13px}
+.fv-filters .filters{margin-bottom:8px}
+.fv-filters .filters .count{flex-basis:100%;margin-left:0}
+.fv-check{display:inline-flex;gap:6px;align-items:center;font-size:13px;color:var(--text-2,var(--text));white-space:nowrap}
+.fv-reset{background:none;border:1px solid var(--border);color:var(--text);border-radius:8px;padding:6px 10px;font:inherit;font-size:13px;cursor:pointer}
+.fv-reset:hover{background:var(--surface-2,var(--surface))}
+.fv-note{color:var(--muted);font-size:13px;margin:0 0 8px}
+.fv-note a{color:inherit}
+.fv-empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:14px;pointer-events:none}
+@media (max-width:600px){.fv-filters .filters select,.fv-filters .filters input[type=number],.fv-filters .filters input[type=search]{flex:1 1 calc(50% - 8px);min-width:0;width:auto!important}}
+</style>`);
+
+  // --- filtering --------------------------------------------------------------------------------------------------
+  const val = (id) => ($(id) ? $(id).value : "");
+  const num = (id) => { const v = parseFloat(val(id)); return Number.isFinite(v) ? v : null; };
+  function matches(d) {
+    const yf = num("fvYearFrom"), yt = num("fvYearTo"), pmin = num("fvPriceMin"), pmax = num("fMax"), km = num("fvKm"), disc = num("fvDisc");
+    const fuel = val("fvFuel"), grp = val("fvGroup"), q = norm(val("fvText")).trim();
+    if (yf != null && !(d.year >= yf)) return false;
+    if (yt != null && !(d.year <= yt)) return false;
+    if (pmin != null && !(d.price_gross >= pmin)) return false;
+    if (pmax != null && !(d.price_gross <= pmax)) return false;
+    if (km != null && !(d.km <= km)) return false;
+    if (disc != null && !(d.discount_pct > disc || (disc > 0 && d.discount_pct >= disc))) return false;
+    if (fuel && fuelOf(d) !== fuel) return false;
+    if (grp !== "" && String(d.cg) !== grp) return false;
+    if ($("fvPick")?.checked && !d.pick) return false;
+    if (q && !q.split(/\s+/).every((w) => norm(`${d.title} ${d.eg ?? ""} ${d.engine ?? ""} ${d.location ?? ""}`).includes(w))) return false;
+    // the report's own filters (engine, gearbox, seller, portal, body, origin) – same rules as its renderTable
+    const en = val("fEngine"), tr = val("fTrans"), se = val("fSeller"), so = val("fSource"), og = val("fOrigin"), bo = val("fBody");
+    if (en && d.eg !== en) return false;
+    if (tr && d.transmission !== tr) return false;
+    if (se && d.seller_type === "dealer") return false;
+    if (so && !(d.source === so || (d.also_listed || []).some((a) => a.source === so))) return false;
+    if (og && d.origin !== og) return false;
+    if (bo && d.body !== bo) return false;
+    return true;
+  }
+  const active = () => [...box.querySelectorAll("select, input")].filter((el) => (el.type === "checkbox" ? el.checked : el.value !== "")).length;
+
+  let drawing = false;
+  function apply() {
+    if (drawing) return;
+    drawing = true;
+    const rows = ALL.filter(matches);
+    data.length = 0;
+    data.push(...rows);
+    const wrap = $("chartWrap");
+    wrap?.querySelector(".fv-empty")?.remove();
+    const plotted = rows.filter((d) => d.km && d.price_gross).length;
+    try {
+      if (typeof drawChart === "function") { // eslint-disable-line no-undef
+        if (plotted) drawChart(); // eslint-disable-line no-undef
+        else { const svg = $("chart"); if (svg) svg.innerHTML = ""; }
+      }
+    } catch (e) { console.warn("chart", e); }
+    if (wrap && !plotted) {
+      if (getComputedStyle(wrap).position === "static") wrap.style.position = "relative";
+      wrap.insertAdjacentHTML("beforeend", `<div class="fv-empty">Filtrom nezodpovedá žiadny inzerát</div>`);
+    }
+    try { renderTable(); } catch (e) { console.warn("table", e); } // eslint-disable-line no-undef
+    const n = active();
+    if (count) count.textContent = `Zobrazených ${fmt(rows.length)} z ${fmt(ALL.length)} inzerátov` + (n ? ` · aktívne filtre: ${n}` : "");
+    note.innerHTML = n
+      ? `Zobrazených ${fmt(rows.length)} z ${fmt(ALL.length)} inzerátov podľa <a href="#filtre">filtrov pri rebríčku</a>.`
+      : `Filtre (rok, cena, nájazd, palivo…) nájdeš <a href="#filtre">pri kompletnom rebríčku</a> – platia aj pre tento graf.`;
+    drawing = false;
+  }
+  box.querySelectorAll("select, input").forEach((el) => el.addEventListener("input", apply));
+  $("fvPick")?.addEventListener("change", apply);
+  $("fvReset").addEventListener("click", () => {
+    box.querySelectorAll("select, input").forEach((el) => { if (el.type === "checkbox") el.checked = false; else el.value = ""; });
+    apply();
+  });
+  apply();
+})();
+</script><!-- /ferovka-theme -->
+</body>
+</html>
