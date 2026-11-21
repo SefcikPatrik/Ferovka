@@ -653,6 +653,38 @@
     }
   },
   {
+    "slug": "fiat-tipo",
+    "file": "fiat-tipo-analyza.html",
+    "name": "Fiat Tipo",
+    "brand": "Fiat",
+    "model": "Tipo",
+    "kind": "model",
+    "date": "2026-11-21",
+    "summary": "Analýza aktuálnych inzerátov Fiat Tipo (2016–2025, sedan, hatchback aj kombi, bez nových áut z 2026) od 3 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 153 inzerátov (33 na bazoši, 56 na autobazar.eu, 64 na bazar.sk) – prezreli sme 81 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 78 rôznych áut zo Slovenska.",
+    "ads": 78,
+    "median": "7 895 €",
+    "r2": "82 %",
+    "history": {
+      "updated_at": "2026-11-21T21:28:11",
+      "as_of": "2026-11-21",
+      "coverage": "partial",
+      "baseline_count": 62,
+      "total_count": 62,
+      "active_count": 62,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 62,
+      "paired_median_change_pct": 0,
+      "historical_median": 7895,
+      "seen_median": 7895,
+      "seen_price_count": 62,
+      "last_observed_at": "2026-11-21T21:27:06"
+    }
+  },
+  {
     "slug": "ford-fiesta",
     "file": "ford-fiesta-analyza.html",
     "name": "Ford Fiesta",
