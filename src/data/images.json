@@ -397,5 +397,12 @@
     "author": "Alexander Migl",
     "license": "CC BY-SA 4.0",
     "source": "https://commons.wikimedia.org/wiki/File:Toyota_Yaris_Hybrid_GR_Sport_(XP210)_Automesse_Ludwigsburg_2022_1X7A5891.jpg"
+  },
+  "hyundai-kona": {
+    "src": "/img/hyundai-kona.jpg",
+    "file": "File:2021 Hyundai Kona Premium T-GDi MHEV 1.0 facelift Front.jpg",
+    "author": "Vauxford",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:2021_Hyundai_Kona_Premium_T-GDi_MHEV_1.0_facelift_Front.jpg"
   }
 }

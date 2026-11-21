@@ -569,7 +569,7 @@
     "median": "8 990 €",
     "r2": "96 %",
     "history": {
-      "updated_at": "2026-11-21T16:40:29",
+      "updated_at": "2026-11-21T17:20:09",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 213,
@@ -589,6 +589,38 @@
     }
   },
   {
+    "slug": "hyundai-kona",
+    "file": "hyundai-kona-analyza.html",
+    "name": "Hyundai Kona",
+    "brand": "Hyundai",
+    "model": "Kona",
+    "kind": "model",
+    "date": "2026-11-21",
+    "summary": "Analýza aktuálnych inzerátov Hyundai Kona (Kona OS a SX2, benzín, hybrid aj elektro, bez Kona N) od 5 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 294 inzerátov (52 na bazoši, 146 na autobazar.eu, 96 na bazar.sk) – prezreli sme 97 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 154 rôznych áut zo Slovenska.",
+    "ads": 154,
+    "median": "17 490 €",
+    "r2": "96 %",
+    "history": {
+      "updated_at": "2026-11-21T17:20:09",
+      "as_of": "2026-11-21",
+      "coverage": "partial",
+      "baseline_count": 125,
+      "total_count": 125,
+      "active_count": 125,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 125,
+      "paired_median_change_pct": 0,
+      "historical_median": 17490,
+      "seen_median": 17490,
+      "seen_price_count": 125,
+      "last_observed_at": "2026-11-21T17:18:24"
+    }
+  },
+  {
     "slug": "hyundai-tucson",
     "file": "hyundai-tucson-analyza.html",
     "name": "Hyundai Tucson",
@@ -601,7 +633,7 @@
     "median": "17 299 €",
     "r2": "89 %",
     "history": {
-      "updated_at": "2026-11-21T16:40:29",
+      "updated_at": "2026-11-21T17:20:09",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 464,
@@ -1273,7 +1305,7 @@
     "median": "11 390 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-21T16:40:29",
+      "updated_at": "2026-11-21T17:20:09",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 274,
