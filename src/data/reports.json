@@ -697,7 +697,7 @@
     "median": "8 990 €",
     "r2": "96 %",
     "history": {
-      "updated_at": "2026-11-21T17:20:09",
+      "updated_at": "2026-11-21T18:51:58",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 213,
@@ -717,6 +717,38 @@
     }
   },
   {
+    "slug": "hyundai-ix35",
+    "file": "hyundai-ix35-analyza.html",
+    "name": "Hyundai ix35",
+    "brand": "Hyundai",
+    "model": "ix35",
+    "kind": "model",
+    "date": "2026-11-21",
+    "summary": "Analýza aktuálnych inzerátov Hyundai ix35 (2010–2015, 2WD aj 4WD) od 2 500 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 281 inzerátov (98 na bazoši, 104 na autobazar.eu, 79 na bazar.sk) – prezreli sme 77 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 133 rôznych áut zo Slovenska.",
+    "ads": 133,
+    "median": "6 500 €",
+    "r2": "66 %",
+    "history": {
+      "updated_at": "2026-11-21T18:51:58",
+      "as_of": "2026-11-21",
+      "coverage": "partial",
+      "baseline_count": 93,
+      "total_count": 93,
+      "active_count": 93,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 93,
+      "paired_median_change_pct": 0,
+      "historical_median": 6500,
+      "seen_median": 6500,
+      "seen_price_count": 93,
+      "last_observed_at": "2026-11-21T18:50:15"
+    }
+  },
+  {
     "slug": "hyundai-kona",
     "file": "hyundai-kona-analyza.html",
     "name": "Hyundai Kona",
@@ -729,7 +761,7 @@
     "median": "17 490 €",
     "r2": "96 %",
     "history": {
-      "updated_at": "2026-11-21T17:20:09",
+      "updated_at": "2026-11-21T18:51:58",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 125,
@@ -761,7 +793,7 @@
     "median": "17 299 €",
     "r2": "89 %",
     "history": {
-      "updated_at": "2026-11-21T17:20:09",
+      "updated_at": "2026-11-21T18:51:58",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 464,
@@ -1881,7 +1913,7 @@
     "median": "11 390 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-21T17:20:09",
+      "updated_at": "2026-11-21T18:51:58",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 274,
