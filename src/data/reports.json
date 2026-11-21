@@ -1024,6 +1024,19 @@
     }
   },
   {
+    "slug": "honda-jazz",
+    "file": "honda-jazz-analyza.html",
+    "name": "Honda Jazz",
+    "brand": "Honda",
+    "model": "Jazz",
+    "kind": "model",
+    "date": "2026-11-21",
+    "summary": "Analýza aktuálnych inzerátov Honda Jazz (druhá až štvrtá generácia, 2009–2025, aj hybrid) od 2 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 71 inzerátov (30 na bazoši, 23 na autobazar.eu, 18 na bazar.sk) – prezreli sme 96 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 45 rôznych áut zo Slovenska.",
+    "ads": 45,
+    "median": "10 750 €",
+    "r2": "95 %"
+  },
+  {
     "slug": "hyundai-bayon",
     "file": "hyundai-bayon-analyza.html",
     "name": "Hyundai Bayon",
@@ -1708,7 +1721,7 @@
     "median": "8 600 €",
     "r2": "93 %",
     "history": {
-      "updated_at": "2026-11-21T19:27:31",
+      "updated_at": "2026-11-21T23:36:16",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 91,
@@ -1728,6 +1741,38 @@
     }
   },
   {
+    "slug": "nissan-micra",
+    "file": "nissan-micra-analyza.html",
+    "name": "Nissan Micra",
+    "brand": "Nissan",
+    "model": "Micra",
+    "kind": "model",
+    "date": "2026-11-21",
+    "summary": "Analýza aktuálnych inzerátov Nissan Micra (štvrtá a piata generácia, 2011–2023) od 2 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 97 inzerátov (27 na bazoši, 38 na autobazar.eu, 32 na bazar.sk) – prezreli sme 96 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 60 rôznych áut zo Slovenska.",
+    "ads": 60,
+    "median": "4 999 €",
+    "r2": "98 %",
+    "history": {
+      "updated_at": "2026-11-21T23:36:16",
+      "as_of": "2026-11-21",
+      "coverage": "partial",
+      "baseline_count": 27,
+      "total_count": 27,
+      "active_count": 27,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 27,
+      "paired_median_change_pct": 0,
+      "historical_median": 4999,
+      "seen_median": 4999,
+      "seen_price_count": 27,
+      "last_observed_at": "2026-11-21T23:33:46"
+    }
+  },
+  {
     "slug": "nissan-qashqai",
     "file": "nissan-qashqai-analyza.html",
     "name": "Nissan Qashqai",
@@ -1740,7 +1785,7 @@
     "median": "11 990 €",
     "r2": "97 %",
     "history": {
-      "updated_at": "2026-11-21T19:27:31",
+      "updated_at": "2026-11-21T23:36:16",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 338,
@@ -1772,7 +1817,7 @@
     "median": "16 995 €",
     "r2": "97 %",
     "history": {
-      "updated_at": "2026-11-21T19:27:31",
+      "updated_at": "2026-11-21T23:36:16",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 120,
