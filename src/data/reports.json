@@ -2041,7 +2041,7 @@
     "median": "7 100 €",
     "r2": "90 %",
     "history": {
-      "updated_at": "2026-11-21T18:11:26",
+      "updated_at": "2026-11-21T20:20:27",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 101,
@@ -2061,6 +2061,38 @@
     }
   },
   {
+    "slug": "toyota-avensis",
+    "file": "toyota-avensis-analyza.html",
+    "name": "Toyota Avensis",
+    "brand": "Toyota",
+    "model": "Avensis",
+    "kind": "model",
+    "date": "2026-11-21",
+    "summary": "Analýza aktuálnych inzerátov Toyota Avensis (tretia generácia T27, 2009–2018, sedan aj kombi) od 2 500 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 99 inzerátov (39 na bazoši, 31 na autobazar.eu, 29 na bazar.sk) – prezreli sme 95 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 71 rôznych áut zo Slovenska.",
+    "ads": 71,
+    "median": "8 500 €",
+    "r2": "93 %",
+    "history": {
+      "updated_at": "2026-11-21T20:20:27",
+      "as_of": "2026-11-21",
+      "coverage": "partial",
+      "baseline_count": 51,
+      "total_count": 51,
+      "active_count": 51,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 51,
+      "paired_median_change_pct": 0,
+      "historical_median": 8500,
+      "seen_median": 8500,
+      "seen_price_count": 51,
+      "last_observed_at": "2026-11-21T20:19:29"
+    }
+  },
+  {
     "slug": "toyota-c-hr",
     "file": "toyota-c-hr-analyza.html",
     "name": "Toyota C-HR",
@@ -2073,7 +2105,7 @@
     "median": "24 600 €",
     "r2": "95 %",
     "history": {
-      "updated_at": "2026-11-21T18:11:26",
+      "updated_at": "2026-11-21T20:20:27",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 161,
@@ -2105,7 +2137,7 @@
     "median": "18 000 €",
     "r2": "96 %",
     "history": {
-      "updated_at": "2026-11-21T18:11:26",
+      "updated_at": "2026-11-21T20:20:27",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 254,
@@ -2137,7 +2169,7 @@
     "median": "22 700 €",
     "r2": "97 %",
     "history": {
-      "updated_at": "2026-11-21T18:11:26",
+      "updated_at": "2026-11-21T20:20:27",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 246,
@@ -2169,7 +2201,7 @@
     "median": "12 000 €",
     "r2": "95 %",
     "history": {
-      "updated_at": "2026-11-21T18:11:26",
+      "updated_at": "2026-11-21T20:20:27",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 186,
