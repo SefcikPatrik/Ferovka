@@ -1913,7 +1913,7 @@
     "median": "11 000 €",
     "r2": "78 %",
     "history": {
-      "updated_at": "2026-11-21T19:22:44",
+      "updated_at": "2026-11-21T21:49:55",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 43,
@@ -1930,6 +1930,38 @@
       "seen_median": 11000,
       "seen_price_count": 43,
       "last_observed_at": "2026-11-21T19:21:40"
+    }
+  },
+  {
+    "slug": "renault-scenic",
+    "file": "renault-scenic-analyza.html",
+    "name": "Renault Scénic",
+    "brand": "Renault",
+    "model": "Scénic",
+    "kind": "model",
+    "date": "2026-11-21",
+    "summary": "Analýza aktuálnych inzerátov Renault Scénic (tretia a štvrtá generácia, 2009–2022, aj 7-miestny Grand Scénic, bez elektrického Scénicu E-Tech) od 2 500 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 129 inzerátov (64 na bazoši, 43 na autobazar.eu, 22 na bazar.sk) – prezreli sme 96 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 77 rôznych áut zo Slovenska.",
+    "ads": 77,
+    "median": "5 000 €",
+    "r2": "94 %",
+    "history": {
+      "updated_at": "2026-11-21T21:49:55",
+      "as_of": "2026-11-21",
+      "coverage": "partial",
+      "baseline_count": 56,
+      "total_count": 56,
+      "active_count": 56,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 56,
+      "paired_median_change_pct": 0,
+      "historical_median": 5000,
+      "seen_median": 5000,
+      "seen_price_count": 56,
+      "last_observed_at": "2026-11-21T21:48:32"
     }
   },
   {
@@ -3270,7 +3302,7 @@
     "median": "14 500 €",
     "r2": "97 %",
     "history": {
-      "updated_at": "2026-11-21T19:22:44",
+      "updated_at": "2026-11-21T21:49:55",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 102,
@@ -3302,7 +3334,7 @@
     "median": "7 000 €",
     "r2": "96 %",
     "history": {
-      "updated_at": "2026-11-21T19:22:44",
+      "updated_at": "2026-11-21T21:49:55",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 181,
@@ -3334,7 +3366,7 @@
     "median": "6 299 €",
     "r2": "90 %",
     "history": {
-      "updated_at": "2026-11-21T19:22:44",
+      "updated_at": "2026-11-21T21:49:55",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 210,
