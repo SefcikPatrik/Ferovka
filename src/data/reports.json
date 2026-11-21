@@ -1101,6 +1101,38 @@
     }
   },
   {
+    "slug": "mitsubishi-asx",
+    "file": "mitsubishi-asx-analyza.html",
+    "name": "Mitsubishi ASX",
+    "brand": "Mitsubishi",
+    "model": "ASX",
+    "kind": "model",
+    "date": "2026-11-21",
+    "summary": "Analýza aktuálnych inzerátov Mitsubishi ASX (prvá generácia 2010–2022 a nové ASX od 2023) od 3 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 244 inzerátov (72 na bazoši, 108 na autobazar.eu, 64 na bazar.sk) – prezreli sme 92 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 122 rôznych áut zo Slovenska.",
+    "ads": 122,
+    "median": "9 900 €",
+    "r2": "92 %",
+    "history": {
+      "updated_at": "2026-11-21T19:42:56",
+      "as_of": "2026-11-21",
+      "coverage": "partial",
+      "baseline_count": 98,
+      "total_count": 98,
+      "active_count": 98,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 98,
+      "paired_median_change_pct": 0,
+      "historical_median": 9900,
+      "seen_median": 9900,
+      "seen_price_count": 98,
+      "last_observed_at": "2026-11-21T19:42:06"
+    }
+  },
+  {
     "slug": "mitsubishi-outlander",
     "file": "mitsubishi-outlander-analyza.html",
     "name": "Mitsubishi Outlander",
@@ -1113,7 +1145,7 @@
     "median": "10 900 €",
     "r2": "93 %",
     "history": {
-      "updated_at": "2026-11-21T18:58:09",
+      "updated_at": "2026-11-21T19:42:56",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 94,
