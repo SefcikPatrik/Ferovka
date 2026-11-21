@@ -285,5 +285,12 @@
     "author": "M 93",
     "license": "CC BY-SA 3.0 de",
     "source": "https://commons.wikimedia.org/wiki/File:Opel_Zafira_Tourer_2.0_CDTI_Innovation_(C)_%E2%80%93_Frontansicht,_23._Mai_2013,_Heiligenhaus.jpg"
+  },
+  "skoda-kamiq": {
+    "src": "/img/skoda-kamiq.jpg",
+    "file": "File:Skoda Kamiq (2019) Monte Carlo 1X7A6165.jpg",
+    "author": "Alexander Migl",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Skoda_Kamiq_(2019)_Monte_Carlo_1X7A6165.jpg"
   }
 }

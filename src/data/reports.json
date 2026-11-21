@@ -557,6 +557,38 @@
     }
   },
   {
+    "slug": "skoda-kamiq",
+    "file": "skoda-kamiq-analyza.html",
+    "name": "Škoda Kamiq",
+    "brand": "Škoda",
+    "model": "Kamiq",
+    "kind": "model",
+    "date": "2026-11-21",
+    "summary": "Analýza aktuálnych inzerátov Škoda Kamiq (od 2019, pred aj po facelifte 2024) od 4 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (21. 11. 2026). Na portáloch je spolu 804 inzerátov (112 na bazoši, 436 na autobazar.eu, 256 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 360 rôznych áut zo Slovenska.",
+    "ads": 360,
+    "median": "18 432 €",
+    "r2": "86 %",
+    "history": {
+      "updated_at": "2026-11-21T15:47:59",
+      "as_of": "2026-11-21",
+      "coverage": "partial",
+      "baseline_count": 301,
+      "total_count": 301,
+      "active_count": 301,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 301,
+      "paired_median_change_pct": 0,
+      "historical_median": 18432,
+      "seen_median": 18432,
+      "seen_price_count": 301,
+      "last_observed_at": "2026-11-21T15:46:59"
+    }
+  },
+  {
     "slug": "skoda-karoq",
     "file": "skoda-karoq-analyza.html",
     "name": "Škoda Karoq",
@@ -569,7 +601,7 @@
     "median": "19 489 €",
     "r2": "89 %",
     "history": {
-      "updated_at": "2026-11-21T15:25:51",
+      "updated_at": "2026-11-21T15:47:59",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 504,
@@ -601,23 +633,23 @@
     "median": "16 590 €",
     "r2": "91 %",
     "history": {
-      "updated_at": "2026-11-21T15:25:51",
+      "updated_at": "2026-11-21T15:47:59",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 282,
-      "total_count": 723,
-      "active_count": 587,
+      "total_count": 727,
+      "active_count": 591,
       "inactive_count": 0,
       "unverified_count": 136,
-      "new_count": 441,
+      "new_count": 445,
       "price_changed_count": 38,
       "price_lowered_count": 35,
       "paired_count": 212,
       "paired_median_change_pct": 0,
-      "historical_median": 16690,
+      "historical_median": 16720,
       "seen_median": 16990,
-      "seen_price_count": 583,
-      "last_observed_at": "2026-11-21T11:24:14"
+      "seen_price_count": 587,
+      "last_observed_at": "2026-11-21T15:46:51"
     }
   },
   {
@@ -1177,7 +1209,7 @@
     "median": "5 945 €",
     "r2": "93 %",
     "history": {
-      "updated_at": "2026-11-21T15:25:51",
+      "updated_at": "2026-11-21T15:47:59",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 1030,
@@ -1209,7 +1241,7 @@
     "median": "24 490 €",
     "r2": "89 %",
     "history": {
-      "updated_at": "2026-11-21T15:25:51",
+      "updated_at": "2026-11-21T15:47:59",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 1084,
@@ -1241,7 +1273,7 @@
     "median": "10 900 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-21T15:25:51",
+      "updated_at": "2026-11-21T15:47:59",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 3448,
@@ -1273,7 +1305,7 @@
     "median": "16 000 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-21T15:25:51",
+      "updated_at": "2026-11-21T15:47:59",
       "as_of": "2026-11-21",
       "coverage": "partial",
       "baseline_count": 1346,
