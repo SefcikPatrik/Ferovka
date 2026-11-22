@@ -1,0 +1,835 @@
+<!doctype html>
+<html lang="sk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Porsche Macan – analýza ponúk</title>
+<style>
+:root {
+  color-scheme: light;
+  --bg: #f6f6f4; --surface: #fcfcfb; --surface-2: #f0efec; --border: #e2e1dc;
+  --text: #0b0b0b; --text-2: #52514e; --muted: #7a7974;
+  --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a;
+  --pos: #2a78d6; --neg: #eb6834; --accent: #2a78d6;
+  --good: #1d7f4e; --bad: #b4332f; --grid: #e8e7e3;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #121211; --surface: #1a1a19; --surface-2: #232321; --border: #33332f;
+    --text: #f0efec; --text-2: #c3c2b7; --muted: #8f8e86;
+    --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+    --pos: #3987e5; --neg: #d95926; --accent: #5598e7;
+    --good: #4cc38a; --bad: #f07a76; --grid: #2a2a27;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #121211; --surface: #1a1a19; --surface-2: #232321; --border: #33332f;
+  --text: #f0efec; --text-2: #c3c2b7; --muted: #8f8e86;
+  --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+  --pos: #3987e5; --neg: #d95926; --accent: #5598e7;
+  --good: #4cc38a; --bad: #f07a76; --grid: #2a2a27;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text);
+  font: 15px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+main { max-width: 1120px; margin: 0 auto; padding: 32px 16px 64px; }
+a { color: var(--accent); text-decoration: none; } a:hover { text-decoration: underline; }
+h1 { font-size: 30px; margin: 0 0 4px; letter-spacing: -.01em; }
+h2 { font-size: 21px; margin: 48px 0 6px; }
+h3 { font-size: 15px; margin: 6px 0 4px; line-height: 1.35; }
+.lead { color: var(--text-2); margin: 0 0 20px; max-width: 760px; }
+.section-lead { color: var(--text-2); margin: 0 0 16px; max-width: 800px; }
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
+.kpi { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+.kpi .v { font-size: 26px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.kpi .l { color: var(--text-2); font-size: 13px; }
+.explain { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; margin-top: 12px; }
+.explain p { margin: 6px 0; color: var(--text-2); }
+.explain b { color: var(--text); }
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; }
+.card-head { display: flex; justify-content: space-between; gap: 8px; font-size: 12px; }
+.tag { font-weight: 600; color: var(--accent); }
+.loc { color: var(--muted); }
+.facts { color: var(--text-2); font-size: 13px; }
+.prices { display: grid; grid-template-columns: 1.2fr 1fr .8fr; gap: 8px; margin: 12px 0 8px; }
+.lbl { display: block; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+.big { font-size: 22px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.mid { font-size: 16px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.good { color: var(--good); }
+.meter { height: 6px; background: var(--surface-2); border-radius: 4px; overflow: hidden; }
+.meter span { display: block; height: 100%; background: var(--s1); border-radius: 4px; }
+.news ul { margin: 6px 0 0; padding-left: 20px; } .news li { margin: 4px 0; } .news .down { color: var(--good, #1baf7a); font-weight: 600; }
+.note { font-size: 12.5px; background: var(--surface-2); border-radius: 6px; padding: 6px 8px; margin-top: 8px; color: var(--text-2); }
+.pc { list-style: none; padding: 0; margin: 10px 0 0; font-size: 13.5px; }
+.pc li { padding-left: 20px; position: relative; margin: 3px 0; }
+.pc li.pro::before { content: "+"; position: absolute; left: 4px; color: var(--good); font-weight: 700; }
+.pc li.con::before { content: "–"; position: absolute; left: 4px; color: var(--bad); font-weight: 700; }
+.subhead { font-size: 15px; color: var(--text-2); margin: 22px 0 10px; font-weight: 600; }
+.chart-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 14px 8px; position: relative; }
+.legend { display: flex; flex-wrap: wrap; gap: 16px; font-size: 13px; color: var(--text-2); margin: 0 0 6px 4px; }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; }
+.legend .ring { background: transparent; border: 2px solid var(--text); width: 12px; height: 12px; }
+svg text { fill: var(--muted); font-size: 11px; }
+.tip { position: absolute; pointer-events: none; background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+  padding: 8px 10px; font-size: 12.5px; box-shadow: 0 6px 20px rgba(0,0,0,.15); max-width: 280px; display: none; z-index: 5; }
+.tip b { display: block; margin-bottom: 2px; }
+.tip .row { display: flex; justify-content: space-between; gap: 12px; color: var(--text-2); }
+.tip .row span:last-child { color: var(--text); font-variant-numeric: tabular-nums; }
+table { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; font-size: 13.5px; }
+th, td { padding: 9px 10px; border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; }
+th { font-size: 12px; color: var(--text-2); font-weight: 600; background: var(--surface-2); white-space: nowrap; }
+th.sortable { cursor: pointer; user-select: none; } th.sortable:hover { color: var(--text); }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+.sub { color: var(--text-2); font-size: 12.5px; margin-top: 2px; }
+.stars { color: #c98500; letter-spacing: 1px; white-space: nowrap; } .stars .off { color: var(--border); }
+.cellbar { height: 5px; background: var(--surface-2); border-radius: 3px; margin-bottom: 4px; }
+.cellbar span { display: block; height: 100%; background: var(--s1); border-radius: 3px; }
+.disc { display: inline-flex; align-items: center; gap: 6px; justify-content: flex-end; }
+.dbar { width: 54px; height: 6px; background: var(--surface-2); border-radius: 3px; position: relative; }
+.dbar span { position: absolute; top: 0; height: 100%; border-radius: 3px; }
+.filters { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 10px; align-items: center; }
+.filters select, .filters input { background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 6px 8px; font: inherit; font-size: 13px; }
+.filters .count { color: var(--muted); font-size: 13px; margin-left: auto; }
+.table-scroll { overflow-x: auto; border-radius: 12px; }
+.badge { font-size: 11px; padding: 1px 6px; border-radius: 10px; background: var(--surface-2); color: var(--text-2); white-space: nowrap; }
+.badge.pick { background: var(--s1); color: #fff; }
+.flag { color: var(--bad); font-size: 12px; }
+.warn { background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--neg); border-radius: 10px; padding: 12px 16px; }
+.warn li { margin: 4px 0; }
+.check { columns: 2 300px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px 14px 34px; margin: 0; }
+.check li { margin: 4px 0; break-inside: avoid; }
+footer { color: var(--muted); font-size: 12.5px; margin-top: 48px; border-top: 1px solid var(--border); padding-top: 14px; }
+.theme-btn { float: right; background: var(--surface); color: var(--text-2); border: 1px solid var(--border); border-radius: 8px; padding: 5px 10px; cursor: pointer; font: inherit; font-size: 13px; }
+@media (max-width: 640px) { h1 { font-size: 24px; } .prices { grid-template-columns: 1fr 1fr 1fr; } .big { font-size: 18px; } th, td { padding: 7px 6px; } }
+</style>
+<!-- ferovka-theme --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"><style id="ferovka-theme">/* Férovka look for the generated analyses – injected by sync-reports.mjs after each report's own <style>.
+   Same palette and type as the site; chart colours (--s1..--s3) stay the validated set. */
+:root {
+  --bg: #f5f4ef; --surface: #fdfdfb; --surface-2: #eeede6; --border: #e1dfd6;
+  --text: #0f1513; --text-2: #4f5551; --muted: #6f746f;
+  --accent: #0b8a56; --good: #0b7a4b; --grid: #e6e4dc; --win: #dff3e9;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d110f; --surface: #151a17; --surface-2: #1d2420; --border: #2a322d;
+    --text: #eef1ec; --text-2: #b6bdb6; --muted: #8f978f;
+    --accent: #2fc583; --good: #4cd08f; --grid: #1f2622; --win: #143223;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d110f; --surface: #151a17; --surface-2: #1d2420; --border: #2a322d;
+  --text: #eef1ec; --text-2: #b6bdb6; --muted: #8f978f;
+  --accent: #2fc583; --good: #4cd08f; --grid: #1f2622; --win: #143223;
+}
+
+body { font-family: "Manrope", system-ui, sans-serif; }
+h1, h2 { letter-spacing: -0.02em; font-weight: 800; }
+.tag { color: var(--accent); }
+
+/* photo header (removed by the site's viewer, which shows its own) */
+.fv-hero { position: relative; margin: 0 0 26px; border-radius: 20px; overflow: hidden; aspect-ratio: 21 / 8; background: #0d110f; display: flex; }
+.fv-hero img { flex: 1; min-width: 0; height: 100%; object-fit: cover; animation: fv-zoom 1.4s cubic-bezier(.2,.7,.2,1) both; }
+.fv-collage img + img { border-left: 3px solid #0d110f; }
+.fv-hero::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(180deg, transparent 55%, rgb(13 17 15 / .75)),
+    repeating-linear-gradient(90deg, rgb(47 197 131 / .06) 0 1px, transparent 1px 48px); }
+.fv-hero figcaption { position: absolute; right: 12px; bottom: 8px; z-index: 1; font-size: 11px; color: rgb(255 255 255 / .75); }
+.fv-hero figcaption a { color: inherit; }
+
+/* cards & panels: softer, lift on hover */
+.card, .kpi, .explain, .chart-wrap, .box { border-radius: 16px; }
+.card { transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease; }
+.card:hover { transform: translateY(-3px); border-color: var(--accent); box-shadow: 0 14px 30px -18px rgb(0 0 0 / .45); }
+.badge.pick { background: var(--accent); }
+
+/* entrance animation */
+@keyframes fv-up { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes fv-zoom { from { transform: scale(1.08); filter: brightness(.6); } to { transform: none; filter: none; } }
+h1, .lead, .kpis, .cards .card { animation: fv-up .6s cubic-bezier(.2,.7,.2,1) both; }
+.lead { animation-delay: .08s; }
+.kpis { animation-delay: .16s; }
+.cards .card:nth-child(2) { animation-delay: .06s; }
+.cards .card:nth-child(3) { animation-delay: .12s; }
+.cards .card:nth-child(4) { animation-delay: .18s; }
+.cards .card:nth-child(5) { animation-delay: .24s; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+@media (max-width: 640px) { .fv-hero { aspect-ratio: 16 / 9; border-radius: 14px; } }
+
+/* touch: hint under the chart tooltip (report-chart.js) */
+.fv-hint { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--border, rgba(127,127,127,.3)); font-weight: 700; color: var(--accent, #2fc583); }
+</style><!-- /ferovka-theme -->
+</head>
+<body>
+<main><!-- ferovka-theme --><!-- /ferovka-theme -->
+<button class="theme-btn" id="themeBtn" type="button">Svetlý / tmavý</button>
+<h1>Porsche Macan – ktorá ponuka sa oplatí</h1>
+<p class="lead">Analýza aktuálnych inzerátov Porsche Macan (95B, 2014–2025, benzín aj diesel, bez elektrického Macanu a nových áut z 2026) od 8 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 146 inzerátov (35 na bazoši, 62 na autobazar.eu, 49 na bazar.sk) – prezreli sme 66 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 81 rôznych áut zo Slovenska. Každé auto sme porovnali
+s <b>férovou cenou</b>: tú vypočítal model naučený na celom trhu podľa veku, nájazdu, motora, prevodovky a typu predajcu.</p>
+
+<div class="kpis">
+  <div class="kpi"><div class="v">81</div><div class="l">inzerátov Macanu (nad 8 000 €)</div></div>
+  <div class="kpi"><div class="v">51</div><div class="l">ohodnotených (majú rok aj km)</div></div>
+  <div class="kpi"><div class="v">33 500 €</div><div class="l">medián ceny s DPH</div></div>
+  <div class="kpi"><div class="v">96 %</div><div class="l">rozdielov v cenách vysvetlí model</div></div>
+</div>
+
+
+<h2>Odkiaľ sú dáta: bazoš, autobazar.eu a bazar.sk</h2>
+<div class="kpis">
+  <div class="kpi"><div class="v">24</div><div class="l">ohodnotených z bazoša</div></div>
+  <div class="kpi"><div class="v">27</div><div class="l">ohodnotených z autobazar.eu</div></div><div class="kpi"><div class="v">0</div><div class="l">ohodnotených z bazar.sk</div></div>
+  <div class="kpi"><div class="v">15</div><div class="l">áut bolo na viacerých portáloch – započítané raz</div></div>
+  <div class="kpi"><div class="v">14 / 9</div><div class="l">s uvedeným pôvodom SR / dovoz</div></div>
+</div>
+<div class="explain">
+  <p><b>Tri portály, jeden trh.</b> Bazoš prehľadal 35 inzerátov, autobazar.eu
+  62, bazar.sk 0. Ponuky z Česka (na autobazar.eu ich je veľa) sme vynechali. Autobazáre často dávajú
+  to isté auto na viac portálov. Takéto dvojice (15 v rebríčku) sme spojili podľa VIN alebo zhody roku, km a ceny,
+  aby sa v modeli nerátali dvakrát. Pri aute nájdeš odkaz na všetky ponuky – niekedy sa líšia cenou.</p>
+  <p><b>Rozdiel medzi portálmi:</b> rovnaké auto je na autobazar.eu v priemere +5,3 %
+  oproti bazošu. Na autobazar.eu predávajú hlavne firmy (22 z 27 ohodnotených).</p>
+  <p><b>Kúpené v SR vs. dovoz:</b> autá s uvedeným pôvodom zo SR sú oproti autám bez uvedeného pôvodu
+  -1,3 %, dovezené -2,6 %
+  (pri rovnakom veku, nájazde a motore). Pôvod zo SR je výhoda pri overovaní histórie, trh zaň však nepripláca – väčšina
+  inzerátov pôvod jednoducho neuvádza. V tabulke dole si môžeš nechať zobraziť len autá kúpené v SR.</p>
+</div>
+
+<h2>Čo hýbe cenou Porsche Macan</h2>
+<p class="section-lead">Toto sa model naučil z trhu. Keď porovnávaš dve autá, tieto čísla ti povedia, koľko má byť
+rozdiel v cene, aby to bolo fér.</p>
+<div class="kpis">
+  <div class="kpi"><div class="v">-3,5 %</div><div class="l">každých ďalších 10 000 km</div></div>
+  <div class="kpi"><div class="v">-7,7 %</div><div class="l">každý rok veku navyše</div></div>
+  <div class="kpi"><div class="v">+4649 %</div><div class="l">príplatok za automat (DSG)</div></div>
+  <div class="kpi"><div class="v">+9,9 %</div><div class="l">príplatok u predajcu / firmy</div></div>
+  <div class="kpi"><div class="v">-3,9 %</div><div class="l">Macan po facelifte (2019+) oproti cene podľa veku</div></div>
+  <div class="kpi"><div class="v">+4648,9 %</div><div class="l">príplatok za automat</div></div>
+</div>
+<div class="explain">
+  <p><b>Príklad:</b> dva rovnaké Macany 2.0 z roku 2020, jedno má 60 tis. km, druhé 120 tis. km. Druhé má byť
+  približne o 21 % lacnejšie (6 × -3,5 %). Ak je lacnejšie len o 5 %, preplácaš kilometre.</p>
+  <p><b>Ako čítať „pod trhom“:</b> +15 % znamená, že auto stojí o 15 % menej, než by malo podľa trhu. Bežný rozptyl
+  cien je asi ±18 %, takže až zľava nad ~10–15 % je naozaj výnimočná. Pri takej zľave vždy zisti, prečo je auto lacné
+  (stav, história, nájazd).</p>
+  <p><b>DPH:</b> ceny uvedené bez DPH (napr. „10 300 € netto“) sme prepočítali na cenu s DPH, ktorú zaplatí súkromná osoba.</p>
+</div>
+
+<h2>Odporúčané ponuky</h2>
+<p class="section-lead">Kandidáti s najlepším pomerom cena / vek / nájazd, ktorých celý inzerát sme prečítali.
+Zoradené podľa toho, ako ich odporúčame.</p>
+<div class="subhead">Macan po facelifte (2019+) – najlepší pomer cena / vek</div>
+<div class="cards">
+<article class="card">
+  <div class="card-head"><span class="tag">Súkromník: Macan z 2024 s 28 tis. km</span><span class="loc">Piešťany</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/porsche-macan-pdk-195kw265hp-a7/AebI1GDxTCy/" target="_blank" rel="noopener">Porsche Macan PDK 195kW265HP A7</a></h3>
+  <div class="facts">2024 · 28 000 km · Macan 2.0 benzín 135–195 kW · automat · súkromník</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · kúpené v SR</div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">58 900 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">68 770 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+14.4 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:48%"></span></div>
+  <ul class="pc"><li class="pro">2024, 2.0 benzín 195 kW, 4x4, 7-st. PDK, 28 tis. km</li><li class="pro">Kúpené v SR</li><li class="pro">~14 % pod férovou cenou</li><li class="con">Inzerát bez textu</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 143 dní (od 2. 7.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Macan T z 2024 od Porsche centra</span><span class="loc">Bratislava</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/macan-t/Amtdlqh-rpR/" target="_blank" rel="noopener">Macan T</a></h3>
+  <div class="facts">2024 · 26 731 km · Macan 2.0 benzín 135–195 kW · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">69 900 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">77 110 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+9.4 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:31%"></span></div>
+  <ul class="pc"><li class="pro">2024, 2.0 benzín 195 kW, 4x4, PDK, verzia T, 27 tis. km</li><li class="pro">Predáva autorizované Porsche centrum</li><li class="pro">~9 % pod férovou cenou</li><li class="con">Krátky inzerát</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 52 dní (od 1. 10.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Macan 2.0 z 2022 z SR</span><span class="loc">Ilava</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/196509551/porsche-macan-pdk-2022-195kw.php" target="_blank" rel="noopener">Porsche Macan PDK 2022 195KW</a></h3>
+  <div class="facts">2022 · 62 000 km · Macan 2.0 benzín 135–195 kW · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazoš</b> · kúpené v SR · aj na <a href='https://www.autobazar.eu/detail/porsche-macan-pdk/Amyd1ctUCfu/' target='_blank' rel='noopener'>autobazar.eu</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">49 990 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">52 810 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+5.3 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:18%"></span></div>
+  <ul class="pc"><li class="pro">6/2022, 2.0 benzín 195 kW, 4x4, 7-st. PDK, 62 tis. km</li><li class="pro">Kúpené v SR, uvedený VIN</li><li class="pro">~5 % pod férovou cenou</li><li class="con">Cena zhruba na úrovni trhu</li><li class="con">Predáva autobazár</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 18 dní (od 4. 11.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Macan GTS z SR, nehavarovaný</span><span class="loc">Martin</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/porsche-macan-gts-265kw360hp-a7/Aeosih58zAp/" target="_blank" rel="noopener">Porsche Macan GTS 265kW360HP A7</a></h3>
+  <div class="facts">2017 · 105 000 km · S / GTS / Turbo benzín V6 250–324 kW · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · kúpené v SR · aj na <a href='https://auto.bazos.sk/inzerat/196362699/porsche-macan-gts-30t-4x4-360k.php' target='_blank' rel='noopener'>bazoš</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">34 990 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">36 380 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+3.8 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:13%"></span></div>
+  <ul class="pc"><li class="pro">2017, 3.0 V6 benzín 265 kW, 4x4, 7-st. PDK, 105 tis. km</li><li class="pro">Kúpené v SR, 2. majiteľ, nehavarované, nové brzdy a pneumatiky Michelin, olej každých 10 tis. km</li><li class="pro">~4 % pod férovou cenou</li><li class="con">Drahší servis GTS</li><li class="con">Predáva autobazár</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke aspoň 43 dní</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Súkromník: Macan 2.0 z 2019</span><span class="loc">Tomášov</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/porsche-macan-20-4x4-at-180kw245hp-a7/Aei2a4dTxid/" target="_blank" rel="noopener">Porsche Macan 2.0 4x4 A/T 180kW/245HP A7</a></h3>
+  <div class="facts">2019 · 179 900 km · Macan 2.0 benzín 135–195 kW · automat · súkromník</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">27 500 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">31 060 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+11.5 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:38%"></span></div>
+  <ul class="pc"><li class="pro">2019, 2.0 benzín 180 kW, 4x4, 7-st. PDK, 180 tis. km</li><li class="pro">~12 % pod férovou cenou</li><li class="con">Vysoký nájazd</li><li class="con">Inzerát bez textu</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 4 dni (od 18. 11.)</p><!-- history-card:end --></article></div>
+<div class="subhead">Lacnejšie Macany do 30 000 €</div>
+<div class="cards">
+<article class="card">
+  <div class="card-head"><span class="tag">Macan 2.0 s keramickou ochranou laku</span><span class="loc">Prešov</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197686752/porsche-macan-20-turbo-2018-pdk-44.php" target="_blank" rel="noopener">Porsche Macan 2.0 Turbo, 2018 | PDK 4×4</a></h3>
+  <div class="facts">2018 · 170 000 km · Macan 2.0 benzín 135–195 kW · automat · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">20 900 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">25 350 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+17.6 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:59%"></span></div>
+  <ul class="pc"><li class="pro">2018, 2.0 benzín, 4x4, PDK, 170 tis. km</li><li class="pro">Kožený interiér, 20&quot; disky, keramika na laku</li><li class="pro">~18 % pod férovou cenou</li><li class="con">Vysoký nájazd</li><li class="con">Predajca neistý</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">Nový inzerát</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Macan S 3.0 V6 so 106 tis. km</span><span class="loc">Martin</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/196646024/porsche-macan-s-30-v6-250-kw-4x4-106-000-km.php" target="_blank" rel="noopener">PORSCHE MACAN S 3.0 V6 – 250 kW – 4x4 – 106 000 km</a></h3>
+  <div class="facts">2015 · 106 000 km · S / GTS / Turbo benzín V6 250–324 kW · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazoš</b> · aj na <a href='https://www.autobazar.eu/detail/porsche-macan-s/AmD5Jq1_Mcz/' target='_blank' rel='noopener'>autobazar.eu</a> za 26 999 €</div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">26 990 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">32 220 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+16.2 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:54%"></span></div>
+  <ul class="pc"><li class="pro">2015, 3.0 V6 benzín 250 kW, 4x4, 7-st. PDK, 106 tis. km</li><li class="pro">~16 % pod férovou cenou</li><li class="con">Vyššia spotreba V6</li><li class="con">Predáva autobazár</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke aspoň 34 dní</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Macan 2.0 s 115 tis. km</span><span class="loc">Námestovo</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/196515656/porsche-macan-20.php" target="_blank" rel="noopener">Porsche Macan 2.0</a></h3>
+  <div class="facts">2018 · 115 000 km · Macan 2.0 benzín 135–195 kW · automat · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">25 500 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">29 480 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+13.5 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:45%"></span></div>
+  <ul class="pc"><li class="pro">2018, 2.0 benzín 185 kW, 4x4, PDK, 115 tis. km</li><li class="pro">~14 % pod férovou cenou</li><li class="con">Predajca neistý</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 10 dní (od 12. 11.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Macan S Diesel za 20 000 €</span><span class="loc">Trnava</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/porsche-macan-s-diesel/AmZQRE23_rL/" target="_blank" rel="noopener">Porsche Macan S Diesel</a></h3>
+  <div class="facts">2015 · 184 282 km · S Diesel 3.0 V6 150–190 kW · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · dovezené</div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">20 000 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">23 280 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+14.1 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:47%"></span></div>
+  <ul class="pc"><li class="pro">2015, 3.0 V6 diesel, 4x4, PDK, 184 tis. km</li><li class="pro">~14 % pod férovou cenou</li><li class="con">Dovoz</li><li class="con">Inzerát bez textu</li><li class="con">Predáva autobazár</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 262 dní (od 5. 3.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Macan S Diesel Exclusive s SK ŠPZ</span><span class="loc">Rimavská Sobota</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/196014794/porsche-macan-s-30d-at-exclusive-4x4-sk-spz.php" target="_blank" rel="noopener">Porsche Macan S 3.0d A/T Exclusive 4x4 SK ŠPZ</a></h3>
+  <div class="facts">2014 · 147 515 km · S Diesel 3.0 V6 150–190 kW · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazoš</b> · aj na <a href='https://www.autobazar.eu/detail/porsche-macan-s-30d-at-exclusive-4x4-sk-spz/Ame_rszyplg/' target='_blank' rel='noopener'>autobazar.eu</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">24 990 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">28 230 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+11.5 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:38%"></span></div>
+  <ul class="pc"><li class="pro">10/2014, 3.0 V6 diesel 190 kW, 4x4, 7-st. PDK, 148 tis. km</li><li class="pro">Slovenská evidencia</li><li class="pro">~12 % pod férovou cenou</li><li class="con">Predáva autobazár</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke aspoň 54 dní</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Macan S Diesel do 19 000 €</span><span class="loc">Bratislava-Ružinov</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/porsche-macan-s-diesel/AmHKlbJFvTs/" target="_blank" rel="noopener">Porsche Macan S Diesel</a></h3>
+  <div class="facts">2016 · 296 800 km · S Diesel 3.0 V6 150–190 kW · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">18 900 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">21 980 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+14.0 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:47%"></span></div>
+  <ul class="pc"><li class="pro">2016, 3.0 V6 diesel, 4x4, PDK, 297 tis. km</li><li class="pro">Možnosť predĺženej záruky</li><li class="pro">~14 % pod férovou cenou</li><li class="con">Veľmi vysoký nájazd</li><li class="con">Predáva autobazár</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 27 dní (od 26. 10.)</p><!-- history-card:end --></article></div>
+<div class="subhead">Špeciálne prípady</div>
+<div class="cards"></div>
+
+<h2>Cena vs. nájazd: celý trh na jednom grafe</h2>
+<p class="section-lead">Každý bod je jeden inzerát. Čím nižšie bod leží oproti ostatným s podobným nájazdom, tým je auto lacnejšie.
+Krúžkom sú označené odporúčané ponuky. Prejdi myšou na bod a uvidíš detail.</p>
+<div class="chart-wrap" id="chartWrap">
+  <div class="legend" id="legend"></div>
+  <svg id="chart" width="100%" height="420" role="img" aria-label="Bodový graf ceny a nájazdu inzerátov"></svg>
+  <div class="tip" id="tip"></div>
+</div>
+
+<h2>Porovnanie motorov</h2>
+<p class="section-lead">Hodnotenie (hviezdičky) zohľadňuje spoľahlivosť, spoľahlivosť a náklady na prevádzku a pomer cena/výkon.
+Číselné stĺpce sú mediány z ohodnotených inzerátov.</p>
+<div class="table-scroll">
+<table>
+  <thead><tr><th>Motor</th><th>Hodnotenie</th><th class="num">Ponúk</th><th class="num">Medián ceny</th><th class="num">Medián roku</th><th class="num">Medián km</th></tr></thead>
+  <tbody>
+<tr>
+  <td><b>S Diesel 3.0 V6 150–190 kW</b><div class="sub">Diesel V6 od Audi 211–258 k (2014–2018). Ťahavý a úsporný; over DPF, AdBlue a dieselgate softvér.</div></td>
+  <td><span class="stars" aria-label="4 z 5">★★★★<span class="off">★</span></span></td>
+  <td class="num">15</td>
+  <td class="num"><div class="cellbar"><span style="width:57%"></span></div>24 990 €</td>
+  <td class="num">2015</td>
+  <td class="num">175 914 km</td>
+</tr>
+<tr>
+  <td><b>S / GTS / Turbo benzín V6 250–324 kW</b><div class="sub">Benzín V6 biturbo 340–440 k. Rýchle, ale drahšie na servis, brzdy a pneumatiky.</div></td>
+  <td><span class="stars" aria-label="3 z 5">★★★<span class="off">★★</span></span></td>
+  <td class="num">20</td>
+  <td class="num"><div class="cellbar"><span style="width:100%"></span></div>43 495 €</td>
+  <td class="num">2018</td>
+  <td class="num">105 500 km</td>
+</tr>
+<tr>
+  <td><b>Macan 2.0 benzín 135–195 kW</b><div class="sub">Základný 2.0 turbo 237–265 k (od Audi). Najrozumnejší na prevádzku.</div></td>
+  <td><span class="stars" aria-label="4 z 5">★★★★<span class="off">★</span></span></td>
+  <td class="num">16</td>
+  <td class="num"><div class="cellbar"><span style="width:82%"></span></div>35 650 €</td>
+  <td class="num">2020</td>
+  <td class="num">116 500 km</td>
+</tr></tbody>
+</table>
+</div>
+<div class="explain">
+  <p><b>Porsche Macan</b> (95B, od 2014, facelifty 2019 a 2022) je kompaktné SUV na technike Audi Q5 – s výborným podvozkom
+  a vždy s automatom PDK a pohonom 4x4. Od 2024 sa predáva aj nový elektrický Macan – ten v analýze nie je.</p>
+  <p><b>Ktorý motor zvoliť?</b> Rozumná voľba je základný <b>2.0 benzín</b>. Staršie <b>S Diesel</b> sú úsporné na diaľnicu.
+  <b>S / GTS / Turbo</b> sú rýchle, ale drahšie na údržbu.</p>
+</div>
+
+<h2>Na čo si dať pozor</h2>
+<div class="warn">
+  <p><b>Lacné kvôli extrémnemu nájazdu</b> (viac ako 35 tis. km ročne, typicky flotila alebo taxi):</p>
+  <ul><li><a href='https://www.autobazar.eu/detail/porsche-macan-gts-pdk/AmF1R5wUKbz/' target='_blank' rel='noopener'>Porsche Macan GTS PDK</a>: 2024, 89 500 km → 38 000 km/rok. Lacné je kvôli nájazdu.</li></ul>
+  <p><b>Ďalšie veci, ktoré sme v inzerátoch našli:</b></p><ul><li>Macan je na Slovensku menej rozšírený (asi 50 použiteľných inzerátov) – férová cena je menej presná než pri bežných modeloch.</li><li>Nový elektrický Macan (Macan 4, 4S, Turbo Electric) je iné auto – do analýzy sme ho nezarátali.</li><li>„2.0 Turbo“ v inzeráte znamená základný 2.0 turbomotor, nie verziu Macan Turbo.</li></ul><p><b>Vyradené z porovnania</b> (poškodené autá alebo nezmyselné údaje – model ich nehodnotí):</p><ul><li><a href='https://www.autobazar.eu/detail/porsche-macan-4s-sport-design-packet/AmUJT5kTX7d/' target='_blank' rel='noopener'>Porsche Macan 4S, Sport Design Packet</a> (72 900 €): havarované / poškodené – cena nie je porovnateľná s trhom</li><li><a href='https://www.autobazar.eu/detail/porsche-macan-s-250kw-a7/AmrFQ-vOEq2/' target='_blank' rel='noopener'>Porsche Macan S 250kw  A7</a> (12 100 €): havarované / poškodené – cena nie je porovnateľná s trhom</li><li><a href='https://auto.bazos.sk/inzerat/197325068/macan-porsche-turbo-s-30-petrol-2017.php' target='_blank' rel='noopener'>Porsche Macan S 3,0 petrol 2017 65,xxx km</a> (12 000 €): havarované / poškodené – cena nie je porovnateľná s trhom</li><li><a href='https://www.autobazar.eu/detail/porsche-macan-s-pdk/AmXHqtjIWTd/' target='_blank' rel='noopener'>Porsche Macan S PDK</a> (31 900 €): cena je o 65 % pod trhom – havarované, na diely, záloha/splátka namiesto ceny alebo podvod</li></ul><p><b>Elektrický Macan, Cayenne a iné modely z vyhľadávania, nové autá z 2026, inzeráty s chybným nájazdom</b> (7 inzerátov) sme z rebríčka vynechali.</p>
+  <p>Ďalších <b>16</b> inzerátov nemá v texte rok alebo kilometre, takže ich nebolo možné ohodnotiť.
+  Ak ťa niektorý zaujme, predajcu sa na tieto údaje opýtaj.</p>
+</div>
+
+<h2>Kompletný rebríček</h2>
+<p class="section-lead">Všetky ohodnotené inzeráty. Kliknutím na hlavičku stĺpca zoraďuješ, filtrom zužuješ výber.</p>
+<div class="filters">
+  <select id="fEngine"><option value="">Všetky motory</option></select>
+  <select id="fTrans"><option value="">Každá prevodovka</option><option value="automatic">Automat</option><option value="manual">Manuál</option></select>
+  <select id="fSeller"><option value="">Všetci predajcovia</option><option value="nodealer">Bez autobazárov</option></select>
+  <select id="fSource"><option value="">Všetky portály</option><option value="bazos">bazoš</option><option value="autobazar">autobazar.eu</option><option value="bazarsk">bazar.sk</option></select>
+  <select id="fBody" hidden><option value=""></option></select>
+  <select id="fOrigin"><option value="">Akýkoľvek pôvod</option><option value="SR">Kúpené v SR</option><option value="dovoz">Dovoz</option></select>
+  <input id="fMax" type="number" placeholder="Max. cena €" step="500" min="0" style="width:120px">
+  <span class="count" id="count"></span>
+</div>
+<div class="table-scroll">
+<table id="tbl">
+  <thead><tr>
+    <th class="sortable" data-k="title">Inzerát</th>
+    <th class="sortable num" data-k="year">Rok</th>
+    <th class="sortable num" data-k="km">Km</th>
+    <th class="sortable num" data-k="price_gross">Cena</th>
+    <th class="sortable num" data-k="fair_price">Férová</th>
+    <th class="sortable num" data-k="discount_pct">Pod trhom ▾</th>
+  </tr></thead>
+  <tbody></tbody>
+</table>
+</div>
+
+<h2>Pred kúpou over</h2>
+<ul class="check">
+  <li>VIN cez Cebia / autoDNA (história km, havárie, leasing)</li>
+  <li>Servisná história v Porsche centre – podľa VIN ju vedia vytiahnuť</li>
+  <li>Automat PDK: plynulé radenie, výmena oleja</li>
+  <li>Brzdy a pneumatiky – pri Porsche drahé položky</li>
+  <li>Diesel: DPF, AdBlue, svolávacia akcia (softvér)</li>
+  <li>STK/EK protokol a dátum platnosti; cena s DPH alebo bez DPH, ak predáva firma</li>
+</ul>
+
+<footer>
+  Zdroj: auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (len ponuky zo Slovenska, to isté auto na viacerých portáloch je započítané raz), sťahované cez lokálny MCP server bazos-mcp (nástroj <code>fair_price</code>), 22. 11. 2026.
+  Model: ridge regresia log(ceny s DPH) podľa veku, veku², km, km², prevodovky, typu predajcu, motora, karosérie, pohonu 4x4, pôvodu (SR / dovoz) a portálu. Vzorka 51
+  inzerátov, R² 96 %. Parametre sú vyťažené z textu inzerátov, a preto môžu obsahovať chyby. Odporúčané ponuky sme overili
+  prečítaním celého inzerátu. Hodnotenie motorov je odborný odhad, nie výsledok modelu.
+</footer>
+</main>
+
+<script>
+const DATA = [{"id": "197686752", "url": "https://auto.bazos.sk/inzerat/197686752/porsche-macan-20-turbo-2018-pdk-44.php", "title": "Porsche Macan 2.0 Turbo, 2018 | PDK 4×4", "price": 20900, "price_gross": 20900, "fair_price": 25350.0, "discount_pct": 17.6, "verdict": "výrazne pod trhom – over prečo", "year": 2018, "km": 170000, "km_per_year": 20400.0, "eg": "Macan 2.0 benzín 135–195 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Prešov", "flags": [], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "196646024", "url": "https://auto.bazos.sk/inzerat/196646024/porsche-macan-s-30-v6-250-kw-4x4-106-000-km.php", "title": "PORSCHE MACAN S 3.0 V6 – 250 kW – 4x4 – 106 000 km", "price": 26990, "price_gross": 26990, "fair_price": 32220.0, "discount_pct": 16.2, "verdict": "výrazne pod trhom – over prečo", "year": 2015, "km": 106000, "km_per_year": 9400.0, "eg": "S / GTS / Turbo benzín V6 250–324 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Martin", "flags": [], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmD5Jq1_Mcz", "url": "https://www.autobazar.eu/detail/porsche-macan-s/AmD5Jq1_Mcz/", "price": 26999}], "body": "suv"}, {"id": "ab-AebI1GDxTCy", "url": "https://www.autobazar.eu/detail/porsche-macan-pdk-195kw265hp-a7/AebI1GDxTCy/", "title": "Porsche Macan PDK 195kW265HP A7", "price": 58900, "price_gross": 58900, "fair_price": 68770.0, "discount_pct": 14.4, "verdict": "pod trhom", "year": 2024, "km": 28000, "km_per_year": 12000.0, "eg": "Macan 2.0 benzín 135–195 kW", "cg": 0, "transmission": "automatic", "seller_type": "private", "location": "Piešťany", "flags": [], "pick": "top", "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "ab-AmZQRE23_rL", "url": "https://www.autobazar.eu/detail/porsche-macan-s-diesel/AmZQRE23_rL/", "title": "Porsche Macan S Diesel", "price": 20000, "price_gross": 20000, "fair_price": 23280.0, "discount_pct": 14.1, "verdict": "pod trhom", "year": 2015, "km": 184282, "km_per_year": 16300.0, "eg": "S Diesel 3.0 V6 150–190 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Trnava", "flags": [], "pick": "budget", "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "suv"}, {"id": "ab-AmHKlbJFvTs", "url": "https://www.autobazar.eu/detail/porsche-macan-s-diesel/AmHKlbJFvTs/", "title": "Porsche Macan S Diesel", "price": 18900, "price_gross": 18900, "fair_price": 21980.0, "discount_pct": 14.0, "verdict": "pod trhom", "year": 2016, "km": 296800, "km_per_year": 28700.0, "eg": "S Diesel 3.0 V6 150–190 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava-Ružinov", "flags": [], "pick": "budget", "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "196151083", "url": "https://auto.bazos.sk/inzerat/196151083/porsche-macan.php", "title": "Porsche Macan", "price": 25500, "price_gross": 25500, "fair_price": 29580.0, "discount_pct": 13.8, "verdict": "pod trhom", "year": 2019, "km": 179600, "km_per_year": 24500.0, "eg": "Macan 2.0 benzín 135–195 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Senec", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "196515656", "url": "https://auto.bazos.sk/inzerat/196515656/porsche-macan-20.php", "title": "Porsche Macan 2.0", "price": 25500, "price_gross": 25500, "fair_price": 29480.0, "discount_pct": 13.5, "verdict": "pod trhom", "year": 2018, "km": 115000, "km_per_year": 13800.0, "eg": "Macan 2.0 benzín 135–195 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Námestovo", "flags": [], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-Aei2a4dTxid", "url": "https://www.autobazar.eu/detail/porsche-macan-20-4x4-at-180kw245hp-a7/Aei2a4dTxid/", "title": "Porsche Macan 2.0 4x4 A/T 180kW/245HP A7", "price": 27500, "price_gross": 27500, "fair_price": 31060.0, "discount_pct": 11.5, "verdict": "pod trhom", "year": 2019, "km": 179900, "km_per_year": 24500.0, "eg": "Macan 2.0 benzín 135–195 kW", "cg": 0, "transmission": "automatic", "seller_type": "private", "location": "Tomášov", "flags": [], "pick": "top", "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "196014794", "url": "https://auto.bazos.sk/inzerat/196014794/porsche-macan-s-30d-at-exclusive-4x4-sk-spz.php", "title": "Porsche Macan S 3.0d A/T Exclusive 4x4 SK ŠPZ", "price": 24990, "price_gross": 24990, "fair_price": 28230.0, "discount_pct": 11.5, "verdict": "pod trhom", "year": 2014, "km": 147515, "km_per_year": 12000.0, "eg": "S Diesel 3.0 V6 150–190 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Rimavská Sobota", "flags": [], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-Ame_rszyplg", "url": "https://www.autobazar.eu/detail/porsche-macan-s-30d-at-exclusive-4x4-sk-spz/Ame_rszyplg/", "price": 24990}], "body": "suv"}, {"id": "ab-Amtdlqh-rpR", "url": "https://www.autobazar.eu/detail/macan-t/Amtdlqh-rpR/", "title": "Macan T", "price": 69900, "price_gross": 69900, "fair_price": 77110.0, "discount_pct": 9.4, "verdict": "pod trhom", "year": 2024, "km": 26731, "km_per_year": 11500.0, "eg": "Macan 2.0 benzín 135–195 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": "top", "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "197140171", "url": "https://auto.bazos.sk/inzerat/197140171/porsche-macan-s-20-sportdesign-kolesa.php", "title": "Porsche Macan S 20\" SportDesign kolesá", "price": 19990, "price_gross": 19990, "fair_price": 21310.0, "discount_pct": 6.2, "verdict": "férová cena", "year": 2014, "km": 175914, "km_per_year": 14300.0, "eg": "S Diesel 3.0 V6 150–190 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Nitra", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmvJzNLRh5a", "url": "https://www.autobazar.eu/detail/porsche-macan-s-20-sportdesign-kolesa/AmvJzNLRh5a/", "price": 19990}], "body": "suv"}, {"id": "196734361", "url": "https://auto.bazos.sk/inzerat/196734361/porsche-macans-30d190kw-2016sr-86000km-a7pdk.php", "title": "Porsche MacanS, 3.0D,190kw, 2016,SR, 87000km, BOSE,.., A7PDK", "price": 34199, "price_gross": 34199, "fair_price": 36300.0, "discount_pct": 5.8, "verdict": "férová cena", "year": 2016, "km": 87000, "km_per_year": 8400.0, "eg": "S Diesel 3.0 V6 150–190 kW", "cg": 1, "transmission": null, "seller_type": "dealer", "location": "Bratislava", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "ab-Amb-LRPfmBr", "url": "https://www.autobazar.eu/detail/porsche-macan-gts/Amb-LRPfmBr/", "title": "Porsche Macan GTS I PDLS+ I BOSE I Vzduch I Panorama I Aj na Splátky od 0%", "price": 32990, "price_gross": 32990, "fair_price": 34930.0, "discount_pct": 5.6, "verdict": "férová cena", "year": 2017, "km": 112729, "km_per_year": 12100.0, "eg": "S / GTS / Turbo benzín V6 250–324 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava-Nové Mesto", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "196903042", "url": "https://auto.bazos.sk/inzerat/196903042/porsche-macan-gts.php", "price": 32990}], "body": "suv"}, {"id": "196509551", "url": "https://auto.bazos.sk/inzerat/196509551/porsche-macan-pdk-2022-195kw.php", "title": "Porsche Macan PDK 2022 195KW", "price": 49990, "price_gross": 49990, "fair_price": 52810.0, "discount_pct": 5.3, "verdict": "férová cena", "year": 2022, "km": 62000, "km_per_year": 14300.0, "eg": "Macan 2.0 benzín 135–195 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Ilava", "flags": [], "pick": "top", "source": "bazos", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-Amyd1ctUCfu", "url": "https://www.autobazar.eu/detail/porsche-macan-pdk/Amyd1ctUCfu/", "price": 49990}], "body": "suv"}, {"id": "197345387", "url": "https://auto.bazos.sk/inzerat/197345387/porsche-macan-s-2017-104-000-km-bose-panorama.php", "title": "Porsche Macan S 2017 | 104 000 km | BOSE | Panorama", "price": 29850, "price_gross": 29850, "fair_price": 31060.0, "discount_pct": 3.9, "verdict": "férová cena", "year": 2017, "km": 104000, "km_per_year": 11100.0, "eg": "S / GTS / Turbo benzín V6 250–324 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Prešov", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-Aef0b6c-6_Q", "url": "https://www.autobazar.eu/detail/porsche-macan-s-250kw-104-000km-panorama/Aef0b6c-6_Q/", "price": 29850}], "body": "suv"}, {"id": "ab-Aeosih58zAp", "url": "https://www.autobazar.eu/detail/porsche-macan-gts-265kw360hp-a7/Aeosih58zAp/", "title": "Porsche Macan GTS 265kW360HP A7", "price": 34990, "price_gross": 34990, "fair_price": 36380.0, "discount_pct": 3.8, "verdict": "férová cena", "year": 2017, "km": 105000, "km_per_year": 11300.0, "eg": "S / GTS / Turbo benzín V6 250–324 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Martin", "flags": [], "pick": "top", "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "196362699", "url": "https://auto.bazos.sk/inzerat/196362699/porsche-macan-gts-30t-4x4-360k.php", "price": 34990}], "body": "suv"}, {"id": "ab-AeBp6psKCXH", "url": "https://www.autobazar.eu/detail/porsche-macan-s-diesel-190kw258hp-a7/AeBp6psKCXH/", "title": "Porsche Macan S Diesel 190kW258HP A7", "price": 27500, "price_gross": 27500, "fair_price": 28470.0, "discount_pct": 3.4, "verdict": "férová cena", "year": 2015, "km": 116208, "km_per_year": 10300.0, "eg": "S Diesel 3.0 V6 150–190 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Turany", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "196197766", "url": "https://auto.bazos.sk/inzerat/196197766/porsche-macan-s-30-tdi-v6-4x4-190-kw.php", "price": 27500}], "body": "suv"}, {"id": "ab-Am-_BO3Djov", "url": "https://www.autobazar.eu/detail/porsche-macan-20i-benzin-at-4x4-42018-139-807-km/Am-_BO3Djov/", "title": "Porsche Macan 2,0i, BENZÍN, AT, 4X4, 4/2018, 139 807 KM", "price": 30990, "price_gross": 30990, "fair_price": 31830.0, "discount_pct": 2.6, "verdict": "férová cena", "year": 2018, "km": 139807, "km_per_year": 16800.0, "eg": "Macan 2.0 benzín 135–195 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Levice", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "196822378", "url": "https://auto.bazos.sk/inzerat/196822378/porsche-macan-20i-benzin-at-4x4-42018-139-807-km.php", "price": 30990}], "body": "suv"}, {"id": "ab-Amg_6eaoEQR", "url": "https://www.autobazar.eu/detail/porsche-macan-t-pdk/Amg_6eaoEQR/", "title": "Porsche Macan T PDK", "price": 49900, "price_gross": 49900, "fair_price": 50460.0, "discount_pct": 1.1, "verdict": "férová cena", "year": 2022, "km": 84936, "km_per_year": 19600.0, "eg": "Macan 2.0 benzín 135–195 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava-Ružinov", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "197542194", "url": "https://auto.bazos.sk/inzerat/197542194/porsche-macan-s.php", "title": "Porsche Macan S", "price": 21990, "price_gross": 21990, "fair_price": 22070.0, "discount_pct": 0.4, "verdict": "férová cena", "year": 2015, "km": 164300, "km_per_year": 14500.0, "eg": "S / GTS / Turbo benzín V6 250–324 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Senec", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-Aen1BXWhjyQ", "url": "https://www.autobazar.eu/detail/porsche-macan-30-s-4x4-at-260kw354hp-a7/Aen1BXWhjyQ/", "title": "Porsche Macan 3.0 S 4x4 AT 260kW354HP A7", "price": 47000, "price_gross": 47000, "fair_price": 47140.0, "discount_pct": 0.3, "verdict": "férová cena", "year": 2020, "km": 106000, "km_per_year": 16700.0, "eg": "S / GTS / Turbo benzín V6 250–324 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Dunajská Streda", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "suv"}, {"id": "196445203", "url": "https://auto.bazos.sk/inzerat/196445203/porsche-macan-20-benzyna-252ps-135tys-km.php", "title": "Porsche Macan 2.0 benzyna 252ps 135tys km", "price": 25400, "price_gross": 25400, "fair_price": 25400.0, "discount_pct": -0.0, "verdict": "férová cena", "year": 2016, "km": 135000, "km_per_year": 13100.0, "eg": "Macan 2.0 benzín 135–195 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Tvrdošín", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AeUUnEFgutC", "url": "https://www.autobazar.eu/detail/porsche-macan-s-diesel-190kw258hp-a7/AeUUnEFgutC/", "title": "Porsche Macan S Diesel 190kW258HP A7", "price": 19990, "price_gross": 19990, "fair_price": 19930.0, "discount_pct": -0.3, "verdict": "férová cena", "year": 2016, "km": 302700, "km_per_year": 29300.0, "eg": "S Diesel 3.0 V6 150–190 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Trnava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-Am_pnuLf414", "url": "https://www.autobazar.eu/detail/porsche-macan-turbo-performance-175/Am_pnuLf414/", "title": "Porsche Macan Turbo Performance 1/75", "price": 47900, "price_gross": 47900, "fair_price": 47670.0, "discount_pct": -0.5, "verdict": "férová cena", "year": 2017, "km": 90000, "km_per_year": 9600.0, "eg": "S / GTS / Turbo benzín V6 250–324 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Košice-Vyšné Opátske", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazos", "id": "196198488", "url": "https://auto.bazos.sk/inzerat/196198488/porsche-macan-turbo-performance-175.php", "price": 47900}], "body": "suv"}, {"id": "ab-AeR6wdWrZHJ", "url": "https://www.autobazar.eu/detail/porsche-macan-gts-pdk-324kw440hp-a7/AeR6wdWrZHJ/", "title": "Porsche Macan GTS PDK 324kW440HP A7", "price": 92910, "price_gross": 92910, "fair_price": 92170.0, "discount_pct": -0.8, "verdict": "férová cena", "year": 2024, "km": 18000, "km_per_year": 7700.0, "eg": "S / GTS / Turbo benzín V6 250–324 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Pezinok", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "197367643", "url": "https://auto.bazos.sk/inzerat/197367643/porsche-macan-20.php", "title": "Porsche Macan 2.0", "price": 33500, "price_gross": 33500, "fair_price": 33110.0, "discount_pct": -1.2, "verdict": "férová cena", "year": 2018, "km": 78000, "km_per_year": 9400.0, "eg": "Macan 2.0 benzín 135–195 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Košice", "flags": [], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "suv"}, {"id": "ab-AmSa_i_XS3_", "url": "https://www.autobazar.eu/detail/porsche-macan-s-pdk/AmSa_i_XS3_/", "title": "Porsche Macan S PDK", "price": 79000, "price_gross": 79000, "fair_price": 77980.0, "discount_pct": -1.3, "verdict": "férová cena", "year": 2023, "km": 29419, "km_per_year": 8800.0, "eg": "S / GTS / Turbo benzín V6 250–324 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava-Ružinov", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "ab-AmGv17x4lUT", "url": "https://www.autobazar.eu/detail/porsche-macan-gts-4x4-at-265kw-2017-aj-na-splatky-protiucet/AmGv17x4lUT/", "title": "Porsche Macan GTS 4x4 A/T, 265kW (2017) / AJ NA SPLÁTKY / PROTIÚČET /", "price": 37500, "price_gross": 37500, "fair_price": 37000.0, "discount_pct": -1.3, "verdict": "férová cena", "year": 2017, "km": 111203, "km_per_year": 11900.0, "eg": "S / GTS / Turbo benzín V6 250–324 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Košice-Pereš", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "196345067", "url": "https://auto.bazos.sk/inzerat/196345067/porsche-macan-gts-4x4-at-265kw-2017.php", "price": 37500}], "body": "suv"}, {"id": "197545445", "url": "https://auto.bazos.sk/inzerat/197545445/porsche-macan-dph-sk-servis-porsche-4x4-apple-carplay.php", "title": "Porsche Macan DPH, SK, Servis Porsche, 4x4, Apple CarPlay", "price": 37900, "price_gross": 37900, "fair_price": 37320.0, "discount_pct": -1.6, "verdict": "férová cena", "year": 2021, "km": 145000, "km_per_year": 27200.0, "eg": "S / GTS / Turbo benzín V6 250–324 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Bratislava", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "ab-Amfk4-g4EaP", "url": "https://www.autobazar.eu/detail/porsche-macan-t-pdk-195kw-aj-na-splatky-od-0percent-akontacie/Amfk4-g4EaP/", "title": "Porsche Macan T | PDK | 195kw | Aj na Splátky! Od 0% akontácie", "price": 62990, "price_gross": 62990, "fair_price": 61610.0, "discount_pct": -2.2, "verdict": "férová cena", "year": 2023, "km": 55665, "km_per_year": 16700.0, "eg": "Macan 2.0 benzín 135–195 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava-Nové Mesto", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197633391", "url": "https://auto.bazos.sk/inzerat/197633391/porsche-macan-t-20-195kw-pdk-1-majitel-sr-povod.php", "price": 62990}], "body": "suv"}, {"id": "ab-Am1KaL3uOPX5", "url": "https://www.autobazar.eu/detail/porsche-macan-s-diesel/Am1KaL3uOPX5/", "title": "Porsche Macan S diesel", "price": 19500, "price_gross": 19500, "fair_price": 19080.0, "discount_pct": -2.2, "verdict": "férová cena", "year": 2014, "km": 266000, "km_per_year": 21600.0, "eg": "S Diesel 3.0 V6 150–190 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava-Petržalka", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "196865865", "url": "https://auto.bazos.sk/inzerat/196865865/porsche-macan-s-30-190kw-rv2014-automat-diesel.php", "title": "Porsche Macan S 3,0 190kW r.v.2014 automat diesel", "price": 26900, "price_gross": 26900, "fair_price": 26320.0, "discount_pct": -2.2, "verdict": "férová cena", "year": 2014, "km": 158000, "km_per_year": 12800.0, "eg": "S Diesel 3.0 V6 150–190 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Žilina", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "197503840", "url": "https://auto.bazos.sk/inzerat/197503840/porsche-macan-20-180kw-pdk-4x4-financovanie.php", "title": "Porsche Macan 2.0 180kW PDK 4x4 | FINANCOVANIE", "price": 39790, "price_gross": 39790, "fair_price": 38850.0, "discount_pct": -2.4, "verdict": "férová cena", "year": 2020, "km": 143000, "km_per_year": 22600.0, "eg": "Macan 2.0 benzín 135–195 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Trenčín", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmOOJBobcpO", "url": "https://www.autobazar.eu/detail/porsche-macan-20-4x4-at/AmOOJBobcpO/", "price": 39790}], "body": "suv"}, {"id": "ab-AmDSaL8-DfM", "url": "https://www.autobazar.eu/detail/porsche-macan-s-pdk/AmDSaL8-DfM/", "title": "Porsche Macan S PDK", "price": 61900, "price_gross": 61900, "fair_price": 60450.0, "discount_pct": -2.4, "verdict": "férová cena", "year": 2023, "km": 83165, "km_per_year": 24900.0, "eg": "S / GTS / Turbo benzín V6 250–324 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Trenčín", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "suv"}, {"id": "197493271", "url": "https://auto.bazos.sk/inzerat/197493271/porsche-macan-turbo-36-pdk.php", "title": "Porsche Macan Turbo 3.6 Pdk", "price": 29999, "price_gross": 29999, "fair_price": 29260.0, "discount_pct": -2.5, "verdict": "férová cena", "year": 2018, "km": 178000, "km_per_year": 21400.0, "eg": "S / GTS / Turbo benzín V6 250–324 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Bratislava", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AeJlwhpqdV_", "url": "https://www.autobazar.eu/detail/porsche-macan-29-benzin-280kw-automat-prevodovka-4x4/AeJlwhpqdV_/", "title": "Porsche Macan 2.9 Benzín 280kW Automat. prevodovka 4x4", "price": 64900, "price_gross": 64900, "fair_price": 62520.0, "discount_pct": -3.8, "verdict": "férová cena", "year": 2022, "km": 81000, "km_per_year": 18700.0, "eg": "S / GTS / Turbo benzín V6 250–324 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Liptovský Mikuláš", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-Amxi3ncUpL-", "url": "https://www.autobazar.eu/detail/porsche-macan-s-21-turbo-design-kolesa/Amxi3ncUpL-/", "title": "Porsche Macan S 21\" Turbo Design kolesá", "price": 26000, "price_gross": 26000, "fair_price": 25030.0, "discount_pct": -3.9, "verdict": "férová cena", "year": 2014, "km": 162047, "km_per_year": 13100.0, "eg": "S Diesel 3.0 V6 150–190 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Žilina", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "197774262", "url": "https://auto.bazos.sk/inzerat/197774262/porsche-macan-s-30-diesel.php", "title": "Porsche Macan S 3.0 Diesel", "price": 24999, "price_gross": 24999, "fair_price": 23890.0, "discount_pct": -4.6, "verdict": "férová cena", "year": 2016, "km": 219000, "km_per_year": 21200.0, "eg": "S Diesel 3.0 V6 150–190 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Spišská Nová Ves", "flags": [], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "suv"}, {"id": "197199025", "url": "https://auto.bazos.sk/inzerat/197199025/porsche-macan-20-tfsi-180-kw-245-k-r-2021.php", "title": "Porsche Macan 2.0 TFSI 180 kW (245 k), r. 2021", "price": 37800, "price_gross": 37800, "fair_price": 36110.0, "discount_pct": -4.7, "verdict": "férová cena", "year": 2021, "km": 118000, "km_per_year": 22100.0, "eg": "Macan 2.0 benzín 135–195 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Košice", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "196200099", "url": "https://auto.bazos.sk/inzerat/196200099/porsche-macan-s-diesel.php", "title": "Porsche Macan S Diesel", "price": 24900, "price_gross": 24900, "fair_price": 23380.0, "discount_pct": -6.5, "verdict": "férová cena", "year": 2017, "km": 210000, "km_per_year": 22500.0, "eg": "S Diesel 3.0 V6 150–190 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Levice", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AeM-RbEySLZ", "url": "https://www.autobazar.eu/detail/porsche-macan-s-diesel-190kw258hp-a7-pdk-chrono-paket-panorama-bose-kupeny-v-sr/AeM-RbEySLZ/", "title": "Porsche Macan S, 190kW258HP, A7 PDK, chrono paket, panorama, BOSE, ťažné, kúpený v SR,", "price": 34199, "price_gross": 34199, "fair_price": 31600.0, "discount_pct": -8.2, "verdict": "nad trhom", "year": 2016, "km": 88500, "km_per_year": 8600.0, "eg": "S Diesel 3.0 V6 150–190 kW", "cg": 1, "transmission": "automatic", "seller_type": "private", "location": "Bratislava-Petržalka", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "ab-AeSwzTGWNEE", "url": "https://www.autobazar.eu/detail/porsche-macan-gts-265kw360hp-a7/AeSwzTGWNEE/", "title": "Porsche Macan GTS 265kW/360HP A7", "price": 39990, "price_gross": 39990, "fair_price": 36240.0, "discount_pct": -10.3, "verdict": "nad trhom", "year": 2018, "km": 129000, "km_per_year": 15500.0, "eg": "S / GTS / Turbo benzín V6 250–324 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Malacky", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "ab-AmF1R5wUKbz", "url": "https://www.autobazar.eu/detail/porsche-macan-gts-pdk/AmF1R5wUKbz/", "title": "Porsche Macan GTS PDK", "price": 73690, "price_gross": 73690, "fair_price": 66590.0, "discount_pct": -10.7, "verdict": "nad trhom", "year": 2024, "km": 89500, "km_per_year": 38400.0, "eg": "S / GTS / Turbo benzín V6 250–324 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Žilina", "flags": ["vysoký nájazd 38000 km/rok – flotila / taxi?"], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "197112900", "url": "https://auto.bazos.sk/inzerat/197112900/porsche-macan-t-092024-zaruka-do-2028.php", "title": "Porsche Macan T 09/2024 záruka do 2028", "price": 68000, "price_gross": 68000, "fair_price": 60860.0, "discount_pct": -11.7, "verdict": "nad trhom", "year": 2024, "km": 45500, "km_per_year": 19500.0, "eg": "Macan 2.0 benzín 135–195 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Bratislava", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "197356280", "url": "https://auto.bazos.sk/inzerat/197356280/porsche-macan-s-30-diesel.php", "title": "Porsche Macan S 3.0 diesel Chrono", "price": 23800, "price_gross": 23800, "fair_price": 21210.0, "discount_pct": -12.2, "verdict": "nad trhom", "year": 2015, "km": 261000, "km_per_year": 23000.0, "eg": "S Diesel 3.0 V6 150–190 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Trnava", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "197358976", "url": "https://auto.bazos.sk/inzerat/197358976/porsche-macan-s-iii-2022-280-kw-37-000-km-sr-auto.php", "title": "Porsche Macan S III, 2022 | 280 kW | 37 000 km, SR auto", "price": 69990, "price_gross": 69990, "fair_price": 61840.0, "discount_pct": -13.2, "verdict": "nad trhom", "year": 2022, "km": 37000, "km_per_year": 8500.0, "eg": "S / GTS / Turbo benzín V6 250–324 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Košice", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "ab-AeU9sLk-qtd", "url": "https://www.autobazar.eu/detail/porsche-macan-turbo/AeU9sLk-qtd/", "title": "Porsche Macan Turbo", "price": 59900, "price_gross": 59900, "fair_price": 51560.0, "discount_pct": -16.2, "verdict": "výrazne nad trhom", "year": 2016, "km": 52500, "km_per_year": 5100.0, "eg": "S / GTS / Turbo benzín V6 250–324 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Nitra", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "195845637", "url": "https://auto.bazos.sk/inzerat/195845637/porsche-macan-20-4x4-at.php", "title": "Porsche Macan 2.0 4x4 A/T", "price": 32000, "price_gross": 32000, "fair_price": 26960.0, "discount_pct": -18.7, "verdict": "výrazne nad trhom", "year": 2019, "km": 222500, "km_per_year": 30300.0, "eg": "Macan 2.0 benzín 135–195 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Žiar nad Hronom", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-Ams1m1iEf2X", "url": "https://www.autobazar.eu/detail/porsche-macan-20-4x4-at/Ams1m1iEf2X/", "price": 30900}], "body": "suv"}, {"id": "ab-AmYDzVVM45x", "url": "https://www.autobazar.eu/detail/porsche-macan-s-30-v6-260-kw-pdk-top-stav-pasmair-mozny-odpocet-dph-mozny-uver/AmYDzVVM45x/", "title": "Porsche Macan S 3.0 V6 260 kW PDK | TOP Stav | PASM/AIR | Možný odpočet DPH | Možný úver", "price": 51490, "price_gross": 51490, "fair_price": 43030.0, "discount_pct": -19.7, "verdict": "výrazne nad trhom", "year": 2018, "km": 113958, "km_per_year": 13700.0, "eg": "S / GTS / Turbo benzín V6 250–324 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Čachtice", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "196509739", "url": "https://auto.bazos.sk/inzerat/196509739/porsche-macan-s-30-v6-260-kw-pdk-miami-blue-odpocet-dph.php", "price": 51490}], "body": "suv"}, {"id": "ab-AmplRITK9Ty", "url": "https://www.autobazar.eu/detail/macan-s-diesel/AmplRITK9Ty/", "title": "Macan S Diesel", "price": 34900, "price_gross": 34900, "fair_price": 28990.0, "discount_pct": -20.4, "verdict": "výrazne nad trhom", "year": 2015, "km": 118523, "km_per_year": 10500.0, "eg": "S Diesel 3.0 V6 150–190 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "197733000", "url": "https://auto.bazos.sk/inzerat/197733000/porsche-macan-turbo-36-v6-400-koni-4x4-pdk.php", "title": "PORSCHE MACAN TURBO 3.6 V6 – 400 KONÍ | 4x4 | PDK |", "price": 30000, "price_gross": 30000, "fair_price": 24350.0, "discount_pct": -23.2, "verdict": "výrazne nad trhom", "year": 2015, "km": 203000, "km_per_year": 17900.0, "eg": "S / GTS / Turbo benzín V6 250–324 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}];
+const GROUPS = ["Benzín", "Diesel", "Nezistený"];
+const BODY = {"suv": "SUV"};
+const fmt = n => Math.round(n).toLocaleString("sk-SK");
+const eur = n => fmt(n) + " €";
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const TRANS = {automatic: "automat", manual: "manuál"};
+const SRC = {bazos: "bazoš", autobazar: "autobazar.eu", bazarsk: "bazar.sk"};
+
+// --- theme toggle ---------------------------------------------------------
+document.getElementById("themeBtn").onclick = () => {
+  const root = document.documentElement;
+  const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  drawChart();
+};
+
+// --- scatter chart --------------------------------------------------------
+const legend = document.getElementById("legend");
+legend.innerHTML = GROUPS.map((g, i) => `<span><i style="background:var(--s${i+1})"></i>${g}</span>`).join("")
+  + `<span><i class="ring"></i>odporúčaná ponuka</span>`;
+
+function drawChart() {
+  const svg = document.getElementById("chart"), wrap = document.getElementById("chartWrap"), tip = document.getElementById("tip");
+  const W = svg.clientWidth, H = 420, m = {l: 56, r: 16, t: 10, b: 40};
+  const pts = DATA.filter(d => d.km && d.price_gross);
+  const xMax = Math.ceil(Math.max(...pts.map(d => d.km)) / 50000) * 50000;
+  const yMax = Math.ceil(Math.max(...pts.map(d => d.price_gross)) / 5000) * 5000;
+  const x = v => m.l + v / xMax * (W - m.l - m.r), y = v => H - m.b - v / yMax * (H - m.t - m.b);
+  let s = "";
+  for (let v = 0; v <= yMax; v += 5000)
+    s += `<line x1="${m.l}" x2="${W-m.r}" y1="${y(v)}" y2="${y(v)}" stroke="var(--grid)"/><text x="${m.l-8}" y="${y(v)+4}" text-anchor="end">${v/1000} tis. €</text>`;
+  const step = W < 520 ? 100000 : 50000;
+  for (let v = 0; v <= xMax; v += step)
+    s += `<text x="${x(v)}" y="${H-m.b+18}" text-anchor="middle">${v/1000} tis.</text>`;
+  s += `<text x="${(W+m.l)/2}" y="${H-6}" text-anchor="middle">nájazd (km)</text>`;
+  const order = [...pts].sort((a, b) => (a.pick ? 1 : 0) - (b.pick ? 1 : 0));
+  order.forEach(d => {
+    const cx = x(d.km), cy = y(d.price_gross);
+    if (d.pick) s += `<circle cx="${cx}" cy="${cy}" r="9" fill="none" stroke="var(--text)" stroke-width="2"/>`;
+    s += `<circle class="pt" data-id="${d.id}" cx="${cx}" cy="${cy}" r="5" fill="var(--s${d.cg+1})" stroke="var(--surface)" stroke-width="2"/>`;
+  });
+  // invisible bigger hit targets
+  order.forEach(d => s += `<circle class="hit" data-id="${d.id}" cx="${x(d.km)}" cy="${y(d.price_gross)}" r="11" fill="transparent" style="cursor:pointer"/>`);
+  svg.innerHTML = s;
+  const byId = Object.fromEntries(pts.map(d => [d.id, d]));
+  svg.querySelectorAll(".hit").forEach(c => {
+    c.onmouseenter = c.onmousemove = ev => {
+      const d = byId[c.dataset.id];
+      tip.innerHTML = `<b>${esc(d.title)}</b>
+        <div class="row"><span>Cena</span><span>${eur(d.price_gross)}</span></div>
+        <div class="row"><span>Férová cena</span><span>${eur(d.fair_price)}</span></div>
+        <div class="row"><span>Pod trhom</span><span>${d.discount_pct > 0 ? "+" : ""}${d.discount_pct.toLocaleString("sk-SK")} %</span></div>
+        <div class="row"><span>Zdroj</span><span>${SRC[d.source]}${d.also_listed.length ? " + " + d.also_listed.map(a => SRC[a.source]).join(", ") : ""}</span></div>
+        <div class="row"><span>Rok · km</span><span>${d.year} · ${fmt(d.km)}</span></div>
+        <div class="row"><span>Motor</span><span>${esc(d.eg)} ${TRANS[d.transmission] || ""}</span></div>`;
+      tip.style.display = "block";
+      const r = wrap.getBoundingClientRect();
+      let lx = ev.clientX - r.left + 14, ly = ev.clientY - r.top + 14;
+      if (lx + 290 > r.width) lx = ev.clientX - r.left - 290;
+      tip.style.left = lx + "px"; tip.style.top = ly + "px";
+    };
+    c.onmouseleave = () => tip.style.display = "none";
+    c.onclick = () => window.open(byId[c.dataset.id].url, "_blank", "noopener");
+  });
+}
+drawChart();
+addEventListener("resize", drawChart);
+
+// --- full table -----------------------------------------------------------
+const fEngine = document.getElementById("fEngine");
+[...new Set(DATA.map(d => d.eg))].sort().forEach(g => fEngine.insertAdjacentHTML("beforeend", `<option>${esc(g)}</option>`));
+let sortK = "discount_pct", sortDir = -1;
+function discCell(v) {
+  const w = Math.min(Math.abs(v), 30) / 30 * 50;
+  const bar = v >= 0 ? `left:50%;width:${w}%;background:var(--pos)` : `right:50%;width:${w}%;background:var(--neg)`;
+  return `<span class="disc">${v > 0 ? "+" : ""}${v.toLocaleString("sk-SK")} %<span class="dbar"><span style="${bar}"></span></span></span>`;
+}
+function renderTable() {
+  const max = parseFloat(document.getElementById("fMax").value) || Infinity;
+  const tr = document.getElementById("fTrans").value, se = document.getElementById("fSeller").value, en = fEngine.value;
+  const so = document.getElementById("fSource").value, og = document.getElementById("fOrigin").value;
+  const bo = document.getElementById("fBody").value;
+  const rows = DATA.filter(d => (!en || d.eg === en) && (!tr || d.transmission === tr)
+    && (!se || d.seller_type !== "dealer") && d.price_gross <= max
+    && (!so || d.source === so || d.also_listed.some(a => a.source === so)) && (!og || d.origin === og) && (!bo || d.body === bo))
+    .sort((a, b) => { const A = a[sortK], B = b[sortK]; return (typeof A === "string" ? A.localeCompare(B) : A - B) * sortDir; });
+  document.getElementById("count").textContent = `${rows.length} z ${DATA.length} inzerátov`;
+  document.querySelector("#tbl tbody").innerHTML = rows.map(d => `<tr>
+    <td><a href="${d.url}" target="_blank" rel="noopener">${esc(d.title)}</a> ${d.pick ? '<span class="badge pick">odporúčané</span>' : ""}
+      <div class="sub">${BODY[d.body] || "karoséria ?"} · ${esc(d.eg)} · ${TRANS[d.transmission] || "prevodovka ?"} · ${esc(d.location)} · ${d.seller_type === "dealer" ? "predajca/firma" : d.seller_type === "private" ? "súkromník" : "neisté"} · ${SRC[d.source]}${d.origin === "SR" ? " · kúpené v SR" : d.origin === "dovoz" ? " · dovoz" : ""}${d.also_listed.map(a => ` · <a href="${a.url}" target="_blank" rel="noopener">aj na ${SRC[a.source]}</a>`).join("")}</div>
+      ${d.flags.filter(f => !f.startsWith("prevodovka")).map(f => `<div class="flag">⚠ ${esc(f)}</div>`).join("")}</td>
+    <td class="num">${d.year}</td><td class="num">${fmt(d.km)}</td>
+    <td class="num">${eur(d.price_gross)}</td><td class="num">${eur(d.fair_price)}</td>
+    <td class="num">${discCell(d.discount_pct)}</td></tr>`).join("");
+  document.querySelectorAll("#tbl th.sortable").forEach(th => {
+    const base = th.textContent.replace(/ [▾▴]$/, "");
+    th.textContent = base + (th.dataset.k === sortK ? (sortDir < 0 ? " ▾" : " ▴") : "");
+  });
+}
+document.querySelectorAll("#tbl th.sortable").forEach(th => th.onclick = () => {
+  if (sortK === th.dataset.k) sortDir *= -1; else { sortK = th.dataset.k; sortDir = th.dataset.k === "title" ? 1 : -1; }
+  renderTable();
+});
+["fEngine", "fTrans", "fSeller", "fSource", "fBody", "fOrigin", "fMax"].forEach(id => document.getElementById(id).addEventListener("input", renderTable));
+renderTable();
+</script>
+<!-- ferovka-theme --><script defer src="/analytics-config.js"></script><script defer src="/analytics.js"></script><script id="ferovka-chart">/* Férovka – chart → ad links, injected into every report by sync-reports.mjs.
+ *
+ * The reports draw one invisible 11px "hit" circle per ad. In dense charts (and always on a narrow phone) those
+ * circles overlap and the one drawn last wins, so a click/tap often opened a neighbouring ad. Here the pointer is
+ * always resolved to the NEAREST point, the report's own tooltip is shown for that point, and a click opens its ad.
+ * Touch: the first tap shows the tooltip (with a hint), a second tap on the same point opens the ad.
+ */
+(() => {
+  let rows;
+  try { rows = DATA; } catch { return; } // eslint-disable-line no-undef
+  if (!Array.isArray(rows) || !rows.length || !("url" in rows[0])) return;
+  const byId = new Map(rows.map((d) => [String(d.id), d]));
+  const MOUSE = ["mouseover", "mouseout", "mouseenter", "mouseleave", "mousemove", "mousedown", "mouseup", "click"];
+  let lastPointer = "mouse", down = null;
+  // the finger position as it was – Chrome "snaps" the later click of a tap to the centre of a nearby clickable element
+  addEventListener("pointerdown", (e) => { lastPointer = e.pointerType || "mouse"; down = { clientX: e.clientX, clientY: e.clientY }; }, true);
+
+  // the old per-point hit circles must not be targets (they overlap, and touch snapping aims at them)
+  document.head.insertAdjacentHTML("beforeend", "<style>svg circle.hit[data-id],svg circle.pt[data-id]{pointer-events:none}</style>");
+
+  function nearest(svg, ev, radius) {
+    let best = null, bd = Infinity;
+    for (const c of svg.querySelectorAll("circle.pt[data-id]")) {
+      const r = c.getBoundingClientRect();
+      const dx = r.left + r.width / 2 - ev.clientX, dy = r.top + r.height / 2 - ev.clientY;
+      const d = dx * dx + dy * dy;
+      if (d <= bd) { bd = d; best = c; } // ties: the point drawn on top (later) wins – that is the one you see
+    }
+    return best && bd <= radius * radius ? best : null;
+  }
+
+  function bind(svg) {
+    if (svg.__fvLinks) return;
+    svg.__fvLinks = true;
+    let current = null, armed = null;
+    const hitOf = (pt) => pt && svg.querySelector(`circle.hit[data-id="${CSS.escape(pt.dataset.id)}"]`);
+    const fire = (el, type, ev) => {
+      if (!el) return;
+      const e = new MouseEvent(type, { clientX: ev.clientX, clientY: ev.clientY, bubbles: false });
+      e.__fv = true;
+      el.dispatchEvent(e);
+    };
+    const tip = () => (svg.parentElement && svg.parentElement.querySelector("#tip, .tip")) || document.getElementById("tip");
+    const mark = (pt) => {
+      if (current === pt) return;
+      if (current) current.setAttribute("r", current.__r || "5");
+      current = pt;
+      if (pt) { pt.__r = pt.__r || pt.getAttribute("r"); pt.setAttribute("r", String(+pt.__r + 2)); }
+    };
+    const show = (pt, ev, hint) => {
+      mark(pt);
+      if (!pt) { const t = tip(); if (t) t.style.display = "none"; return; }
+      fire(hitOf(pt), "mousemove", ev); // the report's own tooltip, for the nearest point
+      const t = tip();
+      if (t && hint) t.insertAdjacentHTML("beforeend", `<div class="fv-hint">Ťukni ešte raz – otvorí sa inzerát ↗</div>`);
+    };
+    const open = (pt) => {
+      const d = byId.get(pt.dataset.id);
+      if (d && d.url) {
+        try { window.FerovkaAnalytics?.listingClick(d.url, "chart"); } catch { /* analytics must never block an ad */ }
+        window.open(d.url, "_blank", "noopener");
+      }
+    };
+
+    // the per-circle handlers of the report never see real mouse events – only our synthetic ones
+    for (const type of MOUSE) {
+      svg.addEventListener(type, (ev) => {
+        if (ev.__fv) return;
+        ev.stopImmediatePropagation();
+        if (type === "mousemove" && lastPointer === "mouse") {
+          show(nearest(svg, ev, 18), ev, false);
+          svg.style.cursor = current ? "pointer" : "";
+        } else if (type === "mouseleave" && ev.target === svg && lastPointer === "mouse") {
+          show(null, ev);
+        } else if (type === "click") {
+          const touch = lastPointer !== "mouse";
+          const at = touch && down ? down : ev;
+          const pt = nearest(svg, at, touch ? 26 : 18);
+          if (!pt) { armed = null; show(null, ev); return; }
+          if (!touch || armed === pt) { armed = null; open(pt); }
+          else { armed = pt; show(pt, at, true); }
+        }
+      }, true);
+    }
+  }
+
+  const scan = () => document.querySelectorAll("svg").forEach((s) => s.querySelector("circle.pt[data-id]") && bind(s));
+  scan();
+  new MutationObserver(scan).observe(document.body, { childList: true, subtree: true });
+})();
+</script><script id="ferovka-filters">/* Férovka – filters for the whole report, injected into every model report by sync-reports.mjs.
+ *
+ * The reports render the chart (drawChart) and the full ranking (renderTable) from the global DATA array; their own
+ * filter bar only filters the table. Here the filter bar (kept in its place above the ranking) gets more filters (year, price from/to,
+ * km, fuel, discount, picks only, text search) and every filter applies to the chart and the ranking together: DATA is
+ * refilled in place with the matching ads and both are drawn again. "</script" can't occur inside this file.
+ */
+(() => {
+  let data;
+  try { data = DATA; } catch { return; } // eslint-disable-line no-undef
+  if (!Array.isArray(data) || !data.length || typeof renderTable !== "function") return; // eslint-disable-line no-undef
+  const bar = document.querySelector(".filters");
+  if (!bar || bar.dataset.fv) return;
+  bar.dataset.fv = "1";
+  const ALL = data.slice();
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+  const fmt = (n) => Math.round(n).toLocaleString("sk-SK");
+  const norm = (s) => String(s ?? "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+  let groups = null;
+  try { groups = GROUPS; } catch { /* report without groups */ } // eslint-disable-line no-undef
+
+  const FUEL = { diesel: "Diesel", petrol: "Benzín", hybrid: "Hybrid", "plug-in hybrid": "Plug-in hybrid", electric: "Elektro", lpg: "LPG", cng: "CNG" };
+  const fuelOf = (d) => {
+    const e = norm(d.eg);
+    if (/tdi|crdi|dci|hdi|diesel|\bd\b|cdi|\d+d\b|blue/.test(e)) return "Diesel";
+    if (/plug-in|phev|e-hybrid|recharge|\bgte\b|\bt8\b|\b\d{2}e\b|\b\d{3} ?e\b/.test(e)) return "Plug-in hybrid";
+    if (/elektro|electric|\bev\b/.test(e)) return "Elektro";
+    if (/cng|lpg|g-tec|g-tron|tgi|ecofuel/.test(e)) return "Plyn (CNG/LPG)";
+    if (/mild|mhev/.test(e)) return "Benzín"; // mild-hybrid petrol (the diesel ones say TDI / d above)
+    if (/hybrid|hev/.test(e)) return "Hybrid";
+    if (/tsi|tfsi|mpi|fsi|benzin|gdi|dpi|htp|12v|\bt\d\b|\bb[56]\b|\d+i\b|turbo|tce|\bs4\b|rs ?\d|amg|competition|\bm\d{2,3}i?\b|gti|\bx5 m\b/.test(e)) return "Benzín";
+    return d.fuel ? FUEL[d.fuel] || String(d.fuel) : null;
+  };
+
+  // --- controls ---------------------------------------------------------------------------------------------------
+  const years = ALL.map((d) => d.year).filter(Boolean);
+  const yMin = Math.min(...years), yMax = Math.max(...years);
+  const yearOpts = (label) => `<option value="">${label}</option>` +
+    Array.from({ length: yMax - yMin + 1 }, (_, i) => yMax - i).map((y) => `<option>${y}</option>`).join("");
+  const kms = [30000, 50000, 75000, 100000, 150000, 200000, 250000, 300000];
+  const fuels = [...new Set(ALL.map(fuelOf).filter(Boolean))].sort((a, b) => a.localeCompare(b, "sk"));
+  const showGroups = Array.isArray(groups) && groups.length > 1 && ALL.some((d) => Number.isInteger(d.cg));
+
+  const maxInput = $("fMax");
+  if (maxInput) { maxInput.placeholder = "Cena do €"; maxInput.title = "Najvyššia cena (s DPH)"; }
+  const html =
+    `<select id="fvYearFrom" title="Rok výroby od">${yearOpts("Rok od")}</select>` +
+    `<select id="fvYearTo" title="Rok výroby do">${yearOpts("Rok do")}</select>` +
+    `<input id="fvPriceMin" type="number" placeholder="Cena od €" step="500" min="0" title="Najnižšia cena (s DPH)" style="width:110px">`;
+  if (maxInput) maxInput.insertAdjacentHTML("beforebegin", html);
+  else bar.insertAdjacentHTML("afterbegin", html);
+  const more =
+    `<select id="fvKm" title="Najviac najazdených km"><option value="">Nájazd – všetky</option>${kms.map((k) => `<option value="${k}">do ${fmt(k)} km</option>`).join("")}</select>` +
+    (fuels.length > 1 ? `<select id="fvFuel" title="Palivo"><option value="">Všetky palivá</option>${fuels.map((f) => `<option>${esc(f)}</option>`).join("")}</select>` : "") +
+    (showGroups ? `<select id="fvGroup" title="Skupina motorov (farba v grafe)"><option value="">Všetky skupiny</option>${groups.map((g, i) => `<option value="${i}">${esc(g)}</option>`).join("")}</select>` : "") +
+    `<select id="fvDisc" title="O koľko je auto lacnejšie ako férová cena"><option value="">Cena – všetky</option><option value="0">pod férovou cenou</option><option value="10">aspoň 10 % pod trhom</option><option value="20">aspoň 20 % pod trhom</option></select>` +
+    `<input id="fvText" type="search" placeholder="Hľadať (výbava, mesto…)" title="Hľadá v názve inzerátu, motore a lokalite" style="width:170px">` +
+    `<label class="fv-check"><input id="fvPick" type="checkbox"> len odporúčané</label>` +
+    `<button type="button" id="fvReset" class="fv-reset">Zrušiť filtre</button>`;
+  const count = $("count");
+  if (count) count.insertAdjacentHTML("beforebegin", more);
+  else bar.insertAdjacentHTML("beforeend", more);
+
+  // the bar stays where it was – right above the ranking – and also drives the chart; the chart gets a pointer to it
+  const chart = $("chartWrap");
+  const box = document.createElement("div");
+  box.className = "fv-filters";
+  box.id = "filtre";
+  bar.before(box);
+  box.innerHTML = `<div class="fv-head"><b>Filtre</b><span>platia pre rebríček aj graf vyššie</span></div>`;
+  box.appendChild(bar);
+  const note = document.createElement("div");
+  note.className = "fv-note";
+  chart?.before(note);
+
+  document.head.insertAdjacentHTML("beforeend", `<style id="fv-filters-css">
+.fv-filters{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 14px 4px;margin:24px 0 8px}
+.fv-filters .fv-head{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;margin-bottom:8px}
+.fv-filters .fv-head span{color:var(--muted);font-size:13px}
+.fv-filters .filters{margin-bottom:8px}
+.fv-filters .filters .count{flex-basis:100%;margin-left:0}
+.fv-check{display:inline-flex;gap:6px;align-items:center;font-size:13px;color:var(--text-2,var(--text));white-space:nowrap}
+.fv-reset{background:none;border:1px solid var(--border);color:var(--text);border-radius:8px;padding:6px 10px;font:inherit;font-size:13px;cursor:pointer}
+.fv-reset:hover{background:var(--surface-2,var(--surface))}
+.fv-note{color:var(--muted);font-size:13px;margin:0 0 8px}
+.fv-note a{color:inherit}
+.fv-empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:14px;pointer-events:none}
+@media (max-width:600px){.fv-filters .filters select,.fv-filters .filters input[type=number],.fv-filters .filters input[type=search]{flex:1 1 calc(50% - 8px);min-width:0;width:auto!important}}
+</style>`);
+
+  // --- filtering --------------------------------------------------------------------------------------------------
+  const val = (id) => ($(id) ? $(id).value : "");
+  const num = (id) => { const v = parseFloat(val(id)); return Number.isFinite(v) ? v : null; };
+  function matches(d) {
+    const yf = num("fvYearFrom"), yt = num("fvYearTo"), pmin = num("fvPriceMin"), pmax = num("fMax"), km = num("fvKm"), disc = num("fvDisc");
+    const fuel = val("fvFuel"), grp = val("fvGroup"), q = norm(val("fvText")).trim();
+    if (yf != null && !(d.year >= yf)) return false;
+    if (yt != null && !(d.year <= yt)) return false;
+    if (pmin != null && !(d.price_gross >= pmin)) return false;
+    if (pmax != null && !(d.price_gross <= pmax)) return false;
+    if (km != null && !(d.km <= km)) return false;
+    if (disc != null && !(d.discount_pct > disc || (disc > 0 && d.discount_pct >= disc))) return false;
+    if (fuel && fuelOf(d) !== fuel) return false;
+    if (grp !== "" && String(d.cg) !== grp) return false;
+    if ($("fvPick")?.checked && !d.pick) return false;
+    if (q && !q.split(/\s+/).every((w) => norm(`${d.title} ${d.eg ?? ""} ${d.engine ?? ""} ${d.location ?? ""}`).includes(w))) return false;
+    // the report's own filters (engine, gearbox, seller, portal, body, origin) – same rules as its renderTable
+    const en = val("fEngine"), tr = val("fTrans"), se = val("fSeller"), so = val("fSource"), og = val("fOrigin"), bo = val("fBody");
+    if (en && d.eg !== en) return false;
+    if (tr && d.transmission !== tr) return false;
+    if (se && d.seller_type === "dealer") return false;
+    if (so && !(d.source === so || (d.also_listed || []).some((a) => a.source === so))) return false;
+    if (og && d.origin !== og) return false;
+    if (bo && d.body !== bo) return false;
+    return true;
+  }
+  const active = () => [...box.querySelectorAll("select, input")].filter((el) => (el.type === "checkbox" ? el.checked : el.value !== "")).length;
+
+  let drawing = false;
+  function apply() {
+    if (drawing) return;
+    drawing = true;
+    const rows = ALL.filter(matches);
+    data.length = 0;
+    data.push(...rows);
+    const wrap = $("chartWrap");
+    wrap?.querySelector(".fv-empty")?.remove();
+    const plotted = rows.filter((d) => d.km && d.price_gross).length;
+    try {
+      if (typeof drawChart === "function") { // eslint-disable-line no-undef
+        if (plotted) drawChart(); // eslint-disable-line no-undef
+        else { const svg = $("chart"); if (svg) svg.innerHTML = ""; }
+      }
+    } catch (e) { console.warn("chart", e); }
+    if (wrap && !plotted) {
+      if (getComputedStyle(wrap).position === "static") wrap.style.position = "relative";
+      wrap.insertAdjacentHTML("beforeend", `<div class="fv-empty">Filtrom nezodpovedá žiadny inzerát</div>`);
+    }
+    try { renderTable(); } catch (e) { console.warn("table", e); } // eslint-disable-line no-undef
+    const n = active();
+    if (count) count.textContent = `Zobrazených ${fmt(rows.length)} z ${fmt(ALL.length)} inzerátov` + (n ? ` · aktívne filtre: ${n}` : "");
+    note.innerHTML = n
+      ? `Zobrazených ${fmt(rows.length)} z ${fmt(ALL.length)} inzerátov podľa <a href="#filtre">filtrov pri rebríčku</a>.`
+      : `Filtre (rok, cena, nájazd, palivo…) nájdeš <a href="#filtre">pri kompletnom rebríčku</a> – platia aj pre tento graf.`;
+    drawing = false;
+  }
+  box.querySelectorAll("select, input").forEach((el) => el.addEventListener("input", apply));
+  $("fvPick")?.addEventListener("change", apply);
+  $("fvReset").addEventListener("click", () => {
+    box.querySelectorAll("select, input").forEach((el) => { if (el.type === "checkbox") el.checked = false; else el.value = ""; });
+    apply();
+  });
+  apply();
+})();
+</script><!-- /ferovka-theme -->
+</body>
+</html>

@@ -1,0 +1,856 @@
+<!doctype html>
+<html lang="sk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Volvo V90 / S90 – analýza ponúk</title>
+<style>
+:root {
+  color-scheme: light;
+  --bg: #f6f6f4; --surface: #fcfcfb; --surface-2: #f0efec; --border: #e2e1dc;
+  --text: #0b0b0b; --text-2: #52514e; --muted: #7a7974;
+  --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a;
+  --pos: #2a78d6; --neg: #eb6834; --accent: #2a78d6;
+  --good: #1d7f4e; --bad: #b4332f; --grid: #e8e7e3;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #121211; --surface: #1a1a19; --surface-2: #232321; --border: #33332f;
+    --text: #f0efec; --text-2: #c3c2b7; --muted: #8f8e86;
+    --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+    --pos: #3987e5; --neg: #d95926; --accent: #5598e7;
+    --good: #4cc38a; --bad: #f07a76; --grid: #2a2a27;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #121211; --surface: #1a1a19; --surface-2: #232321; --border: #33332f;
+  --text: #f0efec; --text-2: #c3c2b7; --muted: #8f8e86;
+  --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+  --pos: #3987e5; --neg: #d95926; --accent: #5598e7;
+  --good: #4cc38a; --bad: #f07a76; --grid: #2a2a27;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text);
+  font: 15px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+main { max-width: 1120px; margin: 0 auto; padding: 32px 16px 64px; }
+a { color: var(--accent); text-decoration: none; } a:hover { text-decoration: underline; }
+h1 { font-size: 30px; margin: 0 0 4px; letter-spacing: -.01em; }
+h2 { font-size: 21px; margin: 48px 0 6px; }
+h3 { font-size: 15px; margin: 6px 0 4px; line-height: 1.35; }
+.lead { color: var(--text-2); margin: 0 0 20px; max-width: 760px; }
+.section-lead { color: var(--text-2); margin: 0 0 16px; max-width: 800px; }
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
+.kpi { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+.kpi .v { font-size: 26px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.kpi .l { color: var(--text-2); font-size: 13px; }
+.explain { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; margin-top: 12px; }
+.explain p { margin: 6px 0; color: var(--text-2); }
+.explain b { color: var(--text); }
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; }
+.card-head { display: flex; justify-content: space-between; gap: 8px; font-size: 12px; }
+.tag { font-weight: 600; color: var(--accent); }
+.loc { color: var(--muted); }
+.facts { color: var(--text-2); font-size: 13px; }
+.prices { display: grid; grid-template-columns: 1.2fr 1fr .8fr; gap: 8px; margin: 12px 0 8px; }
+.lbl { display: block; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+.big { font-size: 22px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.mid { font-size: 16px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.good { color: var(--good); }
+.meter { height: 6px; background: var(--surface-2); border-radius: 4px; overflow: hidden; }
+.meter span { display: block; height: 100%; background: var(--s1); border-radius: 4px; }
+.news ul { margin: 6px 0 0; padding-left: 20px; } .news li { margin: 4px 0; } .news .down { color: var(--good, #1baf7a); font-weight: 600; }
+.note { font-size: 12.5px; background: var(--surface-2); border-radius: 6px; padding: 6px 8px; margin-top: 8px; color: var(--text-2); }
+.pc { list-style: none; padding: 0; margin: 10px 0 0; font-size: 13.5px; }
+.pc li { padding-left: 20px; position: relative; margin: 3px 0; }
+.pc li.pro::before { content: "+"; position: absolute; left: 4px; color: var(--good); font-weight: 700; }
+.pc li.con::before { content: "–"; position: absolute; left: 4px; color: var(--bad); font-weight: 700; }
+.subhead { font-size: 15px; color: var(--text-2); margin: 22px 0 10px; font-weight: 600; }
+.chart-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 14px 8px; position: relative; }
+.legend { display: flex; flex-wrap: wrap; gap: 16px; font-size: 13px; color: var(--text-2); margin: 0 0 6px 4px; }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; }
+.legend .ring { background: transparent; border: 2px solid var(--text); width: 12px; height: 12px; }
+svg text { fill: var(--muted); font-size: 11px; }
+.tip { position: absolute; pointer-events: none; background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+  padding: 8px 10px; font-size: 12.5px; box-shadow: 0 6px 20px rgba(0,0,0,.15); max-width: 280px; display: none; z-index: 5; }
+.tip b { display: block; margin-bottom: 2px; }
+.tip .row { display: flex; justify-content: space-between; gap: 12px; color: var(--text-2); }
+.tip .row span:last-child { color: var(--text); font-variant-numeric: tabular-nums; }
+table { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; font-size: 13.5px; }
+th, td { padding: 9px 10px; border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; }
+th { font-size: 12px; color: var(--text-2); font-weight: 600; background: var(--surface-2); white-space: nowrap; }
+th.sortable { cursor: pointer; user-select: none; } th.sortable:hover { color: var(--text); }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+.sub { color: var(--text-2); font-size: 12.5px; margin-top: 2px; }
+.stars { color: #c98500; letter-spacing: 1px; white-space: nowrap; } .stars .off { color: var(--border); }
+.cellbar { height: 5px; background: var(--surface-2); border-radius: 3px; margin-bottom: 4px; }
+.cellbar span { display: block; height: 100%; background: var(--s1); border-radius: 3px; }
+.disc { display: inline-flex; align-items: center; gap: 6px; justify-content: flex-end; }
+.dbar { width: 54px; height: 6px; background: var(--surface-2); border-radius: 3px; position: relative; }
+.dbar span { position: absolute; top: 0; height: 100%; border-radius: 3px; }
+.filters { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 10px; align-items: center; }
+.filters select, .filters input { background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 6px 8px; font: inherit; font-size: 13px; }
+.filters .count { color: var(--muted); font-size: 13px; margin-left: auto; }
+.table-scroll { overflow-x: auto; border-radius: 12px; }
+.badge { font-size: 11px; padding: 1px 6px; border-radius: 10px; background: var(--surface-2); color: var(--text-2); white-space: nowrap; }
+.badge.pick { background: var(--s1); color: #fff; }
+.flag { color: var(--bad); font-size: 12px; }
+.warn { background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--neg); border-radius: 10px; padding: 12px 16px; }
+.warn li { margin: 4px 0; }
+.check { columns: 2 300px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px 14px 34px; margin: 0; }
+.check li { margin: 4px 0; break-inside: avoid; }
+footer { color: var(--muted); font-size: 12.5px; margin-top: 48px; border-top: 1px solid var(--border); padding-top: 14px; }
+.theme-btn { float: right; background: var(--surface); color: var(--text-2); border: 1px solid var(--border); border-radius: 8px; padding: 5px 10px; cursor: pointer; font: inherit; font-size: 13px; }
+@media (max-width: 640px) { h1 { font-size: 24px; } .prices { grid-template-columns: 1fr 1fr 1fr; } .big { font-size: 18px; } th, td { padding: 7px 6px; } }
+</style>
+<!-- ferovka-theme --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"><style id="ferovka-theme">/* Férovka look for the generated analyses – injected by sync-reports.mjs after each report's own <style>.
+   Same palette and type as the site; chart colours (--s1..--s3) stay the validated set. */
+:root {
+  --bg: #f5f4ef; --surface: #fdfdfb; --surface-2: #eeede6; --border: #e1dfd6;
+  --text: #0f1513; --text-2: #4f5551; --muted: #6f746f;
+  --accent: #0b8a56; --good: #0b7a4b; --grid: #e6e4dc; --win: #dff3e9;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d110f; --surface: #151a17; --surface-2: #1d2420; --border: #2a322d;
+    --text: #eef1ec; --text-2: #b6bdb6; --muted: #8f978f;
+    --accent: #2fc583; --good: #4cd08f; --grid: #1f2622; --win: #143223;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d110f; --surface: #151a17; --surface-2: #1d2420; --border: #2a322d;
+  --text: #eef1ec; --text-2: #b6bdb6; --muted: #8f978f;
+  --accent: #2fc583; --good: #4cd08f; --grid: #1f2622; --win: #143223;
+}
+
+body { font-family: "Manrope", system-ui, sans-serif; }
+h1, h2 { letter-spacing: -0.02em; font-weight: 800; }
+.tag { color: var(--accent); }
+
+/* photo header (removed by the site's viewer, which shows its own) */
+.fv-hero { position: relative; margin: 0 0 26px; border-radius: 20px; overflow: hidden; aspect-ratio: 21 / 8; background: #0d110f; display: flex; }
+.fv-hero img { flex: 1; min-width: 0; height: 100%; object-fit: cover; animation: fv-zoom 1.4s cubic-bezier(.2,.7,.2,1) both; }
+.fv-collage img + img { border-left: 3px solid #0d110f; }
+.fv-hero::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(180deg, transparent 55%, rgb(13 17 15 / .75)),
+    repeating-linear-gradient(90deg, rgb(47 197 131 / .06) 0 1px, transparent 1px 48px); }
+.fv-hero figcaption { position: absolute; right: 12px; bottom: 8px; z-index: 1; font-size: 11px; color: rgb(255 255 255 / .75); }
+.fv-hero figcaption a { color: inherit; }
+
+/* cards & panels: softer, lift on hover */
+.card, .kpi, .explain, .chart-wrap, .box { border-radius: 16px; }
+.card { transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease; }
+.card:hover { transform: translateY(-3px); border-color: var(--accent); box-shadow: 0 14px 30px -18px rgb(0 0 0 / .45); }
+.badge.pick { background: var(--accent); }
+
+/* entrance animation */
+@keyframes fv-up { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes fv-zoom { from { transform: scale(1.08); filter: brightness(.6); } to { transform: none; filter: none; } }
+h1, .lead, .kpis, .cards .card { animation: fv-up .6s cubic-bezier(.2,.7,.2,1) both; }
+.lead { animation-delay: .08s; }
+.kpis { animation-delay: .16s; }
+.cards .card:nth-child(2) { animation-delay: .06s; }
+.cards .card:nth-child(3) { animation-delay: .12s; }
+.cards .card:nth-child(4) { animation-delay: .18s; }
+.cards .card:nth-child(5) { animation-delay: .24s; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+@media (max-width: 640px) { .fv-hero { aspect-ratio: 16 / 9; border-radius: 14px; } }
+
+/* touch: hint under the chart tooltip (report-chart.js) */
+.fv-hint { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--border, rgba(127,127,127,.3)); font-weight: 700; color: var(--accent, #2fc583); }
+</style><!-- /ferovka-theme -->
+</head>
+<body>
+<main><!-- ferovka-theme --><!-- /ferovka-theme -->
+<button class="theme-btn" id="themeBtn" type="button">Svetlý / tmavý</button>
+<h1>Volvo V90 / S90 – ktorá ponuka sa oplatí</h1>
+<p class="lead">Analýza aktuálnych inzerátov Volvo V90 / S90 (2016–2025, kombi V90 vrátane Cross Country aj sedan S90, bez nových áut z 2026) od 6 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 286 inzerátov (69 na bazoši, 132 na autobazar.eu, 85 na bazar.sk) – prezreli sme 94 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 153 rôznych áut zo Slovenska. Každé auto sme porovnali
+s <b>férovou cenou</b>: tú vypočítal model naučený na celom trhu podľa veku, nájazdu, motora, prevodovky a typu predajcu.</p>
+
+<div class="kpis">
+  <div class="kpi"><div class="v">153</div><div class="l">inzerátov V90 / S90 (nad 6 000 €)</div></div>
+  <div class="kpi"><div class="v">86</div><div class="l">ohodnotených (majú rok aj km)</div></div>
+  <div class="kpi"><div class="v">22 750 €</div><div class="l">medián ceny s DPH</div></div>
+  <div class="kpi"><div class="v">89 %</div><div class="l">rozdielov v cenách vysvetlí model</div></div>
+</div>
+
+
+<h2>Odkiaľ sú dáta: bazoš, autobazar.eu a bazar.sk</h2>
+<div class="kpis">
+  <div class="kpi"><div class="v">36</div><div class="l">ohodnotených z bazoša</div></div>
+  <div class="kpi"><div class="v">27</div><div class="l">ohodnotených z autobazar.eu</div></div><div class="kpi"><div class="v">23</div><div class="l">ohodnotených z bazar.sk</div></div>
+  <div class="kpi"><div class="v">92</div><div class="l">áut bolo na viacerých portáloch – započítané raz</div></div>
+  <div class="kpi"><div class="v">6 / 22</div><div class="l">s uvedeným pôvodom SR / dovoz</div></div>
+</div>
+<div class="explain">
+  <p><b>Tri portály, jeden trh.</b> Bazoš prehľadal 61 inzerátov, autobazar.eu
+  132, bazar.sk 77. Ponuky z Česka (na autobazar.eu ich je veľa) sme vynechali. Autobazáre často dávajú
+  to isté auto na viac portálov. Takéto dvojice (41 v rebríčku) sme spojili podľa VIN alebo zhody roku, km a ceny,
+  aby sa v modeli nerátali dvakrát. Pri aute nájdeš odkaz na všetky ponuky – niekedy sa líšia cenou.</p>
+  <p><b>Rozdiel medzi portálmi:</b> rovnaké auto je na autobazar.eu v priemere -5,1 %
+  oproti bazošu. Na autobazar.eu predávajú hlavne firmy (17 z 27 ohodnotených). Na bazar.sk je rovnaké auto v priemere -4,3 % oproti bazošu.</p>
+  <p><b>Kúpené v SR vs. dovoz:</b> autá s uvedeným pôvodom zo SR sú oproti autám bez uvedeného pôvodu
+  +8,4 %, dovezené +1,0 %
+  (pri rovnakom veku, nájazde a motore). Pôvod zo SR je výhoda pri overovaní histórie, trh zaň však nepripláca – väčšina
+  inzerátov pôvod jednoducho neuvádza. V tabulke dole si môžeš nechať zobraziť len autá kúpené v SR.</p>
+</div>
+
+<h2>Čo hýbe cenou Volva V90 / S90</h2>
+<p class="section-lead">Toto sa model naučil z trhu. Keď porovnávaš dve autá, tieto čísla ti povedia, koľko má byť
+rozdiel v cene, aby to bolo fér.</p>
+<div class="kpis">
+  <div class="kpi"><div class="v">-3,7 %</div><div class="l">každých ďalších 10 000 km</div></div>
+  <div class="kpi"><div class="v">-4,7 %</div><div class="l">každý rok veku navyše</div></div>
+  <div class="kpi"><div class="v">+8 %</div><div class="l">príplatok za automat (DSG)</div></div>
+  <div class="kpi"><div class="v">+1,3 %</div><div class="l">príplatok u predajcu / firmy</div></div>
+  <div class="kpi"><div class="v">-1,4 %</div><div class="l">V90 / S90 po facelifte (2020+) oproti cene podľa veku</div></div>
+  <div class="kpi"><div class="v">+8,2 %</div><div class="l">príplatok za automat</div></div>
+</div>
+<div class="explain">
+  <p><b>Príklad:</b> dve rovnaké V90 D4 z roku 2019, jedno má 60 tis. km, druhé 120 tis. km. Druhé má byť
+  približne o 22 % lacnejšie (6 × -3,7 %). Ak je lacnejšie len o 5 %, preplácaš kilometre.</p>
+  <p><b>Ako čítať „pod trhom“:</b> +15 % znamená, že auto stojí o 15 % menej, než by malo podľa trhu. Bežný rozptyl
+  cien je asi ±14 %, takže až zľava nad ~10–15 % je naozaj výnimočná. Pri takej zľave vždy zisti, prečo je auto lacné
+  (stav, história, nájazd).</p>
+  <p><b>DPH:</b> ceny uvedené bez DPH (napr. „10 300 € netto“) sme prepočítali na cenu s DPH, ktorú zaplatí súkromná osoba.</p>
+</div>
+
+<h2>Odporúčané ponuky</h2>
+<p class="section-lead">Kandidáti s najlepším pomerom cena / vek / nájazd, ktorých celý inzerát sme prečítali.
+Zoradené podľa toho, ako ich odporúčame.</p>
+<div class="subhead">V90 / S90 po facelifte (2020+) – najlepší pomer cena / vek</div>
+<div class="cards">
+<article class="card">
+  <div class="card-head"><span class="tag">Súkromník: S90 B5 AWD so servisom Volvo</span><span class="loc">Kotrčiná Lúčka</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/volvo-s90-b5-momentum-pro-awd-at/Ae27tIEhwzO/" target="_blank" rel="noopener">Volvo S90 B5 Momentum Pro AWD A/T</a></h3>
+  <div class="facts">2021 · 102 000 km · D5 / B5 diesel 173–184 kW · automat · sedan S90 · súkromník</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">24 900 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">30 510 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+18.4 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:61%"></span></div>
+  <ul class="pc"><li class="pro">2021, 2.0 diesel mild hybrid 173 kW, 4x4, automat, Momentum Pro, 102 tis. km</li><li class="pro">Servisované vo Volvo Žilina, 2 sady kolies</li><li class="pro">~18 % pod férovou cenou</li><li class="con">Sedan S90 – menší kufor než V90</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">V90 Cross Country B5 v maximálnej výbave</span><span class="loc">Senec</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/196211840/volvo-v90-cross-country-b5.php" target="_blank" rel="noopener">Volvo V90 cross country B5</a></h3>
+  <div class="facts">2021 · 98 000 km · T4 / T5 / T6 / B5 / B6 benzín 140–228 kW · prevodovka ? · kombi V90 · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">29 800 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">33 030 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+9.8 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:33%"></span></div>
+  <ul class="pc"><li class="pro">5/2021, 2.0 benzín mild hybrid 185 kW, 4x4, 98 tis. km</li><li class="pro">Harman Kardon, sledovanie mŕtveho uhla</li><li class="pro">~10 % pod férovou cenou</li><li class="con">Prevodovka v inzeráte neuvedená</li><li class="con">Predajca neistý</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">V90 Cross Country B4 AWD z 2023</span><span class="loc">Košice-Vyšné Opátske</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/volvo-v90-cross-country-advanced-b4-awd-mhev/Am20mjySvhc/" target="_blank" rel="noopener">Volvo V90 Cross Country B4 AWD</a></h3>
+  <div class="facts">2023 · 95 400 km · D3 / D4 / B4 diesel 110–145 kW · automat · kombi V90 · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · aj na <a href='https://auto.bazos.sk/inzerat/197065175/volvo-v90-cross-country-advanced-b4-awd-mhev.php' target='_blank' rel='noopener'>bazoš</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">29 990 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">32 330 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+7.2 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:24%"></span></div>
+  <ul class="pc"><li class="pro">2023, 2.0 diesel mild hybrid, 4x4, automat, 95 tis. km</li><li class="pro">Webasto s časovačom, vyhrievaný volant aj zadné sedadlá, kamera</li><li class="pro">~7 % pod férovou cenou</li><li class="con">Predáva autobazár</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">V90 Cross Country D5 AWD za 17 000 €</span><span class="loc">Trnava</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197156028/volvo-v90-cross-cauntry-20-d5-4x4-173kw-122021.php" target="_blank" rel="noopener">Volvo V90 Cross country 2.0 D5 4x4  173KW automat 8s 12/2021</a></h3>
+  <div class="facts">2021 · 209 000 km · D5 / B5 diesel 173–184 kW · automat · kombi V90 · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b> · aj na <a href='https://www.autobazar.eu/detail/volvo-v90-cross-country-20-d5-4x4-173kw-automat-8s-122021/Aed46YE-onW/' target='_blank' rel='noopener'>autobazar.eu</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">16 990 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">20 090 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+15.4 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:51%"></span></div>
+  <ul class="pc"><li class="pro">12/2021, 2.0 diesel 173 kW, 4x4, 8-st. automat, 209 tis. km</li><li class="pro">Servisované, ťažné, diaľkové štartovanie, matrix svetlá</li><li class="pro">~15 % pod férovou cenou</li><li class="con">Veľmi vysoký nájazd (~39 tis. km/rok)</li><li class="con">Predajca neistý</li></ul>
+</article></div>
+<div class="subhead">Lacnejšie V90 / S90 do 22 000 €</div>
+<div class="cards">
+<article class="card">
+  <div class="card-head"><span class="tag">V90 D4 Inscription za 14 600 €</span><span class="loc">Kútniky</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/volvo-v90-d4-20l-inscription-at-140kw190hp-a8/AexGELAXlY5/" target="_blank" rel="noopener">Volvo V90 D4 2.0L Inscription AT 140kW190HP A8</a></h3>
+  <div class="facts">2016 · 132 000 km · D3 / D4 / B4 diesel 110–145 kW · automat · kombi V90 · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">14 600 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">18 610 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+21.5 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:72%"></span></div>
+  <ul class="pc"><li class="pro">2016, 2.0 diesel 140 kW, 8-st. automat, Inscription, 132 tis. km</li><li class="pro">~22 % pod férovou cenou</li><li class="con">Inzerát bez textu</li><li class="con">Predáva autobazár</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">Súkromník: V90 D5 AWD</span><span class="loc">Trnava</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/volvo-v90-d5-awd-173-kw-44-automat/AePpd_HqqlX/" target="_blank" rel="noopener">Volvo V90 D5 AWD 173 kW, 4×4, automat</a></h3>
+  <div class="facts">2017 · 200 000 km · D5 / B5 diesel 173–184 kW · automat · kombi V90 · súkromník</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · dovezené · aj na <a href='https://auto.bazos.sk/inzerat/196362633/volvo-v90-d5-awd-173-kw-44-automat-sukromny-majitel.php' target='_blank' rel='noopener'>bazoš</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">14 990 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">18 720 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+19.9 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:66%"></span></div>
+  <ul class="pc"><li class="pro">2017, 2.0 diesel 173 kW, 4x4, 8-st. automat, 200 tis. km</li><li class="pro">~20 % pod férovou cenou</li><li class="con">Dovoz</li><li class="con">Vysoký nájazd</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">Súkromník: V90 D4 Momentum</span><span class="loc">Hybe</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/volvo-v90-d4-20l-momentum-at-140kw190hp-a8/Aes5BuIeYOO/" target="_blank" rel="noopener">Volvo V90 D4 2.0L Momentum AT 140kW190HP A8</a></h3>
+  <div class="facts">2018 · 150 000 km · D3 / D4 / B4 diesel 110–145 kW · automat · kombi V90 · súkromník</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · dovezené</div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">16 000 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">19 910 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+19.6 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:65%"></span></div>
+  <ul class="pc"><li class="pro">2018, 2.0 diesel 140 kW, 8-st. automat, 150 tis. km</li><li class="pro">~20 % pod férovou cenou</li><li class="con">Dovoz</li><li class="con">Inzerát bez textu</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">S90 D4 s kompletným servisom</span><span class="loc">Bánovce nad Bebravou</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/196915848/volvo-s90.php" target="_blank" rel="noopener">Volvo S90</a></h3>
+  <div class="facts">2019 · 134 463 km · D3 / D4 / B4 diesel 110–145 kW · automat · sedan S90 · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">18 900 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">22 680 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+16.7 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:56%"></span></div>
+  <ul class="pc"><li class="pro">5/2019, 2.0 diesel 140 kW, 8-st. automat, 134 tis. km</li><li class="pro">Servisná knižka s kompletnou históriou, uvedený VIN</li><li class="pro">~17 % pod férovou cenou</li><li class="con">Sedan vyrobený v Číne (VIN LVY)</li><li class="con">Predáva autobazár</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">V90 D4 s panorámou a Webastom</span><span class="loc">Bratislava</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197325330/volvo-v90-d4-maple-brown-140-kw-panorama-webasto.php" target="_blank" rel="noopener">Volvo V90 D4 (Maple Brown) – 140 kW, panorama, Webasto</a></h3>
+  <div class="facts">2019 · 144 000 km · D3 / D4 / B4 diesel 110–145 kW · automat · kombi V90 · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">19 300 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">23 010 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+16.1 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:54%"></span></div>
+  <ul class="pc"><li class="pro">2019, 2.0 diesel 140 kW, automat, Momentum, 144 tis. km</li><li class="pro">Panoramatická strecha, Webasto</li><li class="pro">Lacnejšie než porovnateľné V90 D4 z 2019</li><li class="con">Predajca neistý</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">V90 D5 Inscription AWD do 12 000 €</span><span class="loc">Bratislava</span></div>
+  <h3><a href="https://auto.bazar.sk/39571981-volvo-v90-d5-inscription-awd-a-t-2-0-173kw/" target="_blank" rel="noopener">Volvo V90 D5 INSCRIPTION AWD A/T 2.0 173kW</a></h3>
+  <div class="facts">2016 · 228 629 km · D5 / B5 diesel 173–184 kW · automat · kombi V90 · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazar.sk</b> · dovezené · aj na <a href='https://www.autobazar.eu/detail/volvo-v90-d5-inscription-awd-at-20-173kw/Am52O6aWrGz/' target='_blank' rel='noopener'>autobazar.eu</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">11 980 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">14 590 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+17.9 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:60%"></span></div>
+  <ul class="pc"><li class="pro">11/2016, 2.0 diesel 173 kW, 4x4, automat, Inscription, 229 tis. km</li><li class="pro">Uvedený VIN</li><li class="pro">~18 % pod férovou cenou</li><li class="con">Dovoz</li><li class="con">Vysoký nájazd</li><li class="con">STK len do 12/2026</li><li class="con">Predáva autobazár</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">V90 D3 manuál s pravidelným servisom</span><span class="loc">Bratislava</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/196357922/volvo-v90-d3-manual.php" target="_blank" rel="noopener">Volvo V90 D3 Manual</a></h3>
+  <div class="facts">2017 · 261 000 km · D3 / D4 / B4 diesel 110–145 kW · manuál · kombi V90 · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b> · aj na <a href='https://www.autobazar.eu/detail/volvo-v90-d3-20l-r-design-110kw150hp-m6/AetYuif8_uC/' target='_blank' rel='noopener'>autobazar.eu</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">11 700 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">13 830 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+15.4 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:51%"></span></div>
+  <ul class="pc"><li class="pro">2017, 2.0 diesel 110 kW, 6-st. manuál, 261 tis. km</li><li class="pro">Pravidelne servisované</li><li class="pro">~15 % pod férovou cenou</li><li class="con">Vysoký nájazd</li><li class="con">Predajca neistý</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">V90 D3 automat so servisnou knižkou</span><span class="loc">Galanta</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197646006/volvo-v90-d3-20l-110kw-at8-fwd.php" target="_blank" rel="noopener">Volvo V90 D3 2.0L 110kW AT/8 FWD</a></h3>
+  <div class="facts">2017 · 173 168 km · D3 / D4 / B4 diesel 110–145 kW · automat · kombi V90 · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazoš</b> · aj na <a href='https://auto.bazar.sk/39754255-volvo-v90-d3-2-0l-110kw-at-8-fwd-aj-na-splatky-protiucet/' target='_blank' rel='noopener'>bazar.sk</a> · aj na <a href='https://www.autobazar.eu/detail/volvo-v90-d3-20l-110kw-at8-fwd-aj-na-splatky-protiucet/Am5wQ6OSOyc/' target='_blank' rel='noopener'>autobazar.eu</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">15 990 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">17 270 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+7.4 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:25%"></span></div>
+  <ul class="pc"><li class="pro">2017, 2.0 diesel 110 kW, 8-st. automat, 173 tis. km</li><li class="pro">Servisná knižka, 2 kľúče, nové brzdy pri 165 tis. km</li><li class="pro">~7 % pod férovou cenou</li><li class="con">Predáva autobazár</li></ul>
+</article></div>
+<div class="subhead">Špeciálne prípady</div>
+<div class="cards"></div>
+
+<h2>Cena vs. nájazd: celý trh na jednom grafe</h2>
+<p class="section-lead">Každý bod je jeden inzerát. Čím nižšie bod leží oproti ostatným s podobným nájazdom, tým je auto lacnejšie.
+Krúžkom sú označené odporúčané ponuky. Prejdi myšou na bod a uvidíš detail.</p>
+<div class="chart-wrap" id="chartWrap">
+  <div class="legend" id="legend"></div>
+  <svg id="chart" width="100%" height="420" role="img" aria-label="Bodový graf ceny a nájazdu inzerátov"></svg>
+  <div class="tip" id="tip"></div>
+</div>
+
+<h2>Porovnanie motorov</h2>
+<p class="section-lead">Hodnotenie (hviezdičky) zohľadňuje spoľahlivosť, spoľahlivosť a náklady na prevádzku a pomer cena/výkon.
+Číselné stĺpce sú mediány z ohodnotených inzerátov.</p>
+<div class="table-scroll">
+<table>
+  <thead><tr><th>Motor</th><th>Hodnotenie</th><th class="num">Ponúk</th><th class="num">Medián ceny</th><th class="num">Medián roku</th><th class="num">Medián km</th></tr></thead>
+  <tbody>
+<tr>
+  <td><b>T6 / T8 Recharge plug-in hybrid 250–335 kW</b><div class="sub">2.0 turbo + elektromotor vzadu (4x4), 40–80 km na elektrinu. Over batériu a nabíjanie.</div></td>
+  <td><span class="stars" aria-label="3 z 5">★★★<span class="off">★★</span></span></td>
+  <td class="num">8</td>
+  <td class="num"><div class="cellbar"><span style="width:100%"></span></div>38 445 €</td>
+  <td class="num">2021</td>
+  <td class="num">57 397 km</td>
+</tr>
+<tr>
+  <td><b>D5 / B5 diesel 173–184 kW</b><div class="sub">2.0 diesel 235 k, väčšinou AWD. Ťahavý a úsporný; over DPF, AdBlue.</div></td>
+  <td><span class="stars" aria-label="4 z 5">★★★★<span class="off">★</span></span></td>
+  <td class="num">24</td>
+  <td class="num"><div class="cellbar"><span style="width:58%"></span></div>22 200 €</td>
+  <td class="num">2018</td>
+  <td class="num">191 174 km</td>
+</tr>
+<tr>
+  <td><b>D3 / D4 / B4 diesel 110–145 kW</b><div class="sub">2.0 diesel 150–197 k (od 2020 mild hybrid B4). Najčastejší a úsporný.</div></td>
+  <td><span class="stars" aria-label="4 z 5">★★★★<span class="off">★</span></span></td>
+  <td class="num">45</td>
+  <td class="num"><div class="cellbar"><span style="width:56%"></span></div>21 685 €</td>
+  <td class="num">2018</td>
+  <td class="num">145 000 km</td>
+</tr>
+<tr>
+  <td><b>T4 / T5 / T6 / B5 / B6 benzín 140–228 kW</b><div class="sub">2.0 turbobenzín 190–310 k. Kultivovaný, ale smädnejší.</div></td>
+  <td><span class="stars" aria-label="3 z 5">★★★<span class="off">★★</span></span></td>
+  <td class="num">9</td>
+  <td class="num"><div class="cellbar"><span style="width:69%"></span></div>26 531 €</td>
+  <td class="num">2020</td>
+  <td class="num">137 024 km</td>
+</tr></tbody>
+</table>
+</div>
+<div class="explain">
+  <p><b>Volvo V90 / S90</b> (od 2016, facelift 2020) je veľké prémiové kombi (V90, aj zvýšené <b>Cross Country</b>) alebo sedan
+  (S90) – konkurent BMW 5 a Audi A6. Všetky motory sú 2.0 štvorvalce s automatom.</p>
+  <p><b>Ktorý motor zvoliť?</b> Na veľa km <b>D4 / B4 diesel</b>, na rýchle cesty <b>D5 / B5</b>. Plug-in <b>T8</b> má zmysel len
+  s nabíjaním doma.</p>
+</div>
+
+<h2>Na čo si dať pozor</h2>
+<div class="warn">
+  <p><b>Lacné kvôli extrémnemu nájazdu</b> (viac ako 35 tis. km ročne, typicky flotila alebo taxi):</p>
+  <ul><li><a href='https://auto.bazos.sk/inzerat/195983666/volvo-v90-cc.php' target='_blank' rel='noopener'>Volvo V90 CC odpočet Dph</a>: 2020, 264 000 km → 42 000 km/rok. Lacné je kvôli nájazdu.</li><li><a href='https://auto.bazar.sk/39768151-volvo-v90-b5-awd-cross-country-tazne/' target='_blank' rel='noopener'>Volvo V90 B5 AWD CROSS COUNTRY TAŽNÉ</a>: 2022, 174 540 km → 40 000 km/rok. Lacné je kvôli nájazdu.</li><li><a href='https://auto.bazos.sk/inzerat/197156028/volvo-v90-cross-cauntry-20-d5-4x4-173kw-122021.php' target='_blank' rel='noopener'>Volvo V90 Cross country 2.0 D5 4x4  173KW automat 8s 12/2021</a>: 2021, 209 000 km → 39 000 km/rok. Lacné je kvôli nájazdu.</li><li><a href='https://www.autobazar.eu/detail/volvo-s90-s90-d5-20l-drive-e-r-design-at-awd-173kw235hp-a8/AeZUUkO_9KI/' target='_blank' rel='noopener'>Volvo S90 S90 D5 2.0L Drive-E R-Design AT AWD 173kW235HP A8</a>: 2018, 325 800 km → 39 000 km/rok. Lacné je kvôli nájazdu.</li><li><a href='https://auto.bazos.sk/inzerat/197301793/volvo-s90-d4-20-at-r-design-serv-kniha-19-alu-rv2020.php' target='_blank' rel='noopener'>Volvo S90 D4 2.0 A/T R-Design Polestar  19&quot; Alu rv.2020</a>: 2020, 235 047 km → 37 000 km/rok. Lacné je kvôli nájazdu.</li><li><a href='https://auto.bazos.sk/inzerat/197152595/volvo-v90-cc-b5-cross-country-pro-awd-at-dph.php' target='_blank' rel='noopener'>Volvo V90 CC B5 Cross Country Pro AWD A/T, DPH</a>: 2021, 188 000 km → 35 000 km/rok. Lacné je kvôli nájazdu.</li></ul>
+  <p><b>Ďalšie veci, ktoré sme v inzerátoch našli:</b></p><ul><li>Asi 40 ponúk sú od českých predajcov (Čestlice, Praha, Brno) – do slovenských cien sme ich nezarátali.</li><li>Od 2020 sú motory B4 / B5 <b>mild hybridy</b> – B4 je vždy diesel, B5 existuje ako diesel aj benzín; over v technickom preukaze.</li><li>Sedan S90 pre Európu sa vyrába v Číne (VIN začína LVY), kombi V90 vo Švédsku.</li><li>Pri inzerátoch AAA AUTO je uvedená <b>cena pri financovaní</b> – pri platbe v hotovosti môže byť iná.</li></ul><p><b>Vyradené z porovnania</b> (poškodené autá alebo nezmyselné údaje – model ich nehodnotí):</p><ul><li><a href='https://auto.bazos.sk/inzerat/195907063/volvo-v90-d4-2019.php' target='_blank' rel='noopener'>VOLVO V90 D4 | 2019</a> (11 990 €): cena je o 74 % pod trhom – havarované, na diely, záloha/splátka namiesto ceny alebo podvod</li><li><a href='https://auto.bazos.sk/inzerat/196821946/volvo-v90-t6-recharge-r-desing-awd.php' target='_blank' rel='noopener'>Volvo V90 T6 Recharge R-Desing AWD</a> (32 499 €): havarované / poškodené – cena nie je porovnateľná s trhom</li><li><a href='https://auto.bazos.sk/inzerat/197782667/volvo-s90-d4-inscription.php' target='_blank' rel='noopener'>Volvo S90 D4 inscription</a> (11 980 €): 942000 km/rok je nereálne – skontroluj rok a km</li><li><a href='https://www.autobazar.eu/detail/volvo-s90-predam-volvo-s90/AeiIAZFxNpC/' target='_blank' rel='noopener'>Volvo S90 inscription</a> (18 900 €): havarované / poškodené – cena nie je porovnateľná s trhom</li><li><a href='https://auto.bazar.sk/37654730-cenova-bomba-volvo-s90-b5-awd-mild-hybrid-diesel-plus-bright/' target='_blank' rel='noopener'>!! Cenová BOMBA !! VOLVO S90 B5 AWD MILD-HYBRID/diesel PLUS/BRIGHT</a> (64 900 €): podozrivo nízky nájazd</li><li><a href='https://auto.bazar.sk/36563059-volvo-s90-b5-awd-mild-hybrid-diesel-plus-bright-polestar/' target='_blank' rel='noopener'>VOLVO S90 B5 AWD MILD-HYBRID/diesel PLUS/BRIGHT + POLESTAR</a> (64 900 €): podozrivo nízky nájazd</li></ul><p><b>Staré V90 / S90 (do 1998), XC90, V60 a iné modely z vyhľadávania, nové autá z 2026, inzeráty s chybným nájazdom</b> (48 inzerátov) sme z rebríčka vynechali.</p>
+  <p>Ďalších <b>4</b> inzerátov nemá v texte rok alebo kilometre, takže ich nebolo možné ohodnotiť.
+  Ak ťa niektorý zaujme, predajcu sa na tieto údaje opýtaj.</p>
+</div>
+
+<h2>Kompletný rebríček</h2>
+<p class="section-lead">Všetky ohodnotené inzeráty. Kliknutím na hlavičku stĺpca zoraďuješ, filtrom zužuješ výber.</p>
+<div class="filters">
+  <select id="fEngine"><option value="">Všetky motory</option></select>
+  <select id="fTrans"><option value="">Každá prevodovka</option><option value="automatic">Automat</option><option value="manual">Manuál</option></select>
+  <select id="fSeller"><option value="">Všetci predajcovia</option><option value="nodealer">Bez autobazárov</option></select>
+  <select id="fSource"><option value="">Všetky portály</option><option value="bazos">bazoš</option><option value="autobazar">autobazar.eu</option><option value="bazarsk">bazar.sk</option></select>
+  <select id="fBody"><option value="">Kombi aj sedan</option><option value="wagon">Kombi v90</option><option value="sedan">Sedan s90</option></select>
+  <select id="fOrigin"><option value="">Akýkoľvek pôvod</option><option value="SR">Kúpené v SR</option><option value="dovoz">Dovoz</option></select>
+  <input id="fMax" type="number" placeholder="Max. cena €" step="500" min="0" style="width:120px">
+  <span class="count" id="count"></span>
+</div>
+<div class="table-scroll">
+<table id="tbl">
+  <thead><tr>
+    <th class="sortable" data-k="title">Inzerát</th>
+    <th class="sortable num" data-k="year">Rok</th>
+    <th class="sortable num" data-k="km">Km</th>
+    <th class="sortable num" data-k="price_gross">Cena</th>
+    <th class="sortable num" data-k="fair_price">Férová</th>
+    <th class="sortable num" data-k="discount_pct">Pod trhom ▾</th>
+  </tr></thead>
+  <tbody></tbody>
+</table>
+</div>
+
+<h2>Pred kúpou over</h2>
+<ul class="check">
+  <li>VIN cez Cebia / autoDNA (história km, havárie, leasing)</li>
+  <li>Servisná história – Volvo dealer ju vie podľa VIN vytiahnuť</li>
+  <li>Diesel: DPF, AdBlue; T8: stav batérie, nabíjanie</li>
+  <li>Automat Aisin 8-st.: plynulé radenie, výmena oleja</li>
+  <li>Infotainment Sensus: funkčnosť obrazovky, kamery</li>
+  <li>STK/EK protokol a dátum platnosti; cena s DPH alebo bez DPH, ak predáva firma</li>
+</ul>
+
+<footer>
+  Zdroj: auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (len ponuky zo Slovenska, to isté auto na viacerých portáloch je započítané raz), sťahované cez lokálny MCP server bazos-mcp (nástroj <code>fair_price</code>), 22. 11. 2026.
+  Model: ridge regresia log(ceny s DPH) podľa veku, veku², km, km², prevodovky, typu predajcu, motora, karosérie, pohonu 4x4, pôvodu (SR / dovoz) a portálu. Vzorka 86
+  inzerátov, R² 89 %. Parametre sú vyťažené z textu inzerátov, a preto môžu obsahovať chyby. Odporúčané ponuky sme overili
+  prečítaním celého inzerátu. Hodnotenie motorov je odborný odhad, nie výsledok modelu.
+</footer>
+</main>
+
+<script>
+const DATA = [{"id": "ab-AexGELAXlY5", "url": "https://www.autobazar.eu/detail/volvo-v90-d4-20l-inscription-at-140kw190hp-a8/AexGELAXlY5/", "title": "Volvo V90 D4 2.0L Inscription AT 140kW190HP A8", "price": 14600, "price_gross": 14600, "fair_price": 18610.0, "discount_pct": 21.5, "verdict": "výrazne pod trhom – over prečo", "year": 2016, "km": 132000, "km_per_year": 12800.0, "eg": "D3 / D4 / B4 diesel 110–145 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Kútniky", "flags": [], "pick": "budget", "source": "autobazar", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "bs-39464790", "url": "https://auto.bazar.sk/39464790-volvo-s90-d4-2-0l-drive-e-r-design-a-t-awd/", "title": "Volvo S90 D4 2.0L Drive-E R-Design A/T AWD", "price": 19900, "price_gross": 19900, "fair_price": 25300.0, "discount_pct": 21.3, "verdict": "výrazne pod trhom – over prečo", "year": 2018, "km": 109000, "km_per_year": 13100.0, "eg": "D3 / D4 / B4 diesel 110–145 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava I - Staré Mesto", "flags": [], "pick": null, "source": "bazarsk", "origin": "dovoz", "also_listed": [], "body": "sedan"}, {"id": "ab-AePpd_HqqlX", "url": "https://www.autobazar.eu/detail/volvo-v90-d5-awd-173-kw-44-automat/AePpd_HqqlX/", "title": "Volvo V90 D5 AWD 173 kW, 4×4, automat", "price": 14990, "price_gross": 14990, "fair_price": 18720.0, "discount_pct": 19.9, "verdict": "výrazne pod trhom – over prečo", "year": 2017, "km": 200000, "km_per_year": 21400.0, "eg": "D5 / B5 diesel 173–184 kW", "cg": 1, "transmission": "automatic", "seller_type": "private", "location": "Trnava", "flags": [], "pick": "budget", "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "196362633", "url": "https://auto.bazos.sk/inzerat/196362633/volvo-v90-d5-awd-173-kw-44-automat-sukromny-majitel.php", "price": 14990}], "body": "wagon"}, {"id": "ab-Aes5BuIeYOO", "url": "https://www.autobazar.eu/detail/volvo-v90-d4-20l-momentum-at-140kw190hp-a8/Aes5BuIeYOO/", "title": "Volvo V90 D4 2.0L Momentum AT 140kW190HP A8", "price": 16000, "price_gross": 16000, "fair_price": 19910.0, "discount_pct": 19.6, "verdict": "výrazne pod trhom – over prečo", "year": 2018, "km": 150000, "km_per_year": 18000.0, "eg": "D3 / D4 / B4 diesel 110–145 kW", "cg": 1, "transmission": "automatic", "seller_type": "private", "location": "Hybe", "flags": [], "pick": "budget", "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "wagon"}, {"id": "ab-Ae27tIEhwzO", "url": "https://www.autobazar.eu/detail/volvo-s90-b5-momentum-pro-awd-at/Ae27tIEhwzO/", "title": "Volvo S90 B5 Momentum Pro AWD A/T", "price": 24900, "price_gross": 24900, "fair_price": 30510.0, "discount_pct": 18.4, "verdict": "výrazne pod trhom – over prečo", "year": 2021, "km": 102000, "km_per_year": 19100.0, "eg": "D5 / B5 diesel 173–184 kW", "cg": 1, "transmission": "automatic", "seller_type": "private", "location": "Kotrčiná Lúčka", "flags": [], "pick": "top", "source": "autobazar", "origin": null, "also_listed": [], "body": "sedan"}, {"id": "bs-39571981", "url": "https://auto.bazar.sk/39571981-volvo-v90-d5-inscription-awd-a-t-2-0-173kw/", "title": "Volvo V90 D5 INSCRIPTION AWD A/T 2.0 173kW", "price": 11980, "price_gross": 11980, "fair_price": 14590.0, "discount_pct": 17.9, "verdict": "výrazne pod trhom – over prečo", "year": 2016, "km": 228629, "km_per_year": 22100.0, "eg": "D5 / B5 diesel 173–184 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": "budget", "source": "bazarsk", "origin": "dovoz", "also_listed": [{"source": "autobazar", "id": "ab-Am52O6aWrGz", "url": "https://www.autobazar.eu/detail/volvo-v90-d5-inscription-awd-at-20-173kw/Am52O6aWrGz/", "price": 11980}], "body": "wagon"}, {"id": "196915848", "url": "https://auto.bazos.sk/inzerat/196915848/volvo-s90.php", "title": "Volvo S90", "price": 18900, "price_gross": 18900, "fair_price": 22680.0, "discount_pct": 16.7, "verdict": "výrazne pod trhom – over prečo", "year": 2019, "km": 134463, "km_per_year": 18300.0, "eg": "D3 / D4 / B4 diesel 110–145 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bánovce nad Bebravou", "flags": [], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [], "body": "sedan"}, {"id": "197325330", "url": "https://auto.bazos.sk/inzerat/197325330/volvo-v90-d4-maple-brown-140-kw-panorama-webasto.php", "title": "Volvo V90 D4 (Maple Brown) – 140 kW, panorama, Webasto", "price": 19300, "price_gross": 19300, "fair_price": 23010.0, "discount_pct": 16.1, "verdict": "výrazne pod trhom – over prečo", "year": 2019, "km": 144000, "km_per_year": 19600.0, "eg": "D3 / D4 / B4 diesel 110–145 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Bratislava", "flags": [], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "197156028", "url": "https://auto.bazos.sk/inzerat/197156028/volvo-v90-cross-cauntry-20-d5-4x4-173kw-122021.php", "title": "Volvo V90 Cross country 2.0 D5 4x4  173KW automat 8s 12/2021", "price": 16990, "price_gross": 16990, "fair_price": 20090.0, "discount_pct": 15.4, "verdict": "výrazne pod trhom – over prečo", "year": 2021, "km": 209000, "km_per_year": 39200.0, "eg": "D5 / B5 diesel 173–184 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Trnava", "flags": ["vysoký nájazd 39000 km/rok – flotila / taxi?"], "pick": "top", "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-Aed46YE-onW", "url": "https://www.autobazar.eu/detail/volvo-v90-cross-country-20-d5-4x4-173kw-automat-8s-122021/Aed46YE-onW/", "price": 16990}], "body": "wagon"}, {"id": "196357922", "url": "https://auto.bazos.sk/inzerat/196357922/volvo-v90-d3-manual.php", "title": "Volvo V90 D3 Manual", "price": 11700, "price_gross": 11700, "fair_price": 13830.0, "discount_pct": 15.4, "verdict": "výrazne pod trhom – over prečo", "year": 2017, "km": 261000, "km_per_year": 28000.0, "eg": "D3 / D4 / B4 diesel 110–145 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Bratislava", "flags": [], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AetYuif8_uC", "url": "https://www.autobazar.eu/detail/volvo-v90-d3-20l-r-design-110kw150hp-m6/AetYuif8_uC/", "price": 11700}], "body": "wagon"}, {"id": "196240087", "url": "https://auto.bazos.sk/inzerat/196240087/volvo-v-90-t4-odpocet-dph.php", "title": "Volvo V 90 T4 ❗️odpočet DPH❗️", "price": 14999, "price_gross": 14999, "fair_price": 17690.0, "discount_pct": 15.2, "verdict": "výrazne pod trhom – over prečo", "year": 2019, "km": 236615, "km_per_year": 32300.0, "eg": "T4 / T5 / T6 / B5 / B6 benzín 140–228 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Košice", "flags": [], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "wagon"}, {"id": "ab-Aeanpi1cpY4", "url": "https://www.autobazar.eu/detail/volvo-v90-cross-country-d4-20-awd-4x4-automat-servkniha/Aeanpi1cpY4/", "title": "Volvo V90 Cross Country D4 2.0 AWD, 4X4, Automat, Serv.kniha", "price": 15500, "price_gross": 15500, "fair_price": 18260.0, "discount_pct": 15.1, "verdict": "výrazne pod trhom – over prečo", "year": 2019, "km": 228284, "km_per_year": 31100.0, "eg": "D3 / D4 / B4 diesel 110–145 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Nitriansky kraj", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "195851365", "url": "https://auto.bazos.sk/inzerat/195851365/v90-d5-at-173kw.php", "title": "v90 D5 A/T 173kW Inscription", "price": 25900, "price_gross": 25900, "fair_price": 30120.0, "discount_pct": 14.0, "verdict": "pod trhom", "year": 2019, "km": 93500, "km_per_year": 12800.0, "eg": "D5 / B5 diesel 173–184 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Bratislava", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "bs-39436506", "url": "https://auto.bazar.sk/39436506-volvo-s90-d3-2-0l-drive-e-momentum-pro-geartronic/", "title": "Volvo S90 D3 2.0L Drive-E Momentum Pro Geartronic", "price": 18999, "price_gross": 18999, "fair_price": 21890.0, "discount_pct": 13.2, "verdict": "pod trhom", "year": 2018, "km": 110084, "km_per_year": 13200.0, "eg": "D3 / D4 / B4 diesel 110–145 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Stará Ľubovňa", "flags": [], "pick": null, "source": "bazarsk", "origin": "dovoz", "also_listed": [], "body": "sedan"}, {"id": "ab-AeIEpIPImd5", "url": "https://www.autobazar.eu/detail/volvo-v90-d4-automat-servkniha-koza/AeIEpIPImd5/", "title": "Volvo V90 D4, Automat, Serv.kniha, Koža", "price": 15000, "price_gross": 15000, "fair_price": 17020.0, "discount_pct": 11.8, "verdict": "pod trhom", "year": 2019, "km": 218346, "km_per_year": 29800.0, "eg": "D3 / D4 / B4 diesel 110–145 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Trenčiansky kraj", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "196211840", "url": "https://auto.bazos.sk/inzerat/196211840/volvo-v90-cross-country-b5.php", "title": "Volvo V90 cross country B5", "price": 29800, "price_gross": 29800, "fair_price": 33030.0, "discount_pct": 9.8, "verdict": "pod trhom", "year": 2021, "km": 98000, "km_per_year": 18400.0, "eg": "T4 / T5 / T6 / B5 / B6 benzín 140–228 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Senec", "flags": ["prevodovka nezistená"], "pick": "top", "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "bs-39735585", "url": "https://auto.bazar.sk/39735585-volvo-v90-t4-2-0l-r-design-a-t/", "title": "Volvo V90 T4 2.0L R-Design A/T", "price": 19999, "price_gross": 19999, "fair_price": 21680.0, "discount_pct": 7.8, "verdict": "pod trhom", "year": 2019, "km": 160753, "km_per_year": 21900.0, "eg": "T4 / T5 / T6 / B5 / B6 benzín 140–228 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Poprad", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmU4_3lOFS7", "url": "https://www.autobazar.eu/detail/volvo-v90-t4-20l-r-design-at/AmU4_3lOFS7/", "price": 19999}], "body": "wagon"}, {"id": "197558714", "url": "https://auto.bazos.sk/inzerat/197558714/volvo-v90-cross-country-d4-20l-awd-140kw-a8-2019.php", "title": "Volvo V90 CC D4 2.0L Cross Country AWD / 140kW / A8", "price": 23990, "price_gross": 23990, "fair_price": 26000.0, "discount_pct": 7.7, "verdict": "pod trhom", "year": 2019, "km": 129936, "km_per_year": 17700.0, "eg": "D3 / D4 / B4 diesel 110–145 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Žilina", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmCyqL0jkuQ", "url": "https://www.autobazar.eu/detail/volvo-v90-cc-d4-20l-cross-country-awd-140kw-a8-zaruka-aj-na-splatky-protiucet/AmCyqL0jkuQ/", "price": 23990}], "body": "wagon"}, {"id": "ab-AeZUUkO_9KI", "url": "https://www.autobazar.eu/detail/volvo-s90-s90-d5-20l-drive-e-r-design-at-awd-173kw235hp-a8/AeZUUkO_9KI/", "title": "Volvo S90 S90 D5 2.0L Drive-E R-Design AT AWD 173kW235HP A8", "price": 12900, "price_gross": 12900, "fair_price": 13950.0, "discount_pct": 7.5, "verdict": "pod trhom", "year": 2018, "km": 325800, "km_per_year": 39100.0, "eg": "D5 / B5 diesel 173–184 kW", "cg": 1, "transmission": "automatic", "seller_type": "private", "location": "Považská Bystrica", "flags": ["vysoký nájazd 39000 km/rok – flotila / taxi?"], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "197621110", "url": "https://auto.bazos.sk/inzerat/197621110/volvo-s90-d5-awd-r-design-235k-bw-matrix-360-52018.php", "price": 12900}], "body": "sedan"}, {"id": "197646006", "url": "https://auto.bazos.sk/inzerat/197646006/volvo-v90-d3-20l-110kw-at8-fwd.php", "title": "Volvo V90 D3 2.0L 110kW AT/8 FWD", "price": 15990, "price_gross": 15990, "fair_price": 17270.0, "discount_pct": 7.4, "verdict": "pod trhom", "year": 2017, "km": 173168, "km_per_year": 18600.0, "eg": "D3 / D4 / B4 diesel 110–145 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Galanta", "flags": [], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39754255", "url": "https://auto.bazar.sk/39754255-volvo-v90-d3-2-0l-110kw-at-8-fwd-aj-na-splatky-protiucet/", "price": 15990}, {"source": "autobazar", "id": "ab-Am5wQ6OSOyc", "url": "https://www.autobazar.eu/detail/volvo-v90-d3-20l-110kw-at8-fwd-aj-na-splatky-protiucet/Am5wQ6OSOyc/", "price": 15990}], "body": "wagon"}, {"id": "ab-Am20mjySvhc", "url": "https://www.autobazar.eu/detail/volvo-v90-cross-country-advanced-b4-awd-mhev/Am20mjySvhc/", "title": "Volvo V90 Cross Country B4 AWD", "price": 29990, "price_gross": 29990, "fair_price": 32330.0, "discount_pct": 7.2, "verdict": "pod trhom", "year": 2023, "km": 95400, "km_per_year": 28600.0, "eg": "D3 / D4 / B4 diesel 110–145 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Košice-Vyšné Opátske", "flags": [], "pick": "top", "source": "autobazar", "origin": null, "also_listed": [{"source": "bazos", "id": "197065175", "url": "https://auto.bazos.sk/inzerat/197065175/volvo-v90-cross-country-advanced-b4-awd-mhev.php", "price": 29990}], "body": "wagon"}, {"id": "ab-Aej6e9HWSXe", "url": "https://www.autobazar.eu/detail/volvo-v90-d4-automat-servkniha-po-stk/Aej6e9HWSXe/", "title": "Volvo V90 D4, Automat, Serv.kniha, Koža", "price": 15000, "price_gross": 15000, "fair_price": 16110.0, "discount_pct": 6.9, "verdict": "férová cena", "year": 2018, "km": 219056, "km_per_year": 26300.0, "eg": "D3 / D4 / B4 diesel 110–145 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Žilinský kraj", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "197666970", "url": "https://auto.bazos.sk/inzerat/197666970/volvo-v90-t5-cross-country-ocean-race-184kw-at8-2018-awd.php", "title": "Volvo V90 T5 Cross Country Ocean Race 184kW AT/8 2018 AWD", "price": 25990, "price_gross": 25990, "fair_price": 27280.0, "discount_pct": 4.7, "verdict": "férová cena", "year": 2018, "km": 137024, "km_per_year": 16400.0, "eg": "T4 / T5 / T6 / B5 / B6 benzín 140–228 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-39754850", "url": "https://auto.bazar.sk/39754850-volvo-v90-t5-cross-country-ocean-race-184kw-at-8-2018-awd-aj-na-splatky-protiucet/", "price": 25990}, {"source": "autobazar", "id": "ab-Amnrkf0sszH", "url": "https://www.autobazar.eu/detail/volvo-v90-t5-cross-country-ocean-race-184kw-at8-2018-awd-aj-na-splatky-protiucet/Amnrkf0sszH/", "price": 25990}], "body": "wagon"}, {"id": "ab-AePouFgfE7F", "url": "https://www.autobazar.eu/detail/volvo-v90-d5-cross-country/AePouFgfE7F/", "title": "Volvo V90 D5 Cross Country Ocean Race", "price": 16900, "price_gross": 16900, "fair_price": 17710.0, "discount_pct": 4.6, "verdict": "férová cena", "year": 2018, "km": 244790, "km_per_year": 29400.0, "eg": "D5 / B5 diesel 173–184 kW", "cg": 1, "transmission": "automatic", "seller_type": "private", "location": "Senec", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "wagon"}, {"id": "197429599", "url": "https://auto.bazos.sk/inzerat/197429599/volvo-v90-d3-110kw-manual-6st-2018.php", "title": "Volvo v90 D3 110kw manuál 6st 2018 nová STK", "price": 13900, "price_gross": 13900, "fair_price": 14490.0, "discount_pct": 4.1, "verdict": "férová cena", "year": 2018, "km": 256000, "km_per_year": 30700.0, "eg": "D3 / D4 / B4 diesel 110–145 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Dolný Kubín", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "ab-Am1b_etco_C", "url": "https://www.autobazar.eu/detail/volvo-s90-d4-20l-drive-e-momentum-at/Am1b_etco_C/", "title": "Volvo S90 D4 2.0L Drive-E Momentum A/T", "price": 13500, "price_gross": 13500, "fair_price": 14070.0, "discount_pct": 4.1, "verdict": "férová cena", "year": 2017, "km": 245000, "km_per_year": 26300.0, "eg": "D3 / D4 / B4 diesel 110–145 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava-Nové Mesto", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39620789", "url": "https://auto.bazar.sk/39620789-volvo-s90-d4-2-0l-drive-e-momentum-a-t/", "price": 13500}], "body": "sedan"}, {"id": "196106022", "url": "https://auto.bazos.sk/inzerat/196106022/volvo-v90-inscription-2020.php", "title": "VOLVO V90 INSCRIPTION 2020", "price": 23990, "price_gross": 23990, "fair_price": 24960.0, "discount_pct": 3.9, "verdict": "férová cena", "year": 2020, "km": 145000, "km_per_year": 22900.0, "eg": "D3 / D4 / B4 diesel 110–145 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Galanta", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "bs-39725977", "url": "https://auto.bazar.sk/39725977-volvo-v90-b4d-197ps-at8-momentum-pro/", "title": "Volvo V90 B4(D) 197PS AT8 Momentum PRO", "price": 23520, "price_gross": 23520, "fair_price": 24410.0, "discount_pct": 3.6, "verdict": "férová cena", "year": 2021, "km": 135870, "km_per_year": 25500.0, "eg": "D3 / D4 / B4 diesel 110–145 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Bratislava IV - Lamač", "flags": [], "pick": null, "source": "bazarsk", "origin": "dovoz", "also_listed": [{"source": "autobazar", "id": "ab-Abx51eYuqi5", "url": "https://www.autobazar.eu/detail/volvo-v90-b4d-197ps-at8-momentum-pro/Abx51eYuqi5/", "price": 23520}], "body": "wagon"}, {"id": "197737285", "url": "https://auto.bazos.sk/inzerat/197737285/volvo-v90-d4-20l-r-design-at-140kw190hp-a8.php", "title": "Volvo V90 D4 2.0L R-Design A/T 140kW/190HP A8", "price": 25000, "price_gross": 25000, "fair_price": 25810.0, "discount_pct": 3.1, "verdict": "férová cena", "year": 2019, "km": 112000, "km_per_year": 15300.0, "eg": "D3 / D4 / B4 diesel 110–145 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Bratislava", "flags": [], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "wagon"}, {"id": "bs-34351444", "url": "https://auto.bazar.sk/34351444-volvo-v90-d5-awd/", "title": "Volvo V90 D5 AWD", "price": 30000, "price_gross": 30000, "fair_price": 30590.0, "discount_pct": 1.9, "verdict": "férová cena", "year": 2017, "km": 89810, "km_per_year": 9600.0, "eg": "D5 / B5 diesel 173–184 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Nové Zámky", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "wagon"}, {"id": "ab-AexrkaJbfgJ", "url": "https://www.autobazar.eu/detail/volvo-v90-d4-20l-momentum-at-140kw190hp-a8/AexrkaJbfgJ/", "title": "Volvo V90 D4 2.0L Momentum AT 140kW190HP A8", "price": 21990, "price_gross": 21990, "fair_price": 22330.0, "discount_pct": 1.5, "verdict": "férová cena", "year": 2019, "km": 134000, "km_per_year": 18300.0, "eg": "D3 / D4 / B4 diesel 110–145 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Prešov", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "197773888", "url": "https://auto.bazos.sk/inzerat/197773888/volvo-s90-inscription.php", "title": "VOLVO S90 INSCRIPTION", "price": 18999, "price_gross": 18999, "fair_price": 19130.0, "discount_pct": 0.7, "verdict": "férová cena", "year": 2018, "km": 178000, "km_per_year": 21400.0, "eg": "D3 / D4 / B4 diesel 110–145 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Spišská Nová Ves", "flags": [], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "sedan"}, {"id": "195938083", "url": "https://auto.bazos.sk/inzerat/195938083/volvo-v90-awd-20-d5-173kw.php", "title": "Volvo V90 AWD 2.0 D5 173kw", "price": 19500, "price_gross": 19500, "fair_price": 19520.0, "discount_pct": 0.1, "verdict": "férová cena", "year": 2019, "km": 219700, "km_per_year": 30000.0, "eg": "D5 / B5 diesel 173–184 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Prešov", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "bs-35019678", "url": "https://auto.bazar.sk/35019678-volvo-v90-d4-2-0l-momentum-a-t/", "title": "Volvo V90 D4 2.0L Momentum A/T", "price": 25490, "price_gross": 25490, "fair_price": 25530.0, "discount_pct": 0.1, "verdict": "férová cena", "year": 2017, "km": 77060, "km_per_year": 8300.0, "eg": "D3 / D4 / B4 diesel 110–145 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Trebišov", "flags": [], "pick": null, "source": "bazarsk", "origin": "dovoz", "also_listed": [], "body": "wagon"}, {"id": "197673405", "url": "https://auto.bazos.sk/inzerat/197673405/volvo-v90-cross-country-4x4-b5-benzin-mild-hybrid.php", "title": "Volvo V90 cross country 4x4 B5 benzín mild-hybrid", "price": 35850, "price_gross": 35850, "fair_price": 35730.0, "discount_pct": -0.3, "verdict": "férová cena", "year": 2020, "km": 98000, "km_per_year": 15500.0, "eg": "T4 / T5 / T6 / B5 / B6 benzín 140–228 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Tvrdošín", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "197416736", "url": "https://auto.bazos.sk/inzerat/197416736/volvo-v90-cc-d4-20l-pro-awd-140kw-a8-2020.php", "title": "Volvo V90 CC D4 2.0L Pro AWD / 140kW / A8", "price": 25990, "price_gross": 25990, "fair_price": 25840.0, "discount_pct": -0.6, "verdict": "férová cena", "year": 2020, "km": 139031, "km_per_year": 22000.0, "eg": "D3 / D4 / B4 diesel 110–145 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Trnava", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmUZLubINRn", "url": "https://www.autobazar.eu/detail/volvo-v90-cc-d4-20l-pro-awd-140kw-a8-zaruka-aj-na-splatky-protiucet/AmUZLubINRn/", "price": 25990}], "body": "wagon"}, {"id": "196190876", "url": "https://auto.bazos.sk/inzerat/196190876/volvo-s90-20-t6-r-design-polestar-awd.php", "title": "Volvo S90 2.0 T6 R-Design / Polestar / AWD", "price": 25000, "price_gross": 25000, "fair_price": 24860.0, "discount_pct": -0.6, "verdict": "férová cena", "year": 2017, "km": 140825, "km_per_year": 15100.0, "eg": "T4 / T5 / T6 / B5 / B6 benzín 140–228 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Žilina", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "sedan"}, {"id": "196486314", "url": "https://auto.bazos.sk/inzerat/196486314/volvo-s90.php", "title": "Volvo S90", "price": 18800, "price_gross": 18800, "fair_price": 18660.0, "discount_pct": -0.7, "verdict": "férová cena", "year": 2017, "km": 152500, "km_per_year": 16300.0, "eg": "D3 / D4 / B4 diesel 110–145 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Malacky", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "sedan"}, {"id": "ab-AmIenDFgbUD", "url": "https://www.autobazar.eu/detail/volvo-v90-cc-d4-20l-cross-country-plus-awd-at/AmIenDFgbUD/", "title": "Volvo V90 CC D4 2.0L Cross Country Plus AWD A/T", "price": 24970, "price_gross": 24970, "fair_price": 24760.0, "discount_pct": -0.8, "verdict": "férová cena", "year": 2019, "km": 129000, "km_per_year": 17600.0, "eg": "D3 / D4 / B4 diesel 110–145 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazos", "id": "196085280", "url": "https://auto.bazos.sk/inzerat/196085280/volvo-v90-cc-d4-awd-2019-129000-km-tazne-panorama.php", "price": 24970}], "body": "wagon"}, {"id": "ab-AmlnOWp8cEl", "url": "https://www.autobazar.eu/detail/volvo-s90-t8-recharge-twin-engine-awd-r-design/AmlnOWp8cEl/", "title": "Volvo S90 T8 RECHARGE Twin Engine AWD R-Design", "price": 34990, "price_gross": 34990, "fair_price": 34600.0, "discount_pct": -1.1, "verdict": "férová cena", "year": 2021, "km": 73046, "km_per_year": 13700.0, "eg": "T6 / T8 Recharge plug-in hybrid 250–335 kW", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Levice", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39175237", "url": "https://auto.bazar.sk/39175237-volvo-s90-t8-recharge-twin-engine-awd-r-design/", "price": 34990}], "body": "sedan"}, {"id": "bs-39773950", "url": "https://auto.bazar.sk/39773950-volvo-v90-b4-awd-cross-country/", "title": "Volvo V90 B4 AWD Cross Country", "price": 34990, "price_gross": 34990, "fair_price": 34540.0, "discount_pct": -1.3, "verdict": "férová cena", "year": 2022, "km": 80000, "km_per_year": 18500.0, "eg": "D3 / D4 / B4 diesel 110–145 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Trenčianska Turná", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-Am8JWNUmgZp", "url": "https://www.autobazar.eu/detail/volvo-v90-cross-country-b4-awd/Am8JWNUmgZp/", "price": 34990}], "body": "wagon"}, {"id": "bs-39581545", "url": "https://auto.bazar.sk/39581545-volvo-v90-t6-recharge-398ps-at8-awd-plus-dark/", "title": "Volvo V90 T6 Recharge 398PS AT8 AWD PLUS DARK", "price": 46490, "price_gross": 46490, "fair_price": 45900.0, "discount_pct": -1.3, "verdict": "férová cena", "year": 2025, "km": 25547, "km_per_year": 19200.0, "eg": "T6 / T8 Recharge plug-in hybrid 250–335 kW", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava IV - Lamač", "flags": [], "pick": null, "source": "bazarsk", "origin": "dovoz", "also_listed": [{"source": "autobazar", "id": "ab-AbMys7GDsv1", "url": "https://www.autobazar.eu/detail/volvo-v90-t6-recharge-398ps-at8-awd-plus-dark/AbMys7GDsv1/", "price": 46490}], "body": "wagon"}, {"id": "197301793", "url": "https://auto.bazos.sk/inzerat/197301793/volvo-s90-d4-20-at-r-design-serv-kniha-19-alu-rv2020.php", "title": "Volvo S90 D4 2.0 A/T R-Design Polestar  19\" Alu rv.2020", "price": 17790, "price_gross": 17790, "fair_price": 17500.0, "discount_pct": -1.7, "verdict": "férová cena", "year": 2020, "km": 235047, "km_per_year": 37100.0, "eg": "D3 / D4 / B4 diesel 110–145 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Trenčín", "flags": ["vysoký nájazd 37000 km/rok – flotila / taxi?"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "sedan"}, {"id": "197372676", "url": "https://auto.bazos.sk/inzerat/197372676/volvo-v90-cc-d5-cc-uz-od-269e-mesacne.php", "title": "Volvo V90 CC D5 CC UŽ OD 269€ MESAČNE", "price": 21900, "price_gross": 21900, "fair_price": 21520.0, "discount_pct": -1.8, "verdict": "férová cena", "year": 2018, "km": 164656, "km_per_year": 19800.0, "eg": "D5 / B5 diesel 173–184 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Poprad", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-Ae7UljTnHtEv", "url": "https://www.autobazar.eu/detail/volvo-v90-20-d5-momentum-awd/Ae7UljTnHtEv/", "price": 21708}], "body": "wagon"}, {"id": "196771282", "url": "https://auto.bazos.sk/inzerat/196771282/volvo-s90-d4-20l-at-140kw-top-stav.php", "title": "Volvo S90 D4 2.0L A/T  140kW TOP STAV", "price": 16200, "price_gross": 16200, "fair_price": 15920.0, "discount_pct": -1.8, "verdict": "férová cena", "year": 2017, "km": 208000, "km_per_year": 22300.0, "eg": "D3 / D4 / B4 diesel 110–145 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Stará Ľubovňa", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "sedan"}, {"id": "ab-AmMfuDIK2mF", "url": "https://www.autobazar.eu/detail/volvo-v90-cc-d4-cross-country-pro-awd-at/AmMfuDIK2mF/", "title": "Volvo V90 CC D4 Cross Country Pro AWD A/T", "price": 23500, "price_gross": 23500, "fair_price": 23010.0, "discount_pct": -2.1, "verdict": "férová cena", "year": 2020, "km": 154000, "km_per_year": 24300.0, "eg": "D3 / D4 / B4 diesel 110–145 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava-Nové Mesto", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazos", "id": "197188212", "url": "https://auto.bazos.sk/inzerat/197188212/volvo-v90-cc-d4-awd.php", "price": 23500}], "body": "wagon"}, {"id": "197580287", "url": "https://auto.bazos.sk/inzerat/197580287/volvo-v90-t6-recharge-r-desing.php", "title": "Volvo V90 T6 Recharge R-desing", "price": 33990, "price_gross": 33990, "fair_price": 33240.0, "discount_pct": -2.3, "verdict": "férová cena", "year": 2021, "km": 80000, "km_per_year": 15000.0, "eg": "T6 / T8 Recharge plug-in hybrid 250–335 kW", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Žilina", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmDTEhUhyC-", "url": "https://www.autobazar.eu/detail/volvo-v90-t6-recharge-r-desing/AmDTEhUhyC-/", "price": 33990}, {"source": "bazarsk", "id": "bs-39757034", "url": "https://auto.bazar.sk/39757034-volvo-v90-t6-recharge-r-desing/", "price": 33990}], "body": "wagon"}, {"id": "ab-AmlqlMHeFN2", "url": "https://www.autobazar.eu/detail/volvo-v90-v-90-cross-country-20-4x4-d4-at/AmlqlMHeFN2/", "title": "Volvo V90 V 90 Cross Country 2,0 4x4 D4 AT", "price": 18999, "price_gross": 18999, "fair_price": 18570.0, "discount_pct": -2.3, "verdict": "férová cena", "year": 2018, "km": 199999, "km_per_year": 24000.0, "eg": "D3 / D4 / B4 diesel 110–145 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava - Vajnory", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39548475", "url": "https://auto.bazar.sk/39548475-volvo-v90-v-90-cross-country-2-0-4x4-d4-at/", "price": 18999}], "body": "wagon"}, {"id": "ab-Amd0lrsHwiX", "url": "https://www.autobazar.eu/detail/volvo-v90-d4-20l-r-design-awd-at/Amd0lrsHwiX/", "title": "Volvo V90 D4 2.0L R-Design AWD A/T", "price": 21685, "price_gross": 21685, "fair_price": 21140.0, "discount_pct": -2.6, "verdict": "férová cena", "year": 2017, "km": 139884, "km_per_year": 15000.0, "eg": "D3 / D4 / B4 diesel 110–145 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Hlohovec", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39543304", "url": "https://auto.bazar.sk/39543304-volvo-v90-d4-2-0l-r-design-awd-a-t/", "price": 21685}], "body": "wagon"}, {"id": "bs-39400181", "url": "https://auto.bazar.sk/39400181-volvo-s90-d5-2-0l-drive-e-inscription-a-t-awd/", "title": "Volvo S90 D5 2.0L Drive-E Inscription A/T AWD", "price": 18990, "price_gross": 18990, "fair_price": 18480.0, "discount_pct": -2.7, "verdict": "férová cena", "year": 2017, "km": 158134, "km_per_year": 16900.0, "eg": "D5 / B5 diesel 173–184 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Ružomberok", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-Amqzl4PEhMC", "url": "https://www.autobazar.eu/detail/volvo-s90-d5-20l-drive-e-inscription-at-awd/Amqzl4PEhMC/", "price": 18990}], "body": "sedan"}, {"id": "bs-39163012", "url": "https://auto.bazar.sk/39163012-volvo-s90-d5-r-design-awd-a-t/", "title": "Volvo S90 D5 R-Design AWD A/T", "price": 26990, "price_gross": 26990, "fair_price": 26140.0, "discount_pct": -3.2, "verdict": "férová cena", "year": 2020, "km": 137000, "km_per_year": 21600.0, "eg": "D5 / B5 diesel 173–184 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Žilina", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmcubVXYSOF", "url": "https://www.autobazar.eu/detail/volvo-s90-d5-r-design-awd-at/AmcubVXYSOF/", "price": 26990}], "body": "sedan"}, {"id": "197382840", "url": "https://auto.bazos.sk/inzerat/197382840/volvo-s90-d4-momentum-at-odpocet-dph.php", "title": "Volvo S90 D4 Momentum A/T odpočet DPH", "price": 21900, "price_gross": 21900, "fair_price": 21200.0, "discount_pct": -3.3, "verdict": "férová cena", "year": 2019, "km": 152973, "km_per_year": 20900.0, "eg": "D3 / D4 / B4 diesel 110–145 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Prešov", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-Ab6NZk_m2lt", "url": "https://www.autobazar.eu/detail/volvo-s90-d4-momentum-at/Ab6NZk_m2lt/", "price": 21900}, {"source": "bazarsk", "id": "bs-39571867", "url": "https://auto.bazar.sk/39571867-volvo-s90-d4-momentum-a-t/", "price": 21900}], "body": "sedan"}, {"id": "bs-39621570", "url": "https://auto.bazar.sk/39621570-volvo-v90-d4-190ps-at8-r-design-svo/", "title": "Volvo V90 D4 190PS AT8 R-Design SVO", "price": 27765, "price_gross": 27765, "fair_price": 26540.0, "discount_pct": -4.6, "verdict": "férová cena", "year": 2020, "km": 100988, "km_per_year": 15900.0, "eg": "D3 / D4 / B4 diesel 110–145 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava IV - Lamač", "flags": [], "pick": null, "source": "bazarsk", "origin": "dovoz", "also_listed": [{"source": "autobazar", "id": "ab-Ab_amqhysmw", "url": "https://www.autobazar.eu/detail/volvo-v90-d4-190ps-at8-r-design-svo/Ab_amqhysmw/", "price": 27765}], "body": "wagon"}, {"id": "bs-39234929", "url": "https://auto.bazar.sk/39234929-volvo-s90-b5p-ultimate-dark-at8-fwd/", "title": "Volvo S90 B5(P) ULTIMATE DARK AT8 FWD", "price": 47990, "price_gross": 47990, "fair_price": 45850.0, "discount_pct": -4.7, "verdict": "férová cena", "year": 2025, "km": 25000, "km_per_year": 18800.0, "eg": "T4 / T5 / T6 / B5 / B6 benzín 140–228 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava IV - Lamač", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AbfMOUAfsgb", "url": "https://www.autobazar.eu/detail/volvo-s90-b5p-ultimate-dark-at8-fwd/AbfMOUAfsgb/", "price": 47990}], "body": "sedan"}, {"id": "197152595", "url": "https://auto.bazos.sk/inzerat/197152595/volvo-v90-cc-b5-cross-country-pro-awd-at-dph.php", "title": "Volvo V90 CC B5 Cross Country Pro AWD A/T, DPH", "price": 24999, "price_gross": 24999, "fair_price": 23820.0, "discount_pct": -4.9, "verdict": "férová cena", "year": 2021, "km": 188000, "km_per_year": 35300.0, "eg": "D5 / B5 diesel 173–184 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": ["vysoký nájazd 35000 km/rok – flotila / taxi?"], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-Am_T2wVO5QC", "url": "https://www.autobazar.eu/detail/volvo-v90-cc-b5-cross-country-pro-awd-at/Am_T2wVO5QC/", "price": 24999}], "body": "wagon"}, {"id": "196008201", "url": "https://auto.bazos.sk/inzerat/196008201/volvo-v90-d3-20l-momentum-at.php", "title": "Volvo V90 D3 2.0D 2018 129000km a/t", "price": 21999, "price_gross": 21999, "fair_price": 20960.0, "discount_pct": -4.9, "verdict": "férová cena", "year": 2018, "km": 129098, "km_per_year": 15500.0, "eg": "D3 / D4 / B4 diesel 110–145 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Košice", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "197683185", "url": "https://auto.bazos.sk/inzerat/197683185/volvo-v90-cc-cross-country-4x4-inscription.php", "title": "Volvo V90 CC (Cross Country), 4x4, Inscription", "price": 19850, "price_gross": 19850, "fair_price": 18870.0, "discount_pct": -5.2, "verdict": "férová cena", "year": 2018, "km": 235000, "km_per_year": 28200.0, "eg": "D5 / B5 diesel 173–184 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Nitra", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "bs-39768151", "url": "https://auto.bazar.sk/39768151-volvo-v90-b5-awd-cross-country-tazne/", "title": "Volvo V90 B5 AWD CROSS COUNTRY TAŽNÉ", "price": 26531, "price_gross": 26531, "fair_price": 25210.0, "discount_pct": -5.2, "verdict": "férová cena", "year": 2022, "km": 174540, "km_per_year": 40300.0, "eg": "T4 / T5 / T6 / B5 / B6 benzín 140–228 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Dyje", "flags": ["vysoký nájazd 40000 km/rok – flotila / taxi?"], "pick": null, "source": "bazarsk", "origin": "dovoz", "also_listed": [{"source": "autobazar", "id": "ab-Ab9NHmqnLR8", "url": "https://www.autobazar.eu/detail/volvo-v90-b5-awd-cross-country-tazne/Ab9NHmqnLR8/", "price": 26531}], "body": "wagon"}, {"id": "bs-38389336", "url": "https://auto.bazar.sk/38389336-volvo-s90-2-0-t8-phev-4x4-at8/", "title": "Volvo S90 2.0 T8 PHEV 4x4 AT8", "price": 41900, "price_gross": 41900, "fair_price": 39830.0, "discount_pct": -5.2, "verdict": "férová cena", "year": 2020, "km": 41748, "km_per_year": 6600.0, "eg": "T6 / T8 Recharge plug-in hybrid 250–335 kW", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Prešov", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "sedan"}, {"id": "bs-39754849", "url": "https://auto.bazar.sk/39754849-volvo-s90-d5-2-0l-awd-at-8-173kw-2018-aj-na-splatky-protiucet/", "title": "Volvo S90 D5 2.0L AWD AT/8 173kW 2018 / AJ NA SPLÁTKY / PROTIÚČET", "price": 18500, "price_gross": 18500, "fair_price": 17410.0, "discount_pct": -6.3, "verdict": "férová cena", "year": 2018, "km": 198213, "km_per_year": 23800.0, "eg": "D5 / B5 diesel 173–184 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [{"source": "bazos", "id": "197373034", "url": "https://auto.bazos.sk/inzerat/197373034/volvo-s90-d5-20l-awd-173kw-at8-2018.php", "price": 18500}, {"source": "autobazar", "id": "ab-AmcYFf3_43v", "url": "https://www.autobazar.eu/detail/volvo-s90-d5-20l-awd-at8-173kw-2018-aj-na-splatky-protiucet/AmcYFf3_43v/", "price": 18500}], "body": "sedan"}, {"id": "bs-39545198", "url": "https://auto.bazar.sk/39545198-volvo-s90-t8-recharge-455ps-at8-awd-ultimate-dark/", "title": "Volvo S90 T8 Recharge 455PS AT8 AWD ULTIMATE DARK", "price": 49590, "price_gross": 49590, "fair_price": 46660.0, "discount_pct": -6.3, "verdict": "férová cena", "year": 2024, "km": 26687, "km_per_year": 11400.0, "eg": "T6 / T8 Recharge plug-in hybrid 250–335 kW", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava IV - Lamač", "flags": [], "pick": null, "source": "bazarsk", "origin": "dovoz", "also_listed": [{"source": "autobazar", "id": "ab-AbrJ2DRPKBs", "url": "https://www.autobazar.eu/detail/volvo-s90-t8-recharge-455ps-at8-awd-ultimate-dark/AbrJ2DRPKBs/", "price": 49590}], "body": "sedan"}, {"id": "bs-39545201", "url": "https://auto.bazar.sk/39545201-volvo-v90-t6-recharge-398ps-at8-awd-plus-dark/", "title": "Volvo V90 T6 Recharge 398PS AT8 AWD PLUS DARK", "price": 46590, "price_gross": 46590, "fair_price": 43750.0, "discount_pct": -6.5, "verdict": "férová cena", "year": 2025, "km": 34130, "km_per_year": 25600.0, "eg": "T6 / T8 Recharge plug-in hybrid 250–335 kW", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava IV - Lamač", "flags": [], "pick": null, "source": "bazarsk", "origin": "dovoz", "also_listed": [{"source": "autobazar", "id": "ab-Abkdq1k2LHd", "url": "https://www.autobazar.eu/detail/volvo-v90-t6-recharge-398ps-at8-awd-plus-dark/Abkdq1k2LHd/", "price": 46590}], "body": "wagon"}, {"id": "ab-AeCo1UiTkqK", "url": "https://www.autobazar.eu/detail/volvo-v90-cross-country-d4-20l-cross-country-pro-awd-at/AeCo1UiTkqK/", "title": "Volvo V90 Cross Country D4 2.0L Cross Country Pro AWD A/T", "price": 27800, "price_gross": 27800, "fair_price": 26070.0, "discount_pct": -6.6, "verdict": "férová cena", "year": 2018, "km": 106000, "km_per_year": 12700.0, "eg": "D3 / D4 / B4 diesel 110–145 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "okres Kysucké Nové Mesto", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "wagon"}, {"id": "ab-AmHgqqcP1On", "url": "https://www.autobazar.eu/detail/volvo-v90-cross-country-d4-awd-at8-v-zaruke/AmHgqqcP1On/", "title": "Volvo V90 Cross Country D4 AWD AT/8 V ZÁRUKE!", "price": 19999, "price_gross": 19999, "fair_price": 18760.0, "discount_pct": -6.6, "verdict": "férová cena", "year": 2018, "km": 192942, "km_per_year": 23200.0, "eg": "D3 / D4 / B4 diesel 110–145 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Poprad", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "bs-36359210", "url": "https://auto.bazar.sk/36359210-volvo-v90-cross-country-d5-awd-173kw-a-t-fullgarancia-121tkmoverene-vozidlo/", "title": "Volvo V90 CROSS COUNTRY D5 AWD 173KW A/T FULL=GARANCIA 121TKM=OVERENÉ VOZIDLO", "price": 26999, "price_gross": 26999, "fair_price": 24870.0, "discount_pct": -8.5, "verdict": "nad trhom", "year": 2017, "km": 121631, "km_per_year": 13000.0, "eg": "D5 / B5 diesel 173–184 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Martin", "flags": [], "pick": null, "source": "bazarsk", "origin": "dovoz", "also_listed": [{"source": "autobazar", "id": "ab-Am6Zo45iezF", "url": "https://www.autobazar.eu/detail/volvo-v90-cross-country-d5-awd-173kw-a-t-fullgarancia-121tkmoverene-vozidlo/Am6Zo45iezF/", "price": 26999}, {"source": "autobazar", "id": "ab-AmFVIvbCe-M", "url": "https://www.autobazar.eu/detail/volvo-v90-cc-cross-country-d5-awd-173kw-a-t-fullgarancia-121tkmoverene-vozidlo/AmFVIvbCe-M/", "price": 27999}], "body": "wagon"}, {"id": "ab-AmKgud1A9M-", "url": "https://www.autobazar.eu/detail/volvo-v90-inscription-b5-fwd-18410-kw-25014-hp/AmKgud1A9M-/", "title": "Volvo V90 INSCRIPTION, B5 FWD, 184+10 kW / 250+14 HP", "price": 31457, "price_gross": 31457, "fair_price": 28940.0, "discount_pct": -8.7, "verdict": "nad trhom", "year": 2020, "km": 73500, "km_per_year": 11600.0, "eg": "T4 / T5 / T6 / B5 / B6 benzín 140–228 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava-Petržalka", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39670187", "url": "https://auto.bazar.sk/39670187-volvo-v90-inscription-b5-fwd-184-10-kw-250-14-hp/", "price": 31457}], "body": "wagon"}, {"id": "197340475", "url": "https://auto.bazos.sk/inzerat/197340475/volvo-s90-d4-20-at-pravidelne-servisovane-preverene.php", "title": "Volvo S90 D4 2.0 A/T, PRAVIDELNE SERVISOVANÉ, PREVERENÉ", "price": 18590, "price_gross": 18590, "fair_price": 17110.0, "discount_pct": -8.7, "verdict": "nad trhom", "year": 2017, "km": 190000, "km_per_year": 20400.0, "eg": "D3 / D4 / B4 diesel 110–145 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Nové Mesto n.Váhom", "flags": [], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [{"source": "bazarsk", "id": "bs-39372738", "url": "https://auto.bazar.sk/39372738-volvo-s90-d4-2-0l-a-t-pravidelne-servisovane-preverene/", "price": 18590}, {"source": "autobazar", "id": "ab-AmFKLigWvkO", "url": "https://www.autobazar.eu/detail/volvo-s90-d4-20l-at-awd-1majitel-servisovane-len-v-autorizovanom-servise/AmFKLigWvkO/", "price": 18590}], "body": "sedan"}, {"id": "bs-39698751", "url": "https://auto.bazar.sk/39698751-volvo-v90-crosscountry-d4-mild-hybrid-1-majitel-aut-servis-harman-kardon/", "title": "Volvo V90 CrossCountry D4 Mild Hybrid 1. MAJITEĽ, AUT. SERVIS, HARMAN KARDON", "price": 27190, "price_gross": 27190, "fair_price": 24980.0, "discount_pct": -8.8, "verdict": "nad trhom", "year": 2021, "km": 135401, "km_per_year": 25400.0, "eg": "D3 / D4 / B4 diesel 110–145 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava I - Staré Mesto", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AeZQSe80OKJ", "url": "https://www.autobazar.eu/detail/volvo-v90-crosscountry-mildhybrid/AeZQSe80OKJ/", "price": 26900}, {"source": "autobazar", "id": "ab-AmX6kpDCMVu", "url": "https://www.autobazar.eu/detail/volvo-v90-crosscountry-d4-mild-hybrid-1-majitel-aut-servis-harman-kardon/AmX6kpDCMVu/", "price": 27190}, {"source": "bazos", "id": "197643366", "url": "https://auto.bazos.sk/inzerat/197643366/volvo-v90-crosscountry-d4-mild-hybrid-1-majitel-aut-ser.php", "price": 27190}], "body": "wagon"}, {"id": "196646782", "url": "https://auto.bazos.sk/inzerat/196646782/volvo-v90-cc-d4-20l-cross-country-awd-at.php", "title": "Volvo V90 CC D4 2.0L Cross Country AWD A/T", "price": 18490, "price_gross": 18490, "fair_price": 16980.0, "discount_pct": -8.9, "verdict": "nad trhom", "year": 2017, "km": 232273, "km_per_year": 24900.0, "eg": "D3 / D4 / B4 diesel 110–145 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Nové Zámky", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-Am_6YI6Pf8i", "url": "https://www.autobazar.eu/detail/volvo-v90-cc-d4-20l-cross-country-awd-at/Am_6YI6Pf8i/", "price": 18490}], "body": "wagon"}, {"id": "197531286", "url": "https://auto.bazos.sk/inzerat/197531286/volvo-v90-d5-20l-inscription-awd-at.php", "title": "Volvo V90 D5 2.0L Inscription AWD A/T", "price": 16590, "price_gross": 16590, "fair_price": 15140.0, "discount_pct": -9.5, "verdict": "nad trhom", "year": 2017, "km": 265400, "km_per_year": 28400.0, "eg": "D5 / B5 diesel 173–184 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bardejov", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "bs-34797335", "url": "https://auto.bazar.sk/34797335-volvo-s90-s90-d4-drive-e-awd-momentum-140kw/", "title": "Volvo S90 S90 D4 Drive-E AWD Momentum 140kW", "price": 27490, "price_gross": 27490, "fair_price": 25070.0, "discount_pct": -9.7, "verdict": "nad trhom", "year": 2017, "km": 110507, "km_per_year": 11800.0, "eg": "D3 / D4 / B4 diesel 110–145 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "sedan"}, {"id": "ab-Aeq4u1sUmhk", "url": "https://www.autobazar.eu/detail/volvo-v90-cross-country-pro/Aeq4u1sUmhk/", "title": "Volvo V90 Cross Country PRO", "price": 25490, "price_gross": 25490, "fair_price": 23200.0, "discount_pct": -9.8, "verdict": "nad trhom", "year": 2018, "km": 126000, "km_per_year": 15100.0, "eg": "D5 / B5 diesel 173–184 kW", "cg": 1, "transmission": "automatic", "seller_type": "private", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "197466151", "url": "https://auto.bazos.sk/inzerat/197466151/volvo-v90-t8-twin-engine-inscription-eawd-at.php", "title": "Volvo V90 T8 Twin Engine Inscription eAWD A/T", "price": 25000, "price_gross": 25000, "fair_price": 22580.0, "discount_pct": -10.7, "verdict": "nad trhom", "year": 2017, "km": 125000, "km_per_year": 13400.0, "eg": "T6 / T8 Recharge plug-in hybrid 250–335 kW", "cg": 2, "transmission": "automatic", "seller_type": "uncertain", "location": "Žilina", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AelnYMFlCsBp", "url": "https://www.autobazar.eu/detail/volvo-v90-t8-twin-engine-inscription-eawd-a-t/AelnYMFlCsBp/", "price": 25000}], "body": "wagon"}, {"id": "ab-AeL4GmXOOhH", "url": "https://www.autobazar.eu/detail/volvo-v90-cross-country-volvo-v90-cross-country/AeL4GmXOOhH/", "title": "Volvo V90 Cross Country Volvo V90 Cross Country", "price": 17300, "price_gross": 17300, "fair_price": 15560.0, "discount_pct": -11.2, "verdict": "nad trhom", "year": 2017, "km": 243914, "km_per_year": 26100.0, "eg": "D5 / B5 diesel 173–184 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Žilina", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "bs-36557578", "url": "https://auto.bazar.sk/36557578-volvo-s90-b5-awd-mild-hybrid-diesel-plus-bright-polestar/", "title": "VOLVO S90 B5 AWD Mild hybrid/diesel PLUS/BRIGHT POLESTAR", "price": 58300, "price_gross": 58300, "fair_price": 51840.0, "discount_pct": -12.5, "verdict": "nad trhom", "year": 2023, "km": 1650, "km_per_year": 500.0, "eg": "D5 / B5 diesel 173–184 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Košice", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "sedan"}, {"id": "ab-AeyttIT0EUB", "url": "https://www.autobazar.eu/detail/volvo-v90-d4-20l-momentum-at-140kw190hp-a8/AeyttIT0EUB/", "title": "Volvo V90 D4 2.0L Momentum AT 140kW190HP A8", "price": 18000, "price_gross": 18000, "fair_price": 15860.0, "discount_pct": -13.5, "verdict": "nad trhom", "year": 2018, "km": 265836, "km_per_year": 31900.0, "eg": "D3 / D4 / B4 diesel 110–145 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Nitra", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197683029", "url": "https://auto.bazos.sk/inzerat/197683029/predam-volvo-v90-d4-140kw-automat-tazne-zariadenie.php", "price": 18000}], "body": "wagon"}, {"id": "196237218", "url": "https://auto.bazos.sk/inzerat/196237218/volvo-v90-t8-2020.php", "title": "Volvo V90 T8 2020", "price": 25500, "price_gross": 25500, "fair_price": 22320.0, "discount_pct": -14.2, "verdict": "nad trhom", "year": 2020, "km": 200000, "km_per_year": 31600.0, "eg": "T6 / T8 Recharge plug-in hybrid 250–335 kW", "cg": 2, "transmission": null, "seller_type": "uncertain", "location": "Levice", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "ab-Am2c16IzzGA", "url": "https://www.autobazar.eu/detail/volvo-v90-cc-b5-cross-country-pro-awd-a-t/Am2c16IzzGA/", "title": "Volvo V90 CC B5 Cross Country Pro AWD A/T", "price": 32499, "price_gross": 32499, "fair_price": 28200.0, "discount_pct": -15.2, "verdict": "výrazne nad trhom", "year": 2021, "km": 132928, "km_per_year": 24900.0, "eg": "D5 / B5 diesel 173–184 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Banská Bystrica", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "195975953", "url": "https://auto.bazos.sk/inzerat/195975953/volvo-v90-cross-country-pro-b5-20d-173kw-at8-awd-022021.php", "price": 32499}], "body": "wagon"}, {"id": "ab-Aeo9zfqvEO9", "url": "https://www.autobazar.eu/detail/volvo-v90-d4-20l-r-design-at-140kw190hp-a8/Aeo9zfqvEO9/", "title": "Volvo V90 D4 2.0L R-Design A/T 140kW/190HP A8", "price": 25000, "price_gross": 25000, "fair_price": 21650.0, "discount_pct": -15.5, "verdict": "výrazne nad trhom", "year": 2017, "km": 112000, "km_per_year": 12000.0, "eg": "D3 / D4 / B4 diesel 110–145 kW", "cg": 1, "transmission": "automatic", "seller_type": "private", "location": "Bratislava-Petržalka", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "wagon"}, {"id": "ab-Aepv5jkUKSy", "url": "https://www.autobazar.eu/detail/volvo-v90-cc-d5-cross-country-pro-d5-awd-360-panorama-pilot-assist-ppf-servis/Aepv5jkUKSy/", "title": "Volvo V90 CC D5 Cross Country PRO AWD 360 Panoráma Pilot Assist PPF Servis", "price": 25000, "price_gross": 25000, "fair_price": 21560.0, "discount_pct": -15.9, "verdict": "výrazne nad trhom", "year": 2018, "km": 170000, "km_per_year": 20400.0, "eg": "D5 / B5 diesel 173–184 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazos", "id": "197210287", "url": "https://auto.bazos.sk/inzerat/197210287/volvo-v90-cc-d5-cross-country-pro-awd.php", "price": 25000}], "body": "wagon"}, {"id": "195983666", "url": "https://auto.bazos.sk/inzerat/195983666/volvo-v90-cc.php", "title": "Volvo V90 CC odpočet Dph", "price": 22500, "price_gross": 22500, "fair_price": 18620.0, "discount_pct": -20.8, "verdict": "výrazne nad trhom", "year": 2020, "km": 264000, "km_per_year": 41700.0, "eg": "D5 / B5 diesel 173–184 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Považská Bystrica", "flags": ["vysoký nájazd 42000 km/rok – flotila / taxi?"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "197139848", "url": "https://auto.bazos.sk/inzerat/197139848/volvo-v90-d3-2018.php", "title": "Volvo V90 D3 2018", "price": 22000, "price_gross": 22000, "fair_price": 17770.0, "discount_pct": -23.8, "verdict": "výrazne nad trhom", "year": 2018, "km": 200000, "km_per_year": 24000.0, "eg": "D3 / D4 / B4 diesel 110–145 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Trenčín", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "197068488", "url": "https://auto.bazos.sk/inzerat/197068488/volvo-v90-cross-country-b5-20d-140kw-at8-awd-122017.php", "title": "Volvo V90 Cross Country B5 2.0d 140kW AT8 AWD 04/2017", "price": 22500, "price_gross": 22500, "fair_price": 17960.0, "discount_pct": -25.3, "verdict": "výrazne nad trhom", "year": 2017, "km": 194349, "km_per_year": 20800.0, "eg": "D5 / B5 diesel 173–184 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Kežmarok", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "bs-38319807", "url": "https://auto.bazar.sk/38319807-volvo-selekt-v90-d4-at8-momentum-advanced-diesel/", "title": "VOLVO SELEKT V90 D4 AT8 Momentum Advanced diesel", "price": 27900, "price_gross": 27900, "fair_price": 22260.0, "discount_pct": -25.3, "verdict": "výrazne nad trhom", "year": 2019, "km": 131000, "km_per_year": 17900.0, "eg": "D3 / D4 / B4 diesel 110–145 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Košice", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "197599858", "url": "https://auto.bazos.sk/inzerat/197599858/volvo-s90-d4-r-design.php", "title": "Volvo S90 D4 R-Design", "price": 27590, "price_gross": 27590, "fair_price": 21650.0, "discount_pct": -27.4, "verdict": "výrazne nad trhom", "year": 2019, "km": 147000, "km_per_year": 20000.0, "eg": "D3 / D4 / B4 diesel 110–145 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Košice", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "sedan"}, {"id": "ab-Aesza_UudNP", "url": "https://www.autobazar.eu/detail/volvo-v90-2018/Aesza_UudNP/", "title": "Volvo V90 Cross country", "price": 23000, "price_gross": 23000, "fair_price": 16910.0, "discount_pct": -36.0, "verdict": "výrazne nad trhom", "year": 2018, "km": 199000, "km_per_year": 23900.0, "eg": "D3 / D4 / B4 diesel 110–145 kW", "cg": 1, "transmission": "automatic", "seller_type": "private", "location": "Vranov nad Topľou", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "wagon"}];
+const GROUPS = ["Benzín", "Diesel", "Plug-in hybrid a nezistený"];
+const BODY = {"wagon": "kombi V90", "sedan": "sedan S90"};
+const fmt = n => Math.round(n).toLocaleString("sk-SK");
+const eur = n => fmt(n) + " €";
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const TRANS = {automatic: "automat", manual: "manuál"};
+const SRC = {bazos: "bazoš", autobazar: "autobazar.eu", bazarsk: "bazar.sk"};
+
+// --- theme toggle ---------------------------------------------------------
+document.getElementById("themeBtn").onclick = () => {
+  const root = document.documentElement;
+  const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  drawChart();
+};
+
+// --- scatter chart --------------------------------------------------------
+const legend = document.getElementById("legend");
+legend.innerHTML = GROUPS.map((g, i) => `<span><i style="background:var(--s${i+1})"></i>${g}</span>`).join("")
+  + `<span><i class="ring"></i>odporúčaná ponuka</span>`;
+
+function drawChart() {
+  const svg = document.getElementById("chart"), wrap = document.getElementById("chartWrap"), tip = document.getElementById("tip");
+  const W = svg.clientWidth, H = 420, m = {l: 56, r: 16, t: 10, b: 40};
+  const pts = DATA.filter(d => d.km && d.price_gross);
+  const xMax = Math.ceil(Math.max(...pts.map(d => d.km)) / 50000) * 50000;
+  const yMax = Math.ceil(Math.max(...pts.map(d => d.price_gross)) / 5000) * 5000;
+  const x = v => m.l + v / xMax * (W - m.l - m.r), y = v => H - m.b - v / yMax * (H - m.t - m.b);
+  let s = "";
+  for (let v = 0; v <= yMax; v += 5000)
+    s += `<line x1="${m.l}" x2="${W-m.r}" y1="${y(v)}" y2="${y(v)}" stroke="var(--grid)"/><text x="${m.l-8}" y="${y(v)+4}" text-anchor="end">${v/1000} tis. €</text>`;
+  const step = W < 520 ? 100000 : 50000;
+  for (let v = 0; v <= xMax; v += step)
+    s += `<text x="${x(v)}" y="${H-m.b+18}" text-anchor="middle">${v/1000} tis.</text>`;
+  s += `<text x="${(W+m.l)/2}" y="${H-6}" text-anchor="middle">nájazd (km)</text>`;
+  const order = [...pts].sort((a, b) => (a.pick ? 1 : 0) - (b.pick ? 1 : 0));
+  order.forEach(d => {
+    const cx = x(d.km), cy = y(d.price_gross);
+    if (d.pick) s += `<circle cx="${cx}" cy="${cy}" r="9" fill="none" stroke="var(--text)" stroke-width="2"/>`;
+    s += `<circle class="pt" data-id="${d.id}" cx="${cx}" cy="${cy}" r="5" fill="var(--s${d.cg+1})" stroke="var(--surface)" stroke-width="2"/>`;
+  });
+  // invisible bigger hit targets
+  order.forEach(d => s += `<circle class="hit" data-id="${d.id}" cx="${x(d.km)}" cy="${y(d.price_gross)}" r="11" fill="transparent" style="cursor:pointer"/>`);
+  svg.innerHTML = s;
+  const byId = Object.fromEntries(pts.map(d => [d.id, d]));
+  svg.querySelectorAll(".hit").forEach(c => {
+    c.onmouseenter = c.onmousemove = ev => {
+      const d = byId[c.dataset.id];
+      tip.innerHTML = `<b>${esc(d.title)}</b>
+        <div class="row"><span>Cena</span><span>${eur(d.price_gross)}</span></div>
+        <div class="row"><span>Férová cena</span><span>${eur(d.fair_price)}</span></div>
+        <div class="row"><span>Pod trhom</span><span>${d.discount_pct > 0 ? "+" : ""}${d.discount_pct.toLocaleString("sk-SK")} %</span></div>
+        <div class="row"><span>Zdroj</span><span>${SRC[d.source]}${d.also_listed.length ? " + " + d.also_listed.map(a => SRC[a.source]).join(", ") : ""}</span></div>
+        <div class="row"><span>Rok · km</span><span>${d.year} · ${fmt(d.km)}</span></div>
+        <div class="row"><span>Motor</span><span>${esc(d.eg)} ${TRANS[d.transmission] || ""}</span></div>`;
+      tip.style.display = "block";
+      const r = wrap.getBoundingClientRect();
+      let lx = ev.clientX - r.left + 14, ly = ev.clientY - r.top + 14;
+      if (lx + 290 > r.width) lx = ev.clientX - r.left - 290;
+      tip.style.left = lx + "px"; tip.style.top = ly + "px";
+    };
+    c.onmouseleave = () => tip.style.display = "none";
+    c.onclick = () => window.open(byId[c.dataset.id].url, "_blank", "noopener");
+  });
+}
+drawChart();
+addEventListener("resize", drawChart);
+
+// --- full table -----------------------------------------------------------
+const fEngine = document.getElementById("fEngine");
+[...new Set(DATA.map(d => d.eg))].sort().forEach(g => fEngine.insertAdjacentHTML("beforeend", `<option>${esc(g)}</option>`));
+let sortK = "discount_pct", sortDir = -1;
+function discCell(v) {
+  const w = Math.min(Math.abs(v), 30) / 30 * 50;
+  const bar = v >= 0 ? `left:50%;width:${w}%;background:var(--pos)` : `right:50%;width:${w}%;background:var(--neg)`;
+  return `<span class="disc">${v > 0 ? "+" : ""}${v.toLocaleString("sk-SK")} %<span class="dbar"><span style="${bar}"></span></span></span>`;
+}
+function renderTable() {
+  const max = parseFloat(document.getElementById("fMax").value) || Infinity;
+  const tr = document.getElementById("fTrans").value, se = document.getElementById("fSeller").value, en = fEngine.value;
+  const so = document.getElementById("fSource").value, og = document.getElementById("fOrigin").value;
+  const bo = document.getElementById("fBody").value;
+  const rows = DATA.filter(d => (!en || d.eg === en) && (!tr || d.transmission === tr)
+    && (!se || d.seller_type !== "dealer") && d.price_gross <= max
+    && (!so || d.source === so || d.also_listed.some(a => a.source === so)) && (!og || d.origin === og) && (!bo || d.body === bo))
+    .sort((a, b) => { const A = a[sortK], B = b[sortK]; return (typeof A === "string" ? A.localeCompare(B) : A - B) * sortDir; });
+  document.getElementById("count").textContent = `${rows.length} z ${DATA.length} inzerátov`;
+  document.querySelector("#tbl tbody").innerHTML = rows.map(d => `<tr>
+    <td><a href="${d.url}" target="_blank" rel="noopener">${esc(d.title)}</a> ${d.pick ? '<span class="badge pick">odporúčané</span>' : ""}
+      <div class="sub">${BODY[d.body] || "karoséria ?"} · ${esc(d.eg)} · ${TRANS[d.transmission] || "prevodovka ?"} · ${esc(d.location)} · ${d.seller_type === "dealer" ? "predajca/firma" : d.seller_type === "private" ? "súkromník" : "neisté"} · ${SRC[d.source]}${d.origin === "SR" ? " · kúpené v SR" : d.origin === "dovoz" ? " · dovoz" : ""}${d.also_listed.map(a => ` · <a href="${a.url}" target="_blank" rel="noopener">aj na ${SRC[a.source]}</a>`).join("")}</div>
+      ${d.flags.filter(f => !f.startsWith("prevodovka")).map(f => `<div class="flag">⚠ ${esc(f)}</div>`).join("")}</td>
+    <td class="num">${d.year}</td><td class="num">${fmt(d.km)}</td>
+    <td class="num">${eur(d.price_gross)}</td><td class="num">${eur(d.fair_price)}</td>
+    <td class="num">${discCell(d.discount_pct)}</td></tr>`).join("");
+  document.querySelectorAll("#tbl th.sortable").forEach(th => {
+    const base = th.textContent.replace(/ [▾▴]$/, "");
+    th.textContent = base + (th.dataset.k === sortK ? (sortDir < 0 ? " ▾" : " ▴") : "");
+  });
+}
+document.querySelectorAll("#tbl th.sortable").forEach(th => th.onclick = () => {
+  if (sortK === th.dataset.k) sortDir *= -1; else { sortK = th.dataset.k; sortDir = th.dataset.k === "title" ? 1 : -1; }
+  renderTable();
+});
+["fEngine", "fTrans", "fSeller", "fSource", "fBody", "fOrigin", "fMax"].forEach(id => document.getElementById(id).addEventListener("input", renderTable));
+renderTable();
+</script>
+<!-- ferovka-theme --><script defer src="/analytics-config.js"></script><script defer src="/analytics.js"></script><script id="ferovka-chart">/* Férovka – chart → ad links, injected into every report by sync-reports.mjs.
+ *
+ * The reports draw one invisible 11px "hit" circle per ad. In dense charts (and always on a narrow phone) those
+ * circles overlap and the one drawn last wins, so a click/tap often opened a neighbouring ad. Here the pointer is
+ * always resolved to the NEAREST point, the report's own tooltip is shown for that point, and a click opens its ad.
+ * Touch: the first tap shows the tooltip (with a hint), a second tap on the same point opens the ad.
+ */
+(() => {
+  let rows;
+  try { rows = DATA; } catch { return; } // eslint-disable-line no-undef
+  if (!Array.isArray(rows) || !rows.length || !("url" in rows[0])) return;
+  const byId = new Map(rows.map((d) => [String(d.id), d]));
+  const MOUSE = ["mouseover", "mouseout", "mouseenter", "mouseleave", "mousemove", "mousedown", "mouseup", "click"];
+  let lastPointer = "mouse", down = null;
+  // the finger position as it was – Chrome "snaps" the later click of a tap to the centre of a nearby clickable element
+  addEventListener("pointerdown", (e) => { lastPointer = e.pointerType || "mouse"; down = { clientX: e.clientX, clientY: e.clientY }; }, true);
+
+  // the old per-point hit circles must not be targets (they overlap, and touch snapping aims at them)
+  document.head.insertAdjacentHTML("beforeend", "<style>svg circle.hit[data-id],svg circle.pt[data-id]{pointer-events:none}</style>");
+
+  function nearest(svg, ev, radius) {
+    let best = null, bd = Infinity;
+    for (const c of svg.querySelectorAll("circle.pt[data-id]")) {
+      const r = c.getBoundingClientRect();
+      const dx = r.left + r.width / 2 - ev.clientX, dy = r.top + r.height / 2 - ev.clientY;
+      const d = dx * dx + dy * dy;
+      if (d <= bd) { bd = d; best = c; } // ties: the point drawn on top (later) wins – that is the one you see
+    }
+    return best && bd <= radius * radius ? best : null;
+  }
+
+  function bind(svg) {
+    if (svg.__fvLinks) return;
+    svg.__fvLinks = true;
+    let current = null, armed = null;
+    const hitOf = (pt) => pt && svg.querySelector(`circle.hit[data-id="${CSS.escape(pt.dataset.id)}"]`);
+    const fire = (el, type, ev) => {
+      if (!el) return;
+      const e = new MouseEvent(type, { clientX: ev.clientX, clientY: ev.clientY, bubbles: false });
+      e.__fv = true;
+      el.dispatchEvent(e);
+    };
+    const tip = () => (svg.parentElement && svg.parentElement.querySelector("#tip, .tip")) || document.getElementById("tip");
+    const mark = (pt) => {
+      if (current === pt) return;
+      if (current) current.setAttribute("r", current.__r || "5");
+      current = pt;
+      if (pt) { pt.__r = pt.__r || pt.getAttribute("r"); pt.setAttribute("r", String(+pt.__r + 2)); }
+    };
+    const show = (pt, ev, hint) => {
+      mark(pt);
+      if (!pt) { const t = tip(); if (t) t.style.display = "none"; return; }
+      fire(hitOf(pt), "mousemove", ev); // the report's own tooltip, for the nearest point
+      const t = tip();
+      if (t && hint) t.insertAdjacentHTML("beforeend", `<div class="fv-hint">Ťukni ešte raz – otvorí sa inzerát ↗</div>`);
+    };
+    const open = (pt) => {
+      const d = byId.get(pt.dataset.id);
+      if (d && d.url) {
+        try { window.FerovkaAnalytics?.listingClick(d.url, "chart"); } catch { /* analytics must never block an ad */ }
+        window.open(d.url, "_blank", "noopener");
+      }
+    };
+
+    // the per-circle handlers of the report never see real mouse events – only our synthetic ones
+    for (const type of MOUSE) {
+      svg.addEventListener(type, (ev) => {
+        if (ev.__fv) return;
+        ev.stopImmediatePropagation();
+        if (type === "mousemove" && lastPointer === "mouse") {
+          show(nearest(svg, ev, 18), ev, false);
+          svg.style.cursor = current ? "pointer" : "";
+        } else if (type === "mouseleave" && ev.target === svg && lastPointer === "mouse") {
+          show(null, ev);
+        } else if (type === "click") {
+          const touch = lastPointer !== "mouse";
+          const at = touch && down ? down : ev;
+          const pt = nearest(svg, at, touch ? 26 : 18);
+          if (!pt) { armed = null; show(null, ev); return; }
+          if (!touch || armed === pt) { armed = null; open(pt); }
+          else { armed = pt; show(pt, at, true); }
+        }
+      }, true);
+    }
+  }
+
+  const scan = () => document.querySelectorAll("svg").forEach((s) => s.querySelector("circle.pt[data-id]") && bind(s));
+  scan();
+  new MutationObserver(scan).observe(document.body, { childList: true, subtree: true });
+})();
+</script><script id="ferovka-filters">/* Férovka – filters for the whole report, injected into every model report by sync-reports.mjs.
+ *
+ * The reports render the chart (drawChart) and the full ranking (renderTable) from the global DATA array; their own
+ * filter bar only filters the table. Here the filter bar (kept in its place above the ranking) gets more filters (year, price from/to,
+ * km, fuel, discount, picks only, text search) and every filter applies to the chart and the ranking together: DATA is
+ * refilled in place with the matching ads and both are drawn again. "</script" can't occur inside this file.
+ */
+(() => {
+  let data;
+  try { data = DATA; } catch { return; } // eslint-disable-line no-undef
+  if (!Array.isArray(data) || !data.length || typeof renderTable !== "function") return; // eslint-disable-line no-undef
+  const bar = document.querySelector(".filters");
+  if (!bar || bar.dataset.fv) return;
+  bar.dataset.fv = "1";
+  const ALL = data.slice();
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+  const fmt = (n) => Math.round(n).toLocaleString("sk-SK");
+  const norm = (s) => String(s ?? "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+  let groups = null;
+  try { groups = GROUPS; } catch { /* report without groups */ } // eslint-disable-line no-undef
+
+  const FUEL = { diesel: "Diesel", petrol: "Benzín", hybrid: "Hybrid", "plug-in hybrid": "Plug-in hybrid", electric: "Elektro", lpg: "LPG", cng: "CNG" };
+  const fuelOf = (d) => {
+    const e = norm(d.eg);
+    if (/tdi|crdi|dci|hdi|diesel|\bd\b|cdi|\d+d\b|blue/.test(e)) return "Diesel";
+    if (/plug-in|phev|e-hybrid|recharge|\bgte\b|\bt8\b|\b\d{2}e\b|\b\d{3} ?e\b/.test(e)) return "Plug-in hybrid";
+    if (/elektro|electric|\bev\b/.test(e)) return "Elektro";
+    if (/cng|lpg|g-tec|g-tron|tgi|ecofuel/.test(e)) return "Plyn (CNG/LPG)";
+    if (/mild|mhev/.test(e)) return "Benzín"; // mild-hybrid petrol (the diesel ones say TDI / d above)
+    if (/hybrid|hev/.test(e)) return "Hybrid";
+    if (/tsi|tfsi|mpi|fsi|benzin|gdi|dpi|htp|12v|\bt\d\b|\bb[56]\b|\d+i\b|turbo|tce|\bs4\b|rs ?\d|amg|competition|\bm\d{2,3}i?\b|gti|\bx5 m\b/.test(e)) return "Benzín";
+    return d.fuel ? FUEL[d.fuel] || String(d.fuel) : null;
+  };
+
+  // --- controls ---------------------------------------------------------------------------------------------------
+  const years = ALL.map((d) => d.year).filter(Boolean);
+  const yMin = Math.min(...years), yMax = Math.max(...years);
+  const yearOpts = (label) => `<option value="">${label}</option>` +
+    Array.from({ length: yMax - yMin + 1 }, (_, i) => yMax - i).map((y) => `<option>${y}</option>`).join("");
+  const kms = [30000, 50000, 75000, 100000, 150000, 200000, 250000, 300000];
+  const fuels = [...new Set(ALL.map(fuelOf).filter(Boolean))].sort((a, b) => a.localeCompare(b, "sk"));
+  const showGroups = Array.isArray(groups) && groups.length > 1 && ALL.some((d) => Number.isInteger(d.cg));
+
+  const maxInput = $("fMax");
+  if (maxInput) { maxInput.placeholder = "Cena do €"; maxInput.title = "Najvyššia cena (s DPH)"; }
+  const html =
+    `<select id="fvYearFrom" title="Rok výroby od">${yearOpts("Rok od")}</select>` +
+    `<select id="fvYearTo" title="Rok výroby do">${yearOpts("Rok do")}</select>` +
+    `<input id="fvPriceMin" type="number" placeholder="Cena od €" step="500" min="0" title="Najnižšia cena (s DPH)" style="width:110px">`;
+  if (maxInput) maxInput.insertAdjacentHTML("beforebegin", html);
+  else bar.insertAdjacentHTML("afterbegin", html);
+  const more =
+    `<select id="fvKm" title="Najviac najazdených km"><option value="">Nájazd – všetky</option>${kms.map((k) => `<option value="${k}">do ${fmt(k)} km</option>`).join("")}</select>` +
+    (fuels.length > 1 ? `<select id="fvFuel" title="Palivo"><option value="">Všetky palivá</option>${fuels.map((f) => `<option>${esc(f)}</option>`).join("")}</select>` : "") +
+    (showGroups ? `<select id="fvGroup" title="Skupina motorov (farba v grafe)"><option value="">Všetky skupiny</option>${groups.map((g, i) => `<option value="${i}">${esc(g)}</option>`).join("")}</select>` : "") +
+    `<select id="fvDisc" title="O koľko je auto lacnejšie ako férová cena"><option value="">Cena – všetky</option><option value="0">pod férovou cenou</option><option value="10">aspoň 10 % pod trhom</option><option value="20">aspoň 20 % pod trhom</option></select>` +
+    `<input id="fvText" type="search" placeholder="Hľadať (výbava, mesto…)" title="Hľadá v názve inzerátu, motore a lokalite" style="width:170px">` +
+    `<label class="fv-check"><input id="fvPick" type="checkbox"> len odporúčané</label>` +
+    `<button type="button" id="fvReset" class="fv-reset">Zrušiť filtre</button>`;
+  const count = $("count");
+  if (count) count.insertAdjacentHTML("beforebegin", more);
+  else bar.insertAdjacentHTML("beforeend", more);
+
+  // the bar stays where it was – right above the ranking – and also drives the chart; the chart gets a pointer to it
+  const chart = $("chartWrap");
+  const box = document.createElement("div");
+  box.className = "fv-filters";
+  box.id = "filtre";
+  bar.before(box);
+  box.innerHTML = `<div class="fv-head"><b>Filtre</b><span>platia pre rebríček aj graf vyššie</span></div>`;
+  box.appendChild(bar);
+  const note = document.createElement("div");
+  note.className = "fv-note";
+  chart?.before(note);
+
+  document.head.insertAdjacentHTML("beforeend", `<style id="fv-filters-css">
+.fv-filters{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 14px 4px;margin:24px 0 8px}
+.fv-filters .fv-head{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;margin-bottom:8px}
+.fv-filters .fv-head span{color:var(--muted);font-size:13px}
+.fv-filters .filters{margin-bottom:8px}
+.fv-filters .filters .count{flex-basis:100%;margin-left:0}
+.fv-check{display:inline-flex;gap:6px;align-items:center;font-size:13px;color:var(--text-2,var(--text));white-space:nowrap}
+.fv-reset{background:none;border:1px solid var(--border);color:var(--text);border-radius:8px;padding:6px 10px;font:inherit;font-size:13px;cursor:pointer}
+.fv-reset:hover{background:var(--surface-2,var(--surface))}
+.fv-note{color:var(--muted);font-size:13px;margin:0 0 8px}
+.fv-note a{color:inherit}
+.fv-empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:14px;pointer-events:none}
+@media (max-width:600px){.fv-filters .filters select,.fv-filters .filters input[type=number],.fv-filters .filters input[type=search]{flex:1 1 calc(50% - 8px);min-width:0;width:auto!important}}
+</style>`);
+
+  // --- filtering --------------------------------------------------------------------------------------------------
+  const val = (id) => ($(id) ? $(id).value : "");
+  const num = (id) => { const v = parseFloat(val(id)); return Number.isFinite(v) ? v : null; };
+  function matches(d) {
+    const yf = num("fvYearFrom"), yt = num("fvYearTo"), pmin = num("fvPriceMin"), pmax = num("fMax"), km = num("fvKm"), disc = num("fvDisc");
+    const fuel = val("fvFuel"), grp = val("fvGroup"), q = norm(val("fvText")).trim();
+    if (yf != null && !(d.year >= yf)) return false;
+    if (yt != null && !(d.year <= yt)) return false;
+    if (pmin != null && !(d.price_gross >= pmin)) return false;
+    if (pmax != null && !(d.price_gross <= pmax)) return false;
+    if (km != null && !(d.km <= km)) return false;
+    if (disc != null && !(d.discount_pct > disc || (disc > 0 && d.discount_pct >= disc))) return false;
+    if (fuel && fuelOf(d) !== fuel) return false;
+    if (grp !== "" && String(d.cg) !== grp) return false;
+    if ($("fvPick")?.checked && !d.pick) return false;
+    if (q && !q.split(/\s+/).every((w) => norm(`${d.title} ${d.eg ?? ""} ${d.engine ?? ""} ${d.location ?? ""}`).includes(w))) return false;
+    // the report's own filters (engine, gearbox, seller, portal, body, origin) – same rules as its renderTable
+    const en = val("fEngine"), tr = val("fTrans"), se = val("fSeller"), so = val("fSource"), og = val("fOrigin"), bo = val("fBody");
+    if (en && d.eg !== en) return false;
+    if (tr && d.transmission !== tr) return false;
+    if (se && d.seller_type === "dealer") return false;
+    if (so && !(d.source === so || (d.also_listed || []).some((a) => a.source === so))) return false;
+    if (og && d.origin !== og) return false;
+    if (bo && d.body !== bo) return false;
+    return true;
+  }
+  const active = () => [...box.querySelectorAll("select, input")].filter((el) => (el.type === "checkbox" ? el.checked : el.value !== "")).length;
+
+  let drawing = false;
+  function apply() {
+    if (drawing) return;
+    drawing = true;
+    const rows = ALL.filter(matches);
+    data.length = 0;
+    data.push(...rows);
+    const wrap = $("chartWrap");
+    wrap?.querySelector(".fv-empty")?.remove();
+    const plotted = rows.filter((d) => d.km && d.price_gross).length;
+    try {
+      if (typeof drawChart === "function") { // eslint-disable-line no-undef
+        if (plotted) drawChart(); // eslint-disable-line no-undef
+        else { const svg = $("chart"); if (svg) svg.innerHTML = ""; }
+      }
+    } catch (e) { console.warn("chart", e); }
+    if (wrap && !plotted) {
+      if (getComputedStyle(wrap).position === "static") wrap.style.position = "relative";
+      wrap.insertAdjacentHTML("beforeend", `<div class="fv-empty">Filtrom nezodpovedá žiadny inzerát</div>`);
+    }
+    try { renderTable(); } catch (e) { console.warn("table", e); } // eslint-disable-line no-undef
+    const n = active();
+    if (count) count.textContent = `Zobrazených ${fmt(rows.length)} z ${fmt(ALL.length)} inzerátov` + (n ? ` · aktívne filtre: ${n}` : "");
+    note.innerHTML = n
+      ? `Zobrazených ${fmt(rows.length)} z ${fmt(ALL.length)} inzerátov podľa <a href="#filtre">filtrov pri rebríčku</a>.`
+      : `Filtre (rok, cena, nájazd, palivo…) nájdeš <a href="#filtre">pri kompletnom rebríčku</a> – platia aj pre tento graf.`;
+    drawing = false;
+  }
+  box.querySelectorAll("select, input").forEach((el) => el.addEventListener("input", apply));
+  $("fvPick")?.addEventListener("change", apply);
+  $("fvReset").addEventListener("click", () => {
+    box.querySelectorAll("select, input").forEach((el) => { if (el.type === "checkbox") el.checked = false; else el.value = ""; });
+    apply();
+  });
+  apply();
+})();
+</script><!-- /ferovka-theme -->
+</body>
+</html>

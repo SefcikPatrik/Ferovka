@@ -365,6 +365,19 @@
     }
   },
   {
+    "slug": "bmw-x4",
+    "file": "bmw-x4-analyza.html",
+    "name": "BMW X4",
+    "brand": "BMW",
+    "model": "X4",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov BMW X4 (F26 a G02, 2014–2025, vrátane M40d / M40i, bez X4 M a nových áut z 2026) od 6 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 177 inzerátov (93 na bazoši, 83 na autobazar.eu, 1 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 133 rôznych áut zo Slovenska.",
+    "ads": 133,
+    "median": "28 000 €",
+    "r2": "95 %"
+  },
+  {
     "slug": "bmw-x5",
     "file": "bmw-x5-analyza.html",
     "name": "BMW X5",
@@ -1127,7 +1140,7 @@
     "median": "35 990 €",
     "r2": "96 %",
     "history": {
-      "updated_at": "2026-11-22T15:42:46",
+      "updated_at": "2026-11-22T15:52:20",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 123,
@@ -1144,6 +1157,38 @@
       "seen_median": 35990,
       "seen_price_count": 123,
       "last_observed_at": "2026-11-22T15:34:21"
+    }
+  },
+  {
+    "slug": "porsche-macan",
+    "file": "porsche-macan-analyza.html",
+    "name": "Porsche Macan",
+    "brand": "Porsche",
+    "model": "Macan",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Porsche Macan (95B, 2014–2025, benzín aj diesel, bez elektrického Macanu a nových áut z 2026) od 8 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 146 inzerátov (35 na bazoši, 62 na autobazar.eu, 49 na bazar.sk) – prezreli sme 66 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 81 rôznych áut zo Slovenska.",
+    "ads": 81,
+    "median": "33 500 €",
+    "r2": "96 %",
+    "history": {
+      "updated_at": "2026-11-22T15:52:20",
+      "as_of": "2026-11-22",
+      "coverage": "partial",
+      "baseline_count": 51,
+      "total_count": 51,
+      "active_count": 51,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 51,
+      "paired_median_change_pct": 0,
+      "historical_median": 33500,
+      "seen_median": 33500,
+      "seen_price_count": 51,
+      "last_observed_at": "2026-11-22T15:45:20"
     }
   },
   {
@@ -1517,6 +1562,19 @@
       "seen_price_count": 41,
       "last_observed_at": "2026-11-22T13:45:52"
     }
+  },
+  {
+    "slug": "volvo-v90",
+    "file": "volvo-v90-analyza.html",
+    "name": "Volvo V90 / S90",
+    "brand": "Volvo",
+    "model": "V90 / S90",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Volvo V90 / S90 (2016–2025, kombi V90 vrátane Cross Country aj sedan S90, bez nových áut z 2026) od 6 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 286 inzerátov (69 na bazoši, 132 na autobazar.eu, 85 na bazar.sk) – prezreli sme 94 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 153 rôznych áut zo Slovenska.",
+    "ads": 153,
+    "median": "22 750 €",
+    "r2": "89 %"
   },
   {
     "slug": "volvo-xc60",
