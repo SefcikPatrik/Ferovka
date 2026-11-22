@@ -153,7 +153,7 @@
     "median": "10 950 €",
     "r2": "86 %",
     "history": {
-      "updated_at": "2026-11-22T12:30:00",
+      "updated_at": "2026-11-22T15:06:59",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 184,
@@ -185,7 +185,7 @@
     "median": "16 800 €",
     "r2": "92 %",
     "history": {
-      "updated_at": "2026-11-22T12:30:00",
+      "updated_at": "2026-11-22T15:06:59",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 470,
@@ -205,6 +205,38 @@
     }
   },
   {
+    "slug": "bmw-4",
+    "file": "bmw-4-analyza.html",
+    "name": "BMW 4",
+    "brand": "BMW",
+    "model": "4",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov BMW 4 (F32/F33/F36 a G22/G23/G26, 2013–2025, kupé, kabriolet aj Gran Coupé, bez M4 a nových áut z 2026) od 6 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 3 592 inzerátov (3 472 na bazoši, 118 na autobazar.eu, 2 na bazar.sk) – prezreli sme 7 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 193 rôznych áut zo Slovenska.",
+    "ads": 193,
+    "median": "29 490 €",
+    "r2": "90 %",
+    "history": {
+      "updated_at": "2026-11-22T15:06:59",
+      "as_of": "2026-11-22",
+      "coverage": "partial",
+      "baseline_count": 112,
+      "total_count": 112,
+      "active_count": 112,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 112,
+      "paired_median_change_pct": 0,
+      "historical_median": 29490,
+      "seen_median": 29490,
+      "seen_price_count": 112,
+      "last_observed_at": "2026-11-22T14:59:38"
+    }
+  },
+  {
     "slug": "bmw-5",
     "file": "bmw-5-analyza.html",
     "name": "BMW 5",
@@ -217,23 +249,23 @@
     "median": "18 990 €",
     "r2": "93 %",
     "history": {
-      "updated_at": "2026-11-22T12:30:00",
+      "updated_at": "2026-11-22T15:06:59",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 513,
-      "total_count": 1126,
-      "active_count": 847,
+      "total_count": 1127,
+      "active_count": 848,
       "inactive_count": 0,
       "unverified_count": 279,
-      "new_count": 613,
+      "new_count": 614,
       "price_changed_count": 89,
       "price_lowered_count": 84,
       "paired_count": 342,
       "paired_median_change_pct": 0,
       "historical_median": 18200,
       "seen_median": 19000,
-      "seen_price_count": 820,
-      "last_observed_at": "2026-11-22T02:11:56"
+      "seen_price_count": 821,
+      "last_observed_at": "2026-11-22T14:57:45"
     }
   },
   {
@@ -249,7 +281,7 @@
     "median": "40 750 €",
     "r2": "86 %",
     "history": {
-      "updated_at": "2026-11-22T12:30:00",
+      "updated_at": "2026-11-22T15:06:59",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 17,
@@ -281,7 +313,7 @@
     "median": "18 990 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-22T12:30:00",
+      "updated_at": "2026-11-22T15:06:59",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 196,
@@ -313,7 +345,7 @@
     "median": "27 499 €",
     "r2": "95 %",
     "history": {
-      "updated_at": "2026-11-22T12:30:00",
+      "updated_at": "2026-11-22T15:06:59",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 186,
@@ -345,7 +377,7 @@
     "median": "40 994 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-22T12:30:00",
+      "updated_at": "2026-11-22T15:06:59",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 433,
@@ -362,6 +394,38 @@
       "seen_median": 43990,
       "seen_price_count": 858,
       "last_observed_at": "2026-11-22T02:16:33"
+    }
+  },
+  {
+    "slug": "bmw-x6",
+    "file": "bmw-x6-analyza.html",
+    "name": "BMW X6",
+    "brand": "BMW",
+    "model": "X6",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov BMW X6 (E71, F16 a G06, 2010–2025, vrátane M50d / M50i / X6 M, bez nových áut z 2026) od 8 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 592 inzerátov (196 na bazoši, 200 na autobazar.eu, 196 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 377 rôznych áut zo Slovenska.",
+    "ads": 377,
+    "median": "29 999 €",
+    "r2": "96 %",
+    "history": {
+      "updated_at": "2026-11-22T15:06:59",
+      "as_of": "2026-11-22",
+      "coverage": "partial",
+      "baseline_count": 218,
+      "total_count": 218,
+      "active_count": 218,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 218,
+      "paired_median_change_pct": 0,
+      "historical_median": 29999,
+      "seen_median": 29999,
+      "seen_price_count": 218,
+      "last_observed_at": "2026-11-22T14:53:20"
     }
   },
   {
@@ -1094,6 +1158,19 @@
       "seen_price_count": 31,
       "last_observed_at": "2026-11-22T01:44:20"
     }
+  },
+  {
+    "slug": "subaru-forester",
+    "file": "subaru-forester-analyza.html",
+    "name": "Subaru Forester",
+    "brand": "Subaru",
+    "model": "Forester",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Subaru Forester (SJ a SK, 2013–2025, bez nových áut z 2026) od 4 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 243 inzerátov (87 na bazoši, 92 na autobazar.eu, 64 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 150 rôznych áut zo Slovenska.",
+    "ads": 150,
+    "median": "15 575 €",
+    "r2": "95 %"
   },
   {
     "slug": "skoda-fabia",
