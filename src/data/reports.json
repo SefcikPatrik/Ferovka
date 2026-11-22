@@ -135,6 +135,38 @@
     }
   },
   {
+    "slug": "mercedes-a",
+    "file": "mercedes-a-analyza.html",
+    "name": "Mercedes-Benz A",
+    "brand": "Mercedes-Benz",
+    "model": "A",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Mercedes-Benz A (W176 a W177, 2012–2025, hatchback aj sedan, vrátane AMG A 35 / A 45, bez nových áut z 2026) od 4 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 3 789 inzerátov (3 419 na bazoši, 210 na autobazar.eu, 160 na bazar.sk) – prezreli sme 13 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 288 rôznych áut zo Slovenska.",
+    "ads": 288,
+    "median": "18 999 €",
+    "r2": "93 %",
+    "history": {
+      "updated_at": "2026-11-22T01:27:38",
+      "as_of": "2026-11-22",
+      "coverage": "partial",
+      "baseline_count": 221,
+      "total_count": 221,
+      "active_count": 221,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 221,
+      "paired_median_change_pct": 0,
+      "historical_median": 18999,
+      "seen_median": 18999,
+      "seen_price_count": 221,
+      "last_observed_at": "2026-11-22T01:19:36"
+    }
+  },
+  {
     "slug": "mercedes-c",
     "file": "mercedes-c-analyza.html",
     "name": "Mercedes-Benz C",
@@ -147,7 +179,7 @@
     "median": "17 145 €",
     "r2": "93 %",
     "history": {
-      "updated_at": "2026-11-22T01:09:53",
+      "updated_at": "2026-11-22T01:27:38",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 516,
@@ -179,7 +211,7 @@
     "median": "23 799 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-22T01:09:53",
+      "updated_at": "2026-11-22T01:27:38",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 489,
@@ -229,6 +261,19 @@
       "seen_price_count": 89,
       "last_observed_at": "2026-11-22T00:09:53"
     }
+  },
+  {
+    "slug": "vw-touareg",
+    "file": "vw-touareg-analyza.html",
+    "name": "Volkswagen Touareg",
+    "brand": "Volkswagen",
+    "model": "Touareg",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov VW Touareg (druhá a tretia generácia, 2010–2025, bez nových áut z 2026) od 6 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 1 177 inzerátov (477 na bazoši, 412 na autobazar.eu, 288 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 746 rôznych áut zo Slovenska.",
+    "ads": 746,
+    "median": "26 900 €",
+    "r2": "94 %"
   },
   {
     "slug": "audi-a3",
@@ -1869,7 +1914,7 @@
     "median": "37 990 €",
     "r2": "95 %",
     "history": {
-      "updated_at": "2026-11-22T01:09:53",
+      "updated_at": "2026-11-22T01:27:38",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 368,
@@ -1901,7 +1946,7 @@
     "median": "39 990 €",
     "r2": "96 %",
     "history": {
-      "updated_at": "2026-11-22T01:09:53",
+      "updated_at": "2026-11-22T01:27:38",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 366,
