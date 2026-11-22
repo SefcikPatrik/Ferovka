@@ -699,6 +699,19 @@
     }
   },
   {
+    "slug": "chevrolet-captiva",
+    "file": "chevrolet-captiva-analyza.html",
+    "name": "Chevrolet Captiva",
+    "brand": "Chevrolet",
+    "model": "Captiva",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Chevrolet Captiva (2006–2015, 5 aj 7 miest) od 2 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 82 inzerátov (41 na bazoši, 25 na autobazar.eu, 16 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 62 rôznych áut zo Slovenska.",
+    "ads": 62,
+    "median": "4 499 €",
+    "r2": "66 %"
+  },
+  {
     "slug": "chevrolet-cruze",
     "file": "chevrolet-cruze-analyza.html",
     "name": "Chevrolet Cruze",
@@ -1988,7 +2001,7 @@
     "median": "9 000 €",
     "r2": "89 %",
     "history": {
-      "updated_at": "2026-11-22T13:50:09",
+      "updated_at": "2026-11-22T17:30:41",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 41,
@@ -2017,8 +2030,27 @@
     "date": "2026-11-22",
     "summary": "Analýza aktuálnych inzerátov Volvo V70 / XC70 (V70 II / III a XC70 2004–2016) od 2 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 96 inzerátov (57 na bazoši, 23 na autobazar.eu, 16 na bazar.sk) – prezreli sme 97 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 70 rôznych áut zo Slovenska.",
     "ads": 70,
-    "median": "7 900 €",
-    "r2": "83 %"
+    "median": "7 399 €",
+    "r2": "83 %",
+    "history": {
+      "updated_at": "2026-11-22T17:30:41",
+      "as_of": "2026-11-22",
+      "coverage": "partial",
+      "baseline_count": 35,
+      "total_count": 35,
+      "active_count": 35,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 35,
+      "paired_median_change_pct": 0,
+      "historical_median": 7399,
+      "seen_median": 7399,
+      "seen_price_count": 35,
+      "last_observed_at": "2026-11-22T17:21:21"
+    }
   },
   {
     "slug": "volvo-v90",
@@ -2031,7 +2063,26 @@
     "summary": "Analýza aktuálnych inzerátov Volvo V90 / S90 (2016–2025, kombi V90 vrátane Cross Country aj sedan S90, bez nových áut z 2026) od 6 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 286 inzerátov (69 na bazoši, 132 na autobazar.eu, 85 na bazar.sk) – prezreli sme 94 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 153 rôznych áut zo Slovenska.",
     "ads": 153,
     "median": "22 750 €",
-    "r2": "89 %"
+    "r2": "89 %",
+    "history": {
+      "updated_at": "2026-11-22T17:30:41",
+      "as_of": "2026-11-22",
+      "coverage": "partial",
+      "baseline_count": 86,
+      "total_count": 86,
+      "active_count": 86,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 86,
+      "paired_median_change_pct": 0,
+      "historical_median": 22750,
+      "seen_median": 22750,
+      "seen_price_count": 86,
+      "last_observed_at": "2026-11-22T15:48:11"
+    }
   },
   {
     "slug": "volvo-xc60",
@@ -2046,7 +2097,7 @@
     "median": "37 945 €",
     "r2": "95 %",
     "history": {
-      "updated_at": "2026-11-22T13:50:09",
+      "updated_at": "2026-11-22T17:30:41",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 230,
@@ -4830,7 +4881,7 @@
     "median": "19 990 €",
     "r2": "95 %",
     "history": {
-      "updated_at": "2026-11-22T13:50:09",
+      "updated_at": "2026-11-22T17:30:41",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 142,
@@ -4862,7 +4913,7 @@
     "median": "22 370 €",
     "r2": "93 %",
     "history": {
-      "updated_at": "2026-11-22T13:50:09",
+      "updated_at": "2026-11-22T17:30:41",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 86,
@@ -4894,7 +4945,7 @@
     "median": "35 670 €",
     "r2": "96 %",
     "history": {
-      "updated_at": "2026-11-22T13:50:09",
+      "updated_at": "2026-11-22T17:30:41",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 216,
