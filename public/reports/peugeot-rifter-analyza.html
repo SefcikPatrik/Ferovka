@@ -1,0 +1,898 @@
+<!doctype html>
+<html lang="sk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Peugeot Rifter / Partner – analýza ponúk</title>
+<style>
+:root {
+  color-scheme: light;
+  --bg: #f6f6f4; --surface: #fcfcfb; --surface-2: #f0efec; --border: #e2e1dc;
+  --text: #0b0b0b; --text-2: #52514e; --muted: #7a7974;
+  --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a;
+  --pos: #2a78d6; --neg: #eb6834; --accent: #2a78d6;
+  --good: #1d7f4e; --bad: #b4332f; --grid: #e8e7e3;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #121211; --surface: #1a1a19; --surface-2: #232321; --border: #33332f;
+    --text: #f0efec; --text-2: #c3c2b7; --muted: #8f8e86;
+    --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+    --pos: #3987e5; --neg: #d95926; --accent: #5598e7;
+    --good: #4cc38a; --bad: #f07a76; --grid: #2a2a27;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #121211; --surface: #1a1a19; --surface-2: #232321; --border: #33332f;
+  --text: #f0efec; --text-2: #c3c2b7; --muted: #8f8e86;
+  --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+  --pos: #3987e5; --neg: #d95926; --accent: #5598e7;
+  --good: #4cc38a; --bad: #f07a76; --grid: #2a2a27;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text);
+  font: 15px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+main { max-width: 1120px; margin: 0 auto; padding: 32px 16px 64px; }
+a { color: var(--accent); text-decoration: none; } a:hover { text-decoration: underline; }
+h1 { font-size: 30px; margin: 0 0 4px; letter-spacing: -.01em; }
+h2 { font-size: 21px; margin: 48px 0 6px; }
+h3 { font-size: 15px; margin: 6px 0 4px; line-height: 1.35; }
+.lead { color: var(--text-2); margin: 0 0 20px; max-width: 760px; }
+.section-lead { color: var(--text-2); margin: 0 0 16px; max-width: 800px; }
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
+.kpi { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+.kpi .v { font-size: 26px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.kpi .l { color: var(--text-2); font-size: 13px; }
+.explain { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; margin-top: 12px; }
+.explain p { margin: 6px 0; color: var(--text-2); }
+.explain b { color: var(--text); }
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; }
+.card-head { display: flex; justify-content: space-between; gap: 8px; font-size: 12px; }
+.tag { font-weight: 600; color: var(--accent); }
+.loc { color: var(--muted); }
+.facts { color: var(--text-2); font-size: 13px; }
+.prices { display: grid; grid-template-columns: 1.2fr 1fr .8fr; gap: 8px; margin: 12px 0 8px; }
+.lbl { display: block; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+.big { font-size: 22px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.mid { font-size: 16px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.good { color: var(--good); }
+.meter { height: 6px; background: var(--surface-2); border-radius: 4px; overflow: hidden; }
+.meter span { display: block; height: 100%; background: var(--s1); border-radius: 4px; }
+.news ul { margin: 6px 0 0; padding-left: 20px; } .news li { margin: 4px 0; } .news .down { color: var(--good, #1baf7a); font-weight: 600; }
+.note { font-size: 12.5px; background: var(--surface-2); border-radius: 6px; padding: 6px 8px; margin-top: 8px; color: var(--text-2); }
+.pc { list-style: none; padding: 0; margin: 10px 0 0; font-size: 13.5px; }
+.pc li { padding-left: 20px; position: relative; margin: 3px 0; }
+.pc li.pro::before { content: "+"; position: absolute; left: 4px; color: var(--good); font-weight: 700; }
+.pc li.con::before { content: "–"; position: absolute; left: 4px; color: var(--bad); font-weight: 700; }
+.subhead { font-size: 15px; color: var(--text-2); margin: 22px 0 10px; font-weight: 600; }
+.chart-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 14px 8px; position: relative; }
+.legend { display: flex; flex-wrap: wrap; gap: 16px; font-size: 13px; color: var(--text-2); margin: 0 0 6px 4px; }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; }
+.legend .ring { background: transparent; border: 2px solid var(--text); width: 12px; height: 12px; }
+svg text { fill: var(--muted); font-size: 11px; }
+.tip { position: absolute; pointer-events: none; background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+  padding: 8px 10px; font-size: 12.5px; box-shadow: 0 6px 20px rgba(0,0,0,.15); max-width: 280px; display: none; z-index: 5; }
+.tip b { display: block; margin-bottom: 2px; }
+.tip .row { display: flex; justify-content: space-between; gap: 12px; color: var(--text-2); }
+.tip .row span:last-child { color: var(--text); font-variant-numeric: tabular-nums; }
+table { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; font-size: 13.5px; }
+th, td { padding: 9px 10px; border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; }
+th { font-size: 12px; color: var(--text-2); font-weight: 600; background: var(--surface-2); white-space: nowrap; }
+th.sortable { cursor: pointer; user-select: none; } th.sortable:hover { color: var(--text); }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+.sub { color: var(--text-2); font-size: 12.5px; margin-top: 2px; }
+.stars { color: #c98500; letter-spacing: 1px; white-space: nowrap; } .stars .off { color: var(--border); }
+.cellbar { height: 5px; background: var(--surface-2); border-radius: 3px; margin-bottom: 4px; }
+.cellbar span { display: block; height: 100%; background: var(--s1); border-radius: 3px; }
+.disc { display: inline-flex; align-items: center; gap: 6px; justify-content: flex-end; }
+.dbar { width: 54px; height: 6px; background: var(--surface-2); border-radius: 3px; position: relative; }
+.dbar span { position: absolute; top: 0; height: 100%; border-radius: 3px; }
+.filters { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 10px; align-items: center; }
+.filters select, .filters input { background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 6px 8px; font: inherit; font-size: 13px; }
+.filters .count { color: var(--muted); font-size: 13px; margin-left: auto; }
+.table-scroll { overflow-x: auto; border-radius: 12px; }
+.badge { font-size: 11px; padding: 1px 6px; border-radius: 10px; background: var(--surface-2); color: var(--text-2); white-space: nowrap; }
+.badge.pick { background: var(--s1); color: #fff; }
+.flag { color: var(--bad); font-size: 12px; }
+.warn { background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--neg); border-radius: 10px; padding: 12px 16px; }
+.warn li { margin: 4px 0; }
+.check { columns: 2 300px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px 14px 34px; margin: 0; }
+.check li { margin: 4px 0; break-inside: avoid; }
+footer { color: var(--muted); font-size: 12.5px; margin-top: 48px; border-top: 1px solid var(--border); padding-top: 14px; }
+.theme-btn { float: right; background: var(--surface); color: var(--text-2); border: 1px solid var(--border); border-radius: 8px; padding: 5px 10px; cursor: pointer; font: inherit; font-size: 13px; }
+@media (max-width: 640px) { h1 { font-size: 24px; } .prices { grid-template-columns: 1fr 1fr 1fr; } .big { font-size: 18px; } th, td { padding: 7px 6px; } }
+</style>
+<!-- ferovka-theme --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"><style id="ferovka-theme">/* Férovka look for the generated analyses – injected by sync-reports.mjs after each report's own <style>.
+   Same palette and type as the site; chart colours (--s1..--s3) stay the validated set. */
+:root {
+  --bg: #f5f4ef; --surface: #fdfdfb; --surface-2: #eeede6; --border: #e1dfd6;
+  --text: #0f1513; --text-2: #4f5551; --muted: #6f746f;
+  --accent: #0b8a56; --good: #0b7a4b; --grid: #e6e4dc; --win: #dff3e9;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d110f; --surface: #151a17; --surface-2: #1d2420; --border: #2a322d;
+    --text: #eef1ec; --text-2: #b6bdb6; --muted: #8f978f;
+    --accent: #2fc583; --good: #4cd08f; --grid: #1f2622; --win: #143223;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d110f; --surface: #151a17; --surface-2: #1d2420; --border: #2a322d;
+  --text: #eef1ec; --text-2: #b6bdb6; --muted: #8f978f;
+  --accent: #2fc583; --good: #4cd08f; --grid: #1f2622; --win: #143223;
+}
+
+body { font-family: "Manrope", system-ui, sans-serif; }
+h1, h2 { letter-spacing: -0.02em; font-weight: 800; }
+.tag { color: var(--accent); }
+
+/* photo header (removed by the site's viewer, which shows its own) */
+.fv-hero { position: relative; margin: 0 0 26px; border-radius: 20px; overflow: hidden; aspect-ratio: 21 / 8; background: #0d110f; display: flex; }
+.fv-hero img { flex: 1; min-width: 0; height: 100%; object-fit: cover; animation: fv-zoom 1.4s cubic-bezier(.2,.7,.2,1) both; }
+.fv-collage img + img { border-left: 3px solid #0d110f; }
+.fv-hero::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(180deg, transparent 55%, rgb(13 17 15 / .75)),
+    repeating-linear-gradient(90deg, rgb(47 197 131 / .06) 0 1px, transparent 1px 48px); }
+.fv-hero figcaption { position: absolute; right: 12px; bottom: 8px; z-index: 1; font-size: 11px; color: rgb(255 255 255 / .75); }
+.fv-hero figcaption a { color: inherit; }
+
+/* cards & panels: softer, lift on hover */
+.card, .kpi, .explain, .chart-wrap, .box { border-radius: 16px; }
+.card { transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease; }
+.card:hover { transform: translateY(-3px); border-color: var(--accent); box-shadow: 0 14px 30px -18px rgb(0 0 0 / .45); }
+.badge.pick { background: var(--accent); }
+
+/* entrance animation */
+@keyframes fv-up { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes fv-zoom { from { transform: scale(1.08); filter: brightness(.6); } to { transform: none; filter: none; } }
+h1, .lead, .kpis, .cards .card { animation: fv-up .6s cubic-bezier(.2,.7,.2,1) both; }
+.lead { animation-delay: .08s; }
+.kpis { animation-delay: .16s; }
+.cards .card:nth-child(2) { animation-delay: .06s; }
+.cards .card:nth-child(3) { animation-delay: .12s; }
+.cards .card:nth-child(4) { animation-delay: .18s; }
+.cards .card:nth-child(5) { animation-delay: .24s; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+@media (max-width: 640px) { .fv-hero { aspect-ratio: 16 / 9; border-radius: 14px; } }
+
+/* touch: hint under the chart tooltip (report-chart.js) */
+.fv-hint { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--border, rgba(127,127,127,.3)); font-weight: 700; color: var(--accent, #2fc583); }
+</style><!-- /ferovka-theme -->
+</head>
+<body>
+<main><!-- ferovka-theme --><!-- /ferovka-theme -->
+<button class="theme-btn" id="themeBtn" type="button">Svetlý / tmavý</button>
+<h1>Peugeot Rifter / Partner – ktorá ponuka sa oplatí</h1>
+<p class="lead">Analýza aktuálnych inzerátov Peugeot Rifter / Partner (osobný Partner Tepee 2010–2018 a Rifter 2018–2025, bez dodávok Van) od 3 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 504 inzerátov (138 na bazoši, 151 na autobazar.eu, 215 na bazar.sk) – prezreli sme 71 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 294 rôznych áut zo Slovenska. Každé auto sme porovnali
+s <b>férovou cenou</b>: tú vypočítal model naučený na celom trhu podľa veku, nájazdu, motora, prevodovky a typu predajcu.</p>
+
+<div class="kpis">
+  <div class="kpi"><div class="v">294</div><div class="l">inzerátov Riftera a Partnera (nad 3 000 €)</div></div>
+  <div class="kpi"><div class="v">111</div><div class="l">ohodnotených (majú rok aj km)</div></div>
+  <div class="kpi"><div class="v">10 990 €</div><div class="l">medián ceny s DPH</div></div>
+  <div class="kpi"><div class="v">94 %</div><div class="l">rozdielov v cenách vysvetlí model</div></div>
+</div>
+
+
+<h2>Odkiaľ sú dáta: bazoš, autobazar.eu a bazar.sk</h2>
+<div class="kpis">
+  <div class="kpi"><div class="v">48</div><div class="l">ohodnotených z bazoša</div></div>
+  <div class="kpi"><div class="v">52</div><div class="l">ohodnotených z autobazar.eu</div></div><div class="kpi"><div class="v">11</div><div class="l">ohodnotených z bazar.sk</div></div>
+  <div class="kpi"><div class="v">46</div><div class="l">áut bolo na viacerých portáloch – započítané raz</div></div>
+  <div class="kpi"><div class="v">42 / 4</div><div class="l">s uvedeným pôvodom SR / dovoz</div></div>
+</div>
+<div class="explain">
+  <p><b>Tri portály, jeden trh.</b> Bazoš prehľadal 133 inzerátov, autobazar.eu
+  151, bazar.sk 75. Ponuky z Česka (na autobazar.eu ich je veľa) sme vynechali. Autobazáre často dávajú
+  to isté auto na viac portálov. Takéto dvojice (26 v rebríčku) sme spojili podľa VIN alebo zhody roku, km a ceny,
+  aby sa v modeli nerátali dvakrát. Pri aute nájdeš odkaz na všetky ponuky – niekedy sa líšia cenou.</p>
+  <p><b>Rozdiel medzi portálmi:</b> rovnaké auto je na autobazar.eu v priemere +6,9 %
+  oproti bazošu. Na autobazar.eu predávajú hlavne firmy (47 z 52 ohodnotených). Na bazar.sk je rovnaké auto v priemere -5,3 % oproti bazošu.</p>
+  <p><b>Kúpené v SR vs. dovoz:</b> autá s uvedeným pôvodom zo SR sú oproti autám bez uvedeného pôvodu
+  -3,8 %, dovezené +7,6 %
+  (pri rovnakom veku, nájazde a motore). Pôvod zo SR je výhoda pri overovaní histórie, trh zaň však nepripláca – väčšina
+  inzerátov pôvod jednoducho neuvádza. V tabulke dole si môžeš nechať zobraziť len autá kúpené v SR.</p>
+</div>
+
+<h2>Čo hýbe cenou Riftera a Partnera</h2>
+<p class="section-lead">Toto sa model naučil z trhu. Keď porovnávaš dve autá, tieto čísla ti povedia, koľko má byť
+rozdiel v cene, aby to bolo fér.</p>
+<div class="kpis">
+  <div class="kpi"><div class="v">-2,5 %</div><div class="l">každých ďalších 10 000 km</div></div>
+  <div class="kpi"><div class="v">-6,0 %</div><div class="l">každý rok veku navyše</div></div>
+  <div class="kpi"><div class="v">+12 %</div><div class="l">príplatok za automat (DSG)</div></div>
+  <div class="kpi"><div class="v">-6,6 %</div><div class="l">príplatok u predajcu / firmy</div></div>
+  <div class="kpi"><div class="v">+22,7 %</div><div class="l">Rifter (2018+) oproti cene podľa veku</div></div>
+  <div class="kpi"><div class="v">+12,4 %</div><div class="l">príplatok za automat</div></div>
+</div>
+<div class="explain">
+  <p><b>Príklad:</b> dva rovnaké Riftery 1.5 BlueHDi z roku 2020, jedno má 60 tis. km, druhé 120 tis. km. Druhé má byť
+  približne o 15 % lacnejšie (6 × -2,5 %). Ak je lacnejšie len o 5 %, preplácaš kilometre.</p>
+  <p><b>Ako čítať „pod trhom“:</b> +15 % znamená, že auto stojí o 15 % menej, než by malo podľa trhu. Bežný rozptyl
+  cien je asi ±19 %, takže až zľava nad ~10–15 % je naozaj výnimočná. Pri takej zľave vždy zisti, prečo je auto lacné
+  (stav, história, nájazd).</p>
+  <p><b>DPH:</b> ceny uvedené bez DPH (napr. „10 300 € netto“) sme prepočítali na cenu s DPH, ktorú zaplatí súkromná osoba.</p>
+</div>
+
+<h2>Odporúčané ponuky</h2>
+<p class="section-lead">Kandidáti s najlepším pomerom cena / vek / nájazd, ktorých celý inzerát sme prečítali.
+Zoradené podľa toho, ako ich odporúčame.</p>
+<div class="subhead">Rifter (2018+) – najlepší pomer cena / vek</div>
+<div class="cards">
+<article class="card">
+  <div class="card-head"><span class="tag">Rifter 1.5 BlueHDi od 1. majiteľa za 7 900 €</span><span class="loc">Raková</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/peugeot-rifter-15-bluehdi-100-style/AmNP9I1aWnH/" target="_blank" rel="noopener">Peugeot Rifter 1.5 BlueHDi 100 Style</a></h3>
+  <div class="facts">2021 · 178 000 km · 1.5 BlueHDi 55–96 kW · manuál · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · kúpené v SR</div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">7 900 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">11 220 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+29.6 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:99%"></span></div>
+  <ul class="pc"><li class="pro">2021 (modelový rok 2022), 1.5 BlueHDi 100, manuál, výbava Style, 178 tis. km</li><li class="pro">Kúpené v SR, 1. majiteľ, servisná knižka, 2 originálne kľúče, nový olej a filtre</li><li class="pro">~30 % pod férovou cenou</li><li class="con">Vysoký nájazd</li><li class="con">Predáva autobazár</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 129 dní (od 16. 7.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Rifter 1.5 BlueHDi so 100 tis. km</span><span class="loc">Prešovský kraj</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/peugeot-rifter-15-bluehdi-active-servkniha/AeZj1UmMl_Y/" target="_blank" rel="noopener">Peugeot Rifter 1.5 BlueHDi, Active, Serv.kniha</a></h3>
+  <div class="facts">2019 · 99 679 km · 1.5 BlueHDi 55–96 kW · manuál · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">10 000 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">13 230 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+24.4 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:81%"></span></div>
+  <ul class="pc"><li class="pro">2019, 1.5 BlueHDi, manuál, výbava Active, 100 tis. km</li><li class="pro">Servisná knižka</li><li class="pro">~24 % pod férovou cenou</li><li class="con">AAA AUTO – cena pri financovaní je 8 500 €, v hotovosti over</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 5 dní (od 17. 11.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Rifter Allure z 2024 z SR</span><span class="loc">Košice</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/peugeot-rifter-15-bluehdiallure-sr2maj-servkniha/Ae_zZ3tPsPP/" target="_blank" rel="noopener">Peugeot Rifter 1.5 BlueHDiAllure, SR,2.maj, Serv.kniha</a></h3>
+  <div class="facts">2024 · 102 955 km · 1.5 BlueHDi 55–96 kW · manuál · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">13 600 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">16 260 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+16.4 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:55%"></span></div>
+  <ul class="pc"><li class="pro">2024, 1.5 BlueHDi, manuál, výbava Allure, 103 tis. km</li><li class="pro">Kúpené v SR, 2. majiteľ, servisná knižka</li><li class="pro">~16 % pod férovou cenou</li><li class="con">Vysoký nájazd na vek</li><li class="con">AAA AUTO – over cenu v hotovosti</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 10 dní (od 12. 11.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Rifter Allure 7-miestny z SR</span><span class="loc">Dunajská Streda</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/peugeot-rifter-15-bluehdi-allure-7-miest-sr2maj/AejyDiedlTM/" target="_blank" rel="noopener">Peugeot Rifter 1.5 BlueHDi, Allure, 7 Miest, SR,2.maj</a></h3>
+  <div class="facts">2019 · 147 674 km · 1.5 BlueHDi 55–96 kW · manuál · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">8 800 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">10 510 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+16.2 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:54%"></span></div>
+  <ul class="pc"><li class="pro">2019, 1.5 BlueHDi, manuál, výbava Allure, 7 miest, 148 tis. km</li><li class="pro">Kúpené v SR, 2. majiteľ, možný odpočet DPH</li><li class="pro">~16 % pod férovou cenou</li><li class="con">AAA AUTO – over cenu v hotovosti</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 9 dní (od 13. 11.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Rifter 1.5 HDi z SR za 6 990 €</span><span class="loc">Trnava</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/196231059/prelim-peugeot-rifter.php" target="_blank" rel="noopener">Predám Peugeot Rifter</a></h3>
+  <div class="facts">2019 · 214 000 km · 1.5 BlueHDi 55–96 kW · manuál · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b> · kúpené v SR</div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">6 990 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">8 280 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+15.5 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:52%"></span></div>
+  <ul class="pc"><li class="pro">2019, 1.5 BlueHDi 75 kW, 5-st. manuál, 214 tis. km</li><li class="pro">Kúpené v SR, asistent jazdných pruhov, tempomat, parkovacie senzory</li><li class="pro">~16 % pod férovou cenou</li><li class="con">Vysoký nájazd</li><li class="con">Predajca neistý</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke aspoň 47 dní</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Rifter s automatom od 1. majiteľa</span><span class="loc">Chorvátsky Grob</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/peugeot-rifter-15-72022/AbOjljQQdIp/" target="_blank" rel="noopener">PEUGEOT Rifter, 1.5, 7/2022</a></h3>
+  <div class="facts">2022 · 155 913 km · 1.5 BlueHDi 55–96 kW · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · kúpené v SR</div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">13 300 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">14 930 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+10.9 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:36%"></span></div>
+  <ul class="pc"><li class="pro">7/2022, 1.5 BlueHDi, automat, 156 tis. km</li><li class="pro">Kúpené nové v SR, 1. majiteľ</li><li class="pro">~11 % pod férovou cenou</li><li class="con">Vysoký nájazd na vek</li><li class="con">Predáva autobazár</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 59 dní (od 24. 9.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Rifter BlueHDi 130 Allure s 56 tis. km</span><span class="loc">Kremnica</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/peugeot-rifter-15-bluehdi-130-allure-96kw130hp-m6/Aeh1u1bfT7V/" target="_blank" rel="noopener">Peugeot Rifter 1.5 BlueHDi 130 Allure 96kW/130HP M6</a></h3>
+  <div class="facts">2023 · 56 059 km · 1.5 BlueHDi 55–96 kW · manuál · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · kúpené v SR</div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">16 900 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">18 440 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+8.4 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:28%"></span></div>
+  <ul class="pc"><li class="pro">2023, 1.5 BlueHDi 96 kW, 6-st. manuál, výbava Allure, 56 tis. km</li><li class="pro">Kúpené v SR, sezónne prezutie</li><li class="pro">~8 % pod férovou cenou</li><li class="con">Predáva autobazár</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 3 dni (od 19. 11.)</p><!-- history-card:end --></article></div>
+<div class="subhead">Lacnejšie Rifter a Partner do 10 000 €</div>
+<div class="cards">
+<article class="card">
+  <div class="card-head"><span class="tag">Partner Tepee 1.6 HDi za 3 500 €</span><span class="loc">Bratislava</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/196691898/peugeot-partner-tepee-16-hdi.php" target="_blank" rel="noopener">Peugeot Partner Tepee 1,6 hdi</a></h3>
+  <div class="facts">2017 · 218 234 km · 1.6 HDi / BlueHDi 55–88 kW · prevodovka ? · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">3 500 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">5 410 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+35.3 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:100%"></span></div>
+  <ul class="pc"><li class="pro">3/2017, 1.6 HDi 73 kW, 5 miest, 218 tis. km</li><li class="pro">STK do 03/2027, nové celoročné pneu, uvedený VIN</li><li class="pro">~35 % pod férovou cenou</li><li class="con">Vizuálne nedostatky (zohľadnené v cene)</li><li class="con">Predajca neistý</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke aspoň 33 dní</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Súkromník: Partner Tepee s LPG od 1. majiteľa</span><span class="loc">Bardejov</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/196963714/peugeot-partner-tepee-16-vti.php" target="_blank" rel="noopener">Peugeot Partner Tepee 1,6 VTi</a></h3>
+  <div class="facts">2014 · 242 000 km · LPG / CNG · manuál · súkromník</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">3 900 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">4 930 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+20.9 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:70%"></span></div>
+  <ul class="pc"><li class="pro">4/2014, 1.6 VTi 72 kW benzín + LPG, 5-st. manuál, 242 tis. km</li><li class="pro">1. majiteľ, STK do 04/2028</li><li class="pro">~21 % pod férovou cenou</li><li class="con">Vysoký nájazd</li><li class="con">Over revíziu LPG</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke aspoň 25 dní</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Partner Tepee po výmene rozvodov a vstrekovačov</span><span class="loc">Čadca</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/196473826/peugeot-partner-tepee.php" target="_blank" rel="noopener">Peugeot partner Tepee</a></h3>
+  <div class="facts">2017 · 250 000 km · 1.6 HDi / BlueHDi 55–88 kW · prevodovka ? · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">4 300 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">5 390 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+20.3 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:68%"></span></div>
+  <ul class="pc"><li class="pro">2017, 1.6 HDi, 6-st. manuál, 250 tis. km</li><li class="pro">Vymenené rozvody, vstrekovače, brzdy a zadné ložiská, 2 kľúče</li><li class="pro">~20 % pod férovou cenou</li><li class="con">Vysoký nájazd, kozmetické vady</li><li class="con">Predajca neistý</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke aspoň 40 dní</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Partner Tepee 1.6 HDi s ťažným</span><span class="loc">Martin</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/196719603/peugeot-partner-tepee-16-hdi-68-kw-2013-tazne.php" target="_blank" rel="noopener">Peugeot Partner Tepee 1.6 HDi 68 kW – 2013, ťažné</a></h3>
+  <div class="facts">2013 · 286 017 km · 1.6 HDi / BlueHDi 55–88 kW · manuál · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">3 450 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">4 230 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+18.4 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:61%"></span></div>
+  <ul class="pc"><li class="pro">4/2013, 1.6 HDi 68 kW, 5-st. manuál, 5 miest, 286 tis. km</li><li class="pro">2. majiteľ, servisované, STK/EK do 01/2028, ťažné</li><li class="pro">~18 % pod férovou cenou</li><li class="con">Veľmi vysoký nájazd</li><li class="con">Predajca neistý</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke aspoň 32 dní</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Partner Tepee Exclusive od 1. majiteľa</span><span class="loc">Martin</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197676400/peugeot-partner-tepee-exclusive-benzin.php" target="_blank" rel="noopener">Peugeot Partner Tepee Exclusive benzín</a></h3>
+  <div class="facts">2018 · 117 632 km · 1.2 PureTech 81–96 kW · manuál · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazoš</b> · dovezené · aj na <a href='https://www.autobazar.eu/detail/peugeot-partner-tepee-exclusive-12-puretech-81-kw-1-majitel/AmEDNufWp7x/' target='_blank' rel='noopener'>autobazar.eu</a> · aj na <a href='https://auto.bazar.sk/39517377-peugeot-partner-tepee-exclusive-1-2-puretech-81-kw-1-majitel/' target='_blank' rel='noopener'>bazar.sk</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">8 890 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">10 660 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+16.6 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:55%"></span></div>
+  <ul class="pc"><li class="pro">11/2018, 1.2 PureTech 81 kW, manuál, výbava Exclusive, 118 tis. km</li><li class="pro">1. majiteľ, servis výhradne v autorizovanom servise, garážované, nehavarované, uvedený VIN</li><li class="pro">~17 % pod férovou cenou</li><li class="con">1.2 PureTech – pýtaj doklad o výmene rozvodového remeňa</li><li class="con">Dovoz</li><li class="con">Predáva autobazár</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 12 dní (od 10. 11.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Partner Tepee BlueHDi 120 od 1. majiteľa</span><span class="loc">Trnava</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/peugeot-partner-tepee-16-bluehdi-sands-active/AmQobEw1ZBn/" target="_blank" rel="noopener">Peugeot Partner Tepee 1.6 BlueHDi S&amp;S Active</a></h3>
+  <div class="facts">2018 · 177 755 km · 1.6 HDi / BlueHDi 55–88 kW · manuál · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · kúpené v SR</div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">7 990 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">9 280 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+13.9 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:46%"></span></div>
+  <ul class="pc"><li class="pro">2018, 1.6 BlueHDi 88 kW, manuál, výbava Active, 178 tis. km</li><li class="pro">Kúpené v SR, 1. majiteľ, garantované km, kompletná servisná história, nebúrané</li><li class="pro">~14 % pod férovou cenou</li><li class="con">Predáva autobazár</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 152 dní (od 23. 6.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Partner Tepee od 1. majiteľa so 71 tis. km</span><span class="loc">Piešťany</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/196691984/predam-peugeot-partner-tepee.php" target="_blank" rel="noopener">Peugeot Partner Tepee 1.6</a></h3>
+  <div class="facts">2014 · 71 000 km · 1.6 HDi / BlueHDi 55–88 kW · manuál · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b> · kúpené v SR</div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">7 000 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">7 670 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+8.7 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:29%"></span></div>
+  <ul class="pc"><li class="pro">2014, 1.6 HDi 68 kW, 5-st. manuál, 71 tis. km</li><li class="pro">Kúpené v SR, 1. majiteľ, garážované, STK do 2028</li><li class="pro">~9 % pod férovou cenou</li><li class="con">Nízky nájazd na vek – over históriu km</li><li class="con">Predajca neistý</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke aspoň 26 dní</p><!-- history-card:end --></article></div>
+<div class="subhead">Špeciálne prípady</div>
+<div class="cards"></div>
+
+<h2>Cena vs. nájazd: celý trh na jednom grafe</h2>
+<p class="section-lead">Každý bod je jeden inzerát. Čím nižšie bod leží oproti ostatným s podobným nájazdom, tým je auto lacnejšie.
+Krúžkom sú označené odporúčané ponuky. Prejdi myšou na bod a uvidíš detail.</p>
+<div class="chart-wrap" id="chartWrap">
+  <div class="legend" id="legend"></div>
+  <svg id="chart" width="100%" height="420" role="img" aria-label="Bodový graf ceny a nájazdu inzerátov"></svg>
+  <div class="tip" id="tip"></div>
+</div>
+
+<h2>Porovnanie motorov</h2>
+<p class="section-lead">Hodnotenie (hviezdičky) zohľadňuje spoľahlivosť, spoľahlivosť a náklady na prevádzku a pomer cena/výkon.
+Číselné stĺpce sú mediány z ohodnotených inzerátov.</p>
+<div class="table-scroll">
+<table>
+  <thead><tr><th>Motor</th><th>Hodnotenie</th><th class="num">Ponúk</th><th class="num">Medián ceny</th><th class="num">Medián roku</th><th class="num">Medián km</th></tr></thead>
+  <tbody>
+<tr>
+  <td><b>e-Rifter / e-Partner elektro 100 kW</b><div class="sub">Elektro s batériou 50 kWh, dojazd ~250–280 km. Lacná prevádzka v meste.</div></td>
+  <td><span class="stars" aria-label="3 z 5">★★★<span class="off">★★</span></span></td>
+  <td class="num">2</td>
+  <td class="num"><div class="cellbar"><span style="width:100%"></span></div>26 800 €</td>
+  <td class="num">2025</td>
+  <td class="num">10 586 km</td>
+</tr>
+<tr>
+  <td><b>LPG / CNG</b><div class="sub">Dodatočne montované LPG – over revíziu a zápis plynu v TP.</div></td>
+  <td><span class="stars" aria-label="3 z 5">★★★<span class="off">★★</span></span></td>
+  <td class="num">1</td>
+  <td class="num"><div class="cellbar"><span style="width:15%"></span></div>3 900 €</td>
+  <td class="num">2014</td>
+  <td class="num">242 000 km</td>
+</tr>
+<tr>
+  <td><b>1.5 BlueHDi 55–96 kW</b><div class="sub">Diesel 75–130 k (2018+). Úsporný (~5 l); over AdBlue a rozvodový remeň v oleji.</div></td>
+  <td><span class="stars" aria-label="4 z 5">★★★★<span class="off">★</span></span></td>
+  <td class="num">65</td>
+  <td class="num"><div class="cellbar"><span style="width:48%"></span></div>12 900 €</td>
+  <td class="num">2021</td>
+  <td class="num">136 012 km</td>
+</tr>
+<tr>
+  <td><b>1.6 HDi / BlueHDi 55–88 kW</b><div class="sub">Odolný diesel 75–120 k. Over DPF, vstrekovače a turbo.</div></td>
+  <td><span class="stars" aria-label="4 z 5">★★★★<span class="off">★</span></span></td>
+  <td class="num">26</td>
+  <td class="num"><div class="cellbar"><span style="width:22%"></span></div>5 994 €</td>
+  <td class="num">2015</td>
+  <td class="num">199 000 km</td>
+</tr>
+<tr>
+  <td><b>1.2 PureTech 81–96 kW</b><div class="sub">3-valec s turbom 110–130 k (2018+). Rozvodový remeň v oleji sa predčasne rozpadá – over doklad o výmene.</div></td>
+  <td><span class="stars" aria-label="2 z 5">★★<span class="off">★★★</span></span></td>
+  <td class="num">12</td>
+  <td class="num"><div class="cellbar"><span style="width:44%"></span></div>11 695 €</td>
+  <td class="num">2019</td>
+  <td class="num">82 092 km</td>
+</tr>
+<tr>
+  <td><b>1.6 VTi / 16V 70–88 kW</b><div class="sub">Atmosférický benzín (do 2018). Jednoduchý, vyššia spotreba; vhodný na LPG.</div></td>
+  <td><span class="stars" aria-label="3 z 5">★★★<span class="off">★★</span></span></td>
+  <td class="num">5</td>
+  <td class="num"><div class="cellbar"><span style="width:26%"></span></div>7 000 €</td>
+  <td class="num">2016</td>
+  <td class="num">123 339 km</td>
+</tr></tbody>
+</table>
+</div>
+<div class="explain">
+  <p><b>Generácie:</b> <b>Partner Tepee</b> (2008–2018, facelift 2015) a <b>Rifter</b> (od 2018, aj predĺžený Long so 7 miestami).
+  Ide o praktické rodinné MPV s posuvnými dverami – technicky zhodné s Citroënom Berlingo a Oplom Combo.</p>
+  <p><b>Ktorý motor zvoliť?</b> Najlepšie diesely <b>1.6 HDi</b> a <b>1.5 BlueHDi</b> – úsporné a odolné. Benzín <b>1.2 PureTech</b>
+  kupuj len s dokladom o výmene rozvodového remeňa.</p>
+</div>
+
+<h2>Na čo si dať pozor</h2>
+<div class="warn">
+  <p><b>Lacné kvôli extrémnemu nájazdu</b> (viac ako 35 tis. km ročne, typicky flotila alebo taxi):</p>
+  <ul><li><a href='https://www.autobazar.eu/detail/peugeot-rifter-15-bluehdi-100-active-pack/AmRAH-T6ceH/' target='_blank' rel='noopener'>Peugeot Rifter 1.5 BlueHDi 100 Active Pack</a>: 2023, 198 801 km → 60 000 km/rok. Lacné je kvôli nájazdu.</li><li><a href='https://auto.bazos.sk/inzerat/197234995/peugeot-rifter-15-bluehdi-130k-gt-96-kw-m6-7-miest-2022.php' target='_blank' rel='noopener'>Peugeot Rifter 1.5 BlueHDi 130k GT, 96 kW, M6, 7 miest, 2022</a>: 2022, 215 859 km → 50 000 km/rok. Lacné je kvôli nájazdu.</li><li><a href='https://www.autobazar.eu/detail/peugeot-rifter-15-bluehdiallure-sr2maj-servkniha/Ae_zZ3tPsPP/' target='_blank' rel='noopener'>Peugeot Rifter 1.5 BlueHDiAllure, SR,2.maj, Serv.kniha</a>: 2024, 102 955 km → 44 000 km/rok. Lacné je kvôli nájazdu.</li><li><a href='https://auto.bazar.sk/39653144-peugeot-rifter-1-5-bluehdi/' target='_blank' rel='noopener'>Peugeot Rifter 1.5 BlueHDi</a>: 2024, 102 932 km → 44 000 km/rok. Lacné je kvôli nájazdu.</li><li><a href='https://auto.bazos.sk/inzerat/195985865/peugeot-rifter-15-hdi.php' target='_blank' rel='noopener'>Peugeot Rifter 1,5 HDI</a>: 2020, 269 000 km → 42 000 km/rok. Lacné je kvôli nájazdu.</li><li><a href='https://www.autobazar.eu/detail/peugeot-rifter-15-bluehdi-active-pack-sr-2023/Amo4f3MrhyQ/' target='_blank' rel='noopener'>Peugeot Rifter 1.5 BlueHDi Active PACK SR 2023</a>: 2023, 138 479 km → 42 000 km/rok. Lacné je kvôli nájazdu.</li><li><a href='https://www.autobazar.eu/detail/peugeot-rifter-12-puretech-130-eat8-96kw-2021-aj-na-splatky-protiucet-odpocet-dph/AmSVvQc_9UP/' target='_blank' rel='noopener'>Peugeot Rifter 1.2 PureTech 130 EAT8, 96kW, 2021 / AJ NA SPLÁTKY / PROTIÚČET / ODPOČET DPH /</a>: 2021, 207 162 km → 39 000 km/rok. Lacné je kvôli nájazdu.</li><li><a href='https://www.autobazar.eu/detail/peugeot-rifter-15-diesel-manual-5-seats-vin-267/Am6_Mm9GrNs/' target='_blank' rel='noopener'>PEUGEOT RIFTER 1,5 diesel manuál, 5 seats VIN 267</a>: 2023, 126 875 km → 38 000 km/rok. Lacné je kvôli nájazdu.</li><li><a href='https://www.autobazar.eu/detail/peugeot-rifter-15-72022/AbOjljQQdIp/' target='_blank' rel='noopener'>PEUGEOT Rifter, 1.5, 7/2022</a>: 2022, 155 913 km → 36 000 km/rok. Lacné je kvôli nájazdu.</li></ul>
+  <p><b>Ďalšie veci, ktoré sme v inzerátoch našli:</b></p><ul><li>Veľa inzerátov „Peugeot Partner“ sú dodávky (2–3 miesta, N1) – tie sme vyradili. Od 2018 sa osobná verzia volá Rifter.</li><li>Asi 30 ponúk sú nové Riftery z 2026 – tie sme nezarátali.</li><li>Pri inzerátoch AAA AUTO je uvedená <b>cena pri financovaní</b> – pri platbe v hotovosti môže byť iná.</li></ul><p><b>Vyradené z porovnania</b> (poškodené autá alebo nezmyselné údaje – model ich nehodnotí):</p><ul><li><a href='https://www.autobazar.eu/detail/peugeot-rifter-gt-15-bluehdi-130k-eat8/Aml4TytAEw2/' target='_blank' rel='noopener'>Peugeot Rifter GT 1.5 BlueHDi 130k EAT8</a> (30 490 €): podozrivo nízky nájazd</li><li><a href='https://www.autobazar.eu/detail/peugeot-rifter-long-15-bluehdi-130-gt-line/Am7y4yfEkMh/' target='_blank' rel='noopener'>Peugeot Rifter Long 1.5 BlueHDi 130 GT Line</a> (8 990 €): havarované / poškodené – cena nie je porovnateľná s trhom</li><li><a href='https://www.autobazar.eu/detail/peugeot-rifter-15-bluehdi-gt-15-bluehdi-130k-eat8/AmP6JJ14rTk/' target='_blank' rel='noopener'>Peugeot Rifter 1,5 BlueHDi GT 1,5 BlueHDi 130k EAT8</a> (30 990 €): podozrivo nízky nájazd</li><li><a href='https://www.autobazar.eu/detail/peugeot-rifter-15-bluehdi-130-active-eat8/AmKPmzAkd5F/' target='_blank' rel='noopener'>Peugeot Rifter 1.5 BlueHDi 130 Allure EAT8</a> (31 500 €): podozrivo nízky nájazd</li><li><a href='https://auto.bazar.sk/39775189-peugeot-partner-1-5-bluehdi-l1-1000kg-premium-100k-bvm6/' target='_blank' rel='noopener'>Peugeot Partner 1,5 BlueHDi L1 1000kg PREMIUM 100k BVM6</a> (21 990 €): 300000 km/rok je nereálne – skontroluj rok a km</li><li><a href='https://auto.bazar.sk/39772681-peugeot-partner-l2-1-5-diesel/' target='_blank' rel='noopener'>Peugeot Partner L2 1,5 DIESEL</a> (20 190 €): podozrivo nízky nájazd</li><li><a href='https://auto.bazar.sk/39742390-peugeot-partner-1-5-bluehdi-l2-1000kg-premium-100k-bvm6/' target='_blank' rel='noopener'>Peugeot Partner 1,5 BlueHDi L2 1000kg PREMIUM 100k BVM6</a> (24 590 €): podozrivo nízky nájazd</li><li><a href='https://auto.bazar.sk/39694134-peugeot-partner-1-5-bluehdi-l1-1000kg-premium-100k-bvm6/' target='_blank' rel='noopener'>Peugeot Partner 1,5 BlueHDi L1 1000kg PREMIUM 100k BVM6</a> (21 990 €): 300000 km/rok je nereálne – skontroluj rok a km</li><li><a href='https://auto.bazar.sk/39680638-peugeot-partner-partner-prem-1-5l-bluehdi-130k-ss-bvm6-euro-6-4-1000kg-l2/' target='_blank' rel='noopener'>Peugeot Partner PARTNER PREM 1,5L BlueHDI 130k S&amp;S BVM6 Euro 6.4 1000kg L2</a> (23 990 €): podozrivo nízky nájazd</li><li><a href='https://auto.bazar.sk/39678928-peugeot-partner-partner-prem-1-5l-bluehdi-130k-ss-bvm6-euro-6-4-1000kg-l2/' target='_blank' rel='noopener'>Peugeot Partner PARTNER PREM 1,5L BlueHDI 130k S&amp;S BVM6 Euro 6.4 1000kg L2</a> (23 990 €): podozrivo nízky nájazd</li><li><a href='https://auto.bazar.sk/39064678-peugeot-partner-1-5-bluehdi-l2-1000kg-premium-100k-bvm6/' target='_blank' rel='noopener'>Peugeot Partner 1,5 BlueHDi L2 1000kg PREMIUM 100k BVM6</a> (23 990 €): 300000 km/rok je nereálne – skontroluj rok a km</li><li><a href='https://auto.bazar.sk/39011141-peugeot-partner-1-5-bluehdi-ft-pro-l2-5-miest-130k-eat8/' target='_blank' rel='noopener'>Peugeot Partner 1,5 BlueHDi FT Pro L2 5 miest 130k EAT8</a> (28 490 €): podozrivo nízky nájazd</li><li><a href='https://auto.bazar.sk/36227965-peugeot-partner/' target='_blank' rel='noopener'>Peugeot Partner</a> (22 270 €): podozrivo nízky nájazd</li></ul><p><b>Dodávky Partner Van (N1), nové autá z 2026, iné modely z vyhľadávania a inzeráty s chybným nájazdom</b> (90 inzerátov) sme z rebríčka vynechali.</p>
+  <p>Ďalších <b>44</b> inzerátov nemá v texte rok alebo kilometre, takže ich nebolo možné ohodnotiť.
+  Ak ťa niektorý zaujme, predajcu sa na tieto údaje opýtaj.</p>
+</div>
+
+<h2>Kompletný rebríček</h2>
+<p class="section-lead">Všetky ohodnotené inzeráty. Kliknutím na hlavičku stĺpca zoraďuješ, filtrom zužuješ výber.</p>
+<div class="filters">
+  <select id="fEngine"><option value="">Všetky motory</option></select>
+  <select id="fTrans"><option value="">Každá prevodovka</option><option value="automatic">Automat</option><option value="manual">Manuál</option></select>
+  <select id="fSeller"><option value="">Všetci predajcovia</option><option value="nodealer">Bez autobazárov</option></select>
+  <select id="fSource"><option value="">Všetky portály</option><option value="bazos">bazoš</option><option value="autobazar">autobazar.eu</option><option value="bazarsk">bazar.sk</option></select>
+  <select id="fBody" hidden><option value=""></option></select>
+  <select id="fOrigin"><option value="">Akýkoľvek pôvod</option><option value="SR">Kúpené v SR</option><option value="dovoz">Dovoz</option></select>
+  <input id="fMax" type="number" placeholder="Max. cena €" step="500" min="0" style="width:120px">
+  <span class="count" id="count"></span>
+</div>
+<div class="table-scroll">
+<table id="tbl">
+  <thead><tr>
+    <th class="sortable" data-k="title">Inzerát</th>
+    <th class="sortable num" data-k="year">Rok</th>
+    <th class="sortable num" data-k="km">Km</th>
+    <th class="sortable num" data-k="price_gross">Cena</th>
+    <th class="sortable num" data-k="fair_price">Férová</th>
+    <th class="sortable num" data-k="discount_pct">Pod trhom ▾</th>
+  </tr></thead>
+  <tbody></tbody>
+</table>
+</div>
+
+<h2>Pred kúpou over</h2>
+<ul class="check">
+  <li>VIN cez Cebia / autoDNA (história km, havárie)</li>
+  <li>Zápis v TP: osobné M1 (nie dodávka N1) a počet miest</li>
+  <li>Posuvné dvere: chod a zámky</li>
+  <li>1.2 PureTech / 1.5 BlueHDi: doklad o výmene rozvodového remeňa v oleji</li>
+  <li>HDi: DPF, vstrekovače, dvojhmotový zotrvačník; BlueHDi: AdBlue</li>
+  <li>STK/EK protokol a dátum platnosti</li>
+</ul>
+
+<footer>
+  Zdroj: auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (len ponuky zo Slovenska, to isté auto na viacerých portáloch je započítané raz), sťahované cez lokálny MCP server bazos-mcp (nástroj <code>fair_price</code>), 22. 11. 2026.
+  Model: ridge regresia log(ceny s DPH) podľa veku, veku², km, km², prevodovky, typu predajcu, motora, karosérie, pohonu 4x4, pôvodu (SR / dovoz) a portálu. Vzorka 111
+  inzerátov, R² 94 %. Parametre sú vyťažené z textu inzerátov, a preto môžu obsahovať chyby. Odporúčané ponuky sme overili
+  prečítaním celého inzerátu. Hodnotenie motorov je odborný odhad, nie výsledok modelu.
+</footer>
+</main>
+
+<script>
+const DATA = [{"id": "196691898", "url": "https://auto.bazos.sk/inzerat/196691898/peugeot-partner-tepee-16-hdi.php", "title": "Peugeot Partner Tepee 1,6 hdi", "price": 3500, "price_gross": 3500, "fair_price": 5410.0, "discount_pct": 35.3, "verdict": "výrazne pod trhom – over prečo", "year": 2017, "km": 218234, "km_per_year": 23400.0, "eg": "1.6 HDi / BlueHDi 55–88 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Bratislava", "flags": ["prevodovka nezistená"], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AmNP9I1aWnH", "url": "https://www.autobazar.eu/detail/peugeot-rifter-15-bluehdi-100-style/AmNP9I1aWnH/", "title": "Peugeot Rifter 1.5 BlueHDi 100 Style", "price": 7900, "price_gross": 7900, "fair_price": 11220.0, "discount_pct": 29.6, "verdict": "výrazne pod trhom – over prečo", "year": 2021, "km": 178000, "km_per_year": 33400.0, "eg": "1.5 BlueHDi 55–96 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Raková", "flags": [], "pick": "top", "source": "autobazar", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "ab-AeZj1UmMl_Y", "url": "https://www.autobazar.eu/detail/peugeot-rifter-15-bluehdi-active-servkniha/AeZj1UmMl_Y/", "title": "Peugeot Rifter 1.5 BlueHDi, Active, Serv.kniha", "price": 10000, "price_gross": 10000, "fair_price": 13230.0, "discount_pct": 24.4, "verdict": "výrazne pod trhom – over prečo", "year": 2019, "km": 99679, "km_per_year": 13600.0, "eg": "1.5 BlueHDi 55–96 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Prešovský kraj", "flags": [], "pick": "top", "source": "autobazar", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "196963714", "url": "https://auto.bazos.sk/inzerat/196963714/peugeot-partner-tepee-16-vti.php", "title": "Peugeot Partner Tepee 1,6 VTi", "price": 3900, "price_gross": 3900, "fair_price": 4930.0, "discount_pct": 20.9, "verdict": "výrazne pod trhom – over prečo", "year": 2014, "km": 242000, "km_per_year": 19600.0, "eg": "LPG / CNG", "cg": 2, "transmission": "manual", "seller_type": "private", "location": "Bardejov", "flags": [], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "196473826", "url": "https://auto.bazos.sk/inzerat/196473826/peugeot-partner-tepee.php", "title": "Peugeot partner Tepee", "price": 4300, "price_gross": 4300, "fair_price": 5390.0, "discount_pct": 20.3, "verdict": "výrazne pod trhom – over prečo", "year": 2017, "km": 250000, "km_per_year": 26800.0, "eg": "1.6 HDi / BlueHDi 55–88 kW", "cg": 1, "transmission": null, "seller_type": "dealer", "location": "Čadca", "flags": ["prevodovka nezistená"], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "196719603", "url": "https://auto.bazos.sk/inzerat/196719603/peugeot-partner-tepee-16-hdi-68-kw-2013-tazne.php", "title": "Peugeot Partner Tepee 1.6 HDi 68 kW – 2013, ťažné", "price": 3450, "price_gross": 3450, "fair_price": 4230.0, "discount_pct": 18.4, "verdict": "výrazne pod trhom – over prečo", "year": 2013, "km": 286017, "km_per_year": 21500.0, "eg": "1.6 HDi / BlueHDi 55–88 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Martin", "flags": [], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "196409072", "url": "https://auto.bazos.sk/inzerat/196409072/peugeot-rifter-15-hdi.php", "title": "Peugeot rifter 1.5 hdi", "price": 7300, "price_gross": 7300, "fair_price": 8800.0, "discount_pct": 17.1, "verdict": "výrazne pod trhom – over prečo", "year": 2019, "km": 230000, "km_per_year": 31400.0, "eg": "1.5 BlueHDi 55–96 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Krupina", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197676400", "url": "https://auto.bazos.sk/inzerat/197676400/peugeot-partner-tepee-exclusive-benzin.php", "title": "Peugeot Partner Tepee Exclusive benzín", "price": 8890, "price_gross": 8890, "fair_price": 10660.0, "discount_pct": 16.6, "verdict": "výrazne pod trhom – over prečo", "year": 2018, "km": 117632, "km_per_year": 14100.0, "eg": "1.2 PureTech 81–96 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Martin", "flags": [], "pick": "budget", "source": "bazos", "origin": "dovoz", "also_listed": [{"source": "autobazar", "id": "ab-AmEDNufWp7x", "url": "https://www.autobazar.eu/detail/peugeot-partner-tepee-exclusive-12-puretech-81-kw-1-majitel/AmEDNufWp7x/", "price": 8890}, {"source": "bazarsk", "id": "bs-39517377", "url": "https://auto.bazar.sk/39517377-peugeot-partner-tepee-exclusive-1-2-puretech-81-kw-1-majitel/", "price": 8890}], "body": "mpv"}, {"id": "197286159", "url": "https://auto.bazos.sk/inzerat/197286159/peugeot-partner-tepee-16-hdi-2012.php", "title": "🚗 PEUGEOT PARTNER TEPEE 1.6 HDi – 2012, STK: 03.09.28", "price": 3990, "price_gross": 3990, "fair_price": 4780.0, "discount_pct": 16.5, "verdict": "výrazne pod trhom – over prečo", "year": 2012, "km": 211673, "km_per_year": 14800.0, "eg": "1.6 HDi / BlueHDi 55–88 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Bytča", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-Ae_zZ3tPsPP", "url": "https://www.autobazar.eu/detail/peugeot-rifter-15-bluehdiallure-sr2maj-servkniha/Ae_zZ3tPsPP/", "title": "Peugeot Rifter 1.5 BlueHDiAllure, SR,2.maj, Serv.kniha", "price": 13600, "price_gross": 13600, "fair_price": 16260.0, "discount_pct": 16.4, "verdict": "výrazne pod trhom – over prečo", "year": 2024, "km": 102955, "km_per_year": 44100.0, "eg": "1.5 BlueHDi 55–96 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Košice", "flags": ["vysoký nájazd 44000 km/rok – flotila / taxi?"], "pick": "top", "source": "autobazar", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AejyDiedlTM", "url": "https://www.autobazar.eu/detail/peugeot-rifter-15-bluehdi-allure-7-miest-sr2maj/AejyDiedlTM/", "title": "Peugeot Rifter 1.5 BlueHDi, Allure, 7 Miest, SR,2.maj", "price": 8800, "price_gross": 8800, "fair_price": 10510.0, "discount_pct": 16.2, "verdict": "výrazne pod trhom – over prečo", "year": 2019, "km": 147674, "km_per_year": 20100.0, "eg": "1.5 BlueHDi 55–96 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Dunajská Streda", "flags": [], "pick": "top", "source": "autobazar", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "196231059", "url": "https://auto.bazos.sk/inzerat/196231059/prelim-peugeot-rifter.php", "title": "Predám Peugeot Rifter", "price": 6990, "price_gross": 6990, "fair_price": 8280.0, "discount_pct": 15.5, "verdict": "výrazne pod trhom – over prečo", "year": 2019, "km": 214000, "km_per_year": 29200.0, "eg": "1.5 BlueHDi 55–96 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Trnava", "flags": [], "pick": "top", "source": "bazos", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "ab-AmQobEw1ZBn", "url": "https://www.autobazar.eu/detail/peugeot-partner-tepee-16-bluehdi-sands-active/AmQobEw1ZBn/", "title": "Peugeot Partner Tepee 1.6 BlueHDi S&S Active", "price": 7990, "price_gross": 7990, "fair_price": 9280.0, "discount_pct": 13.9, "verdict": "pod trhom", "year": 2018, "km": 177755, "km_per_year": 21300.0, "eg": "1.6 HDi / BlueHDi 55–88 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Trnava", "flags": [], "pick": "budget", "source": "autobazar", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "195901358", "url": "https://auto.bazos.sk/inzerat/195901358/peugeot-partner-tepee.php", "title": "Peugeot Partner Tepee", "price": 4000, "price_gross": 4000, "fair_price": 4650.0, "discount_pct": 13.9, "verdict": "pod trhom", "year": 2014, "km": 197000, "km_per_year": 16000.0, "eg": "1.6 HDi / BlueHDi 55–88 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Žilina", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AmLeh3wGpCE", "url": "https://www.autobazar.eu/detail/peugeot-rifter-15-bluehdi-allure-7-miest-servkniha/AmLeh3wGpCE/", "title": "Peugeot Rifter 1.5 BlueHDi, Allure, 7 Miest, Serv.kniha", "price": 7700, "price_gross": 7700, "fair_price": 8920.0, "discount_pct": 13.6, "verdict": "pod trhom", "year": 2019, "km": 214739, "km_per_year": 29300.0, "eg": "1.5 BlueHDi 55–96 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Slovensko", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-Aei-j9vCo3g", "url": "https://www.autobazar.eu/detail/peugeot-rifter-15-bluehdiactive-sr1maj-servkniha/Aei-j9vCo3g/", "title": "Peugeot Rifter 1.5 BlueHDiActive, SR,1.maj, Serv.kniha", "price": 10000, "price_gross": 10000, "fair_price": 11500.0, "discount_pct": 13.0, "verdict": "pod trhom", "year": 2021, "km": 160830, "km_per_year": 30200.0, "eg": "1.5 BlueHDi 55–96 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Prešovský kraj", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39731752", "url": "https://auto.bazar.sk/39731752-peugeot-rifter-1-5-bluehdi/", "price": 10000}], "body": "mpv"}, {"id": "ab-AmSVvQc_9UP", "url": "https://www.autobazar.eu/detail/peugeot-rifter-12-puretech-130-eat8-96kw-2021-aj-na-splatky-protiucet-odpocet-dph/AmSVvQc_9UP/", "title": "Peugeot Rifter 1.2 PureTech 130 EAT8, 96kW, 2021 / AJ NA SPLÁTKY / PROTIÚČET / ODPOČET DPH /", "price": 8990, "price_gross": 8990, "fair_price": 10270.0, "discount_pct": 12.5, "verdict": "pod trhom", "year": 2021, "km": 207162, "km_per_year": 38800.0, "eg": "1.2 PureTech 81–96 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": ["vysoký nájazd 39000 km/rok – flotila / taxi?"], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "ab-AmP-Sq1pBlf", "url": "https://www.autobazar.eu/detail/peugeot-partner-tepee-16-bluehdi-73-kw-99-hp-100-ps-mt5/AmP-Sq1pBlf/", "title": "Peugeot Partner Tepee  1.6 BlueHDi  73 kW (99 HP / 100 PS) MT/5", "price": 5999, "price_gross": 5999, "fair_price": 6840.0, "discount_pct": 12.3, "verdict": "pod trhom", "year": 2015, "km": 97880, "km_per_year": 8600.0, "eg": "1.6 HDi / BlueHDi 55–88 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "196676420", "url": "https://auto.bazos.sk/inzerat/196676420/peugeot-partner-tepee-16-bluehdi-73-kw-99-hp-100-ps-mt.php", "price": 5999}], "body": "mpv"}, {"id": "ab-AbOjljQQdIp", "url": "https://www.autobazar.eu/detail/peugeot-rifter-15-72022/AbOjljQQdIp/", "title": "PEUGEOT Rifter, 1.5, 7/2022", "price": 13300, "price_gross": 13300, "fair_price": 14930.0, "discount_pct": 10.9, "verdict": "pod trhom", "year": 2022, "km": 155913, "km_per_year": 36000.0, "eg": "1.5 BlueHDi 55–96 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Chorvátsky Grob", "flags": ["vysoký nájazd 36000 km/rok – flotila / taxi?"], "pick": "top", "source": "autobazar", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "195985865", "url": "https://auto.bazos.sk/inzerat/195985865/peugeot-rifter-15-hdi.php", "title": "Peugeot Rifter 1,5 HDI", "price": 7999, "price_gross": 7999, "fair_price": 8960.0, "discount_pct": 10.8, "verdict": "pod trhom", "year": 2020, "km": 269000, "km_per_year": 42500.0, "eg": "1.5 BlueHDi 55–96 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Trnava", "flags": ["vysoký nájazd 42000 km/rok – flotila / taxi?"], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "196691984", "url": "https://auto.bazos.sk/inzerat/196691984/predam-peugeot-partner-tepee.php", "title": "Peugeot Partner Tepee 1.6", "price": 7000, "price_gross": 7000, "fair_price": 7670.0, "discount_pct": 8.7, "verdict": "pod trhom", "year": 2014, "km": 71000, "km_per_year": 5800.0, "eg": "1.6 HDi / BlueHDi 55–88 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Piešťany", "flags": [], "pick": "budget", "source": "bazos", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "ab-Aeh1u1bfT7V", "url": "https://www.autobazar.eu/detail/peugeot-rifter-15-bluehdi-130-allure-96kw130hp-m6/Aeh1u1bfT7V/", "title": "Peugeot Rifter 1.5 BlueHDi 130 Allure 96kW/130HP M6", "price": 16900, "price_gross": 16900, "fair_price": 18440.0, "discount_pct": 8.4, "verdict": "pod trhom", "year": 2023, "km": 56059, "km_per_year": 16800.0, "eg": "1.5 BlueHDi 55–96 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Kremnica", "flags": [], "pick": "top", "source": "autobazar", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "ab-AeVW5EY61GX", "url": "https://www.autobazar.eu/detail/peugeot-rifter-15-bluehdi-allure-sr1maj-klima/AeVW5EY61GX/", "title": "Peugeot Rifter 1.5 BlueHDi, Allure, SR,1.maj, Klíma", "price": 11500, "price_gross": 11500, "fair_price": 12560.0, "discount_pct": 8.4, "verdict": "pod trhom", "year": 2021, "km": 126043, "km_per_year": 23600.0, "eg": "1.5 BlueHDi 55–96 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Prešovský kraj", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39633035", "url": "https://auto.bazar.sk/39633035-peugeot-rifter-1-5-bluehdi/", "price": 11800}], "body": "mpv"}, {"id": "ab-AmiY7EUFlXy", "url": "https://www.autobazar.eu/detail/peugeot-rifter-allure-15-bluehdi-75kw/AmiY7EUFlXy/", "title": "Peugeot Rifter Allure 1.5 BlueHDi  75kW", "price": 10990, "price_gross": 10990, "fair_price": 11960.0, "discount_pct": 8.1, "verdict": "pod trhom", "year": 2020, "km": 105853, "km_per_year": 16700.0, "eg": "1.5 BlueHDi 55–96 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "ab-AmT5Fsde34S", "url": "https://www.autobazar.eu/detail/peugeot-rifter-15-bluehdi-at8-kamera-navi-zaruka-sk-1-majitel/AmT5Fsde34S/", "title": "Peugeot Rifter 1.5 BlueHDI AT8 Kamera Navi Záruka SK 1. Majiteľ", "price": 25490, "price_gross": 25490, "fair_price": 27650.0, "discount_pct": 7.8, "verdict": "pod trhom", "year": 2025, "km": 2483, "km_per_year": 1900.0, "eg": "1.5 BlueHDi 55–96 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Ostratice", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "ab-AePsnwDW2KY", "url": "https://www.autobazar.eu/detail/peugeot-rifter-15-bluehdi-active-sr2maj-klima/AePsnwDW2KY/", "title": "Peugeot Rifter 1.5 BlueHDi, Active, SR,2.maj, Klíma", "price": 9200, "price_gross": 9200, "fair_price": 9970.0, "discount_pct": 7.7, "verdict": "pod trhom", "year": 2020, "km": 193477, "km_per_year": 30500.0, "eg": "1.5 BlueHDi 55–96 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Trnava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197741299", "url": "https://auto.bazos.sk/inzerat/197741299/peugeot-partner-outdoor-16-blue-hdi-88kw.php", "title": "Peugeot Partner Outdoor 1.6 Blue-HDi 88kW", "price": 7200, "price_gross": 7200, "fair_price": 7770.0, "discount_pct": 7.4, "verdict": "pod trhom", "year": 2015, "km": 123700, "km_per_year": 10900.0, "eg": "1.6 HDi / BlueHDi 55–88 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Kysucké Nové Mesto", "flags": [], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "mpv"}, {"id": "197641482", "url": "https://auto.bazos.sk/inzerat/197641482/peugeot-rifter-15-96kw-diesel-manual.php", "title": "Peugeot Rifter 1.5 96kw diesel manuál", "price": 13800, "price_gross": 13800, "fair_price": 14840.0, "discount_pct": 7.0, "verdict": "pod trhom", "year": 2020, "km": 80000, "km_per_year": 12600.0, "eg": "1.5 BlueHDi 55–96 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Čadca", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "196844599", "url": "https://auto.bazos.sk/inzerat/196844599/peugeot-partner-tepee.php", "title": "Peugeot Partner Tepee", "price": 4900, "price_gross": 4900, "fair_price": 5140.0, "discount_pct": 4.7, "verdict": "férová cena", "year": 2015, "km": 253000, "km_per_year": 22300.0, "eg": "1.6 HDi / BlueHDi 55–88 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Martin", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AmLP4wRMtYI", "url": "https://www.autobazar.eu/detail/peugeot-e-rifter-electric-allure-52-kwh-lfp-2025-aj-na-splatky-protiucet-odpocet-dph/AmLP4wRMtYI/", "title": "Peugeot e-Rifter Electric Allure 52 kWh LFP, 2025 / AJ NA SPLÁTKY / PROTIÚČET / ODPOČET DPH /", "price": 26900, "price_gross": 26900, "fair_price": 28190.0, "discount_pct": 4.6, "verdict": "férová cena", "year": 2025, "km": 9049, "km_per_year": 6800.0, "eg": "e-Rifter / e-Partner elektro 100 kW", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AmzXtkPNnpM", "url": "https://www.autobazar.eu/detail/peugeot-e-rifter-electric-allure-100kw-2025-v-zaruke-aj-na-splatky-protiucet/AmzXtkPNnpM/", "title": "Peugeot e-Rifter Electric Allure 100kW 2025 / V Záruke / AJ NA SPLÁTKY / PROTIÚČET", "price": 26700, "price_gross": 26700, "fair_price": 27940.0, "discount_pct": 4.4, "verdict": "férová cena", "year": 2025, "km": 12123, "km_per_year": 9100.0, "eg": "e-Rifter / e-Partner elektro 100 kW", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "196808446", "url": "https://auto.bazos.sk/inzerat/196808446/peugeot-partner-tepee-16-bluehdi.php", "title": "Peugeot Partner Tepee 1.6 BlueHDi", "price": 7000, "price_gross": 7000, "fair_price": 7300.0, "discount_pct": 4.1, "verdict": "férová cena", "year": 2018, "km": 213000, "km_per_year": 25600.0, "eg": "1.6 HDi / BlueHDi 55–88 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Snina", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-Am6_Mm9GrNs", "url": "https://www.autobazar.eu/detail/peugeot-rifter-15-diesel-manual-5-seats-vin-267/Am6_Mm9GrNs/", "title": "PEUGEOT RIFTER 1,5 diesel manuál, 5 seats VIN 267", "price": 13700, "price_gross": 13700, "fair_price": 14280.0, "discount_pct": 4.0, "verdict": "férová cena", "year": 2023, "km": 126875, "km_per_year": 38100.0, "eg": "1.5 BlueHDi 55–96 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Levice", "flags": ["vysoký nájazd 38000 km/rok – flotila / taxi?"], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "195942714", "url": "https://auto.bazos.sk/inzerat/195942714/peugeot-rifter-15-blue-hdi.php", "title": "Peugeot Rifter 1.5 Blue HDi", "price": 11000, "price_gross": 11000, "fair_price": 11390.0, "discount_pct": 3.5, "verdict": "férová cena", "year": 2020, "km": 136012, "km_per_year": 21500.0, "eg": "1.5 BlueHDi 55–96 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Košice", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "196729055", "url": "https://auto.bazos.sk/inzerat/196729055/peugeot-partner-2013-16-hdi-diesel-citroen-berlingo.php", "title": "Peugeot partner 2013 1,6 HDI diesel Citroen berlingo", "price": 3300, "price_gross": 3300, "fair_price": 3410.0, "discount_pct": 3.3, "verdict": "férová cena", "year": 2013, "km": 368000, "km_per_year": 27600.0, "eg": "1.6 HDi / BlueHDi 55–88 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Nové Zámky", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AeffXvd0w93", "url": "https://www.autobazar.eu/detail/peugeot-rifter-15-bluehdi-130-allure-96kw130hp-m6/AeffXvd0w93/", "title": "Peugeot Rifter 1.5 BlueHDi 130 Allure 96kW130HP M6", "price": 18500, "price_gross": 18500, "fair_price": 19040.0, "discount_pct": 2.8, "verdict": "férová cena", "year": 2023, "km": 69400, "km_per_year": 20800.0, "eg": "1.5 BlueHDi 55–96 kW", "cg": 1, "transmission": "manual", "seller_type": "private", "location": "Čadca", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "ab-AenwrGVTpYn", "url": "https://www.autobazar.eu/detail/peugeot-rifter-15-bluehdi-130-gt-eat8-96kw130hp-a8/AenwrGVTpYn/", "title": "Peugeot Rifter GT 1.5 BlueHDi 130 96kw EAT8 ZÁRUKA, ŤAŽNÉ, PREZUTIE, 1.majiteľ", "price": 24200, "price_gross": 24200, "fair_price": 24860.0, "discount_pct": 2.7, "verdict": "férová cena", "year": 2024, "km": 39500, "km_per_year": 16900.0, "eg": "1.5 BlueHDi 55–96 kW", "cg": 1, "transmission": "automatic", "seller_type": "private", "location": "Košice", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197348349", "url": "https://auto.bazos.sk/inzerat/197348349/peugeot-rifter-gt-15-bluehdi-102024-39500km-tazne.php", "price": 24200}], "body": "mpv"}, {"id": "ab-AeDvujn3VkT", "url": "https://www.autobazar.eu/detail/peugeot-rifter-15-bluehdiactive-sr1maj-servkniha/AeDvujn3VkT/", "title": "Peugeot Rifter 1.5 BlueHDiActive, SR,1.maj, Serv.kniha", "price": 16200, "price_gross": 16200, "fair_price": 16620.0, "discount_pct": 2.5, "verdict": "férová cena", "year": 2023, "km": 69324, "km_per_year": 20800.0, "eg": "1.5 BlueHDi 55–96 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Trenčiansky kraj", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-Am5kIQaHKgV", "url": "https://www.autobazar.eu/detail/peugeot-rifter-15-bluehdi-100-active-pack/Am5kIQaHKgV/", "title": "Peugeot Rifter 1.5 BlueHDi 100 Active Pack", "price": 14990, "price_gross": 14990, "fair_price": 15280.0, "discount_pct": 1.9, "verdict": "férová cena", "year": 2022, "km": 61600, "km_per_year": 14200.0, "eg": "1.5 BlueHDi 55–96 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Trnava", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197154497", "url": "https://auto.bazos.sk/inzerat/197154497/peugeot-rifter-15-bluehdi-75kw-active-pack-2022-62tkm.php", "price": 14990}], "body": "mpv"}, {"id": "197691789", "url": "https://auto.bazos.sk/inzerat/197691789/peugeot-partner-tepee.php", "title": "Peugeot Partner Tepee", "price": 7000, "price_gross": 7000, "fair_price": 7110.0, "discount_pct": 1.6, "verdict": "férová cena", "year": 2017, "km": 93000, "km_per_year": 10000.0, "eg": "1.6 VTi / 16V 70–88 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Košice", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AmN6rr1QuQ5", "url": "https://www.autobazar.eu/detail/peugeot-partner-tepee-16-hdi-fap-92k-active/AmN6rr1QuQ5/", "title": "Peugeot Partner Tepee 1.6 HDi FAP 92k Active", "price": 5999, "price_gross": 5999, "fair_price": 6080.0, "discount_pct": 1.4, "verdict": "férová cena", "year": 2014, "km": 152000, "km_per_year": 12300.0, "eg": "1.6 HDi / BlueHDi 55–88 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Dunajská Streda", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AmTDzBbX0W6", "url": "https://www.autobazar.eu/detail/peugeot-rifter-15-bluehdi-130-gt-eat8-96kw-5d-aj-na-splatky-protiucet/AmTDzBbX0W6/", "title": "Peugeot Rifter 1.5 BlueHDi 130 GT EAT8, 96kW, 5d. / AJ NA SPLÁTKY / PROTIÚČET /", "price": 21490, "price_gross": 21490, "fair_price": 21510.0, "discount_pct": 0.1, "verdict": "férová cena", "year": 2024, "km": 67326, "km_per_year": 28900.0, "eg": "1.5 BlueHDi 55–96 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197611239", "url": "https://auto.bazos.sk/inzerat/197611239/peugeot-rifter-15-bluehdi-130-gt-eat8-96kw-5d-tazne.php", "price": 21490}], "body": "mpv"}, {"id": "196409029", "url": "https://auto.bazos.sk/inzerat/196409029/predam-peugeot-rifter-2019-15-bluehdi-7-miestny.php", "title": "Predám Peugeot Rifter (2019) – 1.5 BlueHDi, 7-miestny", "price": 9790, "price_gross": 9790, "fair_price": 9800.0, "discount_pct": 0.1, "verdict": "férová cena", "year": 2019, "km": 192049, "km_per_year": 26200.0, "eg": "1.5 BlueHDi 55–96 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Žilina", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "bs-39685627", "url": "https://auto.bazar.sk/39685627-peugeot-rifter-1-5-bluehdi/", "title": "Peugeot Rifter 1.5 BlueHDi", "price": 12900, "price_gross": 12900, "fair_price": 12850.0, "discount_pct": -0.4, "verdict": "férová cena", "year": 2022, "km": 148857, "km_per_year": 34400.0, "eg": "1.5 BlueHDi 55–96 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava V - Petržalka", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197582339", "url": "https://auto.bazos.sk/inzerat/197582339/peugeot-partner-tepee.php", "title": "Peugeot Partner Tepee", "price": 8000, "price_gross": 8000, "fair_price": 7930.0, "discount_pct": -0.8, "verdict": "férová cena", "year": 2017, "km": 119000, "km_per_year": 12800.0, "eg": "1.6 VTi / 16V 70–88 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Žilina", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197632030", "url": "https://auto.bazos.sk/inzerat/197632030/peugeot-partner-tepee-16hdi-model-2013.php", "title": "Peugeot Partner Tepee 1.6HDI Model 2013", "price": 5390, "price_gross": 5390, "fair_price": 5320.0, "discount_pct": -1.4, "verdict": "férová cena", "year": 2012, "km": 167556, "km_per_year": 11700.0, "eg": "1.6 HDi / BlueHDi 55–88 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Poltár", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "bs-39633051", "url": "https://auto.bazar.sk/39633051-peugeot-rifter-1-5-bluehdi/", "title": "Peugeot Rifter 1.5 BlueHDi", "price": 7700, "price_gross": 7700, "fair_price": 7560.0, "discount_pct": -1.8, "verdict": "férová cena", "year": 2018, "km": 217208, "km_per_year": 26100.0, "eg": "1.5 BlueHDi 55–96 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava V - Petržalka", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197245285", "url": "https://auto.bazos.sk/inzerat/197245285/peugeot-rifter-15-bluehdi-7-miest.php", "title": "PEUGEOT RIFTER 1.5 BlueHDi – 7 MIEST", "price": 13590, "price_gross": 13590, "fair_price": 13320.0, "discount_pct": -2.1, "verdict": "férová cena", "year": 2019, "km": 83243, "km_per_year": 11400.0, "eg": "1.5 BlueHDi 55–96 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Stará Ľubovňa", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AeBRY8BDP54", "url": "https://www.autobazar.eu/detail/peugeot-rifter-15-bluehdi-7-miest/AeBRY8BDP54/", "price": 13590}], "body": "mpv"}, {"id": "ab-AmQrkGGr8_0", "url": "https://www.autobazar.eu/detail/peugeot-rifter-gt-line-15-bluehdi-96kw/AmQrkGGr8_0/", "title": "Peugeot Rifter GT Line 1.5 BlueHDi  96kW", "price": 11999, "price_gross": 11999, "fair_price": 11730.0, "discount_pct": -2.3, "verdict": "férová cena", "year": 2019, "km": 130846, "km_per_year": 17800.0, "eg": "1.5 BlueHDi 55–96 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "ab-AmdGP_l_SIP", "url": "https://www.autobazar.eu/detail/peugeot-rifter-15-bluehdi-allure-klima-tempomat/AmdGP_l_SIP/", "title": "Peugeot Rifter 1.5 BlueHDi, Allure, Klíma, Tempomat", "price": 10800, "price_gross": 10800, "fair_price": 10550.0, "discount_pct": -2.4, "verdict": "férová cena", "year": 2018, "km": 165143, "km_per_year": 19800.0, "eg": "1.5 BlueHDi 55–96 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Nitriansky kraj", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "196110976", "url": "https://auto.bazos.sk/inzerat/196110976/peugeot-rifter-15-bluehdi-100-active-pack-odpocet-dph.php", "title": "Peugeot Rifter 1.5 BlueHDi 100 Active Pack, odpočet DPH", "price": 13990, "price_gross": 13990, "fair_price": 13660.0, "discount_pct": -2.4, "verdict": "férová cena", "year": 2022, "km": 78526, "km_per_year": 18100.0, "eg": "1.5 BlueHDi 55–96 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Vranov nad Topľou", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AmLGzlGVhrk", "url": "https://www.autobazar.eu/detail/peugeot-rifter-15-bluehdi-100-active-pack/AmLGzlGVhrk/", "price": 13990}], "body": "mpv"}, {"id": "ab-AeUTT6HStse", "url": "https://www.autobazar.eu/detail/peugeot-rifter-15hdi/AeUTT6HStse/", "title": "Peugeot Rifter 1,5 HDi", "price": 12500, "price_gross": 12500, "fair_price": 12140.0, "discount_pct": -3.0, "verdict": "férová cena", "year": 2022, "km": 149291, "km_per_year": 34500.0, "eg": "1.5 BlueHDi 55–96 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Kremnica", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "ab-Ae1QjzMgb7T", "url": "https://www.autobazar.eu/detail/peugeot-rifter-long-15-bluehdi-100-allure-75kw102hp-m5/Ae1QjzMgb7T/", "title": "Peugeot Rifter Long 1.5 BlueHDi 100 Allure 75kW102HP M5", "price": 10000, "price_gross": 10000, "fair_price": 9700.0, "discount_pct": -3.1, "verdict": "férová cena", "year": 2019, "km": 208000, "km_per_year": 28400.0, "eg": "1.5 BlueHDi 55–96 kW", "cg": 1, "transmission": "manual", "seller_type": "private", "location": "Nitra", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazos", "id": "197587076", "url": "https://auto.bazos.sk/inzerat/197587076/peugeot-rifter-long.php", "price": 10000}], "body": "mpv"}, {"id": "ab-AeHdvl1qINV", "url": "https://www.autobazar.eu/detail/peugeot-rifter-15-bluehdi-130-gt-eat8-96kw130hp-a8/AeHdvl1qINV/", "title": "Peugeot Rifter 1.5 BlueHDi 130 GT EAT8 96kW130HP A8", "price": 26500, "price_gross": 26500, "fair_price": 25680.0, "discount_pct": -3.2, "verdict": "férová cena", "year": 2025, "km": 28570, "km_per_year": 21400.0, "eg": "1.5 BlueHDi 55–96 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Cabov", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "197122547", "url": "https://auto.bazos.sk/inzerat/197122547/peugeot-partner-tepee.php", "title": "Peugeot Partner Tepee", "price": 7490, "price_gross": 7490, "fair_price": 7240.0, "discount_pct": -3.4, "verdict": "férová cena", "year": 2016, "km": 133000, "km_per_year": 12900.0, "eg": "1.6 VTi / 16V 70–88 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Sabinov", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "196910924", "url": "https://auto.bazos.sk/inzerat/196910924/peugeot-rifter-gt-15-hdi-at-sr-povod-1majitel.php", "title": "PEUGEOT Rifter GT 1,5 HDi AT, SR pôvod, 1.majiteľ", "price": 23999, "price_gross": 23999, "fair_price": 23190.0, "discount_pct": -3.5, "verdict": "férová cena", "year": 2024, "km": 30241, "km_per_year": 13000.0, "eg": "1.5 BlueHDi 55–96 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmQ6a4eulUr", "url": "https://www.autobazar.eu/detail/peugeot-rifter-gt-15-hdi-at-sr-povod-1majitel/AmQ6a4eulUr/", "price": 23999}], "body": "mpv"}, {"id": "ab-Amou8mGZLf8", "url": "https://www.autobazar.eu/detail/peugeot-rifter-12-puretech-allure/Amou8mGZLf8/", "title": "Peugeot Rifter 1.2 PureTech Allure", "price": 8890, "price_gross": 8890, "fair_price": 8570.0, "discount_pct": -3.7, "verdict": "férová cena", "year": 2019, "km": 126146, "km_per_year": 17200.0, "eg": "1.2 PureTech 81–96 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Zvolen", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AmcHhCx3S4q", "url": "https://www.autobazar.eu/detail/peugeot-rifter-15-bluehdi-100-75kw-m5-5d-aj-na-splatky-protiucet/AmcHhCx3S4q/", "title": "Peugeot Rifter 1.5 BlueHDi 100, 75kW, M5, 5d. / AJ NA SPLÁTKY / PROTIÚČET /", "price": 10200, "price_gross": 10200, "fair_price": 9750.0, "discount_pct": -4.7, "verdict": "férová cena", "year": 2019, "km": 162000, "km_per_year": 22100.0, "eg": "1.5 BlueHDi 55–96 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Trenčín", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "197001301", "url": "https://auto.bazos.sk/inzerat/197001301/peugeot-rifter-15-hdi-100-allure-75kw-62021-dph.php", "title": "Peugeot Rifter 1,5 hdi 100 allure 75kw 6/2021 DPH", "price": 11900, "price_gross": 11900, "fair_price": 11320.0, "discount_pct": -5.2, "verdict": "férová cena", "year": 2021, "km": 131000, "km_per_year": 24600.0, "eg": "1.5 BlueHDi 55–96 kW", "cg": 1, "transmission": null, "seller_type": "dealer", "location": "Senica", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "bs-39633432", "url": "https://auto.bazar.sk/39633432-peugeot-rifter-1-5-bluehdi/", "title": "Peugeot Rifter 1.5 BlueHDi", "price": 9500, "price_gross": 9500, "fair_price": 9020.0, "discount_pct": -5.3, "verdict": "férová cena", "year": 2020, "km": 193477, "km_per_year": 30500.0, "eg": "1.5 BlueHDi 55–96 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava V - Petržalka", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "196182425", "url": "https://auto.bazos.sk/inzerat/196182425/peugeot-rifter-15-bluehdi-130-allure-96kw130hp-m6.php", "title": "Peugeot Rifter 1.5 BlueHDi 130 Allure 96kW130HP M6", "price": 7490, "price_gross": 7490, "fair_price": 7110.0, "discount_pct": -5.4, "verdict": "férová cena", "year": 2018, "km": 270100, "km_per_year": 32400.0, "eg": "1.5 BlueHDi 55–96 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Bratislava", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "197692927", "url": "https://auto.bazos.sk/inzerat/197692927/peugeot-rifter-long-15-bluehdi-130k-allure-pack.php", "title": "Peugeot Rifter Long 1.5 BlueHDi 130k Allure Pack", "price": 19900, "price_gross": 19900, "fair_price": 18830.0, "discount_pct": -5.7, "verdict": "férová cena", "year": 2022, "km": 35500, "km_per_year": 8200.0, "eg": "1.5 BlueHDi 55–96 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Partizánske", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AmaqWwku8wZ", "url": "https://www.autobazar.eu/detail/peugeot-rifter-long-15-bluehdi-130k-allure-pack/AmaqWwku8wZ/", "title": "Peugeot Rifter Long 1.5 BlueHDi 130k Allure Pack", "price": 15399, "price_gross": 15399, "fair_price": 14470.0, "discount_pct": -6.4, "verdict": "férová cena", "year": 2022, "km": 122237, "km_per_year": 28200.0, "eg": "1.5 BlueHDi 55–96 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Sučany", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "196242071", "url": "https://auto.bazos.sk/inzerat/196242071/peugeot-rifter-long-15-bluehdi-130k-allure-pack.php", "price": 15399}], "body": "mpv"}, {"id": "ab-AmBBvj28W-D", "url": "https://www.autobazar.eu/detail/peugeot-rifter-15-bluehdi-130-gt-line/AmBBvj28W-D/", "title": "Peugeot Rifter 1.5 BlueHDi 130 GT Line", "price": 13490, "price_gross": 13490, "fair_price": 12530.0, "discount_pct": -7.7, "verdict": "nad trhom", "year": 2021, "km": 153500, "km_per_year": 28800.0, "eg": "1.5 BlueHDi 55–96 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Nové Mesto nad Váhom", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197043794", "url": "https://auto.bazos.sk/inzerat/197043794/peugeot-rifter-15-bluehdi-130-gt-line.php", "price": 13490}], "body": "mpv"}, {"id": "ab-AmewbDLDbXf", "url": "https://www.autobazar.eu/detail/peugeot-partner-tepee-sk-outdoor-16-hdi/AmewbDLDbXf/", "title": "Peugeot Partner Tepee SK Outdoor 1.6 HDi", "price": 5490, "price_gross": 5490, "fair_price": 5080.0, "discount_pct": -8.1, "verdict": "nad trhom", "year": 2015, "km": 231952, "km_per_year": 20500.0, "eg": "1.6 HDi / BlueHDi 55–88 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Topoľčany", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197329302", "url": "https://auto.bazos.sk/inzerat/197329302/partner-outdoor-2015.php", "price": 5490}], "body": "mpv"}, {"id": "ab-AmaUTDsoNRO", "url": "https://www.autobazar.eu/detail/peugeot-rifter-15-bluehdi-130-gt-line-at/AmaUTDsoNRO/", "title": "Peugeot Rifter 1.5 BlueHDi 130 GT Line A/T", "price": 14985, "price_gross": 14985, "fair_price": 13810.0, "discount_pct": -8.5, "verdict": "nad trhom", "year": 2020, "km": 136500, "km_per_year": 21600.0, "eg": "1.5 BlueHDi 55–96 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Hlohovec", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "ab-Aml1Frkt9Sc", "url": "https://www.autobazar.eu/detail/peugeot-partner-tepee-16-hdi-fap-92k-happy-family/Aml1Frkt9Sc/", "title": "Peugeot Partner Tepee 1.6 HDi FAP 92k Happy Family", "price": 4999, "price_gross": 4999, "fair_price": 4600.0, "discount_pct": -8.6, "verdict": "nad trhom", "year": 2011, "km": 231483, "km_per_year": 15100.0, "eg": "1.6 HDi / BlueHDi 55–88 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Pezinok", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "bs-39653144", "url": "https://auto.bazar.sk/39653144-peugeot-rifter-1-5-bluehdi/", "title": "Peugeot Rifter 1.5 BlueHDi", "price": 16000, "price_gross": 16000, "fair_price": 14720.0, "discount_pct": -8.7, "verdict": "nad trhom", "year": 2024, "km": 102932, "km_per_year": 44100.0, "eg": "1.5 BlueHDi 55–96 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava V - Petržalka", "flags": ["vysoký nájazd 44000 km/rok – flotila / taxi?"], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "bs-39635342", "url": "https://auto.bazar.sk/39635342-peugeot-rifter-1-5-bluehdi/", "title": "Peugeot Rifter 1.5 BlueHDi", "price": 10300, "price_gross": 10300, "fair_price": 9480.0, "discount_pct": -8.7, "verdict": "nad trhom", "year": 2018, "km": 125835, "km_per_year": 15100.0, "eg": "1.5 BlueHDi 55–96 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava V - Petržalka", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-Am5M5vR-Mir", "url": "https://www.autobazar.eu/detail/peugeot-rifter-15-bluehdi-allure-povodny-lak-122-255km-sr/Am5M5vR-Mir/", "title": "Peugeot Rifter 1.5 BlueHDi Allure, Pôvodný lak, 122 365km, SR", "price": 14299, "price_gross": 14299, "fair_price": 13000.0, "discount_pct": -10.0, "verdict": "nad trhom", "year": 2022, "km": 122365, "km_per_year": 28200.0, "eg": "1.5 BlueHDi 55–96 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Kapušany", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197242484", "url": "https://auto.bazos.sk/inzerat/197242484/peugeot-rifter-15-bluehdi-allure-povodny-lak-122-365kmsr.php", "price": 14299}], "body": "mpv"}, {"id": "ab-AmGBn_ahky7", "url": "https://www.autobazar.eu/detail/peugeot-rifter-15-bluehdi-allure-povodny-lak-navi-sr/AmGBn_ahky7/", "title": "Peugeot Rifter 1.5 BlueHDi Allure, Pôvodný lak, Navi, SR", "price": 14499, "price_gross": 14499, "fair_price": 13040.0, "discount_pct": -11.2, "verdict": "nad trhom", "year": 2022, "km": 121220, "km_per_year": 28000.0, "eg": "1.5 BlueHDi 55–96 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Kapušany", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197247894", "url": "https://auto.bazos.sk/inzerat/197247894/peugeot-rifter-15-bluehdi-allure-povodny-lak-navi-sr.php", "price": 14499}], "body": "mpv"}, {"id": "bs-39635560", "url": "https://auto.bazar.sk/39635560-peugeot-rifter-1-2-puretech/", "title": "Peugeot Rifter 1.2 PureTech", "price": 11000, "price_gross": 11000, "fair_price": 9880.0, "discount_pct": -11.4, "verdict": "nad trhom", "year": 2018, "km": 72911, "km_per_year": 8700.0, "eg": "1.2 PureTech 81–96 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava V - Petržalka", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197725112", "url": "https://auto.bazos.sk/inzerat/197725112/peugeot-rifter.php", "title": "Peugeot rifter", "price": 12500, "price_gross": 12500, "fair_price": 11210.0, "discount_pct": -11.5, "verdict": "nad trhom", "year": 2019, "km": 93000, "km_per_year": 12700.0, "eg": "1.5 BlueHDi 55–96 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Košice-okolie", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "ab-AmQ7ZCcz5N6", "url": "https://www.autobazar.eu/detail/peugeot-rifter-15-bluehdi-100-allure-75kw-mt5-aj-na-splatky-protiucet/AmQ7ZCcz5N6/", "title": "Peugeot Rifter 1.5 BlueHDi 100 Allure 75kW MT/5 / AJ NA SPLÁTKY / PROTIÚČET", "price": 9500, "price_gross": 9500, "fair_price": 8510.0, "discount_pct": -11.6, "verdict": "nad trhom", "year": 2019, "km": 217868, "km_per_year": 29700.0, "eg": "1.5 BlueHDi 55–96 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Trenčín", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197573466", "url": "https://auto.bazos.sk/inzerat/197573466/peugeot-rifter-15-bluehdi-100-allure-75kw-mt-kupene-v-sr.php", "price": 9500}], "body": "mpv"}, {"id": "ab-AeCBUegLhS9", "url": "https://www.autobazar.eu/detail/peugeot-rifter-12-puretech-gt-line-sr2maj-klima/AeCBUegLhS9/", "title": "Peugeot Rifter 1.2 PureTech, GT Line, SR,2.maj, Klíma", "price": 10600, "price_gross": 10600, "fair_price": 9440.0, "discount_pct": -12.2, "verdict": "nad trhom", "year": 2019, "km": 89184, "km_per_year": 12200.0, "eg": "1.2 PureTech 81–96 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Žilinský kraj", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "195929920", "url": "https://auto.bazos.sk/inzerat/195929920/peugeot-partner-tepee-outdoor-16-blue-hdi.php", "title": "Peugeot Partner Tepee Outdoor 1.6 Blue-HDi", "price": 7200, "price_gross": 7200, "fair_price": 6410.0, "discount_pct": -12.3, "verdict": "nad trhom", "year": 2017, "km": 205231, "km_per_year": 22000.0, "eg": "1.6 HDi / BlueHDi 55–88 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Kysucké Nové Mesto", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-Amo4f3MrhyQ", "url": "https://www.autobazar.eu/detail/peugeot-rifter-15-bluehdi-active-pack-sr-2023/Amo4f3MrhyQ/", "title": "Peugeot Rifter 1.5 BlueHDi Active PACK SR 2023", "price": 14990, "price_gross": 14990, "fair_price": 13330.0, "discount_pct": -12.5, "verdict": "nad trhom", "year": 2023, "km": 138479, "km_per_year": 41500.0, "eg": "1.5 BlueHDi 55–96 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Nitra", "flags": ["vysoký nájazd 42000 km/rok – flotila / taxi?"], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "196471524", "url": "https://auto.bazos.sk/inzerat/196471524/peugeot-rifter-15-bluehdi-active-pack-sr-2023.php", "price": 14990}], "body": "mpv"}, {"id": "bs-39681802", "url": "https://auto.bazar.sk/39681802-peugeot-rifter-1-5-bluehdi/", "title": "Peugeot Rifter 1.5 BlueHDi", "price": 17000, "price_gross": 17000, "fair_price": 15040.0, "discount_pct": -13.0, "verdict": "nad trhom", "year": 2023, "km": 69324, "km_per_year": 20800.0, "eg": "1.5 BlueHDi 55–96 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava V - Petržalka", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AmRAH-T6ceH", "url": "https://www.autobazar.eu/detail/peugeot-rifter-15-bluehdi-100-active-pack/AmRAH-T6ceH/", "title": "Peugeot Rifter 1.5 BlueHDi 100 Active Pack", "price": 12999, "price_gross": 12999, "fair_price": 11480.0, "discount_pct": -13.2, "verdict": "nad trhom", "year": 2023, "km": 198801, "km_per_year": 59600.0, "eg": "1.5 BlueHDi 55–96 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Štiavnička", "flags": ["vysoký nájazd 60000 km/rok – flotila / taxi?"], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "195979116", "url": "https://auto.bazos.sk/inzerat/195979116/peugeot-rifter-15-bluehdi-100-active-pack.php", "price": 12999}], "body": "mpv"}, {"id": "ab-AeB386WBO4O", "url": "https://www.autobazar.eu/detail/peugeot-rifter-15-bluehdi-100-active-pack-75kw102hp-m6/AeB386WBO4O/", "title": "Peugeot Rifter 1.5 BlueHDi 100 Active Pack 75kW102HP M6", "price": 14990, "price_gross": 14990, "fair_price": 13250.0, "discount_pct": -13.2, "verdict": "nad trhom", "year": 2021, "km": 116557, "km_per_year": 21900.0, "eg": "1.5 BlueHDi 55–96 kW", "cg": 1, "transmission": "manual", "seller_type": "private", "location": "Cabov", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "ab-AmEDbxmQ_Od", "url": "https://www.autobazar.eu/detail/peugeot-rifter-15bluehdi-75kw-m6-allure-long-l2/AmEDbxmQ_Od/", "title": "Peugeot Rifter 1,5BlueHDi 75KW, M6, Allure Long L2", "price": 13800, "price_gross": 13800, "fair_price": 12180.0, "discount_pct": -13.3, "verdict": "nad trhom", "year": 2021, "km": 137780, "km_per_year": 25800.0, "eg": "1.5 BlueHDi 55–96 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "bs-39634440", "url": "https://auto.bazar.sk/39634440-peugeot-rifter-1-2-puretech/", "title": "Peugeot Rifter 1.2 PureTech", "price": 11400, "price_gross": 11400, "fair_price": 10030.0, "discount_pct": -13.7, "verdict": "nad trhom", "year": 2019, "km": 89185, "km_per_year": 12200.0, "eg": "1.2 PureTech 81–96 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava V - Petržalka", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "196697083", "url": "https://auto.bazos.sk/inzerat/196697083/peugeot-partner-tepee.php", "title": "Peugeot Partner Tepee", "price": 6300, "price_gross": 6300, "fair_price": 5470.0, "discount_pct": -15.1, "verdict": "výrazne nad trhom", "year": 2012, "km": 93600, "km_per_year": 6500.0, "eg": "1.6 HDi / BlueHDi 55–88 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Nitra", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "196689772", "url": "https://auto.bazos.sk/inzerat/196689772/peugeot-partner-tepee-16-hdi-at.php", "title": "Peugeot Partner Tepee 1.6 HDI AT", "price": 5990, "price_gross": 5990, "fair_price": 5200.0, "discount_pct": -15.1, "verdict": "výrazne nad trhom", "year": 2011, "km": 201000, "km_per_year": 13100.0, "eg": "1.6 HDi / BlueHDi 55–88 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Veľký Krtíš", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmcMNj4Gs57", "url": "https://www.autobazar.eu/detail/peugeot-partner-tepee-16-hdi-at/AmcMNj4Gs57/", "price": 5990}], "body": "mpv"}, {"id": "195817487", "url": "https://auto.bazos.sk/inzerat/195817487/peugeot-rifter-long.php", "title": "Peugeot rifter long", "price": 14400, "price_gross": 14400, "fair_price": 12450.0, "discount_pct": -15.7, "verdict": "výrazne nad trhom", "year": 2019, "km": 70000, "km_per_year": 9500.0, "eg": "1.2 PureTech 81–96 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Hlohovec", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AmEPq3bYF_X", "url": "https://www.autobazar.eu/detail/peugeot-rifter-long-15-bluehdi-130-allure/AmEPq3bYF_X/", "title": "Peugeot Rifter Long 7miest, 1.5 BlueHDI Allure, Kamera, Vyhr. sedačky", "price": 12900, "price_gross": 12900, "fair_price": 11140.0, "discount_pct": -15.8, "verdict": "výrazne nad trhom", "year": 2019, "km": 174301, "km_per_year": 23800.0, "eg": "1.5 BlueHDi 55–96 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava-Staré Mesto", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197695640", "url": "https://auto.bazos.sk/inzerat/197695640/peugeot-rifter-long-7miest-15-bluehdi-allure-kamera-vyhr.php", "price": 10488}], "body": "mpv"}, {"id": "195913911", "url": "https://auto.bazos.sk/inzerat/195913911/peugeot-rifter-15-diesel.php", "title": "Peugeot rifter 1.5 diesel", "price": 8500, "price_gross": 8500, "fair_price": 7340.0, "discount_pct": -15.8, "verdict": "výrazne nad trhom", "year": 2018, "km": 273000, "km_per_year": 32800.0, "eg": "1.5 BlueHDi 55–96 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Žilina", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "bs-39651833", "url": "https://auto.bazar.sk/39651833-peugeot-rifter-1-5-bluehdi/", "title": "Peugeot Rifter 1.5 BlueHDi", "price": 11200, "price_gross": 11200, "fair_price": 9600.0, "discount_pct": -16.6, "verdict": "výrazne nad trhom", "year": 2020, "km": 167946, "km_per_year": 26500.0, "eg": "1.5 BlueHDi 55–96 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava V - Petržalka", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "bs-34353344", "url": "https://auto.bazar.sk/34353344-peugeot-partner-tepee-1-6-hdi/", "title": "Peugeot Partner TePee 1.6 HDi", "price": 7800, "price_gross": 7800, "fair_price": 6670.0, "discount_pct": -16.9, "verdict": "výrazne nad trhom", "year": 2015, "km": 100407, "km_per_year": 8900.0, "eg": "1.6 HDi / BlueHDi 55–88 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Nové Zámky", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "ab-Am-Ma6w0YM7", "url": "https://www.autobazar.eu/detail/peugeot-rifter-15-bluehdi-allure/Am-Ma6w0YM7/", "title": "Peugeot Rifter 1,5 BlueHDi Allure", "price": 11990, "price_gross": 11990, "fair_price": 10210.0, "discount_pct": -17.4, "verdict": "výrazne nad trhom", "year": 2019, "km": 166398, "km_per_year": 22700.0, "eg": "1.5 BlueHDi 55–96 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "ab-Ae1qBccpXFe", "url": "https://www.autobazar.eu/detail/peugeot-rifter-15-bluehdi-130-gt-line-96kw130hp-m6/Ae1qBccpXFe/", "title": "Peugeot Rifter 1.5 BlueHDi 130 GT Line 96kW130HP M6", "price": 14500, "price_gross": 14500, "fair_price": 12300.0, "discount_pct": -17.8, "verdict": "výrazne nad trhom", "year": 2020, "km": 136000, "km_per_year": 21500.0, "eg": "1.5 BlueHDi 55–96 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Sereď", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "ab-AmOxXJXey3m", "url": "https://www.autobazar.eu/detail/peugeot-rifter-12-puretech-active-pack/AmOxXJXey3m/", "title": "Peugeot Rifter 1.2 PureTech Active Pack", "price": 11990, "price_gross": 11990, "fair_price": 10050.0, "discount_pct": -19.4, "verdict": "výrazne nad trhom", "year": 2021, "km": 141100, "km_per_year": 26500.0, "eg": "1.2 PureTech 81–96 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Nový Život", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "196646064", "url": "https://auto.bazos.sk/inzerat/196646064/peugeot-rifter-12-puretech-active-pack.php", "price": 11990}, {"source": "autobazar", "id": "ab-AmGb7lM7446", "url": "https://www.autobazar.eu/detail/peugeot-rifter-12-puretech-active-pack/AmGb7lM7446/", "price": 11990}, {"source": "bazos", "id": "196007378", "url": "https://auto.bazos.sk/inzerat/196007378/peugeot-rifter-12-puretech-active-pack-mesacne-189e.php", "price": 11990}], "body": "mpv"}, {"id": "196632060", "url": "https://auto.bazos.sk/inzerat/196632060/peugeot-rifter-long-15-bluehdi-130-7-miest-navi-acc.php", "title": "Peugeot Rifter Long 1.5 BlueHDi 130 – 7 miest – NAVI – ACC", "price": 12000, "price_gross": 12000, "fair_price": 10010.0, "discount_pct": -19.8, "verdict": "výrazne nad trhom", "year": 2018, "km": 187000, "km_per_year": 22400.0, "eg": "1.5 BlueHDi 55–96 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Malacky", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "196579051", "url": "https://auto.bazos.sk/inzerat/196579051/peugeot-rifter-15-bluehdi-100-active-pack.php", "title": "Peugeot Rifter 1.5 BlueHDi 100 Active Pack", "price": 16690, "price_gross": 16690, "fair_price": 13900.0, "discount_pct": -20.1, "verdict": "výrazne nad trhom", "year": 2022, "km": 86471, "km_per_year": 20000.0, "eg": "1.5 BlueHDi 55–96 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Prievidza", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-Amw0i1_XNrN", "url": "https://www.autobazar.eu/detail/peugeot-rifter-15-bluehdi-100-active-pack/Amw0i1_XNrN/", "price": 15690}], "body": "mpv"}, {"id": "196992036", "url": "https://auto.bazos.sk/inzerat/196992036/peugeot-rifter-12-long-7miest-23tiskm.php", "title": "Peugeot Rifter 1,2 Long 7miest. 23tis.km", "price": 20900, "price_gross": 20900, "fair_price": 17390.0, "discount_pct": -20.2, "verdict": "výrazne nad trhom", "year": 2022, "km": 23000, "km_per_year": 5300.0, "eg": "1.2 PureTech 81–96 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Nové Zámky", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "bs-39635578", "url": "https://auto.bazar.sk/39635578-peugeot-rifter-1-2-puretech/", "title": "Peugeot Rifter 1.2 PureTech", "price": 17100, "price_gross": 17100, "fair_price": 14000.0, "discount_pct": -22.2, "verdict": "výrazne nad trhom", "year": 2021, "km": 54679, "km_per_year": 10300.0, "eg": "1.2 PureTech 81–96 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava V - Petržalka", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "195892420", "url": "https://auto.bazos.sk/inzerat/195892420/peugeot-partner-tepee-16-vti-88-kw.php", "title": "Peugeot Partner Tepee 1,6 VTi 88 kW", "price": 6990, "price_gross": 6990, "fair_price": 5700.0, "discount_pct": -22.7, "verdict": "výrazne nad trhom", "year": 2013, "km": 124498, "km_per_year": 9300.0, "eg": "1.6 VTi / 16V 70–88 kW", "cg": 0, "transmission": null, "seller_type": "dealer", "location": "Martin", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-Am9626H3Oof", "url": "https://www.autobazar.eu/detail/peugeot-rifter-15-blue-hdi-2020/Am9626H3Oof/", "title": "PEUGEOT Rifter 1.5 BLUE HDI 2020", "price": 12399, "price_gross": 12399, "fair_price": 10040.0, "discount_pct": -23.5, "verdict": "výrazne nad trhom", "year": 2020, "km": 190649, "km_per_year": 30100.0, "eg": "1.5 BlueHDi 55–96 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazos", "id": "197333125", "url": "https://auto.bazos.sk/inzerat/197333125/89-peugeot-rifter-2020-nafta-15-blue-hdi-75kw.php", "price": 12999}], "body": "mpv"}, {"id": "196084199", "url": "https://auto.bazos.sk/inzerat/196084199/peugeot-partner-tepee.php", "title": "Peugeot Partner Tepee", "price": 6499, "price_gross": 6499, "fair_price": 5250.0, "discount_pct": -23.8, "verdict": "výrazne nad trhom", "year": 2013, "km": 123339, "km_per_year": 9300.0, "eg": "1.6 VTi / 16V 70–88 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Trenčín", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "196332242", "url": "https://auto.bazos.sk/inzerat/196332242/peugeot-rifter-15-blue-hdi-75-kw.php", "title": "Peugeot Rifter 1,5 Blue HDi 75 kW", "price": 11990, "price_gross": 11990, "fair_price": 9650.0, "discount_pct": -24.3, "verdict": "výrazne nad trhom", "year": 2019, "km": 145291, "km_per_year": 19800.0, "eg": "1.5 BlueHDi 55–96 kW", "cg": 1, "transmission": null, "seller_type": "dealer", "location": "Martin", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197234995", "url": "https://auto.bazos.sk/inzerat/197234995/peugeot-rifter-15-bluehdi-130k-gt-96-kw-m6-7-miest-2022.php", "title": "Peugeot Rifter 1.5 BlueHDi 130k GT, 96 kW, M6, 7 miest, 2022", "price": 13990, "price_gross": 13990, "fair_price": 11170.0, "discount_pct": -25.3, "verdict": "výrazne nad trhom", "year": 2022, "km": 215859, "km_per_year": 49800.0, "eg": "1.5 BlueHDi 55–96 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Šaľa", "flags": ["vysoký nájazd 50000 km/rok – flotila / taxi?"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197599215", "url": "https://auto.bazos.sk/inzerat/197599215/peugeot-partner-73kw-16-hdi-m5-kamera-nove-rozvody.php", "title": "Peugeot Partner 73kW 1.6 HDI, M5, Kamera, Nové rozvody", "price": 6990, "price_gross": 6990, "fair_price": 5410.0, "discount_pct": -29.1, "verdict": "výrazne nad trhom", "year": 2015, "km": 155736, "km_per_year": 13700.0, "eg": "1.6 HDi / BlueHDi 55–88 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Liptovský Mikuláš", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "195958342", "url": "https://auto.bazos.sk/inzerat/195958342/peugeot-rifter.php", "title": "PEUGEOT RIFTER GT LINE 1.MAJITEĽ", "price": 15200, "price_gross": 15200, "fair_price": 11640.0, "discount_pct": -30.5, "verdict": "výrazne nad trhom", "year": 2020, "km": 87332, "km_per_year": 13800.0, "eg": "1.5 BlueHDi 55–96 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Spišská Nová Ves", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "197550732", "url": "https://auto.bazos.sk/inzerat/197550732/peugeot-partner-teppe-16-hdi-73kw-kupene-sk.php", "title": "Peugeot partner teppe 1.6 HDI 73kW kúpené SK", "price": 7299, "price_gross": 7299, "fair_price": 5580.0, "discount_pct": -30.9, "verdict": "výrazne nad trhom", "year": 2016, "km": 193000, "km_per_year": 18700.0, "eg": "1.6 HDi / BlueHDi 55–88 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Prešov", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "196912191", "url": "https://auto.bazos.sk/inzerat/196912191/peugeot-partner-tepee-16-hdi.php", "title": "Peugeot partner Tepee 1.6 HDi", "price": 5499, "price_gross": 5499, "fair_price": 4170.0, "discount_pct": -31.8, "verdict": "výrazne nad trhom", "year": 2010, "km": 220000, "km_per_year": 13500.0, "eg": "1.6 HDi / BlueHDi 55–88 kW", "cg": 1, "transmission": null, "seller_type": "dealer", "location": "Bánovce nad Bebravou", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "mpv"}, {"id": "196453456", "url": "https://auto.bazos.sk/inzerat/196453456/peugeot-partner-16hdi.php", "title": "Peugeot Partner 1.6HDi", "price": 7500, "price_gross": 7500, "fair_price": 5610.0, "discount_pct": -33.8, "verdict": "výrazne nad trhom", "year": 2015, "km": 168989, "km_per_year": 14900.0, "eg": "1.6 HDi / BlueHDi 55–88 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Námestovo", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AmENz6R_AWb", "url": "https://www.autobazar.eu/detail/peugeot-rifter-15-bluehdi-gt-96kw-2022-aj-na-splatky-protiucet/AmENz6R_AWb/", "title": "Peugeot Rifter 1.5 BlueHDi GT, 96kW (2022) / AJ NA SPLÁTKY / PROTIÚČET /", "price": 21699, "price_gross": 21699, "fair_price": 16150.0, "discount_pct": -34.4, "verdict": "výrazne nad trhom", "year": 2022, "km": 80665, "km_per_year": 18600.0, "eg": "1.5 BlueHDi 55–96 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Trenčín", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197024114", "url": "https://auto.bazos.sk/inzerat/197024114/peugeot-rifter-15-bluehdi-gt-96kw-2022.php", "price": 21699}], "body": "mpv"}, {"id": "197688506", "url": "https://auto.bazos.sk/inzerat/197688506/peugeot-partner-tepee-16-hdi.php", "title": "Peugeot Partner Tepee 1.6 Hdi", "price": 9890, "price_gross": 9890, "fair_price": 7360.0, "discount_pct": -34.5, "verdict": "výrazne nad trhom", "year": 2017, "km": 92000, "km_per_year": 9900.0, "eg": "1.6 HDi / BlueHDi 55–88 kW", "cg": 1, "transmission": null, "seller_type": "dealer", "location": "Košice", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-Amca4YPcIbO", "url": "https://www.autobazar.eu/detail/peugeot-rifter-12-puretech-active/Amca4YPcIbO/", "title": "Peugeot Rifter 1.2 PureTech Active", "price": 15490, "price_gross": 15490, "fair_price": 11470.0, "discount_pct": -35.0, "verdict": "výrazne nad trhom", "year": 2019, "km": 24857, "km_per_year": 3400.0, "eg": "1.2 PureTech 81–96 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Vrútky", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "196938263", "url": "https://auto.bazos.sk/inzerat/196938263/peugeot-rifter-12-puretech-active.php", "price": 15490}], "body": "mpv"}, {"id": "ab-AegIOmBKk5X", "url": "https://www.autobazar.eu/detail/peugeot-rifter-12-puretech-allure-81kw110hp-m6/AegIOmBKk5X/", "title": "Peugeot Rifter 1.2 PureTech Allure 81kW/110HP M6", "price": 14800, "price_gross": 14800, "fair_price": 10730.0, "discount_pct": -37.9, "verdict": "výrazne nad trhom", "year": 2020, "km": 75000, "km_per_year": 11800.0, "eg": "1.2 PureTech 81–96 kW", "cg": 0, "transmission": "manual", "seller_type": "private", "location": "Banská Bystrica", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "196994246", "url": "https://auto.bazos.sk/inzerat/196994246/peugeot-partner-tepee.php", "title": "Peugeot partner Tepee", "price": 5300, "price_gross": 5300, "fair_price": 3360.0, "discount_pct": -57.8, "verdict": "výrazne nad trhom", "year": 2010, "km": 339000, "km_per_year": 20800.0, "eg": "1.6 HDi / BlueHDi 55–88 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Tvrdošín", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}];
+const GROUPS = ["Benzín", "Diesel HDi / BlueHDi", "Elektro, LPG a nezistený"];
+const BODY = {"mpv": "MPV"};
+const fmt = n => Math.round(n).toLocaleString("sk-SK");
+const eur = n => fmt(n) + " €";
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const TRANS = {automatic: "automat", manual: "manuál"};
+const SRC = {bazos: "bazoš", autobazar: "autobazar.eu", bazarsk: "bazar.sk"};
+
+// --- theme toggle ---------------------------------------------------------
+document.getElementById("themeBtn").onclick = () => {
+  const root = document.documentElement;
+  const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  drawChart();
+};
+
+// --- scatter chart --------------------------------------------------------
+const legend = document.getElementById("legend");
+legend.innerHTML = GROUPS.map((g, i) => `<span><i style="background:var(--s${i+1})"></i>${g}</span>`).join("")
+  + `<span><i class="ring"></i>odporúčaná ponuka</span>`;
+
+function drawChart() {
+  const svg = document.getElementById("chart"), wrap = document.getElementById("chartWrap"), tip = document.getElementById("tip");
+  const W = svg.clientWidth, H = 420, m = {l: 56, r: 16, t: 10, b: 40};
+  const pts = DATA.filter(d => d.km && d.price_gross);
+  const xMax = Math.ceil(Math.max(...pts.map(d => d.km)) / 50000) * 50000;
+  const yMax = Math.ceil(Math.max(...pts.map(d => d.price_gross)) / 5000) * 5000;
+  const x = v => m.l + v / xMax * (W - m.l - m.r), y = v => H - m.b - v / yMax * (H - m.t - m.b);
+  let s = "";
+  for (let v = 0; v <= yMax; v += 5000)
+    s += `<line x1="${m.l}" x2="${W-m.r}" y1="${y(v)}" y2="${y(v)}" stroke="var(--grid)"/><text x="${m.l-8}" y="${y(v)+4}" text-anchor="end">${v/1000} tis. €</text>`;
+  const step = W < 520 ? 100000 : 50000;
+  for (let v = 0; v <= xMax; v += step)
+    s += `<text x="${x(v)}" y="${H-m.b+18}" text-anchor="middle">${v/1000} tis.</text>`;
+  s += `<text x="${(W+m.l)/2}" y="${H-6}" text-anchor="middle">nájazd (km)</text>`;
+  const order = [...pts].sort((a, b) => (a.pick ? 1 : 0) - (b.pick ? 1 : 0));
+  order.forEach(d => {
+    const cx = x(d.km), cy = y(d.price_gross);
+    if (d.pick) s += `<circle cx="${cx}" cy="${cy}" r="9" fill="none" stroke="var(--text)" stroke-width="2"/>`;
+    s += `<circle class="pt" data-id="${d.id}" cx="${cx}" cy="${cy}" r="5" fill="var(--s${d.cg+1})" stroke="var(--surface)" stroke-width="2"/>`;
+  });
+  // invisible bigger hit targets
+  order.forEach(d => s += `<circle class="hit" data-id="${d.id}" cx="${x(d.km)}" cy="${y(d.price_gross)}" r="11" fill="transparent" style="cursor:pointer"/>`);
+  svg.innerHTML = s;
+  const byId = Object.fromEntries(pts.map(d => [d.id, d]));
+  svg.querySelectorAll(".hit").forEach(c => {
+    c.onmouseenter = c.onmousemove = ev => {
+      const d = byId[c.dataset.id];
+      tip.innerHTML = `<b>${esc(d.title)}</b>
+        <div class="row"><span>Cena</span><span>${eur(d.price_gross)}</span></div>
+        <div class="row"><span>Férová cena</span><span>${eur(d.fair_price)}</span></div>
+        <div class="row"><span>Pod trhom</span><span>${d.discount_pct > 0 ? "+" : ""}${d.discount_pct.toLocaleString("sk-SK")} %</span></div>
+        <div class="row"><span>Zdroj</span><span>${SRC[d.source]}${d.also_listed.length ? " + " + d.also_listed.map(a => SRC[a.source]).join(", ") : ""}</span></div>
+        <div class="row"><span>Rok · km</span><span>${d.year} · ${fmt(d.km)}</span></div>
+        <div class="row"><span>Motor</span><span>${esc(d.eg)} ${TRANS[d.transmission] || ""}</span></div>`;
+      tip.style.display = "block";
+      const r = wrap.getBoundingClientRect();
+      let lx = ev.clientX - r.left + 14, ly = ev.clientY - r.top + 14;
+      if (lx + 290 > r.width) lx = ev.clientX - r.left - 290;
+      tip.style.left = lx + "px"; tip.style.top = ly + "px";
+    };
+    c.onmouseleave = () => tip.style.display = "none";
+    c.onclick = () => window.open(byId[c.dataset.id].url, "_blank", "noopener");
+  });
+}
+drawChart();
+addEventListener("resize", drawChart);
+
+// --- full table -----------------------------------------------------------
+const fEngine = document.getElementById("fEngine");
+[...new Set(DATA.map(d => d.eg))].sort().forEach(g => fEngine.insertAdjacentHTML("beforeend", `<option>${esc(g)}</option>`));
+let sortK = "discount_pct", sortDir = -1;
+function discCell(v) {
+  const w = Math.min(Math.abs(v), 30) / 30 * 50;
+  const bar = v >= 0 ? `left:50%;width:${w}%;background:var(--pos)` : `right:50%;width:${w}%;background:var(--neg)`;
+  return `<span class="disc">${v > 0 ? "+" : ""}${v.toLocaleString("sk-SK")} %<span class="dbar"><span style="${bar}"></span></span></span>`;
+}
+function renderTable() {
+  const max = parseFloat(document.getElementById("fMax").value) || Infinity;
+  const tr = document.getElementById("fTrans").value, se = document.getElementById("fSeller").value, en = fEngine.value;
+  const so = document.getElementById("fSource").value, og = document.getElementById("fOrigin").value;
+  const bo = document.getElementById("fBody").value;
+  const rows = DATA.filter(d => (!en || d.eg === en) && (!tr || d.transmission === tr)
+    && (!se || d.seller_type !== "dealer") && d.price_gross <= max
+    && (!so || d.source === so || d.also_listed.some(a => a.source === so)) && (!og || d.origin === og) && (!bo || d.body === bo))
+    .sort((a, b) => { const A = a[sortK], B = b[sortK]; return (typeof A === "string" ? A.localeCompare(B) : A - B) * sortDir; });
+  document.getElementById("count").textContent = `${rows.length} z ${DATA.length} inzerátov`;
+  document.querySelector("#tbl tbody").innerHTML = rows.map(d => `<tr>
+    <td><a href="${d.url}" target="_blank" rel="noopener">${esc(d.title)}</a> ${d.pick ? '<span class="badge pick">odporúčané</span>' : ""}
+      <div class="sub">${BODY[d.body] || "karoséria ?"} · ${esc(d.eg)} · ${TRANS[d.transmission] || "prevodovka ?"} · ${esc(d.location)} · ${d.seller_type === "dealer" ? "predajca/firma" : d.seller_type === "private" ? "súkromník" : "neisté"} · ${SRC[d.source]}${d.origin === "SR" ? " · kúpené v SR" : d.origin === "dovoz" ? " · dovoz" : ""}${d.also_listed.map(a => ` · <a href="${a.url}" target="_blank" rel="noopener">aj na ${SRC[a.source]}</a>`).join("")}</div>
+      ${d.flags.filter(f => !f.startsWith("prevodovka")).map(f => `<div class="flag">⚠ ${esc(f)}</div>`).join("")}</td>
+    <td class="num">${d.year}</td><td class="num">${fmt(d.km)}</td>
+    <td class="num">${eur(d.price_gross)}</td><td class="num">${eur(d.fair_price)}</td>
+    <td class="num">${discCell(d.discount_pct)}</td></tr>`).join("");
+  document.querySelectorAll("#tbl th.sortable").forEach(th => {
+    const base = th.textContent.replace(/ [▾▴]$/, "");
+    th.textContent = base + (th.dataset.k === sortK ? (sortDir < 0 ? " ▾" : " ▴") : "");
+  });
+}
+document.querySelectorAll("#tbl th.sortable").forEach(th => th.onclick = () => {
+  if (sortK === th.dataset.k) sortDir *= -1; else { sortK = th.dataset.k; sortDir = th.dataset.k === "title" ? 1 : -1; }
+  renderTable();
+});
+["fEngine", "fTrans", "fSeller", "fSource", "fBody", "fOrigin", "fMax"].forEach(id => document.getElementById(id).addEventListener("input", renderTable));
+renderTable();
+</script>
+<!-- ferovka-theme --><script defer src="/analytics-config.js"></script><script defer src="/analytics.js"></script><script id="ferovka-chart">/* Férovka – chart → ad links, injected into every report by sync-reports.mjs.
+ *
+ * The reports draw one invisible 11px "hit" circle per ad. In dense charts (and always on a narrow phone) those
+ * circles overlap and the one drawn last wins, so a click/tap often opened a neighbouring ad. Here the pointer is
+ * always resolved to the NEAREST point, the report's own tooltip is shown for that point, and a click opens its ad.
+ * Touch: the first tap shows the tooltip (with a hint), a second tap on the same point opens the ad.
+ */
+(() => {
+  let rows;
+  try { rows = DATA; } catch { return; } // eslint-disable-line no-undef
+  if (!Array.isArray(rows) || !rows.length || !("url" in rows[0])) return;
+  const byId = new Map(rows.map((d) => [String(d.id), d]));
+  const MOUSE = ["mouseover", "mouseout", "mouseenter", "mouseleave", "mousemove", "mousedown", "mouseup", "click"];
+  let lastPointer = "mouse", down = null;
+  // the finger position as it was – Chrome "snaps" the later click of a tap to the centre of a nearby clickable element
+  addEventListener("pointerdown", (e) => { lastPointer = e.pointerType || "mouse"; down = { clientX: e.clientX, clientY: e.clientY }; }, true);
+
+  // the old per-point hit circles must not be targets (they overlap, and touch snapping aims at them)
+  document.head.insertAdjacentHTML("beforeend", "<style>svg circle.hit[data-id],svg circle.pt[data-id]{pointer-events:none}</style>");
+
+  function nearest(svg, ev, radius) {
+    let best = null, bd = Infinity;
+    for (const c of svg.querySelectorAll("circle.pt[data-id]")) {
+      const r = c.getBoundingClientRect();
+      const dx = r.left + r.width / 2 - ev.clientX, dy = r.top + r.height / 2 - ev.clientY;
+      const d = dx * dx + dy * dy;
+      if (d <= bd) { bd = d; best = c; } // ties: the point drawn on top (later) wins – that is the one you see
+    }
+    return best && bd <= radius * radius ? best : null;
+  }
+
+  function bind(svg) {
+    if (svg.__fvLinks) return;
+    svg.__fvLinks = true;
+    let current = null, armed = null;
+    const hitOf = (pt) => pt && svg.querySelector(`circle.hit[data-id="${CSS.escape(pt.dataset.id)}"]`);
+    const fire = (el, type, ev) => {
+      if (!el) return;
+      const e = new MouseEvent(type, { clientX: ev.clientX, clientY: ev.clientY, bubbles: false });
+      e.__fv = true;
+      el.dispatchEvent(e);
+    };
+    const tip = () => (svg.parentElement && svg.parentElement.querySelector("#tip, .tip")) || document.getElementById("tip");
+    const mark = (pt) => {
+      if (current === pt) return;
+      if (current) current.setAttribute("r", current.__r || "5");
+      current = pt;
+      if (pt) { pt.__r = pt.__r || pt.getAttribute("r"); pt.setAttribute("r", String(+pt.__r + 2)); }
+    };
+    const show = (pt, ev, hint) => {
+      mark(pt);
+      if (!pt) { const t = tip(); if (t) t.style.display = "none"; return; }
+      fire(hitOf(pt), "mousemove", ev); // the report's own tooltip, for the nearest point
+      const t = tip();
+      if (t && hint) t.insertAdjacentHTML("beforeend", `<div class="fv-hint">Ťukni ešte raz – otvorí sa inzerát ↗</div>`);
+    };
+    const open = (pt) => {
+      const d = byId.get(pt.dataset.id);
+      if (d && d.url) {
+        try { window.FerovkaAnalytics?.listingClick(d.url, "chart"); } catch { /* analytics must never block an ad */ }
+        window.open(d.url, "_blank", "noopener");
+      }
+    };
+
+    // the per-circle handlers of the report never see real mouse events – only our synthetic ones
+    for (const type of MOUSE) {
+      svg.addEventListener(type, (ev) => {
+        if (ev.__fv) return;
+        ev.stopImmediatePropagation();
+        if (type === "mousemove" && lastPointer === "mouse") {
+          show(nearest(svg, ev, 18), ev, false);
+          svg.style.cursor = current ? "pointer" : "";
+        } else if (type === "mouseleave" && ev.target === svg && lastPointer === "mouse") {
+          show(null, ev);
+        } else if (type === "click") {
+          const touch = lastPointer !== "mouse";
+          const at = touch && down ? down : ev;
+          const pt = nearest(svg, at, touch ? 26 : 18);
+          if (!pt) { armed = null; show(null, ev); return; }
+          if (!touch || armed === pt) { armed = null; open(pt); }
+          else { armed = pt; show(pt, at, true); }
+        }
+      }, true);
+    }
+  }
+
+  const scan = () => document.querySelectorAll("svg").forEach((s) => s.querySelector("circle.pt[data-id]") && bind(s));
+  scan();
+  new MutationObserver(scan).observe(document.body, { childList: true, subtree: true });
+})();
+</script><script id="ferovka-filters">/* Férovka – filters for the whole report, injected into every model report by sync-reports.mjs.
+ *
+ * The reports render the chart (drawChart) and the full ranking (renderTable) from the global DATA array; their own
+ * filter bar only filters the table. Here the filter bar (kept in its place above the ranking) gets more filters (year, price from/to,
+ * km, fuel, discount, picks only, text search) and every filter applies to the chart and the ranking together: DATA is
+ * refilled in place with the matching ads and both are drawn again. "</script" can't occur inside this file.
+ */
+(() => {
+  let data;
+  try { data = DATA; } catch { return; } // eslint-disable-line no-undef
+  if (!Array.isArray(data) || !data.length || typeof renderTable !== "function") return; // eslint-disable-line no-undef
+  const bar = document.querySelector(".filters");
+  if (!bar || bar.dataset.fv) return;
+  bar.dataset.fv = "1";
+  const ALL = data.slice();
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+  const fmt = (n) => Math.round(n).toLocaleString("sk-SK");
+  const norm = (s) => String(s ?? "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+  let groups = null;
+  try { groups = GROUPS; } catch { /* report without groups */ } // eslint-disable-line no-undef
+
+  const FUEL = { diesel: "Diesel", petrol: "Benzín", hybrid: "Hybrid", "plug-in hybrid": "Plug-in hybrid", electric: "Elektro", lpg: "LPG", cng: "CNG" };
+  const fuelOf = (d) => {
+    const e = norm(d.eg);
+    if (/tdi|crdi|dci|hdi|diesel|\bd\b|cdi|\d+d\b|blue/.test(e)) return "Diesel";
+    if (/plug-in|phev|e-hybrid|recharge|\bgte\b|\bt8\b|\b\d{2}e\b|\b\d{3} ?e\b/.test(e)) return "Plug-in hybrid";
+    if (/elektro|electric|\bev\b/.test(e)) return "Elektro";
+    if (/cng|lpg|g-tec|g-tron|tgi|ecofuel/.test(e)) return "Plyn (CNG/LPG)";
+    if (/mild|mhev/.test(e)) return "Benzín"; // mild-hybrid petrol (the diesel ones say TDI / d above)
+    if (/hybrid|hev/.test(e)) return "Hybrid";
+    if (/tsi|tfsi|mpi|fsi|benzin|gdi|dpi|htp|12v|\bt\d\b|\bb[56]\b|\d+i\b|turbo|tce|\bs4\b|rs ?\d|amg|competition|\bm\d{2,3}i?\b|gti|\bx5 m\b/.test(e)) return "Benzín";
+    return d.fuel ? FUEL[d.fuel] || String(d.fuel) : null;
+  };
+
+  // --- controls ---------------------------------------------------------------------------------------------------
+  const years = ALL.map((d) => d.year).filter(Boolean);
+  const yMin = Math.min(...years), yMax = Math.max(...years);
+  const yearOpts = (label) => `<option value="">${label}</option>` +
+    Array.from({ length: yMax - yMin + 1 }, (_, i) => yMax - i).map((y) => `<option>${y}</option>`).join("");
+  const kms = [30000, 50000, 75000, 100000, 150000, 200000, 250000, 300000];
+  const fuels = [...new Set(ALL.map(fuelOf).filter(Boolean))].sort((a, b) => a.localeCompare(b, "sk"));
+  const showGroups = Array.isArray(groups) && groups.length > 1 && ALL.some((d) => Number.isInteger(d.cg));
+
+  const maxInput = $("fMax");
+  if (maxInput) { maxInput.placeholder = "Cena do €"; maxInput.title = "Najvyššia cena (s DPH)"; }
+  const html =
+    `<select id="fvYearFrom" title="Rok výroby od">${yearOpts("Rok od")}</select>` +
+    `<select id="fvYearTo" title="Rok výroby do">${yearOpts("Rok do")}</select>` +
+    `<input id="fvPriceMin" type="number" placeholder="Cena od €" step="500" min="0" title="Najnižšia cena (s DPH)" style="width:110px">`;
+  if (maxInput) maxInput.insertAdjacentHTML("beforebegin", html);
+  else bar.insertAdjacentHTML("afterbegin", html);
+  const more =
+    `<select id="fvKm" title="Najviac najazdených km"><option value="">Nájazd – všetky</option>${kms.map((k) => `<option value="${k}">do ${fmt(k)} km</option>`).join("")}</select>` +
+    (fuels.length > 1 ? `<select id="fvFuel" title="Palivo"><option value="">Všetky palivá</option>${fuels.map((f) => `<option>${esc(f)}</option>`).join("")}</select>` : "") +
+    (showGroups ? `<select id="fvGroup" title="Skupina motorov (farba v grafe)"><option value="">Všetky skupiny</option>${groups.map((g, i) => `<option value="${i}">${esc(g)}</option>`).join("")}</select>` : "") +
+    `<select id="fvDisc" title="O koľko je auto lacnejšie ako férová cena"><option value="">Cena – všetky</option><option value="0">pod férovou cenou</option><option value="10">aspoň 10 % pod trhom</option><option value="20">aspoň 20 % pod trhom</option></select>` +
+    `<input id="fvText" type="search" placeholder="Hľadať (výbava, mesto…)" title="Hľadá v názve inzerátu, motore a lokalite" style="width:170px">` +
+    `<label class="fv-check"><input id="fvPick" type="checkbox"> len odporúčané</label>` +
+    `<button type="button" id="fvReset" class="fv-reset">Zrušiť filtre</button>`;
+  const count = $("count");
+  if (count) count.insertAdjacentHTML("beforebegin", more);
+  else bar.insertAdjacentHTML("beforeend", more);
+
+  // the bar stays where it was – right above the ranking – and also drives the chart; the chart gets a pointer to it
+  const chart = $("chartWrap");
+  const box = document.createElement("div");
+  box.className = "fv-filters";
+  box.id = "filtre";
+  bar.before(box);
+  box.innerHTML = `<div class="fv-head"><b>Filtre</b><span>platia pre rebríček aj graf vyššie</span></div>`;
+  box.appendChild(bar);
+  const note = document.createElement("div");
+  note.className = "fv-note";
+  chart?.before(note);
+
+  document.head.insertAdjacentHTML("beforeend", `<style id="fv-filters-css">
+.fv-filters{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 14px 4px;margin:24px 0 8px}
+.fv-filters .fv-head{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;margin-bottom:8px}
+.fv-filters .fv-head span{color:var(--muted);font-size:13px}
+.fv-filters .filters{margin-bottom:8px}
+.fv-filters .filters .count{flex-basis:100%;margin-left:0}
+.fv-check{display:inline-flex;gap:6px;align-items:center;font-size:13px;color:var(--text-2,var(--text));white-space:nowrap}
+.fv-reset{background:none;border:1px solid var(--border);color:var(--text);border-radius:8px;padding:6px 10px;font:inherit;font-size:13px;cursor:pointer}
+.fv-reset:hover{background:var(--surface-2,var(--surface))}
+.fv-note{color:var(--muted);font-size:13px;margin:0 0 8px}
+.fv-note a{color:inherit}
+.fv-empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:14px;pointer-events:none}
+@media (max-width:600px){.fv-filters .filters select,.fv-filters .filters input[type=number],.fv-filters .filters input[type=search]{flex:1 1 calc(50% - 8px);min-width:0;width:auto!important}}
+</style>`);
+
+  // --- filtering --------------------------------------------------------------------------------------------------
+  const val = (id) => ($(id) ? $(id).value : "");
+  const num = (id) => { const v = parseFloat(val(id)); return Number.isFinite(v) ? v : null; };
+  function matches(d) {
+    const yf = num("fvYearFrom"), yt = num("fvYearTo"), pmin = num("fvPriceMin"), pmax = num("fMax"), km = num("fvKm"), disc = num("fvDisc");
+    const fuel = val("fvFuel"), grp = val("fvGroup"), q = norm(val("fvText")).trim();
+    if (yf != null && !(d.year >= yf)) return false;
+    if (yt != null && !(d.year <= yt)) return false;
+    if (pmin != null && !(d.price_gross >= pmin)) return false;
+    if (pmax != null && !(d.price_gross <= pmax)) return false;
+    if (km != null && !(d.km <= km)) return false;
+    if (disc != null && !(d.discount_pct > disc || (disc > 0 && d.discount_pct >= disc))) return false;
+    if (fuel && fuelOf(d) !== fuel) return false;
+    if (grp !== "" && String(d.cg) !== grp) return false;
+    if ($("fvPick")?.checked && !d.pick) return false;
+    if (q && !q.split(/\s+/).every((w) => norm(`${d.title} ${d.eg ?? ""} ${d.engine ?? ""} ${d.location ?? ""}`).includes(w))) return false;
+    // the report's own filters (engine, gearbox, seller, portal, body, origin) – same rules as its renderTable
+    const en = val("fEngine"), tr = val("fTrans"), se = val("fSeller"), so = val("fSource"), og = val("fOrigin"), bo = val("fBody");
+    if (en && d.eg !== en) return false;
+    if (tr && d.transmission !== tr) return false;
+    if (se && d.seller_type === "dealer") return false;
+    if (so && !(d.source === so || (d.also_listed || []).some((a) => a.source === so))) return false;
+    if (og && d.origin !== og) return false;
+    if (bo && d.body !== bo) return false;
+    return true;
+  }
+  const active = () => [...box.querySelectorAll("select, input")].filter((el) => (el.type === "checkbox" ? el.checked : el.value !== "")).length;
+
+  let drawing = false;
+  function apply() {
+    if (drawing) return;
+    drawing = true;
+    const rows = ALL.filter(matches);
+    data.length = 0;
+    data.push(...rows);
+    const wrap = $("chartWrap");
+    wrap?.querySelector(".fv-empty")?.remove();
+    const plotted = rows.filter((d) => d.km && d.price_gross).length;
+    try {
+      if (typeof drawChart === "function") { // eslint-disable-line no-undef
+        if (plotted) drawChart(); // eslint-disable-line no-undef
+        else { const svg = $("chart"); if (svg) svg.innerHTML = ""; }
+      }
+    } catch (e) { console.warn("chart", e); }
+    if (wrap && !plotted) {
+      if (getComputedStyle(wrap).position === "static") wrap.style.position = "relative";
+      wrap.insertAdjacentHTML("beforeend", `<div class="fv-empty">Filtrom nezodpovedá žiadny inzerát</div>`);
+    }
+    try { renderTable(); } catch (e) { console.warn("table", e); } // eslint-disable-line no-undef
+    const n = active();
+    if (count) count.textContent = `Zobrazených ${fmt(rows.length)} z ${fmt(ALL.length)} inzerátov` + (n ? ` · aktívne filtre: ${n}` : "");
+    note.innerHTML = n
+      ? `Zobrazených ${fmt(rows.length)} z ${fmt(ALL.length)} inzerátov podľa <a href="#filtre">filtrov pri rebríčku</a>.`
+      : `Filtre (rok, cena, nájazd, palivo…) nájdeš <a href="#filtre">pri kompletnom rebríčku</a> – platia aj pre tento graf.`;
+    drawing = false;
+  }
+  box.querySelectorAll("select, input").forEach((el) => el.addEventListener("input", apply));
+  $("fvPick")?.addEventListener("change", apply);
+  $("fvReset").addEventListener("click", () => {
+    box.querySelectorAll("select, input").forEach((el) => { if (el.type === "checkbox") el.checked = false; else el.value = ""; });
+    apply();
+  });
+  apply();
+})();
+</script><!-- /ferovka-theme -->
+</body>
+</html>

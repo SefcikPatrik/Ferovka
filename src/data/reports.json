@@ -762,6 +762,19 @@
     }
   },
   {
+    "slug": "mercedes-gla",
+    "file": "mercedes-gla-analyza.html",
+    "name": "Mercedes-Benz GLA",
+    "brand": "Mercedes-Benz",
+    "model": "GLA",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Mercedes-Benz GLA (X156 a H247, 2014–2025, vrátane AMG GLA 35 / 45, bez nových áut z 2026) od 6 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 3 353 inzerátov (3 155 na bazoši, 198 na autobazar.eu, 0 na bazar.sk) – prezreli sme 8 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 206 rôznych áut zo Slovenska.",
+    "ads": 206,
+    "median": "18 999 €",
+    "r2": "96 %"
+  },
+  {
     "slug": "mercedes-glc",
     "file": "mercedes-glc-analyza.html",
     "name": "Mercedes-Benz GLC",
@@ -856,6 +869,51 @@
       "seen_price_count": 89,
       "last_observed_at": "2026-11-22T00:09:53"
     }
+  },
+  {
+    "slug": "peugeot-rifter",
+    "file": "peugeot-rifter-analyza.html",
+    "name": "Peugeot Rifter / Partner",
+    "brand": "Peugeot",
+    "model": "Rifter / Partner",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Peugeot Rifter / Partner (osobný Partner Tepee 2010–2018 a Rifter 2018–2025, bez dodávok Van) od 3 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 504 inzerátov (138 na bazoši, 151 na autobazar.eu, 215 na bazar.sk) – prezreli sme 71 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 294 rôznych áut zo Slovenska.",
+    "ads": 294,
+    "median": "10 990 €",
+    "r2": "94 %",
+    "history": {
+      "updated_at": "2026-11-22T14:08:31",
+      "as_of": "2026-11-22",
+      "coverage": "partial",
+      "baseline_count": 111,
+      "total_count": 111,
+      "active_count": 111,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 111,
+      "paired_median_change_pct": 0,
+      "historical_median": 10990,
+      "seen_median": 10990,
+      "seen_price_count": 111,
+      "last_observed_at": "2026-11-22T13:56:57"
+    }
+  },
+  {
+    "slug": "land-rover-evoque",
+    "file": "land-rover-evoque-analyza.html",
+    "name": "Range Rover Evoque",
+    "brand": "Range",
+    "model": "Rover Evoque",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Range Rover Evoque (prvá a druhá generácia 2011–2025, bez kabrioletu a nových áut z 2026) od 6 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 244 inzerátov (59 na bazoši, 108 na autobazar.eu, 77 na bazar.sk) – prezreli sme 68 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 107 rôznych áut zo Slovenska.",
+    "ads": 107,
+    "median": "15 990 €",
+    "r2": "95 %"
   },
   {
     "slug": "renault-arkana",
@@ -2726,7 +2784,7 @@
     "median": "12 499 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-22T12:30:00",
+      "updated_at": "2026-11-22T14:08:31",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 261,
@@ -2758,7 +2816,7 @@
     "median": "8 700 €",
     "r2": "92 %",
     "history": {
-      "updated_at": "2026-11-22T12:30:00",
+      "updated_at": "2026-11-22T14:08:31",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 279,
@@ -2790,7 +2848,7 @@
     "median": "13 990 €",
     "r2": "96 %",
     "history": {
-      "updated_at": "2026-11-22T12:30:00",
+      "updated_at": "2026-11-22T14:08:31",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 359,
@@ -2822,7 +2880,7 @@
     "median": "7 570 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-22T12:30:00",
+      "updated_at": "2026-11-22T14:08:31",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 440,
@@ -2854,7 +2912,7 @@
     "median": "15 900 €",
     "r2": "93 %",
     "history": {
-      "updated_at": "2026-11-22T12:30:00",
+      "updated_at": "2026-11-22T14:08:31",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 126,
@@ -2886,7 +2944,7 @@
     "median": "7 925 €",
     "r2": "92 %",
     "history": {
-      "updated_at": "2026-11-22T12:30:00",
+      "updated_at": "2026-11-22T14:08:31",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 148,
