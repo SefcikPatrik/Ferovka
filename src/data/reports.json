@@ -897,6 +897,51 @@
     }
   },
   {
+    "slug": "mitsubishi-l200",
+    "file": "mitsubishi-l200-analyza.html",
+    "name": "Mitsubishi L200",
+    "brand": "Mitsubishi",
+    "model": "L200",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Mitsubishi L200 (pick-up, 4. a 5. generácia 2010–2025, bez nových áut z 2026) od 5 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 107 inzerátov (63 na bazoši, 24 na autobazar.eu, 20 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 78 rôznych áut zo Slovenska.",
+    "ads": 78,
+    "median": "18 499 €",
+    "r2": "92 %",
+    "history": {
+      "updated_at": "2026-11-22T14:38:45",
+      "as_of": "2026-11-22",
+      "coverage": "partial",
+      "baseline_count": 37,
+      "total_count": 37,
+      "active_count": 37,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 37,
+      "paired_median_change_pct": 0,
+      "historical_median": 18499,
+      "seen_median": 18499,
+      "seen_price_count": 37,
+      "last_observed_at": "2026-11-22T14:32:30"
+    }
+  },
+  {
+    "slug": "nissan-navara",
+    "file": "nissan-navara-analyza.html",
+    "name": "Nissan Navara",
+    "brand": "Nissan",
+    "model": "Navara",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Nissan Navara (pick-up, D40 a NP300 2010–2022) od 5 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 188 inzerátov (85 na bazoši, 39 na autobazar.eu, 64 na bazar.sk) – prezreli sme 82 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 115 rôznych áut zo Slovenska.",
+    "ads": 115,
+    "median": "15 700 €",
+    "r2": "86 %"
+  },
+  {
     "slug": "peugeot-rifter",
     "file": "peugeot-rifter-analyza.html",
     "name": "Peugeot Rifter / Partner",
@@ -1132,6 +1177,19 @@
       "seen_price_count": 88,
       "last_observed_at": "2026-11-22T14:13:48"
     }
+  },
+  {
+    "slug": "vw-amarok",
+    "file": "vw-amarok-analyza.html",
+    "name": "Volkswagen Amarok",
+    "brand": "Volkswagen",
+    "model": "Amarok",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov VW Amarok (pick-up, prvá generácia 2010–2020 a nová od 2023, bez nových áut z 2026) od 6 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 97 inzerátov (59 na bazoši, 36 na autobazar.eu, 2 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 74 rôznych áut zo Slovenska.",
+    "ads": 74,
+    "median": "20 990 €",
+    "r2": "95 %"
   },
   {
     "slug": "vw-golf",
@@ -2554,7 +2612,7 @@
     "median": "9 900 €",
     "r2": "92 %",
     "history": {
-      "updated_at": "2026-11-22T12:30:00",
+      "updated_at": "2026-11-22T14:38:45",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 98,
@@ -2586,7 +2644,7 @@
     "median": "10 900 €",
     "r2": "93 %",
     "history": {
-      "updated_at": "2026-11-22T12:30:00",
+      "updated_at": "2026-11-22T14:38:45",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 94,
