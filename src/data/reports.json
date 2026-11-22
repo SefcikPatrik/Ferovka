@@ -2078,6 +2078,19 @@
     }
   },
   {
+    "slug": "nissan-leaf",
+    "file": "nissan-leaf-analyza.html",
+    "name": "Nissan Leaf",
+    "brand": "Nissan",
+    "model": "Leaf",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Nissan Leaf (Leaf I 2011–2017 a Leaf II 2018–2024, elektromobil) od 3 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 70 inzerátov (31 na bazoši, 20 na autobazar.eu, 19 na bazar.sk) – prezreli sme 76 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 45 rôznych áut zo Slovenska.",
+    "ads": 45,
+    "median": "14 759 €",
+    "r2": "96 %"
+  },
+  {
     "slug": "nissan-navara",
     "file": "nissan-navara-analyza.html",
     "name": "Nissan Navara",
@@ -2128,6 +2141,19 @@
     "ads": 39,
     "median": "2 150 €",
     "r2": "62 %"
+  },
+  {
+    "slug": "opel-vivaro",
+    "file": "opel-vivaro-analyza.html",
+    "name": "Opel Vivaro",
+    "brand": "Opel",
+    "model": "Vivaro",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Opel Vivaro (Vivaro A/B 2006–2019 a Vivaro C / Zafira Life 2019+, osobné verzie 6–9 miest, bez dodávok N1) od 5 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 200 inzerátov (105 na bazoši, 32 na autobazar.eu, 63 na bazar.sk) – prezreli sme 97 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 140 rôznych áut zo Slovenska.",
+    "ads": 140,
+    "median": "11 000 €",
+    "r2": "86 %"
   },
   {
     "slug": "peugeot-206",
@@ -2463,7 +2489,7 @@
     "median": "18 000 €",
     "r2": "92 %",
     "history": {
-      "updated_at": "2026-11-22T18:30:11",
+      "updated_at": "2026-11-22T20:38:44",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 31,
@@ -2495,7 +2521,7 @@
     "median": "26 900 €",
     "r2": "80 %",
     "history": {
-      "updated_at": "2026-11-22T18:30:11",
+      "updated_at": "2026-11-22T20:38:44",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 13,
@@ -2527,7 +2553,7 @@
     "median": "9 185 €",
     "r2": "95 %",
     "history": {
-      "updated_at": "2026-11-22T18:30:11",
+      "updated_at": "2026-11-22T20:38:44",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 48,
@@ -2559,7 +2585,7 @@
     "median": "2 300 €",
     "r2": "83 %",
     "history": {
-      "updated_at": "2026-11-22T18:30:11",
+      "updated_at": "2026-11-22T20:38:44",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 55,
@@ -2589,7 +2615,58 @@
     "summary": "Analýza aktuálnych inzerátov Renault Talisman (sedan a Grandtour 2015–2022) od 4 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 54 inzerátov (18 na bazoši, 25 na autobazar.eu, 11 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 34 rôznych áut zo Slovenska.",
     "ads": 34,
     "median": "9 200 €",
-    "r2": "74 %"
+    "r2": "74 %",
+    "history": {
+      "updated_at": "2026-11-22T20:38:44",
+      "as_of": "2026-11-22",
+      "coverage": "partial",
+      "baseline_count": 25,
+      "total_count": 25,
+      "active_count": 25,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 25,
+      "paired_median_change_pct": 0,
+      "historical_median": 9200,
+      "seen_median": 9200,
+      "seen_price_count": 25,
+      "last_observed_at": "2026-11-22T20:25:15"
+    }
+  },
+  {
+    "slug": "renault-trafic",
+    "file": "renault-trafic-analyza.html",
+    "name": "Renault Trafic",
+    "brand": "Renault",
+    "model": "Trafic",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Renault Trafic (Trafic II 2006–2014 a Trafic III 2014+, osobné verzie 6–9 miest, bez dodávok N1) od 5 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 349 inzerátov (113 na bazoši, 108 na autobazar.eu, 128 na bazar.sk) – prezreli sme 96 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 225 rôznych áut zo Slovenska.",
+    "ads": 225,
+    "median": "18 000 €",
+    "r2": "93 %",
+    "history": {
+      "updated_at": "2026-11-22T20:38:44",
+      "as_of": "2026-11-22",
+      "coverage": "partial",
+      "baseline_count": 65,
+      "total_count": 65,
+      "active_count": 65,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 65,
+      "paired_median_change_pct": 0,
+      "historical_median": 18000,
+      "seen_median": 18000,
+      "seen_price_count": 65,
+      "last_observed_at": "2026-11-22T20:33:38"
+    }
   },
   {
     "slug": "renault-twingo",
@@ -2604,7 +2681,7 @@
     "median": "3 700 €",
     "r2": "99 %",
     "history": {
-      "updated_at": "2026-11-22T18:30:11",
+      "updated_at": "2026-11-22T20:38:44",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 19,
@@ -5082,7 +5159,7 @@
     "median": "11 000 €",
     "r2": "78 %",
     "history": {
-      "updated_at": "2026-11-22T18:30:11",
+      "updated_at": "2026-11-22T20:38:44",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 43,
@@ -5114,7 +5191,7 @@
     "median": "5 000 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-22T18:30:11",
+      "updated_at": "2026-11-22T20:38:44",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 56,
@@ -6458,7 +6535,7 @@
     "median": "14 500 €",
     "r2": "97 %",
     "history": {
-      "updated_at": "2026-11-22T18:30:11",
+      "updated_at": "2026-11-22T20:38:44",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 102,
@@ -6490,7 +6567,7 @@
     "median": "7 000 €",
     "r2": "96 %",
     "history": {
-      "updated_at": "2026-11-22T18:30:11",
+      "updated_at": "2026-11-22T20:38:44",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 181,
@@ -6522,7 +6599,7 @@
     "median": "6 299 €",
     "r2": "90 %",
     "history": {
-      "updated_at": "2026-11-22T18:30:11",
+      "updated_at": "2026-11-22T20:38:44",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 210,
