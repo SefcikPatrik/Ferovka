@@ -635,6 +635,19 @@
     "r2": "74 %"
   },
   {
+    "slug": "ford-ecosport",
+    "file": "ford-ecosport-analyza.html",
+    "name": "Ford EcoSport",
+    "brand": "Ford",
+    "model": "EcoSport",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Ford EcoSport (2014–2022) od 3 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 54 inzerátov (25 na bazoši, 26 na autobazar.eu, 3 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 30 rôznych áut zo Slovenska.",
+    "ads": 30,
+    "median": "9 990 €",
+    "r2": "87 %"
+  },
+  {
     "slug": "ford-ranger",
     "file": "ford-ranger-analyza.html",
     "name": "Ford Ranger",
@@ -847,6 +860,19 @@
     }
   },
   {
+    "slug": "kia-carens",
+    "file": "kia-carens-analyza.html",
+    "name": "Kia Carens",
+    "brand": "Kia",
+    "model": "Carens",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Kia Carens (Carens III 2006–2013 a IV 2013–2019, 5 aj 7 miest) od 1 500 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 82 inzerátov (25 na bazoši, 39 na autobazar.eu, 18 na bazar.sk) – prezreli sme 96 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 45 rôznych áut zo Slovenska.",
+    "ads": 45,
+    "median": "6 990 €",
+    "r2": "95 %"
+  },
+  {
     "slug": "kia-ceed",
     "file": "kia-ceed-analyza.html",
     "name": "Kia Ceed",
@@ -909,6 +935,19 @@
       "seen_price_count": 921,
       "last_observed_at": "2026-11-22T02:21:41"
     }
+  },
+  {
+    "slug": "kia-venga",
+    "file": "kia-venga-analyza.html",
+    "name": "Kia Venga",
+    "brand": "Kia",
+    "model": "Venga",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Kia Venga (2010–2019) od 2 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 79 inzerátov (30 na bazoši, 27 na autobazar.eu, 22 na bazar.sk) – prezreli sme 75 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 37 rôznych áut zo Slovenska.",
+    "ads": 37,
+    "median": "4 600 €",
+    "r2": "95 %"
   },
   {
     "slug": "land-rover-discovery-sport",
@@ -1045,7 +1084,7 @@
     "median": "18 999 €",
     "r2": "93 %",
     "history": {
-      "updated_at": "2026-11-22T12:30:00",
+      "updated_at": "2026-11-22T18:01:15",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 221,
@@ -1075,7 +1114,26 @@
     "summary": "Analýza aktuálnych inzerátov Mercedes-Benz B (W246 a W247, 2012–2025, bez nových áut z 2026) od 4 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 3 625 inzerátov (3 438 na bazoši, 91 na autobazar.eu, 96 na bazar.sk) – prezreli sme 7 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 142 rôznych áut zo Slovenska.",
     "ads": 142,
     "median": "12 999 €",
-    "r2": "94 %"
+    "r2": "94 %",
+    "history": {
+      "updated_at": "2026-11-22T18:01:15",
+      "as_of": "2026-11-22",
+      "coverage": "partial",
+      "baseline_count": 113,
+      "total_count": 113,
+      "active_count": 113,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 113,
+      "paired_median_change_pct": 0,
+      "historical_median": 12999,
+      "seen_median": 12999,
+      "seen_price_count": 113,
+      "last_observed_at": "2026-11-22T13:43:20"
+    }
   },
   {
     "slug": "mercedes-c",
@@ -1090,7 +1148,7 @@
     "median": "17 145 €",
     "r2": "93 %",
     "history": {
-      "updated_at": "2026-11-22T12:30:00",
+      "updated_at": "2026-11-22T18:01:15",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 516,
@@ -1120,7 +1178,26 @@
     "summary": "Analýza aktuálnych inzerátov Mercedes-Benz CLA (C117 a C118, 2013–2025, kupé aj Shooting Brake, vrátane AMG CLA 35 / 45, bez nových áut z 2026) od 6 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 3 472 inzerátov (3 154 na bazoši, 299 na autobazar.eu, 19 na bazar.sk) – prezreli sme 13 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 337 rôznych áut zo Slovenska.",
     "ads": 337,
     "median": "20 500 €",
-    "r2": "96 %"
+    "r2": "96 %",
+    "history": {
+      "updated_at": "2026-11-22T18:01:15",
+      "as_of": "2026-11-22",
+      "coverage": "partial",
+      "baseline_count": 205,
+      "total_count": 205,
+      "active_count": 205,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 205,
+      "paired_median_change_pct": 0,
+      "historical_median": 20500,
+      "seen_median": 20500,
+      "seen_price_count": 205,
+      "last_observed_at": "2026-11-22T14:22:37"
+    }
   },
   {
     "slug": "mercedes-e",
@@ -1135,7 +1212,7 @@
     "median": "23 799 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-22T12:30:00",
+      "updated_at": "2026-11-22T18:01:15",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 489,
@@ -1165,7 +1242,26 @@
     "summary": "Analýza aktuálnych inzerátov Mercedes-Benz GLA (X156 a H247, 2014–2025, vrátane AMG GLA 35 / 45, bez nových áut z 2026) od 6 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 3 353 inzerátov (3 155 na bazoši, 198 na autobazar.eu, 0 na bazar.sk) – prezreli sme 8 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 206 rôznych áut zo Slovenska.",
     "ads": 206,
     "median": "18 999 €",
-    "r2": "96 %"
+    "r2": "96 %",
+    "history": {
+      "updated_at": "2026-11-22T18:01:15",
+      "as_of": "2026-11-22",
+      "coverage": "partial",
+      "baseline_count": 132,
+      "total_count": 132,
+      "active_count": 132,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 132,
+      "paired_median_change_pct": 0,
+      "historical_median": 18999,
+      "seen_median": 18999,
+      "seen_price_count": 132,
+      "last_observed_at": "2026-11-22T14:02:13"
+    }
   },
   {
     "slug": "mercedes-glb",
@@ -1178,7 +1274,26 @@
     "summary": "Analýza aktuálnych inzerátov Mercedes-Benz GLB (X247, 2019–2025, vrátane 7-miestnych, bez elektrického EQB a nových áut z 2026) od 10 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 2 796 inzerátov (2 627 na bazoši, 168 na autobazar.eu, 1 na bazar.sk) – prezreli sme 7 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 150 rôznych áut zo Slovenska.",
     "ads": 150,
     "median": "32 500 €",
-    "r2": "96 %"
+    "r2": "96 %",
+    "history": {
+      "updated_at": "2026-11-22T18:01:15",
+      "as_of": "2026-11-22",
+      "coverage": "partial",
+      "baseline_count": 71,
+      "total_count": 71,
+      "active_count": 71,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 71,
+      "paired_median_change_pct": 0,
+      "historical_median": 32500,
+      "seen_median": 32500,
+      "seen_price_count": 71,
+      "last_observed_at": "2026-11-22T16:05:17"
+    }
   },
   {
     "slug": "mercedes-glc",
@@ -1193,7 +1308,7 @@
     "median": "37 990 €",
     "r2": "95 %",
     "history": {
-      "updated_at": "2026-11-22T12:30:00",
+      "updated_at": "2026-11-22T18:01:15",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 368,
@@ -1225,7 +1340,7 @@
     "median": "39 999 €",
     "r2": "96 %",
     "history": {
-      "updated_at": "2026-11-22T12:30:00",
+      "updated_at": "2026-11-22T18:01:15",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 366,
@@ -1242,6 +1357,38 @@
       "seen_median": 39999,
       "seen_price_count": 434,
       "last_observed_at": "2026-11-22T02:18:26"
+    }
+  },
+  {
+    "slug": "mercedes-glk",
+    "file": "mercedes-glk-analyza.html",
+    "name": "Mercedes-Benz GLK",
+    "brand": "Mercedes-Benz",
+    "model": "GLK",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Mercedes GLK (X204, 2008–2015) od 5 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 186 inzerátov (78 na bazoši, 44 na autobazar.eu, 64 na bazar.sk) – prezreli sme 84 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 110 rôznych áut zo Slovenska.",
+    "ads": 110,
+    "median": "9 990 €",
+    "r2": "84 %",
+    "history": {
+      "updated_at": "2026-11-22T18:01:15",
+      "as_of": "2026-11-22",
+      "coverage": "partial",
+      "baseline_count": 79,
+      "total_count": 79,
+      "active_count": 79,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 79,
+      "paired_median_change_pct": 0,
+      "historical_median": 9990,
+      "seen_median": 9990,
+      "seen_price_count": 79,
+      "last_observed_at": "2026-11-22T17:55:16"
     }
   },
   {
@@ -1860,6 +2007,19 @@
     "ads": 192,
     "median": "31 490 €",
     "r2": "90 %"
+  },
+  {
+    "slug": "toyota-verso",
+    "file": "toyota-verso-analyza.html",
+    "name": "Toyota Verso",
+    "brand": "Toyota",
+    "model": "Verso",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Toyota Verso (Corolla Verso 2004–2009 a Verso 2009–2018, 5 aj 7 miest) od 2 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 148 inzerátov (105 na bazoši, 31 na autobazar.eu, 12 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 118 rôznych áut zo Slovenska.",
+    "ads": 118,
+    "median": "4 800 €",
+    "r2": "95 %"
   },
   {
     "slug": "toyota-yaris-cross",

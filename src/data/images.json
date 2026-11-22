@@ -796,5 +796,17 @@
   },
   "mitsubishi-pajero": {
     "file": "File:2007 Mitsubishi Pajero 3.8 SWB silver front.jpg"
+  },
+  "kia-carens": {
+    "file": "File:2018 Kia Carens 1.7 CRDI.jpg"
+  },
+  "kia-venga": {
+    "file": "File:2018 Kia Venga 3 ISG 1.6 Front.jpg"
+  },
+  "ford-ecosport": {
+    "file": "File:2018 Ford Ecosport ST-Line facelift 1.0 Front.jpg"
+  },
+  "mercedes-glk": {
+    "file": "File:Facelift Mercedes-Benz GLK 250 (X204) 4Matic, front view.jpg"
   }
 }
