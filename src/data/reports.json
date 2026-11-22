@@ -64,6 +64,19 @@
     }
   },
   {
+    "slug": "audi-q2",
+    "file": "audi-q2-analyza.html",
+    "name": "Audi Q2",
+    "brand": "Audi",
+    "model": "Q2",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Audi Q2 (2016–2025, bez nových áut z 2026) od 6 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 61 inzerátov (17 na bazoši, 22 na autobazar.eu, 22 na bazar.sk) – prezreli sme 70 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 38 rôznych áut zo Slovenska.",
+    "ads": 38,
+    "median": "16 800 €",
+    "r2": "93 %"
+  },
+  {
     "slug": "audi-q5",
     "file": "audi-q5-analyza.html",
     "name": "Audi Q5",
@@ -672,6 +685,19 @@
     }
   },
   {
+    "slug": "mercedes-b",
+    "file": "mercedes-b-analyza.html",
+    "name": "Mercedes-Benz B",
+    "brand": "Mercedes-Benz",
+    "model": "B",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Mercedes-Benz B (W246 a W247, 2012–2025, bez nových áut z 2026) od 4 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 3 625 inzerátov (3 438 na bazoši, 91 na autobazar.eu, 96 na bazar.sk) – prezreli sme 7 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 142 rôznych áut zo Slovenska.",
+    "ads": 142,
+    "median": "12 999 €",
+    "r2": "94 %"
+  },
+  {
     "slug": "mercedes-c",
     "file": "mercedes-c-analyza.html",
     "name": "Mercedes-Benz C",
@@ -1088,6 +1114,38 @@
     }
   },
   {
+    "slug": "volvo-v40",
+    "file": "volvo-v40-analyza.html",
+    "name": "Volvo V40",
+    "brand": "Volvo",
+    "model": "V40",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Volvo V40 (hatchback 2012–2019, aj Cross Country) od 3 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 85 inzerátov (27 na bazoši, 35 na autobazar.eu, 23 na bazar.sk) – prezreli sme 96 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 50 rôznych áut zo Slovenska.",
+    "ads": 50,
+    "median": "9 000 €",
+    "r2": "89 %",
+    "history": {
+      "updated_at": "2026-11-22T13:50:09",
+      "as_of": "2026-11-22",
+      "coverage": "partial",
+      "baseline_count": 41,
+      "total_count": 41,
+      "active_count": 41,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 41,
+      "paired_median_change_pct": 0,
+      "historical_median": 9000,
+      "seen_median": 9000,
+      "seen_price_count": 41,
+      "last_observed_at": "2026-11-22T13:45:52"
+    }
+  },
+  {
     "slug": "volvo-xc60",
     "file": "volvo-xc60-analyza.html",
     "name": "Volvo XC60",
@@ -1100,7 +1158,7 @@
     "median": "37 945 €",
     "r2": "95 %",
     "history": {
-      "updated_at": "2026-11-22T12:30:00",
+      "updated_at": "2026-11-22T13:50:09",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 230,
@@ -3884,7 +3942,7 @@
     "median": "19 990 €",
     "r2": "95 %",
     "history": {
-      "updated_at": "2026-11-22T12:30:00",
+      "updated_at": "2026-11-22T13:50:09",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 142,
@@ -3916,7 +3974,7 @@
     "median": "22 370 €",
     "r2": "93 %",
     "history": {
-      "updated_at": "2026-11-22T12:30:00",
+      "updated_at": "2026-11-22T13:50:09",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 86,
@@ -3948,7 +4006,7 @@
     "median": "35 670 €",
     "r2": "96 %",
     "history": {
-      "updated_at": "2026-11-22T12:30:00",
+      "updated_at": "2026-11-22T13:50:09",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 216,
