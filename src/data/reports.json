@@ -77,6 +77,19 @@
     "r2": "93 %"
   },
   {
+    "slug": "audi-q4",
+    "file": "audi-q4-analyza.html",
+    "name": "Audi Q4 e-tron",
+    "brand": "Audi",
+    "model": "Q4 e-tron",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Audi Q4 e-tron (Q4 e-tron a Q4 Sportback, 2021–2025, elektro, bez nových áut z 2026) od 15 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 1 777 inzerátov (1 718 na bazoši, 31 na autobazar.eu, 28 na bazar.sk) – prezreli sme 4 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 47 rôznych áut zo Slovenska.",
+    "ads": 47,
+    "median": "28 490 €",
+    "r2": "89 %"
+  },
+  {
     "slug": "audi-q5",
     "file": "audi-q5-analyza.html",
     "name": "Audi Q5",
@@ -536,6 +549,19 @@
       "seen_price_count": 360,
       "last_observed_at": "2026-11-22T02:56:27"
     }
+  },
+  {
+    "slug": "fiat-panda",
+    "file": "fiat-panda-analyza.html",
+    "name": "Fiat Panda",
+    "brand": "Fiat",
+    "model": "Panda",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Fiat Panda (tretia generácia 2012–2025, vrátane 4x4 a Cross, bez novej Grande Panda a nových áut z 2026) od 2 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 213 inzerátov (35 na bazoši, 82 na autobazar.eu, 96 na bazar.sk) – prezreli sme 86 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 102 rôznych áut zo Slovenska.",
+    "ads": 102,
+    "median": "6 222 €",
+    "r2": "98 %"
   },
   {
     "slug": "ford-ranger",
@@ -1429,7 +1455,7 @@
     "median": "30 400 €",
     "r2": "95 %",
     "history": {
-      "updated_at": "2026-11-22T14:26:48",
+      "updated_at": "2026-11-22T16:24:45",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 88,
@@ -1446,6 +1472,38 @@
       "seen_median": 30400,
       "seen_price_count": 88,
       "last_observed_at": "2026-11-22T14:13:48"
+    }
+  },
+  {
+    "slug": "toyota-yaris-cross",
+    "file": "toyota-yaris-cross-analyza.html",
+    "name": "Toyota Yaris Cross",
+    "brand": "Toyota",
+    "model": "Yaris Cross",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Toyota Yaris Cross (2021–2025, hybrid aj benzín, bez nových áut z 2026) od 8 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 170 inzerátov (22 na bazoši, 84 na autobazar.eu, 64 na bazar.sk) – prezreli sme 67 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 96 rôznych áut zo Slovenska.",
+    "ads": 96,
+    "median": "22 500 €",
+    "r2": "92 %",
+    "history": {
+      "updated_at": "2026-11-22T16:24:45",
+      "as_of": "2026-11-22",
+      "coverage": "partial",
+      "baseline_count": 47,
+      "total_count": 47,
+      "active_count": 47,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 47,
+      "paired_median_change_pct": 0,
+      "historical_median": 22500,
+      "seen_median": 22500,
+      "seen_price_count": 47,
+      "last_observed_at": "2026-11-22T16:18:43"
     }
   },
   {
@@ -3938,7 +3996,7 @@
     "median": "7 100 €",
     "r2": "90 %",
     "history": {
-      "updated_at": "2026-11-22T14:26:48",
+      "updated_at": "2026-11-22T16:24:45",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 101,
@@ -3970,7 +4028,7 @@
     "median": "8 500 €",
     "r2": "93 %",
     "history": {
-      "updated_at": "2026-11-22T14:26:48",
+      "updated_at": "2026-11-22T16:24:45",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 51,
@@ -4002,7 +4060,7 @@
     "median": "10 395 €",
     "r2": "99 %",
     "history": {
-      "updated_at": "2026-11-22T14:26:48",
+      "updated_at": "2026-11-22T16:24:45",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 28,
@@ -4034,7 +4092,7 @@
     "median": "24 600 €",
     "r2": "95 %",
     "history": {
-      "updated_at": "2026-11-22T14:26:48",
+      "updated_at": "2026-11-22T16:24:45",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 161,
@@ -4066,7 +4124,7 @@
     "median": "18 000 €",
     "r2": "96 %",
     "history": {
-      "updated_at": "2026-11-22T14:26:48",
+      "updated_at": "2026-11-22T16:24:45",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 254,
@@ -4098,7 +4156,7 @@
     "median": "22 700 €",
     "r2": "97 %",
     "history": {
-      "updated_at": "2026-11-22T14:26:48",
+      "updated_at": "2026-11-22T16:24:45",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 246,
@@ -4130,23 +4188,23 @@
     "median": "12 000 €",
     "r2": "95 %",
     "history": {
-      "updated_at": "2026-11-22T14:26:48",
+      "updated_at": "2026-11-22T16:24:45",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 186,
       "total_count": 186,
-      "active_count": 0,
+      "active_count": 1,
       "inactive_count": 0,
-      "unverified_count": 186,
+      "unverified_count": 185,
       "new_count": 0,
       "price_changed_count": 0,
       "price_lowered_count": 0,
-      "paired_count": 0,
-      "paired_median_change_pct": null,
+      "paired_count": 1,
+      "paired_median_change_pct": 0,
       "historical_median": 12000,
-      "seen_median": null,
-      "seen_price_count": 0,
-      "last_observed_at": "2026-11-21T17:14:30"
+      "seen_median": 19499,
+      "seen_price_count": 1,
+      "last_observed_at": "2026-11-22T16:17:52"
     }
   },
   {
