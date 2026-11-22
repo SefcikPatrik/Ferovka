@@ -1296,6 +1296,19 @@
     "r2": "79 %"
   },
   {
+    "slug": "peugeot-407",
+    "file": "peugeot-407-analyza.html",
+    "name": "Peugeot 407",
+    "brand": "Peugeot",
+    "model": "407",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Peugeot 407 (2004–2011, sedan, kombi SW aj kupé) od 1 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 114 inzerátov (89 na bazoši, 10 na autobazar.eu, 15 na bazar.sk) – prezreli sme 68 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 71 rôznych áut zo Slovenska.",
+    "ads": 71,
+    "median": "1 950 €",
+    "r2": "72 %"
+  },
+  {
     "slug": "peugeot-rifter",
     "file": "peugeot-rifter-analyza.html",
     "name": "Peugeot Rifter / Partner",
@@ -1696,14 +1709,14 @@
   {
     "slug": "toyota-land-cruiser",
     "file": "toyota-land-cruiser-analyza.html",
-    "name": "Toyota Land Cruiser",
+    "name": "Toyota Land Cruiser 120 / 150",
     "brand": "Toyota",
-    "model": "Land Cruiser",
+    "model": "Land Cruiser 120 / 150",
     "kind": "model",
     "date": "2026-11-22",
-    "summary": "Analýza aktuálnych inzerátov Toyota Land Cruiser (Land Cruiser 120 / 150 a 200, 2003–2024) od 5 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 306 inzerátov (160 na bazoši, 79 na autobazar.eu, 67 na bazar.sk) – prezreli sme 93 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 192 rôznych áut zo Slovenska.",
+    "summary": "Analýza aktuálnych inzerátov Toyota Land Cruiser 120 / 150 (Land Cruiser 120 a 150 „Prado“, 2003–2024) od 5 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 306 inzerátov (160 na bazoši, 79 na autobazar.eu, 67 na bazar.sk) – prezreli sme 93 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 192 rôznych áut zo Slovenska.",
     "ads": 192,
-    "median": "35 899 €",
+    "median": "31 490 €",
     "r2": "90 %"
   },
   {
@@ -1751,7 +1764,7 @@
     "median": "20 990 €",
     "r2": "95 %",
     "history": {
-      "updated_at": "2026-11-22T16:09:40",
+      "updated_at": "2026-11-22T17:18:10",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 51,
@@ -1783,7 +1796,7 @@
     "median": "9 990 €",
     "r2": "92 %",
     "history": {
-      "updated_at": "2026-11-22T16:09:40",
+      "updated_at": "2026-11-22T17:18:10",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 1577,
@@ -1815,7 +1828,7 @@
     "median": "26 490 €",
     "r2": "81 %",
     "history": {
-      "updated_at": "2026-11-22T16:09:40",
+      "updated_at": "2026-11-22T17:18:10",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 165,
@@ -1845,7 +1858,26 @@
     "summary": "Analýza aktuálnych inzerátov VW Jetta (Jetta V 2005–2010 a Jetta VI 2010–2018) od 2 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 101 inzerátov (56 na bazoši, 23 na autobazar.eu, 22 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 81 rôznych áut zo Slovenska.",
     "ads": 81,
     "median": "6 195 €",
-    "r2": "87 %"
+    "r2": "87 %",
+    "history": {
+      "updated_at": "2026-11-22T17:18:10",
+      "as_of": "2026-11-22",
+      "coverage": "partial",
+      "baseline_count": 58,
+      "total_count": 58,
+      "active_count": 58,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 58,
+      "paired_median_change_pct": 0,
+      "historical_median": 6195,
+      "seen_median": 6195,
+      "seen_price_count": 58,
+      "last_observed_at": "2026-11-22T17:03:18"
+    }
   },
   {
     "slug": "vw-transporter",
@@ -1858,7 +1890,26 @@
     "summary": "Analýza aktuálnych inzerátov VW Multivan / Caravelle / Transporter (T5, T6, T6.1 a T7, 2008–2025, osobné verzie 6–9 miest vrátane California, bez dodávok N1 a nových áut z 2026) od 5 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 1 111 inzerátov (709 na bazoši, 165 na autobazar.eu, 237 na bazar.sk) – prezreli sme 87 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 722 rôznych áut zo Slovenska.",
     "ads": 722,
     "median": "24 175 €",
-    "r2": "84 %"
+    "r2": "84 %",
+    "history": {
+      "updated_at": "2026-11-22T17:18:10",
+      "as_of": "2026-11-22",
+      "coverage": "partial",
+      "baseline_count": 322,
+      "total_count": 322,
+      "active_count": 322,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 322,
+      "paired_median_change_pct": 0,
+      "historical_median": 24175,
+      "seen_median": 24175,
+      "seen_price_count": 322,
+      "last_observed_at": "2026-11-22T16:47:22"
+    }
   },
   {
     "slug": "vw-tiguan",
@@ -1873,7 +1924,7 @@
     "median": "19 699 €",
     "r2": "92 %",
     "history": {
-      "updated_at": "2026-11-22T16:09:40",
+      "updated_at": "2026-11-22T17:18:10",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 893,
@@ -1905,7 +1956,7 @@
     "median": "26 900 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-22T16:09:40",
+      "updated_at": "2026-11-22T17:18:10",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 529,
@@ -1955,6 +2006,19 @@
       "seen_price_count": 41,
       "last_observed_at": "2026-11-22T13:45:52"
     }
+  },
+  {
+    "slug": "volvo-v70",
+    "file": "volvo-v70-analyza.html",
+    "name": "Volvo V70 / XC70",
+    "brand": "Volvo",
+    "model": "V70 / XC70",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Volvo V70 / XC70 (V70 II / III a XC70 2004–2016) od 2 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 96 inzerátov (57 na bazoši, 23 na autobazar.eu, 16 na bazar.sk) – prezreli sme 97 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 70 rôznych áut zo Slovenska.",
+    "ads": 70,
+    "median": "7 900 €",
+    "r2": "83 %"
   },
   {
     "slug": "volvo-v90",
@@ -4478,7 +4542,7 @@
     "median": "23 990 €",
     "r2": "84 %",
     "history": {
-      "updated_at": "2026-11-22T16:09:40",
+      "updated_at": "2026-11-22T17:18:10",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 304,
@@ -4510,7 +4574,7 @@
     "median": "9 500 €",
     "r2": "86 %",
     "history": {
-      "updated_at": "2026-11-22T16:09:40",
+      "updated_at": "2026-11-22T17:18:10",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 261,
@@ -4542,7 +4606,7 @@
     "median": "12 500 €",
     "r2": "93 %",
     "history": {
-      "updated_at": "2026-11-22T16:09:40",
+      "updated_at": "2026-11-22T17:18:10",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 1346,
@@ -4574,7 +4638,7 @@
     "median": "5 999 €",
     "r2": "90 %",
     "history": {
-      "updated_at": "2026-11-22T16:09:40",
+      "updated_at": "2026-11-22T17:18:10",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 219,
@@ -4606,7 +4670,7 @@
     "median": "9 950 €",
     "r2": "89 %",
     "history": {
-      "updated_at": "2026-11-22T16:09:40",
+      "updated_at": "2026-11-22T17:18:10",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 241,
@@ -4638,7 +4702,7 @@
     "median": "16 140 €",
     "r2": "96 %",
     "history": {
-      "updated_at": "2026-11-22T16:09:40",
+      "updated_at": "2026-11-22T17:18:10",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 59,
@@ -4670,7 +4734,7 @@
     "median": "18 740 €",
     "r2": "90 %",
     "history": {
-      "updated_at": "2026-11-22T16:09:40",
+      "updated_at": "2026-11-22T17:18:10",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 166,
@@ -4702,7 +4766,7 @@
     "median": "8 500 €",
     "r2": "93 %",
     "history": {
-      "updated_at": "2026-11-22T16:09:40",
+      "updated_at": "2026-11-22T17:18:10",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 463,
@@ -4734,7 +4798,7 @@
     "median": "5 500 €",
     "r2": "89 %",
     "history": {
-      "updated_at": "2026-11-22T16:09:40",
+      "updated_at": "2026-11-22T17:18:10",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 35,
