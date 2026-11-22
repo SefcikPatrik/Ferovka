@@ -468,6 +468,19 @@
     }
   },
   {
+    "slug": "citroen-c3-picasso",
+    "file": "citroen-c3-picasso-analyza.html",
+    "name": "Citroën C3 Picasso",
+    "brand": "Citroën",
+    "model": "C3 Picasso",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Citroën C3 Picasso (2009–2017) od 1 500 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 1 987 inzerátov (1 249 na bazoši, 384 na autobazar.eu, 354 na bazar.sk) – prezreli sme 37 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 435 rôznych áut zo Slovenska.",
+    "ads": 435,
+    "median": "4 100 €",
+    "r2": "96 %"
+  },
+  {
     "slug": "citroen-c4",
     "file": "citroen-c4-analyza.html",
     "name": "Citroën C4",
@@ -1501,6 +1514,19 @@
     "r2": "86 %"
   },
   {
+    "slug": "nissan-pathfinder",
+    "file": "nissan-pathfinder-analyza.html",
+    "name": "Nissan Pathfinder",
+    "brand": "Nissan",
+    "model": "Pathfinder",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Nissan Pathfinder (R51 2005–2014 a R52 2013–2021, 7 miest) od 3 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 59 inzerátov (38 na bazoši, 16 na autobazar.eu, 5 na bazar.sk) – prezreli sme 95 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 39 rôznych áut zo Slovenska.",
+    "ads": 39,
+    "median": "8 100 €",
+    "r2": "80 %"
+  },
+  {
     "slug": "opel-antara",
     "file": "opel-antara-analyza.html",
     "name": "Opel Antara",
@@ -1976,7 +2002,7 @@
     "median": "30 400 €",
     "r2": "95 %",
     "history": {
-      "updated_at": "2026-11-22T16:24:45",
+      "updated_at": "2026-11-22T18:11:17",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 88,
@@ -2006,7 +2032,26 @@
     "summary": "Analýza aktuálnych inzerátov Toyota Land Cruiser 120 / 150 (Land Cruiser 120 a 150 „Prado“, 2003–2024) od 5 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 306 inzerátov (160 na bazoši, 79 na autobazar.eu, 67 na bazar.sk) – prezreli sme 93 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 192 rôznych áut zo Slovenska.",
     "ads": 192,
     "median": "31 490 €",
-    "r2": "90 %"
+    "r2": "90 %",
+    "history": {
+      "updated_at": "2026-11-22T18:11:17",
+      "as_of": "2026-11-22",
+      "coverage": "partial",
+      "baseline_count": 72,
+      "total_count": 72,
+      "active_count": 72,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 72,
+      "paired_median_change_pct": 0,
+      "historical_median": 31490,
+      "seen_median": 31490,
+      "seen_price_count": 72,
+      "last_observed_at": "2026-11-22T17:09:57"
+    }
   },
   {
     "slug": "toyota-verso",
@@ -2019,7 +2064,26 @@
     "summary": "Analýza aktuálnych inzerátov Toyota Verso (Corolla Verso 2004–2009 a Verso 2009–2018, 5 aj 7 miest) od 2 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 148 inzerátov (105 na bazoši, 31 na autobazar.eu, 12 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 118 rôznych áut zo Slovenska.",
     "ads": 118,
     "median": "4 800 €",
-    "r2": "95 %"
+    "r2": "95 %",
+    "history": {
+      "updated_at": "2026-11-22T18:11:17",
+      "as_of": "2026-11-22",
+      "coverage": "partial",
+      "baseline_count": 43,
+      "total_count": 43,
+      "active_count": 43,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 43,
+      "paired_median_change_pct": 0,
+      "historical_median": 4800,
+      "seen_median": 4800,
+      "seen_price_count": 43,
+      "last_observed_at": "2026-11-22T18:04:03"
+    }
   },
   {
     "slug": "toyota-yaris-cross",
@@ -2034,7 +2098,7 @@
     "median": "22 500 €",
     "r2": "92 %",
     "history": {
-      "updated_at": "2026-11-22T16:24:45",
+      "updated_at": "2026-11-22T18:11:17",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 47,
@@ -4658,7 +4722,7 @@
     "median": "7 100 €",
     "r2": "90 %",
     "history": {
-      "updated_at": "2026-11-22T16:24:45",
+      "updated_at": "2026-11-22T18:11:17",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 101,
@@ -4690,7 +4754,7 @@
     "median": "8 500 €",
     "r2": "93 %",
     "history": {
-      "updated_at": "2026-11-22T16:24:45",
+      "updated_at": "2026-11-22T18:11:17",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 51,
@@ -4722,7 +4786,7 @@
     "median": "10 395 €",
     "r2": "99 %",
     "history": {
-      "updated_at": "2026-11-22T16:24:45",
+      "updated_at": "2026-11-22T18:11:17",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 28,
@@ -4754,7 +4818,7 @@
     "median": "24 600 €",
     "r2": "95 %",
     "history": {
-      "updated_at": "2026-11-22T16:24:45",
+      "updated_at": "2026-11-22T18:11:17",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 161,
@@ -4786,7 +4850,7 @@
     "median": "18 000 €",
     "r2": "96 %",
     "history": {
-      "updated_at": "2026-11-22T16:24:45",
+      "updated_at": "2026-11-22T18:11:17",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 254,
@@ -4818,7 +4882,7 @@
     "median": "22 700 €",
     "r2": "97 %",
     "history": {
-      "updated_at": "2026-11-22T16:24:45",
+      "updated_at": "2026-11-22T18:11:17",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 246,
@@ -4850,7 +4914,7 @@
     "median": "12 000 €",
     "r2": "95 %",
     "history": {
-      "updated_at": "2026-11-22T16:24:45",
+      "updated_at": "2026-11-22T18:11:17",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 186,
