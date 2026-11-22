@@ -1,5 +1,18 @@
 [
   {
+    "slug": "bmw-1",
+    "file": "bmw-1-analyza.html",
+    "name": "BMW 1",
+    "brand": "BMW",
+    "model": "1",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov BMW 1 (F20 / F21 a F40, 2011–2025, hatchback 3 aj 5 dverí, bez nových áut z 2026) od 3 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 4 448 inzerátov (4 222 na bazoši, 130 na autobazar.eu, 96 na bazar.sk) – prezreli sme 10 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 252 rôznych áut zo Slovenska.",
+    "ads": 252,
+    "median": "10 950 €",
+    "r2": "86 %"
+  },
+  {
     "slug": "citroen-c5-aircross",
     "file": "citroen-c5-aircross-analyza.html",
     "name": "Citroën C5 Aircross",
@@ -134,7 +147,7 @@
     "median": "17 145 €",
     "r2": "93 %",
     "history": {
-      "updated_at": "2026-11-22T00:47:52",
+      "updated_at": "2026-11-22T01:09:53",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 516,
@@ -151,6 +164,38 @@
       "seen_median": 17145,
       "seen_price_count": 516,
       "last_observed_at": "2026-11-22T00:45:28"
+    }
+  },
+  {
+    "slug": "mercedes-e",
+    "file": "mercedes-e-analyza.html",
+    "name": "Mercedes-Benz E",
+    "brand": "Mercedes-Benz",
+    "model": "E",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Mercedes-Benz E (W212, W213 a W214 – sedan, kombi T-model aj kupé / kabriolet, vrátane AMG, bez nových áut z 2026) od 4 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 4 188 inzerátov (3 474 na bazoši, 426 na autobazar.eu, 288 na bazar.sk) – prezreli sme 25 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 653 rôznych áut zo Slovenska.",
+    "ads": 653,
+    "median": "23 799 €",
+    "r2": "94 %",
+    "history": {
+      "updated_at": "2026-11-22T01:09:53",
+      "as_of": "2026-11-22",
+      "coverage": "partial",
+      "baseline_count": 489,
+      "total_count": 489,
+      "active_count": 489,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 489,
+      "paired_median_change_pct": 0,
+      "historical_median": 23799,
+      "seen_median": 23799,
+      "seen_price_count": 489,
+      "last_observed_at": "2026-11-22T00:59:52"
     }
   },
   {
@@ -1824,7 +1869,7 @@
     "median": "37 990 €",
     "r2": "95 %",
     "history": {
-      "updated_at": "2026-11-22T00:47:52",
+      "updated_at": "2026-11-22T01:09:53",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 368,
@@ -1856,7 +1901,7 @@
     "median": "39 990 €",
     "r2": "96 %",
     "history": {
-      "updated_at": "2026-11-22T00:47:52",
+      "updated_at": "2026-11-22T01:09:53",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 366,
