@@ -461,6 +461,19 @@
     }
   },
   {
+    "slug": "ford-ranger",
+    "file": "ford-ranger-analyza.html",
+    "name": "Ford Ranger",
+    "brand": "Ford",
+    "model": "Ranger",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Ford Ranger (pick-up, T6 2012–2022 a nová generácia 2023–2025, bez nových áut z 2026) od 6 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 528 inzerátov (153 na bazoši, 215 na autobazar.eu, 160 na bazar.sk) – prezreli sme 95 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 292 rôznych áut zo Slovenska.",
+    "ads": 292,
+    "median": "25 190 €",
+    "r2": "94 %"
+  },
+  {
     "slug": "hyundai-i30",
     "file": "hyundai-i30-analyza.html",
     "name": "Hyundai i30",
@@ -728,6 +741,19 @@
       "seen_price_count": 516,
       "last_observed_at": "2026-11-22T00:45:28"
     }
+  },
+  {
+    "slug": "mercedes-cla",
+    "file": "mercedes-cla-analyza.html",
+    "name": "Mercedes-Benz CLA",
+    "brand": "Mercedes-Benz",
+    "model": "CLA",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Mercedes-Benz CLA (C117 a C118, 2013–2025, kupé aj Shooting Brake, vrátane AMG CLA 35 / 45, bez nových áut z 2026) od 6 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 3 472 inzerátov (3 154 na bazoši, 299 na autobazar.eu, 19 na bazar.sk) – prezreli sme 13 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 337 rôznych áut zo Slovenska.",
+    "ads": 337,
+    "median": "20 500 €",
+    "r2": "96 %"
   },
   {
     "slug": "mercedes-e",
@@ -1073,6 +1099,38 @@
       "seen_median": 16990,
       "seen_price_count": 587,
       "last_observed_at": "2026-11-22T02:20:28"
+    }
+  },
+  {
+    "slug": "toyota-hilux",
+    "file": "toyota-hilux-analyza.html",
+    "name": "Toyota Hilux",
+    "brand": "Toyota",
+    "model": "Hilux",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Toyota Hilux (pick-up, 7. a 8. generácia 2010–2025, bez nových áut z 2026) od 6 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 305 inzerátov (75 na bazoši, 102 na autobazar.eu, 128 na bazar.sk) – prezreli sme 90 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 161 rôznych áut zo Slovenska.",
+    "ads": 161,
+    "median": "30 400 €",
+    "r2": "95 %",
+    "history": {
+      "updated_at": "2026-11-22T14:26:48",
+      "as_of": "2026-11-22",
+      "coverage": "partial",
+      "baseline_count": 88,
+      "total_count": 88,
+      "active_count": 88,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 88,
+      "paired_median_change_pct": 0,
+      "historical_median": 30400,
+      "seen_median": 30400,
+      "seen_price_count": 88,
+      "last_observed_at": "2026-11-22T14:13:48"
     }
   },
   {
@@ -3488,7 +3546,7 @@
     "median": "7 100 €",
     "r2": "90 %",
     "history": {
-      "updated_at": "2026-11-22T12:30:00",
+      "updated_at": "2026-11-22T14:26:48",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 101,
@@ -3520,7 +3578,7 @@
     "median": "8 500 €",
     "r2": "93 %",
     "history": {
-      "updated_at": "2026-11-22T12:30:00",
+      "updated_at": "2026-11-22T14:26:48",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 51,
@@ -3552,7 +3610,7 @@
     "median": "10 395 €",
     "r2": "99 %",
     "history": {
-      "updated_at": "2026-11-22T12:30:00",
+      "updated_at": "2026-11-22T14:26:48",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 28,
@@ -3584,7 +3642,7 @@
     "median": "24 600 €",
     "r2": "95 %",
     "history": {
-      "updated_at": "2026-11-22T12:30:00",
+      "updated_at": "2026-11-22T14:26:48",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 161,
@@ -3616,7 +3674,7 @@
     "median": "18 000 €",
     "r2": "96 %",
     "history": {
-      "updated_at": "2026-11-22T12:30:00",
+      "updated_at": "2026-11-22T14:26:48",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 254,
@@ -3648,7 +3706,7 @@
     "median": "22 700 €",
     "r2": "97 %",
     "history": {
-      "updated_at": "2026-11-22T12:30:00",
+      "updated_at": "2026-11-22T14:26:48",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 246,
@@ -3680,7 +3738,7 @@
     "median": "12 000 €",
     "r2": "95 %",
     "history": {
-      "updated_at": "2026-11-22T12:30:00",
+      "updated_at": "2026-11-22T14:26:48",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 186,

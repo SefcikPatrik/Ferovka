@@ -1,0 +1,869 @@
+<!doctype html>
+<html lang="sk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Toyota Hilux – analýza ponúk</title>
+<style>
+:root {
+  color-scheme: light;
+  --bg: #f6f6f4; --surface: #fcfcfb; --surface-2: #f0efec; --border: #e2e1dc;
+  --text: #0b0b0b; --text-2: #52514e; --muted: #7a7974;
+  --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a;
+  --pos: #2a78d6; --neg: #eb6834; --accent: #2a78d6;
+  --good: #1d7f4e; --bad: #b4332f; --grid: #e8e7e3;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #121211; --surface: #1a1a19; --surface-2: #232321; --border: #33332f;
+    --text: #f0efec; --text-2: #c3c2b7; --muted: #8f8e86;
+    --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+    --pos: #3987e5; --neg: #d95926; --accent: #5598e7;
+    --good: #4cc38a; --bad: #f07a76; --grid: #2a2a27;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #121211; --surface: #1a1a19; --surface-2: #232321; --border: #33332f;
+  --text: #f0efec; --text-2: #c3c2b7; --muted: #8f8e86;
+  --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+  --pos: #3987e5; --neg: #d95926; --accent: #5598e7;
+  --good: #4cc38a; --bad: #f07a76; --grid: #2a2a27;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text);
+  font: 15px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+main { max-width: 1120px; margin: 0 auto; padding: 32px 16px 64px; }
+a { color: var(--accent); text-decoration: none; } a:hover { text-decoration: underline; }
+h1 { font-size: 30px; margin: 0 0 4px; letter-spacing: -.01em; }
+h2 { font-size: 21px; margin: 48px 0 6px; }
+h3 { font-size: 15px; margin: 6px 0 4px; line-height: 1.35; }
+.lead { color: var(--text-2); margin: 0 0 20px; max-width: 760px; }
+.section-lead { color: var(--text-2); margin: 0 0 16px; max-width: 800px; }
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
+.kpi { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+.kpi .v { font-size: 26px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.kpi .l { color: var(--text-2); font-size: 13px; }
+.explain { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; margin-top: 12px; }
+.explain p { margin: 6px 0; color: var(--text-2); }
+.explain b { color: var(--text); }
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; }
+.card-head { display: flex; justify-content: space-between; gap: 8px; font-size: 12px; }
+.tag { font-weight: 600; color: var(--accent); }
+.loc { color: var(--muted); }
+.facts { color: var(--text-2); font-size: 13px; }
+.prices { display: grid; grid-template-columns: 1.2fr 1fr .8fr; gap: 8px; margin: 12px 0 8px; }
+.lbl { display: block; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+.big { font-size: 22px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.mid { font-size: 16px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.good { color: var(--good); }
+.meter { height: 6px; background: var(--surface-2); border-radius: 4px; overflow: hidden; }
+.meter span { display: block; height: 100%; background: var(--s1); border-radius: 4px; }
+.news ul { margin: 6px 0 0; padding-left: 20px; } .news li { margin: 4px 0; } .news .down { color: var(--good, #1baf7a); font-weight: 600; }
+.note { font-size: 12.5px; background: var(--surface-2); border-radius: 6px; padding: 6px 8px; margin-top: 8px; color: var(--text-2); }
+.pc { list-style: none; padding: 0; margin: 10px 0 0; font-size: 13.5px; }
+.pc li { padding-left: 20px; position: relative; margin: 3px 0; }
+.pc li.pro::before { content: "+"; position: absolute; left: 4px; color: var(--good); font-weight: 700; }
+.pc li.con::before { content: "–"; position: absolute; left: 4px; color: var(--bad); font-weight: 700; }
+.subhead { font-size: 15px; color: var(--text-2); margin: 22px 0 10px; font-weight: 600; }
+.chart-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 14px 8px; position: relative; }
+.legend { display: flex; flex-wrap: wrap; gap: 16px; font-size: 13px; color: var(--text-2); margin: 0 0 6px 4px; }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; }
+.legend .ring { background: transparent; border: 2px solid var(--text); width: 12px; height: 12px; }
+svg text { fill: var(--muted); font-size: 11px; }
+.tip { position: absolute; pointer-events: none; background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+  padding: 8px 10px; font-size: 12.5px; box-shadow: 0 6px 20px rgba(0,0,0,.15); max-width: 280px; display: none; z-index: 5; }
+.tip b { display: block; margin-bottom: 2px; }
+.tip .row { display: flex; justify-content: space-between; gap: 12px; color: var(--text-2); }
+.tip .row span:last-child { color: var(--text); font-variant-numeric: tabular-nums; }
+table { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; font-size: 13.5px; }
+th, td { padding: 9px 10px; border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; }
+th { font-size: 12px; color: var(--text-2); font-weight: 600; background: var(--surface-2); white-space: nowrap; }
+th.sortable { cursor: pointer; user-select: none; } th.sortable:hover { color: var(--text); }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+.sub { color: var(--text-2); font-size: 12.5px; margin-top: 2px; }
+.stars { color: #c98500; letter-spacing: 1px; white-space: nowrap; } .stars .off { color: var(--border); }
+.cellbar { height: 5px; background: var(--surface-2); border-radius: 3px; margin-bottom: 4px; }
+.cellbar span { display: block; height: 100%; background: var(--s1); border-radius: 3px; }
+.disc { display: inline-flex; align-items: center; gap: 6px; justify-content: flex-end; }
+.dbar { width: 54px; height: 6px; background: var(--surface-2); border-radius: 3px; position: relative; }
+.dbar span { position: absolute; top: 0; height: 100%; border-radius: 3px; }
+.filters { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 10px; align-items: center; }
+.filters select, .filters input { background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 6px 8px; font: inherit; font-size: 13px; }
+.filters .count { color: var(--muted); font-size: 13px; margin-left: auto; }
+.table-scroll { overflow-x: auto; border-radius: 12px; }
+.badge { font-size: 11px; padding: 1px 6px; border-radius: 10px; background: var(--surface-2); color: var(--text-2); white-space: nowrap; }
+.badge.pick { background: var(--s1); color: #fff; }
+.flag { color: var(--bad); font-size: 12px; }
+.warn { background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--neg); border-radius: 10px; padding: 12px 16px; }
+.warn li { margin: 4px 0; }
+.check { columns: 2 300px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px 14px 34px; margin: 0; }
+.check li { margin: 4px 0; break-inside: avoid; }
+footer { color: var(--muted); font-size: 12.5px; margin-top: 48px; border-top: 1px solid var(--border); padding-top: 14px; }
+.theme-btn { float: right; background: var(--surface); color: var(--text-2); border: 1px solid var(--border); border-radius: 8px; padding: 5px 10px; cursor: pointer; font: inherit; font-size: 13px; }
+@media (max-width: 640px) { h1 { font-size: 24px; } .prices { grid-template-columns: 1fr 1fr 1fr; } .big { font-size: 18px; } th, td { padding: 7px 6px; } }
+</style>
+<!-- ferovka-theme --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"><style id="ferovka-theme">/* Férovka look for the generated analyses – injected by sync-reports.mjs after each report's own <style>.
+   Same palette and type as the site; chart colours (--s1..--s3) stay the validated set. */
+:root {
+  --bg: #f5f4ef; --surface: #fdfdfb; --surface-2: #eeede6; --border: #e1dfd6;
+  --text: #0f1513; --text-2: #4f5551; --muted: #6f746f;
+  --accent: #0b8a56; --good: #0b7a4b; --grid: #e6e4dc; --win: #dff3e9;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d110f; --surface: #151a17; --surface-2: #1d2420; --border: #2a322d;
+    --text: #eef1ec; --text-2: #b6bdb6; --muted: #8f978f;
+    --accent: #2fc583; --good: #4cd08f; --grid: #1f2622; --win: #143223;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d110f; --surface: #151a17; --surface-2: #1d2420; --border: #2a322d;
+  --text: #eef1ec; --text-2: #b6bdb6; --muted: #8f978f;
+  --accent: #2fc583; --good: #4cd08f; --grid: #1f2622; --win: #143223;
+}
+
+body { font-family: "Manrope", system-ui, sans-serif; }
+h1, h2 { letter-spacing: -0.02em; font-weight: 800; }
+.tag { color: var(--accent); }
+
+/* photo header (removed by the site's viewer, which shows its own) */
+.fv-hero { position: relative; margin: 0 0 26px; border-radius: 20px; overflow: hidden; aspect-ratio: 21 / 8; background: #0d110f; display: flex; }
+.fv-hero img { flex: 1; min-width: 0; height: 100%; object-fit: cover; animation: fv-zoom 1.4s cubic-bezier(.2,.7,.2,1) both; }
+.fv-collage img + img { border-left: 3px solid #0d110f; }
+.fv-hero::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(180deg, transparent 55%, rgb(13 17 15 / .75)),
+    repeating-linear-gradient(90deg, rgb(47 197 131 / .06) 0 1px, transparent 1px 48px); }
+.fv-hero figcaption { position: absolute; right: 12px; bottom: 8px; z-index: 1; font-size: 11px; color: rgb(255 255 255 / .75); }
+.fv-hero figcaption a { color: inherit; }
+
+/* cards & panels: softer, lift on hover */
+.card, .kpi, .explain, .chart-wrap, .box { border-radius: 16px; }
+.card { transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease; }
+.card:hover { transform: translateY(-3px); border-color: var(--accent); box-shadow: 0 14px 30px -18px rgb(0 0 0 / .45); }
+.badge.pick { background: var(--accent); }
+
+/* entrance animation */
+@keyframes fv-up { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes fv-zoom { from { transform: scale(1.08); filter: brightness(.6); } to { transform: none; filter: none; } }
+h1, .lead, .kpis, .cards .card { animation: fv-up .6s cubic-bezier(.2,.7,.2,1) both; }
+.lead { animation-delay: .08s; }
+.kpis { animation-delay: .16s; }
+.cards .card:nth-child(2) { animation-delay: .06s; }
+.cards .card:nth-child(3) { animation-delay: .12s; }
+.cards .card:nth-child(4) { animation-delay: .18s; }
+.cards .card:nth-child(5) { animation-delay: .24s; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+@media (max-width: 640px) { .fv-hero { aspect-ratio: 16 / 9; border-radius: 14px; } }
+
+/* touch: hint under the chart tooltip (report-chart.js) */
+.fv-hint { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--border, rgba(127,127,127,.3)); font-weight: 700; color: var(--accent, #2fc583); }
+</style><!-- /ferovka-theme -->
+</head>
+<body>
+<main><!-- ferovka-theme --><!-- /ferovka-theme -->
+<button class="theme-btn" id="themeBtn" type="button">Svetlý / tmavý</button>
+<h1>Toyota Hilux – ktorá ponuka sa oplatí</h1>
+<p class="lead">Analýza aktuálnych inzerátov Toyota Hilux (pick-up, 7. a 8. generácia 2010–2025, bez nových áut z 2026) od 6 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 305 inzerátov (75 na bazoši, 102 na autobazar.eu, 128 na bazar.sk) – prezreli sme 90 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 161 rôznych áut zo Slovenska. Každé auto sme porovnali
+s <b>férovou cenou</b>: tú vypočítal model naučený na celom trhu podľa veku, nájazdu, motora, prevodovky a typu predajcu.</p>
+
+<div class="kpis">
+  <div class="kpi"><div class="v">161</div><div class="l">inzerátov Hiluxu (nad 6 000 €)</div></div>
+  <div class="kpi"><div class="v">88</div><div class="l">ohodnotených (majú rok aj km)</div></div>
+  <div class="kpi"><div class="v">30 400 €</div><div class="l">medián ceny s DPH</div></div>
+  <div class="kpi"><div class="v">95 %</div><div class="l">rozdielov v cenách vysvetlí model</div></div>
+</div>
+
+
+<h2>Odkiaľ sú dáta: bazoš, autobazar.eu a bazar.sk</h2>
+<div class="kpis">
+  <div class="kpi"><div class="v">36</div><div class="l">ohodnotených z bazoša</div></div>
+  <div class="kpi"><div class="v">19</div><div class="l">ohodnotených z autobazar.eu</div></div><div class="kpi"><div class="v">33</div><div class="l">ohodnotených z bazar.sk</div></div>
+  <div class="kpi"><div class="v">112</div><div class="l">áut bolo na viacerých portáloch – započítané raz</div></div>
+  <div class="kpi"><div class="v">39 / 7</div><div class="l">s uvedeným pôvodom SR / dovoz</div></div>
+</div>
+<div class="explain">
+  <p><b>Tri portály, jeden trh.</b> Bazoš prehľadal 67 inzerátov, autobazar.eu
+  102, bazar.sk 105. Ponuky z Česka (na autobazar.eu ich je veľa) sme vynechali. Autobazáre často dávajú
+  to isté auto na viac portálov. Takéto dvojice (35 v rebríčku) sme spojili podľa VIN alebo zhody roku, km a ceny,
+  aby sa v modeli nerátali dvakrát. Pri aute nájdeš odkaz na všetky ponuky – niekedy sa líšia cenou.</p>
+  <p><b>Rozdiel medzi portálmi:</b> rovnaké auto je na autobazar.eu v priemere -3,7 %
+  oproti bazošu. Na autobazar.eu predávajú hlavne firmy (15 z 19 ohodnotených). Na bazar.sk je rovnaké auto v priemere -5,5 % oproti bazošu.</p>
+  <p><b>Kúpené v SR vs. dovoz:</b> autá s uvedeným pôvodom zo SR sú oproti autám bez uvedeného pôvodu
+  +2,4 %, dovezené -0,8 %
+  (pri rovnakom veku, nájazde a motore). Pôvod zo SR je výhoda pri overovaní histórie, trh zaň však nepripláca – väčšina
+  inzerátov pôvod jednoducho neuvádza. V tabulke dole si môžeš nechať zobraziť len autá kúpené v SR.</p>
+</div>
+
+<h2>Čo hýbe cenou Hiluxu</h2>
+<p class="section-lead">Toto sa model naučil z trhu. Keď porovnávaš dve autá, tieto čísla ti povedia, koľko má byť
+rozdiel v cene, aby to bolo fér.</p>
+<div class="kpis">
+  <div class="kpi"><div class="v">-2,8 %</div><div class="l">každých ďalších 10 000 km</div></div>
+  <div class="kpi"><div class="v">-2,6 %</div><div class="l">každý rok veku navyše</div></div>
+  <div class="kpi"><div class="v">+13 %</div><div class="l">príplatok za automat (DSG)</div></div>
+  <div class="kpi"><div class="v">-1,2 %</div><div class="l">príplatok u predajcu / firmy</div></div>
+  <div class="kpi"><div class="v">+20,8 %</div><div class="l">Hilux ôsmej generácie (2016+) oproti cene podľa veku</div></div>
+  <div class="kpi"><div class="v">+12,9 %</div><div class="l">príplatok za automat</div></div>
+</div>
+<div class="explain">
+  <p><b>Príklad:</b> dva rovnaké Hiluxy 2.4 D-4D Double Cab z roku 2019, jedno má 60 tis. km, druhé 120 tis. km. Druhé má byť
+  približne o 17 % lacnejšie (6 × -2,8 %). Ak je lacnejšie len o 5 %, preplácaš kilometre.</p>
+  <p><b>Ako čítať „pod trhom“:</b> +15 % znamená, že auto stojí o 15 % menej, než by malo podľa trhu. Bežný rozptyl
+  cien je asi ±14 %, takže až zľava nad ~10–15 % je naozaj výnimočná. Pri takej zľave vždy zisti, prečo je auto lacné
+  (stav, história, nájazd).</p>
+  <p><b>DPH:</b> ceny uvedené bez DPH (napr. „10 300 € netto“) sme prepočítali na cenu s DPH, ktorú zaplatí súkromná osoba.</p>
+</div>
+
+<h2>Odporúčané ponuky</h2>
+<p class="section-lead">Kandidáti s najlepším pomerom cena / vek / nájazd, ktorých celý inzerát sme prečítali.
+Zoradené podľa toho, ako ich odporúčame.</p>
+<div class="subhead">Hilux ôsmej generácie (2016+) – najlepší pomer cena / vek</div>
+<div class="cards">
+<article class="card">
+  <div class="card-head"><span class="tag">Hilux 2.4 Live od 1. majiteľa z SR</span><span class="loc">Banská Bystrica</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/196568669/toyota-hilux-24-110-live-4x4-sk-povod-1-majitel.php" target="_blank" rel="noopener">Toyota Hilux 2.4 110 Live 4x4, SK pôvod - 1 Majiteľ</a></h3>
+  <div class="facts">2020 · 107 749 km · 2.4 D-4D 110 kW · manuál · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazoš</b> · kúpené v SR · aj na <a href='https://auto.bazar.sk/39737282-toyota-hilux-2-4-110-live-4x4-sk-povod-1-majitel/' target='_blank' rel='noopener'>bazar.sk</a> · aj na <a href='https://www.autobazar.eu/detail/toyota-hilux-24-110-live-4x4-sk-povod-1-majitel/AmKz9O6cGky/' target='_blank' rel='noopener'>autobazar.eu</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">22 499 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">28 050 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+19.8 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:66%"></span></div>
+  <ul class="pc"><li class="pro">2020, 2.4 D-4D 110 kW, 4x4, manuál, výbava Live, 108 tis. km</li><li class="pro">Kúpené v SR, 1. majiteľ, úplná servisná história, garancia km; cena s DPH (bez DPH 18 292 €)</li><li class="pro">~20 % pod férovou cenou</li><li class="con">Predáva autobazár</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 37 dní (od 16. 10.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Hilux 2.4 z 2019 s 98 tis. km</span><span class="loc">Liptovský Mikuláš</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197014910/toyota-hilux.php" target="_blank" rel="noopener">Toyota HILUX</a></h3>
+  <div class="facts">2019 · 98 000 km · 2.4 D-4D 110 kW · prevodovka ? · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">24 000 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">29 510 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+18.7 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:62%"></span></div>
+  <ul class="pc"><li class="pro">2019, 2.4 D-4D 110 kW, 4x4, 98 tis. km</li><li class="pro">~19 % pod férovou cenou</li><li class="con">Veľmi krátky inzerát – over stav a výbavu</li><li class="con">Predajca neistý</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">Nový inzerát</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Hilux 2.4 s navijakmi a pancierom</span><span class="loc">Námestovo</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197783909/hilux-24-2020.php" target="_blank" rel="noopener">Hilux 2.4 2020</a></h3>
+  <div class="facts">2020 · 184 000 km · 2.4 D-4D 110 kW · prevodovka ? · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">19 900 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">25 380 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+21.6 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:72%"></span></div>
+  <ul class="pc"><li class="pro">2020, 2.4 D-4D, 4x4, 184 tis. km</li><li class="pro">Navijak vpredu aj vzadu, pancier podvozku, pevnostné nárazníky, nové riadenie, vymenené všetky oleje, ťažné 3,5 t</li><li class="pro">~22 % pod férovou cenou</li><li class="con">Upravený na terén – over stav podvozku a zápis úprav v TP</li><li class="con">Predajca neistý</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">Nový inzerát</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Hilux 2.8 Active automat so zárukou</span><span class="loc">Košice II - Pereš</span></div>
+  <h3><a href="https://auto.bazar.sk/39757740-toyota-hilux-dc-2-8-l-d-4d-active-4x4-150kw-a6-zaruka-aj-na-splatky-protiucet/" target="_blank" rel="noopener">Toyota Hilux DC 2.8 l D-4D Active 4x4 / 150kW / A6 / ZÁRUKA / AJ NA SPLÁTKY / PROTIÚČET</a></h3>
+  <div class="facts">2021 · 103 087 km · 2.8 D-4D 130–150 kW · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazar.sk</b> · kúpené v SR · aj na <a href='https://www.autobazar.eu/detail/toyota-hilux-dc-28-l-d-4d-active-4x4-150kw-a6-zaruka-aj-na-splatky-protiucet/Amk7FL9Zh3B/' target='_blank' rel='noopener'>autobazar.eu</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">31 000 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">37 770 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+17.9 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:60%"></span></div>
+  <ul class="pc"><li class="pro">12/2021, 2.8 D-4D 150 kW, 4x4, 6-st. automat, výbava Active, 103 tis. km</li><li class="pro">Kúpené v SR, záruka predajcu, uvedený VIN</li><li class="pro">~18 % pod férovou cenou</li><li class="con">Predáva autobazár</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 18 dní (od 4. 11.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Hilux 2.8 Active automat s 58 tis. km</span><span class="loc">Stará Ľubovňa</span></div>
+  <h3><a href="https://auto.bazar.sk/39577913-toyota-hilux-dc-2-8-i-d-4d-active-4x4-a-t/" target="_blank" rel="noopener">Toyota Hilux DC 2.8 I D-4D Active 4x4 A/T</a></h3>
+  <div class="facts">2022 · 58 329 km · 2.8 D-4D 130–150 kW · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazar.sk</b> · kúpené v SR</div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">37 000 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">43 790 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+15.5 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:52%"></span></div>
+  <ul class="pc"><li class="pro">5/2022, 2.8 D-4D 150 kW, 4x4, automat, výbava Active, 58 tis. km</li><li class="pro">Kúpené v SR, uvedený VIN</li><li class="pro">~16 % pod férovou cenou</li><li class="con">Predáva autobazár</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">Nový inzerát</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Hilux 2.8 Active automat z SR</span><span class="loc">Trnava</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/toyota-hilux-dc-28-i-d-4d-active-4x4-at-150kw204hp-a6/Aesh2J6aQyI/" target="_blank" rel="noopener">Toyota Hilux DC 2.8 I D-4D Active 4x4 AT 150kW204HP A6</a></h3>
+  <div class="facts">2022 · 140 500 km · 2.8 D-4D 130–150 kW · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · kúpené v SR</div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">30 900 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">36 130 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+14.5 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:48%"></span></div>
+  <ul class="pc"><li class="pro">2022, 2.8 D-4D 150 kW, 4x4, 6-st. automat, výbava Active, 141 tis. km</li><li class="pro">Kúpené v SR</li><li class="pro">~15 % pod férovou cenou</li><li class="con">Vysoký nájazd na vek</li><li class="con">Inzerát bez textu</li><li class="con">Predáva autobazár</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 50 dní (od 3. 10.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Hilux 2.4 Active z SR s kamerou</span><span class="loc">Levice</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/196843217/predam-toyota-hilux-2018.php" target="_blank" rel="noopener">Predam Toyota Hilux</a></h3>
+  <div class="facts">2018 · 155 700 km · 2.4 D-4D 110 kW · manuál · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b> · kúpené v SR</div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">19 900 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">23 420 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+15.0 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:50%"></span></div>
+  <ul class="pc"><li class="pro">2018 (v prevádzke od 2019), 2.4 D-4D 110 kW, 4x4, 6-st. manuál, Double Cab, 156 tis. km</li><li class="pro">Kúpené v SR, pôvodné km, kamera, automatická klimatizácia, ťažné 3,5 t, 2 sady diskov</li><li class="pro">~15 % pod férovou cenou</li><li class="con">Predajca neistý</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke aspoň 28 dní</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Hilux 2.4 Executive Plus automat od 1. majiteľa</span><span class="loc">Bratislava - Vajnory</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/toyota-hilux-24-awd-110kw-at/AmqzPvyVVNh/" target="_blank" rel="noopener">TOYOTA Hilux 2.4 D-4D 4x4 A/T Executive Plus</a></h3>
+  <div class="facts">2020 · 81 073 km · 2.4 D-4D 110 kW · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · aj na <a href='https://auto.bazar.sk/39484200-toyota-hilux-2-4-d-4d-4x4-a-t-executive-plus/' target='_blank' rel='noopener'>bazar.sk</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">28 999 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">31 940 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+9.2 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:31%"></span></div>
+  <ul class="pc"><li class="pro">2020, 2.4 D-4D, 4x4, automat, Executive Plus, 81 tis. km</li><li class="pro">Kúpené v SR, 1. majiteľ, uzamykateľná roleta korby, STK/EK do 06/2028</li><li class="pro">~9 % pod férovou cenou</li><li class="con">Predáva autobazár</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 209 dní (od 27. 4.)</p><!-- history-card:end --></article></div>
+<div class="subhead">Lacnejšie Hiluxy do 20 000 €</div>
+<div class="cards">
+<article class="card">
+  <div class="card-head"><span class="tag">Hilux 2.5 D-4D s podvozkom ARB</span><span class="loc">Košice</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/toyota-hilux-pojazdne-dc-25-l-d-4d-luna-2011-diesel-235tkm-106-kw-4x4-m5-arb-podvozok/Amt5U5M9bfj/" target="_blank" rel="noopener">Toyota Hilux POJAZDNÉ DC 2.5 l D-4D Luna 2011, Diesel, 235Tkm, 106 kW, 4x4, M5, ARB PODVOZOK</a></h3>
+  <div class="facts">2011 · 235 000 km · 2.5 / 3.0 D-4D 106–126 kW · manuál · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · dovezené · aj na <a href='https://auto.bazar.sk/35807974-toyota-hilux-pojazdne-dc-2-5-l-d-4d-luna-2011-diesel-235tkm-106-kw-4x4-m5-arb-podvozok/' target='_blank' rel='noopener'>bazar.sk</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">9 990 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">11 920 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+16.2 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:54%"></span></div>
+  <ul class="pc"><li class="pro">2011, 2.5 D-4D 106 kW, 4x4, 5-st. manuál, Double Cab, 235 tis. km</li><li class="pro">Terénny podvozok ARB</li><li class="pro">~16 % pod férovou cenou</li><li class="con">Dovoz</li><li class="con">Takmer bez textu – over stav</li><li class="con">Predáva autobazár</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 1642 dní (od 25. 5.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Hilux 3.0 D-4D automat s hardtopom</span><span class="loc">Nitra</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/195954763/toyota-hilux-30-na-predaj-na-splatky.php" target="_blank" rel="noopener">TOYOTA HILUX 3.0 - na predaj / na splatky</a></h3>
+  <div class="facts">2016 · 270 000 km · 2.5 / 3.0 D-4D 106–126 kW · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazoš</b> · dovezené</div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">16 990 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">19 200 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+11.5 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:38%"></span></div>
+  <ul class="pc"><li class="pro">2016, 3.0 D-4D, 4x4, automat, 270 tis. km</li><li class="pro">Hardtop, ťažné</li><li class="pro">~12 % pod férovou cenou</li><li class="con">Veľmi vysoký nájazd</li><li class="con">Dovoz – treba prihlásiť</li><li class="con">Predáva autobazár</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke aspoň 56 dní</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Hilux 3.0 D-4D Sol automat z SR</span><span class="loc">Dunajská Lužná</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/toyota-hilux-dc-30-i-d-4d-sol-at/AmyykXUhWo9/" target="_blank" rel="noopener">Toyota Hilux DC 3.0 I D-4D Sol A/T</a></h3>
+  <div class="facts">2011 · 309 800 km · 2.5 / 3.0 D-4D 106–126 kW · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · kúpené v SR · aj na <a href='https://auto.bazar.sk/39535834-toyota-hilux-dc-3-0-i-d-4d-sol-a-t/' target='_blank' rel='noopener'>bazar.sk</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">11 999 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">13 530 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+11.3 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:38%"></span></div>
+  <ul class="pc"><li class="pro">2011, 3.0 D-4D, 4x4, automat, výbava Sol, 310 tis. km</li><li class="pro">Kúpené v SR, servisovaný</li><li class="pro">~11 % pod férovou cenou</li><li class="con">Veľmi vysoký nájazd</li><li class="con">Predáva autobazár</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 172 dní (od 3. 6.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Hilux 2.5 D-4D Terra s 81 tis. km</span><span class="loc">Modra</span></div>
+  <h3><a href="https://auto.bazar.sk/39617918-toyota-hilux-dc-2-5-i-d-4d-terra/" target="_blank" rel="noopener">Toyota Hilux DC 2.5 I D-4D Terra</a></h3>
+  <div class="facts">2015 · 81 000 km · 2.5 / 3.0 D-4D 106–126 kW · manuál · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazar.sk</b> · aj na <a href='https://auto.bazos.sk/inzerat/197481829/toyota-hilux-dc-25-i-d-4d-106kw-2015-2ks.php' target='_blank' rel='noopener'>bazoš</a> za 15 800 € · aj na <a href='https://www.autobazar.eu/detail/toyota-hilux-dc-25-i-d-4d-terra/Am3-oaQh_zb/' target='_blank' rel='noopener'>autobazar.eu</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">15 600 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">17 430 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+10.5 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:35%"></span></div>
+  <ul class="pc"><li class="pro">7/2015, 2.5 D-4D 106 kW, 4x4, manuál, výbava Terra, 81 tis. km</li><li class="pro">Uvedený VIN</li><li class="pro">~11 % pod férovou cenou</li><li class="con">Nízky nájazd na vek – over históriu km</li><li class="con">Predáva autobazár</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 13 dní (od 9. 11.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Hilux 3.0 D-4D Sol automat z SR</span><span class="loc">Trenčianska Teplá</span></div>
+  <h3><a href="https://auto.bazar.sk/39648507-toyota-hilux-dc-3-0-i-d-4d-sol-a-t/" target="_blank" rel="noopener">Toyota Hilux DC 3.0 I D-4D Sol A/T</a></h3>
+  <div class="facts">2012 · 210 463 km · 2.5 / 3.0 D-4D 106–126 kW · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazar.sk</b> · kúpené v SR · aj na <a href='https://www.autobazar.eu/detail/toyota-hilux-dc-30-i-d-4d-sol-at/AmIEOGd9N8j/' target='_blank' rel='noopener'>autobazar.eu</a> · aj na <a href='https://auto.bazos.sk/inzerat/196509239/toyota-hilux-dc-30-i-d-4d-sol-at.php' target='_blank' rel='noopener'>bazoš</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">13 900 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">15 420 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+9.8 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:33%"></span></div>
+  <ul class="pc"><li class="pro">8/2012, 3.0 D-4D 126 kW, 4x4, automat, výbava Sol, 210 tis. km</li><li class="pro">Kúpené v SR, uvedený VIN</li><li class="pro">~10 % pod férovou cenou</li><li class="con">Vysoký nájazd</li><li class="con">Predáva autobazár</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke aspoň 39 dní</p><!-- history-card:end --></article></div>
+<div class="subhead">Špeciálne prípady</div>
+<div class="cards"></div>
+
+<h2>Cena vs. nájazd: celý trh na jednom grafe</h2>
+<p class="section-lead">Každý bod je jeden inzerát. Čím nižšie bod leží oproti ostatným s podobným nájazdom, tým je auto lacnejšie.
+Krúžkom sú označené odporúčané ponuky. Prejdi myšou na bod a uvidíš detail.</p>
+<div class="chart-wrap" id="chartWrap">
+  <div class="legend" id="legend"></div>
+  <svg id="chart" width="100%" height="420" role="img" aria-label="Bodový graf ceny a nájazdu inzerátov"></svg>
+  <div class="tip" id="tip"></div>
+</div>
+
+<h2>Porovnanie motorov</h2>
+<p class="section-lead">Hodnotenie (hviezdičky) zohľadňuje spoľahlivosť, spoľahlivosť a náklady na prevádzku a pomer cena/výkon.
+Číselné stĺpce sú mediány z ohodnotených inzerátov.</p>
+<div class="table-scroll">
+<table>
+  <thead><tr><th>Motor</th><th>Hodnotenie</th><th class="num">Ponúk</th><th class="num">Medián ceny</th><th class="num">Medián roku</th><th class="num">Medián km</th></tr></thead>
+  <tbody>
+<tr>
+  <td><b>2.8 D-4D 130–150 kW</b><div class="sub">Silnejší diesel 177–204 k (2016+), často automat. Ťahavý a odolný; over DPF a AdBlue.</div></td>
+  <td><span class="stars" aria-label="4 z 5">★★★★<span class="off">★</span></span></td>
+  <td class="num">35</td>
+  <td class="num"><div class="cellbar"><span style="width:100%"></span></div>45 000 €</td>
+  <td class="num">2023</td>
+  <td class="num">60 000 km</td>
+</tr>
+<tr>
+  <td><b>2.4 D-4D 110 kW</b><div class="sub">Najčastejší diesel 150 k (2016+). Veľmi odolný; over DPF a stav pohonu 4x4.</div></td>
+  <td><span class="stars" aria-label="5 z 5">★★★★★<span class="off"></span></span></td>
+  <td class="num">33</td>
+  <td class="num"><div class="cellbar"><span style="width:58%"></span></div>26 000 €</td>
+  <td class="num">2020</td>
+  <td class="num">107 749 km</td>
+</tr>
+<tr>
+  <td><b>2.5 / 3.0 D-4D 106–126 kW</b><div class="sub">Staršie diesely 144–171 k (do 2015). Odolné, ale hlučnejšie; over vstrekovače.</div></td>
+  <td><span class="stars" aria-label="4 z 5">★★★★<span class="off">★</span></span></td>
+  <td class="num">17</td>
+  <td class="num"><div class="cellbar"><span style="width:31%"></span></div>13 990 €</td>
+  <td class="num">2012</td>
+  <td class="num">231 541 km</td>
+</tr>
+<tr>
+  <td><b>Benzín / nezistený</b><div class="sub">Benzínový Hilux je v Európe vzácny.</div></td>
+  <td><span class="stars" aria-label="3 z 5">★★★<span class="off">★★</span></span></td>
+  <td class="num">3</td>
+  <td class="num"><div class="cellbar"><span style="width:77%"></span></div>34 500 €</td>
+  <td class="num">2019</td>
+  <td class="num">32 700 km</td>
+</tr></tbody>
+</table>
+</div>
+<div class="explain">
+  <p><b>Generácie:</b> <b>Hilux VII</b> (AN10/AN20, 2005–2015) a <b>Hilux VIII</b> (AN120/AN130, od 2016, facelift 2020).
+  Legendárne odolný pick-up s rámom, pohonom 4x4 a ťažným do 3,5 t – drží si cenu aj pri vysokom nájazde.</p>
+  <p><b>Ktorý motor zvoliť?</b> <b>2.4 D-4D</b> stačí na bežnú prácu. <b>2.8 D-4D</b> (od 2020 s 204 k) je lepší na ťahanie a diaľnicu.
+  Kabína <b>Double Cab</b> má 5 miest, Extra Cab a Single Cab sú pracovné.</p>
+</div>
+
+<h2>Na čo si dať pozor</h2>
+<div class="warn">
+  <p><b>Lacné kvôli extrémnemu nájazdu</b> (viac ako 35 tis. km ročne, typicky flotila alebo taxi):</p>
+  <ul><li><a href='https://auto.bazos.sk/inzerat/197334150/hilux-28d.php' target='_blank' rel='noopener'>Hilux 2.8d</a>: 2023, 151 000 km → 45 000 km/rok. Lacné je kvôli nájazdu.</li><li><a href='https://auto.bazar.sk/39041036-toyota-hilux-dc-2-8-i-d-4d-active-4x4-a-t/' target='_blank' rel='noopener'>Toyota Hilux DC 2.8 I D-4D Active 4x4 A/T</a>: 2022, 187 201 km → 43 000 km/rok. Lacné je kvôli nájazdu.</li><li><a href='https://www.autobazar.eu/detail/toyota-hilux-24-d-4d-adventure-24/Abs4BmB76cQ/' target='_blank' rel='noopener'>Toyota HILUX 2.4. D-4D Adventure  2,4</a>: 2020, 266 500 km → 42 000 km/rok. Lacné je kvôli nájazdu.</li><li><a href='https://auto.bazar.sk/39631839-toyota-hilux-2-4-d-4d/' target='_blank' rel='noopener'>Toyota Hilux 2.4 D-4D</a>: 2020, 240 531 km → 38 000 km/rok. Lacné je kvôli nájazdu.</li></ul>
+  <p><b>Podozrivo nízky nájazd na vek</b> – preklep alebo stočené km, over cez Cebiu:</p><ul><li><a href='https://auto.bazar.sk/34351956-toyota-hilux-2-4-d-4d/' target='_blank' rel='noopener'>Toyota Hilux 2.4 D-4D</a> (33 299 €): rok 2018 a len 27 348 km</li></ul><p><b>Ďalšie veci, ktoré sme v inzerátoch našli:</b></p><ul><li>Hilux z 2025 za 30 300 € vyzerá veľmi lacno, ale podľa textu je to <b>cena bez DPH</b> – s DPH je to asi 37 000 €, teda zhruba trhová cena.</li><li>Hiluxy sú často firemné autá – pri cene bez DPH počítame s cenou s DPH; over aj zápis v TP (N1 alebo M1).</li><li>Asi 35 ponúk sú nové Hiluxy z 2026 – tie sme nezarátali.</li><li>Pri inzerátoch AAA AUTO je uvedená <b>cena pri financovaní</b> – pri platbe v hotovosti môže byť iná.</li></ul><p><b>Vyradené z porovnania</b> (poškodené autá alebo nezmyselné údaje – model ich nehodnotí):</p><ul><li><a href='https://auto.bazar.sk/39720987-toyota-hilux-invincible/' target='_blank' rel='noopener'>Toyota Hilux Invincible</a> (50 970 €): podozrivo nízky nájazd</li><li><a href='https://auto.bazar.sk/39711949-toyota-hilux-toyota-hilux-invincible-2025-4x4-2-8l-204k-mhev/' target='_blank' rel='noopener'>Toyota Hilux Toyota Hilux Invincible 2025 4x4 2.8L 204k MHEV</a> (51 900 €): podozrivo nízky nájazd</li><li><a href='https://auto.bazar.sk/39631571-toyota-hilux-hilux-my25-4d-pick-up-double-cab-2-8-diesel-invincible/' target='_blank' rel='noopener'>Toyota Hilux Hilux MY25 - 4D Pick Up Double Cab - 2.8 Diesel - Invincible</a> (48 816 €): podozrivo nízky nájazd</li><li><a href='https://auto.bazar.sk/29589328-toyota-hilux-dc-2-5i-d-4d-luna-2013-diesel-90000-km-106-kw-4x4-m5-kabina-korba-znicene/' target='_blank' rel='noopener'>Toyota Hilux DC 2.5I D-4D Luna 2013, Diesel, 90000 km, 106 kW, 4x4, M5, KABÍNA+KORBA ZNIČENÉ</a> (7 190 €): cena je o 59 % pod trhom – havarované, na diely, záloha/splátka namiesto ceny alebo podvod</li></ul><p><b>Land Cruiser, RAV4 a iné modely z vyhľadávania, nové autá z 2026, inzeráty s chybným nájazdom</b> (52 inzerátov) sme z rebríčka vynechali.</p>
+  <p>Ďalších <b>12</b> inzerátov nemá v texte rok alebo kilometre, takže ich nebolo možné ohodnotiť.
+  Ak ťa niektorý zaujme, predajcu sa na tieto údaje opýtaj.</p>
+</div>
+
+<h2>Kompletný rebríček</h2>
+<p class="section-lead">Všetky ohodnotené inzeráty. Kliknutím na hlavičku stĺpca zoraďuješ, filtrom zužuješ výber.</p>
+<div class="filters">
+  <select id="fEngine"><option value="">Všetky motory</option></select>
+  <select id="fTrans"><option value="">Každá prevodovka</option><option value="automatic">Automat</option><option value="manual">Manuál</option></select>
+  <select id="fSeller"><option value="">Všetci predajcovia</option><option value="nodealer">Bez autobazárov</option></select>
+  <select id="fSource"><option value="">Všetky portály</option><option value="bazos">bazoš</option><option value="autobazar">autobazar.eu</option><option value="bazarsk">bazar.sk</option></select>
+  <select id="fBody" hidden><option value=""></option></select>
+  <select id="fOrigin"><option value="">Akýkoľvek pôvod</option><option value="SR">Kúpené v SR</option><option value="dovoz">Dovoz</option></select>
+  <input id="fMax" type="number" placeholder="Max. cena €" step="500" min="0" style="width:120px">
+  <span class="count" id="count"></span>
+</div>
+<div class="table-scroll">
+<table id="tbl">
+  <thead><tr>
+    <th class="sortable" data-k="title">Inzerát</th>
+    <th class="sortable num" data-k="year">Rok</th>
+    <th class="sortable num" data-k="km">Km</th>
+    <th class="sortable num" data-k="price_gross">Cena</th>
+    <th class="sortable num" data-k="fair_price">Férová</th>
+    <th class="sortable num" data-k="discount_pct">Pod trhom ▾</th>
+  </tr></thead>
+  <tbody></tbody>
+</table>
+</div>
+
+<h2>Pred kúpou over</h2>
+<ul class="check">
+  <li>VIN cez Cebia / autoDNA (história km, havárie, leasing)</li>
+  <li>Rám a podvozok: hrdza, ohnuté diely (pracovné a terénne využitie)</li>
+  <li>Pohon 4x4 a uzávierka diferenciálu: zapínanie, hluky</li>
+  <li>Korba: poškodenie, kryt korby, ťažné zariadenie</li>
+  <li>Zápis v TP: N1 (nákladné) alebo M1 – vplyv na diaľničnú známku a odpočet DPH</li>
+  <li>STK/EK protokol a dátum platnosti; cena s DPH alebo bez DPH, ak predáva firma</li>
+</ul>
+
+<footer>
+  Zdroj: auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (len ponuky zo Slovenska, to isté auto na viacerých portáloch je započítané raz), sťahované cez lokálny MCP server bazos-mcp (nástroj <code>fair_price</code>), 22. 11. 2026.
+  Model: ridge regresia log(ceny s DPH) podľa veku, veku², km, km², prevodovky, typu predajcu, motora, karosérie, pohonu 4x4, pôvodu (SR / dovoz) a portálu. Vzorka 88
+  inzerátov, R² 95 %. Parametre sú vyťažené z textu inzerátov, a preto môžu obsahovať chyby. Odporúčané ponuky sme overili
+  prečítaním celého inzerátu. Hodnotenie motorov je odborný odhad, nie výsledok modelu.
+</footer>
+</main>
+
+<script>
+const DATA = [{"id": "197783909", "url": "https://auto.bazos.sk/inzerat/197783909/hilux-24-2020.php", "title": "Hilux 2.4 2020", "price": 19900, "price_gross": 19900, "fair_price": 25380.0, "discount_pct": 21.6, "verdict": "výrazne pod trhom – over prečo", "year": 2020, "km": 184000, "km_per_year": 29100.0, "eg": "2.4 D-4D 110 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Námestovo", "flags": ["prevodovka nezistená"], "pick": "top", "source": "bazos", "origin": null, "also_listed": [], "body": "pickup"}, {"id": "196568669", "url": "https://auto.bazos.sk/inzerat/196568669/toyota-hilux-24-110-live-4x4-sk-povod-1-majitel.php", "title": "Toyota Hilux 2.4 110 Live 4x4, SK pôvod - 1 Majiteľ", "price": 22499, "price_gross": 22499, "fair_price": 28050.0, "discount_pct": 19.8, "verdict": "výrazne pod trhom – over prečo", "year": 2020, "km": 107749, "km_per_year": 17000.0, "eg": "2.4 D-4D 110 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Banská Bystrica", "flags": [], "pick": "top", "source": "bazos", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-39737282", "url": "https://auto.bazar.sk/39737282-toyota-hilux-2-4-110-live-4x4-sk-povod-1-majitel/", "price": 22499}, {"source": "autobazar", "id": "ab-AmKz9O6cGky", "url": "https://www.autobazar.eu/detail/toyota-hilux-24-110-live-4x4-sk-povod-1-majitel/AmKz9O6cGky/", "price": 22499}], "body": "pickup"}, {"id": "197014910", "url": "https://auto.bazos.sk/inzerat/197014910/toyota-hilux.php", "title": "Toyota HILUX", "price": 24000, "price_gross": 24000, "fair_price": 29510.0, "discount_pct": 18.7, "verdict": "výrazne pod trhom – over prečo", "year": 2019, "km": 98000, "km_per_year": 13400.0, "eg": "2.4 D-4D 110 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Liptovský Mikuláš", "flags": ["prevodovka nezistená"], "pick": "top", "source": "bazos", "origin": null, "also_listed": [], "body": "pickup"}, {"id": "bs-39757740", "url": "https://auto.bazar.sk/39757740-toyota-hilux-dc-2-8-l-d-4d-active-4x4-150kw-a6-zaruka-aj-na-splatky-protiucet/", "title": "Toyota Hilux DC 2.8 l D-4D Active 4x4 / 150kW / A6 / ZÁRUKA / AJ NA SPLÁTKY / PROTIÚČET", "price": 31000, "price_gross": 31000, "fair_price": 37770.0, "discount_pct": 17.9, "verdict": "výrazne pod trhom – over prečo", "year": 2021, "km": 103087, "km_per_year": 19300.0, "eg": "2.8 D-4D 130–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Košice II - Pereš", "flags": [], "pick": "top", "source": "bazarsk", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-Amk7FL9Zh3B", "url": "https://www.autobazar.eu/detail/toyota-hilux-dc-28-l-d-4d-active-4x4-150kw-a6-zaruka-aj-na-splatky-protiucet/Amk7FL9Zh3B/", "price": 31000}], "body": "pickup"}, {"id": "ab-Amt5U5M9bfj", "url": "https://www.autobazar.eu/detail/toyota-hilux-pojazdne-dc-25-l-d-4d-luna-2011-diesel-235tkm-106-kw-4x4-m5-arb-podvozok/Amt5U5M9bfj/", "title": "Toyota Hilux POJAZDNÉ DC 2.5 l D-4D Luna 2011, Diesel, 235Tkm, 106 kW, 4x4, M5, ARB PODVOZOK", "price": 9990, "price_gross": 9990, "fair_price": 11920.0, "discount_pct": 16.2, "verdict": "výrazne pod trhom – over prečo", "year": 2011, "km": 235000, "km_per_year": 15300.0, "eg": "2.5 / 3.0 D-4D 106–126 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Košice", "flags": [], "pick": "budget", "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazarsk", "id": "bs-35807974", "url": "https://auto.bazar.sk/35807974-toyota-hilux-pojazdne-dc-2-5-l-d-4d-luna-2011-diesel-235tkm-106-kw-4x4-m5-arb-podvozok/", "price": 9990}], "body": "pickup"}, {"id": "bs-39577913", "url": "https://auto.bazar.sk/39577913-toyota-hilux-dc-2-8-i-d-4d-active-4x4-a-t/", "title": "Toyota Hilux DC 2.8 I D-4D Active 4x4 A/T", "price": 37000, "price_gross": 37000, "fair_price": 43790.0, "discount_pct": 15.5, "verdict": "výrazne pod trhom – over prečo", "year": 2022, "km": 58329, "km_per_year": 13500.0, "eg": "2.8 D-4D 130–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Stará Ľubovňa", "flags": [], "pick": "top", "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "pickup"}, {"id": "196843217", "url": "https://auto.bazos.sk/inzerat/196843217/predam-toyota-hilux-2018.php", "title": "Predam Toyota Hilux", "price": 19900, "price_gross": 19900, "fair_price": 23420.0, "discount_pct": 15.0, "verdict": "výrazne pod trhom – over prečo", "year": 2018, "km": 155700, "km_per_year": 18700.0, "eg": "2.4 D-4D 110 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Levice", "flags": [], "pick": "top", "source": "bazos", "origin": "SR", "also_listed": [], "body": "pickup"}, {"id": "ab-Aesh2J6aQyI", "url": "https://www.autobazar.eu/detail/toyota-hilux-dc-28-i-d-4d-active-4x4-at-150kw204hp-a6/Aesh2J6aQyI/", "title": "Toyota Hilux DC 2.8 I D-4D Active 4x4 AT 150kW204HP A6", "price": 30900, "price_gross": 30900, "fair_price": 36130.0, "discount_pct": 14.5, "verdict": "pod trhom", "year": 2022, "km": 140500, "km_per_year": 32400.0, "eg": "2.8 D-4D 130–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Trnava", "flags": [], "pick": "top", "source": "autobazar", "origin": "SR", "also_listed": [], "body": "pickup"}, {"id": "195954763", "url": "https://auto.bazos.sk/inzerat/195954763/toyota-hilux-30-na-predaj-na-splatky.php", "title": "TOYOTA HILUX 3.0 - na predaj / na splatky", "price": 16990, "price_gross": 16990, "fair_price": 19200.0, "discount_pct": 11.5, "verdict": "pod trhom", "year": 2016, "km": 270000, "km_per_year": 26100.0, "eg": "2.5 / 3.0 D-4D 106–126 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Nitra", "flags": [], "pick": "budget", "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "pickup"}, {"id": "ab-AbJRaZ4pTMQ", "url": "https://www.autobazar.eu/detail/toyota-hilux-active-d-4d/AbJRaZ4pTMQ/", "title": "Toyota HILUX Active D-4D", "price": 25000, "price_gross": 25000, "fair_price": 28210.0, "discount_pct": 11.4, "verdict": "pod trhom", "year": 2019, "km": 117000, "km_per_year": 16000.0, "eg": "2.4 D-4D 110 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Košice", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-39776801", "url": "https://auto.bazar.sk/39776801-toyota-hilux-active-d-4d/", "price": 25000}], "body": "pickup"}, {"id": "ab-AmyykXUhWo9", "url": "https://www.autobazar.eu/detail/toyota-hilux-dc-30-i-d-4d-sol-at/AmyykXUhWo9/", "title": "Toyota Hilux DC 3.0 I D-4D Sol A/T", "price": 11999, "price_gross": 11999, "fair_price": 13530.0, "discount_pct": 11.3, "verdict": "pod trhom", "year": 2011, "km": 309800, "km_per_year": 20200.0, "eg": "2.5 / 3.0 D-4D 106–126 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Dunajská Lužná", "flags": [], "pick": "budget", "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-39535834", "url": "https://auto.bazar.sk/39535834-toyota-hilux-dc-3-0-i-d-4d-sol-a-t/", "price": 11999}], "body": "pickup"}, {"id": "bs-39617918", "url": "https://auto.bazar.sk/39617918-toyota-hilux-dc-2-5-i-d-4d-terra/", "title": "Toyota Hilux DC 2.5 I D-4D Terra", "price": 15600, "price_gross": 15600, "fair_price": 17430.0, "discount_pct": 10.5, "verdict": "pod trhom", "year": 2015, "km": 81000, "km_per_year": 7100.0, "eg": "2.5 / 3.0 D-4D 106–126 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Modra", "flags": [], "pick": "budget", "source": "bazarsk", "origin": null, "also_listed": [{"source": "bazos", "id": "197481829", "url": "https://auto.bazos.sk/inzerat/197481829/toyota-hilux-dc-25-i-d-4d-106kw-2015-2ks.php", "price": 15800}, {"source": "autobazar", "id": "ab-Am3-oaQh_zb", "url": "https://www.autobazar.eu/detail/toyota-hilux-dc-25-i-d-4d-terra/Am3-oaQh_zb/", "price": 15600}], "body": "pickup"}, {"id": "ab-AezTVbaUFNV", "url": "https://www.autobazar.eu/detail/toyota-hilux-28-diesel-150kw-automat-prevodovka-4x4/AezTVbaUFNV/", "title": "Toyota Hilux 2.8 Diesel 150kW Automat. prevodovka 4x4", "price": 45000, "price_gross": 45000, "fair_price": 50250.0, "discount_pct": 10.4, "verdict": "pod trhom", "year": 2024, "km": 39500, "km_per_year": 16900.0, "eg": "2.8 D-4D 130–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "private", "location": "Veľké Kostoľany", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "pickup"}, {"id": "bs-39648507", "url": "https://auto.bazar.sk/39648507-toyota-hilux-dc-3-0-i-d-4d-sol-a-t/", "title": "Toyota Hilux DC 3.0 I D-4D Sol A/T", "price": 13900, "price_gross": 13900, "fair_price": 15420.0, "discount_pct": 9.8, "verdict": "pod trhom", "year": 2012, "km": 210463, "km_per_year": 14700.0, "eg": "2.5 / 3.0 D-4D 106–126 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Trenčianska Teplá", "flags": [], "pick": "budget", "source": "bazarsk", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AmIEOGd9N8j", "url": "https://www.autobazar.eu/detail/toyota-hilux-dc-30-i-d-4d-sol-at/AmIEOGd9N8j/", "price": 13900}, {"source": "bazos", "id": "196509239", "url": "https://auto.bazos.sk/inzerat/196509239/toyota-hilux-dc-30-i-d-4d-sol-at.php", "price": 13900}], "body": "pickup"}, {"id": "196204781", "url": "https://auto.bazos.sk/inzerat/196204781/toyota-hilux-24-110-live-dcabin-4x4-sk.php", "title": "Toyota Hilux 2.4 110 Live D.Cabin 4x4, SK", "price": 23999, "price_gross": 23999, "fair_price": 26570.0, "discount_pct": 9.7, "verdict": "pod trhom", "year": 2020, "km": 130312, "km_per_year": 20600.0, "eg": "2.4 D-4D 110 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Banská Bystrica", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-39520956", "url": "https://auto.bazar.sk/39520956-toyota-hilux-2-4-110-live-d-cabin-4x4-sk/", "price": 23999}, {"source": "autobazar", "id": "ab-AmtBWRl3cCx", "url": "https://www.autobazar.eu/detail/toyota-hilux-24-110-live-dcabin-4x4-sk/AmtBWRl3cCx/", "price": 23999}], "body": "pickup"}, {"id": "196402029", "url": "https://auto.bazos.sk/inzerat/196402029/toyota-hilux-invincible-28.php", "title": "Toyota Hilux Invincible 2.8", "price": 47000, "price_gross": 47000, "fair_price": 51970.0, "discount_pct": 9.6, "verdict": "pod trhom", "year": 2024, "km": 23000, "km_per_year": 9900.0, "eg": "2.8 D-4D 130–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Žilina", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "pickup"}, {"id": "ab-AmqzPvyVVNh", "url": "https://www.autobazar.eu/detail/toyota-hilux-24-awd-110kw-at/AmqzPvyVVNh/", "title": "TOYOTA Hilux 2.4 D-4D 4x4 A/T Executive Plus", "price": 28999, "price_gross": 28999, "fair_price": 31940.0, "discount_pct": 9.2, "verdict": "pod trhom", "year": 2020, "km": 81073, "km_per_year": 12800.0, "eg": "2.4 D-4D 110 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava - Vajnory", "flags": [], "pick": "top", "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39484200", "url": "https://auto.bazar.sk/39484200-toyota-hilux-2-4-d-4d-4x4-a-t-executive-plus/", "price": 28999}], "body": "pickup"}, {"id": "bs-39580527", "url": "https://auto.bazar.sk/39580527-toyota-hilux-2-4-110-live-4x4-sk-povod-1-majitel/", "title": "Toyota Hilux 2.4 110 Live 4x4, SK pôvod, 1 Majiteľ", "price": 25499, "price_gross": 25499, "fair_price": 28100.0, "discount_pct": 9.2, "verdict": "pod trhom", "year": 2020, "km": 85268, "km_per_year": 13500.0, "eg": "2.4 D-4D 110 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Banská Bystrica", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AmPZs2dGdeK", "url": "https://www.autobazar.eu/detail/toyota-hilux-24-110-live-4x4-sk-povod-1-majitel/AmPZs2dGdeK/", "price": 25499}], "body": "pickup"}, {"id": "197224648", "url": "https://auto.bazos.sk/inzerat/197224648/toyota-hilux-pickup-4x4-automat-28-150kw-jbl.php", "title": "TOYOTA HILUX automat 2.8 150kw JBL", "price": 33000, "price_gross": 40590, "fair_price": 44660.0, "discount_pct": 9.1, "verdict": "pod trhom", "year": 2021, "km": 82333, "km_per_year": 15400.0, "eg": "2.8 D-4D 130–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Košice", "flags": ["inzerovaná cena 33000 € je bez DPH – porovnáva sa cena s DPH 40590 €"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "pickup"}, {"id": "bs-39580526", "url": "https://auto.bazar.sk/39580526-toyota-hilux-2-4-110-live-d-cabin-4x4-sk-povod-1-majitel/", "title": "Toyota Hilux 2.4 110 Live D.Cabin 4x4, SK pôvod, 1 Majiteľ", "price": 24999, "price_gross": 24999, "fair_price": 27420.0, "discount_pct": 8.8, "verdict": "pod trhom", "year": 2020, "km": 94511, "km_per_year": 14900.0, "eg": "2.4 D-4D 110 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Banská Bystrica", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-Am6_YBXR66R", "url": "https://www.autobazar.eu/detail/toyota-hilux-24-110-live-dcabin-4x4-sk-povod-1-majitel/Am6_YBXR66R/", "price": 24999}], "body": "pickup"}, {"id": "bs-39524186", "url": "https://auto.bazar.sk/39524186-toyota-hilux-2-4-110-live-d-cabin-4x4-sk-povod/", "title": "Toyota Hilux 2.4 110 Live D.Cabin 4x4, SK pôvod", "price": 25999, "price_gross": 25999, "fair_price": 28500.0, "discount_pct": 8.8, "verdict": "pod trhom", "year": 2020, "km": 79999, "km_per_year": 12600.0, "eg": "2.4 D-4D 110 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Banská Bystrica", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AmGK953hJzb", "url": "https://www.autobazar.eu/detail/toyota-hilux-24-110-live-dcabin-4x4-sk-povod/AmGK953hJzb/", "price": 25999}], "body": "pickup"}, {"id": "ab-Aepr2z5BBuG", "url": "https://www.autobazar.eu/detail/toyota-hilux-dc-28-i-d-4d-invincible-4x4-150kw204hp-m6/Aepr2z5BBuG/", "title": "Toyota Hilux DC 2.8 I D-4D Invincible 4x4 150kW204HP M6", "price": 32500, "price_gross": 32500, "fair_price": 35500.0, "discount_pct": 8.4, "verdict": "pod trhom", "year": 2021, "km": 92000, "km_per_year": 17300.0, "eg": "2.8 D-4D 130–150 kW", "cg": 1, "transmission": "manual", "seller_type": "private", "location": "Spišská Nová Ves", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "pickup"}, {"id": "197308324", "url": "https://auto.bazos.sk/inzerat/197308324/toyota-hilux.php", "title": "Toyota Hilux", "price": 25000, "price_gross": 25000, "fair_price": 26930.0, "discount_pct": 7.2, "verdict": "pod trhom", "year": 2017, "km": 187000, "km_per_year": 20000.0, "eg": "2.4 D-4D 110 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Snina", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "pickup"}, {"id": "bs-39732690", "url": "https://auto.bazar.sk/39732690-toyota-hilux-active-double-cab-7-gen-2-8-d-4d-150kw-mt-6/", "title": "Toyota Hilux Active Double Cab, 7. gen 2,8 D-4D, 150kW, MT/6", "price": 41890, "price_gross": 41890, "fair_price": 45120.0, "discount_pct": 7.2, "verdict": "pod trhom", "year": 2025, "km": 12000, "km_per_year": 9000.0, "eg": "2.8 D-4D 130–150 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Ružomberok", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmGi0gvIeij", "url": "https://www.autobazar.eu/detail/toyota-hilux-active-double-cab-7-gen-28-d-4d-150kw-mt6/AmGi0gvIeij/", "price": 41890}], "body": "pickup"}, {"id": "bs-34353025", "url": "https://auto.bazar.sk/34353025-toyota-hilux-executive-2-4-d-4d/", "title": "Toyota Hilux Executive 2.4 D-4D", "price": 31399, "price_gross": 31399, "fair_price": 33400.0, "discount_pct": 6.0, "verdict": "férová cena", "year": 2019, "km": 35156, "km_per_year": 4800.0, "eg": "2.4 D-4D 110 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Nové Zámky", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "pickup"}, {"id": "196144280", "url": "https://auto.bazos.sk/inzerat/196144280/toyota-hilux.php", "title": "Toyota Hilux", "price": 41000, "price_gross": 41000, "fair_price": 43300.0, "discount_pct": 5.3, "verdict": "férová cena", "year": 2023, "km": 41000, "km_per_year": 12300.0, "eg": "2.8 D-4D 130–150 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Čadca", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "pickup"}, {"id": "bs-39766421", "url": "https://auto.bazar.sk/39766421-toyota-hilux-kun25l-4x4-2-5-hardtop-diesel-manual-e5-vin-078/", "title": "TOYOTA HILUX KUN25L 4x4 2,5 hardtop diesel manual E5 VIN 078", "price": 13800, "price_gross": 13800, "fair_price": 14570.0, "discount_pct": 5.3, "verdict": "férová cena", "year": 2014, "km": 163087, "km_per_year": 13200.0, "eg": "2.5 / 3.0 D-4D 106–126 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Levice", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmGeWO6rKy2", "url": "https://www.autobazar.eu/detail/toyota-hilux-kun25l-4x4-25-hardtop-diesel-manual-e5-vin-078/AmGeWO6rKy2/", "price": 13800}], "body": "pickup"}, {"id": "196446314", "url": "https://auto.bazos.sk/inzerat/196446314/predam.php", "title": "Predam", "price": 13000, "price_gross": 13000, "fair_price": 13650.0, "discount_pct": 4.8, "verdict": "férová cena", "year": 2012, "km": 360000, "km_per_year": 25100.0, "eg": "2.5 / 3.0 D-4D 106–126 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Lučenec", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "pickup"}, {"id": "196107664", "url": "https://auto.bazos.sk/inzerat/196107664/toyote-hilux-executive-2025.php", "title": "Toyote Hilux invicible 2025", "price": 49500, "price_gross": 49500, "fair_price": 51650.0, "discount_pct": 4.2, "verdict": "férová cena", "year": 2025, "km": 24000, "km_per_year": 18000.0, "eg": "2.8 D-4D 130–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Námestovo", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "pickup"}, {"id": "197096551", "url": "https://auto.bazos.sk/inzerat/197096551/toyota-hilux-invincible.php", "title": "TOYOTA HILUX INVINCIBLE", "price": 37000, "price_gross": 37000, "fair_price": 38450.0, "discount_pct": 3.8, "verdict": "férová cena", "year": 2022, "km": 93000, "km_per_year": 21500.0, "eg": "2.8 D-4D 130–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "private", "location": "Bardejov", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "pickup"}, {"id": "bs-39631839", "url": "https://auto.bazar.sk/39631839-toyota-hilux-2-4-d-4d/", "title": "Toyota Hilux 2.4 D-4D", "price": 23000, "price_gross": 23000, "fair_price": 23830.0, "discount_pct": 3.5, "verdict": "férová cena", "year": 2020, "km": 240531, "km_per_year": 38000.0, "eg": "2.4 D-4D 110 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava V - Petržalka", "flags": ["vysoký nájazd 38000 km/rok – flotila / taxi?"], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "pickup"}, {"id": "196515303", "url": "https://auto.bazos.sk/inzerat/196515303/predam-toyota-hilux.php", "title": "Predam Toyota Hilux", "price": 34500, "price_gross": 34500, "fair_price": 35570.0, "discount_pct": 3.0, "verdict": "férová cena", "year": 2019, "km": 32700, "km_per_year": 4500.0, "eg": "Benzín / nezistený", "cg": 2, "transmission": null, "seller_type": "uncertain", "location": "Senec", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "pickup"}, {"id": "bs-39684624", "url": "https://auto.bazar.sk/39684624-toyota-hilux-2-4-d-4d/", "title": "Toyota Hilux 2.4 D-4D", "price": 23500, "price_gross": 23500, "fair_price": 24220.0, "discount_pct": 3.0, "verdict": "férová cena", "year": 2020, "km": 160159, "km_per_year": 25300.0, "eg": "2.4 D-4D 110 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava V - Petržalka", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "pickup"}, {"id": "ab-AmV12QaNNHq", "url": "https://www.autobazar.eu/detail/toyota-hilux/AmV12QaNNHq/", "title": "Toyota Hilux DC 2.8 I D-4D 4x4 A/T", "price": 39990, "price_gross": 39990, "fair_price": 41070.0, "discount_pct": 2.6, "verdict": "férová cena", "year": 2021, "km": 78482, "km_per_year": 14700.0, "eg": "2.8 D-4D 130–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Nové Mesto nad Váhom", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-39750522", "url": "https://auto.bazar.sk/39750522-toyota-hilux-dc-2-8-i-d-4d-4x4-a-t/", "price": 39990}], "body": "pickup"}, {"id": "bs-39668404", "url": "https://auto.bazar.sk/39668404-toyota-hilux-executive-2-4-d-110-6-stup-automat/", "title": "Toyota Hilux Executive 2.4 D 110 6-stup. automat", "price": 27900, "price_gross": 27900, "fair_price": 28500.0, "discount_pct": 2.1, "verdict": "férová cena", "year": 2020, "km": 105166, "km_per_year": 16600.0, "eg": "2.4 D-4D 110 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Bratislava V - Petržalka", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmQ4xGEBIb7", "url": "https://www.autobazar.eu/detail/toyota-hilux-executive-24-d-110-6-stup-automat/AmQ4xGEBIb7/", "price": 27900}], "body": "pickup"}, {"id": "197466139", "url": "https://auto.bazos.sk/inzerat/197466139/toyota-hilux-dc-28-i-d-4d-invincible-4x4-at-150kw-204hp-a6.php", "title": "Toyota Hilux DC 2.8 I D-4D Invincible 4x4 AT 150kW 204HP A6", "price": 35599, "price_gross": 35599, "fair_price": 36320.0, "discount_pct": 2.0, "verdict": "férová cena", "year": 2022, "km": 144564, "km_per_year": 33400.0, "eg": "2.8 D-4D 130–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Košice", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "pickup"}, {"id": "bs-39470636", "url": "https://auto.bazar.sk/39470636-toyota-hilux-dc-2-5-i-d-4d-terra/", "title": "Toyota Hilux DC 2.5 I D-4D Terra", "price": 15600, "price_gross": 15600, "fair_price": 15930.0, "discount_pct": 2.0, "verdict": "férová cena", "year": 2015, "km": 116000, "km_per_year": 10200.0, "eg": "2.5 / 3.0 D-4D 106–126 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Modra", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmBgmOLRwMj", "url": "https://www.autobazar.eu/detail/toyota-hilux-dc-25-i-d-4d-terra/AmBgmOLRwMj/", "price": 15600}], "body": "pickup"}, {"id": "197334150", "url": "https://auto.bazos.sk/inzerat/197334150/hilux-28d.php", "title": "Hilux 2.8d", "price": 35000, "price_gross": 35000, "fair_price": 35580.0, "discount_pct": 1.6, "verdict": "férová cena", "year": 2023, "km": 151000, "km_per_year": 45300.0, "eg": "2.8 D-4D 130–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Rimavská Sobota", "flags": ["vysoký nájazd 45000 km/rok – flotila / taxi?"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "pickup"}, {"id": "196031159", "url": "https://auto.bazos.sk/inzerat/196031159/predam-toyotu-hilux.php", "title": "Predám Toyotu Hilux", "price": 22000, "price_gross": 22000, "fair_price": 22360.0, "discount_pct": 1.6, "verdict": "férová cena", "year": 2016, "km": 203000, "km_per_year": 19600.0, "eg": "2.4 D-4D 110 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Topoľčany", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "pickup"}, {"id": "ab-Ab1zsfJqwvI", "url": "https://www.autobazar.eu/detail/toyota-hilux-24-d-4d-double-cab-active-4x4/Ab1zsfJqwvI/", "title": "Toyota Hilux 2.4 D-4D Double Cab Active 4x4", "price": 36990, "price_gross": 36990, "fair_price": 37570.0, "discount_pct": 1.5, "verdict": "férová cena", "year": 2024, "km": 59708, "km_per_year": 25600.0, "eg": "2.4 D-4D 110 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Žilina", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39766600", "url": "https://auto.bazar.sk/39766600-toyota-hilux-2-4-d-4d-double-cab-active-4x4/", "price": 36990}], "body": "pickup"}, {"id": "bs-34351956", "url": "https://auto.bazar.sk/34351956-toyota-hilux-2-4-d-4d/", "title": "Toyota Hilux 2.4 D-4D", "price": 33299, "price_gross": 33299, "fair_price": 33730.0, "discount_pct": 1.3, "verdict": "férová cena", "year": 2018, "km": 27348, "km_per_year": 3300.0, "eg": "2.4 D-4D 110 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Nové Zámky", "flags": ["nezvyčajne nízky nájazd na vek (27 348 km) – over  či nejde o preklep"], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "pickup"}, {"id": "bs-39413554", "url": "https://auto.bazar.sk/39413554-toyota-hilux-ec-2-4-i-d-4d-110kw-4x4-sklapac-do-3-strany/", "title": "Toyota Hilux EC 2.4 I D-4D 110kW 4x4 Sklápač do 3 strany", "price": 31000, "price_gross": 31000, "fair_price": 31360.0, "discount_pct": 1.1, "verdict": "férová cena", "year": 2021, "km": 45140, "km_per_year": 8500.0, "eg": "2.4 D-4D 110 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Tornaľa", "flags": [], "pick": null, "source": "bazarsk", "origin": "dovoz", "also_listed": [{"source": "autobazar", "id": "ab-AmQtnqfcwi1", "url": "https://www.autobazar.eu/detail/toyota-hilux-ec-24-i-d-4d-110kw-4x4-sklapac-do-3-strany/AmQtnqfcwi1/", "price": 31000}, {"source": "bazos", "id": "196252334", "url": "https://auto.bazos.sk/inzerat/196252334/toyota-hilux-ec-24-i-d-4d-110kw-4x4-sklapac-do-3-strany.php", "price": 31000}], "body": "pickup"}, {"id": "196563296", "url": "https://auto.bazos.sk/inzerat/196563296/toyota-hilux-na-predaj-na-splatky.php", "title": "TOYOTA HILUX — na predaj / na splatky", "price": 19990, "price_gross": 19990, "fair_price": 20070.0, "discount_pct": 0.4, "verdict": "férová cena", "year": 2017, "km": 200000, "km_per_year": 21400.0, "eg": "2.4 D-4D 110 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Nitra", "flags": [], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "pickup"}, {"id": "bs-39165130", "url": "https://auto.bazar.sk/39165130-toyota-hilux-2-4-diesel-4x4-double-cab-vin-615/", "title": "TOYOTA HILUX 2.4 diesel 4X4 Double Cab VIN 615", "price": 29900, "price_gross": 29900, "fair_price": 29980.0, "discount_pct": 0.3, "verdict": "férová cena", "year": 2019, "km": 45132, "km_per_year": 6200.0, "eg": "2.4 D-4D 110 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Levice", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmyTyIg7g-x", "url": "https://www.autobazar.eu/detail/toyota-hilux-24-diesel-4x4-double-cab-vin-615/AmyTyIg7g-x/", "price": 29900}], "body": "pickup"}, {"id": "ab-AeDQdbd_DtS", "url": "https://www.autobazar.eu/detail/toyota-hilux-dc-24-i-d-4d-active-110kw150hp-m6/AeDQdbd_DtS/", "title": "Toyota Hilux DC 2.4 I D-4D Active 110kW150HP M6", "price": 29900, "price_gross": 29900, "fair_price": 29920.0, "discount_pct": 0.1, "verdict": "férová cena", "year": 2020, "km": 54000, "km_per_year": 8500.0, "eg": "2.4 D-4D 110 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Partizánske", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "pickup"}, {"id": "bs-39041036", "url": "https://auto.bazar.sk/39041036-toyota-hilux-dc-2-8-i-d-4d-active-4x4-a-t/", "title": "Toyota Hilux DC 2.8 I D-4D Active 4x4 A/T", "price": 31900, "price_gross": 31900, "fair_price": 31890.0, "discount_pct": -0.0, "verdict": "férová cena", "year": 2022, "km": 187201, "km_per_year": 43200.0, "eg": "2.8 D-4D 130–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Štiavnička", "flags": ["vysoký nájazd 43000 km/rok – flotila / taxi?"], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [{"source": "bazos", "id": "196914052", "url": "https://auto.bazos.sk/inzerat/196914052/toyota-hilux-dc-28-i-d-4d-active-plus-4x4-at.php", "price": 31900}, {"source": "autobazar", "id": "ab-AmfeDB77vBa", "url": "https://www.autobazar.eu/detail/toyota-hilux-dc-28-i-d-4d-active-4x4-a-t/AmfeDB77vBa/", "price": 31900}], "body": "pickup"}, {"id": "ab-AeaYCTExOjJ", "url": "https://www.autobazar.eu/detail/toyota-hilux-25-d-4d-mt-dc-kat-vozidla-n1g/AeaYCTExOjJ/", "title": "Toyota Hilux 2,5 D-4D MT DC 4x4 kat. vozidla N1G", "price": 13000, "price_gross": 13000, "fair_price": 12950.0, "discount_pct": -0.4, "verdict": "férová cena", "year": 2011, "km": 209000, "km_per_year": 13600.0, "eg": "2.5 / 3.0 D-4D 106–126 kW", "cg": 1, "transmission": "manual", "seller_type": "private", "location": "Závadka nad Hronom", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "pickup"}, {"id": "bs-39523032", "url": "https://auto.bazar.sk/39523032-toyota-hilux-2-5-d-4d-dc-4x4/", "title": "Toyota Hilux 2,5 D-4D DC 4x4", "price": 11980, "price_gross": 11980, "fair_price": 11910.0, "discount_pct": -0.6, "verdict": "férová cena", "year": 2010, "km": 231541, "km_per_year": 14200.0, "eg": "2.5 / 3.0 D-4D 106–126 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Veľký Šariš", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "pickup"}, {"id": "ab-AbHpT7J-c8g", "url": "https://www.autobazar.eu/detail/toyota-hilux-28-d-4d-double-cab-invincible-sport-4x4/AbHpT7J-c8g/", "title": "Toyota Hilux 2.8 D-4D Double Cab Invincible Sport 4x4", "price": 47990, "price_gross": 47990, "fair_price": 47390.0, "discount_pct": -1.3, "verdict": "férová cena", "year": 2023, "km": 38900, "km_per_year": 11700.0, "eg": "2.8 D-4D 130–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Nitra", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39736269", "url": "https://auto.bazar.sk/39736269-toyota-hilux-2-8-d-4d-double-cab-invincible-sport-4x4/", "price": 47990}], "body": "pickup"}, {"id": "bs-39764663", "url": "https://auto.bazar.sk/39764663-toyota-hilux-2-8-invincible-awd-150kw-2021-aj-na-splatky-protiucet/", "title": "Toyota Hilux 2.8 Invincible AWD 150kW 2021 / AJ NA SPLÁTKY / PROTIÚČET", "price": 39990, "price_gross": 39990, "fair_price": 39230.0, "discount_pct": -1.9, "verdict": "férová cena", "year": 2021, "km": 88516, "km_per_year": 16600.0, "eg": "2.8 D-4D 130–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Stará Turá", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-Am05JEKvL9W", "url": "https://www.autobazar.eu/detail/toyota-hilux-28-invincible-awd-150kw-2021-aj-na-splatky-protiucet/Am05JEKvL9W/", "price": 39990}, {"source": "bazos", "id": "197368668", "url": "https://auto.bazos.sk/inzerat/197368668/toyota-hilux-28-invincible-awd-150kw-2021.php", "price": 39990}], "body": "pickup"}, {"id": "bs-39055938", "url": "https://auto.bazar.sk/39055938-toyota-hilux-dc-2-8-i-d-4d-executive-4x4-a-t/", "title": "Toyota Hilux DC 2.8 I D-4D Executive 4x4 A/T", "price": 44000, "price_gross": 44000, "fair_price": 42920.0, "discount_pct": -2.5, "verdict": "férová cena", "year": 2023, "km": 74220, "km_per_year": 22300.0, "eg": "2.8 D-4D 130–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Kežmarok", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "pickup"}, {"id": "bs-39765986", "url": "https://auto.bazar.sk/39765986-toyota-hilux-3-0-d-4d-4wd-a-t-126-kw-2010-aj-na-splatky-protiucet/", "title": "Toyota Hilux 3.0 D-4D 4WD A/T, 126 kW (2010) / AJ NA SPLÁTKY / PROTIÚČET /", "price": 13990, "price_gross": 13990, "fair_price": 13450.0, "discount_pct": -4.0, "verdict": "férová cena", "year": 2010, "km": 285074, "km_per_year": 17500.0, "eg": "2.5 / 3.0 D-4D 106–126 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Košice II - Pereš", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [{"source": "bazos", "id": "197408328", "url": "https://auto.bazos.sk/inzerat/197408328/toyota-hilux-30-d-4d-4wd-at-126-kw-2010.php", "price": 13990}, {"source": "autobazar", "id": "ab-AmerHeb0QQO", "url": "https://www.autobazar.eu/detail/toyota-hilux-30-d-4d-4wd-at-126-kw-2010-aj-na-splatky-protiucet/AmerHeb0QQO/", "price": 13990}], "body": "pickup"}, {"id": "197178544", "url": "https://auto.bazos.sk/inzerat/197178544/toyota-hilux-24d-4d-executive-2017.php", "title": "TOYOTA HILUX 2,4D-4D EXECUTIVE 2017", "price": 21900, "price_gross": 21900, "fair_price": 21040.0, "discount_pct": -4.1, "verdict": "férová cena", "year": 2017, "km": 302000, "km_per_year": 32400.0, "eg": "2.4 D-4D 110 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Trenčín", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "pickup"}, {"id": "196922114", "url": "https://auto.bazos.sk/inzerat/196922114/toyota-hilux-24-2018-4x4.php", "title": "Toyota Hilux 2,4 2018, 4x4", "price": 25600, "price_gross": 25600, "fair_price": 24490.0, "discount_pct": -4.5, "verdict": "férová cena", "year": 2018, "km": 184900, "km_per_year": 22200.0, "eg": "2.8 D-4D 130–150 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Košice-okolie", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "pickup"}, {"id": "bs-39510422", "url": "https://auto.bazar.sk/39510422-toyota-hilux-dc-2-8-i-d-4d-invincible-1-majitel-v-zaruke-nelakovane-ochrana-podvozku/", "title": "Toyota Hilux DC 2.8 I D-4D Invincible 1. majiteľ v záruke, nelakované, ochrana podvozku", "price": 46999, "price_gross": 46999, "fair_price": 44900.0, "discount_pct": -4.7, "verdict": "férová cena", "year": 2023, "km": 43607, "km_per_year": 13100.0, "eg": "2.8 D-4D 130–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava I - Staré Mesto", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "pickup"}, {"id": "197130943", "url": "https://auto.bazos.sk/inzerat/197130943/toyota-hilux-executive-vip-4x4-rangerl200navaraamarok.php", "title": "Toyota Hilux EXECUTIVE VIP 4x4 (ranger,L200,navara,amarok)", "price": 25999, "price_gross": 25999, "fair_price": 24780.0, "discount_pct": -4.9, "verdict": "férová cena", "year": 2016, "km": 170959, "km_per_year": 16500.0, "eg": "2.4 D-4D 110 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Revúca", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "pickup"}, {"id": "197240816", "url": "https://auto.bazos.sk/inzerat/197240816/toyota-hilux-double-cab-24-d-4d-4x4-automat-s-odpoc-dph.php", "title": "Toyota Hilux Double Cab 2.4 D-4D 4x4 AUTOMAT – s odpoč. DPH", "price": 28990, "price_gross": 28990, "fair_price": 27580.0, "discount_pct": -5.1, "verdict": "férová cena", "year": 2018, "km": 143983, "km_per_year": 17300.0, "eg": "2.4 D-4D 110 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Banská Bystrica", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "pickup"}, {"id": "bs-34353033", "url": "https://auto.bazar.sk/34353033-toyota-hilux-2-4-d-4d/", "title": "Toyota Hilux 2.4 D-4D", "price": 39081, "price_gross": 39081, "fair_price": 36950.0, "discount_pct": -5.8, "verdict": "férová cena", "year": 2019, "km": 4037, "km_per_year": 600.0, "eg": "2.4 D-4D 110 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Nové Zámky", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "pickup"}, {"id": "197640394", "url": "https://auto.bazos.sk/inzerat/197640394/toyota-hilux-dc-24-i-d-4d-adventure-at.php", "title": "Toyota Hilux DC 2.4 I D-4D Adventure A/T", "price": 26490, "price_gross": 26490, "fair_price": 24820.0, "discount_pct": -6.7, "verdict": "férová cena", "year": 2019, "km": 187998, "km_per_year": 25600.0, "eg": "2.4 D-4D 110 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Poprad", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-39737242", "url": "https://auto.bazar.sk/39737242-toyota-hilux-dc-2-4-i-d-4d-adventure-a-t/", "price": 26490}, {"source": "autobazar", "id": "ab-Amw11WyAgGG", "url": "https://www.autobazar.eu/detail/toyota-hilux-dc-24-i-d-4d-adventure-at/Amw11WyAgGG/", "price": 26490}], "body": "pickup"}, {"id": "bs-39431537", "url": "https://auto.bazar.sk/39431537-toyota-hilux/", "title": "Toyota Hilux", "price": 49990, "price_gross": 49990, "fair_price": 46690.0, "discount_pct": -7.1, "verdict": "nad trhom", "year": 2023, "km": 20000, "km_per_year": 6000.0, "eg": "2.8 D-4D 130–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava V - Petržalka", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-Amhusvq4sCY", "url": "https://www.autobazar.eu/detail/toyota-hilux/Amhusvq4sCY/", "price": 49990}], "body": "pickup"}, {"id": "196783769", "url": "https://auto.bazos.sk/inzerat/196783769/toyota-hilux-28d-150kw-at-2021-invincible-4x4.php", "title": "Toyota Hilux Invincible 2.8, 2021, automat, 4×4, odpočet DPH", "price": 41900, "price_gross": 41900, "fair_price": 39050.0, "discount_pct": -7.3, "verdict": "nad trhom", "year": 2021, "km": 95000, "km_per_year": 17800.0, "eg": "2.8 D-4D 130–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Senec", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "pickup"}, {"id": "197123722", "url": "https://auto.bazos.sk/inzerat/197123722/toyota-hilux-2010-25l-d-4d-88kw.php", "title": "Toyota Hilux 2010, 2.5l, D-4D, 88kW", "price": 12900, "price_gross": 12900, "fair_price": 11960.0, "discount_pct": -7.9, "verdict": "nad trhom", "year": 2010, "km": 233000, "km_per_year": 14300.0, "eg": "2.5 / 3.0 D-4D 106–126 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Prešov", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "pickup"}, {"id": "197642532", "url": "https://auto.bazos.sk/inzerat/197642532/toyota-hilux-30-d-4d.php", "title": "TOYOTA HILUX 3.0 D-4D", "price": 16990, "price_gross": 16990, "fair_price": 15730.0, "discount_pct": -8.0, "verdict": "nad trhom", "year": 2015, "km": 279000, "km_per_year": 24600.0, "eg": "2.5 / 3.0 D-4D 106–126 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Nitra", "flags": [], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "pickup"}, {"id": "197762200", "url": "https://auto.bazos.sk/inzerat/197762200/hilux.php", "title": "Hilux", "price": 26200, "price_gross": 26200, "fair_price": 24200.0, "discount_pct": -8.3, "verdict": "nad trhom", "year": 2015, "km": 83000, "km_per_year": 7300.0, "eg": "2.5 / 3.0 D-4D 106–126 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Rožňava", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "pickup"}, {"id": "bs-39417271", "url": "https://auto.bazar.sk/39417271-toyota-hilux-dc-2-4-i-d-4d-live-chassis-4x4/", "title": "Toyota Hilux DC 2.4 I D-4D Live Chassis 4x4", "price": 29900, "price_gross": 29900, "fair_price": 27250.0, "discount_pct": -9.7, "verdict": "nad trhom", "year": 2022, "km": 122500, "km_per_year": 28300.0, "eg": "2.4 D-4D 110 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Bratislava I - Staré Mesto", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "pickup"}, {"id": "ab-AmkwrtQ7uIh", "url": "https://www.autobazar.eu/detail/toyota-hilux-dc-28-i-d-4d-mhev-invincible-4x4-at/AmkwrtQ7uIh/", "title": "Toyota Hilux DC 2.8 I D-4D Invincible 4x4 A/T", "price": 49500, "price_gross": 49500, "fair_price": 44820.0, "discount_pct": -10.4, "verdict": "nad trhom", "year": 2024, "km": 74400, "km_per_year": 31900.0, "eg": "2.8 D-4D 130–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Šamorín", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-39758735", "url": "https://auto.bazar.sk/39758735-toyota-hilux-dc-2-8-i-d-4d-invincible-4x4-a-t/", "price": 49500}], "body": "pickup"}, {"id": "bs-39767361", "url": "https://auto.bazar.sk/39767361-toyota-hilux-dc-2-5-i-d-4d-terra/", "title": "Toyota Hilux DC 2.5 I D-4D Terra", "price": 14990, "price_gross": 14990, "fair_price": 13550.0, "discount_pct": -10.6, "verdict": "nad trhom", "year": 2012, "km": 145357, "km_per_year": 10100.0, "eg": "2.5 / 3.0 D-4D 106–126 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Veľký Krtíš", "flags": [], "pick": null, "source": "bazarsk", "origin": "dovoz", "also_listed": [{"source": "autobazar", "id": "ab-AmoBun47RGY", "url": "https://www.autobazar.eu/detail/toyota-hilux-dc-25-i-d-4d-terra/AmoBun47RGY/", "price": 14990}, {"source": "bazos", "id": "197443097", "url": "https://auto.bazos.sk/inzerat/197443097/toyota-hilux-25-d-4d-4x4-2012-145tis-km-tazne-stk-spz.php", "price": 14990}], "body": "pickup"}, {"id": "ab-Amma55JHm6H", "url": "https://www.autobazar.eu/detail/toyota-hilux-27-vvt-i/Amma55JHm6H/", "title": "Toyota Hilux 2.7 VVT-i", "price": 38130, "price_gross": 38130, "fair_price": 34400.0, "discount_pct": -10.8, "verdict": "nad trhom", "year": 2019, "km": 7876, "km_per_year": 1100.0, "eg": "Benzín / nezistený", "cg": 2, "transmission": "manual", "seller_type": "dealer", "location": "Štúrovo", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39238233", "url": "https://auto.bazar.sk/39238233-toyota-hilux-2-7-vvt-i/", "price": 38130}], "body": "pickup"}, {"id": "bs-34352322", "url": "https://auto.bazar.sk/34352322-toyota-hilux-2-4-d-4d/", "title": "Toyota Hilux 2.4 D-4D", "price": 34999, "price_gross": 34999, "fair_price": 31450.0, "discount_pct": -11.3, "verdict": "nad trhom", "year": 2018, "km": 45977, "km_per_year": 5500.0, "eg": "2.4 D-4D 110 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Nové Zámky", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "pickup"}, {"id": "bs-39767179", "url": "https://auto.bazar.sk/39767179-toyota-hilux-dc-2-4-i-d-4d-live-4x4/", "title": "Toyota Hilux DC 2.4 I D-4D Live 4x4", "price": 34985, "price_gross": 34985, "fair_price": 31400.0, "discount_pct": -11.4, "verdict": "nad trhom", "year": 2021, "km": 55100, "km_per_year": 10300.0, "eg": "2.4 D-4D 110 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Hlohovec", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "pickup"}, {"id": "bs-39768291", "url": "https://auto.bazar.sk/39768291-toyota-hilux-2-8-d-4d-204-invincible-4x4-at-150-kw-aj-na-splatky-protiucet-odpocet-dph/", "title": "Toyota Hilux 2.8 D-4D 204 Invincible 4x4 AT, 150 kW / AJ NA SPLÁTKY / PROTIÚČET / ODPOČET DPH /", "price": 59400, "price_gross": 59400, "fair_price": 53150.0, "discount_pct": -11.8, "verdict": "nad trhom", "year": 2024, "km": 12209, "km_per_year": 5200.0, "eg": "2.8 D-4D 130–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AmBoovAjUL6", "url": "https://www.autobazar.eu/detail/toyota-hilux-28-d-4d-204-invincible-4x4-at-150-kw-aj-na-splatky-protiucet-odpocet-dph/AmBoovAjUL6/", "price": 59400}, {"source": "bazos", "id": "197521491", "url": "https://auto.bazos.sk/inzerat/197521491/toyota-hilux-28-d-4d-204-invincible-4x4-at-150-kw-2024.php", "price": 59400}], "body": "pickup"}, {"id": "ab-AeNuPfMI5m2", "url": "https://www.autobazar.eu/detail/toyota-hilux-invicible-2024-4x4-28l/AeNuPfMI5m2/", "title": "Toyota Hilux Invicible 2024 4x4 2,8L", "price": 55500, "price_gross": 55500, "fair_price": 48530.0, "discount_pct": -14.4, "verdict": "nad trhom", "year": 2024, "km": 51000, "km_per_year": 21900.0, "eg": "2.8 D-4D 130–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "private", "location": "Richvald", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "pickup"}, {"id": "ab-Ae1Lfpl31fq", "url": "https://www.autobazar.eu/detail/toyota-hilux-dc-28-i-d-4d-mhev-invincible-4x4-at-150kw204hp-a6/Ae1Lfpl31fq/", "title": "Toyota Hilux DC 2.8 I D-4D mHEV Invincible 4x4 AT 150kW204HP A6", "price": 48000, "price_gross": 48000, "fair_price": 41840.0, "discount_pct": -14.7, "verdict": "nad trhom", "year": 2024, "km": 60000, "km_per_year": 25700.0, "eg": "2.8 D-4D 130–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Veľké Úľany", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "pickup"}, {"id": "196753009", "url": "https://auto.bazos.sk/inzerat/196753009/toyota-hilux-24-d-4d-44-executive-2018-arb-ome-alu-cab.php", "title": "Toyota Hilux 2.4 D-4D 4×4 Executive 2018– ARB, OME, Alu-Cab", "price": 27900, "price_gross": 27900, "fair_price": 24270.0, "discount_pct": -15.0, "verdict": "nad trhom", "year": 2018, "km": 238456, "km_per_year": 28600.0, "eg": "2.4 D-4D 110 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Bytča", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "pickup"}, {"id": "ab-Abp5_31MXz6", "url": "https://www.autobazar.eu/detail/toyota-hilux-28-d-4d-mhev-double-cab-invincible-4x4/Abp5_31MXz6/", "title": "Toyota Hilux 2.8 D-4D mHEV Double Cab Invincible 4x4", "price": 57990, "price_gross": 57990, "fair_price": 50260.0, "discount_pct": -15.4, "verdict": "výrazne nad trhom", "year": 2025, "km": 2124, "km_per_year": 1600.0, "eg": "2.8 D-4D 130–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Prešov", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39529853", "url": "https://auto.bazar.sk/39529853-toyota-hilux-2-8-d-4d-mhev-double-cab-invincible-4x4/", "price": 57990}], "body": "pickup"}, {"id": "197254526", "url": "https://auto.bazos.sk/inzerat/197254526/toyota-hilux.php", "title": "Toyota Hilux", "price": 35000, "price_gross": 35000, "fair_price": 30330.0, "discount_pct": -15.4, "verdict": "výrazne nad trhom", "year": 2021, "km": 160000, "km_per_year": 30000.0, "eg": "2.8 D-4D 130–150 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Pezinok", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "pickup"}, {"id": "197221206", "url": "https://auto.bazos.sk/inzerat/197221206/toyota-hilux-invincible-52024.php", "title": "Toyota Hilux INVINCIBLE 5/2024", "price": 50900, "price_gross": 50900, "fair_price": 43860.0, "discount_pct": -16.0, "verdict": "výrazne nad trhom", "year": 2024, "km": 41000, "km_per_year": 17600.0, "eg": "2.8 D-4D 130–150 kW", "cg": 1, "transmission": null, "seller_type": "dealer", "location": "Myjava", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "pickup"}, {"id": "bs-39772061", "url": "https://auto.bazar.sk/39772061-toyota-hilux-2-4-d-4d-110-kw-a6-aj-na-splatky-protiucet/", "title": "Toyota Hilux 2.4 D-4D / 110 kW / A6 / AJ NA SPLÁTKY / PROTIÚČET /", "price": 39990, "price_gross": 39990, "fair_price": 34050.0, "discount_pct": -17.5, "verdict": "výrazne nad trhom", "year": 2020, "km": 45174, "km_per_year": 7100.0, "eg": "2.4 D-4D 110 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Stará Turá", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AmoU8RIB-w2", "url": "https://www.autobazar.eu/detail/toyota-hilux-24-d-4d-110-kw-a6-aj-na-splatky-protiucet/AmoU8RIB-w2/", "price": 39990}, {"source": "bazos", "id": "197618256", "url": "https://auto.bazos.sk/inzerat/197618256/toyota-hilux-24-d-4d-110-kw-a6-2020.php", "price": 39990}], "body": "pickup"}, {"id": "197153233", "url": "https://auto.bazos.sk/inzerat/197153233/toyota-hilux-25-d-4d-mt-dc.php", "title": "TOYOTA HILUX  2,5 D-4D,  M/T  DC", "price": 16800, "price_gross": 16800, "fair_price": 14180.0, "discount_pct": -18.5, "verdict": "výrazne nad trhom", "year": 2012, "km": 160000, "km_per_year": 11200.0, "eg": "2.5 / 3.0 D-4D 106–126 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Košice", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "pickup"}, {"id": "bs-39391375", "url": "https://auto.bazar.sk/39391375-toyota-hilux-dc-3-0-i-d-4d-sol/", "title": "Toyota Hilux DC 3.0 I D-4D Sol", "price": 16000, "price_gross": 16000, "fair_price": 13440.0, "discount_pct": -19.1, "verdict": "výrazne nad trhom", "year": 2013, "km": 232500, "km_per_year": 17400.0, "eg": "2.5 / 3.0 D-4D 106–126 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Trenčín", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "pickup"}, {"id": "bs-39285144", "url": "https://auto.bazar.sk/39285144-toyota-hilux-dc-2-8-i-d-4d-invincible-4x4-a-t/", "title": "Toyota Hilux DC 2.8 I D-4D Invincible 4x4 A/T", "price": 53300, "price_gross": 53300, "fair_price": 43570.0, "discount_pct": -22.3, "verdict": "výrazne nad trhom", "year": 2022, "km": 60000, "km_per_year": 13800.0, "eg": "2.8 D-4D 130–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava I - Staré Mesto", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "pickup"}, {"id": "ab-Abs4BmB76cQ", "url": "https://www.autobazar.eu/detail/toyota-hilux-24-d-4d-adventure-24/Abs4BmB76cQ/", "title": "Toyota HILUX 2.4. D-4D Adventure  2,4", "price": 26000, "price_gross": 26000, "fair_price": 21170.0, "discount_pct": -22.8, "verdict": "výrazne nad trhom", "year": 2020, "km": 266500, "km_per_year": 42100.0, "eg": "2.4 D-4D 110 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Košice", "flags": ["vysoký nájazd 42000 km/rok – flotila / taxi?"], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazarsk", "id": "bs-39776800", "url": "https://auto.bazar.sk/39776800-toyota-hilux-2-4-d-4d-adventure-2-4/", "price": 26000}], "body": "pickup"}, {"id": "196612369", "url": "https://auto.bazos.sk/inzerat/196612369/toyota-hilux.php", "title": "Toyota Hilux", "price": 27900, "price_gross": 27900, "fair_price": 22600.0, "discount_pct": -23.5, "verdict": "výrazne nad trhom", "year": 2019, "km": 230000, "km_per_year": 31400.0, "eg": "Benzín / nezistený", "cg": 2, "transmission": null, "seller_type": "uncertain", "location": "Pezinok", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "pickup"}, {"id": "ab-AegPOQ9JNtI", "url": "https://www.autobazar.eu/detail/toyota-hilux-gr-sport-28/AegPOQ9JNtI/", "title": "Toyota Hilux GR sport 2.8", "price": 65490, "price_gross": 65490, "fair_price": 52290.0, "discount_pct": -25.3, "verdict": "výrazne nad trhom", "year": 2025, "km": 17000, "km_per_year": 12800.0, "eg": "2.8 D-4D 130–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Trnava", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "pickup"}, {"id": "197210080", "url": "https://auto.bazos.sk/inzerat/197210080/toyota-hilux-dc-28-d-4d-invincible-at6-4x4-150kw-2022-dph.php", "title": "Toyota Hilux DC 2.8 D-4D Invincible AT/6 4x4 150kW 2022/ DPH", "price": 63300, "price_gross": 63300, "fair_price": 49130.0, "discount_pct": -28.8, "verdict": "výrazne nad trhom", "year": 2022, "km": 38847, "km_per_year": 9000.0, "eg": "2.8 D-4D 130–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Michalovce", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-39757716", "url": "https://auto.bazar.sk/39757716-toyota-hilux-dc-2-8-d-4d-invincible-2022-at-6-4x4-150kw-aj-na-splatky-protiucet/", "price": 63300}, {"source": "autobazar", "id": "ab-AmffvEXRo26", "url": "https://www.autobazar.eu/detail/toyota-hilux-dc-28-d-4d-invincible-2022-at6-4x4-150kw-aj-na-splatky-protiucet/AmffvEXRo26/", "price": 63300}], "body": "pickup"}, {"id": "197767509", "url": "https://auto.bazos.sk/inzerat/197767509/toyota-hilux-dc-28-i-d-4d-invincible-4x4-at.php", "title": "Toyota Hilux DC 2.8 I D-4D Invincible 4x4 A/T", "price": 48500, "price_gross": 59655, "fair_price": 45950.0, "discount_pct": -29.8, "verdict": "výrazne nad trhom", "year": 2024, "km": 70685, "km_per_year": 30300.0, "eg": "2.8 D-4D 130–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Nové Mesto n.Váhom", "flags": ["inzerovaná cena 48500 € je bez DPH – porovnáva sa cena s DPH 59655 €"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "pickup"}, {"id": "197507425", "url": "https://auto.bazos.sk/inzerat/197507425/toyota-hilux-invicible-28-at.php", "title": "Toyota hilux invicible 2.8 AT", "price": 42500, "price_gross": 52275, "fair_price": 39560.0, "discount_pct": -32.1, "verdict": "výrazne nad trhom", "year": 2021, "km": 117000, "km_per_year": 21900.0, "eg": "2.8 D-4D 130–150 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Lučenec", "flags": ["inzerovaná cena 42500 € je bez DPH – porovnáva sa cena s DPH 52275 €", "prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "pickup"}, {"id": "196693924", "url": "https://auto.bazos.sk/inzerat/196693924/toyota-hilux-28-d-4d-4x4-invisible-150kw-at6-2023.php", "title": "Toyota Hilux 2.8 D-4D 4x4 Invisible 150kW AT/6 2023 DPH", "price": 66990, "price_gross": 66990, "fair_price": 50580.0, "discount_pct": -32.4, "verdict": "výrazne nad trhom", "year": 2023, "km": 37658, "km_per_year": 11300.0, "eg": "2.8 D-4D 130–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Prievidza", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-39759762", "url": "https://auto.bazar.sk/39759762-toyota-hilux-2-8-d-4d-4x4-invisible-150kw-at-6-2023-aj-na-splatky-protiucet/", "price": 66990}, {"source": "autobazar", "id": "ab-AmmbJo5gZlZ", "url": "https://www.autobazar.eu/detail/toyota-hilux-28-d-4d-4x4-invisible-150kw-at6-2023-aj-na-splatky-protiucet/AmmbJo5gZlZ/", "price": 66990}], "body": "pickup"}];
+const GROUPS = ["2.4 diesel", "2.5 / 2.8 / 3.0 diesel", "Benzín a nezistený"];
+const BODY = {"pickup": "pick-up"};
+const fmt = n => Math.round(n).toLocaleString("sk-SK");
+const eur = n => fmt(n) + " €";
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const TRANS = {automatic: "automat", manual: "manuál"};
+const SRC = {bazos: "bazoš", autobazar: "autobazar.eu", bazarsk: "bazar.sk"};
+
+// --- theme toggle ---------------------------------------------------------
+document.getElementById("themeBtn").onclick = () => {
+  const root = document.documentElement;
+  const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  drawChart();
+};
+
+// --- scatter chart --------------------------------------------------------
+const legend = document.getElementById("legend");
+legend.innerHTML = GROUPS.map((g, i) => `<span><i style="background:var(--s${i+1})"></i>${g}</span>`).join("")
+  + `<span><i class="ring"></i>odporúčaná ponuka</span>`;
+
+function drawChart() {
+  const svg = document.getElementById("chart"), wrap = document.getElementById("chartWrap"), tip = document.getElementById("tip");
+  const W = svg.clientWidth, H = 420, m = {l: 56, r: 16, t: 10, b: 40};
+  const pts = DATA.filter(d => d.km && d.price_gross);
+  const xMax = Math.ceil(Math.max(...pts.map(d => d.km)) / 50000) * 50000;
+  const yMax = Math.ceil(Math.max(...pts.map(d => d.price_gross)) / 5000) * 5000;
+  const x = v => m.l + v / xMax * (W - m.l - m.r), y = v => H - m.b - v / yMax * (H - m.t - m.b);
+  let s = "";
+  for (let v = 0; v <= yMax; v += 5000)
+    s += `<line x1="${m.l}" x2="${W-m.r}" y1="${y(v)}" y2="${y(v)}" stroke="var(--grid)"/><text x="${m.l-8}" y="${y(v)+4}" text-anchor="end">${v/1000} tis. €</text>`;
+  const step = W < 520 ? 100000 : 50000;
+  for (let v = 0; v <= xMax; v += step)
+    s += `<text x="${x(v)}" y="${H-m.b+18}" text-anchor="middle">${v/1000} tis.</text>`;
+  s += `<text x="${(W+m.l)/2}" y="${H-6}" text-anchor="middle">nájazd (km)</text>`;
+  const order = [...pts].sort((a, b) => (a.pick ? 1 : 0) - (b.pick ? 1 : 0));
+  order.forEach(d => {
+    const cx = x(d.km), cy = y(d.price_gross);
+    if (d.pick) s += `<circle cx="${cx}" cy="${cy}" r="9" fill="none" stroke="var(--text)" stroke-width="2"/>`;
+    s += `<circle class="pt" data-id="${d.id}" cx="${cx}" cy="${cy}" r="5" fill="var(--s${d.cg+1})" stroke="var(--surface)" stroke-width="2"/>`;
+  });
+  // invisible bigger hit targets
+  order.forEach(d => s += `<circle class="hit" data-id="${d.id}" cx="${x(d.km)}" cy="${y(d.price_gross)}" r="11" fill="transparent" style="cursor:pointer"/>`);
+  svg.innerHTML = s;
+  const byId = Object.fromEntries(pts.map(d => [d.id, d]));
+  svg.querySelectorAll(".hit").forEach(c => {
+    c.onmouseenter = c.onmousemove = ev => {
+      const d = byId[c.dataset.id];
+      tip.innerHTML = `<b>${esc(d.title)}</b>
+        <div class="row"><span>Cena</span><span>${eur(d.price_gross)}</span></div>
+        <div class="row"><span>Férová cena</span><span>${eur(d.fair_price)}</span></div>
+        <div class="row"><span>Pod trhom</span><span>${d.discount_pct > 0 ? "+" : ""}${d.discount_pct.toLocaleString("sk-SK")} %</span></div>
+        <div class="row"><span>Zdroj</span><span>${SRC[d.source]}${d.also_listed.length ? " + " + d.also_listed.map(a => SRC[a.source]).join(", ") : ""}</span></div>
+        <div class="row"><span>Rok · km</span><span>${d.year} · ${fmt(d.km)}</span></div>
+        <div class="row"><span>Motor</span><span>${esc(d.eg)} ${TRANS[d.transmission] || ""}</span></div>`;
+      tip.style.display = "block";
+      const r = wrap.getBoundingClientRect();
+      let lx = ev.clientX - r.left + 14, ly = ev.clientY - r.top + 14;
+      if (lx + 290 > r.width) lx = ev.clientX - r.left - 290;
+      tip.style.left = lx + "px"; tip.style.top = ly + "px";
+    };
+    c.onmouseleave = () => tip.style.display = "none";
+    c.onclick = () => window.open(byId[c.dataset.id].url, "_blank", "noopener");
+  });
+}
+drawChart();
+addEventListener("resize", drawChart);
+
+// --- full table -----------------------------------------------------------
+const fEngine = document.getElementById("fEngine");
+[...new Set(DATA.map(d => d.eg))].sort().forEach(g => fEngine.insertAdjacentHTML("beforeend", `<option>${esc(g)}</option>`));
+let sortK = "discount_pct", sortDir = -1;
+function discCell(v) {
+  const w = Math.min(Math.abs(v), 30) / 30 * 50;
+  const bar = v >= 0 ? `left:50%;width:${w}%;background:var(--pos)` : `right:50%;width:${w}%;background:var(--neg)`;
+  return `<span class="disc">${v > 0 ? "+" : ""}${v.toLocaleString("sk-SK")} %<span class="dbar"><span style="${bar}"></span></span></span>`;
+}
+function renderTable() {
+  const max = parseFloat(document.getElementById("fMax").value) || Infinity;
+  const tr = document.getElementById("fTrans").value, se = document.getElementById("fSeller").value, en = fEngine.value;
+  const so = document.getElementById("fSource").value, og = document.getElementById("fOrigin").value;
+  const bo = document.getElementById("fBody").value;
+  const rows = DATA.filter(d => (!en || d.eg === en) && (!tr || d.transmission === tr)
+    && (!se || d.seller_type !== "dealer") && d.price_gross <= max
+    && (!so || d.source === so || d.also_listed.some(a => a.source === so)) && (!og || d.origin === og) && (!bo || d.body === bo))
+    .sort((a, b) => { const A = a[sortK], B = b[sortK]; return (typeof A === "string" ? A.localeCompare(B) : A - B) * sortDir; });
+  document.getElementById("count").textContent = `${rows.length} z ${DATA.length} inzerátov`;
+  document.querySelector("#tbl tbody").innerHTML = rows.map(d => `<tr>
+    <td><a href="${d.url}" target="_blank" rel="noopener">${esc(d.title)}</a> ${d.pick ? '<span class="badge pick">odporúčané</span>' : ""}
+      <div class="sub">${BODY[d.body] || "karoséria ?"} · ${esc(d.eg)} · ${TRANS[d.transmission] || "prevodovka ?"} · ${esc(d.location)} · ${d.seller_type === "dealer" ? "predajca/firma" : d.seller_type === "private" ? "súkromník" : "neisté"} · ${SRC[d.source]}${d.origin === "SR" ? " · kúpené v SR" : d.origin === "dovoz" ? " · dovoz" : ""}${d.also_listed.map(a => ` · <a href="${a.url}" target="_blank" rel="noopener">aj na ${SRC[a.source]}</a>`).join("")}</div>
+      ${d.flags.filter(f => !f.startsWith("prevodovka")).map(f => `<div class="flag">⚠ ${esc(f)}</div>`).join("")}</td>
+    <td class="num">${d.year}</td><td class="num">${fmt(d.km)}</td>
+    <td class="num">${eur(d.price_gross)}</td><td class="num">${eur(d.fair_price)}</td>
+    <td class="num">${discCell(d.discount_pct)}</td></tr>`).join("");
+  document.querySelectorAll("#tbl th.sortable").forEach(th => {
+    const base = th.textContent.replace(/ [▾▴]$/, "");
+    th.textContent = base + (th.dataset.k === sortK ? (sortDir < 0 ? " ▾" : " ▴") : "");
+  });
+}
+document.querySelectorAll("#tbl th.sortable").forEach(th => th.onclick = () => {
+  if (sortK === th.dataset.k) sortDir *= -1; else { sortK = th.dataset.k; sortDir = th.dataset.k === "title" ? 1 : -1; }
+  renderTable();
+});
+["fEngine", "fTrans", "fSeller", "fSource", "fBody", "fOrigin", "fMax"].forEach(id => document.getElementById(id).addEventListener("input", renderTable));
+renderTable();
+</script>
+<!-- ferovka-theme --><script defer src="/analytics-config.js"></script><script defer src="/analytics.js"></script><script id="ferovka-chart">/* Férovka – chart → ad links, injected into every report by sync-reports.mjs.
+ *
+ * The reports draw one invisible 11px "hit" circle per ad. In dense charts (and always on a narrow phone) those
+ * circles overlap and the one drawn last wins, so a click/tap often opened a neighbouring ad. Here the pointer is
+ * always resolved to the NEAREST point, the report's own tooltip is shown for that point, and a click opens its ad.
+ * Touch: the first tap shows the tooltip (with a hint), a second tap on the same point opens the ad.
+ */
+(() => {
+  let rows;
+  try { rows = DATA; } catch { return; } // eslint-disable-line no-undef
+  if (!Array.isArray(rows) || !rows.length || !("url" in rows[0])) return;
+  const byId = new Map(rows.map((d) => [String(d.id), d]));
+  const MOUSE = ["mouseover", "mouseout", "mouseenter", "mouseleave", "mousemove", "mousedown", "mouseup", "click"];
+  let lastPointer = "mouse", down = null;
+  // the finger position as it was – Chrome "snaps" the later click of a tap to the centre of a nearby clickable element
+  addEventListener("pointerdown", (e) => { lastPointer = e.pointerType || "mouse"; down = { clientX: e.clientX, clientY: e.clientY }; }, true);
+
+  // the old per-point hit circles must not be targets (they overlap, and touch snapping aims at them)
+  document.head.insertAdjacentHTML("beforeend", "<style>svg circle.hit[data-id],svg circle.pt[data-id]{pointer-events:none}</style>");
+
+  function nearest(svg, ev, radius) {
+    let best = null, bd = Infinity;
+    for (const c of svg.querySelectorAll("circle.pt[data-id]")) {
+      const r = c.getBoundingClientRect();
+      const dx = r.left + r.width / 2 - ev.clientX, dy = r.top + r.height / 2 - ev.clientY;
+      const d = dx * dx + dy * dy;
+      if (d <= bd) { bd = d; best = c; } // ties: the point drawn on top (later) wins – that is the one you see
+    }
+    return best && bd <= radius * radius ? best : null;
+  }
+
+  function bind(svg) {
+    if (svg.__fvLinks) return;
+    svg.__fvLinks = true;
+    let current = null, armed = null;
+    const hitOf = (pt) => pt && svg.querySelector(`circle.hit[data-id="${CSS.escape(pt.dataset.id)}"]`);
+    const fire = (el, type, ev) => {
+      if (!el) return;
+      const e = new MouseEvent(type, { clientX: ev.clientX, clientY: ev.clientY, bubbles: false });
+      e.__fv = true;
+      el.dispatchEvent(e);
+    };
+    const tip = () => (svg.parentElement && svg.parentElement.querySelector("#tip, .tip")) || document.getElementById("tip");
+    const mark = (pt) => {
+      if (current === pt) return;
+      if (current) current.setAttribute("r", current.__r || "5");
+      current = pt;
+      if (pt) { pt.__r = pt.__r || pt.getAttribute("r"); pt.setAttribute("r", String(+pt.__r + 2)); }
+    };
+    const show = (pt, ev, hint) => {
+      mark(pt);
+      if (!pt) { const t = tip(); if (t) t.style.display = "none"; return; }
+      fire(hitOf(pt), "mousemove", ev); // the report's own tooltip, for the nearest point
+      const t = tip();
+      if (t && hint) t.insertAdjacentHTML("beforeend", `<div class="fv-hint">Ťukni ešte raz – otvorí sa inzerát ↗</div>`);
+    };
+    const open = (pt) => {
+      const d = byId.get(pt.dataset.id);
+      if (d && d.url) {
+        try { window.FerovkaAnalytics?.listingClick(d.url, "chart"); } catch { /* analytics must never block an ad */ }
+        window.open(d.url, "_blank", "noopener");
+      }
+    };
+
+    // the per-circle handlers of the report never see real mouse events – only our synthetic ones
+    for (const type of MOUSE) {
+      svg.addEventListener(type, (ev) => {
+        if (ev.__fv) return;
+        ev.stopImmediatePropagation();
+        if (type === "mousemove" && lastPointer === "mouse") {
+          show(nearest(svg, ev, 18), ev, false);
+          svg.style.cursor = current ? "pointer" : "";
+        } else if (type === "mouseleave" && ev.target === svg && lastPointer === "mouse") {
+          show(null, ev);
+        } else if (type === "click") {
+          const touch = lastPointer !== "mouse";
+          const at = touch && down ? down : ev;
+          const pt = nearest(svg, at, touch ? 26 : 18);
+          if (!pt) { armed = null; show(null, ev); return; }
+          if (!touch || armed === pt) { armed = null; open(pt); }
+          else { armed = pt; show(pt, at, true); }
+        }
+      }, true);
+    }
+  }
+
+  const scan = () => document.querySelectorAll("svg").forEach((s) => s.querySelector("circle.pt[data-id]") && bind(s));
+  scan();
+  new MutationObserver(scan).observe(document.body, { childList: true, subtree: true });
+})();
+</script><script id="ferovka-filters">/* Férovka – filters for the whole report, injected into every model report by sync-reports.mjs.
+ *
+ * The reports render the chart (drawChart) and the full ranking (renderTable) from the global DATA array; their own
+ * filter bar only filters the table. Here the filter bar (kept in its place above the ranking) gets more filters (year, price from/to,
+ * km, fuel, discount, picks only, text search) and every filter applies to the chart and the ranking together: DATA is
+ * refilled in place with the matching ads and both are drawn again. "</script" can't occur inside this file.
+ */
+(() => {
+  let data;
+  try { data = DATA; } catch { return; } // eslint-disable-line no-undef
+  if (!Array.isArray(data) || !data.length || typeof renderTable !== "function") return; // eslint-disable-line no-undef
+  const bar = document.querySelector(".filters");
+  if (!bar || bar.dataset.fv) return;
+  bar.dataset.fv = "1";
+  const ALL = data.slice();
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+  const fmt = (n) => Math.round(n).toLocaleString("sk-SK");
+  const norm = (s) => String(s ?? "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+  let groups = null;
+  try { groups = GROUPS; } catch { /* report without groups */ } // eslint-disable-line no-undef
+
+  const FUEL = { diesel: "Diesel", petrol: "Benzín", hybrid: "Hybrid", "plug-in hybrid": "Plug-in hybrid", electric: "Elektro", lpg: "LPG", cng: "CNG" };
+  const fuelOf = (d) => {
+    const e = norm(d.eg);
+    if (/tdi|crdi|dci|hdi|diesel|\bd\b|cdi|\d+d\b|blue/.test(e)) return "Diesel";
+    if (/plug-in|phev|e-hybrid|recharge|\bgte\b|\bt8\b|\b\d{2}e\b|\b\d{3} ?e\b/.test(e)) return "Plug-in hybrid";
+    if (/elektro|electric|\bev\b/.test(e)) return "Elektro";
+    if (/cng|lpg|g-tec|g-tron|tgi|ecofuel/.test(e)) return "Plyn (CNG/LPG)";
+    if (/mild|mhev/.test(e)) return "Benzín"; // mild-hybrid petrol (the diesel ones say TDI / d above)
+    if (/hybrid|hev/.test(e)) return "Hybrid";
+    if (/tsi|tfsi|mpi|fsi|benzin|gdi|dpi|htp|12v|\bt\d\b|\bb[56]\b|\d+i\b|turbo|tce|\bs4\b|rs ?\d|amg|competition|\bm\d{2,3}i?\b|gti|\bx5 m\b/.test(e)) return "Benzín";
+    return d.fuel ? FUEL[d.fuel] || String(d.fuel) : null;
+  };
+
+  // --- controls ---------------------------------------------------------------------------------------------------
+  const years = ALL.map((d) => d.year).filter(Boolean);
+  const yMin = Math.min(...years), yMax = Math.max(...years);
+  const yearOpts = (label) => `<option value="">${label}</option>` +
+    Array.from({ length: yMax - yMin + 1 }, (_, i) => yMax - i).map((y) => `<option>${y}</option>`).join("");
+  const kms = [30000, 50000, 75000, 100000, 150000, 200000, 250000, 300000];
+  const fuels = [...new Set(ALL.map(fuelOf).filter(Boolean))].sort((a, b) => a.localeCompare(b, "sk"));
+  const showGroups = Array.isArray(groups) && groups.length > 1 && ALL.some((d) => Number.isInteger(d.cg));
+
+  const maxInput = $("fMax");
+  if (maxInput) { maxInput.placeholder = "Cena do €"; maxInput.title = "Najvyššia cena (s DPH)"; }
+  const html =
+    `<select id="fvYearFrom" title="Rok výroby od">${yearOpts("Rok od")}</select>` +
+    `<select id="fvYearTo" title="Rok výroby do">${yearOpts("Rok do")}</select>` +
+    `<input id="fvPriceMin" type="number" placeholder="Cena od €" step="500" min="0" title="Najnižšia cena (s DPH)" style="width:110px">`;
+  if (maxInput) maxInput.insertAdjacentHTML("beforebegin", html);
+  else bar.insertAdjacentHTML("afterbegin", html);
+  const more =
+    `<select id="fvKm" title="Najviac najazdených km"><option value="">Nájazd – všetky</option>${kms.map((k) => `<option value="${k}">do ${fmt(k)} km</option>`).join("")}</select>` +
+    (fuels.length > 1 ? `<select id="fvFuel" title="Palivo"><option value="">Všetky palivá</option>${fuels.map((f) => `<option>${esc(f)}</option>`).join("")}</select>` : "") +
+    (showGroups ? `<select id="fvGroup" title="Skupina motorov (farba v grafe)"><option value="">Všetky skupiny</option>${groups.map((g, i) => `<option value="${i}">${esc(g)}</option>`).join("")}</select>` : "") +
+    `<select id="fvDisc" title="O koľko je auto lacnejšie ako férová cena"><option value="">Cena – všetky</option><option value="0">pod férovou cenou</option><option value="10">aspoň 10 % pod trhom</option><option value="20">aspoň 20 % pod trhom</option></select>` +
+    `<input id="fvText" type="search" placeholder="Hľadať (výbava, mesto…)" title="Hľadá v názve inzerátu, motore a lokalite" style="width:170px">` +
+    `<label class="fv-check"><input id="fvPick" type="checkbox"> len odporúčané</label>` +
+    `<button type="button" id="fvReset" class="fv-reset">Zrušiť filtre</button>`;
+  const count = $("count");
+  if (count) count.insertAdjacentHTML("beforebegin", more);
+  else bar.insertAdjacentHTML("beforeend", more);
+
+  // the bar stays where it was – right above the ranking – and also drives the chart; the chart gets a pointer to it
+  const chart = $("chartWrap");
+  const box = document.createElement("div");
+  box.className = "fv-filters";
+  box.id = "filtre";
+  bar.before(box);
+  box.innerHTML = `<div class="fv-head"><b>Filtre</b><span>platia pre rebríček aj graf vyššie</span></div>`;
+  box.appendChild(bar);
+  const note = document.createElement("div");
+  note.className = "fv-note";
+  chart?.before(note);
+
+  document.head.insertAdjacentHTML("beforeend", `<style id="fv-filters-css">
+.fv-filters{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 14px 4px;margin:24px 0 8px}
+.fv-filters .fv-head{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;margin-bottom:8px}
+.fv-filters .fv-head span{color:var(--muted);font-size:13px}
+.fv-filters .filters{margin-bottom:8px}
+.fv-filters .filters .count{flex-basis:100%;margin-left:0}
+.fv-check{display:inline-flex;gap:6px;align-items:center;font-size:13px;color:var(--text-2,var(--text));white-space:nowrap}
+.fv-reset{background:none;border:1px solid var(--border);color:var(--text);border-radius:8px;padding:6px 10px;font:inherit;font-size:13px;cursor:pointer}
+.fv-reset:hover{background:var(--surface-2,var(--surface))}
+.fv-note{color:var(--muted);font-size:13px;margin:0 0 8px}
+.fv-note a{color:inherit}
+.fv-empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:14px;pointer-events:none}
+@media (max-width:600px){.fv-filters .filters select,.fv-filters .filters input[type=number],.fv-filters .filters input[type=search]{flex:1 1 calc(50% - 8px);min-width:0;width:auto!important}}
+</style>`);
+
+  // --- filtering --------------------------------------------------------------------------------------------------
+  const val = (id) => ($(id) ? $(id).value : "");
+  const num = (id) => { const v = parseFloat(val(id)); return Number.isFinite(v) ? v : null; };
+  function matches(d) {
+    const yf = num("fvYearFrom"), yt = num("fvYearTo"), pmin = num("fvPriceMin"), pmax = num("fMax"), km = num("fvKm"), disc = num("fvDisc");
+    const fuel = val("fvFuel"), grp = val("fvGroup"), q = norm(val("fvText")).trim();
+    if (yf != null && !(d.year >= yf)) return false;
+    if (yt != null && !(d.year <= yt)) return false;
+    if (pmin != null && !(d.price_gross >= pmin)) return false;
+    if (pmax != null && !(d.price_gross <= pmax)) return false;
+    if (km != null && !(d.km <= km)) return false;
+    if (disc != null && !(d.discount_pct > disc || (disc > 0 && d.discount_pct >= disc))) return false;
+    if (fuel && fuelOf(d) !== fuel) return false;
+    if (grp !== "" && String(d.cg) !== grp) return false;
+    if ($("fvPick")?.checked && !d.pick) return false;
+    if (q && !q.split(/\s+/).every((w) => norm(`${d.title} ${d.eg ?? ""} ${d.engine ?? ""} ${d.location ?? ""}`).includes(w))) return false;
+    // the report's own filters (engine, gearbox, seller, portal, body, origin) – same rules as its renderTable
+    const en = val("fEngine"), tr = val("fTrans"), se = val("fSeller"), so = val("fSource"), og = val("fOrigin"), bo = val("fBody");
+    if (en && d.eg !== en) return false;
+    if (tr && d.transmission !== tr) return false;
+    if (se && d.seller_type === "dealer") return false;
+    if (so && !(d.source === so || (d.also_listed || []).some((a) => a.source === so))) return false;
+    if (og && d.origin !== og) return false;
+    if (bo && d.body !== bo) return false;
+    return true;
+  }
+  const active = () => [...box.querySelectorAll("select, input")].filter((el) => (el.type === "checkbox" ? el.checked : el.value !== "")).length;
+
+  let drawing = false;
+  function apply() {
+    if (drawing) return;
+    drawing = true;
+    const rows = ALL.filter(matches);
+    data.length = 0;
+    data.push(...rows);
+    const wrap = $("chartWrap");
+    wrap?.querySelector(".fv-empty")?.remove();
+    const plotted = rows.filter((d) => d.km && d.price_gross).length;
+    try {
+      if (typeof drawChart === "function") { // eslint-disable-line no-undef
+        if (plotted) drawChart(); // eslint-disable-line no-undef
+        else { const svg = $("chart"); if (svg) svg.innerHTML = ""; }
+      }
+    } catch (e) { console.warn("chart", e); }
+    if (wrap && !plotted) {
+      if (getComputedStyle(wrap).position === "static") wrap.style.position = "relative";
+      wrap.insertAdjacentHTML("beforeend", `<div class="fv-empty">Filtrom nezodpovedá žiadny inzerát</div>`);
+    }
+    try { renderTable(); } catch (e) { console.warn("table", e); } // eslint-disable-line no-undef
+    const n = active();
+    if (count) count.textContent = `Zobrazených ${fmt(rows.length)} z ${fmt(ALL.length)} inzerátov` + (n ? ` · aktívne filtre: ${n}` : "");
+    note.innerHTML = n
+      ? `Zobrazených ${fmt(rows.length)} z ${fmt(ALL.length)} inzerátov podľa <a href="#filtre">filtrov pri rebríčku</a>.`
+      : `Filtre (rok, cena, nájazd, palivo…) nájdeš <a href="#filtre">pri kompletnom rebríčku</a> – platia aj pre tento graf.`;
+    drawing = false;
+  }
+  box.querySelectorAll("select, input").forEach((el) => el.addEventListener("input", apply));
+  $("fvPick")?.addEventListener("change", apply);
+  $("fvReset").addEventListener("click", () => {
+    box.querySelectorAll("select, input").forEach((el) => { if (el.type === "checkbox") el.checked = false; else el.value = ""; });
+    apply();
+  });
+  apply();
+})();
+</script><!-- /ferovka-theme -->
+</body>
+</html>
