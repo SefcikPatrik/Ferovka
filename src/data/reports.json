@@ -25,7 +25,7 @@
     "median": "14 800 €",
     "r2": "88 %",
     "history": {
-      "updated_at": "2026-11-22T12:30:00",
+      "updated_at": "2026-11-22T19:51:52",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 519,
@@ -41,7 +41,7 @@
       "historical_median": 14990,
       "seen_median": 15238,
       "seen_price_count": 852,
-      "last_observed_at": "2026-11-22T02:01:49"
+      "last_observed_at": "2026-11-22T19:20:31"
     }
   },
   {
@@ -57,23 +57,23 @@
     "median": "17 150 €",
     "r2": "93 %",
     "history": {
-      "updated_at": "2026-11-22T12:30:00",
+      "updated_at": "2026-11-22T19:51:52",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 705,
-      "total_count": 1494,
-      "active_count": 1143,
+      "total_count": 1510,
+      "active_count": 1159,
       "inactive_count": 0,
       "unverified_count": 351,
-      "new_count": 789,
+      "new_count": 805,
       "price_changed_count": 131,
       "price_lowered_count": 123,
       "paired_count": 467,
       "paired_median_change_pct": 0,
       "historical_median": 16500,
       "seen_median": 17700,
-      "seen_price_count": 1107,
-      "last_observed_at": "2026-11-22T02:03:43"
+      "seen_price_count": 1123,
+      "last_observed_at": "2026-11-22T19:45:42"
     }
   },
   {
@@ -87,7 +87,58 @@
     "summary": "Analýza aktuálnych inzerátov Audi A7 (Sportback 2010–2025, aj S7 / RS7) od 8 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 382 inzerátov (207 na bazoši, 67 na autobazar.eu, 108 na bazar.sk) – prezreli sme 60 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 196 rôznych áut zo Slovenska.",
     "ads": 196,
     "median": "23 150 €",
-    "r2": "89 %"
+    "r2": "89 %",
+    "history": {
+      "updated_at": "2026-11-22T19:51:52",
+      "as_of": "2026-11-22",
+      "coverage": "partial",
+      "baseline_count": 92,
+      "total_count": 98,
+      "active_count": 98,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 6,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 92,
+      "paired_median_change_pct": 0,
+      "historical_median": 22900,
+      "seen_median": 22900,
+      "seen_price_count": 98,
+      "last_observed_at": "2026-11-22T19:44:40"
+    }
+  },
+  {
+    "slug": "audi-a8",
+    "file": "audi-a8-analyza.html",
+    "name": "Audi A8",
+    "brand": "Audi",
+    "model": "A8",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Audi A8 (D4 2010–2017 a D5 2018+, aj S8) od 6 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 389 inzerátov (194 na bazoši, 99 na autobazar.eu, 96 na bazar.sk) – prezreli sme 85 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 211 rôznych áut zo Slovenska.",
+    "ads": 211,
+    "median": "29 452 €",
+    "r2": "92 %",
+    "history": {
+      "updated_at": "2026-11-22T19:51:52",
+      "as_of": "2026-11-22",
+      "coverage": "partial",
+      "baseline_count": 154,
+      "total_count": 154,
+      "active_count": 154,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 154,
+      "paired_median_change_pct": 0,
+      "historical_median": 29452,
+      "seen_median": 29452,
+      "seen_price_count": 154,
+      "last_observed_at": "2026-11-22T19:41:06"
+    }
   },
   {
     "slug": "audi-q2",
@@ -100,7 +151,26 @@
     "summary": "Analýza aktuálnych inzerátov Audi Q2 (2016–2025, bez nových áut z 2026) od 6 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 61 inzerátov (17 na bazoši, 22 na autobazar.eu, 22 na bazar.sk) – prezreli sme 70 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 38 rôznych áut zo Slovenska.",
     "ads": 38,
     "median": "16 800 €",
-    "r2": "93 %"
+    "r2": "93 %",
+    "history": {
+      "updated_at": "2026-11-22T19:51:52",
+      "as_of": "2026-11-22",
+      "coverage": "partial",
+      "baseline_count": 29,
+      "total_count": 29,
+      "active_count": 29,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 29,
+      "paired_median_change_pct": 0,
+      "historical_median": 16800,
+      "seen_median": 16800,
+      "seen_price_count": 29,
+      "last_observed_at": "2026-11-22T13:37:03"
+    }
   },
   {
     "slug": "audi-q4",
@@ -113,7 +183,26 @@
     "summary": "Analýza aktuálnych inzerátov Audi Q4 e-tron (Q4 e-tron a Q4 Sportback, 2021–2025, elektro, bez nových áut z 2026) od 15 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 1 777 inzerátov (1 718 na bazoši, 31 na autobazar.eu, 28 na bazar.sk) – prezreli sme 4 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 47 rôznych áut zo Slovenska.",
     "ads": 47,
     "median": "28 490 €",
-    "r2": "89 %"
+    "r2": "89 %",
+    "history": {
+      "updated_at": "2026-11-22T19:51:52",
+      "as_of": "2026-11-22",
+      "coverage": "partial",
+      "baseline_count": 35,
+      "total_count": 35,
+      "active_count": 35,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 35,
+      "paired_median_change_pct": 0,
+      "historical_median": 28490,
+      "seen_median": 28490,
+      "seen_price_count": 35,
+      "last_observed_at": "2026-11-22T16:22:43"
+    }
   },
   {
     "slug": "audi-q5",
@@ -128,7 +217,7 @@
     "median": "24 500 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-22T12:30:00",
+      "updated_at": "2026-11-22T19:51:52",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 209,
@@ -144,7 +233,7 @@
       "historical_median": 24000,
       "seen_median": 24500,
       "seen_price_count": 372,
-      "last_observed_at": "2026-11-22T02:04:22"
+      "last_observed_at": "2026-11-22T19:20:32"
     }
   },
   {
@@ -160,7 +249,7 @@
     "median": "26 490 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-22T12:30:00",
+      "updated_at": "2026-11-22T19:51:52",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 263,
@@ -176,7 +265,39 @@
       "historical_median": 26550,
       "seen_median": 27990,
       "seen_price_count": 426,
-      "last_observed_at": "2026-11-22T02:27:26"
+      "last_observed_at": "2026-11-22T19:40:44"
+    }
+  },
+  {
+    "slug": "audi-q8",
+    "file": "audi-q8-analyza.html",
+    "name": "Audi Q8",
+    "brand": "Audi",
+    "model": "Q8",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Audi Q8 (2018+, aj SQ8 / RS Q8, bez elektrického Q8 e-tron) od 20 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 250 inzerátov (58 na bazoši, 114 na autobazar.eu, 78 na bazar.sk) – prezreli sme 68 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 126 rôznych áut zo Slovenska.",
+    "ads": 126,
+    "median": "54 999 €",
+    "r2": "88 %",
+    "history": {
+      "updated_at": "2026-11-22T19:51:52",
+      "as_of": "2026-11-22",
+      "coverage": "partial",
+      "baseline_count": 67,
+      "total_count": 67,
+      "active_count": 67,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 67,
+      "paired_median_change_pct": 0,
+      "historical_median": 54999,
+      "seen_median": 54999,
+      "seen_price_count": 67,
+      "last_observed_at": "2026-11-22T19:42:28"
     }
   },
   {
@@ -190,7 +311,26 @@
     "summary": "Analýza aktuálnych inzerátov Audi TT (TT 8J 2006–2014 a TT 8S 2014–2023, kupé aj roadster, vrátane TTS) od 4 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 69 inzerátov (40 na bazoši, 19 na autobazar.eu, 10 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 53 rôznych áut zo Slovenska.",
     "ads": 53,
     "median": "8 300 €",
-    "r2": "96 %"
+    "r2": "96 %",
+    "history": {
+      "updated_at": "2026-11-22T19:51:52",
+      "as_of": "2026-11-22",
+      "coverage": "partial",
+      "baseline_count": 23,
+      "total_count": 23,
+      "active_count": 23,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 23,
+      "paired_median_change_pct": 0,
+      "historical_median": 8300,
+      "seen_median": 8300,
+      "seen_price_count": 23,
+      "last_observed_at": "2026-11-22T17:46:52"
+    }
   },
   {
     "slug": "bmw-1",
@@ -1438,6 +1578,19 @@
     }
   },
   {
+    "slug": "mercedes-cls",
+    "file": "mercedes-cls-analyza.html",
+    "name": "Mercedes-Benz CLS",
+    "brand": "Mercedes-Benz",
+    "model": "CLS",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Mercedes-Benz CLS (C218 2011–2017 kupé aj Shooting Brake, C257 2018–2023) od 6 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 149 inzerátov (71 na bazoši, 50 na autobazar.eu, 28 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 92 rôznych áut zo Slovenska.",
+    "ads": 92,
+    "median": "19 900 €",
+    "r2": "88 %"
+  },
+  {
     "slug": "mercedes-e",
     "file": "mercedes-e-analyza.html",
     "name": "Mercedes-Benz E",
@@ -2071,6 +2224,32 @@
       "seen_price_count": 51,
       "last_observed_at": "2026-11-22T15:45:20"
     }
+  },
+  {
+    "slug": "porsche-panamera",
+    "file": "porsche-panamera-analyza.html",
+    "name": "Porsche Panamera",
+    "brand": "Porsche",
+    "model": "Panamera",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Porsche Panamera (970 2009–2016 a 971 2016–2023, aj Sport Turismo) od 15 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 207 inzerátov (58 na bazoši, 85 na autobazar.eu, 64 na bazar.sk) – prezreli sme 90 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 114 rôznych áut zo Slovenska.",
+    "ads": 114,
+    "median": "60 138 €",
+    "r2": "98 %"
+  },
+  {
+    "slug": "land-rover-range-rover",
+    "file": "land-rover-range-rover-analyza.html",
+    "name": "Range Rover",
+    "brand": "Range",
+    "model": "Rover",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Range Rover (L322 2002–2012, L405 2013–2021 a L460 2022+, bez Sport / Evoque / Velar) od 8 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 1 205 inzerátov (210 na bazoši, 579 na autobazar.eu, 416 na bazar.sk) – prezreli sme 94 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 630 rôznych áut zo Slovenska.",
+    "ads": 630,
+    "median": "44 445 €",
+    "r2": "95 %"
   },
   {
     "slug": "land-rover-evoque",
@@ -2963,23 +3142,23 @@
     "median": "8 990 €",
     "r2": "92 %",
     "history": {
-      "updated_at": "2026-11-22T12:30:00",
+      "updated_at": "2026-11-22T19:51:52",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 332,
-      "total_count": 332,
-      "active_count": 0,
+      "total_count": 333,
+      "active_count": 3,
       "inactive_count": 0,
-      "unverified_count": 332,
-      "new_count": 0,
+      "unverified_count": 330,
+      "new_count": 1,
       "price_changed_count": 0,
       "price_lowered_count": 0,
-      "paired_count": 0,
-      "paired_median_change_pct": null,
+      "paired_count": 2,
+      "paired_median_change_pct": 0,
       "historical_median": 8990,
-      "seen_median": null,
-      "seen_price_count": 0,
-      "last_observed_at": "2026-11-21T16:45:57"
+      "seen_median": 14500,
+      "seen_price_count": 3,
+      "last_observed_at": "2026-11-22T19:20:03"
     }
   },
   {
@@ -2995,23 +3174,23 @@
     "median": "13 450 €",
     "r2": "90 %",
     "history": {
-      "updated_at": "2026-11-22T12:30:00",
+      "updated_at": "2026-11-22T19:51:52",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 221,
-      "total_count": 507,
-      "active_count": 2,
+      "total_count": 512,
+      "active_count": 9,
       "inactive_count": 0,
-      "unverified_count": 505,
-      "new_count": 286,
+      "unverified_count": 503,
+      "new_count": 291,
       "price_changed_count": 0,
       "price_lowered_count": 0,
       "paired_count": 0,
       "paired_median_change_pct": null,
-      "historical_median": 14400,
-      "seen_median": 10350,
-      "seen_price_count": 2,
-      "last_observed_at": "2026-11-22T02:01:06"
+      "historical_median": 14150,
+      "seen_median": 13333,
+      "seen_price_count": 9,
+      "last_observed_at": "2026-11-22T19:41:01"
     }
   },
   {
@@ -3027,14 +3206,14 @@
     "median": "22 000 €",
     "r2": "93 %",
     "history": {
-      "updated_at": "2026-11-22T12:30:00",
+      "updated_at": "2026-11-22T19:51:52",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 101,
       "total_count": 101,
-      "active_count": 0,
+      "active_count": 1,
       "inactive_count": 0,
-      "unverified_count": 101,
+      "unverified_count": 100,
       "new_count": 0,
       "price_changed_count": 0,
       "price_lowered_count": 0,
@@ -3043,7 +3222,7 @@
       "historical_median": 22000,
       "seen_median": null,
       "seen_price_count": 0,
-      "last_observed_at": "2026-11-21T20:59:13"
+      "last_observed_at": "2026-11-22T19:20:20"
     }
   },
   {

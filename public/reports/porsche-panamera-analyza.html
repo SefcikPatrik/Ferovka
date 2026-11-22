@@ -1,0 +1,856 @@
+<!doctype html>
+<html lang="sk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Porsche Panamera – analýza ponúk</title>
+<style>
+:root {
+  color-scheme: light;
+  --bg: #f6f6f4; --surface: #fcfcfb; --surface-2: #f0efec; --border: #e2e1dc;
+  --text: #0b0b0b; --text-2: #52514e; --muted: #7a7974;
+  --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a;
+  --pos: #2a78d6; --neg: #eb6834; --accent: #2a78d6;
+  --good: #1d7f4e; --bad: #b4332f; --grid: #e8e7e3;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #121211; --surface: #1a1a19; --surface-2: #232321; --border: #33332f;
+    --text: #f0efec; --text-2: #c3c2b7; --muted: #8f8e86;
+    --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+    --pos: #3987e5; --neg: #d95926; --accent: #5598e7;
+    --good: #4cc38a; --bad: #f07a76; --grid: #2a2a27;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #121211; --surface: #1a1a19; --surface-2: #232321; --border: #33332f;
+  --text: #f0efec; --text-2: #c3c2b7; --muted: #8f8e86;
+  --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+  --pos: #3987e5; --neg: #d95926; --accent: #5598e7;
+  --good: #4cc38a; --bad: #f07a76; --grid: #2a2a27;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text);
+  font: 15px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+main { max-width: 1120px; margin: 0 auto; padding: 32px 16px 64px; }
+a { color: var(--accent); text-decoration: none; } a:hover { text-decoration: underline; }
+h1 { font-size: 30px; margin: 0 0 4px; letter-spacing: -.01em; }
+h2 { font-size: 21px; margin: 48px 0 6px; }
+h3 { font-size: 15px; margin: 6px 0 4px; line-height: 1.35; }
+.lead { color: var(--text-2); margin: 0 0 20px; max-width: 760px; }
+.section-lead { color: var(--text-2); margin: 0 0 16px; max-width: 800px; }
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
+.kpi { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+.kpi .v { font-size: 26px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.kpi .l { color: var(--text-2); font-size: 13px; }
+.explain { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; margin-top: 12px; }
+.explain p { margin: 6px 0; color: var(--text-2); }
+.explain b { color: var(--text); }
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; }
+.card-head { display: flex; justify-content: space-between; gap: 8px; font-size: 12px; }
+.tag { font-weight: 600; color: var(--accent); }
+.loc { color: var(--muted); }
+.facts { color: var(--text-2); font-size: 13px; }
+.prices { display: grid; grid-template-columns: 1.2fr 1fr .8fr; gap: 8px; margin: 12px 0 8px; }
+.lbl { display: block; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+.big { font-size: 22px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.mid { font-size: 16px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.good { color: var(--good); }
+.meter { height: 6px; background: var(--surface-2); border-radius: 4px; overflow: hidden; }
+.meter span { display: block; height: 100%; background: var(--s1); border-radius: 4px; }
+.news ul { margin: 6px 0 0; padding-left: 20px; } .news li { margin: 4px 0; } .news .down { color: var(--good, #1baf7a); font-weight: 600; }
+.note { font-size: 12.5px; background: var(--surface-2); border-radius: 6px; padding: 6px 8px; margin-top: 8px; color: var(--text-2); }
+.pc { list-style: none; padding: 0; margin: 10px 0 0; font-size: 13.5px; }
+.pc li { padding-left: 20px; position: relative; margin: 3px 0; }
+.pc li.pro::before { content: "+"; position: absolute; left: 4px; color: var(--good); font-weight: 700; }
+.pc li.con::before { content: "–"; position: absolute; left: 4px; color: var(--bad); font-weight: 700; }
+.subhead { font-size: 15px; color: var(--text-2); margin: 22px 0 10px; font-weight: 600; }
+.chart-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 14px 8px; position: relative; }
+.legend { display: flex; flex-wrap: wrap; gap: 16px; font-size: 13px; color: var(--text-2); margin: 0 0 6px 4px; }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; }
+.legend .ring { background: transparent; border: 2px solid var(--text); width: 12px; height: 12px; }
+svg text { fill: var(--muted); font-size: 11px; }
+.tip { position: absolute; pointer-events: none; background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+  padding: 8px 10px; font-size: 12.5px; box-shadow: 0 6px 20px rgba(0,0,0,.15); max-width: 280px; display: none; z-index: 5; }
+.tip b { display: block; margin-bottom: 2px; }
+.tip .row { display: flex; justify-content: space-between; gap: 12px; color: var(--text-2); }
+.tip .row span:last-child { color: var(--text); font-variant-numeric: tabular-nums; }
+table { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; font-size: 13.5px; }
+th, td { padding: 9px 10px; border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; }
+th { font-size: 12px; color: var(--text-2); font-weight: 600; background: var(--surface-2); white-space: nowrap; }
+th.sortable { cursor: pointer; user-select: none; } th.sortable:hover { color: var(--text); }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+.sub { color: var(--text-2); font-size: 12.5px; margin-top: 2px; }
+.stars { color: #c98500; letter-spacing: 1px; white-space: nowrap; } .stars .off { color: var(--border); }
+.cellbar { height: 5px; background: var(--surface-2); border-radius: 3px; margin-bottom: 4px; }
+.cellbar span { display: block; height: 100%; background: var(--s1); border-radius: 3px; }
+.disc { display: inline-flex; align-items: center; gap: 6px; justify-content: flex-end; }
+.dbar { width: 54px; height: 6px; background: var(--surface-2); border-radius: 3px; position: relative; }
+.dbar span { position: absolute; top: 0; height: 100%; border-radius: 3px; }
+.filters { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 10px; align-items: center; }
+.filters select, .filters input { background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 6px 8px; font: inherit; font-size: 13px; }
+.filters .count { color: var(--muted); font-size: 13px; margin-left: auto; }
+.table-scroll { overflow-x: auto; border-radius: 12px; }
+.badge { font-size: 11px; padding: 1px 6px; border-radius: 10px; background: var(--surface-2); color: var(--text-2); white-space: nowrap; }
+.badge.pick { background: var(--s1); color: #fff; }
+.flag { color: var(--bad); font-size: 12px; }
+.warn { background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--neg); border-radius: 10px; padding: 12px 16px; }
+.warn li { margin: 4px 0; }
+.check { columns: 2 300px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px 14px 34px; margin: 0; }
+.check li { margin: 4px 0; break-inside: avoid; }
+footer { color: var(--muted); font-size: 12.5px; margin-top: 48px; border-top: 1px solid var(--border); padding-top: 14px; }
+.theme-btn { float: right; background: var(--surface); color: var(--text-2); border: 1px solid var(--border); border-radius: 8px; padding: 5px 10px; cursor: pointer; font: inherit; font-size: 13px; }
+@media (max-width: 640px) { h1 { font-size: 24px; } .prices { grid-template-columns: 1fr 1fr 1fr; } .big { font-size: 18px; } th, td { padding: 7px 6px; } }
+</style>
+<!-- ferovka-theme --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"><style id="ferovka-theme">/* Férovka look for the generated analyses – injected by sync-reports.mjs after each report's own <style>.
+   Same palette and type as the site; chart colours (--s1..--s3) stay the validated set. */
+:root {
+  --bg: #f5f4ef; --surface: #fdfdfb; --surface-2: #eeede6; --border: #e1dfd6;
+  --text: #0f1513; --text-2: #4f5551; --muted: #6f746f;
+  --accent: #0b8a56; --good: #0b7a4b; --grid: #e6e4dc; --win: #dff3e9;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d110f; --surface: #151a17; --surface-2: #1d2420; --border: #2a322d;
+    --text: #eef1ec; --text-2: #b6bdb6; --muted: #8f978f;
+    --accent: #2fc583; --good: #4cd08f; --grid: #1f2622; --win: #143223;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d110f; --surface: #151a17; --surface-2: #1d2420; --border: #2a322d;
+  --text: #eef1ec; --text-2: #b6bdb6; --muted: #8f978f;
+  --accent: #2fc583; --good: #4cd08f; --grid: #1f2622; --win: #143223;
+}
+
+body { font-family: "Manrope", system-ui, sans-serif; }
+h1, h2 { letter-spacing: -0.02em; font-weight: 800; }
+.tag { color: var(--accent); }
+
+/* photo header (removed by the site's viewer, which shows its own) */
+.fv-hero { position: relative; margin: 0 0 26px; border-radius: 20px; overflow: hidden; aspect-ratio: 21 / 8; background: #0d110f; display: flex; }
+.fv-hero img { flex: 1; min-width: 0; height: 100%; object-fit: cover; animation: fv-zoom 1.4s cubic-bezier(.2,.7,.2,1) both; }
+.fv-collage img + img { border-left: 3px solid #0d110f; }
+.fv-hero::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(180deg, transparent 55%, rgb(13 17 15 / .75)),
+    repeating-linear-gradient(90deg, rgb(47 197 131 / .06) 0 1px, transparent 1px 48px); }
+.fv-hero figcaption { position: absolute; right: 12px; bottom: 8px; z-index: 1; font-size: 11px; color: rgb(255 255 255 / .75); }
+.fv-hero figcaption a { color: inherit; }
+
+/* cards & panels: softer, lift on hover */
+.card, .kpi, .explain, .chart-wrap, .box { border-radius: 16px; }
+.card { transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease; }
+.card:hover { transform: translateY(-3px); border-color: var(--accent); box-shadow: 0 14px 30px -18px rgb(0 0 0 / .45); }
+.badge.pick { background: var(--accent); }
+
+/* entrance animation */
+@keyframes fv-up { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes fv-zoom { from { transform: scale(1.08); filter: brightness(.6); } to { transform: none; filter: none; } }
+h1, .lead, .kpis, .cards .card { animation: fv-up .6s cubic-bezier(.2,.7,.2,1) both; }
+.lead { animation-delay: .08s; }
+.kpis { animation-delay: .16s; }
+.cards .card:nth-child(2) { animation-delay: .06s; }
+.cards .card:nth-child(3) { animation-delay: .12s; }
+.cards .card:nth-child(4) { animation-delay: .18s; }
+.cards .card:nth-child(5) { animation-delay: .24s; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+@media (max-width: 640px) { .fv-hero { aspect-ratio: 16 / 9; border-radius: 14px; } }
+
+/* touch: hint under the chart tooltip (report-chart.js) */
+.fv-hint { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--border, rgba(127,127,127,.3)); font-weight: 700; color: var(--accent, #2fc583); }
+</style><!-- /ferovka-theme -->
+</head>
+<body>
+<main><!-- ferovka-theme --><!-- /ferovka-theme -->
+<button class="theme-btn" id="themeBtn" type="button">Svetlý / tmavý</button>
+<h1>Porsche Panamera – ktorá ponuka sa oplatí</h1>
+<p class="lead">Analýza aktuálnych inzerátov Porsche Panamera (970 2009–2016 a 971 2016–2023, aj Sport Turismo) od 15 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 207 inzerátov (58 na bazoši, 85 na autobazar.eu, 64 na bazar.sk) – prezreli sme 90 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 114 rôznych áut zo Slovenska. Každé auto sme porovnali
+s <b>férovou cenou</b>: tú vypočítal model naučený na celom trhu podľa veku, nájazdu, motora, prevodovky a typu predajcu.</p>
+
+<div class="kpis">
+  <div class="kpi"><div class="v">114</div><div class="l">inzerátov Panamery (nad 15 000 €)</div></div>
+  <div class="kpi"><div class="v">84</div><div class="l">ohodnotených (majú rok aj km)</div></div>
+  <div class="kpi"><div class="v">60 138 €</div><div class="l">medián ceny s DPH</div></div>
+  <div class="kpi"><div class="v">98 %</div><div class="l">rozdielov v cenách vysvetlí model</div></div>
+</div>
+
+
+<h2>Odkiaľ sú dáta: bazoš, autobazar.eu a bazar.sk</h2>
+<div class="kpis">
+  <div class="kpi"><div class="v">27</div><div class="l">ohodnotených z bazoša</div></div>
+  <div class="kpi"><div class="v">46</div><div class="l">ohodnotených z autobazar.eu</div></div><div class="kpi"><div class="v">11</div><div class="l">ohodnotených z bazar.sk</div></div>
+  <div class="kpi"><div class="v">70</div><div class="l">áut bolo na viacerých portáloch – započítané raz</div></div>
+  <div class="kpi"><div class="v">17 / 18</div><div class="l">s uvedeným pôvodom SR / dovoz</div></div>
+</div>
+<div class="explain">
+  <p><b>Tri portály, jeden trh.</b> Bazoš prehľadal 56 inzerátov, autobazar.eu
+  85, bazar.sk 46. Ponuky z Česka (na autobazar.eu ich je veľa) sme vynechali. Autobazáre často dávajú
+  to isté auto na viac portálov. Takéto dvojice (43 v rebríčku) sme spojili podľa VIN alebo zhody roku, km a ceny,
+  aby sa v modeli nerátali dvakrát. Pri aute nájdeš odkaz na všetky ponuky – niekedy sa líšia cenou.</p>
+  <p><b>Rozdiel medzi portálmi:</b> rovnaké auto je na autobazar.eu v priemere -3,7 %
+  oproti bazošu. Na autobazar.eu predávajú hlavne firmy (38 z 46 ohodnotených). Na bazar.sk je rovnaké auto v priemere +0,4 % oproti bazošu.</p>
+  <p><b>Kúpené v SR vs. dovoz:</b> autá s uvedeným pôvodom zo SR sú oproti autám bez uvedeného pôvodu
+  -2,3 %, dovezené -1,9 %
+  (pri rovnakom veku, nájazde a motore). Pôvod zo SR je výhoda pri overovaní histórie, trh zaň však nepripláca – väčšina
+  inzerátov pôvod jednoducho neuvádza. V tabulke dole si môžeš nechať zobraziť len autá kúpené v SR.</p>
+</div>
+
+<h2>Čo hýbe cenou Porsche Panamera</h2>
+<p class="section-lead">Toto sa model naučil z trhu. Keď porovnávaš dve autá, tieto čísla ti povedia, koľko má byť
+rozdiel v cene, aby to bolo fér.</p>
+<div class="kpis">
+  <div class="kpi"><div class="v">-3,0 %</div><div class="l">každých ďalších 10 000 km</div></div>
+  <div class="kpi"><div class="v">-7,1 %</div><div class="l">každý rok veku navyše</div></div>
+  <div class="kpi"><div class="v">+5611 %</div><div class="l">príplatok za automat (DSG)</div></div>
+  <div class="kpi"><div class="v">-10,3 %</div><div class="l">príplatok u predajcu / firmy</div></div>
+  <div class="kpi"><div class="v">+24,5 %</div><div class="l">Panamera 971 (2017+) oproti cene podľa veku</div></div>
+  <div class="kpi"><div class="v">+5610,6 %</div><div class="l">príplatok za automat</div></div>
+</div>
+<div class="explain">
+  <p><b>Príklad:</b> dve rovnaké Panamery 4S z roku 2018, jedno má 60 tis. km, druhé 120 tis. km. Druhé má byť
+  približne o 18 % lacnejšie (6 × -3,0 %). Ak je lacnejšie len o 5 %, preplácaš kilometre.</p>
+  <p><b>Ako čítať „pod trhom“:</b> +15 % znamená, že auto stojí o 15 % menej, než by malo podľa trhu. Bežný rozptyl
+  cien je asi ±14 %, takže až zľava nad ~10–15 % je naozaj výnimočná. Pri takej zľave vždy zisti, prečo je auto lacné
+  (stav, história, nájazd).</p>
+  <p><b>DPH:</b> ceny uvedené bez DPH (napr. „10 300 € netto“) sme prepočítali na cenu s DPH, ktorú zaplatí súkromná osoba.</p>
+</div>
+
+<h2>Odporúčané ponuky</h2>
+<p class="section-lead">Kandidáti s najlepším pomerom cena / vek / nájazd, ktorých celý inzerát sme prečítali.
+Zoradené podľa toho, ako ich odporúčame.</p>
+<div class="subhead">Panamera 971 (2017+) – najlepší pomer cena / vek</div>
+<div class="cards">
+<article class="card">
+  <div class="card-head"><span class="tag">Panamera 4 z 2024 v záruke</span><span class="loc">Komárno</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197796893/porsche-panamera-4-29-v6-pdk-4x4-v-zaruke.php" target="_blank" rel="noopener">Porsche Panamera 4 2.9 V6 PDK 4x4 V ZÁRUKE</a></h3>
+  <div class="facts">2024 · 22 000 km · V6 benzín (Panamera, 4, 4S od 2017) 220–324 kW · automat · liftback · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazoš</b> · aj na <a href='https://www.autobazar.eu/detail/porsche-panamera-4-29-v6-pdk-4x4/AmoZiNdu3I6/' target='_blank' rel='noopener'>autobazar.eu</a> · aj na <a href='https://auto.bazar.sk/39657391-porsche-panamera-4-2-9-v6-pdk-4x4/' target='_blank' rel='noopener'>bazar.sk</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">102 000 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">120 430 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+15.3 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:51%"></span></div>
+  <ul class="pc"><li class="pro">2024, 2.9 V6, PDK, 4x4, 22 tis. km</li><li class="pro">Nová generácia, ešte v záruke</li><li class="pro">~15 % pod férovou cenou</li><li class="con">Predáva autobazár</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">Panamera Turbo z SR z 2019</span><span class="loc">Liptovský Mikuláš</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/porsche-panamera-turbo-4x4-at-404kw550hp-a8/Aea1yzuoUzx/" target="_blank" rel="noopener">Porsche Panamera Turbo 4x4 AT 404kW550HP A8</a></h3>
+  <div class="facts">2019 · 76 500 km · V8 benzín (Turbo, GTS, 4S do 2016) 294–463 kW · automat · liftback · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · kúpené v SR</div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">69 900 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">81 330 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+14.1 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:47%"></span></div>
+  <ul class="pc"><li class="pro">2019, 4.0 V8 Turbo 404 kW, 4x4, 8-st. automat, 77 tis. km</li><li class="pro">Pôvod SR, nízky nájazd</li><li class="pro">~14 % pod férovou cenou</li><li class="con">V8 – veľmi drahý servis</li><li class="con">Predáva autobazár</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">Panamera Sport Turismo 4 E-Hybrid Platinum Edition</span><span class="loc">Trenčín</span></div>
+  <h3><a href="https://auto.bazar.sk/39656955-porsche-panamera-sport-turismo-4-e-hybrid-platinum-edition/" target="_blank" rel="noopener">Porsche Panamera Sport Turismo 4 E-hybrid Platinum Edition</a></h3>
+  <div class="facts">2023 · 43 436 km · Plug-in hybrid 4 E-Hybrid / Turbo S E-Hybrid · automat · Sport Turismo · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazar.sk</b> · dovezené · aj na <a href='https://www.autobazar.eu/detail/porsche-panamera-sport-turismo-4-e-hybrid-platinum-edition/AmiXN8nOJFB/' target='_blank' rel='noopener'>autobazar.eu</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">83 300 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">96 950 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+14.1 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:47%"></span></div>
+  <ul class="pc"><li class="pro">2023, plug-in hybrid, 4x4, automat, 43 tis. km</li><li class="pro">Kombi Sport Turismo, výbava Platinum Edition</li><li class="pro">~14 % pod férovou cenou</li><li class="con">Predáva autobazár</li><li class="con">Dovoz</li><li class="con">Over stav batérie</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">Panamera 4 E-Hybrid z SR</span><span class="loc">Štúrovo</span></div>
+  <h3><a href="https://auto.bazar.sk/39613791-porsche-panamera-4-e-hybrid-4x4-a-t/" target="_blank" rel="noopener">Porsche Panamera 4 E-Hybrid 4x4 A/T</a></h3>
+  <div class="facts">2018 · 117 000 km · Plug-in hybrid 4 E-Hybrid / Turbo S E-Hybrid · automat · liftback · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazar.sk</b> · kúpené v SR · aj na <a href='https://www.autobazar.eu/detail/porsche-panamera-4-e-hybrid-4x4-at/AmB4SNYzgEx/' target='_blank' rel='noopener'>autobazar.eu</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">49 900 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">57 610 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+13.4 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:45%"></span></div>
+  <ul class="pc"><li class="pro">2018, plug-in hybrid, 4x4, automat, 117 tis. km</li><li class="pro">Pôvod SR, generácia 971</li><li class="pro">~13 % pod férovou cenou</li><li class="con">Predáva autobazár</li><li class="con">Over stav batérie</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">Panamera 4S Diesel PDK 4x4</span><span class="loc">Banská Bystrica</span></div>
+  <h3><a href="https://auto.bazar.sk/39518337-porsche-panamera-4s-diesel-pdk-4x4/" target="_blank" rel="noopener">Porsche Panamera 4S Diesel PDK 4x4</a></h3>
+  <div class="facts">2017 · 165 000 km · Diesel 4.0 / 3.0 V6 / V8 184–310 kW · automat · liftback · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazar.sk</b> · aj na <a href='https://www.autobazar.eu/detail/porsche-panamera-4s-diesel-pdk-4x4/Ami3VIqsMvx/' target='_blank' rel='noopener'>autobazar.eu</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">44 999 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">52 270 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+13.9 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:46%"></span></div>
+  <ul class="pc"><li class="pro">2017, 4.0 V8 diesel, PDK, 4x4, 165 tis. km</li><li class="pro">Generácia 971, úspornejší V8 diesel</li><li class="pro">~14 % pod férovou cenou</li><li class="con">Predáva autobazár</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">Súkromník: Panamera 4S z SR s nadštandardnou výbavou</span><span class="loc">Šaľa</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/porsche-panamera-4s-sportovy-vyfuk-vybava-nadstandard/AeW0N5Z7cU9/" target="_blank" rel="noopener">Porsche Panamera 4S - športový výfuk + výbava nadštandard</a></h3>
+  <div class="facts">2017 · 124 000 km · V6 benzín (Panamera, 4, 4S od 2017) 220–324 kW · automat · liftback · súkromník</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · kúpené v SR</div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">52 500 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">59 310 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+11.5 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:38%"></span></div>
+  <ul class="pc"><li class="pro">2017, 2.9 V6 4S, 4x4, 124 tis. km</li><li class="pro">Pôvod SR, športový výfuk, nadštandardná výbava</li><li class="pro">~12 % pod férovou cenou</li><li class="con">Krátky inzerát</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">Panamera Sport Turismo 4S E-Hybrid so zárukou</span><span class="loc">Humenné</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197257012/porsche-panamera-sport-turismo-4s-e-hybrid-2021-zaruka.php" target="_blank" rel="noopener">Porsche Panamera Sport Turismo 4S E-Hybrid / 2021 / Záruka</a></h3>
+  <div class="facts">2021 · 89 415 km · Plug-in hybrid 4 E-Hybrid / Turbo S E-Hybrid · automat · Sport Turismo · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazoš</b> · aj na <a href='https://www.autobazar.eu/detail/porsche-panamera-sport-turismo-4s-e-hybrid-29-v6-pdk-4x4-412kw-a8-zaruka-aj-na-splatky/AmQ_fucbkjk/' target='_blank' rel='noopener'>autobazar.eu</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">69 900 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">77 600 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+9.9 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:33%"></span></div>
+  <ul class="pc"><li class="pro">2021, plug-in hybrid, 4x4, automat, 89 tis. km</li><li class="pro">Kombi Sport Turismo, v záruke (podľa predajcu)</li><li class="pro">~10 % pod férovou cenou</li><li class="con">Predáva autobazár</li><li class="con">Over stav batérie</li></ul>
+</article></div>
+<div class="subhead">Lacnejšie Panamery do 40 000 €</div>
+<div class="cards">
+<article class="card">
+  <div class="card-head"><span class="tag">Panamera S E-Hybrid za 15 000 €</span><span class="loc">Senec</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197524469/porsche-panamera-s-e-hybrid.php" target="_blank" rel="noopener">Porsche Panamera S e-Hybrid</a></h3>
+  <div class="facts">2014 · 253 500 km · Plug-in hybrid 4 E-Hybrid / Turbo S E-Hybrid · prevodovka ? · liftback · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">15 000 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">19 400 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+22.7 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:76%"></span></div>
+  <ul class="pc"><li class="pro">2014, plug-in hybrid, automat, 254 tis. km</li><li class="pro">Najlacnejšia Panamera v ponuke</li><li class="pro">~23 % pod férovou cenou</li><li class="con">Vysoký nájazd</li><li class="con">Over stav batérie – výmena je veľmi drahá</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">Súkromník: Panamera 4.8 V8 za 16 999 €</span><span class="loc">Nitra</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/porsche-panamera-48-v8-top/AeHoaDdnMOo/" target="_blank" rel="noopener">Porsche Panamera 4,8 V8 2010</a></h3>
+  <div class="facts">2010 · 173 000 km · V8 benzín (Turbo, GTS, 4S do 2016) 294–463 kW · automat · liftback · súkromník</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · dovezené</div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">16 999 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">20 690 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+17.9 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:60%"></span></div>
+  <ul class="pc"><li class="pro">2010, 4.8 V8 benzín, automat, 173 tis. km</li><li class="pro">Predáva súkromník</li><li class="pro">~18 % pod férovou cenou</li><li class="con">Dovoz</li><li class="con">V8 – vysoká spotreba a drahý servis</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">Panamera 4S 4.8 V8 slovenská so servisnou históriou</span><span class="loc">Bratislava</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197672699/porsche-panamera-2011-480-4s-slovak-servhistoria-2majit.php" target="_blank" rel="noopener">Porsche Panamera 2011 4.80 4S Slovák, Serv.história, 2.Majit</a></h3>
+  <div class="facts">2011 · 146 000 km · V8 benzín (Turbo, GTS, 4S do 2016) 294–463 kW · automat · liftback · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazoš</b> · kúpené v SR · aj na <a href='https://www.autobazar.eu/detail/porsche-panamera-480-4s-slovak-servhistoria-2majitel/AmMFElTgPGH/' target='_blank' rel='noopener'>autobazar.eu</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">21 899 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">24 820 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+11.8 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:39%"></span></div>
+  <ul class="pc"><li class="pro">2011, 4.8 V8 4S, 4x4, 146 tis. km</li><li class="pro">Slovenské auto, 2. majiteľ, servisná história</li><li class="pro">~12 % pod férovou cenou</li><li class="con">Predáva autobazár</li><li class="con">V8 – drahý servis</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">Panamera 4 3.6 V6 za 22 590 €</span><span class="loc">Bardejov</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197668272/porsche-panamera-4-36l-228kw.php" target="_blank" rel="noopener">Porsche Panamera 4 3,6l 228kw</a></h3>
+  <div class="facts">2014 · 166 700 km · V6 benzín (Panamera, 4, 4S od 2017) 220–324 kW · automat · liftback · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">22 590 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">25 620 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+11.8 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:39%"></span></div>
+  <ul class="pc"><li class="pro">2014, 3.6 V6 228 kW, 4x4, 167 tis. km</li><li class="pro">Po facelifte, rozumnejší V6</li><li class="pro">~12 % pod férovou cenou</li><li class="con">Predáva autobazár</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">Súkromník: Panamera Diesel Edition 300 k</span><span class="loc">Marcelová</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/porsche-panamera-diesel-edition-300ps/AeL-M44DxJn/" target="_blank" rel="noopener">Porsche Panamera Diesel edition 300ps</a></h3>
+  <div class="facts">2015 · 242 000 km · Diesel 4.0 / 3.0 V6 / V8 184–310 kW · automat · liftback · súkromník</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · dovezené</div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">25 900 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">29 310 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+11.6 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:39%"></span></div>
+  <ul class="pc"><li class="pro">2015, 3.0 V6 diesel 221 kW, automat, 242 tis. km</li><li class="pro">Úspornejší diesel</li><li class="pro">~12 % pod férovou cenou</li><li class="con">Dovoz</li><li class="con">Vyšší nájazd</li></ul>
+</article></div>
+<div class="subhead">Špeciálne prípady</div>
+<div class="cards"></div>
+
+<h2>Cena vs. nájazd: celý trh na jednom grafe</h2>
+<p class="section-lead">Každý bod je jeden inzerát. Čím nižšie bod leží oproti ostatným s podobným nájazdom, tým je auto lacnejšie.
+Krúžkom sú označené odporúčané ponuky. Prejdi myšou na bod a uvidíš detail.</p>
+<div class="chart-wrap" id="chartWrap">
+  <div class="legend" id="legend"></div>
+  <svg id="chart" width="100%" height="420" role="img" aria-label="Bodový graf ceny a nájazdu inzerátov"></svg>
+  <div class="tip" id="tip"></div>
+</div>
+
+<h2>Porovnanie motorov</h2>
+<p class="section-lead">Hodnotenie (hviezdičky) zohľadňuje spoľahlivosť, spoľahlivosť a náklady na prevádzku a pomer cena/výkon.
+Číselné stĺpce sú mediány z ohodnotených inzerátov.</p>
+<div class="table-scroll">
+<table>
+  <thead><tr><th>Motor</th><th>Hodnotenie</th><th class="num">Ponúk</th><th class="num">Medián ceny</th><th class="num">Medián roku</th><th class="num">Medián km</th></tr></thead>
+  <tbody>
+<tr>
+  <td><b>Plug-in hybrid 4 E-Hybrid / Turbo S E-Hybrid</b><div class="sub">Benzín V6 / V8 + elektromotor 340–500 kW. Over stav batérie.</div></td>
+  <td><span class="stars" aria-label="3 z 5">★★★<span class="off">★★</span></span></td>
+  <td class="num">22</td>
+  <td class="num"><div class="cellbar"><span style="width:100%"></span></div>68 775 €</td>
+  <td class="num">2020</td>
+  <td class="num">100 630 km</td>
+</tr>
+<tr>
+  <td><b>Diesel 4.0 / 3.0 V6 / V8 184–310 kW</b><div class="sub">Diesel 250–422 k. Úspornejší; over DPF a turbá.</div></td>
+  <td><span class="stars" aria-label="3 z 5">★★★<span class="off">★★</span></span></td>
+  <td class="num">9</td>
+  <td class="num"><div class="cellbar"><span style="width:65%"></span></div>44 999 €</td>
+  <td class="num">2017</td>
+  <td class="num">151 000 km</td>
+</tr>
+<tr>
+  <td><b>V8 benzín (Turbo, GTS, 4S do 2016) 294–463 kW</b><div class="sub">Benzín V8 400–630 k. Extrémne výkonný, veľmi drahý servis.</div></td>
+  <td><span class="stars" aria-label="3 z 5">★★★<span class="off">★★</span></span></td>
+  <td class="num">29</td>
+  <td class="num"><div class="cellbar"><span style="width:95%"></span></div>65 000 €</td>
+  <td class="num">2019</td>
+  <td class="num">137 000 km</td>
+</tr>
+<tr>
+  <td><b>V6 benzín (Panamera, 4, 4S od 2017) 220–324 kW</b><div class="sub">Benzín V6 300–440 k. Rozumnejšia voľba; aj s pohonom 4x4.</div></td>
+  <td><span class="stars" aria-label="3 z 5">★★★<span class="off">★★</span></span></td>
+  <td class="num">24</td>
+  <td class="num"><div class="cellbar"><span style="width:77%"></span></div>52 700 €</td>
+  <td class="num">2018</td>
+  <td class="num">139 500 km</td>
+</tr></tbody>
+</table>
+</div>
+<div class="explain">
+  <p><b>Porsche Panamera</b> je luxusný športový liftback so 4 miestami – generácia <b>970</b> (2009–2016) a <b>971</b> (2016–2023),
+  aj ako kombi <b>Sport Turismo</b>. Novú generáciu (2024+) ponúkajú zatiaľ najmä predajcovia.</p>
+  <p><b>Ktorý motor zvoliť?</b> Najrozumnejšie sú V6 verzie <b>Panamera 4</b> a <b>4S</b>. Pri V8 Turbo a plug-in hybridoch počítaj
+  s vysokými nákladmi.</p>
+</div>
+
+<h2>Na čo si dať pozor</h2>
+<div class="warn">
+  <p><b>Lacné kvôli extrémnemu nájazdu</b> (viac ako 35 tis. km ročne, typicky flotila alebo taxi):</p>
+  <ul><li><a href='https://www.autobazar.eu/detail/porsche-panamera-4-29-v6-platinum-pdk/Am9PaI0b-1R/' target='_blank' rel='noopener'>Porsche Panamera 4 2.9 V6 Platinum PDK</a>: 2023, 126 000 km → 38 000 km/rok. Lacné je kvôli nájazdu.</li></ul>
+  <p><b>Podozrivo nízky nájazd na vek</b> – preklep alebo stočené km, over cez Cebiu:</p><ul><li><a href='https://www.autobazar.eu/detail/porsche-panamera-diesel-tiptronic-s/AeN6AqXDDIo-/' target='_blank' rel='noopener'>Porsche Panamera Diesel Tiptronic S</a> (57 900 €): rok 2014 a len 22 200 km</li></ul><p><b>Ďalšie veci, ktoré sme v inzerátoch našli:</b></p><ul><li>Lacné Panamery prvej generácie (2009–2016) majú vysoké náklady na údržbu – brzdy, podvozok a PDK sú drahé.</li><li>Pri plug-in hybridoch over stav batérie – jej výmena stojí desaťtisíce eur.</li></ul><p><b>Vyradené z porovnania</b> (poškodené autá alebo nezmyselné údaje – model ich nehodnotí):</p><ul><li><a href='https://auto.bazos.sk/inzerat/197100589/porsche-panamera-turbo-s-e-hybrid-700-k-1maj-zaruka.php' target='_blank' rel='noopener'>Porsche Panamera Turbo S E-Hybrid 700 k, 1.maj, záruka</a> (79 000 €): 111000 km/rok je nereálne – skontroluj rok a km</li><li><a href='https://auto.bazar.sk/39702349-porsche-panamera-4s-diesel-pdk-4x4/' target='_blank' rel='noopener'>Porsche Panamera 4S Diesel PDK 4x4</a> (45 690 €): havarované / poškodené – cena nie je porovnateľná s trhom</li></ul><p><b>Cayenne, Macan, Taycan a iné modely z vyhľadávania, inzeráty s chybným nájazdom</b> (4 inzerátov) sme z rebríčka vynechali.</p>
+  <p>Ďalších <b>11</b> inzerátov nemá v texte rok alebo kilometre, takže ich nebolo možné ohodnotiť.
+  Ak ťa niektorý zaujme, predajcu sa na tieto údaje opýtaj.</p>
+</div>
+
+<h2>Kompletný rebríček</h2>
+<p class="section-lead">Všetky ohodnotené inzeráty. Kliknutím na hlavičku stĺpca zoraďuješ, filtrom zužuješ výber.</p>
+<div class="filters">
+  <select id="fEngine"><option value="">Všetky motory</option></select>
+  <select id="fTrans"><option value="">Každá prevodovka</option><option value="automatic">Automat</option><option value="manual">Manuál</option></select>
+  <select id="fSeller"><option value="">Všetci predajcovia</option><option value="nodealer">Bez autobazárov</option></select>
+  <select id="fSource"><option value="">Všetky portály</option><option value="bazos">bazoš</option><option value="autobazar">autobazar.eu</option><option value="bazarsk">bazar.sk</option></select>
+  <select id="fBody"><option value="">Liftback aj Sport Turismo</option><option value="hatch">Liftback</option><option value="wagon">Sport turismo</option></select>
+  <select id="fOrigin"><option value="">Akýkoľvek pôvod</option><option value="SR">Kúpené v SR</option><option value="dovoz">Dovoz</option></select>
+  <input id="fMax" type="number" placeholder="Max. cena €" step="500" min="0" style="width:120px">
+  <span class="count" id="count"></span>
+</div>
+<div class="table-scroll">
+<table id="tbl">
+  <thead><tr>
+    <th class="sortable" data-k="title">Inzerát</th>
+    <th class="sortable num" data-k="year">Rok</th>
+    <th class="sortable num" data-k="km">Km</th>
+    <th class="sortable num" data-k="price_gross">Cena</th>
+    <th class="sortable num" data-k="fair_price">Férová</th>
+    <th class="sortable num" data-k="discount_pct">Pod trhom ▾</th>
+  </tr></thead>
+  <tbody></tbody>
+</table>
+</div>
+
+<h2>Pred kúpou over</h2>
+<ul class="check">
+  <li>VIN cez Cebia / autoDNA (história km, havárie) a servisná história Porsche</li>
+  <li>PDK prevodovka: plynulosť radenia, výmena oleja</li>
+  <li>Vzduchový podvozok a PASM</li>
+  <li>Brzdy a pneumatiky (drahé)</li>
+  <li>Plug-in hybrid: stav batérie</li>
+  <li>STK/EK protokol a dátum platnosti</li>
+</ul>
+
+<footer>
+  Zdroj: auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (len ponuky zo Slovenska, to isté auto na viacerých portáloch je započítané raz), sťahované cez lokálny MCP server bazos-mcp (nástroj <code>fair_price</code>), 22. 11. 2026.
+  Model: ridge regresia log(ceny s DPH) podľa veku, veku², km, km², prevodovky, typu predajcu, motora, karosérie, pohonu 4x4, pôvodu (SR / dovoz) a portálu. Vzorka 84
+  inzerátov, R² 98 %. Parametre sú vyťažené z textu inzerátov, a preto môžu obsahovať chyby. Odporúčané ponuky sme overili
+  prečítaním celého inzerátu. Hodnotenie motorov je odborný odhad, nie výsledok modelu.
+</footer>
+</main>
+
+<script>
+const DATA = [{"id": "197524469", "url": "https://auto.bazos.sk/inzerat/197524469/porsche-panamera-s-e-hybrid.php", "title": "Porsche Panamera S e-Hybrid", "price": 15000, "price_gross": 15000, "fair_price": 19400.0, "discount_pct": 22.7, "verdict": "výrazne pod trhom – over prečo", "year": 2014, "km": 253500, "km_per_year": 20600.0, "eg": "Plug-in hybrid 4 E-Hybrid / Turbo S E-Hybrid", "cg": 2, "transmission": null, "seller_type": "dealer", "location": "Senec", "flags": ["prevodovka nezistená"], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "ab-AeHoaDdnMOo", "url": "https://www.autobazar.eu/detail/porsche-panamera-48-v8-top/AeHoaDdnMOo/", "title": "Porsche Panamera 4,8 V8 2010", "price": 16999, "price_gross": 16999, "fair_price": 20690.0, "discount_pct": 17.9, "verdict": "výrazne pod trhom – over prečo", "year": 2010, "km": 173000, "km_per_year": 10600.0, "eg": "V8 benzín (Turbo, GTS, 4S do 2016) 294–463 kW", "cg": 0, "transmission": "automatic", "seller_type": "private", "location": "Nitra", "flags": [], "pick": "budget", "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "hatch"}, {"id": "197796893", "url": "https://auto.bazos.sk/inzerat/197796893/porsche-panamera-4-29-v6-pdk-4x4-v-zaruke.php", "title": "Porsche Panamera 4 2.9 V6 PDK 4x4 V ZÁRUKE", "price": 102000, "price_gross": 102000, "fair_price": 120430.0, "discount_pct": 15.3, "verdict": "výrazne pod trhom – over prečo", "year": 2024, "km": 22000, "km_per_year": 9400.0, "eg": "V6 benzín (Panamera, 4, 4S od 2017) 220–324 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Komárno", "flags": [], "pick": "top", "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmoZiNdu3I6", "url": "https://www.autobazar.eu/detail/porsche-panamera-4-29-v6-pdk-4x4/AmoZiNdu3I6/", "price": 102000}, {"source": "bazarsk", "id": "bs-39657391", "url": "https://auto.bazar.sk/39657391-porsche-panamera-4-2-9-v6-pdk-4x4/", "price": 102000}], "body": "hatch"}, {"id": "ab-Aea1yzuoUzx", "url": "https://www.autobazar.eu/detail/porsche-panamera-turbo-4x4-at-404kw550hp-a8/Aea1yzuoUzx/", "title": "Porsche Panamera Turbo 4x4 AT 404kW550HP A8", "price": 69900, "price_gross": 69900, "fair_price": 81330.0, "discount_pct": 14.1, "verdict": "pod trhom", "year": 2019, "km": 76500, "km_per_year": 10400.0, "eg": "V8 benzín (Turbo, GTS, 4S do 2016) 294–463 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Liptovský Mikuláš", "flags": [], "pick": "top", "source": "autobazar", "origin": "SR", "also_listed": [], "body": "hatch"}, {"id": "bs-39656955", "url": "https://auto.bazar.sk/39656955-porsche-panamera-sport-turismo-4-e-hybrid-platinum-edition/", "title": "Porsche Panamera Sport Turismo 4 E-hybrid Platinum Edition", "price": 83300, "price_gross": 83300, "fair_price": 96950.0, "discount_pct": 14.1, "verdict": "pod trhom", "year": 2023, "km": 43436, "km_per_year": 13000.0, "eg": "Plug-in hybrid 4 E-Hybrid / Turbo S E-Hybrid", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Trenčín", "flags": [], "pick": "top", "source": "bazarsk", "origin": "dovoz", "also_listed": [{"source": "autobazar", "id": "ab-AmiXN8nOJFB", "url": "https://www.autobazar.eu/detail/porsche-panamera-sport-turismo-4-e-hybrid-platinum-edition/AmiXN8nOJFB/", "price": 83300}], "body": "wagon"}, {"id": "bs-39518337", "url": "https://auto.bazar.sk/39518337-porsche-panamera-4s-diesel-pdk-4x4/", "title": "Porsche Panamera 4S Diesel PDK 4x4", "price": 44999, "price_gross": 44999, "fair_price": 52270.0, "discount_pct": 13.9, "verdict": "pod trhom", "year": 2017, "km": 165000, "km_per_year": 17700.0, "eg": "Diesel 4.0 / 3.0 V6 / V8 184–310 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Banská Bystrica", "flags": [], "pick": "top", "source": "bazarsk", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-Ami3VIqsMvx", "url": "https://www.autobazar.eu/detail/porsche-panamera-4s-diesel-pdk-4x4/Ami3VIqsMvx/", "price": 44999}], "body": "hatch"}, {"id": "bs-39613791", "url": "https://auto.bazar.sk/39613791-porsche-panamera-4-e-hybrid-4x4-a-t/", "title": "Porsche Panamera 4 E-Hybrid 4x4 A/T", "price": 49900, "price_gross": 49900, "fair_price": 57610.0, "discount_pct": 13.4, "verdict": "pod trhom", "year": 2018, "km": 117000, "km_per_year": 14000.0, "eg": "Plug-in hybrid 4 E-Hybrid / Turbo S E-Hybrid", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Štúrovo", "flags": [], "pick": "top", "source": "bazarsk", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AmB4SNYzgEx", "url": "https://www.autobazar.eu/detail/porsche-panamera-4-e-hybrid-4x4-at/AmB4SNYzgEx/", "price": 49900}], "body": "hatch"}, {"id": "197672699", "url": "https://auto.bazos.sk/inzerat/197672699/porsche-panamera-2011-480-4s-slovak-servhistoria-2majit.php", "title": "Porsche Panamera 2011 4.80 4S Slovák, Serv.história, 2.Majit", "price": 21899, "price_gross": 21899, "fair_price": 24820.0, "discount_pct": 11.8, "verdict": "pod trhom", "year": 2011, "km": 146000, "km_per_year": 9500.0, "eg": "V8 benzín (Turbo, GTS, 4S do 2016) 294–463 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": "budget", "source": "bazos", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AmMFElTgPGH", "url": "https://www.autobazar.eu/detail/porsche-panamera-480-4s-slovak-servhistoria-2majitel/AmMFElTgPGH/", "price": 21899}], "body": "hatch"}, {"id": "197668272", "url": "https://auto.bazos.sk/inzerat/197668272/porsche-panamera-4-36l-228kw.php", "title": "Porsche Panamera 4 3,6l 228kw", "price": 22590, "price_gross": 22590, "fair_price": 25620.0, "discount_pct": 11.8, "verdict": "pod trhom", "year": 2014, "km": 166700, "km_per_year": 13500.0, "eg": "V6 benzín (Panamera, 4, 4S od 2017) 220–324 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bardejov", "flags": [], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "ab-AeL-M44DxJn", "url": "https://www.autobazar.eu/detail/porsche-panamera-diesel-edition-300ps/AeL-M44DxJn/", "title": "Porsche Panamera Diesel edition 300ps", "price": 25900, "price_gross": 25900, "fair_price": 29310.0, "discount_pct": 11.6, "verdict": "pod trhom", "year": 2015, "km": 242000, "km_per_year": 21400.0, "eg": "Diesel 4.0 / 3.0 V6 / V8 184–310 kW", "cg": 1, "transmission": "automatic", "seller_type": "private", "location": "Marcelová", "flags": [], "pick": "budget", "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "hatch"}, {"id": "ab-AeW0N5Z7cU9", "url": "https://www.autobazar.eu/detail/porsche-panamera-4s-sportovy-vyfuk-vybava-nadstandard/AeW0N5Z7cU9/", "title": "Porsche Panamera 4S - športový výfuk + výbava nadštandard", "price": 52500, "price_gross": 52500, "fair_price": 59310.0, "discount_pct": 11.5, "verdict": "pod trhom", "year": 2017, "km": 124000, "km_per_year": 13300.0, "eg": "V6 benzín (Panamera, 4, 4S od 2017) 220–324 kW", "cg": 0, "transmission": "automatic", "seller_type": "private", "location": "Šaľa", "flags": [], "pick": "top", "source": "autobazar", "origin": "SR", "also_listed": [], "body": "hatch"}, {"id": "ab-AmQW8UBRpb2V", "url": "https://www.autobazar.eu/detail/porsche-panamera-turbo-4x4-a-t/AmQW8UBRpb2V/", "title": "Porsche Panamera Turbo 4x4 A/T", "price": 49900, "price_gross": 49900, "fair_price": 55560.0, "discount_pct": 10.2, "verdict": "pod trhom", "year": 2018, "km": 188000, "km_per_year": 22600.0, "eg": "V8 benzín (Turbo, GTS, 4S do 2016) 294–463 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava-Nové Mesto", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-38652843", "url": "https://auto.bazar.sk/38652843-porsche-panamera-turbo-4x4-a-t/", "price": 49900}], "body": "hatch"}, {"id": "197257012", "url": "https://auto.bazos.sk/inzerat/197257012/porsche-panamera-sport-turismo-4s-e-hybrid-2021-zaruka.php", "title": "Porsche Panamera Sport Turismo 4S E-Hybrid / 2021 / Záruka", "price": 69900, "price_gross": 69900, "fair_price": 77600.0, "discount_pct": 9.9, "verdict": "pod trhom", "year": 2021, "km": 89415, "km_per_year": 16800.0, "eg": "Plug-in hybrid 4 E-Hybrid / Turbo S E-Hybrid", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Humenné", "flags": [], "pick": "top", "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmQ_fucbkjk", "url": "https://www.autobazar.eu/detail/porsche-panamera-sport-turismo-4s-e-hybrid-29-v6-pdk-4x4-412kw-a8-zaruka-aj-na-splatky/AmQ_fucbkjk/", "price": 69900}], "body": "wagon"}, {"id": "bs-39755072", "url": "https://auto.bazar.sk/39755072-porsche-panamera-gts-4x4-368kw-2025-aj-na-splatky-protiucet/", "title": "Porsche Panamera GTS 4x4 368kW 2025 / AJ NA SPLÁTKY / PROTIÚČET", "price": 121144, "price_gross": 121144, "fair_price": 134030.0, "discount_pct": 9.6, "verdict": "pod trhom", "year": 2025, "km": 28690, "km_per_year": 21500.0, "eg": "V8 benzín (Turbo, GTS, 4S do 2016) 294–463 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmC9RH3-0av", "url": "https://www.autobazar.eu/detail/porsche-panamera-gts-4x4-368kw-2025-aj-na-splatky-protiucet/AmC9RH3-0av/", "price": 121144}], "body": "hatch"}, {"id": "197670182", "url": "https://auto.bazos.sk/inzerat/197670182/porche-panamera-30-d.php", "title": "Porche Panamera 3.0 d", "price": 25500, "price_gross": 25500, "fair_price": 28160.0, "discount_pct": 9.4, "verdict": "pod trhom", "year": 2012, "km": 156000, "km_per_year": 10900.0, "eg": "Diesel 4.0 / 3.0 V6 / V8 184–310 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "197035863", "url": "https://auto.bazos.sk/inzerat/197035863/porsche-panamera-4s-diesel.php", "title": "Porsche panamera 4S diesel", "price": 49000, "price_gross": 49000, "fair_price": 53530.0, "discount_pct": 8.5, "verdict": "pod trhom", "year": 2017, "km": 112000, "km_per_year": 12000.0, "eg": "Diesel 4.0 / 3.0 V6 / V8 184–310 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Brezno", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "ab-Amuvom4scuw", "url": "https://www.autobazar.eu/detail/porsche-panamera-turbo-4x4-a-t/Amuvom4scuw/", "title": "Porsche Panamera Turbo 4x4 A/T", "price": 69900, "price_gross": 69900, "fair_price": 76220.0, "discount_pct": 8.3, "verdict": "pod trhom", "year": 2018, "km": 74000, "km_per_year": 8900.0, "eg": "V8 benzín (Turbo, GTS, 4S do 2016) 294–463 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Badín", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-36049919", "url": "https://auto.bazar.sk/36049919-porsche-panamera-turbo-4x4-a-t/", "price": 69900}], "body": "hatch"}, {"id": "ab-AeVslS4roGq", "url": "https://www.autobazar.eu/detail/porsche-panamera-plug-in-hybrid/AeVslS4roGq/", "title": "Porsche Panamera Plug in Hybrid", "price": 94000, "price_gross": 94000, "fair_price": 101410.0, "discount_pct": 7.3, "verdict": "pod trhom", "year": 2024, "km": 53000, "km_per_year": 22700.0, "eg": "Plug-in hybrid 4 E-Hybrid / Turbo S E-Hybrid", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava-Ružinov", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "ab-AedI1PpEh4g", "url": "https://www.autobazar.eu/detail/porsche-panamera-4s-at-324kw440hp-a8/AedI1PpEh4g/", "title": "Porsche Panamera 4S", "price": 50000, "price_gross": 50000, "fair_price": 53960.0, "discount_pct": 7.3, "verdict": "pod trhom", "year": 2019, "km": 179500, "km_per_year": 24500.0, "eg": "V6 benzín (Panamera, 4, 4S od 2017) 220–324 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Košice", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "ab-Amrdn3XuT-l", "url": "https://www.autobazar.eu/detail/porsche-panamera-panamera-4s-e-hybrid-porsche-approved-innodrive-matrix-led/Amrdn3XuT-l/", "title": "Porsche Panamera Panamera 4S E-Hybrid | Porsche Approved 06/2027 | InnoDrive | Matrix LED", "price": 84900, "price_gross": 84900, "fair_price": 91150.0, "discount_pct": 6.9, "verdict": "férová cena", "year": 2023, "km": 72000, "km_per_year": 21600.0, "eg": "Plug-in hybrid 4 E-Hybrid / Turbo S E-Hybrid", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava-Petržalka", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "197398700", "url": "https://auto.bazos.sk/inzerat/197398700/porsche-panamera-gts-dph-vymena.php", "title": "Porsche Panamera GTS", "price": 69990, "price_gross": 69990, "fair_price": 73810.0, "discount_pct": 5.2, "verdict": "férová cena", "year": 2019, "km": 87950, "km_per_year": 12000.0, "eg": "V8 benzín (Turbo, GTS, 4S do 2016) 294–463 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Trenčín", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-Am6HMMC98Q3", "url": "https://www.autobazar.eu/detail/porsche-panamera-gts-financovanie-protiucet/Am6HMMC98Q3/", "price": 69990}, {"source": "bazarsk", "id": "bs-39760083", "url": "https://auto.bazar.sk/39760083-porsche-panamera-gts-financovanie-protiucet/", "price": 69990}], "body": "hatch"}, {"id": "ab-AmUbAucm8XM", "url": "https://www.autobazar.eu/detail/porsche-panamera-panamera-gts-40-v8-biturbo-rear-axle-steering-night-vision-innodrive/AmUbAucm8XM/", "title": "Porsche Panamera Panamera GTS 4.0 V8 Biturbo | Rear Axle Steering | Night Vision | InnoDrive", "price": 79000, "price_gross": 79000, "fair_price": 83310.0, "discount_pct": 5.2, "verdict": "férová cena", "year": 2019, "km": 37000, "km_per_year": 5000.0, "eg": "V8 benzín (Turbo, GTS, 4S do 2016) 294–463 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava-Petržalka", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "ab-AmvA8ZTSQHc", "url": "https://www.autobazar.eu/detail/porsche-panamera-turbo-s-e-hybrid-4x4-at/AmvA8ZTSQHc/", "title": "Porsche Panamera Turbo S E-Hybrid 700 PS, 1.maj, záruka", "price": 79000, "price_gross": 79000, "fair_price": 83250.0, "discount_pct": 5.1, "verdict": "férová cena", "year": 2020, "km": 100259, "km_per_year": 15800.0, "eg": "Plug-in hybrid 4 E-Hybrid / Turbo S E-Hybrid", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Rovinka", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39458113", "url": "https://auto.bazar.sk/39458113-porsche-panamera-turbo-s-e-hybrid-700-ps-1-maj-zaruka/", "price": 79000}], "body": "hatch"}, {"id": "ab-Am7USxO7GN6", "url": "https://www.autobazar.eu/detail/panamera-4s/Am7USxO7GN6/", "title": "Panamera 4S", "price": 84900, "price_gross": 84900, "fair_price": 89200.0, "discount_pct": 4.8, "verdict": "férová cena", "year": 2022, "km": 83216, "km_per_year": 19200.0, "eg": "V6 benzín (Panamera, 4, 4S od 2017) 220–324 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39722418", "url": "https://auto.bazar.sk/39722418-panamera-4s/", "price": 84900}], "body": "hatch"}, {"id": "ab-AmgASPmEHXZ", "url": "https://www.autobazar.eu/detail/panamera-4-e-hybrid/AmgASPmEHXZ/", "title": "Panamera 4 E-Hybrid", "price": 125000, "price_gross": 125000, "fair_price": 131180.0, "discount_pct": 4.7, "verdict": "férová cena", "year": 2025, "km": 14349, "km_per_year": 10800.0, "eg": "Plug-in hybrid 4 E-Hybrid / Turbo S E-Hybrid", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39722420", "url": "https://auto.bazar.sk/39722420-panamera-4-e-hybrid/", "price": 125000}], "body": "hatch"}, {"id": "197317575", "url": "https://auto.bazos.sk/inzerat/197317575/porsche-panamera-4s.php", "title": "Porsche Panamera 4S 4.8  V8", "price": 19500, "price_gross": 19500, "fair_price": 20350.0, "discount_pct": 4.2, "verdict": "férová cena", "year": 2012, "km": 290000, "km_per_year": 20200.0, "eg": "V8 benzín (Turbo, GTS, 4S do 2016) 294–463 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Košice", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "ab-AeceBta3e6D", "url": "https://www.autobazar.eu/detail/porsche-panamera-sport-turismo-combi-243kw-automat/AeceBta3e6D/", "title": "Porsche Panamera Sport Turismo Combi 243kw Automat", "price": 52900, "price_gross": 52900, "fair_price": 55230.0, "discount_pct": 4.2, "verdict": "férová cena", "year": 2018, "km": 100021, "km_per_year": 12000.0, "eg": "V6 benzín (Panamera, 4, 4S od 2017) 220–324 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "wagon"}, {"id": "196896136", "url": "https://auto.bazos.sk/inzerat/196896136/porsche-panamera-sport-turismo-gts-4x4-at.php", "title": "Porsche Panamera Sport Turismo GTS 4x4 A/T", "price": 74999, "price_gross": 74999, "fair_price": 78090.0, "discount_pct": 4.0, "verdict": "férová cena", "year": 2020, "km": 91500, "km_per_year": 14400.0, "eg": "V8 benzín (Turbo, GTS, 4S do 2016) 294–463 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Ilava", "flags": [], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "wagon"}, {"id": "ab-AmefEUPm1wo", "url": "https://www.autobazar.eu/detail/porsche-panamera-36-228-kw-a7-aj-na-splatky-protiucet/AmefEUPm1wo/", "title": "Porsche Panamera 3.6 / 228 kW / A7 / AJ NA SPLÁTKY / PROTIÚČET /", "price": 23000, "price_gross": 23000, "fair_price": 23920.0, "discount_pct": 3.9, "verdict": "férová cena", "year": 2014, "km": 169303, "km_per_year": 13700.0, "eg": "V6 benzín (Panamera, 4, 4S od 2017) 220–324 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Košice-Pereš", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197280668", "url": "https://auto.bazos.sk/inzerat/197280668/porsche-panamera-36-228-kw-a7-2014.php", "price": 23000}, {"source": "bazarsk", "id": "bs-39761675", "url": "https://auto.bazar.sk/39761675-porsche-panamera-3-6-228-kw-a7-aj-na-splatky-protiucet/", "price": 23000}], "body": "hatch"}, {"id": "ab-AeAt1L6_oEm", "url": "https://www.autobazar.eu/detail/porsche-panamera-4s-diesel-pdk-4x4-310kw422hp-a8/AeAt1L6_oEm/", "title": "Porsche Panamera 4S Diesel PDK 4x4 310kW422HP A8", "price": 49000, "price_gross": 49000, "fair_price": 50880.0, "discount_pct": 3.7, "verdict": "férová cena", "year": 2017, "km": 151000, "km_per_year": 16200.0, "eg": "Diesel 4.0 / 3.0 V6 / V8 184–310 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Trnava", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "196374421", "url": "https://auto.bazos.sk/inzerat/196374421/porsche-panamera-971-4s.php", "price": 49000}], "body": "hatch"}, {"id": "ab-AmLyXC7xB6N", "url": "https://www.autobazar.eu/detail/porsche-panamera-4-36-pdk/AmLyXC7xB6N/", "title": "Porsche Panamera 4 3.6 PDK", "price": 15899, "price_gross": 15899, "fair_price": 16380.0, "discount_pct": 3.0, "verdict": "férová cena", "year": 2011, "km": 256023, "km_per_year": 16700.0, "eg": "V6 benzín (Panamera, 4, 4S od 2017) 220–324 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava-Staré Mesto", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "196998530", "url": "https://auto.bazos.sk/inzerat/196998530/porsche-panamera-4-36-pdk.php", "price": 15899}, {"source": "bazarsk", "id": "bs-39676884", "url": "https://auto.bazar.sk/39676884-porsche-panamera-4-3-6-pdk/", "price": 15899}], "body": "hatch"}, {"id": "ab-AmKkLGwK6aO", "url": "https://www.autobazar.eu/detail/porsche-panamera-sport-turismo-turbo-4x4-at/AmKkLGwK6aO/", "title": "Porsche Panamera Sport Turismo Turbo 4x4 A/T", "price": 66990, "price_gross": 66990, "fair_price": 68950.0, "discount_pct": 2.8, "verdict": "férová cena", "year": 2019, "km": 128535, "km_per_year": 17500.0, "eg": "V8 benzín (Turbo, GTS, 4S do 2016) 294–463 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava-Staré Mesto", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "wagon"}, {"id": "bs-39278941", "url": "https://auto.bazar.sk/39278941-porsche-panamera-4s-a-t/", "title": "Porsche Panamera 4S A/T", "price": 58500, "price_gross": 58500, "fair_price": 59900.0, "discount_pct": 2.3, "verdict": "férová cena", "year": 2018, "km": 125000, "km_per_year": 15000.0, "eg": "V6 benzín (Panamera, 4, 4S od 2017) 220–324 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava I - Staré Mesto", "flags": [], "pick": null, "source": "bazarsk", "origin": "dovoz", "also_listed": [{"source": "autobazar", "id": "ab-AegQufJ-rDK", "url": "https://www.autobazar.eu/detail/porsche-panamera-4s-at-324kw440hp-a8/AegQufJ-rDK/", "price": 57400}], "body": "hatch"}, {"id": "195938190", "url": "https://auto.bazos.sk/inzerat/195938190/porsche-panamera-4-243-kw-29l-bez-odpoctu-dph.php", "title": "Porsche Panamera 4, 243 kW, 2,9l , bez odpoctu DPH", "price": 43900, "price_gross": 43900, "fair_price": 44800.0, "discount_pct": 2.0, "verdict": "férová cena", "year": 2018, "km": 137000, "km_per_year": 16400.0, "eg": "V8 benzín (Turbo, GTS, 4S do 2016) 294–463 kW", "cg": 0, "transmission": null, "seller_type": "dealer", "location": "Bratislava", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "197675113", "url": "https://auto.bazos.sk/inzerat/197675113/porsche-panamera-4s-sport-tourismo-324kw-cvt1-2018.php", "title": "Porsche Panamera 4S Sport Tourismo 324kW CVT/1 2018", "price": 53500, "price_gross": 53500, "fair_price": 54540.0, "discount_pct": 1.9, "verdict": "férová cena", "year": 2018, "km": 161592, "km_per_year": 19400.0, "eg": "V6 benzín (Panamera, 4, 4S od 2017) 220–324 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmbJ-BJm18H", "url": "https://www.autobazar.eu/detail/porsche-panamera-4s-sport-tourismo-324kw-cvt1-2018-aj-na-splatky-protiucet/AmbJ-BJm18H/", "price": 53500}, {"source": "bazarsk", "id": "bs-39754356", "url": "https://auto.bazar.sk/39754356-porsche-panamera-4s-sport-tourismo-324kw-cvt-1-2018-aj-na-splatky-protiucet/", "price": 53500}], "body": "wagon"}, {"id": "ab-Am54oe2woT4", "url": "https://www.autobazar.eu/detail/porsche-panamera-4-30-v6-243-kw/Am54oe2woT4/", "title": "Porsche Panamera 4 3.0 V6 243 KW", "price": 51900, "price_gross": 51900, "fair_price": 52930.0, "discount_pct": 1.9, "verdict": "férová cena", "year": 2017, "km": 134000, "km_per_year": 14400.0, "eg": "V6 benzín (Panamera, 4, 4S od 2017) 220–324 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Košice-Vyšné Opátske", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39523978", "url": "https://auto.bazar.sk/39523978-porsche-panamera-4-3-0-v6-243-kw/", "price": 51900}], "body": "hatch"}, {"id": "ab-AelaoQ5YlOP", "url": "https://www.autobazar.eu/detail/porsche-panamera-4-e-hybrid-matrix-bose-zaruka/AelaoQ5YlOP/", "title": "Porsche Panamera 4 E-Hybrid, Matrix, BOSE, zaruka", "price": 129990, "price_gross": 129990, "fair_price": 132350.0, "discount_pct": 1.8, "verdict": "férová cena", "year": 2025, "km": 7200, "km_per_year": 5400.0, "eg": "Plug-in hybrid 4 E-Hybrid / Turbo S E-Hybrid", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Veľký Krtíš", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "hatch"}, {"id": "ab-Am9PaI0b-1R", "url": "https://www.autobazar.eu/detail/porsche-panamera-4-29-v6-platinum-pdk/Am9PaI0b-1R/", "title": "Porsche Panamera 4 2.9 V6 Platinum PDK", "price": 75590, "price_gross": 75590, "fair_price": 76670.0, "discount_pct": 1.4, "verdict": "férová cena", "year": 2023, "km": 126000, "km_per_year": 37800.0, "eg": "V6 benzín (Panamera, 4, 4S od 2017) 220–324 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Žilina", "flags": ["vysoký nájazd 38000 km/rok – flotila / taxi?"], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-37690552", "url": "https://auto.bazar.sk/37690552-porsche-panamera-4-2-9-v6-platinum-pdk/", "price": 75590}], "body": "hatch"}, {"id": "ab-AmK_JsvSgr3", "url": "https://www.autobazar.eu/detail/porsche-panamera-sport-turismo-4-e-hybrid-4x4/AmK_JsvSgr3/", "title": "Porsche Panamera Sport Turismo 4 E-Hybrid 4x4", "price": 62990, "price_gross": 62990, "fair_price": 63660.0, "discount_pct": 1.0, "verdict": "férová cena", "year": 2020, "km": 95000, "km_per_year": 15000.0, "eg": "Plug-in hybrid 4 E-Hybrid / Turbo S E-Hybrid", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Trenčín", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "196872355", "url": "https://auto.bazos.sk/inzerat/196872355/porsche-panamera-sport-turismo-4-e-hybrid-95-000-km.php", "price": 62990}], "body": "wagon"}, {"id": "ab-AmNXdHIKEj1", "url": "https://www.autobazar.eu/detail/porsche-panamera-sport-turismo-gts-4x4-at/AmNXdHIKEj1/", "title": "Porsche Panamera Sport Turismo GTS 4x4 A/T", "price": 74999, "price_gross": 74999, "fair_price": 75750.0, "discount_pct": 1.0, "verdict": "férová cena", "year": 2020, "km": 89200, "km_per_year": 14100.0, "eg": "V8 benzín (Turbo, GTS, 4S do 2016) 294–463 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Ilava", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "wagon"}, {"id": "197393135", "url": "https://auto.bazos.sk/inzerat/197393135/porsche-panamera-4s-48-v8-294kw-cierna-met-sk-auto-top-stav.php", "title": "Porsche Panamera 4S 4.8 V8 294kw čierna met SK AUTO TOP STAV", "price": 17990, "price_gross": 17990, "fair_price": 18080.0, "discount_pct": 0.5, "verdict": "férová cena", "year": 2010, "km": 265000, "km_per_year": 16200.0, "eg": "V8 benzín (Turbo, GTS, 4S do 2016) 294–463 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Skalica", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "hatch"}, {"id": "ab-AeBPBvHlmMU", "url": "https://www.autobazar.eu/detail/porsche-panamera-gts-sport-turismo/AeBPBvHlmMU/", "title": "Porsche Panamera GTS Sport Turismo", "price": 51500, "price_gross": 51500, "fair_price": 51720.0, "discount_pct": 0.4, "verdict": "férová cena", "year": 2019, "km": 198000, "km_per_year": 27000.0, "eg": "V8 benzín (Turbo, GTS, 4S do 2016) 294–463 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava-Nové Mesto", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "ab-Amumbx3807o", "url": "https://www.autobazar.eu/detail/porsche-panamera-gts-40-v8-pdk-4x4/Amumbx3807o/", "title": "Porsche Panamera GTS 4.0 V8 PDK 4x4", "price": 131500, "price_gross": 131500, "fair_price": 131850.0, "discount_pct": 0.3, "verdict": "férová cena", "year": 2024, "km": 52000, "km_per_year": 22300.0, "eg": "V8 benzín (Turbo, GTS, 4S do 2016) 294–463 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava-Nové Mesto", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39428364", "url": "https://auto.bazar.sk/39428364-porsche-panamera-gts-4-0-v8-pdk-4x4/", "price": 131500}], "body": "hatch"}, {"id": "ab-AmpvP1XHyUI", "url": "https://www.autobazar.eu/detail/porsche-panamera-sport-turismo-edition-10/AmpvP1XHyUI/", "title": "Porsche Panamera Sport Turismo EDITION 10 4x4", "price": 67650, "price_gross": 67650, "fair_price": 67600.0, "discount_pct": -0.1, "verdict": "férová cena", "year": 2020, "km": 88000, "km_per_year": 13900.0, "eg": "Plug-in hybrid 4 E-Hybrid / Turbo S E-Hybrid", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Trenčín", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "196981744", "url": "https://auto.bazos.sk/inzerat/196981744/porsche-panamera-sport-turismo-edition-10-4x4.php", "price": 67650}], "body": "wagon"}, {"id": "197531176", "url": "https://auto.bazos.sk/inzerat/197531176/porsche-panamera-36-v6-at-220kw-a7.php", "title": "Porsche Panamera 3.6 V6 A/T, 220kW, A7", "price": 21990, "price_gross": 21990, "fair_price": 21970.0, "discount_pct": -0.1, "verdict": "férová cena", "year": 2011, "km": 158963, "km_per_year": 10400.0, "eg": "V6 benzín (Panamera, 4, 4S od 2017) 220–324 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmtZwnQC05o", "url": "https://www.autobazar.eu/detail/porsche-panamera-36-v6-at-220kw-a7-aj-na-splatky-protiucet/AmtZwnQC05o/", "price": 21990}, {"source": "bazarsk", "id": "bs-39754405", "url": "https://auto.bazar.sk/39754405-porsche-panamera-3-6-v6-a-t-220kw-a7-aj-na-splatky-protiucet/", "price": 21990}], "body": "hatch"}, {"id": "bs-39769305", "url": "https://auto.bazar.sk/39769305-porsche-panamera-st-turbo/", "title": "Porsche Panamera ST Turbo", "price": 63462, "price_gross": 63462, "fair_price": 63360.0, "discount_pct": -0.2, "verdict": "férová cena", "year": 2019, "km": 168000, "km_per_year": 22900.0, "eg": "V8 benzín (Turbo, GTS, 4S do 2016) 294–463 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Ostrava", "flags": [], "pick": null, "source": "bazarsk", "origin": "dovoz", "also_listed": [{"source": "autobazar", "id": "ab-AbtDW2y6ySh", "url": "https://www.autobazar.eu/detail/porsche-panamera-st-turbo/AbtDW2y6ySh/", "price": 63462}], "body": "hatch"}, {"id": "ab-AeaYDfnGBET", "url": "https://www.autobazar.eu/detail/porsche-panamera-40-benzin-338kw-automat-prevodovka-4x4/AeaYDfnGBET/", "title": "Porsche Panamera GTS", "price": 52400, "price_gross": 52400, "fair_price": 52270.0, "discount_pct": -0.3, "verdict": "férová cena", "year": 2019, "km": 195000, "km_per_year": 26600.0, "eg": "V8 benzín (Turbo, GTS, 4S do 2016) 294–463 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava-Ružinov", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "ab-AeSzY1kfvh_", "url": "https://www.autobazar.eu/detail/porsche-panamera-29-benzin-260kw-automat-prevodovka-4x4/AeSzY1kfvh_/", "title": "Porsche Panamera 2.9 Benzín 260kW Automat. prevodovka 4x4", "price": 109900, "price_gross": 109900, "fair_price": 109530.0, "discount_pct": -0.3, "verdict": "férová cena", "year": 2024, "km": 32000, "km_per_year": 13700.0, "eg": "V6 benzín (Panamera, 4, 4S od 2017) 220–324 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "hatch"}, {"id": "ab-Ae90ET9IVLt", "url": "https://www.autobazar.eu/detail/porsche-panamera-gts-4x4-at-338kw460hp-a8/Ae90ET9IVLt/", "title": "Porsche Panamera GTS 4x4 AT 338kW460HP A8", "price": 79000, "price_gross": 79000, "fair_price": 78720.0, "discount_pct": -0.4, "verdict": "férová cena", "year": 2020, "km": 118000, "km_per_year": 18600.0, "eg": "V8 benzín (Turbo, GTS, 4S do 2016) 294–463 kW", "cg": 0, "transmission": "automatic", "seller_type": "private", "location": "Partizánske", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "bs-39526830", "url": "https://auto.bazar.sk/39526830-porsche-panamera-turo-s-e-hybrid-sport-chrono-p/", "title": "Porsche Panamera Turo S E-Hybrid Sport Chrono P", "price": 61259, "price_gross": 61259, "fair_price": 60840.0, "discount_pct": -0.7, "verdict": "férová cena", "year": 2018, "km": 133541, "km_per_year": 16000.0, "eg": "Plug-in hybrid 4 E-Hybrid / Turbo S E-Hybrid", "cg": 2, "transmission": "automatic", "seller_type": "uncertain", "location": "Ostrava", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AbFSA1MfTGv", "url": "https://www.autobazar.eu/detail/porsche-panamera-turo-s-e-hybrid-sport-chrono-p/AbFSA1MfTGv/", "price": 61259}, {"source": "bazos", "id": "196807976", "url": "https://auto.bazos.sk/inzerat/196807976/porsche-panamera-turbo-sport-turismo.php", "price": 62000}], "body": "hatch"}, {"id": "ab-AeyE7oy8Fa2", "url": "https://www.autobazar.eu/detail/porsche-panamera-4-e-hybrid-platinum-edition/AeyE7oy8Fa2/", "title": "Porsche Panamera 4 E - hybrid Platinum Edition", "price": 91000, "price_gross": 91000, "fair_price": 89910.0, "discount_pct": -1.2, "verdict": "férová cena", "year": 2023, "km": 113000, "km_per_year": 33900.0, "eg": "Plug-in hybrid 4 E-Hybrid / Turbo S E-Hybrid", "cg": 2, "transmission": "automatic", "seller_type": "private", "location": "Nitra", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "ab-AeUm66Yef8R", "url": "https://www.autobazar.eu/detail/porsche-panamera-36-v6-pdk/AeUm66Yef8R/", "title": "Porsche Panamera 3.6 V6 PDK", "price": 19999, "price_gross": 19999, "fair_price": 19690.0, "discount_pct": -1.6, "verdict": "férová cena", "year": 2010, "km": 196500, "km_per_year": 12000.0, "eg": "V6 benzín (Panamera, 4, 4S od 2017) 220–324 kW", "cg": 0, "transmission": "automatic", "seller_type": "private", "location": "Galanta", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazos", "id": "197444318", "url": "https://auto.bazos.sk/inzerat/197444318/porsche-panamera-36-v6-pdk.php", "price": 19999}], "body": "hatch"}, {"id": "ab-Ae6cltu_U-X", "url": "https://www.autobazar.eu/detail/porsche-panamera-gts-sport-turismo-40-v8-my-2023/Ae6cltu_U-X/", "title": "Porsche Panamera GTS Sport Turismo 4.0 V8 MY 2023", "price": 108900, "price_gross": 108900, "fair_price": 107120.0, "discount_pct": -1.7, "verdict": "férová cena", "year": 2022, "km": 56000, "km_per_year": 12900.0, "eg": "V8 benzín (Turbo, GTS, 4S do 2016) 294–463 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Tvrdošín", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "196060945", "url": "https://auto.bazos.sk/inzerat/196060945/porsche-panamera-4-36-v6-benzin-4x4-rv-2016.php", "title": "Porsche Panamera 4, 3.6 V6 benzín, 4x4, r.v. 2016", "price": 33000, "price_gross": 33000, "fair_price": 32170.0, "discount_pct": -2.6, "verdict": "férová cena", "year": 2016, "km": 112000, "km_per_year": 10800.0, "eg": "V6 benzín (Panamera, 4, 4S od 2017) 220–324 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Myjava", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "196615923", "url": "https://auto.bazos.sk/inzerat/196615923/porsche-panamera-48-4s.php", "title": "Porsche panamera 4.8 4S", "price": 19000, "price_gross": 19000, "fair_price": 18480.0, "discount_pct": -2.8, "verdict": "férová cena", "year": 2010, "km": 255676, "km_per_year": 15700.0, "eg": "V8 benzín (Turbo, GTS, 4S do 2016) 294–463 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Levoča", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "ab-AmJyVZmc6Zu", "url": "https://www.autobazar.eu/detail/porsche-panamera-4-29-v6-pdk-4x4/AmJyVZmc6Zu/", "title": "Porsche Panamera 4 2.9 V6 PDK 4x4", "price": 119990, "price_gross": 119990, "fair_price": 116350.0, "discount_pct": -3.1, "verdict": "férová cena", "year": 2024, "km": 14990, "km_per_year": 6400.0, "eg": "V6 benzín (Panamera, 4, 4S od 2017) 220–324 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Trenčín", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-39772123", "url": "https://auto.bazar.sk/39772123-porsche-panamera-4-2-9-v6-pdk-4x4/", "price": 119990}, {"source": "bazos", "id": "197724748", "url": "https://auto.bazos.sk/inzerat/197724748/porsche-panamera-4-29-v6-pdk-4x4-moznost-financovania.php", "price": 119990}], "body": "hatch"}, {"id": "bs-39727277", "url": "https://auto.bazar.sk/39727277-porsche-panamera-s/", "title": "Porsche Panamera S", "price": 28400, "price_gross": 28400, "fair_price": 27510.0, "discount_pct": -3.2, "verdict": "férová cena", "year": 2013, "km": 189000, "km_per_year": 14200.0, "eg": "V6 benzín (Panamera, 4, 4S od 2017) 220–324 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava I - Staré Mesto", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-Am6fDNWFQEZ", "url": "https://www.autobazar.eu/detail/porsche-panamera-s/Am6fDNWFQEZ/", "price": 28400}, {"source": "bazos", "id": "196245756", "url": "https://auto.bazos.sk/inzerat/196245756/porsche-panamera-s.php", "price": 28400}], "body": "hatch"}, {"id": "ab-Am4_5lQgVE0", "url": "https://www.autobazar.eu/detail/porsche-panamera-sport-turismo-4-4x4-at/Am4_5lQgVE0/", "title": "Porsche Panamera Sport Turismo 4 4x4 A/T E-Hybrid", "price": 64990, "price_gross": 64990, "fair_price": 62930.0, "discount_pct": -3.3, "verdict": "férová cena", "year": 2019, "km": 105322, "km_per_year": 14400.0, "eg": "Plug-in hybrid 4 E-Hybrid / Turbo S E-Hybrid", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Nová Dubnica", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "197448493", "url": "https://auto.bazos.sk/inzerat/197448493/porsche-panamera-turbo-4x4-at-40-v8-404kw-2020-povod-sr.php", "title": "Porsche Panamera Turbo 4x4 A/T 4.0 V8 404kW, 2020, pôvod SR", "price": 59500, "price_gross": 59500, "fair_price": 57420.0, "discount_pct": -3.6, "verdict": "férová cena", "year": 2020, "km": 189000, "km_per_year": 29800.0, "eg": "V8 benzín (Turbo, GTS, 4S do 2016) 294–463 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Brezno", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-39595041", "url": "https://auto.bazar.sk/39595041-porsche-panamera-turbo-4x4-a-t/", "price": 59500}, {"source": "autobazar", "id": "ab-AmRWOSw_aob", "url": "https://www.autobazar.eu/detail/porsche-panamera-turbo-4x4-at/AmRWOSw_aob/", "price": 59500}], "body": "hatch"}, {"id": "ab-Am8pUFV2jfd", "url": "https://www.autobazar.eu/detail/panamera-4-e-hybrid-sport-turismo/Am8pUFV2jfd/", "title": "Panamera 4 E-Hybrid Sport Turismo", "price": 51900, "price_gross": 51900, "fair_price": 50020.0, "discount_pct": -3.8, "verdict": "férová cena", "year": 2019, "km": 151928, "km_per_year": 20700.0, "eg": "Plug-in hybrid 4 E-Hybrid / Turbo S E-Hybrid", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39722507", "url": "https://auto.bazar.sk/39722507-panamera-4-e-hybrid-sport-turismo/", "price": 51900}], "body": "wagon"}, {"id": "197257844", "url": "https://auto.bazos.sk/inzerat/197257844/porsche-panamera-diesel-tiptronic-s-221-kw-a8-5d-2014.php", "title": "Porsche Panamera Diesel Tiptronic S, 221 kW, A8, 5d., 2014", "price": 35990, "price_gross": 35990, "fair_price": 34540.0, "discount_pct": -4.2, "verdict": "férová cena", "year": 2014, "km": 127795, "km_per_year": 10400.0, "eg": "Diesel 4.0 / 3.0 V6 / V8 184–310 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Dunajská Streda", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmsWdC9l0mu", "url": "https://www.autobazar.eu/detail/porsche-panamera-diesel-tiptronic-s-221-kw-a8-5d-aj-na-splatky-protiucet/AmsWdC9l0mu/", "price": 35990}, {"source": "bazarsk", "id": "bs-39754586", "url": "https://auto.bazar.sk/39754586-porsche-panamera-diesel-tiptronic-s-221-kw-a8-5d-aj-na-splatky-protiucet/", "price": 35990}], "body": "hatch"}, {"id": "ab-AekTrgroBST", "url": "https://www.autobazar.eu/detail/porsche-panamera-sport-turismo-combi-338kw-automat/AekTrgroBST/", "title": "Porsche Panamera Sport Turismo Combi 338kw Automat", "price": 61500, "price_gross": 61500, "fair_price": 58970.0, "discount_pct": -4.3, "verdict": "férová cena", "year": 2020, "km": 175000, "km_per_year": 27600.0, "eg": "V6 benzín (Panamera, 4, 4S od 2017) 220–324 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Šurany", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "bs-39725725", "url": "https://auto.bazar.sk/39725725-porsche-panamera-4s-diesel-pdk-4x4/", "title": "Porsche Panamera 4S Diesel PDK 4x4", "price": 43900, "price_gross": 43900, "fair_price": 41460.0, "discount_pct": -5.9, "verdict": "férová cena", "year": 2017, "km": 254661, "km_per_year": 27300.0, "eg": "Diesel 4.0 / 3.0 V6 / V8 184–310 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Štiavnička", "flags": [], "pick": null, "source": "bazarsk", "origin": "dovoz", "also_listed": [{"source": "autobazar", "id": "ab-AmaI5o7eltK", "url": "https://www.autobazar.eu/detail/porsche-panamera-4s-diesel-pdk-4x4/AmaI5o7eltK/", "price": 43900}, {"source": "bazos", "id": "196220023", "url": "https://auto.bazos.sk/inzerat/196220023/porsche-panamera-4s-diesel-pdk-4x4-a8-420ps.php", "price": 43900}], "body": "hatch"}, {"id": "196992409", "url": "https://auto.bazos.sk/inzerat/196992409/porsche-panamera-4s-48-v8-400-koni-4x4-pdk-sport-plus.php", "title": "Porsche Panamera 4S 4.8 V8 400 koní 4x4 PDK SPORT PLUS", "price": 17900, "price_gross": 17900, "fair_price": 16860.0, "discount_pct": -6.2, "verdict": "férová cena", "year": 2009, "km": 267966, "km_per_year": 15500.0, "eg": "V8 benzín (Turbo, GTS, 4S do 2016) 294–463 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Senica", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "ab-AekOEJsK9Rg", "url": "https://www.autobazar.eu/detail/porsche-panamera-4s-at-324kw440hp-a8/AekOEJsK9Rg/", "title": "Porsche Panamera 4S AT 324kW440HP A8", "price": 62000, "price_gross": 62000, "fair_price": 58260.0, "discount_pct": -6.4, "verdict": "férová cena", "year": 2019, "km": 145000, "km_per_year": 19800.0, "eg": "V6 benzín (Panamera, 4, 4S od 2017) 220–324 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "hatch"}, {"id": "196375764", "url": "https://auto.bazos.sk/inzerat/196375764/porsche-panamera-s-e-hybrid-nizky-najazd-km.php", "title": "Porsche Panamera SE-Hybrid | 416 koní | Overiteľná história", "price": 36000, "price_gross": 36000, "fair_price": 33730.0, "discount_pct": -6.7, "verdict": "férová cena", "year": 2013, "km": 122000, "km_per_year": 9200.0, "eg": "Plug-in hybrid 4 E-Hybrid / Turbo S E-Hybrid", "cg": 2, "transmission": "automatic", "seller_type": "uncertain", "location": "Bratislava", "flags": [], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [{"source": "autobazar", "id": "ab-AeYKbzODbb8", "url": "https://www.autobazar.eu/detail/porsche-panamera-se/AeYKbzODbb8/", "price": 36000}], "body": "hatch"}, {"id": "ab-AmFgfqQjnuM", "url": "https://www.autobazar.eu/detail/porsche-panamera-panamera-4s-dieselpanobose/AmFgfqQjnuM/", "title": "Porsche Panamera PANAMERA 4S DIESEL*PANO*BOSE", "price": 76900, "price_gross": 76900, "fair_price": 71730.0, "discount_pct": -7.2, "verdict": "nad trhom", "year": 2017, "km": 42000, "km_per_year": 4500.0, "eg": "Diesel 4.0 / 3.0 V6 / V8 184–310 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava-Petržalka", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "hatch"}, {"id": "197122032", "url": "https://auto.bazos.sk/inzerat/197122032/predam-porsche-panamera-4x4-2019-platinum-edicia.php", "title": "Predám porsche panamera 4x4  2019 platinum edicia", "price": 51990, "price_gross": 51990, "fair_price": 48230.0, "discount_pct": -7.8, "verdict": "nad trhom", "year": 2019, "km": 172000, "km_per_year": 23500.0, "eg": "Plug-in hybrid 4 E-Hybrid / Turbo S E-Hybrid", "cg": 2, "transmission": null, "seller_type": "uncertain", "location": "Galanta", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "ab-Amk4_4g1Tn3", "url": "https://www.autobazar.eu/detail/porsche-panamera-gts-40-v8-pdk-pccb-pano-masazna-funkcia-vpredu-a-vzadu-360-cam/Amk4_4g1Tn3/", "title": "Porsche Panamera GTS 4.0 V8 PDK PCCB PANO Masážna funkcia (vpredu a vzadu)  360 CAM", "price": 179900, "price_gross": 179900, "fair_price": 166510.0, "discount_pct": -8.0, "verdict": "nad trhom", "year": 2025, "km": 4200, "km_per_year": 3200.0, "eg": "V8 benzín (Turbo, GTS, 4S do 2016) 294–463 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava-Ružinov", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39423204", "url": "https://auto.bazar.sk/39423204-porsche-panamera-gts-4-0-v8-pdk-pccb-pano-masazna-funkcia-vpredu-a-vzadu-360-cam/", "price": 179900}], "body": "hatch"}, {"id": "197429400", "url": "https://auto.bazos.sk/inzerat/197429400/porsche-panamera-48-turbo-368kw-4-miestne.php", "title": "Porsche Panamera 4.8 Turbo 368kW", "price": 22730, "price_gross": 22730, "fair_price": 20670.0, "discount_pct": -10.0, "verdict": "nad trhom", "year": 2010, "km": 213672, "km_per_year": 13100.0, "eg": "V8 benzín (Turbo, GTS, 4S do 2016) 294–463 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Žilina", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-Am84jQXIe4U", "url": "https://www.autobazar.eu/detail/porsche-panamera-48-turbo-368kw-aj-na-splatky-protiucet/Am84jQXIe4U/", "price": 22730}, {"source": "bazarsk", "id": "bs-39759116", "url": "https://auto.bazar.sk/39759116-porsche-panamera-4-8-turbo-368kw-aj-na-splatky-protiucet/", "price": 22730}], "body": "hatch"}, {"id": "196971760", "url": "https://auto.bazos.sk/inzerat/196971760/porsche-panamera-turbo-s.php", "title": "Porsche Panamera Turbo S", "price": 34000, "price_gross": 34000, "fair_price": 30710.0, "discount_pct": -10.7, "verdict": "nad trhom", "year": 2012, "km": 205000, "km_per_year": 14300.0, "eg": "V8 benzín (Turbo, GTS, 4S do 2016) 294–463 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Dunajská Streda", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "197256377", "url": "https://auto.bazos.sk/inzerat/197256377/porsche-panamera-turbo-4x4-404kw-a8-2017.php", "title": "Porsche Panamera Turbo 4x4 / 404kW / A8 / 2017", "price": 68990, "price_gross": 68990, "fair_price": 62150.0, "discount_pct": -11.0, "verdict": "nad trhom", "year": 2017, "km": 133906, "km_per_year": 14300.0, "eg": "V8 benzín (Turbo, GTS, 4S do 2016) 294–463 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Žilina", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmRQ8jKMlBt", "url": "https://www.autobazar.eu/detail/porsche-panamera-turbo-4x4-404kw-a8-zaruka-aj-na-splatky-protiucet/AmRQ8jKMlBt/", "price": 68990}, {"source": "bazarsk", "id": "bs-39759260", "url": "https://auto.bazar.sk/39759260-porsche-panamera-turbo-4x4-404kw-a8-zaruka-aj-na-splatky-protiucet/", "price": 68990}], "body": "hatch"}, {"id": "ab-AmGUJuD8bBa", "url": "https://www.autobazar.eu/detail/porsche-panamera-turbo-4x4-at/AmGUJuD8bBa/", "title": "Porsche Panamera Turbo 4x4 A/T", "price": 69890, "price_gross": 69890, "fair_price": 62090.0, "discount_pct": -12.6, "verdict": "nad trhom", "year": 2017, "km": 114000, "km_per_year": 12200.0, "eg": "V8 benzín (Turbo, GTS, 4S do 2016) 294–463 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Malacky", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "hatch"}, {"id": "ab-Ae81VFIKBgp", "url": "https://www.autobazar.eu/detail/porsche-panamera-4s-29-v6-pdk-324kw440hp-a8/Ae81VFIKBgp/", "title": "Porsche Panamera 4S 2.9 V6 PDK 324kW440HP A8", "price": 89900, "price_gross": 89900, "fair_price": 79620.0, "discount_pct": -12.9, "verdict": "nad trhom", "year": 2022, "km": 97200, "km_per_year": 22400.0, "eg": "V6 benzín (Panamera, 4, 4S od 2017) 220–324 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Veľká Bytča", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "hatch"}, {"id": "197106193", "url": "https://auto.bazos.sk/inzerat/197106193/porsche-panamera-4s-e-hybrid-active-ride-sport-chrono.php", "title": "Porsche Panamera 4S E-Hybrid, Active Ride, Sport Chrono", "price": 135000, "price_gross": 135000, "fair_price": 119460.0, "discount_pct": -13.0, "verdict": "nad trhom", "year": 2025, "km": 54000, "km_per_year": 40500.0, "eg": "Plug-in hybrid 4 E-Hybrid / Turbo S E-Hybrid", "cg": 2, "transmission": null, "seller_type": "uncertain", "location": "Prešov", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "ab-AmZC9goa5mu", "url": "https://www.autobazar.eu/detail/porsche-panamera-4-e-hybrid-executive-sport-chrono-4x4-at-243kw-a8-aj-na-splatky/AmZC9goa5mu/", "title": "Porsche Panamera 4 E-Hybrid Executive Sport Chrono 4x4 A/T, 243kW, A8 / AJ NA SPLÁTKY /", "price": 44990, "price_gross": 44990, "fair_price": 39730.0, "discount_pct": -13.2, "verdict": "nad trhom", "year": 2018, "km": 255115, "km_per_year": 30600.0, "eg": "Plug-in hybrid 4 E-Hybrid / Turbo S E-Hybrid", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39754869", "url": "https://auto.bazar.sk/39754869-porsche-panamera-4-e-hybrid-executive-sport-chrono-4x4-a-t-243kw-a8-aj-na-splatky/", "price": 44990}], "body": "hatch"}, {"id": "ab-AeRR4OxzsIl", "url": "https://www.autobazar.eu/detail/porsche-panamera-exkluzivne-29-hybrid-elektrina-benzin-243-341kw-automat-prevodovka-4x4/AeRR4OxzsIl/", "title": "Porsche Panamera - EXKLUZÍVNE - 2.9 Hybrid Elektrina - benzín 243-341kW Automat. prevodovka 4x4", "price": 60775, "price_gross": 60775, "fair_price": 53170.0, "discount_pct": -14.3, "verdict": "nad trhom", "year": 2018, "km": 205991, "km_per_year": 24700.0, "eg": "Plug-in hybrid 4 E-Hybrid / Turbo S E-Hybrid", "cg": 2, "transmission": "automatic", "seller_type": "private", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "197611615", "url": "https://auto.bazos.sk/inzerat/197611615/predam-porsche-panamera-4-odpocet-dph-36-v6.php", "title": "Predám Porsche Panamera 4, odpočet DPH, 3.6 V6,", "price": 24300, "price_gross": 24300, "fair_price": 21060.0, "discount_pct": -15.4, "verdict": "výrazne nad trhom", "year": 2011, "km": 156700, "km_per_year": 10200.0, "eg": "V6 benzín (Panamera, 4, 4S od 2017) 220–324 kW", "cg": 0, "transmission": null, "seller_type": "dealer", "location": "Senica", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "ab-AezkLqvBwrA", "url": "https://www.autobazar.eu/detail/porsche-panamera-4s-e-hybrid-544k-active-ride-sport-chrono-bose/AezkLqvBwrA/", "title": "Porsche Panamera 4S E-Hybrid 544k Active Ride Sport Chrono BOSE", "price": 134900, "price_gross": 134900, "fair_price": 116860.0, "discount_pct": -15.4, "verdict": "výrazne nad trhom", "year": 2024, "km": 52000, "km_per_year": 22300.0, "eg": "Plug-in hybrid 4 E-Hybrid / Turbo S E-Hybrid", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Prešov", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "hatch"}, {"id": "ab-AeN6AqXDDIo-", "url": "https://www.autobazar.eu/detail/porsche-panamera-diesel-tiptronic-s/AeN6AqXDDIo-/", "title": "Porsche Panamera Diesel Tiptronic S", "price": 57900, "price_gross": 57900, "fair_price": 49680.0, "discount_pct": -16.5, "verdict": "výrazne nad trhom", "year": 2014, "km": 22200, "km_per_year": 1800.0, "eg": "Diesel 4.0 / 3.0 V6 / V8 184–310 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Nitra", "flags": ["nezvyčajne nízky nájazd na vek (22 200 km) – over  či nejde o preklep"], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-38684777", "url": "https://auto.bazar.sk/38684777-porsche-panamera-diesel-tiptronic-s/", "price": 57900}], "body": "hatch"}, {"id": "ab-AeJNp-iCqqh", "url": "https://www.autobazar.eu/detail/porsche-panamera-turbo-4x4-at-404kw550hp-a8/AeJNp-iCqqh/", "title": "Porsche Panamera Turbo 4x4 A/T 404kW/550HP A8", "price": 65000, "price_gross": 65000, "fair_price": 55730.0, "discount_pct": -16.6, "verdict": "výrazne nad trhom", "year": 2018, "km": 178200, "km_per_year": 21400.0, "eg": "V8 benzín (Turbo, GTS, 4S do 2016) 294–463 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Martin", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazarsk", "id": "bs-39774898", "url": "https://auto.bazar.sk/39774898-porsche-panamera-turbo-4x4-a-t-404kw-550hp-a8/", "price": 65000}], "body": "hatch"}, {"id": "bs-39075864", "url": "https://auto.bazar.sk/39075864-porsche-panamera-nezavisle-topeni/", "title": "Porsche Panamera Nezávislé topení", "price": 89765, "price_gross": 89765, "fair_price": 75590.0, "discount_pct": -18.7, "verdict": "výrazne nad trhom", "year": 2019, "km": 83000, "km_per_year": 11300.0, "eg": "V6 benzín (Panamera, 4, 4S od 2017) 220–324 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Ostrava", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AblHfJd85ElL", "url": "https://www.autobazar.eu/detail/porsche-panamera-nezavisle-topeni/AblHfJd85ElL/", "price": 89765}], "body": "hatch"}, {"id": "197469797", "url": "https://auto.bazos.sk/inzerat/197469797/porsche-panamera-turbo-s-e-hybrid-dph.php", "title": "Porsche Panamera Turbo S E-hybrid DPH", "price": 87600, "price_gross": 87600, "fair_price": 73130.0, "discount_pct": -19.8, "verdict": "výrazne nad trhom", "year": 2018, "km": 101000, "km_per_year": 12100.0, "eg": "Plug-in hybrid 4 E-Hybrid / Turbo S E-Hybrid", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Košice", "flags": [], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [{"source": "autobazar", "id": "ab-AmXgeVCN-yQ", "url": "https://www.autobazar.eu/detail/porsche-panamera-turbo-s-e-hybrid/AmXgeVCN-yQ/", "price": 87600}], "body": "hatch"}, {"id": "bs-39297586", "url": "https://auto.bazar.sk/39297586-porsche-panamera-4s-a-t/", "title": "Porsche Panamera 4S A/T", "price": 49999, "price_gross": 49999, "fair_price": 38870.0, "discount_pct": -28.6, "verdict": "výrazne nad trhom", "year": 2016, "km": 145000, "km_per_year": 14000.0, "eg": "V6 benzín (Panamera, 4, 4S od 2017) 220–324 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava I - Staré Mesto", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197648626", "url": "https://auto.bazos.sk/inzerat/197648626/porsche-panamera-4s324kw4x4pdk-zaruka-a-assist.php", "price": 44990}, {"source": "bazos", "id": "196799134", "url": "https://auto.bazos.sk/inzerat/196799134/porsche-panamera-4s324kw4x4pdk-zaruka-a-asistencia.php", "price": 44990}], "body": "hatch"}];
+const GROUPS = ["Benzín", "Diesel", "Plug-in hybrid", "LPG a nezistený"];
+const BODY = {"hatch": "liftback", "wagon": "Sport Turismo"};
+const fmt = n => Math.round(n).toLocaleString("sk-SK");
+const eur = n => fmt(n) + " €";
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const TRANS = {automatic: "automat", manual: "manuál"};
+const SRC = {bazos: "bazoš", autobazar: "autobazar.eu", bazarsk: "bazar.sk"};
+
+// --- theme toggle ---------------------------------------------------------
+document.getElementById("themeBtn").onclick = () => {
+  const root = document.documentElement;
+  const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  drawChart();
+};
+
+// --- scatter chart --------------------------------------------------------
+const legend = document.getElementById("legend");
+legend.innerHTML = GROUPS.map((g, i) => `<span><i style="background:var(--s${i+1})"></i>${g}</span>`).join("")
+  + `<span><i class="ring"></i>odporúčaná ponuka</span>`;
+
+function drawChart() {
+  const svg = document.getElementById("chart"), wrap = document.getElementById("chartWrap"), tip = document.getElementById("tip");
+  const W = svg.clientWidth, H = 420, m = {l: 56, r: 16, t: 10, b: 40};
+  const pts = DATA.filter(d => d.km && d.price_gross);
+  const xMax = Math.ceil(Math.max(...pts.map(d => d.km)) / 50000) * 50000;
+  const yMax = Math.ceil(Math.max(...pts.map(d => d.price_gross)) / 5000) * 5000;
+  const x = v => m.l + v / xMax * (W - m.l - m.r), y = v => H - m.b - v / yMax * (H - m.t - m.b);
+  let s = "";
+  for (let v = 0; v <= yMax; v += 5000)
+    s += `<line x1="${m.l}" x2="${W-m.r}" y1="${y(v)}" y2="${y(v)}" stroke="var(--grid)"/><text x="${m.l-8}" y="${y(v)+4}" text-anchor="end">${v/1000} tis. €</text>`;
+  const step = W < 520 ? 100000 : 50000;
+  for (let v = 0; v <= xMax; v += step)
+    s += `<text x="${x(v)}" y="${H-m.b+18}" text-anchor="middle">${v/1000} tis.</text>`;
+  s += `<text x="${(W+m.l)/2}" y="${H-6}" text-anchor="middle">nájazd (km)</text>`;
+  const order = [...pts].sort((a, b) => (a.pick ? 1 : 0) - (b.pick ? 1 : 0));
+  order.forEach(d => {
+    const cx = x(d.km), cy = y(d.price_gross);
+    if (d.pick) s += `<circle cx="${cx}" cy="${cy}" r="9" fill="none" stroke="var(--text)" stroke-width="2"/>`;
+    s += `<circle class="pt" data-id="${d.id}" cx="${cx}" cy="${cy}" r="5" fill="var(--s${d.cg+1})" stroke="var(--surface)" stroke-width="2"/>`;
+  });
+  // invisible bigger hit targets
+  order.forEach(d => s += `<circle class="hit" data-id="${d.id}" cx="${x(d.km)}" cy="${y(d.price_gross)}" r="11" fill="transparent" style="cursor:pointer"/>`);
+  svg.innerHTML = s;
+  const byId = Object.fromEntries(pts.map(d => [d.id, d]));
+  svg.querySelectorAll(".hit").forEach(c => {
+    c.onmouseenter = c.onmousemove = ev => {
+      const d = byId[c.dataset.id];
+      tip.innerHTML = `<b>${esc(d.title)}</b>
+        <div class="row"><span>Cena</span><span>${eur(d.price_gross)}</span></div>
+        <div class="row"><span>Férová cena</span><span>${eur(d.fair_price)}</span></div>
+        <div class="row"><span>Pod trhom</span><span>${d.discount_pct > 0 ? "+" : ""}${d.discount_pct.toLocaleString("sk-SK")} %</span></div>
+        <div class="row"><span>Zdroj</span><span>${SRC[d.source]}${d.also_listed.length ? " + " + d.also_listed.map(a => SRC[a.source]).join(", ") : ""}</span></div>
+        <div class="row"><span>Rok · km</span><span>${d.year} · ${fmt(d.km)}</span></div>
+        <div class="row"><span>Motor</span><span>${esc(d.eg)} ${TRANS[d.transmission] || ""}</span></div>`;
+      tip.style.display = "block";
+      const r = wrap.getBoundingClientRect();
+      let lx = ev.clientX - r.left + 14, ly = ev.clientY - r.top + 14;
+      if (lx + 290 > r.width) lx = ev.clientX - r.left - 290;
+      tip.style.left = lx + "px"; tip.style.top = ly + "px";
+    };
+    c.onmouseleave = () => tip.style.display = "none";
+    c.onclick = () => window.open(byId[c.dataset.id].url, "_blank", "noopener");
+  });
+}
+drawChart();
+addEventListener("resize", drawChart);
+
+// --- full table -----------------------------------------------------------
+const fEngine = document.getElementById("fEngine");
+[...new Set(DATA.map(d => d.eg))].sort().forEach(g => fEngine.insertAdjacentHTML("beforeend", `<option>${esc(g)}</option>`));
+let sortK = "discount_pct", sortDir = -1;
+function discCell(v) {
+  const w = Math.min(Math.abs(v), 30) / 30 * 50;
+  const bar = v >= 0 ? `left:50%;width:${w}%;background:var(--pos)` : `right:50%;width:${w}%;background:var(--neg)`;
+  return `<span class="disc">${v > 0 ? "+" : ""}${v.toLocaleString("sk-SK")} %<span class="dbar"><span style="${bar}"></span></span></span>`;
+}
+function renderTable() {
+  const max = parseFloat(document.getElementById("fMax").value) || Infinity;
+  const tr = document.getElementById("fTrans").value, se = document.getElementById("fSeller").value, en = fEngine.value;
+  const so = document.getElementById("fSource").value, og = document.getElementById("fOrigin").value;
+  const bo = document.getElementById("fBody").value;
+  const rows = DATA.filter(d => (!en || d.eg === en) && (!tr || d.transmission === tr)
+    && (!se || d.seller_type !== "dealer") && d.price_gross <= max
+    && (!so || d.source === so || d.also_listed.some(a => a.source === so)) && (!og || d.origin === og) && (!bo || d.body === bo))
+    .sort((a, b) => { const A = a[sortK], B = b[sortK]; return (typeof A === "string" ? A.localeCompare(B) : A - B) * sortDir; });
+  document.getElementById("count").textContent = `${rows.length} z ${DATA.length} inzerátov`;
+  document.querySelector("#tbl tbody").innerHTML = rows.map(d => `<tr>
+    <td><a href="${d.url}" target="_blank" rel="noopener">${esc(d.title)}</a> ${d.pick ? '<span class="badge pick">odporúčané</span>' : ""}
+      <div class="sub">${BODY[d.body] || "karoséria ?"} · ${esc(d.eg)} · ${TRANS[d.transmission] || "prevodovka ?"} · ${esc(d.location)} · ${d.seller_type === "dealer" ? "predajca/firma" : d.seller_type === "private" ? "súkromník" : "neisté"} · ${SRC[d.source]}${d.origin === "SR" ? " · kúpené v SR" : d.origin === "dovoz" ? " · dovoz" : ""}${d.also_listed.map(a => ` · <a href="${a.url}" target="_blank" rel="noopener">aj na ${SRC[a.source]}</a>`).join("")}</div>
+      ${d.flags.filter(f => !f.startsWith("prevodovka")).map(f => `<div class="flag">⚠ ${esc(f)}</div>`).join("")}</td>
+    <td class="num">${d.year}</td><td class="num">${fmt(d.km)}</td>
+    <td class="num">${eur(d.price_gross)}</td><td class="num">${eur(d.fair_price)}</td>
+    <td class="num">${discCell(d.discount_pct)}</td></tr>`).join("");
+  document.querySelectorAll("#tbl th.sortable").forEach(th => {
+    const base = th.textContent.replace(/ [▾▴]$/, "");
+    th.textContent = base + (th.dataset.k === sortK ? (sortDir < 0 ? " ▾" : " ▴") : "");
+  });
+}
+document.querySelectorAll("#tbl th.sortable").forEach(th => th.onclick = () => {
+  if (sortK === th.dataset.k) sortDir *= -1; else { sortK = th.dataset.k; sortDir = th.dataset.k === "title" ? 1 : -1; }
+  renderTable();
+});
+["fEngine", "fTrans", "fSeller", "fSource", "fBody", "fOrigin", "fMax"].forEach(id => document.getElementById(id).addEventListener("input", renderTable));
+renderTable();
+</script>
+<!-- ferovka-theme --><script defer src="/analytics-config.js"></script><script defer src="/analytics.js"></script><script id="ferovka-chart">/* Férovka – chart → ad links, injected into every report by sync-reports.mjs.
+ *
+ * The reports draw one invisible 11px "hit" circle per ad. In dense charts (and always on a narrow phone) those
+ * circles overlap and the one drawn last wins, so a click/tap often opened a neighbouring ad. Here the pointer is
+ * always resolved to the NEAREST point, the report's own tooltip is shown for that point, and a click opens its ad.
+ * Touch: the first tap shows the tooltip (with a hint), a second tap on the same point opens the ad.
+ */
+(() => {
+  let rows;
+  try { rows = DATA; } catch { return; } // eslint-disable-line no-undef
+  if (!Array.isArray(rows) || !rows.length || !("url" in rows[0])) return;
+  const byId = new Map(rows.map((d) => [String(d.id), d]));
+  const MOUSE = ["mouseover", "mouseout", "mouseenter", "mouseleave", "mousemove", "mousedown", "mouseup", "click"];
+  let lastPointer = "mouse", down = null;
+  // the finger position as it was – Chrome "snaps" the later click of a tap to the centre of a nearby clickable element
+  addEventListener("pointerdown", (e) => { lastPointer = e.pointerType || "mouse"; down = { clientX: e.clientX, clientY: e.clientY }; }, true);
+
+  // the old per-point hit circles must not be targets (they overlap, and touch snapping aims at them)
+  document.head.insertAdjacentHTML("beforeend", "<style>svg circle.hit[data-id],svg circle.pt[data-id]{pointer-events:none}</style>");
+
+  function nearest(svg, ev, radius) {
+    let best = null, bd = Infinity;
+    for (const c of svg.querySelectorAll("circle.pt[data-id]")) {
+      const r = c.getBoundingClientRect();
+      const dx = r.left + r.width / 2 - ev.clientX, dy = r.top + r.height / 2 - ev.clientY;
+      const d = dx * dx + dy * dy;
+      if (d <= bd) { bd = d; best = c; } // ties: the point drawn on top (later) wins – that is the one you see
+    }
+    return best && bd <= radius * radius ? best : null;
+  }
+
+  function bind(svg) {
+    if (svg.__fvLinks) return;
+    svg.__fvLinks = true;
+    let current = null, armed = null;
+    const hitOf = (pt) => pt && svg.querySelector(`circle.hit[data-id="${CSS.escape(pt.dataset.id)}"]`);
+    const fire = (el, type, ev) => {
+      if (!el) return;
+      const e = new MouseEvent(type, { clientX: ev.clientX, clientY: ev.clientY, bubbles: false });
+      e.__fv = true;
+      el.dispatchEvent(e);
+    };
+    const tip = () => (svg.parentElement && svg.parentElement.querySelector("#tip, .tip")) || document.getElementById("tip");
+    const mark = (pt) => {
+      if (current === pt) return;
+      if (current) current.setAttribute("r", current.__r || "5");
+      current = pt;
+      if (pt) { pt.__r = pt.__r || pt.getAttribute("r"); pt.setAttribute("r", String(+pt.__r + 2)); }
+    };
+    const show = (pt, ev, hint) => {
+      mark(pt);
+      if (!pt) { const t = tip(); if (t) t.style.display = "none"; return; }
+      fire(hitOf(pt), "mousemove", ev); // the report's own tooltip, for the nearest point
+      const t = tip();
+      if (t && hint) t.insertAdjacentHTML("beforeend", `<div class="fv-hint">Ťukni ešte raz – otvorí sa inzerát ↗</div>`);
+    };
+    const open = (pt) => {
+      const d = byId.get(pt.dataset.id);
+      if (d && d.url) {
+        try { window.FerovkaAnalytics?.listingClick(d.url, "chart"); } catch { /* analytics must never block an ad */ }
+        window.open(d.url, "_blank", "noopener");
+      }
+    };
+
+    // the per-circle handlers of the report never see real mouse events – only our synthetic ones
+    for (const type of MOUSE) {
+      svg.addEventListener(type, (ev) => {
+        if (ev.__fv) return;
+        ev.stopImmediatePropagation();
+        if (type === "mousemove" && lastPointer === "mouse") {
+          show(nearest(svg, ev, 18), ev, false);
+          svg.style.cursor = current ? "pointer" : "";
+        } else if (type === "mouseleave" && ev.target === svg && lastPointer === "mouse") {
+          show(null, ev);
+        } else if (type === "click") {
+          const touch = lastPointer !== "mouse";
+          const at = touch && down ? down : ev;
+          const pt = nearest(svg, at, touch ? 26 : 18);
+          if (!pt) { armed = null; show(null, ev); return; }
+          if (!touch || armed === pt) { armed = null; open(pt); }
+          else { armed = pt; show(pt, at, true); }
+        }
+      }, true);
+    }
+  }
+
+  const scan = () => document.querySelectorAll("svg").forEach((s) => s.querySelector("circle.pt[data-id]") && bind(s));
+  scan();
+  new MutationObserver(scan).observe(document.body, { childList: true, subtree: true });
+})();
+</script><script id="ferovka-filters">/* Férovka – filters for the whole report, injected into every model report by sync-reports.mjs.
+ *
+ * The reports render the chart (drawChart) and the full ranking (renderTable) from the global DATA array; their own
+ * filter bar only filters the table. Here the filter bar (kept in its place above the ranking) gets more filters (year, price from/to,
+ * km, fuel, discount, picks only, text search) and every filter applies to the chart and the ranking together: DATA is
+ * refilled in place with the matching ads and both are drawn again. "</script" can't occur inside this file.
+ */
+(() => {
+  let data;
+  try { data = DATA; } catch { return; } // eslint-disable-line no-undef
+  if (!Array.isArray(data) || !data.length || typeof renderTable !== "function") return; // eslint-disable-line no-undef
+  const bar = document.querySelector(".filters");
+  if (!bar || bar.dataset.fv) return;
+  bar.dataset.fv = "1";
+  const ALL = data.slice();
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+  const fmt = (n) => Math.round(n).toLocaleString("sk-SK");
+  const norm = (s) => String(s ?? "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+  let groups = null;
+  try { groups = GROUPS; } catch { /* report without groups */ } // eslint-disable-line no-undef
+
+  const FUEL = { diesel: "Diesel", petrol: "Benzín", hybrid: "Hybrid", "plug-in hybrid": "Plug-in hybrid", electric: "Elektro", lpg: "LPG", cng: "CNG" };
+  const fuelOf = (d) => {
+    const e = norm(d.eg);
+    if (/tdi|crdi|dci|hdi|diesel|\bd\b|cdi|\d+d\b|blue/.test(e)) return "Diesel";
+    if (/plug-in|phev|e-hybrid|recharge|\bgte\b|\bt8\b|\b\d{2}e\b|\b\d{3} ?e\b/.test(e)) return "Plug-in hybrid";
+    if (/elektro|electric|\bev\b/.test(e)) return "Elektro";
+    if (/cng|lpg|g-tec|g-tron|tgi|ecofuel/.test(e)) return "Plyn (CNG/LPG)";
+    if (/mild|mhev/.test(e)) return "Benzín"; // mild-hybrid petrol (the diesel ones say TDI / d above)
+    if (/hybrid|hev/.test(e)) return "Hybrid";
+    if (/tsi|tfsi|mpi|fsi|benzin|gdi|dpi|htp|12v|\bt\d\b|\bb[56]\b|\d+i\b|turbo|tce|\bs4\b|rs ?\d|amg|competition|\bm\d{2,3}i?\b|gti|\bx5 m\b/.test(e)) return "Benzín";
+    return d.fuel ? FUEL[d.fuel] || String(d.fuel) : null;
+  };
+
+  // --- controls ---------------------------------------------------------------------------------------------------
+  const years = ALL.map((d) => d.year).filter(Boolean);
+  const yMin = Math.min(...years), yMax = Math.max(...years);
+  const yearOpts = (label) => `<option value="">${label}</option>` +
+    Array.from({ length: yMax - yMin + 1 }, (_, i) => yMax - i).map((y) => `<option>${y}</option>`).join("");
+  const kms = [30000, 50000, 75000, 100000, 150000, 200000, 250000, 300000];
+  const fuels = [...new Set(ALL.map(fuelOf).filter(Boolean))].sort((a, b) => a.localeCompare(b, "sk"));
+  const showGroups = Array.isArray(groups) && groups.length > 1 && ALL.some((d) => Number.isInteger(d.cg));
+
+  const maxInput = $("fMax");
+  if (maxInput) { maxInput.placeholder = "Cena do €"; maxInput.title = "Najvyššia cena (s DPH)"; }
+  const html =
+    `<select id="fvYearFrom" title="Rok výroby od">${yearOpts("Rok od")}</select>` +
+    `<select id="fvYearTo" title="Rok výroby do">${yearOpts("Rok do")}</select>` +
+    `<input id="fvPriceMin" type="number" placeholder="Cena od €" step="500" min="0" title="Najnižšia cena (s DPH)" style="width:110px">`;
+  if (maxInput) maxInput.insertAdjacentHTML("beforebegin", html);
+  else bar.insertAdjacentHTML("afterbegin", html);
+  const more =
+    `<select id="fvKm" title="Najviac najazdených km"><option value="">Nájazd – všetky</option>${kms.map((k) => `<option value="${k}">do ${fmt(k)} km</option>`).join("")}</select>` +
+    (fuels.length > 1 ? `<select id="fvFuel" title="Palivo"><option value="">Všetky palivá</option>${fuels.map((f) => `<option>${esc(f)}</option>`).join("")}</select>` : "") +
+    (showGroups ? `<select id="fvGroup" title="Skupina motorov (farba v grafe)"><option value="">Všetky skupiny</option>${groups.map((g, i) => `<option value="${i}">${esc(g)}</option>`).join("")}</select>` : "") +
+    `<select id="fvDisc" title="O koľko je auto lacnejšie ako férová cena"><option value="">Cena – všetky</option><option value="0">pod férovou cenou</option><option value="10">aspoň 10 % pod trhom</option><option value="20">aspoň 20 % pod trhom</option></select>` +
+    `<input id="fvText" type="search" placeholder="Hľadať (výbava, mesto…)" title="Hľadá v názve inzerátu, motore a lokalite" style="width:170px">` +
+    `<label class="fv-check"><input id="fvPick" type="checkbox"> len odporúčané</label>` +
+    `<button type="button" id="fvReset" class="fv-reset">Zrušiť filtre</button>`;
+  const count = $("count");
+  if (count) count.insertAdjacentHTML("beforebegin", more);
+  else bar.insertAdjacentHTML("beforeend", more);
+
+  // the bar stays where it was – right above the ranking – and also drives the chart; the chart gets a pointer to it
+  const chart = $("chartWrap");
+  const box = document.createElement("div");
+  box.className = "fv-filters";
+  box.id = "filtre";
+  bar.before(box);
+  box.innerHTML = `<div class="fv-head"><b>Filtre</b><span>platia pre rebríček aj graf vyššie</span></div>`;
+  box.appendChild(bar);
+  const note = document.createElement("div");
+  note.className = "fv-note";
+  chart?.before(note);
+
+  document.head.insertAdjacentHTML("beforeend", `<style id="fv-filters-css">
+.fv-filters{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 14px 4px;margin:24px 0 8px}
+.fv-filters .fv-head{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;margin-bottom:8px}
+.fv-filters .fv-head span{color:var(--muted);font-size:13px}
+.fv-filters .filters{margin-bottom:8px}
+.fv-filters .filters .count{flex-basis:100%;margin-left:0}
+.fv-check{display:inline-flex;gap:6px;align-items:center;font-size:13px;color:var(--text-2,var(--text));white-space:nowrap}
+.fv-reset{background:none;border:1px solid var(--border);color:var(--text);border-radius:8px;padding:6px 10px;font:inherit;font-size:13px;cursor:pointer}
+.fv-reset:hover{background:var(--surface-2,var(--surface))}
+.fv-note{color:var(--muted);font-size:13px;margin:0 0 8px}
+.fv-note a{color:inherit}
+.fv-empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:14px;pointer-events:none}
+@media (max-width:600px){.fv-filters .filters select,.fv-filters .filters input[type=number],.fv-filters .filters input[type=search]{flex:1 1 calc(50% - 8px);min-width:0;width:auto!important}}
+</style>`);
+
+  // --- filtering --------------------------------------------------------------------------------------------------
+  const val = (id) => ($(id) ? $(id).value : "");
+  const num = (id) => { const v = parseFloat(val(id)); return Number.isFinite(v) ? v : null; };
+  function matches(d) {
+    const yf = num("fvYearFrom"), yt = num("fvYearTo"), pmin = num("fvPriceMin"), pmax = num("fMax"), km = num("fvKm"), disc = num("fvDisc");
+    const fuel = val("fvFuel"), grp = val("fvGroup"), q = norm(val("fvText")).trim();
+    if (yf != null && !(d.year >= yf)) return false;
+    if (yt != null && !(d.year <= yt)) return false;
+    if (pmin != null && !(d.price_gross >= pmin)) return false;
+    if (pmax != null && !(d.price_gross <= pmax)) return false;
+    if (km != null && !(d.km <= km)) return false;
+    if (disc != null && !(d.discount_pct > disc || (disc > 0 && d.discount_pct >= disc))) return false;
+    if (fuel && fuelOf(d) !== fuel) return false;
+    if (grp !== "" && String(d.cg) !== grp) return false;
+    if ($("fvPick")?.checked && !d.pick) return false;
+    if (q && !q.split(/\s+/).every((w) => norm(`${d.title} ${d.eg ?? ""} ${d.engine ?? ""} ${d.location ?? ""}`).includes(w))) return false;
+    // the report's own filters (engine, gearbox, seller, portal, body, origin) – same rules as its renderTable
+    const en = val("fEngine"), tr = val("fTrans"), se = val("fSeller"), so = val("fSource"), og = val("fOrigin"), bo = val("fBody");
+    if (en && d.eg !== en) return false;
+    if (tr && d.transmission !== tr) return false;
+    if (se && d.seller_type === "dealer") return false;
+    if (so && !(d.source === so || (d.also_listed || []).some((a) => a.source === so))) return false;
+    if (og && d.origin !== og) return false;
+    if (bo && d.body !== bo) return false;
+    return true;
+  }
+  const active = () => [...box.querySelectorAll("select, input")].filter((el) => (el.type === "checkbox" ? el.checked : el.value !== "")).length;
+
+  let drawing = false;
+  function apply() {
+    if (drawing) return;
+    drawing = true;
+    const rows = ALL.filter(matches);
+    data.length = 0;
+    data.push(...rows);
+    const wrap = $("chartWrap");
+    wrap?.querySelector(".fv-empty")?.remove();
+    const plotted = rows.filter((d) => d.km && d.price_gross).length;
+    try {
+      if (typeof drawChart === "function") { // eslint-disable-line no-undef
+        if (plotted) drawChart(); // eslint-disable-line no-undef
+        else { const svg = $("chart"); if (svg) svg.innerHTML = ""; }
+      }
+    } catch (e) { console.warn("chart", e); }
+    if (wrap && !plotted) {
+      if (getComputedStyle(wrap).position === "static") wrap.style.position = "relative";
+      wrap.insertAdjacentHTML("beforeend", `<div class="fv-empty">Filtrom nezodpovedá žiadny inzerát</div>`);
+    }
+    try { renderTable(); } catch (e) { console.warn("table", e); } // eslint-disable-line no-undef
+    const n = active();
+    if (count) count.textContent = `Zobrazených ${fmt(rows.length)} z ${fmt(ALL.length)} inzerátov` + (n ? ` · aktívne filtre: ${n}` : "");
+    note.innerHTML = n
+      ? `Zobrazených ${fmt(rows.length)} z ${fmt(ALL.length)} inzerátov podľa <a href="#filtre">filtrov pri rebríčku</a>.`
+      : `Filtre (rok, cena, nájazd, palivo…) nájdeš <a href="#filtre">pri kompletnom rebríčku</a> – platia aj pre tento graf.`;
+    drawing = false;
+  }
+  box.querySelectorAll("select, input").forEach((el) => el.addEventListener("input", apply));
+  $("fvPick")?.addEventListener("change", apply);
+  $("fvReset").addEventListener("click", () => {
+    box.querySelectorAll("select, input").forEach((el) => { if (el.type === "checkbox") el.checked = false; else el.value = ""; });
+    apply();
+  });
+  apply();
+})();
+</script><!-- /ferovka-theme -->
+</body>
+</html>

@@ -1,0 +1,835 @@
+<!doctype html>
+<html lang="sk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Range Rover – analýza ponúk</title>
+<style>
+:root {
+  color-scheme: light;
+  --bg: #f6f6f4; --surface: #fcfcfb; --surface-2: #f0efec; --border: #e2e1dc;
+  --text: #0b0b0b; --text-2: #52514e; --muted: #7a7974;
+  --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a;
+  --pos: #2a78d6; --neg: #eb6834; --accent: #2a78d6;
+  --good: #1d7f4e; --bad: #b4332f; --grid: #e8e7e3;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #121211; --surface: #1a1a19; --surface-2: #232321; --border: #33332f;
+    --text: #f0efec; --text-2: #c3c2b7; --muted: #8f8e86;
+    --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+    --pos: #3987e5; --neg: #d95926; --accent: #5598e7;
+    --good: #4cc38a; --bad: #f07a76; --grid: #2a2a27;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #121211; --surface: #1a1a19; --surface-2: #232321; --border: #33332f;
+  --text: #f0efec; --text-2: #c3c2b7; --muted: #8f8e86;
+  --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+  --pos: #3987e5; --neg: #d95926; --accent: #5598e7;
+  --good: #4cc38a; --bad: #f07a76; --grid: #2a2a27;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text);
+  font: 15px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+main { max-width: 1120px; margin: 0 auto; padding: 32px 16px 64px; }
+a { color: var(--accent); text-decoration: none; } a:hover { text-decoration: underline; }
+h1 { font-size: 30px; margin: 0 0 4px; letter-spacing: -.01em; }
+h2 { font-size: 21px; margin: 48px 0 6px; }
+h3 { font-size: 15px; margin: 6px 0 4px; line-height: 1.35; }
+.lead { color: var(--text-2); margin: 0 0 20px; max-width: 760px; }
+.section-lead { color: var(--text-2); margin: 0 0 16px; max-width: 800px; }
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
+.kpi { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+.kpi .v { font-size: 26px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.kpi .l { color: var(--text-2); font-size: 13px; }
+.explain { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; margin-top: 12px; }
+.explain p { margin: 6px 0; color: var(--text-2); }
+.explain b { color: var(--text); }
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; }
+.card-head { display: flex; justify-content: space-between; gap: 8px; font-size: 12px; }
+.tag { font-weight: 600; color: var(--accent); }
+.loc { color: var(--muted); }
+.facts { color: var(--text-2); font-size: 13px; }
+.prices { display: grid; grid-template-columns: 1.2fr 1fr .8fr; gap: 8px; margin: 12px 0 8px; }
+.lbl { display: block; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+.big { font-size: 22px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.mid { font-size: 16px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.good { color: var(--good); }
+.meter { height: 6px; background: var(--surface-2); border-radius: 4px; overflow: hidden; }
+.meter span { display: block; height: 100%; background: var(--s1); border-radius: 4px; }
+.news ul { margin: 6px 0 0; padding-left: 20px; } .news li { margin: 4px 0; } .news .down { color: var(--good, #1baf7a); font-weight: 600; }
+.note { font-size: 12.5px; background: var(--surface-2); border-radius: 6px; padding: 6px 8px; margin-top: 8px; color: var(--text-2); }
+.pc { list-style: none; padding: 0; margin: 10px 0 0; font-size: 13.5px; }
+.pc li { padding-left: 20px; position: relative; margin: 3px 0; }
+.pc li.pro::before { content: "+"; position: absolute; left: 4px; color: var(--good); font-weight: 700; }
+.pc li.con::before { content: "–"; position: absolute; left: 4px; color: var(--bad); font-weight: 700; }
+.subhead { font-size: 15px; color: var(--text-2); margin: 22px 0 10px; font-weight: 600; }
+.chart-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 14px 8px; position: relative; }
+.legend { display: flex; flex-wrap: wrap; gap: 16px; font-size: 13px; color: var(--text-2); margin: 0 0 6px 4px; }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; }
+.legend .ring { background: transparent; border: 2px solid var(--text); width: 12px; height: 12px; }
+svg text { fill: var(--muted); font-size: 11px; }
+.tip { position: absolute; pointer-events: none; background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+  padding: 8px 10px; font-size: 12.5px; box-shadow: 0 6px 20px rgba(0,0,0,.15); max-width: 280px; display: none; z-index: 5; }
+.tip b { display: block; margin-bottom: 2px; }
+.tip .row { display: flex; justify-content: space-between; gap: 12px; color: var(--text-2); }
+.tip .row span:last-child { color: var(--text); font-variant-numeric: tabular-nums; }
+table { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; font-size: 13.5px; }
+th, td { padding: 9px 10px; border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; }
+th { font-size: 12px; color: var(--text-2); font-weight: 600; background: var(--surface-2); white-space: nowrap; }
+th.sortable { cursor: pointer; user-select: none; } th.sortable:hover { color: var(--text); }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+.sub { color: var(--text-2); font-size: 12.5px; margin-top: 2px; }
+.stars { color: #c98500; letter-spacing: 1px; white-space: nowrap; } .stars .off { color: var(--border); }
+.cellbar { height: 5px; background: var(--surface-2); border-radius: 3px; margin-bottom: 4px; }
+.cellbar span { display: block; height: 100%; background: var(--s1); border-radius: 3px; }
+.disc { display: inline-flex; align-items: center; gap: 6px; justify-content: flex-end; }
+.dbar { width: 54px; height: 6px; background: var(--surface-2); border-radius: 3px; position: relative; }
+.dbar span { position: absolute; top: 0; height: 100%; border-radius: 3px; }
+.filters { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 10px; align-items: center; }
+.filters select, .filters input { background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 6px 8px; font: inherit; font-size: 13px; }
+.filters .count { color: var(--muted); font-size: 13px; margin-left: auto; }
+.table-scroll { overflow-x: auto; border-radius: 12px; }
+.badge { font-size: 11px; padding: 1px 6px; border-radius: 10px; background: var(--surface-2); color: var(--text-2); white-space: nowrap; }
+.badge.pick { background: var(--s1); color: #fff; }
+.flag { color: var(--bad); font-size: 12px; }
+.warn { background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--neg); border-radius: 10px; padding: 12px 16px; }
+.warn li { margin: 4px 0; }
+.check { columns: 2 300px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px 14px 34px; margin: 0; }
+.check li { margin: 4px 0; break-inside: avoid; }
+footer { color: var(--muted); font-size: 12.5px; margin-top: 48px; border-top: 1px solid var(--border); padding-top: 14px; }
+.theme-btn { float: right; background: var(--surface); color: var(--text-2); border: 1px solid var(--border); border-radius: 8px; padding: 5px 10px; cursor: pointer; font: inherit; font-size: 13px; }
+@media (max-width: 640px) { h1 { font-size: 24px; } .prices { grid-template-columns: 1fr 1fr 1fr; } .big { font-size: 18px; } th, td { padding: 7px 6px; } }
+</style>
+<!-- ferovka-theme --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"><style id="ferovka-theme">/* Férovka look for the generated analyses – injected by sync-reports.mjs after each report's own <style>.
+   Same palette and type as the site; chart colours (--s1..--s3) stay the validated set. */
+:root {
+  --bg: #f5f4ef; --surface: #fdfdfb; --surface-2: #eeede6; --border: #e1dfd6;
+  --text: #0f1513; --text-2: #4f5551; --muted: #6f746f;
+  --accent: #0b8a56; --good: #0b7a4b; --grid: #e6e4dc; --win: #dff3e9;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d110f; --surface: #151a17; --surface-2: #1d2420; --border: #2a322d;
+    --text: #eef1ec; --text-2: #b6bdb6; --muted: #8f978f;
+    --accent: #2fc583; --good: #4cd08f; --grid: #1f2622; --win: #143223;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d110f; --surface: #151a17; --surface-2: #1d2420; --border: #2a322d;
+  --text: #eef1ec; --text-2: #b6bdb6; --muted: #8f978f;
+  --accent: #2fc583; --good: #4cd08f; --grid: #1f2622; --win: #143223;
+}
+
+body { font-family: "Manrope", system-ui, sans-serif; }
+h1, h2 { letter-spacing: -0.02em; font-weight: 800; }
+.tag { color: var(--accent); }
+
+/* photo header (removed by the site's viewer, which shows its own) */
+.fv-hero { position: relative; margin: 0 0 26px; border-radius: 20px; overflow: hidden; aspect-ratio: 21 / 8; background: #0d110f; display: flex; }
+.fv-hero img { flex: 1; min-width: 0; height: 100%; object-fit: cover; animation: fv-zoom 1.4s cubic-bezier(.2,.7,.2,1) both; }
+.fv-collage img + img { border-left: 3px solid #0d110f; }
+.fv-hero::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(180deg, transparent 55%, rgb(13 17 15 / .75)),
+    repeating-linear-gradient(90deg, rgb(47 197 131 / .06) 0 1px, transparent 1px 48px); }
+.fv-hero figcaption { position: absolute; right: 12px; bottom: 8px; z-index: 1; font-size: 11px; color: rgb(255 255 255 / .75); }
+.fv-hero figcaption a { color: inherit; }
+
+/* cards & panels: softer, lift on hover */
+.card, .kpi, .explain, .chart-wrap, .box { border-radius: 16px; }
+.card { transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease; }
+.card:hover { transform: translateY(-3px); border-color: var(--accent); box-shadow: 0 14px 30px -18px rgb(0 0 0 / .45); }
+.badge.pick { background: var(--accent); }
+
+/* entrance animation */
+@keyframes fv-up { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes fv-zoom { from { transform: scale(1.08); filter: brightness(.6); } to { transform: none; filter: none; } }
+h1, .lead, .kpis, .cards .card { animation: fv-up .6s cubic-bezier(.2,.7,.2,1) both; }
+.lead { animation-delay: .08s; }
+.kpis { animation-delay: .16s; }
+.cards .card:nth-child(2) { animation-delay: .06s; }
+.cards .card:nth-child(3) { animation-delay: .12s; }
+.cards .card:nth-child(4) { animation-delay: .18s; }
+.cards .card:nth-child(5) { animation-delay: .24s; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+@media (max-width: 640px) { .fv-hero { aspect-ratio: 16 / 9; border-radius: 14px; } }
+
+/* touch: hint under the chart tooltip (report-chart.js) */
+.fv-hint { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--border, rgba(127,127,127,.3)); font-weight: 700; color: var(--accent, #2fc583); }
+</style><!-- /ferovka-theme -->
+</head>
+<body>
+<main><!-- ferovka-theme --><!-- /ferovka-theme -->
+<button class="theme-btn" id="themeBtn" type="button">Svetlý / tmavý</button>
+<h1>Range Rover – ktorá ponuka sa oplatí</h1>
+<p class="lead">Analýza aktuálnych inzerátov Range Rover (L322 2002–2012, L405 2013–2021 a L460 2022+, bez Sport / Evoque / Velar) od 8 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 1 205 inzerátov (210 na bazoši, 579 na autobazar.eu, 416 na bazar.sk) – prezreli sme 94 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 630 rôznych áut zo Slovenska. Každé auto sme porovnali
+s <b>férovou cenou</b>: tú vypočítal model naučený na celom trhu podľa veku, nájazdu, motora, prevodovky a typu predajcu.</p>
+
+<div class="kpis">
+  <div class="kpi"><div class="v">630</div><div class="l">inzerátov Range Rover (nad 8 000 €)</div></div>
+  <div class="kpi"><div class="v">80</div><div class="l">ohodnotených (majú rok aj km)</div></div>
+  <div class="kpi"><div class="v">44 445 €</div><div class="l">medián ceny s DPH</div></div>
+  <div class="kpi"><div class="v">95 %</div><div class="l">rozdielov v cenách vysvetlí model</div></div>
+</div>
+
+
+<h2>Odkiaľ sú dáta: bazoš, autobazar.eu a bazar.sk</h2>
+<div class="kpis">
+  <div class="kpi"><div class="v">21</div><div class="l">ohodnotených z bazoša</div></div>
+  <div class="kpi"><div class="v">41</div><div class="l">ohodnotených z autobazar.eu</div></div><div class="kpi"><div class="v">18</div><div class="l">ohodnotených z bazar.sk</div></div>
+  <div class="kpi"><div class="v">407</div><div class="l">áut bolo na viacerých portáloch – započítané raz</div></div>
+  <div class="kpi"><div class="v">31 / 9</div><div class="l">s uvedeným pôvodom SR / dovoz</div></div>
+</div>
+<div class="explain">
+  <p><b>Tri portály, jeden trh.</b> Bazoš prehľadal 202 inzerátov, autobazar.eu
+  579, bazar.sk 352. Ponuky z Česka (na autobazar.eu ich je veľa) sme vynechali. Autobazáre často dávajú
+  to isté auto na viac portálov. Takéto dvojice (46 v rebríčku) sme spojili podľa VIN alebo zhody roku, km a ceny,
+  aby sa v modeli nerátali dvakrát. Pri aute nájdeš odkaz na všetky ponuky – niekedy sa líšia cenou.</p>
+  <p><b>Rozdiel medzi portálmi:</b> rovnaké auto je na autobazar.eu v priemere +3,2 %
+  oproti bazošu. Na autobazar.eu predávajú hlavne firmy (33 z 41 ohodnotených). Na bazar.sk je rovnaké auto v priemere +0,4 % oproti bazošu.</p>
+  <p><b>Kúpené v SR vs. dovoz:</b> autá s uvedeným pôvodom zo SR sú oproti autám bez uvedeného pôvodu
+  +1,3 %, dovezené -3,6 %
+  (pri rovnakom veku, nájazde a motore). Pôvod zo SR je výhoda pri overovaní histórie, trh zaň však nepripláca – väčšina
+  inzerátov pôvod jednoducho neuvádza. V tabulke dole si môžeš nechať zobraziť len autá kúpené v SR.</p>
+</div>
+
+<h2>Čo hýbe cenou Range Rovera</h2>
+<p class="section-lead">Toto sa model naučil z trhu. Keď porovnávaš dve autá, tieto čísla ti povedia, koľko má byť
+rozdiel v cene, aby to bolo fér.</p>
+<div class="kpis">
+  <div class="kpi"><div class="v">-3,3 %</div><div class="l">každých ďalších 10 000 km</div></div>
+  <div class="kpi"><div class="v">-9,7 %</div><div class="l">každý rok veku navyše</div></div>
+  <div class="kpi"><div class="v">+20 %</div><div class="l">príplatok za automat (DSG)</div></div>
+  <div class="kpi"><div class="v">+3,7 %</div><div class="l">príplatok u predajcu / firmy</div></div>
+  <div class="kpi"><div class="v">+17,6 %</div><div class="l">Range Rover L405 a novší (2013+) oproti cene podľa veku</div></div>
+  <div class="kpi"><div class="v">+19,7 %</div><div class="l">príplatok za automat</div></div>
+</div>
+<div class="explain">
+  <p><b>Príklad:</b> dva rovnaké Range Rovery 3.0 SDV6 z roku 2017, jedno má 60 tis. km, druhé 120 tis. km. Druhé má byť
+  približne o 20 % lacnejšie (6 × -3,3 %). Ak je lacnejšie len o 5 %, preplácaš kilometre.</p>
+  <p><b>Ako čítať „pod trhom“:</b> +15 % znamená, že auto stojí o 15 % menej, než by malo podľa trhu. Bežný rozptyl
+  cien je asi ±26 %, takže až zľava nad ~10–15 % je naozaj výnimočná. Pri takej zľave vždy zisti, prečo je auto lacné
+  (stav, história, nájazd).</p>
+  <p><b>DPH:</b> ceny uvedené bez DPH (napr. „10 300 € netto“) sme prepočítali na cenu s DPH, ktorú zaplatí súkromná osoba.</p>
+</div>
+
+<h2>Odporúčané ponuky</h2>
+<p class="section-lead">Kandidáti s najlepším pomerom cena / vek / nájazd, ktorých celý inzerát sme prečítali.
+Zoradené podľa toho, ako ich odporúčame.</p>
+<div class="subhead">Range Rover L405 a novší (2013+) – najlepší pomer cena / vek</div>
+<div class="cards">
+<article class="card">
+  <div class="card-head"><span class="tag">Range Rover 5.0 V8 Autobiography so 74 tis. km</span><span class="loc">Bratislava II - Ružinov</span></div>
+  <h3><a href="https://auto.bazar.sk/39594483-land-rover-range-rover-5-0l-v8-autobiography-head-up-pano-360cam-vzduch/" target="_blank" rel="noopener">Land Rover Range Rover 5.0L V8 Autobiography Head-Up PANO 360CAM VZDUCH</a></h3>
+  <div class="facts">2019 · 74 000 km · Benzín V8 / P400 / P530 250–450 kW · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazar.sk</b> · aj na <a href='https://www.autobazar.eu/detail/land-rover-range-rover-50l-v8-autobiography-head-up-pano-vzduch/AmaFZbsyVIt/' target='_blank' rel='noopener'>autobazar.eu</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">42 900 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">54 870 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+21.8 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:73%"></span></div>
+  <ul class="pc"><li class="pro">2019, 5.0 V8 benzín, 4x4, automat, 74 tis. km</li><li class="pro">Autobiography, head-up, panoráma, 360° kamera, vzduchový podvozok</li><li class="pro">~22 % pod férovou cenou</li><li class="con">V8 – vysoká spotreba a drahý servis</li><li class="con">Predáva autobazár</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">Range Rover 5.0 V8 SC Autobiography z SR</span><span class="loc">Nitra</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/land-rover-range-rover-50-v8-sc-autobiography-4wd-at-386kw525hp-a8/AeLEdnSR-8d/" target="_blank" rel="noopener">Land Rover Range Rover 5.0 V8 SC Autobiography 4WD AT 386kW525HP A8</a></h3>
+  <div class="facts">2019 · 102 000 km · Benzín V8 / P400 / P530 250–450 kW · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · kúpené v SR · aj na <a href='https://auto.bazos.sk/inzerat/196383069/range-rover-42019-50-v8-supercharded.php' target='_blank' rel='noopener'>bazoš</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">41 300 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">50 600 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+18.4 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:61%"></span></div>
+  <ul class="pc"><li class="pro">2019, 5.0 V8 kompresor 386 kW, 4x4, 8-st. automat, 102 tis. km</li><li class="pro">Pôvod SR, najvyššia výbava</li><li class="pro">~18 % pod férovou cenou</li><li class="con">V8 – vysoká spotreba a drahý servis</li><li class="con">Predáva autobazár</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">Súkromník: Range Rover Vogue D350 HSE</span><span class="loc">Spišská Belá</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/land-rover-range-rover-30d-mhev-d350-hse-awd-at-258kw350hp-a8/AezdBxchKOl/" target="_blank" rel="noopener">Land Rover Range Rover Vogue 3.0D mHEV D350 HSE AWD AT 258kW350HP A8</a></h3>
+  <div class="facts">2021 · 125 000 km · Diesel 3.0 TDV6 / SDV6 / D300 / 4.4 SDV8 155–250 kW · automat · súkromník</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · aj na <a href='https://auto.bazos.sk/inzerat/196743086/land-rover-range-rover-30d-mhev-d350-hse-awd-at-258kw.php' target='_blank' rel='noopener'>bazoš</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">45 000 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">54 080 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+16.8 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:56%"></span></div>
+  <ul class="pc"><li class="pro">2021, 3.0 D350 mild hybrid 258 kW, 4x4, 8-st. automat, 125 tis. km</li><li class="pro">Radový 6-valec, novší ročník L405</li><li class="pro">~17 % pod férovou cenou</li><li class="con">Inzerát bez popisu</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">Range Rover 4.4 SDV8 za 16 500 €</span><span class="loc">Poprad</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197253112/land-rover-range-rover-44-sdv8.php" target="_blank" rel="noopener">Land Rover Range Rover 4.4 SDV8</a></h3>
+  <div class="facts">2014 · 230 000 km · Diesel 3.0 TDV6 / SDV6 / D300 / 4.4 SDV8 155–250 kW · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">16 500 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">22 400 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+26.4 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:88%"></span></div>
+  <ul class="pc"><li class="pro">2014, 4.4 SDV8, 4x4, automat, 230 tis. km</li><li class="pro">Hliníková generácia L405</li><li class="pro">~26 % pod férovou cenou</li><li class="con">Predáva autobazár</li><li class="con">SDV8 – over turbá a chladenie</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">Range Rover Autobiography z SR za 18 000 €</span><span class="loc">Bratislava-Petržalka</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/land-rover-range-rover/AeCDUDPBmJq/" target="_blank" rel="noopener">Land Rover Range Rover Autobiography</a></h3>
+  <div class="facts">2016 · 235 000 km · Diesel 3.0 TDV6 / SDV6 / D300 / 4.4 SDV8 155–250 kW · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · kúpené v SR</div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">18 000 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">21 090 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+14.7 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:49%"></span></div>
+  <ul class="pc"><li class="pro">2016, diesel, 4x4, automat, 235 tis. km</li><li class="pro">Pôvod SR, výbava Autobiography</li><li class="pro">~15 % pod férovou cenou</li><li class="con">Predáva autobazár</li><li class="con">Inzerát bez popisu</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">Range Rover 4.4 SDV8 Autobiography s 92 tis. km</span><span class="loc">Bratislava I - Staré Mesto</span></div>
+  <h3><a href="https://auto.bazar.sk/39451290-land-rover-range-rover-4-4l-sdv8-ab/" target="_blank" rel="noopener">Land Rover Range Rover 4.4L SDV8 AB</a></h3>
+  <div class="facts">2016 · 91 939 km · Diesel 3.0 TDV6 / SDV6 / D300 / 4.4 SDV8 155–250 kW · automat · neisté</div>
+  <div class="facts src">zdroj: <b>bazar.sk</b> · dovezené · aj na <a href='https://www.autobazar.eu/detail/land-rover-range-rover-44l-sdv8-ab/AmPEu02Wa_y/' target='_blank' rel='noopener'>autobazar.eu</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">29 990 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">33 720 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+11.1 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:37%"></span></div>
+  <ul class="pc"><li class="pro">2016, 4.4 SDV8, 4x4, automat, 92 tis. km</li><li class="pro">Nízky nájazd, výbava Autobiography</li><li class="pro">~11 % pod férovou cenou</li><li class="con">Dovoz</li><li class="con">Predajca neistý</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">Range Rover Vogue 4.4 SDV8 z 2019</span><span class="loc">Košice</span></div>
+  <h3><a href="https://auto.bazar.sk/30065554-land-rover-range-rover-vogue-4-4d-sdv8-339-ps-4wd-auto-5-dr-suv-swb/" target="_blank" rel="noopener">Land Rover RANGE ROVER Vogue 4.4D SDV8 339 PS 4WD Auto 5 dr SUV SWB</a></h3>
+  <div class="facts">2019 · 210 000 km · Diesel 3.0 TDV6 / SDV6 / D300 / 4.4 SDV8 155–250 kW · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazar.sk</b> · aj na <a href='https://www.autobazar.eu/detail/land-rover-range-rover-vogue-44d-sdv8-339-ps-4wd-auto-5-dr-suv-swb/Ab0YLKNXFU__/' target='_blank' rel='noopener'>autobazar.eu</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">29 900 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">33 370 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+10.4 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:35%"></span></div>
+  <ul class="pc"><li class="pro">2019, 4.4 SDV8 249 kW, 4x4, automat, 210 tis. km</li><li class="pro">Po facelifte</li><li class="pro">~10 % pod férovou cenou</li><li class="con">Vyšší nájazd</li><li class="con">Predáva autobazár</li><li class="con">Inzerát je zverejnený dlhšie – over, či je auto ešte k dispozícii</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">Range Rover Vogue SDV6 z SR so 57 tis. km</span><span class="loc">Bratislava</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/land-rover-range-rover-30d-sdv6-vogue-4wd-at/AmP42HXxbUI/" target="_blank" rel="noopener">Land Rover Range Rover 3.0D SDV6 Vogue 4WD A/T</a></h3>
+  <div class="facts">2020 · 57 400 km · Diesel 3.0 TDV6 / SDV6 / D300 / 4.4 SDV8 155–250 kW · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · kúpené v SR · aj na <a href='https://auto.bazar.sk/39527618-land-rover-range-rover-3-0d-sdv6-vogue-4wd-a-t/' target='_blank' rel='noopener'>bazar.sk</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">45 900 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">49 650 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+7.5 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:25%"></span></div>
+  <ul class="pc"><li class="pro">2020, 3.0 SDV6, 4x4, automat, 57 tis. km</li><li class="pro">Pôvod SR, nízky nájazd</li><li class="pro">~8 % pod férovou cenou</li><li class="con">Predáva autobazár</li></ul>
+</article></div>
+<div class="subhead">Lacnejšie Range Rovery do 25 000 €</div>
+<div class="cards">
+<article class="card">
+  <div class="card-head"><span class="tag">Range Rover 3.6 TDV8 Vogue za 8 400 €</span><span class="loc">Štiavnička</span></div>
+  <h3><a href="https://auto.bazar.sk/39598695-land-rover-range-rover-3-6-tdv8-vogue-ab/" target="_blank" rel="noopener">Land Rover Range Rover 3.6 TDV8 Vogue AB</a></h3>
+  <div class="facts">2010 · 289 927 km · Diesel 3.0 TDV6 / SDV6 / D300 / 4.4 SDV8 155–250 kW · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazar.sk</b> · dovezené · aj na <a href='https://www.autobazar.eu/detail/land-rover-range-rover-36-tdv8-vogue-ab/AmR69eXtVa4/' target='_blank' rel='noopener'>autobazar.eu</a> · aj na <a href='https://auto.bazos.sk/inzerat/197571496/land-rover-range-rover-36-tdv8-vogue-ab.php' target='_blank' rel='noopener'>bazoš</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">8 400 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">13 080 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+35.8 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:100%"></span></div>
+  <ul class="pc"><li class="pro">2010, 3.6 TDV8, 4x4, automat, 290 tis. km</li><li class="pro">Najlacnejší vstup do Range Rovera</li><li class="pro">~36 % pod férovou cenou</li><li class="con">Staršia generácia L322 – počítaj s opravami</li><li class="con">Dovoz</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">Range Rover L322 4.4 TDV8</span><span class="loc">Pezinok</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197319563/predam-range-rover-l322-44-tdv8.php" target="_blank" rel="noopener">Predam Range Rover L322 4.4 TDV8</a></h3>
+  <div class="facts">2011 · 250 000 km · Diesel 3.0 TDV6 / SDV6 / D300 / 4.4 SDV8 155–250 kW · prevodovka ? · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">9 999 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">12 480 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+19.8 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:66%"></span></div>
+  <ul class="pc"><li class="pro">2011, 4.4 TDV8, 4x4, automat, 250 tis. km</li><li class="pro">Silný V8 diesel</li><li class="pro">~20 % pod férovou cenou</li><li class="con">Staršia generácia L322 – počítaj s opravami</li><li class="con">Predajca neistý</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">Range Rover 4.4 V8 z 2014 za 15 000 €</span><span class="loc">Bratislava</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197631440/land-rover-range-rover-44-v8.php" target="_blank" rel="noopener">Land Rover Range Rover 4.4 V8</a></h3>
+  <div class="facts">2014 · 210 000 km · Benzín V8 / P400 / P530 250–450 kW · prevodovka ? · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">15 000 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">18 530 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+19.0 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:63%"></span></div>
+  <ul class="pc"><li class="pro">2014, 4.4 V8, 4x4, 210 tis. km</li><li class="pro">Hliníková generácia L405</li><li class="pro">~19 % pod férovou cenou</li><li class="con">Over v TP, či ide o benzín alebo diesel SDV8</li><li class="con">Predajca neistý</li></ul>
+</article></div>
+<div class="subhead">Špeciálne prípady</div>
+<div class="cards"></div>
+
+<h2>Cena vs. nájazd: celý trh na jednom grafe</h2>
+<p class="section-lead">Každý bod je jeden inzerát. Čím nižšie bod leží oproti ostatným s podobným nájazdom, tým je auto lacnejšie.
+Krúžkom sú označené odporúčané ponuky. Prejdi myšou na bod a uvidíš detail.</p>
+<div class="chart-wrap" id="chartWrap">
+  <div class="legend" id="legend"></div>
+  <svg id="chart" width="100%" height="420" role="img" aria-label="Bodový graf ceny a nájazdu inzerátov"></svg>
+  <div class="tip" id="tip"></div>
+</div>
+
+<h2>Porovnanie motorov</h2>
+<p class="section-lead">Hodnotenie (hviezdičky) zohľadňuje spoľahlivosť, spoľahlivosť a náklady na prevádzku a pomer cena/výkon.
+Číselné stĺpce sú mediány z ohodnotených inzerátov.</p>
+<div class="table-scroll">
+<table>
+  <thead><tr><th>Motor</th><th>Hodnotenie</th><th class="num">Ponúk</th><th class="num">Medián ceny</th><th class="num">Medián roku</th><th class="num">Medián km</th></tr></thead>
+  <tbody>
+<tr>
+  <td><b>Plug-in hybrid P400e / P440e / P510e</b><div class="sub">Benzín + elektromotor 297–375 kW. Over stav batérie a nabíjanie.</div></td>
+  <td><span class="stars" aria-label="3 z 5">★★★<span class="off">★★</span></span></td>
+  <td class="num">9</td>
+  <td class="num"><div class="cellbar"><span style="width:100%"></span></div>141 990 €</td>
+  <td class="num">2024</td>
+  <td class="num">42 500 km</td>
+</tr>
+<tr>
+  <td><b>Diesel 3.0 TDV6 / SDV6 / D300 / 4.4 SDV8 155–250 kW</b><div class="sub">Diesel V6, R6 alebo V8. Ťahavý; over turbá, DPF, vzduchový podvozok a pri SDV8 chladenie.</div></td>
+  <td><span class="stars" aria-label="2 z 5">★★<span class="off">★★★</span></span></td>
+  <td class="num">44</td>
+  <td class="num"><div class="cellbar"><span style="width:21%"></span></div>29 945 €</td>
+  <td class="num">2016</td>
+  <td class="num">189 528 km</td>
+</tr>
+<tr>
+  <td><b>Benzín V8 / P400 / P530 250–450 kW</b><div class="sub">Benzín 340–615 k. Veľmi výkonný, vysoká spotreba a drahý servis.</div></td>
+  <td><span class="stars" aria-label="2 z 5">★★<span class="off">★★★</span></span></td>
+  <td class="num">27</td>
+  <td class="num"><div class="cellbar"><span style="width:52%"></span></div>73 790 €</td>
+  <td class="num">2020</td>
+  <td class="num">74 000 km</td>
+</tr></tbody>
+</table>
+</div>
+<div class="explain">
+  <p><b>Range Rover</b> je vlajková loď Land Roveru – generácia <b>L322</b> (2002–2012), <b>L405</b> (2013–2021, hliníková karoséria)
+  a <b>L460</b> (od 2022). Verzie LWB majú predĺžený rázvor. Range Rover Sport, Evoque a Velar sú iné modely.</p>
+  <p><b>Ktorý motor zvoliť?</b> Najrozšírenejšie sú diesely <b>3.0 SDV6 / TDV6</b> a <b>4.4 SDV8</b>, novšie autá majú R6 <b>D300 / D350</b>.
+  Pri staršom Range Roveri počítaj s vysokými nákladmi na údržbu.</p>
+</div>
+
+<h2>Na čo si dať pozor</h2>
+<div class="warn">
+  <p><b>Lacné kvôli extrémnemu nájazdu</b> (viac ako 35 tis. km ročne, typicky flotila alebo taxi):</p>
+  <ul><li>Žiadne výrazné prípady.</li></ul>
+  <p><b>Ďalšie veci, ktoré sme v inzerátoch našli:</b></p><ul><li>Vyhľadávanie „Range Rover“ vracia hlavne Sport, Evoque a Velar – sem nie sú zarátané (Range Rover Sport a Evoque majú samostatné analýzy).</li><li>Nové autá zo skladu predajcov sme do analýzy ojazdených áut nezarátali.</li><li>Pri lacných Range Roveroch počítaj s vysokými nákladmi na vzduchový podvozok, turbá a elektroniku.</li></ul><p><b>Vyradené z porovnania</b> (poškodené autá alebo nezmyselné údaje – model ich nehodnotí):</p><ul><li><a href='https://www.autobazar.eu/detail/land-rover-range-rover-sport-30-i6-d300-mhev-dynamic-se-awd-a-t/Ams7blygGeE/' target='_blank' rel='noopener'>Land Rover Range Rover Sport 3.0 I6 D300 mHEV Dynamic SE AWD A/T</a> (123 000 €): podozrivo nízky nájazd</li><li><a href='https://www.autobazar.eu/detail/land-rover-range-rover-30d-mhev-d300-se-awd-a-t/AmXsTY0xgiW/' target='_blank' rel='noopener'>Land Rover Range Rover 3.0D MHEV D300 SE AWD A/T</a> (149 000 €): podozrivo nízky nájazd</li><li><a href='https://www.autobazar.eu/detail/land-rover-range-rover-sport-autobiography/AmImp1vrH3R/' target='_blank' rel='noopener'>Land Rover Range Rover Sport AUTOBIOGRAPHY</a> (134 000 €): podozrivo nízky nájazd</li><li><a href='https://www.autobazar.eu/detail/land-rover-range-rover-sport-dynamic-se-d300/AbzV6SNVNT7/' target='_blank' rel='noopener'>Land Rover RANGE ROVER SPORT DYNAMIC SE D300</a> (119 900 €): podozrivo nízky nájazd</li><li><a href='https://www.autobazar.eu/detail/land-rover-range-rover-sport-30-i6-d300-mhev-dynamic-hse-awd-at/Amwx8LY6N7F/' target='_blank' rel='noopener'>Land Rover Range Rover Sport 3.0 I6 D300 mHEV Dynamic HSE AWD A/T</a> (55 900 €): havarované / poškodené – cena nie je porovnateľná s trhom</li><li><a href='https://www.autobazar.eu/detail/land-rover-range-rover-44-v8-awd-390kw-a8/AmJIxQirxRA/' target='_blank' rel='noopener'>Land Rover Range Rover 4.4 V8 AWD 390kw A8</a> (77 900 €): cena je o 49 % pod trhom – havarované, na diely, záloha/splátka namiesto ceny alebo podvod</li><li><a href='https://auto.bazos.sk/inzerat/197601573/land-rover-range-rover-lwb-50-v8-525k-autobiography-benz.php' target='_blank' rel='noopener'>Land Rover Range Rover LWB 5.0 V8 525k Autobiography (benz)</a> (59 990 €): 72000 km/rok je nereálne – skontroluj rok a km</li><li><a href='https://www.autobazar.eu/detail/land-rover-range-rover-sport-30-i6-d300-mhev-dynamic-hse-awd-at-221kw300hp-a8/AenT56H4OJa/' target='_blank' rel='noopener'>Land Rover Range Rover Sport 3.0 I6 D300 mHEV Dynamic HSE AWD AT 221kW300HP A8</a> (94 900 €): 80000 km/rok je nereálne – skontroluj rok a km</li><li><a href='https://auto.bazos.sk/inzerat/197508929/land-rover-range-rover-sport-30-sdv6-autobiography-215kw.php' target='_blank' rel='noopener'>Land Rover Range Rover Sport 3.0 SDV6 Autobiography, 215kW</a> (13 990 €): 195000 km/rok je nereálne – skontroluj rok a km</li><li><a href='https://www.autobazar.eu/detail/range-rover-velar-s-d200-awd-automat-mhev/AbkuZBQx4Dx/' target='_blank' rel='noopener'>Range Rover Velar S D200 AWD AUTOMAT MHEV</a> (68 990 €): podozrivo nízky nájazd</li><li><a href='https://www.autobazar.eu/detail/land-rover-range-rover-evoque-r-dynamic/Aeu7gSXka6A/' target='_blank' rel='noopener'>Land Rover Range Rover Evoque R-Dynamic</a> (24 000 €): cena je o 49 % pod trhom – havarované, na diely, záloha/splátka namiesto ceny alebo podvod</li><li><a href='https://auto.bazos.sk/inzerat/197224865/land-rover-range-rover-evoque-22-td4-se-dynamic-110kw-at9.php' target='_blank' rel='noopener'>Land Rover Range Rover Evoque 2.2 TD4 SE Dynamic 110kW AT/9</a> (12 290 €): 662000 km/rok je nereálne – skontroluj rok a km</li><li><a href='https://www.autobazar.eu/detail/land-rover-range-rover-evoque-20d-i4-mhev-dynamic-se/Amu6KjOw1k8/' target='_blank' rel='noopener'>Land Rover Range Rover Evoque 2.0D I4 MHEV Dynamic SE</a> (57 990 €): podozrivo nízky nájazd</li><li><a href='https://www.autobazar.eu/detail/land-rover-range-rover-velar-20d-i4-awd-132kw-a8/AmdV8mVeRIj/' target='_blank' rel='noopener'>Land Rover Range Rover Velar 2.0d I4 AWD 132kw A8</a> (13 900 €): havarované / poškodené – cena nie je porovnateľná s trhom</li><li><a href='https://www.autobazar.eu/detail/land-rover-range-rover-44l-sdv8-vogue/AmFTPfYaMVM/' target='_blank' rel='noopener'>Land Rover Range Rover 4.4L SDV8 Vogue</a> (19 900 €): havarované / poškodené – cena nie je porovnateľná s trhom</li><li><a href='https://auto.bazos.sk/inzerat/196512725/range-rover-sport-225kw-2017.php' target='_blank' rel='noopener'>Range rover šport 225kw 2017 3.0 diesel</a> (10 000 €): havarované / poškodené – cena nie je porovnateľná s trhom</li><li><a href='https://www.autobazar.eu/detail/land-rover-range-rover-evoque-20d-i4-d200-mhev-s-awd-at/AmS-AkNboyw/' target='_blank' rel='noopener'>Land Rover Range Rover Evoque 2.0D I4 D200 MHEV S AWD A/T</a> (58 900 €): 62000 km/rok je nereálne – skontroluj rok a km</li><li><a href='https://www.autobazar.eu/detail/land-rover-range-rover-velar/Am7TcZXCBFB/' target='_blank' rel='noopener'>Range Rover Velar 3.D 300PS MHEV Dynamic SE AWD Auto - VÝPREDAJ SKLADU!</a> (75 990 €): podozrivo nízky nájazd</li><li><a href='https://www.autobazar.eu/detail/land-rover-range-rover-velar/AmG11HSAWpB/' target='_blank' rel='noopener'>Range Rover Velar 2.0P 404PS PHEV S AWD Auto - VÝPREDAJ SKLADU!</a> (72 990 €): podozrivo nízky nájazd</li><li><a href='https://www.autobazar.eu/detail/land-rover-range-rover-evoque/Am5axCWhx5R/' target='_blank' rel='noopener'>Range Evoque P269e PHEV S AWD Auto - VÝPREDAJ SKLADU!</a> (49 990 €): podozrivo nízky nájazd</li><li>… a ďalších 11.</li></ul><p><b>Range Rover Sport, Evoque, Velar, Discovery, Defender a iné modely z vyhľadávania, inzeráty s chybným nájazdom</b> (421 inzerátov) sme z rebríčka vynechali.</p>
+  <p>Ďalších <b>66</b> inzerátov nemá v texte rok alebo kilometre, takže ich nebolo možné ohodnotiť.
+  Ak ťa niektorý zaujme, predajcu sa na tieto údaje opýtaj.</p>
+</div>
+
+<h2>Kompletný rebríček</h2>
+<p class="section-lead">Všetky ohodnotené inzeráty. Kliknutím na hlavičku stĺpca zoraďuješ, filtrom zužuješ výber.</p>
+<div class="filters">
+  <select id="fEngine"><option value="">Všetky motory</option></select>
+  <select id="fTrans"><option value="">Každá prevodovka</option><option value="automatic">Automat</option><option value="manual">Manuál</option></select>
+  <select id="fSeller"><option value="">Všetci predajcovia</option><option value="nodealer">Bez autobazárov</option></select>
+  <select id="fSource"><option value="">Všetky portály</option><option value="bazos">bazoš</option><option value="autobazar">autobazar.eu</option><option value="bazarsk">bazar.sk</option></select>
+  <select id="fBody" hidden><option value=""></option></select>
+  <select id="fOrigin"><option value="">Akýkoľvek pôvod</option><option value="SR">Kúpené v SR</option><option value="dovoz">Dovoz</option></select>
+  <input id="fMax" type="number" placeholder="Max. cena €" step="500" min="0" style="width:120px">
+  <span class="count" id="count"></span>
+</div>
+<div class="table-scroll">
+<table id="tbl">
+  <thead><tr>
+    <th class="sortable" data-k="title">Inzerát</th>
+    <th class="sortable num" data-k="year">Rok</th>
+    <th class="sortable num" data-k="km">Km</th>
+    <th class="sortable num" data-k="price_gross">Cena</th>
+    <th class="sortable num" data-k="fair_price">Férová</th>
+    <th class="sortable num" data-k="discount_pct">Pod trhom ▾</th>
+  </tr></thead>
+  <tbody></tbody>
+</table>
+</div>
+
+<h2>Pred kúpou over</h2>
+<ul class="check">
+  <li>VIN cez Cebia / autoDNA (história km, havárie) a servisná história</li>
+  <li>Vzduchový podvozok – kompresor, mechy, chybové hlásenia</li>
+  <li>Diesel: turbá, DPF, AdBlue; pri SDV6 kľukový hriadeľ</li>
+  <li>Chladenie a úniky oleja</li>
+  <li>Elektronika (InControl, kamery, soft-close)</li>
+  <li>STK/EK protokol a dátum platnosti</li>
+</ul>
+
+<footer>
+  Zdroj: auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (len ponuky zo Slovenska, to isté auto na viacerých portáloch je započítané raz), sťahované cez lokálny MCP server bazos-mcp (nástroj <code>fair_price</code>), 22. 11. 2026.
+  Model: ridge regresia log(ceny s DPH) podľa veku, veku², km, km², prevodovky, typu predajcu, motora, karosérie, pohonu 4x4, pôvodu (SR / dovoz) a portálu. Vzorka 80
+  inzerátov, R² 95 %. Parametre sú vyťažené z textu inzerátov, a preto môžu obsahovať chyby. Odporúčané ponuky sme overili
+  prečítaním celého inzerátu. Hodnotenie motorov je odborný odhad, nie výsledok modelu.
+</footer>
+</main>
+
+<script>
+const DATA = [{"id": "bs-39598695", "url": "https://auto.bazar.sk/39598695-land-rover-range-rover-3-6-tdv8-vogue-ab/", "title": "Land Rover Range Rover 3.6 TDV8 Vogue AB", "price": 8400, "price_gross": 8400, "fair_price": 13080.0, "discount_pct": 35.8, "verdict": "výrazne pod trhom – over prečo", "year": 2010, "km": 289927, "km_per_year": 17800.0, "eg": "Diesel 3.0 TDV6 / SDV6 / D300 / 4.4 SDV8 155–250 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Štiavnička", "flags": [], "pick": "budget", "source": "bazarsk", "origin": "dovoz", "also_listed": [{"source": "autobazar", "id": "ab-AmR69eXtVa4", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-36-tdv8-vogue-ab/AmR69eXtVa4/", "price": 8400}, {"source": "bazos", "id": "197571496", "url": "https://auto.bazos.sk/inzerat/197571496/land-rover-range-rover-36-tdv8-vogue-ab.php", "price": 8400}], "body": "suv"}, {"id": "197253112", "url": "https://auto.bazos.sk/inzerat/197253112/land-rover-range-rover-44-sdv8.php", "title": "Land Rover Range Rover 4.4 SDV8", "price": 16500, "price_gross": 16500, "fair_price": 22400.0, "discount_pct": 26.4, "verdict": "výrazne pod trhom – over prečo", "year": 2014, "km": 230000, "km_per_year": 18600.0, "eg": "Diesel 3.0 TDV6 / SDV6 / D300 / 4.4 SDV8 155–250 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Poprad", "flags": [], "pick": "top", "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "bs-39594483", "url": "https://auto.bazar.sk/39594483-land-rover-range-rover-5-0l-v8-autobiography-head-up-pano-360cam-vzduch/", "title": "Land Rover Range Rover 5.0L V8 Autobiography Head-Up PANO 360CAM VZDUCH", "price": 42900, "price_gross": 42900, "fair_price": 54870.0, "discount_pct": 21.8, "verdict": "výrazne pod trhom – over prečo", "year": 2019, "km": 74000, "km_per_year": 10100.0, "eg": "Benzín V8 / P400 / P530 250–450 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava II - Ružinov", "flags": [], "pick": "top", "source": "bazarsk", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmaFZbsyVIt", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-50l-v8-autobiography-head-up-pano-vzduch/AmaFZbsyVIt/", "price": 42900}], "body": "suv"}, {"id": "197319563", "url": "https://auto.bazos.sk/inzerat/197319563/predam-range-rover-l322-44-tdv8.php", "title": "Predam Range Rover L322 4.4 TDV8", "price": 9999, "price_gross": 9999, "fair_price": 12480.0, "discount_pct": 19.8, "verdict": "výrazne pod trhom – over prečo", "year": 2011, "km": 250000, "km_per_year": 16300.0, "eg": "Diesel 3.0 TDV6 / SDV6 / D300 / 4.4 SDV8 155–250 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Pezinok", "flags": ["prevodovka nezistená"], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "197631440", "url": "https://auto.bazos.sk/inzerat/197631440/land-rover-range-rover-44-v8.php", "title": "Land Rover Range Rover 4.4 V8", "price": 15000, "price_gross": 15000, "fair_price": 18530.0, "discount_pct": 19.0, "verdict": "výrazne pod trhom – over prečo", "year": 2014, "km": 210000, "km_per_year": 17000.0, "eg": "Benzín V8 / P400 / P530 250–450 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Bratislava", "flags": ["prevodovka nezistená"], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AeLEdnSR-8d", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-50-v8-sc-autobiography-4wd-at-386kw525hp-a8/AeLEdnSR-8d/", "title": "Land Rover Range Rover 5.0 V8 SC Autobiography 4WD AT 386kW525HP A8", "price": 41300, "price_gross": 41300, "fair_price": 50600.0, "discount_pct": 18.4, "verdict": "výrazne pod trhom – over prečo", "year": 2019, "km": 102000, "km_per_year": 13900.0, "eg": "Benzín V8 / P400 / P530 250–450 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Nitra", "flags": [], "pick": "top", "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "196383069", "url": "https://auto.bazos.sk/inzerat/196383069/range-rover-42019-50-v8-supercharded.php", "price": 41300}], "body": "suv"}, {"id": "ab-AezdBxchKOl", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-30d-mhev-d350-hse-awd-at-258kw350hp-a8/AezdBxchKOl/", "title": "Land Rover Range Rover Vogue 3.0D mHEV D350 HSE AWD AT 258kW350HP A8", "price": 45000, "price_gross": 45000, "fair_price": 54080.0, "discount_pct": 16.8, "verdict": "výrazne pod trhom – over prečo", "year": 2021, "km": 125000, "km_per_year": 23400.0, "eg": "Diesel 3.0 TDV6 / SDV6 / D300 / 4.4 SDV8 155–250 kW", "cg": 1, "transmission": "automatic", "seller_type": "private", "location": "Spišská Belá", "flags": [], "pick": "top", "source": "autobazar", "origin": null, "also_listed": [{"source": "bazos", "id": "196743086", "url": "https://auto.bazos.sk/inzerat/196743086/land-rover-range-rover-30d-mhev-d350-hse-awd-at-258kw.php", "price": 45000}], "body": "suv"}, {"id": "ab-AeCDUDPBmJq", "url": "https://www.autobazar.eu/detail/land-rover-range-rover/AeCDUDPBmJq/", "title": "Land Rover Range Rover Autobiography", "price": 18000, "price_gross": 18000, "fair_price": 21090.0, "discount_pct": 14.7, "verdict": "pod trhom", "year": 2016, "km": 235000, "km_per_year": 22700.0, "eg": "Diesel 3.0 TDV6 / SDV6 / D300 / 4.4 SDV8 155–250 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava-Petržalka", "flags": [], "pick": "top", "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "ab-AmMqIotvnAj", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-vogue-44l-sdvb-autobiography/AmMqIotvnAj/", "title": "Land Rover Range Rover Vogue 4.4L SDVB Autobiography", "price": 29000, "price_gross": 29000, "fair_price": 32860.0, "discount_pct": 11.8, "verdict": "pod trhom", "year": 2016, "km": 224000, "km_per_year": 21700.0, "eg": "Diesel 3.0 TDV6 / SDV6 / D300 / 4.4 SDV8 155–250 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava-Rača", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "bs-39451290", "url": "https://auto.bazar.sk/39451290-land-rover-range-rover-4-4l-sdv8-ab/", "title": "Land Rover Range Rover 4.4L SDV8 AB", "price": 29990, "price_gross": 29990, "fair_price": 33720.0, "discount_pct": 11.1, "verdict": "pod trhom", "year": 2016, "km": 91939, "km_per_year": 8900.0, "eg": "Diesel 3.0 TDV6 / SDV6 / D300 / 4.4 SDV8 155–250 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Bratislava I - Staré Mesto", "flags": [], "pick": "top", "source": "bazarsk", "origin": "dovoz", "also_listed": [{"source": "autobazar", "id": "ab-AmPEu02Wa_y", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-44l-sdv8-ab/AmPEu02Wa_y/", "price": 29990}], "body": "suv"}, {"id": "bs-30065554", "url": "https://auto.bazar.sk/30065554-land-rover-range-rover-vogue-4-4d-sdv8-339-ps-4wd-auto-5-dr-suv-swb/", "title": "Land Rover RANGE ROVER Vogue 4.4D SDV8 339 PS 4WD Auto 5 dr SUV SWB", "price": 29900, "price_gross": 29900, "fair_price": 33370.0, "discount_pct": 10.4, "verdict": "pod trhom", "year": 2019, "km": 210000, "km_per_year": 28600.0, "eg": "Diesel 3.0 TDV6 / SDV6 / D300 / 4.4 SDV8 155–250 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Košice", "flags": [], "pick": "top", "source": "bazarsk", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-Ab0YLKNXFU__", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-vogue-44d-sdv8-339-ps-4wd-auto-5-dr-suv-swb/Ab0YLKNXFU__/", "price": 29900}], "body": "suv"}, {"id": "ab-AmP42HXxbUI", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-30d-sdv6-vogue-4wd-at/AmP42HXxbUI/", "title": "Land Rover Range Rover 3.0D SDV6 Vogue 4WD A/T", "price": 45900, "price_gross": 45900, "fair_price": 49650.0, "discount_pct": 7.5, "verdict": "pod trhom", "year": 2020, "km": 57400, "km_per_year": 9100.0, "eg": "Diesel 3.0 TDV6 / SDV6 / D300 / 4.4 SDV8 155–250 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": "top", "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-39527618", "url": "https://auto.bazar.sk/39527618-land-rover-range-rover-3-0d-sdv6-vogue-4wd-a-t/", "price": 45900}], "body": "suv"}, {"id": "ab-Ae_YDAfg0FW", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-land-rover-range-rover/Ae_YDAfg0FW/", "title": "Land Rover Range Rover LG", "price": 25500, "price_gross": 25500, "fair_price": 27430.0, "discount_pct": 7.1, "verdict": "pod trhom", "year": 2016, "km": 154000, "km_per_year": 14900.0, "eg": "Diesel 3.0 TDV6 / SDV6 / D300 / 4.4 SDV8 155–250 kW", "cg": 1, "transmission": "automatic", "seller_type": "private", "location": "Nitra", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "197232660", "url": "https://auto.bazos.sk/inzerat/197232660/range-rover.php", "title": "✅ PO GO  ✅ Range Rover 2014 – 215 000 km", "price": 16200, "price_gross": 16200, "fair_price": 17150.0, "discount_pct": 5.6, "verdict": "férová cena", "year": 2014, "km": 215000, "km_per_year": 17400.0, "eg": "Diesel 3.0 TDV6 / SDV6 / D300 / 4.4 SDV8 155–250 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Tvrdošín", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AePA7hkQ53f", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-44l-sdv8-ab/AePA7hkQ53f/", "title": "Land Rover Range Rover 4.4L SDV8 AB", "price": 18800, "price_gross": 18800, "fair_price": 19910.0, "discount_pct": 5.6, "verdict": "férová cena", "year": 2013, "km": 240000, "km_per_year": 18000.0, "eg": "Diesel 3.0 TDV6 / SDV6 / D300 / 4.4 SDV8 155–250 kW", "cg": 1, "transmission": "automatic", "seller_type": "private", "location": "Nováky", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "suv"}, {"id": "bs-39486340", "url": "https://auto.bazar.sk/39486340-land-rover-range-rover-4-4l-sdv8-vogue/", "title": "Land Rover Range Rover 4.4L SDV8 Vogue", "price": 20999, "price_gross": 20999, "fair_price": 22060.0, "discount_pct": 4.8, "verdict": "férová cena", "year": 2014, "km": 242600, "km_per_year": 19700.0, "eg": "Diesel 3.0 TDV6 / SDV6 / D300 / 4.4 SDV8 155–250 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Nová Ves nad Váhom", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-Am2QpU6Kv2Y", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-44l-sdv8-vogue/Am2QpU6Kv2Y/", "price": 20999}], "body": "suv"}, {"id": "ab-AmSq6tKFQlS", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-hse-30td-v6/AmSq6tKFQlS/", "title": "Land Rover Range Rover HSE  3,0TD V6", "price": 42900, "price_gross": 42900, "fair_price": 44290.0, "discount_pct": 3.1, "verdict": "férová cena", "year": 2021, "km": 132000, "km_per_year": 24800.0, "eg": "Diesel 3.0 TDV6 / SDV6 / D300 / 4.4 SDV8 155–250 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-39304155", "url": "https://auto.bazar.sk/39304155-land-rover-range-rover-hse-3-0td-v6/", "price": 42900}], "body": "suv"}, {"id": "ab-Am19A5BDDIy", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-44l-sdv8-vogue/Am19A5BDDIy/", "title": "Land Rover Range Rover 4.4L SDV8 Vogue", "price": 21990, "price_gross": 21990, "fair_price": 22460.0, "discount_pct": 2.1, "verdict": "férová cena", "year": 2013, "km": 218679, "km_per_year": 16400.0, "eg": "Diesel 3.0 TDV6 / SDV6 / D300 / 4.4 SDV8 155–250 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Nové Mesto nad Váhom", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197049639", "url": "https://auto.bazos.sk/inzerat/197049639/land-rover-range-rover-44l-sdv8-vogue.php", "price": 21990}, {"source": "bazarsk", "id": "bs-39749725", "url": "https://auto.bazar.sk/39749725-land-rover-range-rover-4-4l-sdv8-vogue/", "price": 21990}], "body": "suv"}, {"id": "ab-AmSPJ86RFkR", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-44i-v8-p530-se-awd-a-t-390kw-a8-5d/AmSPJ86RFkR/", "title": "Land Rover Range Rover 4.4i V8  P530 SE AWD A/T, 390kW, A8, 5d.", "price": 129990, "price_gross": 129990, "fair_price": 132490.0, "discount_pct": 1.9, "verdict": "férová cena", "year": 2023, "km": 12900, "km_per_year": 3900.0, "eg": "Benzín V8 / P400 / P530 250–450 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-38274055", "url": "https://auto.bazar.sk/38274055-land-rover-range-rover-4-4i-v8-p530-se-awd-a-t-390kw-a8-5d/", "price": 129990}], "body": "suv"}, {"id": "bs-39698518", "url": "https://auto.bazar.sk/39698518-land-rover-range-rover-3-0d-mhev-d350-hse-awd-a-t/", "title": "Land Rover Range Rover 3.0D mHEV D350 HSE AWD A/T", "price": 149937, "price_gross": 149937, "fair_price": 151270.0, "discount_pct": 0.9, "verdict": "férová cena", "year": 2026, "km": 3000, "km_per_year": 9000.0, "eg": "Diesel 3.0 TDV6 / SDV6 / D300 / 4.4 SDV8 155–250 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava III - Nové Mesto", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmVWpNic9jF", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-30d-mhev-d350-hse-awd-at/AmVWpNic9jF/", "price": 149937}], "body": "suv"}, {"id": "197699287", "url": "https://auto.bazos.sk/inzerat/197699287/range-rover-vogue-44d-v8.php", "title": "Range Rover Vogue 4.4d V8", "price": 44990, "price_gross": 44990, "fair_price": 45280.0, "discount_pct": 0.6, "verdict": "férová cena", "year": 2020, "km": 144000, "km_per_year": 22700.0, "eg": "Diesel 3.0 TDV6 / SDV6 / D300 / 4.4 SDV8 155–250 kW", "cg": 1, "transmission": null, "seller_type": "dealer", "location": "Banská Bystrica", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "ab-AmQtM3-Nsas", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-44-sdv8-autobiography/AmQtM3-Nsas/", "title": "Land Rover Range Rover 4.4 SDV8 Autobiography ", "price": 45000, "price_gross": 45000, "fair_price": 45270.0, "discount_pct": 0.6, "verdict": "férová cena", "year": 2019, "km": 113770, "km_per_year": 15500.0, "eg": "Diesel 3.0 TDV6 / SDV6 / D300 / 4.4 SDV8 155–250 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-39228582", "url": "https://auto.bazar.sk/39228582-land-rover-range-rover-4-4-sdv8-autobiography/", "price": 45000}], "body": "suv"}, {"id": "bs-39698474", "url": "https://auto.bazar.sk/39698474-land-rover-range-rover-lwb-4-4i-v8-p530-autobiography-awd-a-t/", "title": "Land Rover Range Rover LWB 4.4i V8 P530 Autobiography AWD A/T", "price": 189974, "price_gross": 189974, "fair_price": 190750.0, "discount_pct": 0.4, "verdict": "férová cena", "year": 2026, "km": 3000, "km_per_year": 9000.0, "eg": "Benzín V8 / P400 / P530 250–450 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava III - Nové Mesto", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmCLnFweTnm", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-lwb-44i-v8-p530-autobiography-awd-at/AmCLnFweTnm/", "price": 189974}], "body": "suv"}, {"id": "ab-Ae1ZvgT-vNq", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-vogue-autobiography/Ae1ZvgT-vNq/", "title": "Land Rover Range Rover Vogue - Autobiography", "price": 19500, "price_gross": 19500, "fair_price": 19560.0, "discount_pct": 0.3, "verdict": "férová cena", "year": 2014, "km": 269693, "km_per_year": 21900.0, "eg": "Diesel 3.0 TDV6 / SDV6 / D300 / 4.4 SDV8 155–250 kW", "cg": 1, "transmission": "automatic", "seller_type": "private", "location": "Nitra", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "ab-AmCXBzLuSTP", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-50-v8-sc-autobiography-4wd-at/AmCXBzLuSTP/", "title": "Land Rover Range Rover 5.0 V8 S/C Autobiography 4WD A/T", "price": 39999, "price_gross": 39999, "fair_price": 39910.0, "discount_pct": -0.2, "verdict": "férová cena", "year": 2018, "km": 149000, "km_per_year": 17900.0, "eg": "Benzín V8 / P400 / P530 250–450 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Banská Bystrica", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39725846", "url": "https://auto.bazar.sk/39725846-land-rover-range-rover-5-0-v8-s-c-autobiography-4wd-a-t/", "price": 39999}], "body": "suv"}, {"id": "ab-AeAchMkO6yD", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-44d-sdv8-vogue-4wd-at-250kw339hp-a8/AeAchMkO6yD/", "title": "Land Rover Range Rover 4.4D SDV8 Vogue 4WD AT 250kW339HP A8", "price": 48000, "price_gross": 48000, "fair_price": 47840.0, "discount_pct": -0.3, "verdict": "férová cena", "year": 2020, "km": 117000, "km_per_year": 18500.0, "eg": "Diesel 3.0 TDV6 / SDV6 / D300 / 4.4 SDV8 155–250 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Brezno", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "ab-AmjF7w38Iyi", "url": "https://www.autobazar.eu/detail/land-rover-range-rover/AmjF7w38Iyi/", "title": "Range Rover 3.0P 550PS PHEV Autobiography SWB AWD Auto - VÝPREDAJ SKLADU!", "price": 168990, "price_gross": 168990, "fair_price": 165740.0, "discount_pct": -2.0, "verdict": "férová cena", "year": 2026, "km": 3725, "km_per_year": 11200.0, "eg": "Plug-in hybrid P400e / P440e / P510e", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Trenčín", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-39226202", "url": "https://auto.bazar.sk/39226202-range-rover-3-0p-550ps-phev-autobiography-swb-awd-auto-vypredaj-skladu/", "price": 168990}], "body": "suv"}, {"id": "ab-AexUe9lOVne", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-50-v8-sc/AexUe9lOVne/", "title": "Land Rover Range Rover 5.0 V8 S/C", "price": 35900, "price_gross": 35900, "fair_price": 34900.0, "discount_pct": -2.9, "verdict": "férová cena", "year": 2017, "km": 104389, "km_per_year": 11200.0, "eg": "Benzín V8 / P400 / P530 250–450 kW", "cg": 0, "transmission": "automatic", "seller_type": "private", "location": "Streda nad Bodrogom", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "suv"}, {"id": "ab-Ae1U_hmzLQx", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-50-v8-sc-autobiography-4wd-at-386kw525hp-a8/Ae1U_hmzLQx/", "title": "Land Rover Range Rover 5.0 V8 SC Autobiography 4WD AT 386kW525HP A8", "price": 46500, "price_gross": 46500, "fair_price": 44900.0, "discount_pct": -3.6, "verdict": "férová cena", "year": 2019, "km": 138000, "km_per_year": 18800.0, "eg": "Benzín V8 / P400 / P530 250–450 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Banská Bystrica", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "bs-38788465", "url": "https://auto.bazar.sk/38788465-land-rover-range-rover-p530-autobiography-swb/", "title": "Land Rover Range Rover P530 AUTOBIOGRAPHY SWB", "price": 184492, "price_gross": 184492, "fair_price": 178160.0, "discount_pct": -3.6, "verdict": "férová cena", "year": 2026, "km": 4799, "km_per_year": 14400.0, "eg": "Benzín V8 / P400 / P530 250–450 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Čestlice", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AbLoLmpJoPA", "url": "https://www.autobazar.eu/detail/jaguar-f-type-p450-cabriolet-75-rwd/AbLoLmpJoPA/", "price": 184492}], "body": "suv"}, {"id": "ab-AecrG65bzQs", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-30i-mhev-p400-hse-awd-at-294kw400hp-a8/AecrG65bzQs/", "title": "Land Rover Range Rover 390kW 7miestny", "price": 99900, "price_gross": 99900, "fair_price": 94800.0, "discount_pct": -5.4, "verdict": "férová cena", "year": 2023, "km": 85000, "km_per_year": 25500.0, "eg": "Benzín V8 / P400 / P530 250–450 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Dubnica nad Váhom", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "bs-39758274", "url": "https://auto.bazar.sk/39758274-land-rover-range-rover-3-0d-mhev-d350-autobiography-awd-a-t/", "title": "Land Rover Range Rover 3.0D mHEV D350 Autobiography AWD A/T", "price": 159900, "price_gross": 159900, "fair_price": 149310.0, "discount_pct": -7.1, "verdict": "nad trhom", "year": 2026, "km": 6000, "km_per_year": 18000.0, "eg": "Diesel 3.0 TDV6 / SDV6 / D300 / 4.4 SDV8 155–250 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava III - Nové Mesto", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmM3KrjhdSx", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-30d-mhev-d350-autobiography-awd-at/AmM3KrjhdSx/", "price": 159900}], "body": "suv"}, {"id": "197405697", "url": "https://auto.bazos.sk/inzerat/197405697/land-rover-range-rover-44-sdv8-autobiography.php", "title": "Land Rover Range Rover 4.4 SDV8 Autobiography", "price": 24490, "price_gross": 24490, "fair_price": 22850.0, "discount_pct": -7.2, "verdict": "nad trhom", "year": 2014, "km": 199000, "km_per_year": 16100.0, "eg": "Diesel 3.0 TDV6 / SDV6 / D300 / 4.4 SDV8 155–250 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Nové Zámky", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "bs-39726460", "url": "https://auto.bazar.sk/39726460-land-rover-range-rover-3-0d-mhev-d350-autobiography-awd-a-t/", "title": "Land Rover Range Rover 3.0D mHEV D350 Autobiography AWD A/T", "price": 162360, "price_gross": 162360, "fair_price": 151270.0, "discount_pct": -7.3, "verdict": "nad trhom", "year": 2026, "km": 3000, "km_per_year": 9000.0, "eg": "Diesel 3.0 TDV6 / SDV6 / D300 / 4.4 SDV8 155–250 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava III - Nové Mesto", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-Am4G_-QqrZi", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-30d-mhev-d350-autobiography-awd-at/Am4G_-QqrZi/", "price": 162360}], "body": "suv"}, {"id": "ab-Ae4EEt_kGN7", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-lwb-44d-sdv8-vogue-4wd-at-250kw339hp-a8/Ae4EEt_kGN7/", "title": "Land Rover Range Rover LWB 4.4D SDV8 Vogue 4WD AT 250kW339HP A8", "price": 38000, "price_gross": 38000, "fair_price": 35380.0, "discount_pct": -7.4, "verdict": "nad trhom", "year": 2019, "km": 201000, "km_per_year": 27400.0, "eg": "Diesel 3.0 TDV6 / SDV6 / D300 / 4.4 SDV8 155–250 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Šurany", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "bs-39311365", "url": "https://auto.bazar.sk/39311365-land-rover-range-rover-4-4-sdv8-vogue-awd-aut/", "title": "Land Rover Range Rover 4.4 SDV8 VOGUE AWD AUT", "price": 39373, "price_gross": 39373, "fair_price": 36520.0, "discount_pct": -7.8, "verdict": "nad trhom", "year": 2018, "km": 133072, "km_per_year": 16000.0, "eg": "Diesel 3.0 TDV6 / SDV6 / D300 / 4.4 SDV8 155–250 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Čestlice", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AbixpdfRcc6", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-sport-p460e-dynamic-se-awd-aut/AbixpdfRcc6/", "price": 39373}], "body": "suv"}, {"id": "195876821", "url": "https://auto.bazos.sk/inzerat/195876821/land-rover-range-rover.php", "title": "LAND ROVER RANGE ROVER", "price": 14700, "price_gross": 14700, "fair_price": 13370.0, "discount_pct": -9.9, "verdict": "nad trhom", "year": 2012, "km": 205000, "km_per_year": 14300.0, "eg": "Diesel 3.0 TDV6 / SDV6 / D300 / 4.4 SDV8 155–250 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Michalovce", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "196738916", "url": "https://auto.bazos.sk/inzerat/196738916/land-rover-range-rover.php", "title": "✅ PO GO ✅ Range Rover 2015 – 230 000 km", "price": 19900, "price_gross": 19900, "fair_price": 17880.0, "discount_pct": -11.3, "verdict": "nad trhom", "year": 2015, "km": 230000, "km_per_year": 20300.0, "eg": "Diesel 3.0 TDV6 / SDV6 / D300 / 4.4 SDV8 155–250 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Tvrdošín", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "197558019", "url": "https://auto.bazos.sk/inzerat/197558019/land-rover-range-rover.php", "title": "Land Rover Range Rover", "price": 16500, "price_gross": 16500, "fair_price": 14800.0, "discount_pct": -11.5, "verdict": "nad trhom", "year": 2013, "km": 255000, "km_per_year": 19100.0, "eg": "Benzín V8 / P400 / P530 250–450 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Nitra", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "bs-39323903", "url": "https://auto.bazar.sk/39323903-land-rover-range-rover-p530-autobiography-awd-aut-cz/", "title": "Land Rover Range Rover P530 AUTOBIOGRAPHY AWD AUT CZ", "price": 124424, "price_gross": 124424, "fair_price": 110910.0, "discount_pct": -12.2, "verdict": "nad trhom", "year": 2024, "km": 44146, "km_per_year": 18900.0, "eg": "Benzín V8 / P400 / P530 250–450 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Čestlice", "flags": [], "pick": null, "source": "bazarsk", "origin": "dovoz", "also_listed": [{"source": "autobazar", "id": "ab-AbWJZ3ADPdm", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-44-sdv8-vogue-awd-aut-cz/AbWJZ3ADPdm/", "price": 124424}], "body": "suv"}, {"id": "ab-Ab6MuaFjsBaF", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-vogue-4-4l-sdv8/Ab6MuaFjsBaF/", "title": "Land Rover RANGE ROVER Vogue 4,4L SDV8", "price": 26990, "price_gross": 26990, "fair_price": 23700.0, "discount_pct": -13.9, "verdict": "nad trhom", "year": 2013, "km": 184600, "km_per_year": 13800.0, "eg": "Diesel 3.0 TDV6 / SDV6 / D300 / 4.4 SDV8 155–250 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Košice", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-37414756", "url": "https://auto.bazar.sk/37414756-land-rover-range-rover-vogue-4-4l-sdv8/", "price": 26990}], "body": "suv"}, {"id": "197358325", "url": "https://auto.bazos.sk/inzerat/197358325/land-rover-range-rover-iv.php", "title": "Land Rover Range Rover 4.4 D SDV8 AUTOBIOGRAPHY", "price": 23900, "price_gross": 23900, "fair_price": 20930.0, "discount_pct": -14.2, "verdict": "nad trhom", "year": 2013, "km": 220000, "km_per_year": 16500.0, "eg": "Diesel 3.0 TDV6 / SDV6 / D300 / 4.4 SDV8 155–250 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Čadca", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "196213829", "url": "https://auto.bazos.sk/inzerat/196213829/land-rover-range-rover-30p460e-hse-lwb-sk-1majitel.php", "title": "Land Rover Range Rover 3.0P460e HSE LWB, SK - 1.Majiteľ", "price": 112999, "price_gross": 112999, "fair_price": 98340.0, "discount_pct": -14.9, "verdict": "nad trhom", "year": 2024, "km": 72513, "km_per_year": 31100.0, "eg": "Benzín V8 / P400 / P530 250–450 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Banská Bystrica", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-39692874", "url": "https://auto.bazar.sk/39692874-land-rover-range-rover-3-0p460e-hse-lwb-sk-1-majitel/", "price": 112999}, {"source": "autobazar", "id": "ab-Am-ZZ763__n", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-30p460e-hse-lwb-sk-1majitel/Am-ZZ763__n/", "price": 112999}], "body": "suv"}, {"id": "ab-AmYfj7DA9t0", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-lwb-30i-phev-p460e-autobiography-awd-at/AmYfj7DA9t0/", "title": "Land Rover Range Rover LWB 3.0i PHEV P460e Autobiography AWD A/T", "price": 160000, "price_gross": 160000, "fair_price": 138050.0, "discount_pct": -15.9, "verdict": "výrazne nad trhom", "year": 2026, "km": 9900, "km_per_year": 29700.0, "eg": "Plug-in hybrid P400e / P440e / P510e", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-39696225", "url": "https://auto.bazar.sk/39696225-land-rover-range-rover-lwb-3-0i-phev-p460e-autobiography-awd-a-t/", "price": 160000}], "body": "suv"}, {"id": "ab-AerDlucf-fr", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-range-rover-autobiography/AerDlucf-fr/", "title": "Land Rover Range Rover Range Rover Autobiography", "price": 63500, "price_gross": 63500, "fair_price": 54390.0, "discount_pct": -16.7, "verdict": "výrazne nad trhom", "year": 2019, "km": 70500, "km_per_year": 9600.0, "eg": "Benzín V8 / P400 / P530 250–450 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava-Ružinov", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "bs-39511745", "url": "https://auto.bazar.sk/39511745-range-rover-3-0p-550ps-phev-autobiography-swb-awd-auto-vypredaj-skladu/", "title": "Range Rover 3.0P 550PS PHEV Autobiography SWB AWD Auto - VÝPREDAJ SKLADU!", "price": 149990, "price_gross": 149990, "fair_price": 128220.0, "discount_pct": -17.0, "verdict": "výrazne nad trhom", "year": 2025, "km": 28078, "km_per_year": 21100.0, "eg": "Plug-in hybrid P400e / P440e / P510e", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Trenčianska Turná", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AmUdmBgW5nP", "url": "https://www.autobazar.eu/detail/land-rover-range-rover/AmUdmBgW5nP/", "price": 149990}], "body": "suv"}, {"id": "197477623", "url": "https://auto.bazos.sk/inzerat/197477623/land-rover-range-rover-20-si4-autobiography-phev-221kw-at8.php", "title": "Land Rover Range Rover 2.0 Si4 Autobiography PHEV 221kW AT/8", "price": 38990, "price_gross": 38990, "fair_price": 33290.0, "discount_pct": -17.1, "verdict": "výrazne nad trhom", "year": 2019, "km": 124906, "km_per_year": 17000.0, "eg": "Plug-in hybrid P400e / P440e / P510e", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Žilina", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AmyxSBBUhCB", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-20-si4-autobiography-phev-221kw-at8-2019-aj-na-splatky-protiucet/AmyxSBBUhCB/", "price": 38990}, {"source": "bazarsk", "id": "bs-39759868", "url": "https://auto.bazar.sk/39759868-land-rover-range-rover-2-0-si4-autobiography-phev-221kw-at-8-2019-aj-na-splatky-protiucet/", "price": 38990}], "body": "suv"}, {"id": "ab-AmwPFTgIpAo", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-44-v8-sv-p615-awd/AmwPFTgIpAo/", "title": "Land Rover Range Rover 4.4 V8 SV P615 AWD", "price": 192990, "price_gross": 192990, "fair_price": 164230.0, "discount_pct": -17.5, "verdict": "výrazne nad trhom", "year": 2026, "km": 15000, "km_per_year": 45000.0, "eg": "Benzín V8 / P400 / P530 250–450 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Žilina", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39754069", "url": "https://auto.bazar.sk/39754069-land-rover-range-rover-4-4-v8-sv-p615-awd/", "price": 192990}], "body": "suv"}, {"id": "ab-AeHI-K_NMUD", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-vogue-land-rover-range-rover-50-v8-supercharged-autobiography-long-510-koni/AeHI-K_NMUD/", "title": "Land Rover Range Rover Vogue LAND ROVER RANGE ROVER 5.0 V8 SUPERCHARGED AUTOBIOGRAPHY LONG  510 KONÍ", "price": 38900, "price_gross": 38900, "fair_price": 33030.0, "discount_pct": -17.8, "verdict": "výrazne nad trhom", "year": 2014, "km": 67000, "km_per_year": 5400.0, "eg": "Benzín V8 / P400 / P530 250–450 kW", "cg": 0, "transmission": "automatic", "seller_type": "private", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "196950799", "url": "https://auto.bazos.sk/inzerat/196950799/landrover-range-rover-autobiography-44d.php", "title": "LANDROVER   RANGE ROVER   AUTOBIOGRAPHY 4,4D", "price": 29900, "price_gross": 29900, "fair_price": 25220.0, "discount_pct": -18.6, "verdict": "výrazne nad trhom", "year": 2018, "km": 226000, "km_per_year": 27100.0, "eg": "Benzín V8 / P400 / P530 250–450 kW", "cg": 0, "transmission": null, "seller_type": "dealer", "location": "Púchov", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "196412703", "url": "https://auto.bazos.sk/inzerat/196412703/land-rover-range-rover-44l-sdv8-autobiography-lwb.php", "title": "Land Rover Range Rover 4.4L SDV8 AUTOBIOGRAPHY LWB", "price": 26500, "price_gross": 26500, "fair_price": 22240.0, "discount_pct": -19.2, "verdict": "výrazne nad trhom", "year": 2014, "km": 243570, "km_per_year": 19700.0, "eg": "Diesel 3.0 TDV6 / SDV6 / D300 / 4.4 SDV8 155–250 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Ružomberok", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-38887357", "url": "https://auto.bazar.sk/38887357-land-rover-range-rover-4-4l-sdv8-ab-lwb/", "price": 26500}, {"source": "autobazar", "id": "ab-AmFWtvBTwey", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-44l-sdv8-ab-lwb/AmFWtvBTwey/", "price": 26500}], "body": "suv"}, {"id": "bs-39465902", "url": "https://auto.bazar.sk/39465902-land-rover-range-rover-p400e-plug-in-hybrid-autobiography-42500km/", "title": "Land Rover Range Rover P400e Plug-in Hybrid AUTOBIOGRAPHY 42500km", "price": 51990, "price_gross": 51990, "fair_price": 43610.0, "discount_pct": -19.2, "verdict": "výrazne nad trhom", "year": 2019, "km": 42500, "km_per_year": 5800.0, "eg": "Plug-in hybrid P400e / P440e / P510e", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Nové Mesto nad Váhom", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "ab-Aeg6DkaVd8W", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-50l-v8-sc-ab-375kw510hp-a8/Aeg6DkaVd8W/", "title": "Land Rover Range Rover 5.0L V8 SC AB 375kW510HP A8", "price": 25000, "price_gross": 25000, "fair_price": 20570.0, "discount_pct": -21.6, "verdict": "výrazne nad trhom", "year": 2013, "km": 230851, "km_per_year": 17300.0, "eg": "Benzín V8 / P400 / P530 250–450 kW", "cg": 0, "transmission": "automatic", "seller_type": "private", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "ab-AmqwalCa9iN", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-20-si4-phev-vogue-4wd-at/AmqwalCa9iN/", "title": "Land Rover Range Rover 2.0 Si4 PHEV Vogue 4WD A/T", "price": 43900, "price_gross": 43900, "fair_price": 36060.0, "discount_pct": -21.7, "verdict": "výrazne nad trhom", "year": 2020, "km": 130776, "km_per_year": 20600.0, "eg": "Plug-in hybrid P400e / P440e / P510e", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-39562681", "url": "https://auto.bazar.sk/39562681-land-rover-range-rover-2-0-si4-phev-vogue-4wd-a-t/", "price": 43900}], "body": "suv"}, {"id": "ab-Amt_rRui_uP", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-30d-mhev-d250-hse-awd-at/Amt_rRui_uP/", "title": "Land Rover Range Rover 3.0D mHEV D250 HSE AWD A/T", "price": 48500, "price_gross": 48500, "fair_price": 39570.0, "discount_pct": -22.6, "verdict": "výrazne nad trhom", "year": 2021, "km": 130000, "km_per_year": 24400.0, "eg": "Diesel 3.0 TDV6 / SDV6 / D300 / 4.4 SDV8 155–250 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Košice-Vyšné Opátske", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39683304", "url": "https://auto.bazar.sk/39683304-land-rover-range-rover-3-0d-mhev-d250-hse-awd-a-t/", "price": 48500}], "body": "suv"}, {"id": "197761550", "url": "https://auto.bazos.sk/inzerat/197761550/range-rover-vogue-44-tdv8.php", "title": "Range Rover Vogue 4.4 TDV8", "price": 37990, "price_gross": 37990, "fair_price": 30340.0, "discount_pct": -25.2, "verdict": "výrazne nad trhom", "year": 2018, "km": 228000, "km_per_year": 27400.0, "eg": "Diesel 3.0 TDV6 / SDV6 / D300 / 4.4 SDV8 155–250 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Banská Bystrica", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "195971291", "url": "https://auto.bazos.sk/inzerat/195971291/land-rover-range-rover-44l-sdv8-ab-lwb.php", "title": "Land Rover Range Rover 4.4L SDV8 AB LWB", "price": 21951, "price_gross": 27000, "fair_price": 21170.0, "discount_pct": -27.5, "verdict": "výrazne nad trhom", "year": 2014, "km": 284000, "km_per_year": 23000.0, "eg": "Diesel 3.0 TDV6 / SDV6 / D300 / 4.4 SDV8 155–250 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Kysucké Nové Mesto", "flags": ["inzerovaná cena 21951 € je bez DPH – porovnáva sa cena s DPH 27000 €"], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AmGhE4ChqsbL", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-44l-sdv8-ab-lwb/AmGhE4ChqsbL/", "price": 27000}, {"source": "bazarsk", "id": "bs-37126732", "url": "https://auto.bazar.sk/37126732-land-rover-range-rover-4-4l-sdv8-ab-lwb/", "price": 27000}], "body": "suv"}, {"id": "197533479", "url": "https://auto.bazos.sk/inzerat/197533479/land-rover-range-rover-50-v8-sc-autobiography-4wd-at.php", "title": "Land Rover Range Rover 5.0 V8 S/C Autobiography 4WD A/T", "price": 70110, "price_gross": 70110, "fair_price": 54670.0, "discount_pct": -28.2, "verdict": "výrazne nad trhom", "year": 2020, "km": 93125, "km_per_year": 14700.0, "eg": "Benzín V8 / P400 / P530 250–450 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Šaľa", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-Am1Ygm6X0BA", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-50-v8-sc-autobiography-4wd-at/Am1Ygm6X0BA/", "price": 70110}, {"source": "bazarsk", "id": "bs-39295871", "url": "https://auto.bazar.sk/39295871-land-rover-range-rover-5-0-v8-s-c-autobiography-4wd-a-t/", "price": 70110}], "body": "suv"}, {"id": "197358106", "url": "https://auto.bazos.sk/inzerat/197358106/range-rover-50-v8-525hp-vogue-l405.php", "title": "Range Rover 5,0 V8 525hp Vogue L405", "price": 38990, "price_gross": 38990, "fair_price": 30140.0, "discount_pct": -29.3, "verdict": "výrazne nad trhom", "year": 2019, "km": 159600, "km_per_year": 21800.0, "eg": "Benzín V8 / P400 / P530 250–450 kW", "cg": 0, "transmission": null, "seller_type": "dealer", "location": "Prešov", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "197673017", "url": "https://auto.bazos.sk/inzerat/197673017/land-rover-range-rover-vogue-2012-440-l-sdv8-vogue-250kw-po.php", "title": "Land Rover Range Rover Vogue 2012 4.40 L SDV8 Vogue 250kW Po", "price": 18499, "price_gross": 18499, "fair_price": 14260.0, "discount_pct": -29.7, "verdict": "výrazne nad trhom", "year": 2012, "km": 194455, "km_per_year": 13600.0, "eg": "Diesel 3.0 TDV6 / SDV6 / D300 / 4.4 SDV8 155–250 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmZCGTyFPHN", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-vogue-440-l-sdv8-vogue-250kw-po-velkom-servise/AmZCGTyFPHN/", "price": 18499}], "body": "suv"}, {"id": "ab-AegC4ghHsfV", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-range-rover/AegC4ghHsfV/", "title": "Land Rover Range Rover Range Rover", "price": 24600, "price_gross": 24600, "fair_price": 18860.0, "discount_pct": -30.5, "verdict": "výrazne nad trhom", "year": 2015, "km": 253376, "km_per_year": 22400.0, "eg": "Diesel 3.0 TDV6 / SDV6 / D300 / 4.4 SDV8 155–250 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava-Ružinov", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-Am39dgP3oAo", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-lwb-50-v8-s-v-a-t-supercharged-autobiography-4wd-business-edition/Am39dgP3oAo/", "title": "Land Rover Range Rover LWB 5.0 V8 S/V A/T Supercharged Autobiography 4WD Business Edition", "price": 73790, "price_gross": 73790, "fair_price": 56320.0, "discount_pct": -31.0, "verdict": "výrazne nad trhom", "year": 2019, "km": 66354, "km_per_year": 9000.0, "eg": "Benzín V8 / P400 / P530 250–450 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Galanta", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-38084296", "url": "https://auto.bazar.sk/38084296-land-rover-range-rover-lwb-5-0-v8-s-v-a-t-supercharged-autobiography-4wd-business-edition/", "price": 73790}], "body": "suv"}, {"id": "ab-AmqizYRgDvd", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-44i-v8-p530-sv-awd-at/AmqizYRgDvd/", "title": "Land Rover Range Rover 4.4i V8 P530 SV AWD A/T", "price": 149900, "price_gross": 149900, "fair_price": 114250.0, "discount_pct": -31.2, "verdict": "výrazne nad trhom", "year": 2023, "km": 37000, "km_per_year": 11100.0, "eg": "Benzín V8 / P400 / P530 250–450 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazarsk", "id": "bs-39708179", "url": "https://auto.bazar.sk/39708179-land-rover-range-rover-4-4i-v8-p530-sv-awd-a-t/", "price": 149900}, {"source": "autobazar", "id": "ab-AmLUoyXfY3j", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-range-rover-44i-v8-p530-sv-awd-at/AmLUoyXfY3j/", "price": 149000}], "body": "suv"}, {"id": "ab-AmYak_Xgnra", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-lwb-30d-mhev-d350-autobiography-awd-at-7-miest/AmYak_Xgnra/", "title": "Land Rover Range Rover 3.0D mHEV D350 Autobiography AWD A/T", "price": 129900, "price_gross": 129900, "fair_price": 95440.0, "discount_pct": -36.1, "verdict": "výrazne nad trhom", "year": 2024, "km": 67000, "km_per_year": 28700.0, "eg": "Diesel 3.0 TDV6 / SDV6 / D300 / 4.4 SDV8 155–250 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Partizánske", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-39711187", "url": "https://auto.bazar.sk/39711187-land-rover-range-rover-3-0d-mhev-d350-autobiography-awd-a-t/", "price": 129900}], "body": "suv"}, {"id": "ab-Aeb0Gh_Evz5", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-lwb-44i-v8-p530-sv-awd-at-390kw530hp/Aeb0Gh_Evz5/", "title": "Land Rover Range Rover LWB 4.4i V8 P530 SV AWD AT 390kW530HP", "price": 145000, "price_gross": 145000, "fair_price": 105150.0, "discount_pct": -37.9, "verdict": "výrazne nad trhom", "year": 2023, "km": 49000, "km_per_year": 14700.0, "eg": "Benzín V8 / P400 / P530 250–450 kW", "cg": 0, "transmission": "automatic", "seller_type": "private", "location": "Michalovce", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "suv"}, {"id": "ab-Am038UFLqcS", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-lwb-30i-mhev-p400-hse-awd-at-7-miest/Am038UFLqcS/", "title": "Land Rover Range Rover LWB 3.0i mHEV P400 HSE AWD A/T 7 miest", "price": 119000, "price_gross": 119000, "fair_price": 85890.0, "discount_pct": -38.5, "verdict": "výrazne nad trhom", "year": 2023, "km": 79000, "km_per_year": 23700.0, "eg": "Benzín V8 / P400 / P530 250–450 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Senec", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-39401232", "url": "https://auto.bazar.sk/39401232-land-rover-range-rover-lwb-3-0i-mhev-p400-hse-awd-a-t-7-miest/", "price": 119000}, {"source": "bazos", "id": "197607151", "url": "https://auto.bazos.sk/inzerat/197607151/land-rover-range-rover-lwb-30-benzin-400-ps-4wd-294-kw.php", "price": 96747}], "body": "suv"}, {"id": "bs-39740836", "url": "https://auto.bazar.sk/39740836-land-rover-range-rover-autobiography-p400/", "title": "Land Rover Range Rover Autobiography P400", "price": 121185, "price_gross": 121185, "fair_price": 85200.0, "discount_pct": -42.2, "verdict": "výrazne nad trhom", "year": 2022, "km": 17266, "km_per_year": 4000.0, "eg": "Benzín V8 / P400 / P530 250–450 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Ostrava", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AbVcAQi8210", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-autobiography-p400/AbVcAQi8210/", "price": 121185}], "body": "suv"}, {"id": "197517259", "url": "https://auto.bazos.sk/inzerat/197517259/land-rover-range-rover-p530-44-v8-awd-390-kw-2022-sv.php", "title": "Land Rover Range Rover P530 4.4 V8 AWD – 390 kW | 2022 | SV", "price": 149900, "price_gross": 149900, "fair_price": 105310.0, "discount_pct": -42.3, "verdict": "výrazne nad trhom", "year": 2022, "km": 30900, "km_per_year": 7100.0, "eg": "Benzín V8 / P400 / P530 250–450 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Trenčín", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmZHzGvDlc9", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-44i-v8-p530-se-awd-at/AmZHzGvDlc9/", "price": 149900}, {"source": "bazarsk", "id": "bs-39731753", "url": "https://auto.bazar.sk/39731753-land-rover-range-rover-4-4i-v8-p530-se-awd-a-t/", "price": 149900}], "body": "suv"}, {"id": "ab-Am5sRH0tylk", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-44d-sdv8-lwb-4wd-250kw-a8-zaruka-aj-na-splatky-protiucet/Am5sRH0tylk/", "title": "Land Rover Range Rover 4.4D SDV8 LWB 4WD / 250kW / A8 / ZÁRUKA / AJ NA SPLÁTKY / PROTIÚČET", "price": 49800, "price_gross": 49800, "fair_price": 34840.0, "discount_pct": -42.9, "verdict": "výrazne nad trhom", "year": 2018, "km": 167201, "km_per_year": 20100.0, "eg": "Diesel 3.0 TDV6 / SDV6 / D300 / 4.4 SDV8 155–250 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197622843", "url": "https://auto.bazos.sk/inzerat/197622843/land-rover-range-rover-44d-sdv8-lwb-4wd-250kw-a8-2018.php", "price": 49800}, {"source": "bazarsk", "id": "bs-39754386", "url": "https://auto.bazar.sk/39754386-land-rover-range-rover-4-4d-sdv8-lwb-4wd-250kw-a8-zaruka-aj-na-splatky-protiucet/", "price": 49800}], "body": "suv"}, {"id": "ab-AeXmNaEnUg7", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-30d-sdv6-hse-4wd-at-202kw275hp-a8/AeXmNaEnUg7/", "title": "Land Rover Range Rover 3.0D SDV6 HSE 4WD AT 202kW275HP A8", "price": 40000, "price_gross": 40000, "fair_price": 27690.0, "discount_pct": -44.5, "verdict": "výrazne nad trhom", "year": 2018, "km": 175000, "km_per_year": 21000.0, "eg": "Diesel 3.0 TDV6 / SDV6 / D300 / 4.4 SDV8 155–250 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "suv"}, {"id": "ab-AbGACC_4xQn", "url": "https://www.autobazar.eu/detail/range-rover-autobiography-p550e-swb-phev-awd/AbGACC_4xQn/", "title": "Land Rover Range Rover Autobiography SWB PHEV 550e", "price": 141990, "price_gross": 141990, "fair_price": 95900.0, "discount_pct": -48.1, "verdict": "výrazne nad trhom", "year": 2024, "km": 46000, "km_per_year": 19700.0, "eg": "Plug-in hybrid P400e / P440e / P510e", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Nitra", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39211566", "url": "https://auto.bazar.sk/39211566-land-rover-range-rover-autobiography-swb-phev-550e/", "price": 141990}], "body": "suv"}, {"id": "196963537", "url": "https://auto.bazos.sk/inzerat/196963537/land-rover-range-rover-d350-autobiography-2025.php", "title": "LAND ROVER RANGE ROVER D350 AUTOBIOGRAPHY | 2025 |", "price": 127920, "price_gross": 127920, "fair_price": 85600.0, "discount_pct": -49.4, "verdict": "výrazne nad trhom", "year": 2025, "km": 30500, "km_per_year": 22900.0, "eg": "Diesel 3.0 TDV6 / SDV6 / D300 / 4.4 SDV8 155–250 kW", "cg": 1, "transmission": null, "seller_type": "dealer", "location": "Bratislava", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-Ae1A3FTSp87", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-30d-mhev-d300-autobiography-awd-at-221kw300hp-a8/Ae1A3FTSp87/", "title": "Land Rover Range Rover 3.0D mHEV D300 Autobiography AWD AT 221kW300HP A8", "price": 129500, "price_gross": 129500, "fair_price": 83220.0, "discount_pct": -55.6, "verdict": "výrazne nad trhom", "year": 2025, "km": 63469, "km_per_year": 47600.0, "eg": "Diesel 3.0 TDV6 / SDV6 / D300 / 4.4 SDV8 155–250 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Žilina", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "ab-AmUNqZsbomi", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-lwb-30i-mhev-p400-hse-awd-at-7-miest/AmUNqZsbomi/", "title": "Land Rover Range Rover LWB 3.0i mHEV P400 HSE AWD A/T 7 miest", "price": 112900, "price_gross": 112900, "fair_price": 71040.0, "discount_pct": -58.9, "verdict": "výrazne nad trhom", "year": 2022, "km": 99000, "km_per_year": 22800.0, "eg": "Benzín V8 / P400 / P530 250–450 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava-Nové Mesto", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39745327", "url": "https://auto.bazar.sk/39745327-land-rover-range-rover-lwb-3-0i-mhev-p400-hse-awd-a-t-7-miest/", "price": 112900}], "body": "suv"}, {"id": "bs-39533519", "url": "https://auto.bazar.sk/39533519-range-rover-swb-autobiography-phev-550e-my26/", "title": "Range Rover SWB Autobiography PHEV 550e MY26", "price": 182990, "price_gross": 182990, "fair_price": 114940.0, "discount_pct": -59.2, "verdict": "výrazne nad trhom", "year": 2026, "km": 5000, "km_per_year": 15000.0, "eg": "Plug-in hybrid P400e / P440e / P510e", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Nitra", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-Ab_sxLK83gm", "url": "https://www.autobazar.eu/detail/range-rover-swb-autobiography-phev-550e-my26/Ab_sxLK83gm/", "price": 182990}], "body": "suv"}, {"id": "bs-34299023", "url": "https://auto.bazar.sk/34299023-land-rover-range-rover-4-4l-sdv8-autobiography-black/", "title": "Land Rover Range Rover 4.4L SDV8 Autobiography Black", "price": 46500, "price_gross": 46500, "fair_price": 27440.0, "discount_pct": -69.4, "verdict": "výrazne nad trhom", "year": 2015, "km": 170000, "km_per_year": 15000.0, "eg": "Diesel 3.0 TDV6 / SDV6 / D300 / 4.4 SDV8 155–250 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "ab-AmyrAZP9o0P", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-lwb-30i-phev-p440e-hse-awd-at-aj-na-splatky-protiucet/AmyrAZP9o0P/", "title": "Land Rover Range Rover LWB 3.0i PHEV P440e HSE AWD A/T / AJ NA SPLÁTKY / PROTIÚČET /", "price": 114990, "price_gross": 114990, "fair_price": 65150.0, "discount_pct": -76.5, "verdict": "výrazne nad trhom", "year": 2022, "km": 82207, "km_per_year": 19000.0, "eg": "Plug-in hybrid P400e / P440e / P510e", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197360289", "url": "https://auto.bazos.sk/inzerat/197360289/land-rover-range-rover-lwb-30i-phev-p440e-hse-awd-1majitel.php", "price": 114990}, {"source": "bazarsk", "id": "bs-39754296", "url": "https://auto.bazar.sk/39754296-land-rover-range-rover-lwb-3-0i-phev-p440e-hse-awd-a-t-aj-na-splatky-protiucet/", "price": 114990}], "body": "suv"}, {"id": "bs-23218243", "url": "https://auto.bazar.sk/23218243-land-rover-range-rover-3-6-tdv8-vogue-se-200kw-a6-5d/", "title": "Land Rover Range Rover 3.6 TDV8 Vogue SE, 200kW, A6, 5d.", "price": 24600, "price_gross": 24600, "fair_price": 13780.0, "discount_pct": -78.5, "verdict": "výrazne nad trhom", "year": 2010, "km": 245000, "km_per_year": 15000.0, "eg": "Diesel 3.0 TDV6 / SDV6 / D300 / 4.4 SDV8 155–250 kW", "cg": 1, "transmission": "automatic", "seller_type": "private", "location": "Bratislava", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AeOx70XWpcj", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-30d-mhev-d250-hse-awd-at-183kw249hp-a8/AeOx70XWpcj/", "title": "Land Rover Range Rover 3.0D mHEV D250 HSE AWD AT 183kW249HP A8", "price": 111900, "price_gross": 111900, "fair_price": 62120.0, "discount_pct": -80.1, "verdict": "výrazne nad trhom", "year": 2023, "km": 48000, "km_per_year": 14400.0, "eg": "Diesel 3.0 TDV6 / SDV6 / D300 / 4.4 SDV8 155–250 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava-Lamač", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "197033289", "url": "https://auto.bazos.sk/inzerat/197033289/land-rover-range-rover-30d-mhev-d250-hse-awd-atodpocet-dph.php", "price": 111900}], "body": "suv"}, {"id": "ab-AeENEnwpUsbN", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-ine-190kw-automat/AeENEnwpUsbN/", "title": "Land Rover Range Rover Iné 190kw Automat", "price": 83900, "price_gross": 83900, "fair_price": 43010.0, "discount_pct": -95.1, "verdict": "výrazne nad trhom", "year": 2018, "km": 74700, "km_per_year": 9000.0, "eg": "Diesel 3.0 TDV6 / SDV6 / D300 / 4.4 SDV8 155–250 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Nitra", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-38684773", "url": "https://auto.bazar.sk/38684773-land-rover-range-rover-ine-190kw-automat/", "price": 83900}], "body": "suv"}];
+const GROUPS = ["Benzín", "Diesel", "Plug-in hybrid", "LPG a nezistený"];
+const BODY = {"suv": "SUV"};
+const fmt = n => Math.round(n).toLocaleString("sk-SK");
+const eur = n => fmt(n) + " €";
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const TRANS = {automatic: "automat", manual: "manuál"};
+const SRC = {bazos: "bazoš", autobazar: "autobazar.eu", bazarsk: "bazar.sk"};
+
+// --- theme toggle ---------------------------------------------------------
+document.getElementById("themeBtn").onclick = () => {
+  const root = document.documentElement;
+  const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  drawChart();
+};
+
+// --- scatter chart --------------------------------------------------------
+const legend = document.getElementById("legend");
+legend.innerHTML = GROUPS.map((g, i) => `<span><i style="background:var(--s${i+1})"></i>${g}</span>`).join("")
+  + `<span><i class="ring"></i>odporúčaná ponuka</span>`;
+
+function drawChart() {
+  const svg = document.getElementById("chart"), wrap = document.getElementById("chartWrap"), tip = document.getElementById("tip");
+  const W = svg.clientWidth, H = 420, m = {l: 56, r: 16, t: 10, b: 40};
+  const pts = DATA.filter(d => d.km && d.price_gross);
+  const xMax = Math.ceil(Math.max(...pts.map(d => d.km)) / 50000) * 50000;
+  const yMax = Math.ceil(Math.max(...pts.map(d => d.price_gross)) / 5000) * 5000;
+  const x = v => m.l + v / xMax * (W - m.l - m.r), y = v => H - m.b - v / yMax * (H - m.t - m.b);
+  let s = "";
+  for (let v = 0; v <= yMax; v += 5000)
+    s += `<line x1="${m.l}" x2="${W-m.r}" y1="${y(v)}" y2="${y(v)}" stroke="var(--grid)"/><text x="${m.l-8}" y="${y(v)+4}" text-anchor="end">${v/1000} tis. €</text>`;
+  const step = W < 520 ? 100000 : 50000;
+  for (let v = 0; v <= xMax; v += step)
+    s += `<text x="${x(v)}" y="${H-m.b+18}" text-anchor="middle">${v/1000} tis.</text>`;
+  s += `<text x="${(W+m.l)/2}" y="${H-6}" text-anchor="middle">nájazd (km)</text>`;
+  const order = [...pts].sort((a, b) => (a.pick ? 1 : 0) - (b.pick ? 1 : 0));
+  order.forEach(d => {
+    const cx = x(d.km), cy = y(d.price_gross);
+    if (d.pick) s += `<circle cx="${cx}" cy="${cy}" r="9" fill="none" stroke="var(--text)" stroke-width="2"/>`;
+    s += `<circle class="pt" data-id="${d.id}" cx="${cx}" cy="${cy}" r="5" fill="var(--s${d.cg+1})" stroke="var(--surface)" stroke-width="2"/>`;
+  });
+  // invisible bigger hit targets
+  order.forEach(d => s += `<circle class="hit" data-id="${d.id}" cx="${x(d.km)}" cy="${y(d.price_gross)}" r="11" fill="transparent" style="cursor:pointer"/>`);
+  svg.innerHTML = s;
+  const byId = Object.fromEntries(pts.map(d => [d.id, d]));
+  svg.querySelectorAll(".hit").forEach(c => {
+    c.onmouseenter = c.onmousemove = ev => {
+      const d = byId[c.dataset.id];
+      tip.innerHTML = `<b>${esc(d.title)}</b>
+        <div class="row"><span>Cena</span><span>${eur(d.price_gross)}</span></div>
+        <div class="row"><span>Férová cena</span><span>${eur(d.fair_price)}</span></div>
+        <div class="row"><span>Pod trhom</span><span>${d.discount_pct > 0 ? "+" : ""}${d.discount_pct.toLocaleString("sk-SK")} %</span></div>
+        <div class="row"><span>Zdroj</span><span>${SRC[d.source]}${d.also_listed.length ? " + " + d.also_listed.map(a => SRC[a.source]).join(", ") : ""}</span></div>
+        <div class="row"><span>Rok · km</span><span>${d.year} · ${fmt(d.km)}</span></div>
+        <div class="row"><span>Motor</span><span>${esc(d.eg)} ${TRANS[d.transmission] || ""}</span></div>`;
+      tip.style.display = "block";
+      const r = wrap.getBoundingClientRect();
+      let lx = ev.clientX - r.left + 14, ly = ev.clientY - r.top + 14;
+      if (lx + 290 > r.width) lx = ev.clientX - r.left - 290;
+      tip.style.left = lx + "px"; tip.style.top = ly + "px";
+    };
+    c.onmouseleave = () => tip.style.display = "none";
+    c.onclick = () => window.open(byId[c.dataset.id].url, "_blank", "noopener");
+  });
+}
+drawChart();
+addEventListener("resize", drawChart);
+
+// --- full table -----------------------------------------------------------
+const fEngine = document.getElementById("fEngine");
+[...new Set(DATA.map(d => d.eg))].sort().forEach(g => fEngine.insertAdjacentHTML("beforeend", `<option>${esc(g)}</option>`));
+let sortK = "discount_pct", sortDir = -1;
+function discCell(v) {
+  const w = Math.min(Math.abs(v), 30) / 30 * 50;
+  const bar = v >= 0 ? `left:50%;width:${w}%;background:var(--pos)` : `right:50%;width:${w}%;background:var(--neg)`;
+  return `<span class="disc">${v > 0 ? "+" : ""}${v.toLocaleString("sk-SK")} %<span class="dbar"><span style="${bar}"></span></span></span>`;
+}
+function renderTable() {
+  const max = parseFloat(document.getElementById("fMax").value) || Infinity;
+  const tr = document.getElementById("fTrans").value, se = document.getElementById("fSeller").value, en = fEngine.value;
+  const so = document.getElementById("fSource").value, og = document.getElementById("fOrigin").value;
+  const bo = document.getElementById("fBody").value;
+  const rows = DATA.filter(d => (!en || d.eg === en) && (!tr || d.transmission === tr)
+    && (!se || d.seller_type !== "dealer") && d.price_gross <= max
+    && (!so || d.source === so || d.also_listed.some(a => a.source === so)) && (!og || d.origin === og) && (!bo || d.body === bo))
+    .sort((a, b) => { const A = a[sortK], B = b[sortK]; return (typeof A === "string" ? A.localeCompare(B) : A - B) * sortDir; });
+  document.getElementById("count").textContent = `${rows.length} z ${DATA.length} inzerátov`;
+  document.querySelector("#tbl tbody").innerHTML = rows.map(d => `<tr>
+    <td><a href="${d.url}" target="_blank" rel="noopener">${esc(d.title)}</a> ${d.pick ? '<span class="badge pick">odporúčané</span>' : ""}
+      <div class="sub">${BODY[d.body] || "karoséria ?"} · ${esc(d.eg)} · ${TRANS[d.transmission] || "prevodovka ?"} · ${esc(d.location)} · ${d.seller_type === "dealer" ? "predajca/firma" : d.seller_type === "private" ? "súkromník" : "neisté"} · ${SRC[d.source]}${d.origin === "SR" ? " · kúpené v SR" : d.origin === "dovoz" ? " · dovoz" : ""}${d.also_listed.map(a => ` · <a href="${a.url}" target="_blank" rel="noopener">aj na ${SRC[a.source]}</a>`).join("")}</div>
+      ${d.flags.filter(f => !f.startsWith("prevodovka")).map(f => `<div class="flag">⚠ ${esc(f)}</div>`).join("")}</td>
+    <td class="num">${d.year}</td><td class="num">${fmt(d.km)}</td>
+    <td class="num">${eur(d.price_gross)}</td><td class="num">${eur(d.fair_price)}</td>
+    <td class="num">${discCell(d.discount_pct)}</td></tr>`).join("");
+  document.querySelectorAll("#tbl th.sortable").forEach(th => {
+    const base = th.textContent.replace(/ [▾▴]$/, "");
+    th.textContent = base + (th.dataset.k === sortK ? (sortDir < 0 ? " ▾" : " ▴") : "");
+  });
+}
+document.querySelectorAll("#tbl th.sortable").forEach(th => th.onclick = () => {
+  if (sortK === th.dataset.k) sortDir *= -1; else { sortK = th.dataset.k; sortDir = th.dataset.k === "title" ? 1 : -1; }
+  renderTable();
+});
+["fEngine", "fTrans", "fSeller", "fSource", "fBody", "fOrigin", "fMax"].forEach(id => document.getElementById(id).addEventListener("input", renderTable));
+renderTable();
+</script>
+<!-- ferovka-theme --><script defer src="/analytics-config.js"></script><script defer src="/analytics.js"></script><script id="ferovka-chart">/* Férovka – chart → ad links, injected into every report by sync-reports.mjs.
+ *
+ * The reports draw one invisible 11px "hit" circle per ad. In dense charts (and always on a narrow phone) those
+ * circles overlap and the one drawn last wins, so a click/tap often opened a neighbouring ad. Here the pointer is
+ * always resolved to the NEAREST point, the report's own tooltip is shown for that point, and a click opens its ad.
+ * Touch: the first tap shows the tooltip (with a hint), a second tap on the same point opens the ad.
+ */
+(() => {
+  let rows;
+  try { rows = DATA; } catch { return; } // eslint-disable-line no-undef
+  if (!Array.isArray(rows) || !rows.length || !("url" in rows[0])) return;
+  const byId = new Map(rows.map((d) => [String(d.id), d]));
+  const MOUSE = ["mouseover", "mouseout", "mouseenter", "mouseleave", "mousemove", "mousedown", "mouseup", "click"];
+  let lastPointer = "mouse", down = null;
+  // the finger position as it was – Chrome "snaps" the later click of a tap to the centre of a nearby clickable element
+  addEventListener("pointerdown", (e) => { lastPointer = e.pointerType || "mouse"; down = { clientX: e.clientX, clientY: e.clientY }; }, true);
+
+  // the old per-point hit circles must not be targets (they overlap, and touch snapping aims at them)
+  document.head.insertAdjacentHTML("beforeend", "<style>svg circle.hit[data-id],svg circle.pt[data-id]{pointer-events:none}</style>");
+
+  function nearest(svg, ev, radius) {
+    let best = null, bd = Infinity;
+    for (const c of svg.querySelectorAll("circle.pt[data-id]")) {
+      const r = c.getBoundingClientRect();
+      const dx = r.left + r.width / 2 - ev.clientX, dy = r.top + r.height / 2 - ev.clientY;
+      const d = dx * dx + dy * dy;
+      if (d <= bd) { bd = d; best = c; } // ties: the point drawn on top (later) wins – that is the one you see
+    }
+    return best && bd <= radius * radius ? best : null;
+  }
+
+  function bind(svg) {
+    if (svg.__fvLinks) return;
+    svg.__fvLinks = true;
+    let current = null, armed = null;
+    const hitOf = (pt) => pt && svg.querySelector(`circle.hit[data-id="${CSS.escape(pt.dataset.id)}"]`);
+    const fire = (el, type, ev) => {
+      if (!el) return;
+      const e = new MouseEvent(type, { clientX: ev.clientX, clientY: ev.clientY, bubbles: false });
+      e.__fv = true;
+      el.dispatchEvent(e);
+    };
+    const tip = () => (svg.parentElement && svg.parentElement.querySelector("#tip, .tip")) || document.getElementById("tip");
+    const mark = (pt) => {
+      if (current === pt) return;
+      if (current) current.setAttribute("r", current.__r || "5");
+      current = pt;
+      if (pt) { pt.__r = pt.__r || pt.getAttribute("r"); pt.setAttribute("r", String(+pt.__r + 2)); }
+    };
+    const show = (pt, ev, hint) => {
+      mark(pt);
+      if (!pt) { const t = tip(); if (t) t.style.display = "none"; return; }
+      fire(hitOf(pt), "mousemove", ev); // the report's own tooltip, for the nearest point
+      const t = tip();
+      if (t && hint) t.insertAdjacentHTML("beforeend", `<div class="fv-hint">Ťukni ešte raz – otvorí sa inzerát ↗</div>`);
+    };
+    const open = (pt) => {
+      const d = byId.get(pt.dataset.id);
+      if (d && d.url) {
+        try { window.FerovkaAnalytics?.listingClick(d.url, "chart"); } catch { /* analytics must never block an ad */ }
+        window.open(d.url, "_blank", "noopener");
+      }
+    };
+
+    // the per-circle handlers of the report never see real mouse events – only our synthetic ones
+    for (const type of MOUSE) {
+      svg.addEventListener(type, (ev) => {
+        if (ev.__fv) return;
+        ev.stopImmediatePropagation();
+        if (type === "mousemove" && lastPointer === "mouse") {
+          show(nearest(svg, ev, 18), ev, false);
+          svg.style.cursor = current ? "pointer" : "";
+        } else if (type === "mouseleave" && ev.target === svg && lastPointer === "mouse") {
+          show(null, ev);
+        } else if (type === "click") {
+          const touch = lastPointer !== "mouse";
+          const at = touch && down ? down : ev;
+          const pt = nearest(svg, at, touch ? 26 : 18);
+          if (!pt) { armed = null; show(null, ev); return; }
+          if (!touch || armed === pt) { armed = null; open(pt); }
+          else { armed = pt; show(pt, at, true); }
+        }
+      }, true);
+    }
+  }
+
+  const scan = () => document.querySelectorAll("svg").forEach((s) => s.querySelector("circle.pt[data-id]") && bind(s));
+  scan();
+  new MutationObserver(scan).observe(document.body, { childList: true, subtree: true });
+})();
+</script><script id="ferovka-filters">/* Férovka – filters for the whole report, injected into every model report by sync-reports.mjs.
+ *
+ * The reports render the chart (drawChart) and the full ranking (renderTable) from the global DATA array; their own
+ * filter bar only filters the table. Here the filter bar (kept in its place above the ranking) gets more filters (year, price from/to,
+ * km, fuel, discount, picks only, text search) and every filter applies to the chart and the ranking together: DATA is
+ * refilled in place with the matching ads and both are drawn again. "</script" can't occur inside this file.
+ */
+(() => {
+  let data;
+  try { data = DATA; } catch { return; } // eslint-disable-line no-undef
+  if (!Array.isArray(data) || !data.length || typeof renderTable !== "function") return; // eslint-disable-line no-undef
+  const bar = document.querySelector(".filters");
+  if (!bar || bar.dataset.fv) return;
+  bar.dataset.fv = "1";
+  const ALL = data.slice();
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+  const fmt = (n) => Math.round(n).toLocaleString("sk-SK");
+  const norm = (s) => String(s ?? "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+  let groups = null;
+  try { groups = GROUPS; } catch { /* report without groups */ } // eslint-disable-line no-undef
+
+  const FUEL = { diesel: "Diesel", petrol: "Benzín", hybrid: "Hybrid", "plug-in hybrid": "Plug-in hybrid", electric: "Elektro", lpg: "LPG", cng: "CNG" };
+  const fuelOf = (d) => {
+    const e = norm(d.eg);
+    if (/tdi|crdi|dci|hdi|diesel|\bd\b|cdi|\d+d\b|blue/.test(e)) return "Diesel";
+    if (/plug-in|phev|e-hybrid|recharge|\bgte\b|\bt8\b|\b\d{2}e\b|\b\d{3} ?e\b/.test(e)) return "Plug-in hybrid";
+    if (/elektro|electric|\bev\b/.test(e)) return "Elektro";
+    if (/cng|lpg|g-tec|g-tron|tgi|ecofuel/.test(e)) return "Plyn (CNG/LPG)";
+    if (/mild|mhev/.test(e)) return "Benzín"; // mild-hybrid petrol (the diesel ones say TDI / d above)
+    if (/hybrid|hev/.test(e)) return "Hybrid";
+    if (/tsi|tfsi|mpi|fsi|benzin|gdi|dpi|htp|12v|\bt\d\b|\bb[56]\b|\d+i\b|turbo|tce|\bs4\b|rs ?\d|amg|competition|\bm\d{2,3}i?\b|gti|\bx5 m\b/.test(e)) return "Benzín";
+    return d.fuel ? FUEL[d.fuel] || String(d.fuel) : null;
+  };
+
+  // --- controls ---------------------------------------------------------------------------------------------------
+  const years = ALL.map((d) => d.year).filter(Boolean);
+  const yMin = Math.min(...years), yMax = Math.max(...years);
+  const yearOpts = (label) => `<option value="">${label}</option>` +
+    Array.from({ length: yMax - yMin + 1 }, (_, i) => yMax - i).map((y) => `<option>${y}</option>`).join("");
+  const kms = [30000, 50000, 75000, 100000, 150000, 200000, 250000, 300000];
+  const fuels = [...new Set(ALL.map(fuelOf).filter(Boolean))].sort((a, b) => a.localeCompare(b, "sk"));
+  const showGroups = Array.isArray(groups) && groups.length > 1 && ALL.some((d) => Number.isInteger(d.cg));
+
+  const maxInput = $("fMax");
+  if (maxInput) { maxInput.placeholder = "Cena do €"; maxInput.title = "Najvyššia cena (s DPH)"; }
+  const html =
+    `<select id="fvYearFrom" title="Rok výroby od">${yearOpts("Rok od")}</select>` +
+    `<select id="fvYearTo" title="Rok výroby do">${yearOpts("Rok do")}</select>` +
+    `<input id="fvPriceMin" type="number" placeholder="Cena od €" step="500" min="0" title="Najnižšia cena (s DPH)" style="width:110px">`;
+  if (maxInput) maxInput.insertAdjacentHTML("beforebegin", html);
+  else bar.insertAdjacentHTML("afterbegin", html);
+  const more =
+    `<select id="fvKm" title="Najviac najazdených km"><option value="">Nájazd – všetky</option>${kms.map((k) => `<option value="${k}">do ${fmt(k)} km</option>`).join("")}</select>` +
+    (fuels.length > 1 ? `<select id="fvFuel" title="Palivo"><option value="">Všetky palivá</option>${fuels.map((f) => `<option>${esc(f)}</option>`).join("")}</select>` : "") +
+    (showGroups ? `<select id="fvGroup" title="Skupina motorov (farba v grafe)"><option value="">Všetky skupiny</option>${groups.map((g, i) => `<option value="${i}">${esc(g)}</option>`).join("")}</select>` : "") +
+    `<select id="fvDisc" title="O koľko je auto lacnejšie ako férová cena"><option value="">Cena – všetky</option><option value="0">pod férovou cenou</option><option value="10">aspoň 10 % pod trhom</option><option value="20">aspoň 20 % pod trhom</option></select>` +
+    `<input id="fvText" type="search" placeholder="Hľadať (výbava, mesto…)" title="Hľadá v názve inzerátu, motore a lokalite" style="width:170px">` +
+    `<label class="fv-check"><input id="fvPick" type="checkbox"> len odporúčané</label>` +
+    `<button type="button" id="fvReset" class="fv-reset">Zrušiť filtre</button>`;
+  const count = $("count");
+  if (count) count.insertAdjacentHTML("beforebegin", more);
+  else bar.insertAdjacentHTML("beforeend", more);
+
+  // the bar stays where it was – right above the ranking – and also drives the chart; the chart gets a pointer to it
+  const chart = $("chartWrap");
+  const box = document.createElement("div");
+  box.className = "fv-filters";
+  box.id = "filtre";
+  bar.before(box);
+  box.innerHTML = `<div class="fv-head"><b>Filtre</b><span>platia pre rebríček aj graf vyššie</span></div>`;
+  box.appendChild(bar);
+  const note = document.createElement("div");
+  note.className = "fv-note";
+  chart?.before(note);
+
+  document.head.insertAdjacentHTML("beforeend", `<style id="fv-filters-css">
+.fv-filters{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 14px 4px;margin:24px 0 8px}
+.fv-filters .fv-head{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;margin-bottom:8px}
+.fv-filters .fv-head span{color:var(--muted);font-size:13px}
+.fv-filters .filters{margin-bottom:8px}
+.fv-filters .filters .count{flex-basis:100%;margin-left:0}
+.fv-check{display:inline-flex;gap:6px;align-items:center;font-size:13px;color:var(--text-2,var(--text));white-space:nowrap}
+.fv-reset{background:none;border:1px solid var(--border);color:var(--text);border-radius:8px;padding:6px 10px;font:inherit;font-size:13px;cursor:pointer}
+.fv-reset:hover{background:var(--surface-2,var(--surface))}
+.fv-note{color:var(--muted);font-size:13px;margin:0 0 8px}
+.fv-note a{color:inherit}
+.fv-empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:14px;pointer-events:none}
+@media (max-width:600px){.fv-filters .filters select,.fv-filters .filters input[type=number],.fv-filters .filters input[type=search]{flex:1 1 calc(50% - 8px);min-width:0;width:auto!important}}
+</style>`);
+
+  // --- filtering --------------------------------------------------------------------------------------------------
+  const val = (id) => ($(id) ? $(id).value : "");
+  const num = (id) => { const v = parseFloat(val(id)); return Number.isFinite(v) ? v : null; };
+  function matches(d) {
+    const yf = num("fvYearFrom"), yt = num("fvYearTo"), pmin = num("fvPriceMin"), pmax = num("fMax"), km = num("fvKm"), disc = num("fvDisc");
+    const fuel = val("fvFuel"), grp = val("fvGroup"), q = norm(val("fvText")).trim();
+    if (yf != null && !(d.year >= yf)) return false;
+    if (yt != null && !(d.year <= yt)) return false;
+    if (pmin != null && !(d.price_gross >= pmin)) return false;
+    if (pmax != null && !(d.price_gross <= pmax)) return false;
+    if (km != null && !(d.km <= km)) return false;
+    if (disc != null && !(d.discount_pct > disc || (disc > 0 && d.discount_pct >= disc))) return false;
+    if (fuel && fuelOf(d) !== fuel) return false;
+    if (grp !== "" && String(d.cg) !== grp) return false;
+    if ($("fvPick")?.checked && !d.pick) return false;
+    if (q && !q.split(/\s+/).every((w) => norm(`${d.title} ${d.eg ?? ""} ${d.engine ?? ""} ${d.location ?? ""}`).includes(w))) return false;
+    // the report's own filters (engine, gearbox, seller, portal, body, origin) – same rules as its renderTable
+    const en = val("fEngine"), tr = val("fTrans"), se = val("fSeller"), so = val("fSource"), og = val("fOrigin"), bo = val("fBody");
+    if (en && d.eg !== en) return false;
+    if (tr && d.transmission !== tr) return false;
+    if (se && d.seller_type === "dealer") return false;
+    if (so && !(d.source === so || (d.also_listed || []).some((a) => a.source === so))) return false;
+    if (og && d.origin !== og) return false;
+    if (bo && d.body !== bo) return false;
+    return true;
+  }
+  const active = () => [...box.querySelectorAll("select, input")].filter((el) => (el.type === "checkbox" ? el.checked : el.value !== "")).length;
+
+  let drawing = false;
+  function apply() {
+    if (drawing) return;
+    drawing = true;
+    const rows = ALL.filter(matches);
+    data.length = 0;
+    data.push(...rows);
+    const wrap = $("chartWrap");
+    wrap?.querySelector(".fv-empty")?.remove();
+    const plotted = rows.filter((d) => d.km && d.price_gross).length;
+    try {
+      if (typeof drawChart === "function") { // eslint-disable-line no-undef
+        if (plotted) drawChart(); // eslint-disable-line no-undef
+        else { const svg = $("chart"); if (svg) svg.innerHTML = ""; }
+      }
+    } catch (e) { console.warn("chart", e); }
+    if (wrap && !plotted) {
+      if (getComputedStyle(wrap).position === "static") wrap.style.position = "relative";
+      wrap.insertAdjacentHTML("beforeend", `<div class="fv-empty">Filtrom nezodpovedá žiadny inzerát</div>`);
+    }
+    try { renderTable(); } catch (e) { console.warn("table", e); } // eslint-disable-line no-undef
+    const n = active();
+    if (count) count.textContent = `Zobrazených ${fmt(rows.length)} z ${fmt(ALL.length)} inzerátov` + (n ? ` · aktívne filtre: ${n}` : "");
+    note.innerHTML = n
+      ? `Zobrazených ${fmt(rows.length)} z ${fmt(ALL.length)} inzerátov podľa <a href="#filtre">filtrov pri rebríčku</a>.`
+      : `Filtre (rok, cena, nájazd, palivo…) nájdeš <a href="#filtre">pri kompletnom rebríčku</a> – platia aj pre tento graf.`;
+    drawing = false;
+  }
+  box.querySelectorAll("select, input").forEach((el) => el.addEventListener("input", apply));
+  $("fvPick")?.addEventListener("change", apply);
+  $("fvReset").addEventListener("click", () => {
+    box.querySelectorAll("select, input").forEach((el) => { if (el.type === "checkbox") el.checked = false; else el.value = ""; });
+    apply();
+  });
+  apply();
+})();
+</script><!-- /ferovka-theme -->
+</body>
+</html>

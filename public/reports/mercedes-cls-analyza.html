@@ -1,0 +1,855 @@
+<!doctype html>
+<html lang="sk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mercedes-Benz CLS – analýza ponúk</title>
+<style>
+:root {
+  color-scheme: light;
+  --bg: #f6f6f4; --surface: #fcfcfb; --surface-2: #f0efec; --border: #e2e1dc;
+  --text: #0b0b0b; --text-2: #52514e; --muted: #7a7974;
+  --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a;
+  --pos: #2a78d6; --neg: #eb6834; --accent: #2a78d6;
+  --good: #1d7f4e; --bad: #b4332f; --grid: #e8e7e3;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #121211; --surface: #1a1a19; --surface-2: #232321; --border: #33332f;
+    --text: #f0efec; --text-2: #c3c2b7; --muted: #8f8e86;
+    --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+    --pos: #3987e5; --neg: #d95926; --accent: #5598e7;
+    --good: #4cc38a; --bad: #f07a76; --grid: #2a2a27;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #121211; --surface: #1a1a19; --surface-2: #232321; --border: #33332f;
+  --text: #f0efec; --text-2: #c3c2b7; --muted: #8f8e86;
+  --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+  --pos: #3987e5; --neg: #d95926; --accent: #5598e7;
+  --good: #4cc38a; --bad: #f07a76; --grid: #2a2a27;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text);
+  font: 15px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+main { max-width: 1120px; margin: 0 auto; padding: 32px 16px 64px; }
+a { color: var(--accent); text-decoration: none; } a:hover { text-decoration: underline; }
+h1 { font-size: 30px; margin: 0 0 4px; letter-spacing: -.01em; }
+h2 { font-size: 21px; margin: 48px 0 6px; }
+h3 { font-size: 15px; margin: 6px 0 4px; line-height: 1.35; }
+.lead { color: var(--text-2); margin: 0 0 20px; max-width: 760px; }
+.section-lead { color: var(--text-2); margin: 0 0 16px; max-width: 800px; }
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
+.kpi { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+.kpi .v { font-size: 26px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.kpi .l { color: var(--text-2); font-size: 13px; }
+.explain { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; margin-top: 12px; }
+.explain p { margin: 6px 0; color: var(--text-2); }
+.explain b { color: var(--text); }
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; }
+.card-head { display: flex; justify-content: space-between; gap: 8px; font-size: 12px; }
+.tag { font-weight: 600; color: var(--accent); }
+.loc { color: var(--muted); }
+.facts { color: var(--text-2); font-size: 13px; }
+.prices { display: grid; grid-template-columns: 1.2fr 1fr .8fr; gap: 8px; margin: 12px 0 8px; }
+.lbl { display: block; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+.big { font-size: 22px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.mid { font-size: 16px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.good { color: var(--good); }
+.meter { height: 6px; background: var(--surface-2); border-radius: 4px; overflow: hidden; }
+.meter span { display: block; height: 100%; background: var(--s1); border-radius: 4px; }
+.news ul { margin: 6px 0 0; padding-left: 20px; } .news li { margin: 4px 0; } .news .down { color: var(--good, #1baf7a); font-weight: 600; }
+.note { font-size: 12.5px; background: var(--surface-2); border-radius: 6px; padding: 6px 8px; margin-top: 8px; color: var(--text-2); }
+.pc { list-style: none; padding: 0; margin: 10px 0 0; font-size: 13.5px; }
+.pc li { padding-left: 20px; position: relative; margin: 3px 0; }
+.pc li.pro::before { content: "+"; position: absolute; left: 4px; color: var(--good); font-weight: 700; }
+.pc li.con::before { content: "–"; position: absolute; left: 4px; color: var(--bad); font-weight: 700; }
+.subhead { font-size: 15px; color: var(--text-2); margin: 22px 0 10px; font-weight: 600; }
+.chart-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 14px 8px; position: relative; }
+.legend { display: flex; flex-wrap: wrap; gap: 16px; font-size: 13px; color: var(--text-2); margin: 0 0 6px 4px; }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; }
+.legend .ring { background: transparent; border: 2px solid var(--text); width: 12px; height: 12px; }
+svg text { fill: var(--muted); font-size: 11px; }
+.tip { position: absolute; pointer-events: none; background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+  padding: 8px 10px; font-size: 12.5px; box-shadow: 0 6px 20px rgba(0,0,0,.15); max-width: 280px; display: none; z-index: 5; }
+.tip b { display: block; margin-bottom: 2px; }
+.tip .row { display: flex; justify-content: space-between; gap: 12px; color: var(--text-2); }
+.tip .row span:last-child { color: var(--text); font-variant-numeric: tabular-nums; }
+table { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; font-size: 13.5px; }
+th, td { padding: 9px 10px; border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; }
+th { font-size: 12px; color: var(--text-2); font-weight: 600; background: var(--surface-2); white-space: nowrap; }
+th.sortable { cursor: pointer; user-select: none; } th.sortable:hover { color: var(--text); }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+.sub { color: var(--text-2); font-size: 12.5px; margin-top: 2px; }
+.stars { color: #c98500; letter-spacing: 1px; white-space: nowrap; } .stars .off { color: var(--border); }
+.cellbar { height: 5px; background: var(--surface-2); border-radius: 3px; margin-bottom: 4px; }
+.cellbar span { display: block; height: 100%; background: var(--s1); border-radius: 3px; }
+.disc { display: inline-flex; align-items: center; gap: 6px; justify-content: flex-end; }
+.dbar { width: 54px; height: 6px; background: var(--surface-2); border-radius: 3px; position: relative; }
+.dbar span { position: absolute; top: 0; height: 100%; border-radius: 3px; }
+.filters { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 10px; align-items: center; }
+.filters select, .filters input { background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 6px 8px; font: inherit; font-size: 13px; }
+.filters .count { color: var(--muted); font-size: 13px; margin-left: auto; }
+.table-scroll { overflow-x: auto; border-radius: 12px; }
+.badge { font-size: 11px; padding: 1px 6px; border-radius: 10px; background: var(--surface-2); color: var(--text-2); white-space: nowrap; }
+.badge.pick { background: var(--s1); color: #fff; }
+.flag { color: var(--bad); font-size: 12px; }
+.warn { background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--neg); border-radius: 10px; padding: 12px 16px; }
+.warn li { margin: 4px 0; }
+.check { columns: 2 300px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px 14px 34px; margin: 0; }
+.check li { margin: 4px 0; break-inside: avoid; }
+footer { color: var(--muted); font-size: 12.5px; margin-top: 48px; border-top: 1px solid var(--border); padding-top: 14px; }
+.theme-btn { float: right; background: var(--surface); color: var(--text-2); border: 1px solid var(--border); border-radius: 8px; padding: 5px 10px; cursor: pointer; font: inherit; font-size: 13px; }
+@media (max-width: 640px) { h1 { font-size: 24px; } .prices { grid-template-columns: 1fr 1fr 1fr; } .big { font-size: 18px; } th, td { padding: 7px 6px; } }
+</style>
+<!-- ferovka-theme --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"><style id="ferovka-theme">/* Férovka look for the generated analyses – injected by sync-reports.mjs after each report's own <style>.
+   Same palette and type as the site; chart colours (--s1..--s3) stay the validated set. */
+:root {
+  --bg: #f5f4ef; --surface: #fdfdfb; --surface-2: #eeede6; --border: #e1dfd6;
+  --text: #0f1513; --text-2: #4f5551; --muted: #6f746f;
+  --accent: #0b8a56; --good: #0b7a4b; --grid: #e6e4dc; --win: #dff3e9;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d110f; --surface: #151a17; --surface-2: #1d2420; --border: #2a322d;
+    --text: #eef1ec; --text-2: #b6bdb6; --muted: #8f978f;
+    --accent: #2fc583; --good: #4cd08f; --grid: #1f2622; --win: #143223;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d110f; --surface: #151a17; --surface-2: #1d2420; --border: #2a322d;
+  --text: #eef1ec; --text-2: #b6bdb6; --muted: #8f978f;
+  --accent: #2fc583; --good: #4cd08f; --grid: #1f2622; --win: #143223;
+}
+
+body { font-family: "Manrope", system-ui, sans-serif; }
+h1, h2 { letter-spacing: -0.02em; font-weight: 800; }
+.tag { color: var(--accent); }
+
+/* photo header (removed by the site's viewer, which shows its own) */
+.fv-hero { position: relative; margin: 0 0 26px; border-radius: 20px; overflow: hidden; aspect-ratio: 21 / 8; background: #0d110f; display: flex; }
+.fv-hero img { flex: 1; min-width: 0; height: 100%; object-fit: cover; animation: fv-zoom 1.4s cubic-bezier(.2,.7,.2,1) both; }
+.fv-collage img + img { border-left: 3px solid #0d110f; }
+.fv-hero::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(180deg, transparent 55%, rgb(13 17 15 / .75)),
+    repeating-linear-gradient(90deg, rgb(47 197 131 / .06) 0 1px, transparent 1px 48px); }
+.fv-hero figcaption { position: absolute; right: 12px; bottom: 8px; z-index: 1; font-size: 11px; color: rgb(255 255 255 / .75); }
+.fv-hero figcaption a { color: inherit; }
+
+/* cards & panels: softer, lift on hover */
+.card, .kpi, .explain, .chart-wrap, .box { border-radius: 16px; }
+.card { transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease; }
+.card:hover { transform: translateY(-3px); border-color: var(--accent); box-shadow: 0 14px 30px -18px rgb(0 0 0 / .45); }
+.badge.pick { background: var(--accent); }
+
+/* entrance animation */
+@keyframes fv-up { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes fv-zoom { from { transform: scale(1.08); filter: brightness(.6); } to { transform: none; filter: none; } }
+h1, .lead, .kpis, .cards .card { animation: fv-up .6s cubic-bezier(.2,.7,.2,1) both; }
+.lead { animation-delay: .08s; }
+.kpis { animation-delay: .16s; }
+.cards .card:nth-child(2) { animation-delay: .06s; }
+.cards .card:nth-child(3) { animation-delay: .12s; }
+.cards .card:nth-child(4) { animation-delay: .18s; }
+.cards .card:nth-child(5) { animation-delay: .24s; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+@media (max-width: 640px) { .fv-hero { aspect-ratio: 16 / 9; border-radius: 14px; } }
+
+/* touch: hint under the chart tooltip (report-chart.js) */
+.fv-hint { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--border, rgba(127,127,127,.3)); font-weight: 700; color: var(--accent, #2fc583); }
+</style><!-- /ferovka-theme -->
+</head>
+<body>
+<main><!-- ferovka-theme --><!-- /ferovka-theme -->
+<button class="theme-btn" id="themeBtn" type="button">Svetlý / tmavý</button>
+<h1>Mercedes-Benz CLS – ktorá ponuka sa oplatí</h1>
+<p class="lead">Analýza aktuálnych inzerátov Mercedes-Benz CLS (C218 2011–2017 kupé aj Shooting Brake, C257 2018–2023) od 6 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 149 inzerátov (71 na bazoši, 50 na autobazar.eu, 28 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 92 rôznych áut zo Slovenska. Každé auto sme porovnali
+s <b>férovou cenou</b>: tú vypočítal model naučený na celom trhu podľa veku, nájazdu, motora, prevodovky a typu predajcu.</p>
+
+<div class="kpis">
+  <div class="kpi"><div class="v">92</div><div class="l">inzerátov CLS (nad 6 000 €)</div></div>
+  <div class="kpi"><div class="v">69</div><div class="l">ohodnotených (majú rok aj km)</div></div>
+  <div class="kpi"><div class="v">19 900 €</div><div class="l">medián ceny s DPH</div></div>
+  <div class="kpi"><div class="v">88 %</div><div class="l">rozdielov v cenách vysvetlí model</div></div>
+</div>
+
+
+<h2>Odkiaľ sú dáta: bazoš, autobazar.eu a bazar.sk</h2>
+<div class="kpis">
+  <div class="kpi"><div class="v">29</div><div class="l">ohodnotených z bazoša</div></div>
+  <div class="kpi"><div class="v">22</div><div class="l">ohodnotených z autobazar.eu</div></div><div class="kpi"><div class="v">18</div><div class="l">ohodnotených z bazar.sk</div></div>
+  <div class="kpi"><div class="v">38</div><div class="l">áut bolo na viacerých portáloch – započítané raz</div></div>
+  <div class="kpi"><div class="v">26 / 10</div><div class="l">s uvedeným pôvodom SR / dovoz</div></div>
+</div>
+<div class="explain">
+  <p><b>Tri portály, jeden trh.</b> Bazoš prehľadal 70 inzerátov, autobazar.eu
+  50, bazar.sk 27. Ponuky z Česka (na autobazar.eu ich je veľa) sme vynechali. Autobazáre často dávajú
+  to isté auto na viac portálov. Takéto dvojice (23 v rebríčku) sme spojili podľa VIN alebo zhody roku, km a ceny,
+  aby sa v modeli nerátali dvakrát. Pri aute nájdeš odkaz na všetky ponuky – niekedy sa líšia cenou.</p>
+  <p><b>Rozdiel medzi portálmi:</b> rovnaké auto je na autobazar.eu v priemere -0,9 %
+  oproti bazošu. Na autobazar.eu predávajú hlavne firmy (14 z 22 ohodnotených). Na bazar.sk je rovnaké auto v priemere +2,4 % oproti bazošu.</p>
+  <p><b>Kúpené v SR vs. dovoz:</b> autá s uvedeným pôvodom zo SR sú oproti autám bez uvedeného pôvodu
+  -2,1 %, dovezené +9,0 %
+  (pri rovnakom veku, nájazde a motore). Pôvod zo SR je výhoda pri overovaní histórie, trh zaň však nepripláca – väčšina
+  inzerátov pôvod jednoducho neuvádza. V tabulke dole si môžeš nechať zobraziť len autá kúpené v SR.</p>
+</div>
+
+<h2>Čo hýbe cenou Mercedesu CLS</h2>
+<p class="section-lead">Toto sa model naučil z trhu. Keď porovnávaš dve autá, tieto čísla ti povedia, koľko má byť
+rozdiel v cene, aby to bolo fér.</p>
+<div class="kpis">
+  <div class="kpi"><div class="v">-2,7 %</div><div class="l">každých ďalších 10 000 km</div></div>
+  <div class="kpi"><div class="v">-3,3 %</div><div class="l">každý rok veku navyše</div></div>
+  <div class="kpi"><div class="v">+4006 %</div><div class="l">príplatok za automat (DSG)</div></div>
+  <div class="kpi"><div class="v">-4,3 %</div><div class="l">príplatok u predajcu / firmy</div></div>
+  <div class="kpi"><div class="v">+29,6 %</div><div class="l">CLS C257 (2018+) oproti cene podľa veku</div></div>
+  <div class="kpi"><div class="v">+4006,3 %</div><div class="l">príplatok za automat</div></div>
+</div>
+<div class="explain">
+  <p><b>Príklad:</b> dva rovnaké Mercedesy CLS 350d z roku 2019, jedno má 60 tis. km, druhé 120 tis. km. Druhé má byť
+  približne o 16 % lacnejšie (6 × -2,7 %). Ak je lacnejšie len o 5 %, preplácaš kilometre.</p>
+  <p><b>Ako čítať „pod trhom“:</b> +15 % znamená, že auto stojí o 15 % menej, než by malo podľa trhu. Bežný rozptyl
+  cien je asi ±23 %, takže až zľava nad ~10–15 % je naozaj výnimočná. Pri takej zľave vždy zisti, prečo je auto lacné
+  (stav, história, nájazd).</p>
+  <p><b>DPH:</b> ceny uvedené bez DPH (napr. „10 300 € netto“) sme prepočítali na cenu s DPH, ktorú zaplatí súkromná osoba.</p>
+</div>
+
+<h2>Odporúčané ponuky</h2>
+<p class="section-lead">Kandidáti s najlepším pomerom cena / vek / nájazd, ktorých celý inzerát sme prečítali.
+Zoradené podľa toho, ako ich odporúčame.</p>
+<div class="subhead">CLS C257 (2018+) – najlepší pomer cena / vek</div>
+<div class="cards">
+<article class="card">
+  <div class="card-head"><span class="tag">CLS 450 4MATIC mild hybrid z 2019</span><span class="loc">Bratislava</span></div>
+  <h3><a href="https://auto.bazar.sk/39754320-mercedes-benz-cls-kupe-450-mhev-4matic-a-t-270kw-2019-aj-na-splatky-protiucet/" target="_blank" rel="noopener">Mercedes-Benz CLS Kupé 450 mHEV 4MATIC A/T, 270kW (2019) / AJ NA SPLÁTKY / PROTIÚČET /</a></h3>
+  <div class="facts">2019 · 109 098 km · CLS 350 / 400 / 450 benzín 225–270 kW · automat · 4-dverové kupé · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazar.sk</b> · dovezené · aj na <a href='https://www.autobazar.eu/detail/mercedes-benz-cls-kupe-450-mhev-4matic-at-270kw-2019-aj-na-splatky-protiucet/AmahZ_GOT--/' target='_blank' rel='noopener'>autobazar.eu</a> · aj na <a href='https://auto.bazos.sk/inzerat/197600824/mercedes-benz-cls-450-mhev-4matic-at-270kw-2019.php' target='_blank' rel='noopener'>bazoš</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">31 990 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">40 830 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+21.6 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:72%"></span></div>
+  <ul class="pc"><li class="pro">2019, CLS 450 270 kW (R6), 4x4, automat, 109 tis. km</li><li class="pro">Druhá generácia C257</li><li class="pro">~22 % pod férovou cenou</li><li class="con">Predáva autobazár</li><li class="con">Dovoz</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">CLS 300 d s AMG paketom</span><span class="loc">Trenčín</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197516287/mercedes-cls-300d.php" target="_blank" rel="noopener">Mercedes CLS 300d AMG packet</a></h3>
+  <div class="facts">2019 · 98 378 km · CLS 220 d / 250 d / 300 d diesel 125–180 kW · automat · 4-dverové kupé · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">32 000 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">36 850 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+13.2 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:44%"></span></div>
+  <ul class="pc"><li class="pro">2019, CLS 300 d, 98 tis. km</li><li class="pro">AMG paket, nižší nájazd</li><li class="pro">~13 % pod férovou cenou</li><li class="con">Predajca neistý</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">CLS z 2019 v záruke</span><span class="loc">Bratislava-Nové Mesto</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/mercedes-benz-cls-v-zaruke/AeqysBISsPB/" target="_blank" rel="noopener">Mercedes-Benz CLS V Záruke</a></h3>
+  <div class="facts">2019 · 163 507 km · CLS 350 / 400 / 450 benzín 225–270 kW · automat · 4-dverové kupé · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · dovezené</div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">36 990 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">40 710 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+9.1 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:30%"></span></div>
+  <ul class="pc"><li class="pro">2019, CLS benzín, automat, 164 tis. km</li><li class="pro">V záruke (podľa predajcu)</li><li class="pro">~9 % pod férovou cenou</li><li class="con">Predáva autobazár</li><li class="con">Dovoz</li><li class="con">Krátky inzerát</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">CLS 450 4Matic AMG Line z SR</span><span class="loc">Prešov</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/mercedes-benz-cls-450-4matic-amg-line/AbSDwRGAXRM/" target="_blank" rel="noopener">Mercedes-Benz CLS Kupé 450 4Matic AMG Line</a></h3>
+  <div class="facts">2018 · 182 691 km · CLS 350 / 400 / 450 benzín 225–270 kW · automat · 4-dverové kupé · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · kúpené v SR · aj na <a href='https://auto.bazar.sk/39708222-mercedes-benz-cls-kupe-450-4matic-amg-line/' target='_blank' rel='noopener'>bazar.sk</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">28 900 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">31 670 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+8.7 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:29%"></span></div>
+  <ul class="pc"><li class="pro">2018, CLS 450 (R6), 4x4, automat, 183 tis. km</li><li class="pro">Pôvod SR, AMG Line</li><li class="pro">~9 % pod férovou cenou</li><li class="con">Predáva autobazár</li></ul>
+</article></div>
+<div class="subhead">Lacnejšie CLS do 18 000 €</div>
+<div class="cards">
+<article class="card">
+  <div class="card-head"><span class="tag">Súkromník: CLS Shooting Brake 250 d za 12 750 €</span><span class="loc">Topoľčany</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/mercedes-benz-cls-shooting-brake-21-diesel-150kw-automat-prevodovka-4x4/AeJH03xFGz3/" target="_blank" rel="noopener">Mercedes-Benz CLS Shooting Brake 2.1 Diesel 150kW Automat. prevodovka 4x4</a></h3>
+  <div class="facts">2016 · 213 000 km · CLS 220 d / 250 d / 300 d diesel 125–180 kW · automat · Shooting Brake · súkromník</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">12 750 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">20 020 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+36.3 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:100%"></span></div>
+  <ul class="pc"><li class="pro">2016, 2.1 diesel 150 kW, automat, 213 tis. km</li><li class="pro">Kombi Shooting Brake, po facelifte</li><li class="pro">~36 % pod férovou cenou</li><li class="con">Inzerát bez popisu</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">CLS 350 CDI 4Matic z SR</span><span class="loc">Banská Bystrica</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197342434/mercedes-benz-cls-350cdi-4matic-x218-sk-povod.php" target="_blank" rel="noopener">Mercedes Benz CLS 350CDI 4Matic (X218) SK pôvod</a></h3>
+  <div class="facts">2013 · 295 411 km · CLS 350 / 400 d diesel 190–250 kW · automat · Shooting Brake · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b> · kúpené v SR</div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">9 800 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">12 950 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+24.3 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:81%"></span></div>
+  <ul class="pc"><li class="pro">2013, 350 CDI, 4x4, 295 tis. km</li><li class="pro">Pôvod SR</li><li class="pro">~24 % pod férovou cenou</li><li class="con">Vysoký nájazd</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">CLS Shooting Brake 350 CDI za 10 900 €</span><span class="loc">Detva</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197666080/mercedes-benz-cls-350-cdi-195kw-shooting-brake-sb.php" target="_blank" rel="noopener">✳️Mercedes-Benz CLS 350 CDI 195kW Shooting Brake SB ✳️</a></h3>
+  <div class="facts">2013 · 246 000 km · CLS 350 / 400 d diesel 190–250 kW · automat · Shooting Brake · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">10 900 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">14 050 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+22.4 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:75%"></span></div>
+  <ul class="pc"><li class="pro">2013, 350 CDI 195 kW, automat, 246 tis. km</li><li class="pro">Kombi Shooting Brake</li><li class="pro">~22 % pod férovou cenou</li><li class="con">Predáva autobazár</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">CLS 350 V6 benzín C218</span><span class="loc">Lučenec</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/196216602/mercedes-benz-cls-350-c218-35-v6-benzin-225-kw-306-k.php" target="_blank" rel="noopener">Mercedes-Benz CLS 350 (C218), 3.5 V6 benzín, 225 kW / 306 k,</a></h3>
+  <div class="facts">2012 · 270 000 km · CLS 350 / 400 / 450 benzín 225–270 kW · automat · 4-dverové kupé · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">11 900 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">15 080 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+21.1 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:70%"></span></div>
+  <ul class="pc"><li class="pro">2012, 3.5 V6 benzín 225 kW, automat, 270 tis. km</li><li class="pro">Atmosférický V6 bez turba</li><li class="pro">~21 % pod férovou cenou</li><li class="con">Vysoký nájazd</li><li class="con">Predajca neistý</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">Súkromník: CLS Shooting Brake 350 CDI 4matic z SR</span><span class="loc">Brezno</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/mercedes-benz-cls-shooting-brake-cls-sb-350-cdi-4matic-195kw265hp-a7/Ae9EGhY9PuS/" target="_blank" rel="noopener">Mercedes-Benz CLS Shooting Brake CLS SB 350 CDI 4matic 195kW265HP A7</a></h3>
+  <div class="facts">2013 · 294 567 km · CLS 350 / 400 d diesel 190–250 kW · automat · Shooting Brake · súkromník</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · kúpené v SR</div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">10 499 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">13 070 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+19.6 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:65%"></span></div>
+  <ul class="pc"><li class="pro">2013, 350 CDI 195 kW, 4x4, 7-st. automat, 295 tis. km</li><li class="pro">Pôvod SR, kombi Shooting Brake</li><li class="pro">~20 % pod férovou cenou</li><li class="con">Vysoký nájazd</li><li class="con">Inzerát bez popisu</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">CLS 350 CDI 4MATIC Airmatic z SR</span><span class="loc">Ružomberok</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197346114/mercedes-benz-cls-350-cdi-4matic-airmatic-2013.php" target="_blank" rel="noopener">Mercedes-Benz CLS 350 CDI 4MATIC AIRMATIC - 2013</a></h3>
+  <div class="facts">2013 · 243 000 km · CLS 350 / 400 d diesel 190–250 kW · automat · Shooting Brake · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b> · kúpené v SR</div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">12 800 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">15 330 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+16.5 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:55%"></span></div>
+  <ul class="pc"><li class="pro">2013, 350 CDI, 4x4, vzduchový podvozok, 243 tis. km</li><li class="pro">Pôvod SR</li><li class="pro">~17 % pod férovou cenou</li><li class="con">Over vzduchový podvozok Airmatic</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">CLS 250 CDI so 160 tis. km</span><span class="loc">Kežmarok</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197307910/mercedes-cls-250-cdi.php" target="_blank" rel="noopener">Mercedes CLS 250 cdi</a></h3>
+  <div class="facts">2012 · 160 000 km · CLS 220 d / 250 d / 300 d diesel 125–180 kW · automat · 4-dverové kupé · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">14 000 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">16 750 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+16.4 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:55%"></span></div>
+  <ul class="pc"><li class="pro">2012, 250 CDI, 160 tis. km</li><li class="pro">Úsporný 4-valcový diesel, nižší nájazd</li><li class="pro">~16 % pod férovou cenou</li><li class="con">Predajca neistý</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">CLS Shooting Brake 350 BlueTEC 4MATIC AMG</span><span class="loc">Pezinok</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/mercedes-benz-cls-shooting-brake-350-amg-bluetec-4-matic/Am15MoteoB9/" target="_blank" rel="noopener">Mercedes-Benz CLS Shooting Brake 350 AMG-Bluetec 4 MATIC</a></h3>
+  <div class="facts">2015 · 164 900 km · CLS 350 / 400 d diesel 190–250 kW · automat · Shooting Brake · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">17 300 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">19 750 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+12.4 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:41%"></span></div>
+  <ul class="pc"><li class="pro">2015, 350 BlueTEC, 4x4, automat, 165 tis. km</li><li class="pro">Kombi Shooting Brake po facelifte, AMG paket</li><li class="pro">~12 % pod férovou cenou</li><li class="con">Predáva autobazár</li></ul>
+</article></div>
+<div class="subhead">Špeciálne prípady</div>
+<div class="cards"></div>
+
+<h2>Cena vs. nájazd: celý trh na jednom grafe</h2>
+<p class="section-lead">Každý bod je jeden inzerát. Čím nižšie bod leží oproti ostatným s podobným nájazdom, tým je auto lacnejšie.
+Krúžkom sú označené odporúčané ponuky. Prejdi myšou na bod a uvidíš detail.</p>
+<div class="chart-wrap" id="chartWrap">
+  <div class="legend" id="legend"></div>
+  <svg id="chart" width="100%" height="420" role="img" aria-label="Bodový graf ceny a nájazdu inzerátov"></svg>
+  <div class="tip" id="tip"></div>
+</div>
+
+<h2>Porovnanie motorov</h2>
+<p class="section-lead">Hodnotenie (hviezdičky) zohľadňuje spoľahlivosť, spoľahlivosť a náklady na prevádzku a pomer cena/výkon.
+Číselné stĺpce sú mediány z ohodnotených inzerátov.</p>
+<div class="table-scroll">
+<table>
+  <thead><tr><th>Motor</th><th>Hodnotenie</th><th class="num">Ponúk</th><th class="num">Medián ceny</th><th class="num">Medián roku</th><th class="num">Medián km</th></tr></thead>
+  <tbody>
+<tr>
+  <td><b>CLS 220 d / 250 d / 300 d diesel 125–180 kW</b><div class="sub">Diesel 4-valec 170–245 k. Úsporný; over DPF a AdBlue.</div></td>
+  <td><span class="stars" aria-label="4 z 5">★★★★<span class="off">★</span></span></td>
+  <td class="num">8</td>
+  <td class="num"><div class="cellbar"><span style="width:41%"></span></div>15 250 €</td>
+  <td class="num">2016</td>
+  <td class="num">192 950 km</td>
+</tr>
+<tr>
+  <td><b>CLS 350 / 400 d diesel 190–250 kW</b><div class="sub">Diesel V6 / R6 258–340 k. Ťahavý a najrozšírenejší; over DPF, AdBlue a vstrekovače.</div></td>
+  <td><span class="stars" aria-label="4 z 5">★★★★<span class="off">★</span></span></td>
+  <td class="num">43</td>
+  <td class="num"><div class="cellbar"><span style="width:49%"></span></div>18 200 €</td>
+  <td class="num">2014</td>
+  <td class="num">188 000 km</td>
+</tr>
+<tr>
+  <td><b>CLS 500 / 53 / 63 AMG benzín 320–430 kW</b><div class="sub">Benzín V8 / R6 435–585 k. Veľmi výkonný, drahý servis.</div></td>
+  <td><span class="stars" aria-label="3 z 5">★★★<span class="off">★★</span></span></td>
+  <td class="num">8</td>
+  <td class="num"><div class="cellbar"><span style="width:100%"></span></div>37 495 €</td>
+  <td class="num">2017</td>
+  <td class="num">158 000 km</td>
+</tr>
+<tr>
+  <td><b>CLS 350 / 400 / 450 benzín 225–270 kW</b><div class="sub">Benzín V6 / R6 306–367 k. Kultivovaný, vyššia spotreba.</div></td>
+  <td><span class="stars" aria-label="3 z 5">★★★<span class="off">★★</span></span></td>
+  <td class="num">10</td>
+  <td class="num"><div class="cellbar"><span style="width:73%"></span></div>27 445 €</td>
+  <td class="num">2018</td>
+  <td class="num">186 846 km</td>
+</tr></tbody>
+</table>
+</div>
+<div class="explain">
+  <p><b>Mercedes-Benz CLS</b> je 4-dverové kupé na technike triedy E – generácia <b>C218</b> (2011–2017, aj kombi <b>Shooting Brake</b>)
+  a <b>C257</b> (2018–2023). Prvú generáciu W219 analýza nezahŕňa.</p>
+  <p><b>Ktorý motor zvoliť?</b> Najrozšírenejší je diesel <b>CLS 350 d / 350 CDI</b>. Benzínové AMG verzie majú vysoké náklady.</p>
+</div>
+
+<h2>Na čo si dať pozor</h2>
+<div class="warn">
+  <p><b>Lacné kvôli extrémnemu nájazdu</b> (viac ako 35 tis. km ročne, typicky flotila alebo taxi):</p>
+  <ul><li>Žiadne výrazné prípady.</li></ul>
+  <p><b>Ďalšie veci, ktoré sme v inzerátoch našli:</b></p><ul><li>Väčšina CLS má diesel 350 CDI / 350 d a nájazd nad 200 tis. km – over servisnú históriu a vzduchový podvozok.</li><li>Vyradili sme inzeráty z Česka a zo zahraničia.</li></ul><p><b>Vyradené z porovnania</b> (poškodené autá alebo nezmyselné údaje – model ich nehodnotí):</p><ul><li><a href='https://www.autobazar.eu/detail/mercedes-benz-cls-kupe-450-4matic/AmM0VB5dGUp/' target='_blank' rel='noopener'>Mercedes-Benz CLS Kupé 450 4MATIC</a> (7 990 €): cena je o 74 % pod trhom – havarované, na diely, záloha/splátka namiesto ceny alebo podvod</li><li><a href='https://www.autobazar.eu/detail/mercedes-benz-cls-po-skodovej-udalosti/AecH8U5DMZs/' target='_blank' rel='noopener'>Mercedes-Benz CLS po škodovej udalosti</a> (7 000 €): havarované / poškodené – cena nie je porovnateľná s trhom</li></ul><p><b>CLA, trieda E, trieda S a iné modely z vyhľadávania, inzeráty s chybným nájazdom</b> (2 inzerátov) sme z rebríčka vynechali.</p>
+  <p>Ďalších <b>14</b> inzerátov nemá v texte rok alebo kilometre, takže ich nebolo možné ohodnotiť.
+  Ak ťa niektorý zaujme, predajcu sa na tieto údaje opýtaj.</p>
+</div>
+
+<h2>Kompletný rebríček</h2>
+<p class="section-lead">Všetky ohodnotené inzeráty. Kliknutím na hlavičku stĺpca zoraďuješ, filtrom zužuješ výber.</p>
+<div class="filters">
+  <select id="fEngine"><option value="">Všetky motory</option></select>
+  <select id="fTrans"><option value="">Každá prevodovka</option><option value="automatic">Automat</option><option value="manual">Manuál</option></select>
+  <select id="fSeller"><option value="">Všetci predajcovia</option><option value="nodealer">Bez autobazárov</option></select>
+  <select id="fSource"><option value="">Všetky portály</option><option value="bazos">bazoš</option><option value="autobazar">autobazar.eu</option><option value="bazarsk">bazar.sk</option></select>
+  <select id="fBody"><option value="">Kupé aj Shooting Brake</option><option value="coupe">4-dverové kupé</option><option value="wagon">Shooting brake</option></select>
+  <select id="fOrigin"><option value="">Akýkoľvek pôvod</option><option value="SR">Kúpené v SR</option><option value="dovoz">Dovoz</option></select>
+  <input id="fMax" type="number" placeholder="Max. cena €" step="500" min="0" style="width:120px">
+  <span class="count" id="count"></span>
+</div>
+<div class="table-scroll">
+<table id="tbl">
+  <thead><tr>
+    <th class="sortable" data-k="title">Inzerát</th>
+    <th class="sortable num" data-k="year">Rok</th>
+    <th class="sortable num" data-k="km">Km</th>
+    <th class="sortable num" data-k="price_gross">Cena</th>
+    <th class="sortable num" data-k="fair_price">Férová</th>
+    <th class="sortable num" data-k="discount_pct">Pod trhom ▾</th>
+  </tr></thead>
+  <tbody></tbody>
+</table>
+</div>
+
+<h2>Pred kúpou over</h2>
+<ul class="check">
+  <li>VIN cez Cebia / autoDNA (história km, havárie) a servisná história Mercedes</li>
+  <li>Diesel: DPF, AdBlue, vstrekovače</li>
+  <li>Automat 7G / 9G-Tronic: plynulosť radenia</li>
+  <li>Vzduchový podvozok (ak je)</li>
+  <li>Elektronika (COMAND, asistenty)</li>
+  <li>STK/EK protokol a dátum platnosti</li>
+</ul>
+
+<footer>
+  Zdroj: auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (len ponuky zo Slovenska, to isté auto na viacerých portáloch je započítané raz), sťahované cez lokálny MCP server bazos-mcp (nástroj <code>fair_price</code>), 22. 11. 2026.
+  Model: ridge regresia log(ceny s DPH) podľa veku, veku², km, km², prevodovky, typu predajcu, motora, karosérie, pohonu 4x4, pôvodu (SR / dovoz) a portálu. Vzorka 69
+  inzerátov, R² 88 %. Parametre sú vyťažené z textu inzerátov, a preto môžu obsahovať chyby. Odporúčané ponuky sme overili
+  prečítaním celého inzerátu. Hodnotenie motorov je odborný odhad, nie výsledok modelu.
+</footer>
+</main>
+
+<script>
+const DATA = [{"id": "ab-AeJH03xFGz3", "url": "https://www.autobazar.eu/detail/mercedes-benz-cls-shooting-brake-21-diesel-150kw-automat-prevodovka-4x4/AeJH03xFGz3/", "title": "Mercedes-Benz CLS Shooting Brake 2.1 Diesel 150kW Automat. prevodovka 4x4", "price": 12750, "price_gross": 12750, "fair_price": 20020.0, "discount_pct": 36.3, "verdict": "výrazne pod trhom – over prečo", "year": 2016, "km": 213000, "km_per_year": 20600.0, "eg": "CLS 220 d / 250 d / 300 d diesel 125–180 kW", "cg": 1, "transmission": "automatic", "seller_type": "private", "location": "Topoľčany", "flags": [], "pick": "budget", "source": "autobazar", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "197342434", "url": "https://auto.bazos.sk/inzerat/197342434/mercedes-benz-cls-350cdi-4matic-x218-sk-povod.php", "title": "Mercedes Benz CLS 350CDI 4Matic (X218) SK pôvod", "price": 9800, "price_gross": 9800, "fair_price": 12950.0, "discount_pct": 24.3, "verdict": "výrazne pod trhom – over prečo", "year": 2013, "km": 295411, "km_per_year": 22200.0, "eg": "CLS 350 / 400 d diesel 190–250 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Banská Bystrica", "flags": [], "pick": "budget", "source": "bazos", "origin": "SR", "also_listed": [], "body": "wagon"}, {"id": "197666080", "url": "https://auto.bazos.sk/inzerat/197666080/mercedes-benz-cls-350-cdi-195kw-shooting-brake-sb.php", "title": "✳️Mercedes-Benz CLS 350 CDI 195kW Shooting Brake SB ✳️", "price": 10900, "price_gross": 10900, "fair_price": 14050.0, "discount_pct": 22.4, "verdict": "výrazne pod trhom – over prečo", "year": 2013, "km": 246000, "km_per_year": 18500.0, "eg": "CLS 350 / 400 d diesel 190–250 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Detva", "flags": [], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "bs-39754320", "url": "https://auto.bazar.sk/39754320-mercedes-benz-cls-kupe-450-mhev-4matic-a-t-270kw-2019-aj-na-splatky-protiucet/", "title": "Mercedes-Benz CLS Kupé 450 mHEV 4MATIC A/T, 270kW (2019) / AJ NA SPLÁTKY / PROTIÚČET /", "price": 31990, "price_gross": 31990, "fair_price": 40830.0, "discount_pct": 21.6, "verdict": "výrazne pod trhom – over prečo", "year": 2019, "km": 109098, "km_per_year": 14900.0, "eg": "CLS 350 / 400 / 450 benzín 225–270 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": "top", "source": "bazarsk", "origin": "dovoz", "also_listed": [{"source": "autobazar", "id": "ab-AmahZ_GOT--", "url": "https://www.autobazar.eu/detail/mercedes-benz-cls-kupe-450-mhev-4matic-at-270kw-2019-aj-na-splatky-protiucet/AmahZ_GOT--/", "price": 31990}, {"source": "bazos", "id": "197600824", "url": "https://auto.bazos.sk/inzerat/197600824/mercedes-benz-cls-450-mhev-4matic-at-270kw-2019.php", "price": 31990}], "body": "coupe"}, {"id": "196216602", "url": "https://auto.bazos.sk/inzerat/196216602/mercedes-benz-cls-350-c218-35-v6-benzin-225-kw-306-k.php", "title": "Mercedes-Benz CLS 350 (C218), 3.5 V6 benzín, 225 kW / 306 k,", "price": 11900, "price_gross": 11900, "fair_price": 15080.0, "discount_pct": 21.1, "verdict": "výrazne pod trhom – over prečo", "year": 2012, "km": 270000, "km_per_year": 18800.0, "eg": "CLS 350 / 400 / 450 benzín 225–270 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Lučenec", "flags": [], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [], "body": "coupe"}, {"id": "ab-Ae9EGhY9PuS", "url": "https://www.autobazar.eu/detail/mercedes-benz-cls-shooting-brake-cls-sb-350-cdi-4matic-195kw265hp-a7/Ae9EGhY9PuS/", "title": "Mercedes-Benz CLS Shooting Brake CLS SB 350 CDI 4matic 195kW265HP A7", "price": 10499, "price_gross": 10499, "fair_price": 13070.0, "discount_pct": 19.6, "verdict": "výrazne pod trhom – over prečo", "year": 2013, "km": 294567, "km_per_year": 22100.0, "eg": "CLS 350 / 400 d diesel 190–250 kW", "cg": 1, "transmission": "automatic", "seller_type": "private", "location": "Brezno", "flags": [], "pick": "budget", "source": "autobazar", "origin": "SR", "also_listed": [], "body": "wagon"}, {"id": "197346114", "url": "https://auto.bazos.sk/inzerat/197346114/mercedes-benz-cls-350-cdi-4matic-airmatic-2013.php", "title": "Mercedes-Benz CLS 350 CDI 4MATIC AIRMATIC - 2013", "price": 12800, "price_gross": 12800, "fair_price": 15330.0, "discount_pct": 16.5, "verdict": "výrazne pod trhom – over prečo", "year": 2013, "km": 243000, "km_per_year": 18200.0, "eg": "CLS 350 / 400 d diesel 190–250 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Ružomberok", "flags": [], "pick": "budget", "source": "bazos", "origin": "SR", "also_listed": [], "body": "wagon"}, {"id": "197307910", "url": "https://auto.bazos.sk/inzerat/197307910/mercedes-cls-250-cdi.php", "title": "Mercedes CLS 250 cdi", "price": 14000, "price_gross": 14000, "fair_price": 16750.0, "discount_pct": 16.4, "verdict": "výrazne pod trhom – over prečo", "year": 2012, "km": 160000, "km_per_year": 11200.0, "eg": "CLS 220 d / 250 d / 300 d diesel 125–180 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Kežmarok", "flags": [], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [], "body": "coupe"}, {"id": "bs-39759278", "url": "https://auto.bazar.sk/39759278-mercedes-benz-cls-kupe-350-4matic-cdi-be-195kw-at-7-aj-na-splatky-protiucet/", "title": "Mercedes-Benz CLS Kupé 350 4MATIC CDI BE 195kW AT/7 / AJ NA SPLÁTKY / PROTIÚČET", "price": 11230, "price_gross": 11230, "fair_price": 13200.0, "discount_pct": 14.9, "verdict": "pod trhom", "year": 2012, "km": 270592, "km_per_year": 18900.0, "eg": "CLS 350 / 400 d diesel 190–250 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Stará Turá", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-Am_GXz8txpd", "url": "https://www.autobazar.eu/detail/mercedes-benz-cls-kupe-350-4matic-cdi-be-195kw-at7-aj-na-splatky-protiucet/Am_GXz8txpd/", "price": 11230}, {"source": "bazos", "id": "197325616", "url": "https://auto.bazos.sk/inzerat/197325616/mercedes-benz-cls-kupe-350-4matic-cdi-be-195kw-kupene-v-sr.php", "price": 11230}], "body": "coupe"}, {"id": "ab-AeAv_qcHmox", "url": "https://www.autobazar.eu/detail/mercedes-benz-cls-kupe-cls-350-d-4matic-190kw258hp-a9/AeAv_qcHmox/", "title": "Mercedes-Benz CLS Kupé CLS 350 d 4matic 190kW258HP A9", "price": 18790, "price_gross": 18790, "fair_price": 22050.0, "discount_pct": 14.8, "verdict": "pod trhom", "year": 2015, "km": 145000, "km_per_year": 12800.0, "eg": "CLS 350 / 400 d diesel 190–250 kW", "cg": 1, "transmission": "automatic", "seller_type": "private", "location": "Levice", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "coupe"}, {"id": "197516287", "url": "https://auto.bazos.sk/inzerat/197516287/mercedes-cls-300d.php", "title": "Mercedes CLS 300d AMG packet", "price": 32000, "price_gross": 32000, "fair_price": 36850.0, "discount_pct": 13.2, "verdict": "pod trhom", "year": 2019, "km": 98378, "km_per_year": 13400.0, "eg": "CLS 220 d / 250 d / 300 d diesel 125–180 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Trenčín", "flags": [], "pick": "top", "source": "bazos", "origin": null, "also_listed": [], "body": "coupe"}, {"id": "ab-Am15MoteoB9", "url": "https://www.autobazar.eu/detail/mercedes-benz-cls-shooting-brake-350-amg-bluetec-4-matic/Am15MoteoB9/", "title": "Mercedes-Benz CLS Shooting Brake 350 AMG-Bluetec 4 MATIC", "price": 17300, "price_gross": 17300, "fair_price": 19750.0, "discount_pct": 12.4, "verdict": "pod trhom", "year": 2015, "km": 164900, "km_per_year": 14600.0, "eg": "CLS 350 / 400 d diesel 190–250 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Pezinok", "flags": [], "pick": "budget", "source": "autobazar", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "bs-39754660", "url": "https://auto.bazar.sk/39754660-mercedes-benz-cls-kupe-400-4matic-a-t-amg-line-245-kw-a7-aj-na-splatky-protiucet/", "title": "Mercedes-Benz CLS Kupé 400 4MATIC A/T AMG-line, 245 kW, A7 / AJ NA SPLÁTKY / PROTIÚČET /", "price": 23500, "price_gross": 23500, "fair_price": 26230.0, "discount_pct": 10.4, "verdict": "pod trhom", "year": 2015, "km": 125500, "km_per_year": 11100.0, "eg": "CLS 350 / 400 / 450 benzín 225–270 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AmXMJ-iVP7w", "url": "https://www.autobazar.eu/detail/mercedes-benz-cls-kupe-400-4matic-at-amg-line-245-kw-a7-aj-na-splatky-protiucet/AmXMJ-iVP7w/", "price": 23500}], "body": "coupe"}, {"id": "ab-AeqysBISsPB", "url": "https://www.autobazar.eu/detail/mercedes-benz-cls-v-zaruke/AeqysBISsPB/", "title": "Mercedes-Benz CLS V Záruke", "price": 36990, "price_gross": 36990, "fair_price": 40710.0, "discount_pct": 9.1, "verdict": "pod trhom", "year": 2019, "km": 163507, "km_per_year": 22300.0, "eg": "CLS 350 / 400 / 450 benzín 225–270 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava-Nové Mesto", "flags": [], "pick": "top", "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "coupe"}, {"id": "ab-AbSDwRGAXRM", "url": "https://www.autobazar.eu/detail/mercedes-benz-cls-450-4matic-amg-line/AbSDwRGAXRM/", "title": "Mercedes-Benz CLS Kupé 450 4Matic AMG Line", "price": 28900, "price_gross": 28900, "fair_price": 31670.0, "discount_pct": 8.7, "verdict": "pod trhom", "year": 2018, "km": 182691, "km_per_year": 21900.0, "eg": "CLS 350 / 400 / 450 benzín 225–270 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Prešov", "flags": [], "pick": "top", "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-39708222", "url": "https://auto.bazar.sk/39708222-mercedes-benz-cls-kupe-450-4matic-amg-line/", "price": 28900}], "body": "coupe"}, {"id": "bs-39754785", "url": "https://auto.bazar.sk/39754785-mercedes-benz-cls-kupe-350-d-190kw-2014-aj-na-splatky-protiucet/", "title": "Mercedes-Benz CLS Kupé 350 d, 190kW (2014) / AJ NA SPLÁTKY / PROTIÚČET /", "price": 16250, "price_gross": 16250, "fair_price": 17690.0, "discount_pct": 8.1, "verdict": "pod trhom", "year": 2014, "km": 239046, "km_per_year": 19400.0, "eg": "CLS 350 / 400 d diesel 190–250 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "bazarsk", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "197631722", "url": "https://auto.bazos.sk/inzerat/197631722/mercedes-benz-cls-kupe-350-d-190kw-2014.php", "price": 16250}, {"source": "autobazar", "id": "ab-AmeniBAwpS0", "url": "https://www.autobazar.eu/detail/mercedes-benz-cls-kupe-350-d-190kw-2014-aj-na-splatky-protiucet/AmeniBAwpS0/", "price": 16250}], "body": "coupe"}, {"id": "ab-AmKJq5Ui_mi", "url": "https://www.autobazar.eu/detail/mercedes-benz-cls-shooting-brake-sb-250-d-4matic/AmKJq5Ui_mi/", "title": "Mercedes-Benz CLS Shooting Brake SB 250 d 4matic", "price": 15500, "price_gross": 15500, "fair_price": 16850.0, "discount_pct": 8.0, "verdict": "pod trhom", "year": 2015, "km": 172900, "km_per_year": 15300.0, "eg": "CLS 220 d / 250 d / 300 d diesel 125–180 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Pezinok", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "wagon"}, {"id": "197412783", "url": "https://auto.bazos.sk/inzerat/197412783/mercedes-benz-cls-350d-4matic-sk-auto-110tis-km.php", "title": "Mercedes Benz Cls 350d 4matic Sk auto 110tis km Dph", "price": 18200, "price_gross": 18200, "fair_price": 19640.0, "discount_pct": 7.3, "verdict": "pod trhom", "year": 2012, "km": 110000, "km_per_year": 7700.0, "eg": "CLS 350 / 400 d diesel 190–250 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Trenčín", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "coupe"}, {"id": "197665986", "url": "https://auto.bazos.sk/inzerat/197665986/mercedes-cls400-4matic-shooting-brake.php", "title": "Mercedes CLS400 4MATIC Shooting Brake", "price": 18490, "price_gross": 18490, "fair_price": 19930.0, "discount_pct": 7.2, "verdict": "pod trhom", "year": 2015, "km": 223000, "km_per_year": 19700.0, "eg": "CLS 350 / 400 / 450 benzín 225–270 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Stará Ľubovňa", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "ab-Aeep1SDgoXj", "url": "https://www.autobazar.eu/detail/mercedes-benz-cls-shooting-brake-cls-sb-350-d-4matic-190kw258hp-a9/Aeep1SDgoXj/", "title": "Mercedes-Benz CLS Shooting Brake CLS SB 350 d 4matic 190kW/258HP A9", "price": 13990, "price_gross": 13990, "fair_price": 15020.0, "discount_pct": 6.9, "verdict": "férová cena", "year": 2015, "km": 270850, "km_per_year": 23900.0, "eg": "CLS 350 / 400 d diesel 190–250 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava-Petržalka", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "wagon"}, {"id": "ab-Amdjh_dh11t", "url": "https://www.autobazar.eu/detail/mercedes-benz-cls-kupe-350-d-4matic-at/Amdjh_dh11t/", "title": "Mercedes-Benz CLS Kupé 350 d 4matic A/T", "price": 42900, "price_gross": 42900, "fair_price": 45500.0, "discount_pct": 5.7, "verdict": "férová cena", "year": 2019, "km": 59940, "km_per_year": 8200.0, "eg": "CLS 350 / 400 d diesel 190–250 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Košice-Ťahanovce", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "coupe"}, {"id": "bs-39471936", "url": "https://auto.bazar.sk/39471936-mercedes-benz-cls-53-amg-4matic-kupe/", "title": "Mercedes-Benz CLS 53 AMG 4MATIC+ kupé", "price": 69178, "price_gross": 69178, "fair_price": 73300.0, "discount_pct": 5.6, "verdict": "férová cena", "year": 2020, "km": 1500, "km_per_year": 200.0, "eg": "CLS 500 / 53 / 63 AMG benzín 320–430 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Olomouc", "flags": [], "pick": null, "source": "bazarsk", "origin": "dovoz", "also_listed": [{"source": "autobazar", "id": "ab-Ab38Llz3QjU", "url": "https://www.autobazar.eu/detail/mercedes-benz-cls-53-amg-4matic-kupe/Ab38Llz3QjU/", "price": 69178}], "body": "coupe"}, {"id": "197657909", "url": "https://auto.bazos.sk/inzerat/197657909/mb.php", "title": "Mercedes CLS Shooting brake 350CDI 4 matic AMG", "price": 16500, "price_gross": 16500, "fair_price": 17420.0, "discount_pct": 5.3, "verdict": "férová cena", "year": 2013, "km": 180000, "km_per_year": 13500.0, "eg": "CLS 350 / 400 d diesel 190–250 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Košice", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "197667452", "url": "https://auto.bazos.sk/inzerat/197667452/mercedes-cls450-amg-4matic.php", "title": "Mercedes CLS450 AMG 4Matic", "price": 29490, "price_gross": 29490, "fair_price": 30900.0, "discount_pct": 4.6, "verdict": "férová cena", "year": 2018, "km": 192500, "km_per_year": 23100.0, "eg": "CLS 500 / 53 / 63 AMG benzín 320–430 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Stará Ľubovňa", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "coupe"}, {"id": "bs-39226540", "url": "https://auto.bazar.sk/39226540-mercedes-benz-cls-kupe-400-d-4matic-a-t/", "title": "Mercedes-Benz CLS Kupé 400 d 4MATIC A/T", "price": 49990, "price_gross": 49990, "fair_price": 52180.0, "discount_pct": 4.2, "verdict": "férová cena", "year": 2022, "km": 51600, "km_per_year": 11900.0, "eg": "CLS 350 / 400 d diesel 190–250 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava III - Rača", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AmdQIT--MTw", "url": "https://www.autobazar.eu/detail/mercedes-benz-cls-kupe-400-d-4matic-at/AmdQIT--MTw/", "price": 49990}, {"source": "bazos", "id": "196799791", "url": "https://auto.bazos.sk/inzerat/196799791/mercedes-benz-cls-400d-4matic-amg.php", "price": 51500}], "body": "coupe"}, {"id": "ab-AmNkeDoNHpj", "url": "https://www.autobazar.eu/detail/mercedes-benz-cls-amg-53-4matic/AmNkeDoNHpj/", "title": "Mercedes-Benz CLS AMG 53 4MATIC+", "price": 33990, "price_gross": 33990, "fair_price": 35400.0, "discount_pct": 4.0, "verdict": "férová cena", "year": 2018, "km": 171000, "km_per_year": 20500.0, "eg": "CLS 500 / 53 / 63 AMG benzín 320–430 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Košice-Vyšné Opátske", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39078871", "url": "https://auto.bazar.sk/39078871-mercedes-benz-cls-amg-53-4matic/", "price": 33990}, {"source": "bazos", "id": "196242266", "url": "https://auto.bazos.sk/inzerat/196242266/mercedes-benz-cls-amg-53-4matic.php", "price": 33990}], "body": "coupe"}, {"id": "ab-AmgC9UPdyoo", "url": "https://www.autobazar.eu/detail/mercedes-benz-cls-350-d-4matic/AmgC9UPdyoo/", "title": "MERCEDES-BENZ CLS 350 d 4MATIC", "price": 39900, "price_gross": 39900, "fair_price": 41310.0, "discount_pct": 3.4, "verdict": "férová cena", "year": 2020, "km": 75944, "km_per_year": 12000.0, "eg": "CLS 350 / 400 d diesel 190–250 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Košice-Ťahanovce", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39761215", "url": "https://auto.bazar.sk/39761215-mercedes-benz-cls-350-d-4matic/", "price": 39900}], "body": "coupe"}, {"id": "ab-AePrpBFfKlZ", "url": "https://www.autobazar.eu/detail/mercedes-benz-cls-450-30-benzin-270kw-automat-prevodovka-4x4/AePrpBFfKlZ/", "title": "Mercedes-Benz CLS 450 3.0 Benzín - mHev 270kW Automat. prevodovka 4x4", "price": 32990, "price_gross": 32990, "fair_price": 33870.0, "discount_pct": 2.6, "verdict": "férová cena", "year": 2019, "km": 129870, "km_per_year": 17700.0, "eg": "CLS 350 / 400 / 450 benzín 225–270 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Nitra", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "coupe"}, {"id": "bs-39754906", "url": "https://auto.bazar.sk/39754906-mercedes-benz-cls-kupe-coupe-250d-4matic-aj-na-splatky-protiucet/", "title": "Mercedes-Benz CLS Kupé Coupé 250d 4MATIC / AJ NA SPLÁTKY / PROTIÚČET /", "price": 14990, "price_gross": 14990, "fair_price": 15320.0, "discount_pct": 2.2, "verdict": "férová cena", "year": 2015, "km": 260426, "km_per_year": 23000.0, "eg": "CLS 220 d / 250 d / 300 d diesel 125–180 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "bazarsk", "origin": "dovoz", "also_listed": [{"source": "autobazar", "id": "ab-Amjw5QYUMKG", "url": "https://www.autobazar.eu/detail/mercedes-benz-cls-kupe-coupe-250d-4matic-aj-na-splatky-protiucet/Amjw5QYUMKG/", "price": 14990}, {"source": "bazos", "id": "197608657", "url": "https://auto.bazos.sk/inzerat/197608657/mercedes-benz-cls-coupe-250d-4matic.php", "price": 14990}], "body": "coupe"}, {"id": "197080652", "url": "https://auto.bazos.sk/inzerat/197080652/mercedes-cls-350cdi-shooting-brake.php", "title": "Mercedes CLS 350CDI Shooting brake", "price": 14500, "price_gross": 14500, "fair_price": 14720.0, "discount_pct": 1.5, "verdict": "férová cena", "year": 2013, "km": 245174, "km_per_year": 18400.0, "eg": "CLS 350 / 400 d diesel 190–250 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Humenné", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "bs-33150272", "url": "https://auto.bazar.sk/33150272-mercedes-cls-350d-4matic/", "title": "Mercedes CLS 350d 4MATIC", "price": 24600, "price_gross": 24600, "fair_price": 24970.0, "discount_pct": 1.5, "verdict": "férová cena", "year": 2015, "km": 93937, "km_per_year": 8300.0, "eg": "CLS 350 / 400 d diesel 190–250 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Nové Zámky", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "coupe"}, {"id": "bs-34353927", "url": "https://auto.bazar.sk/34353927-mercedes-cls-350-cdi-4matic/", "title": "Mercedes CLS 350 CDI 4MATIC", "price": 21000, "price_gross": 21000, "fair_price": 21300.0, "discount_pct": 1.4, "verdict": "férová cena", "year": 2012, "km": 90499, "km_per_year": 6300.0, "eg": "CLS 350 / 400 d diesel 190–250 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Nové Zámky", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "coupe"}, {"id": "196758529", "url": "https://auto.bazos.sk/inzerat/196758529/mercedes-benz-cls-350d-amg-paket-4matic-w218.php", "title": "Mercedes-Benz CLS 350D _ AMG Paket _ 4matic _ W218", "price": 18700, "price_gross": 18700, "fair_price": 18890.0, "discount_pct": 1.0, "verdict": "férová cena", "year": 2016, "km": 191000, "km_per_year": 18500.0, "eg": "CLS 350 / 400 d diesel 190–250 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Trnava", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "coupe"}, {"id": "197212495", "url": "https://auto.bazos.sk/inzerat/197212495/predam-mercedes-benz-cls-350-d-4matic-c257.php", "title": "Predám Mercedes-Benz CLS 350 d 4MATIC (C257)", "price": 29990, "price_gross": 29990, "fair_price": 30260.0, "discount_pct": 0.9, "verdict": "férová cena", "year": 2020, "km": 188000, "km_per_year": 29700.0, "eg": "CLS 350 / 400 d diesel 190–250 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Trnava", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "coupe"}, {"id": "196712917", "url": "https://auto.bazos.sk/inzerat/196712917/mercedes-cls-350-cdi.php", "title": "Mercedes cls 350 cdi", "price": 13000, "price_gross": 13000, "fair_price": 13110.0, "discount_pct": 0.8, "verdict": "férová cena", "year": 2011, "km": 235000, "km_per_year": 15300.0, "eg": "CLS 350 / 400 d diesel 190–250 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Púchov", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "bs-39150287", "url": "https://auto.bazar.sk/39150287-mercedes-benz-cls-kupe-400-d-4matic-a-t/", "title": "Mercedes-Benz CLS Kupé 400 d 4matic A/T", "price": 46900, "price_gross": 46900, "fair_price": 47290.0, "discount_pct": 0.8, "verdict": "férová cena", "year": 2020, "km": 92560, "km_per_year": 14600.0, "eg": "CLS 350 / 400 d diesel 190–250 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Trnava", "flags": [], "pick": null, "source": "bazarsk", "origin": "dovoz", "also_listed": [{"source": "autobazar", "id": "ab-AmXkZ00QviV", "url": "https://www.autobazar.eu/detail/mercedes-benz-cls-kupe-400-d-4matic-a-t/AmXkZ00QviV/", "price": 46900}], "body": "coupe"}, {"id": "196806794", "url": "https://auto.bazos.sk/inzerat/196806794/mercedes-cls-350-cdi-4-matic-amg.php", "title": "Mercedes CLS 350 CDI , 4 Matic AMG", "price": 12000, "price_gross": 12000, "fair_price": 12040.0, "discount_pct": 0.3, "verdict": "férová cena", "year": 2011, "km": 263000, "km_per_year": 17200.0, "eg": "CLS 350 / 400 d diesel 190–250 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Bardejov", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "coupe"}, {"id": "196156122", "url": "https://auto.bazos.sk/inzerat/196156122/mercedes-cls-350-4matic.php", "title": "Mercedes CLS 350 4matic", "price": 17000, "price_gross": 17000, "fair_price": 16990.0, "discount_pct": -0.0, "verdict": "férová cena", "year": 2013, "km": 170000, "km_per_year": 12800.0, "eg": "CLS 350 / 400 d diesel 190–250 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Bratislava", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "coupe"}, {"id": "197596544", "url": "https://auto.bazos.sk/inzerat/197596544/mercedes-benz-cls-350-cdi-4matic.php", "title": "Mercedes-Benz CLS 350 CDI 4MATIC", "price": 16590, "price_gross": 16590, "fair_price": 16470.0, "discount_pct": -0.8, "verdict": "férová cena", "year": 2012, "km": 180000, "km_per_year": 12600.0, "eg": "CLS 350 / 400 d diesel 190–250 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Žilina", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "coupe"}, {"id": "ab-Ae7tbB5Lq1n", "url": "https://www.autobazar.eu/detail/mercedes-benz-cls-350-amg-paket/Ae7tbB5Lq1n/", "title": "Mercedes-Benz CLS 350 amg paket", "price": 12500, "price_gross": 12500, "fair_price": 12340.0, "discount_pct": -1.3, "verdict": "férová cena", "year": 2011, "km": 285696, "km_per_year": 18600.0, "eg": "CLS 350 / 400 d diesel 190–250 kW", "cg": 1, "transmission": "automatic", "seller_type": "private", "location": "Radoma", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "coupe"}, {"id": "bs-39362367", "url": "https://auto.bazar.sk/39362367-mercedes-benz-cls-kupe-400-4matic-a-t/", "title": "Mercedes-Benz CLS Kupé 400 4matic A/T", "price": 20990, "price_gross": 20990, "fair_price": 20400.0, "discount_pct": -2.9, "verdict": "férová cena", "year": 2015, "km": 234974, "km_per_year": 20700.0, "eg": "CLS 350 / 400 / 450 benzín 225–270 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Bátorove Kosihy", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AmXyMGYJPgx", "url": "https://www.autobazar.eu/detail/mercedes-benz-cls-kupe-400-4matic-at/AmXyMGYJPgx/", "price": 20990}, {"source": "bazos", "id": "196968864", "url": "https://auto.bazos.sk/inzerat/196968864/mercedes-benz-cls-kupe-400-4matic-at-mozny-leasing.php", "price": 20990}], "body": "coupe"}, {"id": "ab-Ae-8Umbazxe", "url": "https://www.autobazar.eu/detail/mercedes-benz-cls-kupe-53-amg/Ae-8Umbazxe/", "title": "Mercedes-Benz CLS Kupé 53 AMG", "price": 40900, "price_gross": 40900, "fair_price": 39490.0, "discount_pct": -3.6, "verdict": "férová cena", "year": 2019, "km": 145000, "km_per_year": 19800.0, "eg": "CLS 500 / 53 / 63 AMG benzín 320–430 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bytča", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "coupe"}, {"id": "bs-39634387", "url": "https://auto.bazar.sk/39634387-mercedes-cls-400-d-4matic/", "title": "Mercedes CLS 400 d 4MATIC", "price": 37000, "price_gross": 37000, "fair_price": 35620.0, "discount_pct": -3.9, "verdict": "férová cena", "year": 2019, "km": 107246, "km_per_year": 14600.0, "eg": "CLS 350 / 400 d diesel 190–250 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava V - Petržalka", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "coupe"}, {"id": "bs-30869942", "url": "https://auto.bazar.sk/30869942-mercedes-benz-cls-kupe-mercedes-shooting-brake-350-d-4matic/", "title": "Mercedes-Benz CLS Kupé Mercedes Shooting Brake 350 d 4matic", "price": 34000, "price_gross": 34000, "fair_price": 32670.0, "discount_pct": -4.1, "verdict": "férová cena", "year": 2017, "km": 53000, "km_per_year": 5700.0, "eg": "CLS 350 / 400 d diesel 190–250 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Banská Bystrica", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "197640124", "url": "https://auto.bazos.sk/inzerat/197640124/mercedes-benz-cls-250-d-4matic-150-kw-2016.php", "title": "Mercedes-Benz CLS 250 d 4MATIC 150 kW | 2016", "price": 18990, "price_gross": 18990, "fair_price": 18140.0, "discount_pct": -4.7, "verdict": "férová cena", "year": 2016, "km": 155987, "km_per_year": 15100.0, "eg": "CLS 220 d / 250 d / 300 d diesel 125–180 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Poprad", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-39751079", "url": "https://auto.bazar.sk/39751079-mercedes-benz-cls-kupe-250-d-4matic/", "price": 18990}, {"source": "autobazar", "id": "ab-AmFARNv7sxB", "url": "https://www.autobazar.eu/detail/mercedes-benz-cls-kupe-250-d-4matic/AmFARNv7sxB/", "price": 18990}], "body": "coupe"}, {"id": "ab-AeuexT_pOmn", "url": "https://www.autobazar.eu/detail/mercedes-cls-250-bluetec-4matic-4x4-automat-servkniha/AeuexT_pOmn/", "title": "Mercedes CLS 250 BlueTEC 4MATIC, 4X4, Automat, Serv.kniha", "price": 15000, "price_gross": 15000, "fair_price": 14270.0, "discount_pct": -5.1, "verdict": "férová cena", "year": 2015, "km": 244802, "km_per_year": 21600.0, "eg": "CLS 220 d / 250 d / 300 d diesel 125–180 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Prešovský kraj", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "coupe"}, {"id": "197161530", "url": "https://auto.bazos.sk/inzerat/197161530/mercedes-cls-400-d.php", "title": "Mercedes CLS 400 d", "price": 39900, "price_gross": 39900, "fair_price": 37800.0, "discount_pct": -5.6, "verdict": "férová cena", "year": 2019, "km": 87000, "km_per_year": 11900.0, "eg": "CLS 350 / 400 d diesel 190–250 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Senica", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "coupe"}, {"id": "196471738", "url": "https://auto.bazos.sk/inzerat/196471738/mercedes-cls-350-cdi-shooting-brake.php", "title": "Mercedes CLS 350 CDI Shooting Brake", "price": 17990, "price_gross": 17990, "fair_price": 16690.0, "discount_pct": -7.8, "verdict": "nad trhom", "year": 2013, "km": 156000, "km_per_year": 11700.0, "eg": "CLS 350 / 400 d diesel 190–250 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Košice", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "ab-Am7OJJvtRW8", "url": "https://www.autobazar.eu/detail/mercedes-benz-cls-350-d-4matic/Am7OJJvtRW8/", "title": "MERCEDES-BENZ CLS 350 d 4MATIC", "price": 33900, "price_gross": 33900, "fair_price": 31330.0, "discount_pct": -8.2, "verdict": "nad trhom", "year": 2018, "km": 139676, "km_per_year": 16800.0, "eg": "CLS 350 / 400 d diesel 190–250 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39773156", "url": "https://auto.bazar.sk/39773156-mercedes-benz-cls-350-d-4matic/", "price": 33900}], "body": "coupe"}, {"id": "ab-AeM6WU9xTSm", "url": "https://www.autobazar.eu/detail/mercedes-benz-cls-shooting-brake-cls-sb-350-cdi-4matic-blueefficiency-195kw265hp-a7/AeM6WU9xTSm/", "title": "Mercedes-Benz CLS Shooting Brake CLS SB 350 CDI 4matic BlueEFFICIENCY 195kW265HP A7", "price": 15350, "price_gross": 15350, "fair_price": 14190.0, "discount_pct": -8.2, "verdict": "nad trhom", "year": 2013, "km": 260000, "km_per_year": 19500.0, "eg": "CLS 350 / 400 d diesel 190–250 kW", "cg": 1, "transmission": "automatic", "seller_type": "private", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "196872751", "url": "https://auto.bazos.sk/inzerat/196872751/mercedes-benz-cls-350-cdi-4matic-brabus-chip-d6s-2013.php", "price": 15350}], "body": "wagon"}, {"id": "197678321", "url": "https://auto.bazos.sk/inzerat/197678321/mercedes-cls-250cdi-4matic.php", "title": "Mercedes CLS 250CDi 4MATIC", "price": 17000, "price_gross": 17000, "fair_price": 15640.0, "discount_pct": -8.7, "verdict": "nad trhom", "year": 2017, "km": 234091, "km_per_year": 25100.0, "eg": "CLS 220 d / 250 d / 300 d diesel 125–180 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Košice", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "coupe"}, {"id": "ab-AeVw8wdE_jg", "url": "https://www.autobazar.eu/detail/mercedes-benz-cls-350-cdi-4-matic/AeVw8wdE_jg/", "title": "Mercedes-Benz CLS 350 CDI 4-matic", "price": 21900, "price_gross": 21900, "fair_price": 19800.0, "discount_pct": -10.6, "verdict": "nad trhom", "year": 2012, "km": 114648, "km_per_year": 8000.0, "eg": "CLS 350 / 400 d diesel 190–250 kW", "cg": 1, "transmission": "automatic", "seller_type": "private", "location": "Rimavská Sobota", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "coupe"}, {"id": "197699183", "url": "https://auto.bazos.sk/inzerat/197699183/mercedes-benz-cls-350-d-4matic-286-koni-burmester-boha.php", "title": "MERCEDES-BENZ CLS 350 d 4MATIC | 286 KONÍ | BURMESTER | BOHA", "price": 34000, "price_gross": 34000, "fair_price": 30620.0, "discount_pct": -11.0, "verdict": "nad trhom", "year": 2018, "km": 167000, "km_per_year": 20000.0, "eg": "CLS 350 / 400 d diesel 190–250 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Trebišov", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "coupe"}, {"id": "bs-39746234", "url": "https://auto.bazar.sk/39746234-mercedes-benz-cls-kupe-mercedes-450-4matic-eq-boost-odpocet-dph/", "title": "Mercedes-Benz CLS Kupé Mercedes 450 4MATIC EQ Boost | Odpočet DPH", "price": 32400, "price_gross": 32400, "fair_price": 29170.0, "discount_pct": -11.1, "verdict": "nad trhom", "year": 2019, "km": 191000, "km_per_year": 26000.0, "eg": "CLS 350 / 400 / 450 benzín 225–270 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Trenčín", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-Am7OicG3wTj", "url": "https://www.autobazar.eu/detail/mercedes-benz-cls-kupe-mercedes-450-4matic-eq-boost-odpocet-dph/Am7OicG3wTj/", "price": 32400}, {"source": "bazos", "id": "197724872", "url": "https://auto.bazos.sk/inzerat/197724872/mercedes-benz-cls-450-4matic-eq-boost-odpocet-dph.php", "price": 32400}], "body": "coupe"}, {"id": "ab-AeMaAB_YdQL", "url": "https://www.autobazar.eu/detail/mercedes-benz-cls-350-bluetec/AeMaAB_YdQL/", "title": "Mercedes-Benz CLS 350 Bluetec", "price": 17000, "price_gross": 17000, "fair_price": 15220.0, "discount_pct": -11.7, "verdict": "nad trhom", "year": 2014, "km": 267000, "km_per_year": 21600.0, "eg": "CLS 350 / 400 d diesel 190–250 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Pezinok", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "coupe"}, {"id": "197631592", "url": "https://auto.bazos.sk/inzerat/197631592/mercedes-benz-cls-350-cdi-4matic-amg.php", "title": "Mercedes Benz CLS 350 CDI 4MATIC AMG", "price": 15990, "price_gross": 15990, "fair_price": 14270.0, "discount_pct": -12.0, "verdict": "nad trhom", "year": 2014, "km": 275000, "km_per_year": 22300.0, "eg": "CLS 350 / 400 d diesel 190–250 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Lučenec", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "coupe"}, {"id": "195740215", "url": "https://auto.bazos.sk/inzerat/195740215/mercedes-benz-cls-450-eq-4matic.php", "title": "Mercedes CLS 450 4MATIC", "price": 25990, "price_gross": 25990, "fair_price": 22920.0, "discount_pct": -13.4, "verdict": "nad trhom", "year": 2018, "km": 265000, "km_per_year": 31800.0, "eg": "CLS 350 / 400 / 450 benzín 225–270 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Senec", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AeivFG19itD", "url": "https://www.autobazar.eu/detail/mercedes-cls-450-4matic-at/AeivFG19itD/", "price": 25990}], "body": "coupe"}, {"id": "197725154", "url": "https://auto.bazos.sk/inzerat/197725154/mercedes-benz-cls-shooting-brake-sb-350-cdi-4matic.php", "title": "Mercedes-Benz CLS Shooting Brake SB 350 CDI 4matic", "price": 17490, "price_gross": 17490, "fair_price": 15300.0, "discount_pct": -14.3, "verdict": "nad trhom", "year": 2013, "km": 215889, "km_per_year": 16200.0, "eg": "CLS 350 / 400 d diesel 190–250 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Nové Mesto n.Váhom", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AmADUwZ1CM8", "url": "https://www.autobazar.eu/detail/mercedes-benz-cls-shooting-brake-sb-350-cdi-4matic-blueefficiency/AmADUwZ1CM8/", "price": 17490}], "body": "wagon"}, {"id": "195902948", "url": "https://auto.bazos.sk/inzerat/195902948/mercedes-benz-cls-63amg.php", "title": "Mercedes Benz CLS 63AMG", "price": 37500, "price_gross": 37500, "fair_price": 32690.0, "discount_pct": -14.7, "verdict": "nad trhom", "year": 2013, "km": 93000, "km_per_year": 7000.0, "eg": "CLS 500 / 53 / 63 AMG benzín 320–430 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Nové Zámky", "flags": [], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [{"source": "autobazar", "id": "ab-AmuS7jDFpmS", "url": "https://www.autobazar.eu/detail/mercedes-benz-mercedes-amg-cls-63-kupe/AmuS7jDFpmS/", "price": 37500}, {"source": "bazarsk", "id": "bs-39660063", "url": "https://auto.bazar.sk/39660063-mercedes-benz-mercedes-amg-cls-63-kupe/", "price": 37500}], "body": "coupe"}, {"id": "bs-39594754", "url": "https://auto.bazar.sk/39594754-mercedes-benz-cls-400-d-4matic/", "title": "MERCEDES-BENZ CLS 400 d 4MATIC", "price": 30900, "price_gross": 30900, "fair_price": 26480.0, "discount_pct": -16.7, "verdict": "výrazne nad trhom", "year": 2018, "km": 228711, "km_per_year": 27400.0, "eg": "CLS 350 / 400 d diesel 190–250 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Košice I - Ťahanovce", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AmSOHmpsZL9", "url": "https://www.autobazar.eu/detail/mercedes-benz-cls-400-d-4matic/AmSOHmpsZL9/", "price": 30900}], "body": "coupe"}, {"id": "bs-39759756", "url": "https://auto.bazar.sk/39759756-mercedes-benz-cls-kupe-350-d-final-edition-4matic-at9-190kw-2017-aj-na-splatky-protiucet/", "title": "Mercedes-Benz CLS Kupé 350 d Final Edition 4MATIC AT9, 190kW (2017) / AJ NA SPLÁTKY / PROTIÚČET", "price": 19900, "price_gross": 19900, "fair_price": 16880.0, "discount_pct": -17.9, "verdict": "výrazne nad trhom", "year": 2017, "km": 261996, "km_per_year": 28100.0, "eg": "CLS 350 / 400 d diesel 190–250 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Stará Turá", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AmdF6OjZgF_", "url": "https://www.autobazar.eu/detail/mercedes-benz-cls-kupe-350-d-final-edition-4matic-at9-190kw-2017-aj-na-splatky-protiucet/AmdF6OjZgF_/", "price": 19900}, {"source": "bazos", "id": "197418960", "url": "https://auto.bazos.sk/inzerat/197418960/mercedes-benz-cls-350d-final-edition-4matic-at9-190kw-2017.php", "price": 19900}], "body": "coupe"}, {"id": "bs-39739868", "url": "https://auto.bazar.sk/39739868-mercedes-benz-cls-kupe-350d-4matic-amg/", "title": "Mercedes-Benz CLS Kupé 350d 4MATIC AMG", "price": 19999, "price_gross": 19999, "fair_price": 16920.0, "discount_pct": -18.2, "verdict": "výrazne nad trhom", "year": 2014, "km": 242725, "km_per_year": 19700.0, "eg": "CLS 350 / 400 d diesel 190–250 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Kežmarok", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmXUKRcILaX", "url": "https://www.autobazar.eu/detail/mercedes-benz-cls-kupe-350-bluetec-4matic/AmXUKRcILaX/", "price": 19999}, {"source": "bazos", "id": "196653421", "url": "https://auto.bazos.sk/inzerat/196653421/mercedes-benz-cls-kupe-350d-4matic-amg.php", "price": 19999}], "body": "coupe"}, {"id": "197517223", "url": "https://auto.bazos.sk/inzerat/197517223/mercedes-benz-cls-shooting-brake-sb-350-cdi-4matic-blueeffic.php", "title": "Mercedes-Benz CLS Shooting Brake SB 350 CDI 4matic BlueEFFIC", "price": 18599, "price_gross": 18599, "fair_price": 15470.0, "discount_pct": -20.2, "verdict": "výrazne nad trhom", "year": 2013, "km": 219500, "km_per_year": 16500.0, "eg": "CLS 350 / 400 d diesel 190–250 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Partizánske", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "ab-AmzgAMUaWRv", "url": "https://www.autobazar.eu/detail/mercedes-benz-cls-kupe-400-d-4matic-at/AmzgAMUaWRv/", "title": "Mercedes-Benz CLS Kupé 400 d 4MATIC A/T", "price": 50999, "price_gross": 50999, "fair_price": 41660.0, "discount_pct": -22.4, "verdict": "výrazne nad trhom", "year": 2021, "km": 104905, "km_per_year": 19700.0, "eg": "CLS 350 / 400 d diesel 190–250 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Nitra", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39222289", "url": "https://auto.bazar.sk/39222289-mercedes-benz-cls-kupe-400-d-4matic-a-t/", "price": 50999}], "body": "coupe"}, {"id": "ab-AepG6uDngsD", "url": "https://www.autobazar.eu/detail/mercedes-benz-cls-v8-biturbo/AepG6uDngsD/", "title": "Mercedes-Benz CLS V8 Biturbo", "price": 22900, "price_gross": 22900, "fair_price": 17150.0, "discount_pct": -33.5, "verdict": "výrazne nad trhom", "year": 2011, "km": 198200, "km_per_year": 12900.0, "eg": "CLS 500 / 53 / 63 AMG benzín 320–430 kW", "cg": 0, "transmission": "automatic", "seller_type": "private", "location": "Trenčín", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "coupe"}, {"id": "197173357", "url": "https://auto.bazos.sk/inzerat/197173357/mercedes-benz-cls-350-cdi-4matic-shooting-brake-airmatic.php", "title": "Mercedes-Benz CLS 350 CDI 4MATIC Shooting Brake | Airmatic", "price": 15500, "price_gross": 15500, "fair_price": 11580.0, "discount_pct": -33.8, "verdict": "výrazne nad trhom", "year": 2013, "km": 355000, "km_per_year": 26600.0, "eg": "CLS 350 / 400 d diesel 190–250 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Senec", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "bs-38862087", "url": "https://auto.bazar.sk/38862087-mercedes-benz-cls-kupe-350-d-4matic/", "title": "Mercedes-Benz CLS Kupé 350 d 4matic", "price": 28990, "price_gross": 28990, "fair_price": 21430.0, "discount_pct": -35.3, "verdict": "výrazne nad trhom", "year": 2016, "km": 156000, "km_per_year": 15100.0, "eg": "CLS 350 / 400 d diesel 190–250 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava I - Staré Mesto", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "coupe"}, {"id": "197685808", "url": "https://auto.bazos.sk/inzerat/197685808/mercedes-benz-cls-500-4matic-facelift-bo-webasto-amg.php", "title": "Mercedes-Benz CLS 500 4MATIC Facelift | B&O | WEBASTO | AMG", "price": 37490, "price_gross": 37490, "fair_price": 27160.0, "discount_pct": -38.0, "verdict": "výrazne nad trhom", "year": 2016, "km": 130169, "km_per_year": 12600.0, "eg": "CLS 500 / 53 / 63 AMG benzín 320–430 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Žilina", "flags": [], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "coupe"}, {"id": "ab-AebMhXvi64g", "url": "https://www.autobazar.eu/detail/mercedes-benz-cls-63/AebMhXvi64g/", "title": "Mercedes-Benz CLS 63", "price": 41800, "price_gross": 41800, "fair_price": 25320.0, "discount_pct": -65.1, "verdict": "výrazne nad trhom", "year": 2014, "km": 180000, "km_per_year": 14600.0, "eg": "CLS 500 / 53 / 63 AMG benzín 320–430 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Prievidza", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "coupe"}];
+const GROUPS = ["Benzín", "Diesel", "LPG a nezistený"];
+const BODY = {"coupe": "4-dverové kupé", "wagon": "Shooting Brake"};
+const fmt = n => Math.round(n).toLocaleString("sk-SK");
+const eur = n => fmt(n) + " €";
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const TRANS = {automatic: "automat", manual: "manuál"};
+const SRC = {bazos: "bazoš", autobazar: "autobazar.eu", bazarsk: "bazar.sk"};
+
+// --- theme toggle ---------------------------------------------------------
+document.getElementById("themeBtn").onclick = () => {
+  const root = document.documentElement;
+  const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  drawChart();
+};
+
+// --- scatter chart --------------------------------------------------------
+const legend = document.getElementById("legend");
+legend.innerHTML = GROUPS.map((g, i) => `<span><i style="background:var(--s${i+1})"></i>${g}</span>`).join("")
+  + `<span><i class="ring"></i>odporúčaná ponuka</span>`;
+
+function drawChart() {
+  const svg = document.getElementById("chart"), wrap = document.getElementById("chartWrap"), tip = document.getElementById("tip");
+  const W = svg.clientWidth, H = 420, m = {l: 56, r: 16, t: 10, b: 40};
+  const pts = DATA.filter(d => d.km && d.price_gross);
+  const xMax = Math.ceil(Math.max(...pts.map(d => d.km)) / 50000) * 50000;
+  const yMax = Math.ceil(Math.max(...pts.map(d => d.price_gross)) / 5000) * 5000;
+  const x = v => m.l + v / xMax * (W - m.l - m.r), y = v => H - m.b - v / yMax * (H - m.t - m.b);
+  let s = "";
+  for (let v = 0; v <= yMax; v += 5000)
+    s += `<line x1="${m.l}" x2="${W-m.r}" y1="${y(v)}" y2="${y(v)}" stroke="var(--grid)"/><text x="${m.l-8}" y="${y(v)+4}" text-anchor="end">${v/1000} tis. €</text>`;
+  const step = W < 520 ? 100000 : 50000;
+  for (let v = 0; v <= xMax; v += step)
+    s += `<text x="${x(v)}" y="${H-m.b+18}" text-anchor="middle">${v/1000} tis.</text>`;
+  s += `<text x="${(W+m.l)/2}" y="${H-6}" text-anchor="middle">nájazd (km)</text>`;
+  const order = [...pts].sort((a, b) => (a.pick ? 1 : 0) - (b.pick ? 1 : 0));
+  order.forEach(d => {
+    const cx = x(d.km), cy = y(d.price_gross);
+    if (d.pick) s += `<circle cx="${cx}" cy="${cy}" r="9" fill="none" stroke="var(--text)" stroke-width="2"/>`;
+    s += `<circle class="pt" data-id="${d.id}" cx="${cx}" cy="${cy}" r="5" fill="var(--s${d.cg+1})" stroke="var(--surface)" stroke-width="2"/>`;
+  });
+  // invisible bigger hit targets
+  order.forEach(d => s += `<circle class="hit" data-id="${d.id}" cx="${x(d.km)}" cy="${y(d.price_gross)}" r="11" fill="transparent" style="cursor:pointer"/>`);
+  svg.innerHTML = s;
+  const byId = Object.fromEntries(pts.map(d => [d.id, d]));
+  svg.querySelectorAll(".hit").forEach(c => {
+    c.onmouseenter = c.onmousemove = ev => {
+      const d = byId[c.dataset.id];
+      tip.innerHTML = `<b>${esc(d.title)}</b>
+        <div class="row"><span>Cena</span><span>${eur(d.price_gross)}</span></div>
+        <div class="row"><span>Férová cena</span><span>${eur(d.fair_price)}</span></div>
+        <div class="row"><span>Pod trhom</span><span>${d.discount_pct > 0 ? "+" : ""}${d.discount_pct.toLocaleString("sk-SK")} %</span></div>
+        <div class="row"><span>Zdroj</span><span>${SRC[d.source]}${d.also_listed.length ? " + " + d.also_listed.map(a => SRC[a.source]).join(", ") : ""}</span></div>
+        <div class="row"><span>Rok · km</span><span>${d.year} · ${fmt(d.km)}</span></div>
+        <div class="row"><span>Motor</span><span>${esc(d.eg)} ${TRANS[d.transmission] || ""}</span></div>`;
+      tip.style.display = "block";
+      const r = wrap.getBoundingClientRect();
+      let lx = ev.clientX - r.left + 14, ly = ev.clientY - r.top + 14;
+      if (lx + 290 > r.width) lx = ev.clientX - r.left - 290;
+      tip.style.left = lx + "px"; tip.style.top = ly + "px";
+    };
+    c.onmouseleave = () => tip.style.display = "none";
+    c.onclick = () => window.open(byId[c.dataset.id].url, "_blank", "noopener");
+  });
+}
+drawChart();
+addEventListener("resize", drawChart);
+
+// --- full table -----------------------------------------------------------
+const fEngine = document.getElementById("fEngine");
+[...new Set(DATA.map(d => d.eg))].sort().forEach(g => fEngine.insertAdjacentHTML("beforeend", `<option>${esc(g)}</option>`));
+let sortK = "discount_pct", sortDir = -1;
+function discCell(v) {
+  const w = Math.min(Math.abs(v), 30) / 30 * 50;
+  const bar = v >= 0 ? `left:50%;width:${w}%;background:var(--pos)` : `right:50%;width:${w}%;background:var(--neg)`;
+  return `<span class="disc">${v > 0 ? "+" : ""}${v.toLocaleString("sk-SK")} %<span class="dbar"><span style="${bar}"></span></span></span>`;
+}
+function renderTable() {
+  const max = parseFloat(document.getElementById("fMax").value) || Infinity;
+  const tr = document.getElementById("fTrans").value, se = document.getElementById("fSeller").value, en = fEngine.value;
+  const so = document.getElementById("fSource").value, og = document.getElementById("fOrigin").value;
+  const bo = document.getElementById("fBody").value;
+  const rows = DATA.filter(d => (!en || d.eg === en) && (!tr || d.transmission === tr)
+    && (!se || d.seller_type !== "dealer") && d.price_gross <= max
+    && (!so || d.source === so || d.also_listed.some(a => a.source === so)) && (!og || d.origin === og) && (!bo || d.body === bo))
+    .sort((a, b) => { const A = a[sortK], B = b[sortK]; return (typeof A === "string" ? A.localeCompare(B) : A - B) * sortDir; });
+  document.getElementById("count").textContent = `${rows.length} z ${DATA.length} inzerátov`;
+  document.querySelector("#tbl tbody").innerHTML = rows.map(d => `<tr>
+    <td><a href="${d.url}" target="_blank" rel="noopener">${esc(d.title)}</a> ${d.pick ? '<span class="badge pick">odporúčané</span>' : ""}
+      <div class="sub">${BODY[d.body] || "karoséria ?"} · ${esc(d.eg)} · ${TRANS[d.transmission] || "prevodovka ?"} · ${esc(d.location)} · ${d.seller_type === "dealer" ? "predajca/firma" : d.seller_type === "private" ? "súkromník" : "neisté"} · ${SRC[d.source]}${d.origin === "SR" ? " · kúpené v SR" : d.origin === "dovoz" ? " · dovoz" : ""}${d.also_listed.map(a => ` · <a href="${a.url}" target="_blank" rel="noopener">aj na ${SRC[a.source]}</a>`).join("")}</div>
+      ${d.flags.filter(f => !f.startsWith("prevodovka")).map(f => `<div class="flag">⚠ ${esc(f)}</div>`).join("")}</td>
+    <td class="num">${d.year}</td><td class="num">${fmt(d.km)}</td>
+    <td class="num">${eur(d.price_gross)}</td><td class="num">${eur(d.fair_price)}</td>
+    <td class="num">${discCell(d.discount_pct)}</td></tr>`).join("");
+  document.querySelectorAll("#tbl th.sortable").forEach(th => {
+    const base = th.textContent.replace(/ [▾▴]$/, "");
+    th.textContent = base + (th.dataset.k === sortK ? (sortDir < 0 ? " ▾" : " ▴") : "");
+  });
+}
+document.querySelectorAll("#tbl th.sortable").forEach(th => th.onclick = () => {
+  if (sortK === th.dataset.k) sortDir *= -1; else { sortK = th.dataset.k; sortDir = th.dataset.k === "title" ? 1 : -1; }
+  renderTable();
+});
+["fEngine", "fTrans", "fSeller", "fSource", "fBody", "fOrigin", "fMax"].forEach(id => document.getElementById(id).addEventListener("input", renderTable));
+renderTable();
+</script>
+<!-- ferovka-theme --><script defer src="/analytics-config.js"></script><script defer src="/analytics.js"></script><script id="ferovka-chart">/* Férovka – chart → ad links, injected into every report by sync-reports.mjs.
+ *
+ * The reports draw one invisible 11px "hit" circle per ad. In dense charts (and always on a narrow phone) those
+ * circles overlap and the one drawn last wins, so a click/tap often opened a neighbouring ad. Here the pointer is
+ * always resolved to the NEAREST point, the report's own tooltip is shown for that point, and a click opens its ad.
+ * Touch: the first tap shows the tooltip (with a hint), a second tap on the same point opens the ad.
+ */
+(() => {
+  let rows;
+  try { rows = DATA; } catch { return; } // eslint-disable-line no-undef
+  if (!Array.isArray(rows) || !rows.length || !("url" in rows[0])) return;
+  const byId = new Map(rows.map((d) => [String(d.id), d]));
+  const MOUSE = ["mouseover", "mouseout", "mouseenter", "mouseleave", "mousemove", "mousedown", "mouseup", "click"];
+  let lastPointer = "mouse", down = null;
+  // the finger position as it was – Chrome "snaps" the later click of a tap to the centre of a nearby clickable element
+  addEventListener("pointerdown", (e) => { lastPointer = e.pointerType || "mouse"; down = { clientX: e.clientX, clientY: e.clientY }; }, true);
+
+  // the old per-point hit circles must not be targets (they overlap, and touch snapping aims at them)
+  document.head.insertAdjacentHTML("beforeend", "<style>svg circle.hit[data-id],svg circle.pt[data-id]{pointer-events:none}</style>");
+
+  function nearest(svg, ev, radius) {
+    let best = null, bd = Infinity;
+    for (const c of svg.querySelectorAll("circle.pt[data-id]")) {
+      const r = c.getBoundingClientRect();
+      const dx = r.left + r.width / 2 - ev.clientX, dy = r.top + r.height / 2 - ev.clientY;
+      const d = dx * dx + dy * dy;
+      if (d <= bd) { bd = d; best = c; } // ties: the point drawn on top (later) wins – that is the one you see
+    }
+    return best && bd <= radius * radius ? best : null;
+  }
+
+  function bind(svg) {
+    if (svg.__fvLinks) return;
+    svg.__fvLinks = true;
+    let current = null, armed = null;
+    const hitOf = (pt) => pt && svg.querySelector(`circle.hit[data-id="${CSS.escape(pt.dataset.id)}"]`);
+    const fire = (el, type, ev) => {
+      if (!el) return;
+      const e = new MouseEvent(type, { clientX: ev.clientX, clientY: ev.clientY, bubbles: false });
+      e.__fv = true;
+      el.dispatchEvent(e);
+    };
+    const tip = () => (svg.parentElement && svg.parentElement.querySelector("#tip, .tip")) || document.getElementById("tip");
+    const mark = (pt) => {
+      if (current === pt) return;
+      if (current) current.setAttribute("r", current.__r || "5");
+      current = pt;
+      if (pt) { pt.__r = pt.__r || pt.getAttribute("r"); pt.setAttribute("r", String(+pt.__r + 2)); }
+    };
+    const show = (pt, ev, hint) => {
+      mark(pt);
+      if (!pt) { const t = tip(); if (t) t.style.display = "none"; return; }
+      fire(hitOf(pt), "mousemove", ev); // the report's own tooltip, for the nearest point
+      const t = tip();
+      if (t && hint) t.insertAdjacentHTML("beforeend", `<div class="fv-hint">Ťukni ešte raz – otvorí sa inzerát ↗</div>`);
+    };
+    const open = (pt) => {
+      const d = byId.get(pt.dataset.id);
+      if (d && d.url) {
+        try { window.FerovkaAnalytics?.listingClick(d.url, "chart"); } catch { /* analytics must never block an ad */ }
+        window.open(d.url, "_blank", "noopener");
+      }
+    };
+
+    // the per-circle handlers of the report never see real mouse events – only our synthetic ones
+    for (const type of MOUSE) {
+      svg.addEventListener(type, (ev) => {
+        if (ev.__fv) return;
+        ev.stopImmediatePropagation();
+        if (type === "mousemove" && lastPointer === "mouse") {
+          show(nearest(svg, ev, 18), ev, false);
+          svg.style.cursor = current ? "pointer" : "";
+        } else if (type === "mouseleave" && ev.target === svg && lastPointer === "mouse") {
+          show(null, ev);
+        } else if (type === "click") {
+          const touch = lastPointer !== "mouse";
+          const at = touch && down ? down : ev;
+          const pt = nearest(svg, at, touch ? 26 : 18);
+          if (!pt) { armed = null; show(null, ev); return; }
+          if (!touch || armed === pt) { armed = null; open(pt); }
+          else { armed = pt; show(pt, at, true); }
+        }
+      }, true);
+    }
+  }
+
+  const scan = () => document.querySelectorAll("svg").forEach((s) => s.querySelector("circle.pt[data-id]") && bind(s));
+  scan();
+  new MutationObserver(scan).observe(document.body, { childList: true, subtree: true });
+})();
+</script><script id="ferovka-filters">/* Férovka – filters for the whole report, injected into every model report by sync-reports.mjs.
+ *
+ * The reports render the chart (drawChart) and the full ranking (renderTable) from the global DATA array; their own
+ * filter bar only filters the table. Here the filter bar (kept in its place above the ranking) gets more filters (year, price from/to,
+ * km, fuel, discount, picks only, text search) and every filter applies to the chart and the ranking together: DATA is
+ * refilled in place with the matching ads and both are drawn again. "</script" can't occur inside this file.
+ */
+(() => {
+  let data;
+  try { data = DATA; } catch { return; } // eslint-disable-line no-undef
+  if (!Array.isArray(data) || !data.length || typeof renderTable !== "function") return; // eslint-disable-line no-undef
+  const bar = document.querySelector(".filters");
+  if (!bar || bar.dataset.fv) return;
+  bar.dataset.fv = "1";
+  const ALL = data.slice();
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+  const fmt = (n) => Math.round(n).toLocaleString("sk-SK");
+  const norm = (s) => String(s ?? "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+  let groups = null;
+  try { groups = GROUPS; } catch { /* report without groups */ } // eslint-disable-line no-undef
+
+  const FUEL = { diesel: "Diesel", petrol: "Benzín", hybrid: "Hybrid", "plug-in hybrid": "Plug-in hybrid", electric: "Elektro", lpg: "LPG", cng: "CNG" };
+  const fuelOf = (d) => {
+    const e = norm(d.eg);
+    if (/tdi|crdi|dci|hdi|diesel|\bd\b|cdi|\d+d\b|blue/.test(e)) return "Diesel";
+    if (/plug-in|phev|e-hybrid|recharge|\bgte\b|\bt8\b|\b\d{2}e\b|\b\d{3} ?e\b/.test(e)) return "Plug-in hybrid";
+    if (/elektro|electric|\bev\b/.test(e)) return "Elektro";
+    if (/cng|lpg|g-tec|g-tron|tgi|ecofuel/.test(e)) return "Plyn (CNG/LPG)";
+    if (/mild|mhev/.test(e)) return "Benzín"; // mild-hybrid petrol (the diesel ones say TDI / d above)
+    if (/hybrid|hev/.test(e)) return "Hybrid";
+    if (/tsi|tfsi|mpi|fsi|benzin|gdi|dpi|htp|12v|\bt\d\b|\bb[56]\b|\d+i\b|turbo|tce|\bs4\b|rs ?\d|amg|competition|\bm\d{2,3}i?\b|gti|\bx5 m\b/.test(e)) return "Benzín";
+    return d.fuel ? FUEL[d.fuel] || String(d.fuel) : null;
+  };
+
+  // --- controls ---------------------------------------------------------------------------------------------------
+  const years = ALL.map((d) => d.year).filter(Boolean);
+  const yMin = Math.min(...years), yMax = Math.max(...years);
+  const yearOpts = (label) => `<option value="">${label}</option>` +
+    Array.from({ length: yMax - yMin + 1 }, (_, i) => yMax - i).map((y) => `<option>${y}</option>`).join("");
+  const kms = [30000, 50000, 75000, 100000, 150000, 200000, 250000, 300000];
+  const fuels = [...new Set(ALL.map(fuelOf).filter(Boolean))].sort((a, b) => a.localeCompare(b, "sk"));
+  const showGroups = Array.isArray(groups) && groups.length > 1 && ALL.some((d) => Number.isInteger(d.cg));
+
+  const maxInput = $("fMax");
+  if (maxInput) { maxInput.placeholder = "Cena do €"; maxInput.title = "Najvyššia cena (s DPH)"; }
+  const html =
+    `<select id="fvYearFrom" title="Rok výroby od">${yearOpts("Rok od")}</select>` +
+    `<select id="fvYearTo" title="Rok výroby do">${yearOpts("Rok do")}</select>` +
+    `<input id="fvPriceMin" type="number" placeholder="Cena od €" step="500" min="0" title="Najnižšia cena (s DPH)" style="width:110px">`;
+  if (maxInput) maxInput.insertAdjacentHTML("beforebegin", html);
+  else bar.insertAdjacentHTML("afterbegin", html);
+  const more =
+    `<select id="fvKm" title="Najviac najazdených km"><option value="">Nájazd – všetky</option>${kms.map((k) => `<option value="${k}">do ${fmt(k)} km</option>`).join("")}</select>` +
+    (fuels.length > 1 ? `<select id="fvFuel" title="Palivo"><option value="">Všetky palivá</option>${fuels.map((f) => `<option>${esc(f)}</option>`).join("")}</select>` : "") +
+    (showGroups ? `<select id="fvGroup" title="Skupina motorov (farba v grafe)"><option value="">Všetky skupiny</option>${groups.map((g, i) => `<option value="${i}">${esc(g)}</option>`).join("")}</select>` : "") +
+    `<select id="fvDisc" title="O koľko je auto lacnejšie ako férová cena"><option value="">Cena – všetky</option><option value="0">pod férovou cenou</option><option value="10">aspoň 10 % pod trhom</option><option value="20">aspoň 20 % pod trhom</option></select>` +
+    `<input id="fvText" type="search" placeholder="Hľadať (výbava, mesto…)" title="Hľadá v názve inzerátu, motore a lokalite" style="width:170px">` +
+    `<label class="fv-check"><input id="fvPick" type="checkbox"> len odporúčané</label>` +
+    `<button type="button" id="fvReset" class="fv-reset">Zrušiť filtre</button>`;
+  const count = $("count");
+  if (count) count.insertAdjacentHTML("beforebegin", more);
+  else bar.insertAdjacentHTML("beforeend", more);
+
+  // the bar stays where it was – right above the ranking – and also drives the chart; the chart gets a pointer to it
+  const chart = $("chartWrap");
+  const box = document.createElement("div");
+  box.className = "fv-filters";
+  box.id = "filtre";
+  bar.before(box);
+  box.innerHTML = `<div class="fv-head"><b>Filtre</b><span>platia pre rebríček aj graf vyššie</span></div>`;
+  box.appendChild(bar);
+  const note = document.createElement("div");
+  note.className = "fv-note";
+  chart?.before(note);
+
+  document.head.insertAdjacentHTML("beforeend", `<style id="fv-filters-css">
+.fv-filters{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 14px 4px;margin:24px 0 8px}
+.fv-filters .fv-head{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;margin-bottom:8px}
+.fv-filters .fv-head span{color:var(--muted);font-size:13px}
+.fv-filters .filters{margin-bottom:8px}
+.fv-filters .filters .count{flex-basis:100%;margin-left:0}
+.fv-check{display:inline-flex;gap:6px;align-items:center;font-size:13px;color:var(--text-2,var(--text));white-space:nowrap}
+.fv-reset{background:none;border:1px solid var(--border);color:var(--text);border-radius:8px;padding:6px 10px;font:inherit;font-size:13px;cursor:pointer}
+.fv-reset:hover{background:var(--surface-2,var(--surface))}
+.fv-note{color:var(--muted);font-size:13px;margin:0 0 8px}
+.fv-note a{color:inherit}
+.fv-empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:14px;pointer-events:none}
+@media (max-width:600px){.fv-filters .filters select,.fv-filters .filters input[type=number],.fv-filters .filters input[type=search]{flex:1 1 calc(50% - 8px);min-width:0;width:auto!important}}
+</style>`);
+
+  // --- filtering --------------------------------------------------------------------------------------------------
+  const val = (id) => ($(id) ? $(id).value : "");
+  const num = (id) => { const v = parseFloat(val(id)); return Number.isFinite(v) ? v : null; };
+  function matches(d) {
+    const yf = num("fvYearFrom"), yt = num("fvYearTo"), pmin = num("fvPriceMin"), pmax = num("fMax"), km = num("fvKm"), disc = num("fvDisc");
+    const fuel = val("fvFuel"), grp = val("fvGroup"), q = norm(val("fvText")).trim();
+    if (yf != null && !(d.year >= yf)) return false;
+    if (yt != null && !(d.year <= yt)) return false;
+    if (pmin != null && !(d.price_gross >= pmin)) return false;
+    if (pmax != null && !(d.price_gross <= pmax)) return false;
+    if (km != null && !(d.km <= km)) return false;
+    if (disc != null && !(d.discount_pct > disc || (disc > 0 && d.discount_pct >= disc))) return false;
+    if (fuel && fuelOf(d) !== fuel) return false;
+    if (grp !== "" && String(d.cg) !== grp) return false;
+    if ($("fvPick")?.checked && !d.pick) return false;
+    if (q && !q.split(/\s+/).every((w) => norm(`${d.title} ${d.eg ?? ""} ${d.engine ?? ""} ${d.location ?? ""}`).includes(w))) return false;
+    // the report's own filters (engine, gearbox, seller, portal, body, origin) – same rules as its renderTable
+    const en = val("fEngine"), tr = val("fTrans"), se = val("fSeller"), so = val("fSource"), og = val("fOrigin"), bo = val("fBody");
+    if (en && d.eg !== en) return false;
+    if (tr && d.transmission !== tr) return false;
+    if (se && d.seller_type === "dealer") return false;
+    if (so && !(d.source === so || (d.also_listed || []).some((a) => a.source === so))) return false;
+    if (og && d.origin !== og) return false;
+    if (bo && d.body !== bo) return false;
+    return true;
+  }
+  const active = () => [...box.querySelectorAll("select, input")].filter((el) => (el.type === "checkbox" ? el.checked : el.value !== "")).length;
+
+  let drawing = false;
+  function apply() {
+    if (drawing) return;
+    drawing = true;
+    const rows = ALL.filter(matches);
+    data.length = 0;
+    data.push(...rows);
+    const wrap = $("chartWrap");
+    wrap?.querySelector(".fv-empty")?.remove();
+    const plotted = rows.filter((d) => d.km && d.price_gross).length;
+    try {
+      if (typeof drawChart === "function") { // eslint-disable-line no-undef
+        if (plotted) drawChart(); // eslint-disable-line no-undef
+        else { const svg = $("chart"); if (svg) svg.innerHTML = ""; }
+      }
+    } catch (e) { console.warn("chart", e); }
+    if (wrap && !plotted) {
+      if (getComputedStyle(wrap).position === "static") wrap.style.position = "relative";
+      wrap.insertAdjacentHTML("beforeend", `<div class="fv-empty">Filtrom nezodpovedá žiadny inzerát</div>`);
+    }
+    try { renderTable(); } catch (e) { console.warn("table", e); } // eslint-disable-line no-undef
+    const n = active();
+    if (count) count.textContent = `Zobrazených ${fmt(rows.length)} z ${fmt(ALL.length)} inzerátov` + (n ? ` · aktívne filtre: ${n}` : "");
+    note.innerHTML = n
+      ? `Zobrazených ${fmt(rows.length)} z ${fmt(ALL.length)} inzerátov podľa <a href="#filtre">filtrov pri rebríčku</a>.`
+      : `Filtre (rok, cena, nájazd, palivo…) nájdeš <a href="#filtre">pri kompletnom rebríčku</a> – platia aj pre tento graf.`;
+    drawing = false;
+  }
+  box.querySelectorAll("select, input").forEach((el) => el.addEventListener("input", apply));
+  $("fvPick")?.addEventListener("change", apply);
+  $("fvReset").addEventListener("click", () => {
+    box.querySelectorAll("select, input").forEach((el) => { if (el.type === "checkbox") el.checked = false; else el.value = ""; });
+    apply();
+  });
+  apply();
+})();
+</script><!-- /ferovka-theme -->
+</body>
+</html>
