@@ -1,0 +1,855 @@
+<!doctype html>
+<html lang="sk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Audi A7 – analýza ponúk</title>
+<style>
+:root {
+  color-scheme: light;
+  --bg: #f6f6f4; --surface: #fcfcfb; --surface-2: #f0efec; --border: #e2e1dc;
+  --text: #0b0b0b; --text-2: #52514e; --muted: #7a7974;
+  --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a;
+  --pos: #2a78d6; --neg: #eb6834; --accent: #2a78d6;
+  --good: #1d7f4e; --bad: #b4332f; --grid: #e8e7e3;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #121211; --surface: #1a1a19; --surface-2: #232321; --border: #33332f;
+    --text: #f0efec; --text-2: #c3c2b7; --muted: #8f8e86;
+    --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+    --pos: #3987e5; --neg: #d95926; --accent: #5598e7;
+    --good: #4cc38a; --bad: #f07a76; --grid: #2a2a27;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #121211; --surface: #1a1a19; --surface-2: #232321; --border: #33332f;
+  --text: #f0efec; --text-2: #c3c2b7; --muted: #8f8e86;
+  --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+  --pos: #3987e5; --neg: #d95926; --accent: #5598e7;
+  --good: #4cc38a; --bad: #f07a76; --grid: #2a2a27;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text);
+  font: 15px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+main { max-width: 1120px; margin: 0 auto; padding: 32px 16px 64px; }
+a { color: var(--accent); text-decoration: none; } a:hover { text-decoration: underline; }
+h1 { font-size: 30px; margin: 0 0 4px; letter-spacing: -.01em; }
+h2 { font-size: 21px; margin: 48px 0 6px; }
+h3 { font-size: 15px; margin: 6px 0 4px; line-height: 1.35; }
+.lead { color: var(--text-2); margin: 0 0 20px; max-width: 760px; }
+.section-lead { color: var(--text-2); margin: 0 0 16px; max-width: 800px; }
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
+.kpi { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+.kpi .v { font-size: 26px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.kpi .l { color: var(--text-2); font-size: 13px; }
+.explain { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; margin-top: 12px; }
+.explain p { margin: 6px 0; color: var(--text-2); }
+.explain b { color: var(--text); }
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; }
+.card-head { display: flex; justify-content: space-between; gap: 8px; font-size: 12px; }
+.tag { font-weight: 600; color: var(--accent); }
+.loc { color: var(--muted); }
+.facts { color: var(--text-2); font-size: 13px; }
+.prices { display: grid; grid-template-columns: 1.2fr 1fr .8fr; gap: 8px; margin: 12px 0 8px; }
+.lbl { display: block; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+.big { font-size: 22px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.mid { font-size: 16px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.good { color: var(--good); }
+.meter { height: 6px; background: var(--surface-2); border-radius: 4px; overflow: hidden; }
+.meter span { display: block; height: 100%; background: var(--s1); border-radius: 4px; }
+.news ul { margin: 6px 0 0; padding-left: 20px; } .news li { margin: 4px 0; } .news .down { color: var(--good, #1baf7a); font-weight: 600; }
+.note { font-size: 12.5px; background: var(--surface-2); border-radius: 6px; padding: 6px 8px; margin-top: 8px; color: var(--text-2); }
+.pc { list-style: none; padding: 0; margin: 10px 0 0; font-size: 13.5px; }
+.pc li { padding-left: 20px; position: relative; margin: 3px 0; }
+.pc li.pro::before { content: "+"; position: absolute; left: 4px; color: var(--good); font-weight: 700; }
+.pc li.con::before { content: "–"; position: absolute; left: 4px; color: var(--bad); font-weight: 700; }
+.subhead { font-size: 15px; color: var(--text-2); margin: 22px 0 10px; font-weight: 600; }
+.chart-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 14px 8px; position: relative; }
+.legend { display: flex; flex-wrap: wrap; gap: 16px; font-size: 13px; color: var(--text-2); margin: 0 0 6px 4px; }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; }
+.legend .ring { background: transparent; border: 2px solid var(--text); width: 12px; height: 12px; }
+svg text { fill: var(--muted); font-size: 11px; }
+.tip { position: absolute; pointer-events: none; background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+  padding: 8px 10px; font-size: 12.5px; box-shadow: 0 6px 20px rgba(0,0,0,.15); max-width: 280px; display: none; z-index: 5; }
+.tip b { display: block; margin-bottom: 2px; }
+.tip .row { display: flex; justify-content: space-between; gap: 12px; color: var(--text-2); }
+.tip .row span:last-child { color: var(--text); font-variant-numeric: tabular-nums; }
+table { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; font-size: 13.5px; }
+th, td { padding: 9px 10px; border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; }
+th { font-size: 12px; color: var(--text-2); font-weight: 600; background: var(--surface-2); white-space: nowrap; }
+th.sortable { cursor: pointer; user-select: none; } th.sortable:hover { color: var(--text); }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+.sub { color: var(--text-2); font-size: 12.5px; margin-top: 2px; }
+.stars { color: #c98500; letter-spacing: 1px; white-space: nowrap; } .stars .off { color: var(--border); }
+.cellbar { height: 5px; background: var(--surface-2); border-radius: 3px; margin-bottom: 4px; }
+.cellbar span { display: block; height: 100%; background: var(--s1); border-radius: 3px; }
+.disc { display: inline-flex; align-items: center; gap: 6px; justify-content: flex-end; }
+.dbar { width: 54px; height: 6px; background: var(--surface-2); border-radius: 3px; position: relative; }
+.dbar span { position: absolute; top: 0; height: 100%; border-radius: 3px; }
+.filters { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 10px; align-items: center; }
+.filters select, .filters input { background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 6px 8px; font: inherit; font-size: 13px; }
+.filters .count { color: var(--muted); font-size: 13px; margin-left: auto; }
+.table-scroll { overflow-x: auto; border-radius: 12px; }
+.badge { font-size: 11px; padding: 1px 6px; border-radius: 10px; background: var(--surface-2); color: var(--text-2); white-space: nowrap; }
+.badge.pick { background: var(--s1); color: #fff; }
+.flag { color: var(--bad); font-size: 12px; }
+.warn { background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--neg); border-radius: 10px; padding: 12px 16px; }
+.warn li { margin: 4px 0; }
+.check { columns: 2 300px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px 14px 34px; margin: 0; }
+.check li { margin: 4px 0; break-inside: avoid; }
+footer { color: var(--muted); font-size: 12.5px; margin-top: 48px; border-top: 1px solid var(--border); padding-top: 14px; }
+.theme-btn { float: right; background: var(--surface); color: var(--text-2); border: 1px solid var(--border); border-radius: 8px; padding: 5px 10px; cursor: pointer; font: inherit; font-size: 13px; }
+@media (max-width: 640px) { h1 { font-size: 24px; } .prices { grid-template-columns: 1fr 1fr 1fr; } .big { font-size: 18px; } th, td { padding: 7px 6px; } }
+</style>
+<!-- ferovka-theme --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"><style id="ferovka-theme">/* Férovka look for the generated analyses – injected by sync-reports.mjs after each report's own <style>.
+   Same palette and type as the site; chart colours (--s1..--s3) stay the validated set. */
+:root {
+  --bg: #f5f4ef; --surface: #fdfdfb; --surface-2: #eeede6; --border: #e1dfd6;
+  --text: #0f1513; --text-2: #4f5551; --muted: #6f746f;
+  --accent: #0b8a56; --good: #0b7a4b; --grid: #e6e4dc; --win: #dff3e9;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d110f; --surface: #151a17; --surface-2: #1d2420; --border: #2a322d;
+    --text: #eef1ec; --text-2: #b6bdb6; --muted: #8f978f;
+    --accent: #2fc583; --good: #4cd08f; --grid: #1f2622; --win: #143223;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d110f; --surface: #151a17; --surface-2: #1d2420; --border: #2a322d;
+  --text: #eef1ec; --text-2: #b6bdb6; --muted: #8f978f;
+  --accent: #2fc583; --good: #4cd08f; --grid: #1f2622; --win: #143223;
+}
+
+body { font-family: "Manrope", system-ui, sans-serif; }
+h1, h2 { letter-spacing: -0.02em; font-weight: 800; }
+.tag { color: var(--accent); }
+
+/* photo header (removed by the site's viewer, which shows its own) */
+.fv-hero { position: relative; margin: 0 0 26px; border-radius: 20px; overflow: hidden; aspect-ratio: 21 / 8; background: #0d110f; display: flex; }
+.fv-hero img { flex: 1; min-width: 0; height: 100%; object-fit: cover; animation: fv-zoom 1.4s cubic-bezier(.2,.7,.2,1) both; }
+.fv-collage img + img { border-left: 3px solid #0d110f; }
+.fv-hero::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(180deg, transparent 55%, rgb(13 17 15 / .75)),
+    repeating-linear-gradient(90deg, rgb(47 197 131 / .06) 0 1px, transparent 1px 48px); }
+.fv-hero figcaption { position: absolute; right: 12px; bottom: 8px; z-index: 1; font-size: 11px; color: rgb(255 255 255 / .75); }
+.fv-hero figcaption a { color: inherit; }
+
+/* cards & panels: softer, lift on hover */
+.card, .kpi, .explain, .chart-wrap, .box { border-radius: 16px; }
+.card { transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease; }
+.card:hover { transform: translateY(-3px); border-color: var(--accent); box-shadow: 0 14px 30px -18px rgb(0 0 0 / .45); }
+.badge.pick { background: var(--accent); }
+
+/* entrance animation */
+@keyframes fv-up { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes fv-zoom { from { transform: scale(1.08); filter: brightness(.6); } to { transform: none; filter: none; } }
+h1, .lead, .kpis, .cards .card { animation: fv-up .6s cubic-bezier(.2,.7,.2,1) both; }
+.lead { animation-delay: .08s; }
+.kpis { animation-delay: .16s; }
+.cards .card:nth-child(2) { animation-delay: .06s; }
+.cards .card:nth-child(3) { animation-delay: .12s; }
+.cards .card:nth-child(4) { animation-delay: .18s; }
+.cards .card:nth-child(5) { animation-delay: .24s; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+@media (max-width: 640px) { .fv-hero { aspect-ratio: 16 / 9; border-radius: 14px; } }
+
+/* touch: hint under the chart tooltip (report-chart.js) */
+.fv-hint { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--border, rgba(127,127,127,.3)); font-weight: 700; color: var(--accent, #2fc583); }
+</style><!-- /ferovka-theme -->
+</head>
+<body>
+<main><!-- ferovka-theme --><!-- /ferovka-theme -->
+<button class="theme-btn" id="themeBtn" type="button">Svetlý / tmavý</button>
+<h1>Audi A7 – ktorá ponuka sa oplatí</h1>
+<p class="lead">Analýza aktuálnych inzerátov Audi A7 (Sportback 2010–2025, aj S7 / RS7) od 8 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 382 inzerátov (207 na bazoši, 67 na autobazar.eu, 108 na bazar.sk) – prezreli sme 60 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 196 rôznych áut zo Slovenska. Každé auto sme porovnali
+s <b>férovou cenou</b>: tú vypočítal model naučený na celom trhu podľa veku, nájazdu, motora, prevodovky a typu predajcu.</p>
+
+<div class="kpis">
+  <div class="kpi"><div class="v">196</div><div class="l">inzerátov A7 (nad 8 000 €)</div></div>
+  <div class="kpi"><div class="v">92</div><div class="l">ohodnotených (majú rok aj km)</div></div>
+  <div class="kpi"><div class="v">23 150 €</div><div class="l">medián ceny s DPH</div></div>
+  <div class="kpi"><div class="v">89 %</div><div class="l">rozdielov v cenách vysvetlí model</div></div>
+</div>
+
+
+<h2>Odkiaľ sú dáta: bazoš, autobazar.eu a bazar.sk</h2>
+<div class="kpis">
+  <div class="kpi"><div class="v">51</div><div class="l">ohodnotených z bazoša</div></div>
+  <div class="kpi"><div class="v">40</div><div class="l">ohodnotených z autobazar.eu</div></div><div class="kpi"><div class="v">1</div><div class="l">ohodnotených z bazar.sk</div></div>
+  <div class="kpi"><div class="v">22</div><div class="l">áut bolo na viacerých portáloch – započítané raz</div></div>
+  <div class="kpi"><div class="v">11 / 15</div><div class="l">s uvedeným pôvodom SR / dovoz</div></div>
+</div>
+<div class="explain">
+  <p><b>Tri portály, jeden trh.</b> Bazoš prehľadal 160 inzerátov, autobazar.eu
+  67, bazar.sk 3. Ponuky z Česka (na autobazar.eu ich je veľa) sme vynechali. Autobazáre často dávajú
+  to isté auto na viac portálov. Takéto dvojice (21 v rebríčku) sme spojili podľa VIN alebo zhody roku, km a ceny,
+  aby sa v modeli nerátali dvakrát. Pri aute nájdeš odkaz na všetky ponuky – niekedy sa líšia cenou.</p>
+  <p><b>Rozdiel medzi portálmi:</b> rovnaké auto je na autobazar.eu v priemere +0,2 %
+  oproti bazošu. Na autobazar.eu predávajú hlavne firmy (34 z 40 ohodnotených).</p>
+  <p><b>Kúpené v SR vs. dovoz:</b> autá s uvedeným pôvodom zo SR sú oproti autám bez uvedeného pôvodu
+  +1,4 %, dovezené +5,5 %
+  (pri rovnakom veku, nájazde a motore). Pôvod zo SR je výhoda pri overovaní histórie, trh zaň však nepripláca – väčšina
+  inzerátov pôvod jednoducho neuvádza. V tabulke dole si môžeš nechať zobraziť len autá kúpené v SR.</p>
+</div>
+
+<h2>Čo hýbe cenou Audi A7</h2>
+<p class="section-lead">Toto sa model naučil z trhu. Keď porovnávaš dve autá, tieto čísla ti povedia, koľko má byť
+rozdiel v cene, aby to bolo fér.</p>
+<div class="kpis">
+  <div class="kpi"><div class="v">-1,5 %</div><div class="l">každých ďalších 10 000 km</div></div>
+  <div class="kpi"><div class="v">-8,2 %</div><div class="l">každý rok veku navyše</div></div>
+  <div class="kpi"><div class="v">+59 %</div><div class="l">príplatok za automat (DSG)</div></div>
+  <div class="kpi"><div class="v">+0,6 %</div><div class="l">príplatok u predajcu / firmy</div></div>
+  <div class="kpi"><div class="v">+8,7 %</div><div class="l">A7 druhej generácie (2018+) oproti cene podľa veku</div></div>
+  <div class="kpi"><div class="v">+59,4 %</div><div class="l">príplatok za automat</div></div>
+</div>
+<div class="explain">
+  <p><b>Príklad:</b> dve rovnaké Audi A7 3.0 TDI z roku 2016, jedno má 60 tis. km, druhé 120 tis. km. Druhé má byť
+  približne o 9 % lacnejšie (6 × -1,5 %). Ak je lacnejšie len o 5 %, preplácaš kilometre.</p>
+  <p><b>Ako čítať „pod trhom“:</b> +15 % znamená, že auto stojí o 15 % menej, než by malo podľa trhu. Bežný rozptyl
+  cien je asi ±21 %, takže až zľava nad ~10–15 % je naozaj výnimočná. Pri takej zľave vždy zisti, prečo je auto lacné
+  (stav, história, nájazd).</p>
+  <p><b>DPH:</b> ceny uvedené bez DPH (napr. „10 300 € netto“) sme prepočítali na cenu s DPH, ktorú zaplatí súkromná osoba.</p>
+</div>
+
+<h2>Odporúčané ponuky</h2>
+<p class="section-lead">Kandidáti s najlepším pomerom cena / vek / nájazd, ktorých celý inzerát sme prečítali.
+Zoradené podľa toho, ako ich odporúčame.</p>
+<div class="subhead">A7 druhej generácie (2018+) – najlepší pomer cena / vek</div>
+<div class="cards">
+<article class="card">
+  <div class="card-head"><span class="tag">A7 Sportback 50 TDI quattro so 47 tis. km</span><span class="loc">Košice-Juh</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/audi-a7-sportback-50-30-tdi-mhev-quattro-tiptronic/AefMC2RfYo8/" target="_blank" rel="noopener">Audi A7 Sportback 50 3.0 TDI mHEV quattro tiptronic</a></h3>
+  <div class="facts">2019 · 46 930 km · 3.0 TDI V6 150–257 kW · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">28 000 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">41 230 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+32.1 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:100%"></span></div>
+  <ul class="pc"><li class="pro">2019, 3.0 TDI mild hybrid, quattro, tiptronic, 47 tis. km</li><li class="pro">Druhá generácia, nízky nájazd</li><li class="pro">~32 % pod férovou cenou</li><li class="con">Predáva autobazár</li><li class="con">Inzerát bez popisu</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">A7 Sportback competition 3.0 TDI 326 k</span><span class="loc">Pezinok</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/audi-a7-sportback-competition-30-tdi-quattro-326k-tiptronic/AmmVW4Fv3lk/" target="_blank" rel="noopener">Audi A7 Sportback competition 3.0 TDI quattro 326k tiptronic</a></h3>
+  <div class="facts">2017 · 80 600 km · 3.0 TDI V6 150–257 kW · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">22 800 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">29 190 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+21.9 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:73%"></span></div>
+  <ul class="pc"><li class="pro">2017, 3.0 BiTDI 240 kW, quattro, tiptronic, 81 tis. km</li><li class="pro">Pravidelne servisované, nezávislé kúrenie, nefajčiar</li><li class="pro">~22 % pod férovou cenou</li><li class="con">Predáva autobazár</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">Súkromník: A7 Sportback competition 3.0 TDI</span><span class="loc">Zvolen</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/audi-a7-sportback-competition-30-tdi-quattro-326k-tiptronic-240kw326hp-a8/AeQhaK0Oxsi/" target="_blank" rel="noopener">Audi A7 Sportback competition 3.0 TDI quattro 326k tiptronic 240kW326HP A8</a></h3>
+  <div class="facts">2018 · 179 000 km · 3.0 TDI V6 150–257 kW · automat · súkromník</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">23 500 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">29 070 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+19.2 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:64%"></span></div>
+  <ul class="pc"><li class="pro">2018, 3.0 BiTDI 240 kW, quattro, 8-st. tiptronic, 179 tis. km</li><li class="pro">Lak chránený fóliou</li><li class="pro">~19 % pod férovou cenou</li><li class="con">Krátky inzerát</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">A7 3.0 TDI quattro S-line z 2018</span><span class="loc">Prievidza</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197174155/audi-a7-30tdi-c7-quattro-s-line-200kw-at7-2018.php" target="_blank" rel="noopener">Audi A7 3.0TDI C7 Quattro S-line 200kW AT/7 2018</a></h3>
+  <div class="facts">2018 · 234 827 km · 3.0 TDI V6 150–257 kW · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazoš</b> · aj na <a href='https://www.autobazar.eu/detail/audi-a7-30-tdi-quattro-s-line-200kw-at7-2018-aj-na-splatky-protiucet/AmV4qio2IHN/' target='_blank' rel='noopener'>autobazar.eu</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">19 990 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">23 520 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+15.0 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:50%"></span></div>
+  <ul class="pc"><li class="pro">1/2018, 3.0 TDI 200 kW, quattro, 7-st. automat, 235 tis. km</li><li class="pro">Bohatá výbava, výborný stav</li><li class="pro">~15 % pod férovou cenou</li><li class="con">Vyšší nájazd</li><li class="con">Predáva autobazár</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">A7 Sportback 50 TFSI e plug-in hybrid so 44 tis. km</span><span class="loc">Malacky</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197117038/predam-nadherne-audi-a7-sportback-50-tfsi-e-plug-in-hybrid.php" target="_blank" rel="noopener">Predám nádherné Audi A7 Sportback 50 TFSI e Plug-in Hybrid,</a></h3>
+  <div class="facts">2022 · 44 000 km · Plug-in hybrid 55 TFSI e · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">33 000 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">39 200 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+15.8 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:53%"></span></div>
+  <ul class="pc"><li class="pro">2022, 2.0 TFSI e plug-in 195 kW, 7-st. S tronic, 44 tis. km</li><li class="pro">Novší ročník, nízky nájazd</li><li class="pro">~16 % pod férovou cenou</li><li class="con">Predáva autobazár</li><li class="con">Over stav batérie</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">A7 Sportback 50 TFSI e quattro S-line</span><span class="loc">Trenčín</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197217957/audi-a7-sportback-50-tfsi-e-quattro-s-line-odo-pass-kera.php" target="_blank" rel="noopener">Audi A7 Sportback 50 TFSI e quattro S-line | ODO-Pass | Kera</a></h3>
+  <div class="facts">2021 · 124 589 km · Plug-in hybrid 55 TFSI e · automat · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b> · dovezené · aj na <a href='https://www.autobazar.eu/detail/audi-a7-audi-a7-sportback-50-tfsi-e-quattro-s-line-odo-pass-keramika/AeYwqIQhAZR/' target='_blank' rel='noopener'>autobazar.eu</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">38 000 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">45 060 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+15.7 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:52%"></span></div>
+  <ul class="pc"><li class="pro">7/2021, plug-in hybrid, quattro, automat, 125 tis. km</li><li class="pro">ODO-Pass, overená história</li><li class="pro">~16 % pod férovou cenou</li><li class="con">Dovoz (v SR od 2024)</li><li class="con">Over stav batérie</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">A7 Sportback 55 TFSI e quattro S-line</span><span class="loc">Bratislava</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/audi-a7-sportback-55-tfsie-s-line-quattro-at7/AmVSjKhpxdt/" target="_blank" rel="noopener">Audi A7 Sportback 55 TFSIe, S-Line, Quattro AT/7</a></h3>
+  <div class="facts">2020 · 186 911 km · Plug-in hybrid 55 TFSI e · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">27 552 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">31 790 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+13.3 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:44%"></span></div>
+  <ul class="pc"><li class="pro">2020, plug-in hybrid 270 kW, quattro, 7-st. automat, 187 tis. km</li><li class="pro">Najsilnejší plug-in</li><li class="pro">~13 % pod férovou cenou</li><li class="con">Vyšší nájazd</li><li class="con">Inzerát bez popisu</li></ul>
+</article></div>
+<div class="subhead">Lacnejšie A7 do 18 000 €</div>
+<div class="cards">
+<article class="card">
+  <div class="card-head"><span class="tag">A7 3.0 BiTDI quattro facelift za 11 800 €</span><span class="loc">Detva</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197489160/audi-a7-30bitdi-quattro.php" target="_blank" rel="noopener">AUDI A7 3.0BiTDI Quattro</a></h3>
+  <div class="facts">2015 · 242 000 km · 3.0 TDI V6 150–257 kW · prevodovka ? · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">11 800 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">17 700 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+33.4 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:100%"></span></div>
+  <ul class="pc"><li class="pro">2015, 3.0 BiTDI 235 kW, quattro, 242 tis. km</li><li class="pro">Po facelifte, najsilnejší diesel</li><li class="pro">~33 % pod férovou cenou</li><li class="con">Prevodovka neuvedená (automat)</li><li class="con">Predajca neistý</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">A7 Sportback 3.0 TDI quattro s novými rozvodmi</span><span class="loc">Bratislava - Vajnory</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/audi-a7-180kw-at-quattro/Amq_z7gSyLJ/" target="_blank" rel="noopener">AUDI A7 Sportback 3.0 TDI  Quattro, S Tronic</a></h3>
+  <div class="facts">2012 · 297 820 km · 3.0 TDI V6 150–257 kW · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">8 999 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">12 070 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+25.4 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:85%"></span></div>
+  <ul class="pc"><li class="pro">2012, 3.0 TDI, quattro, S tronic, 298 tis. km</li><li class="pro">Vymenené rozvody, nová STK/EK do 3/2028, nezávislé kúrenie</li><li class="pro">~25 % pod férovou cenou</li><li class="con">Vysoký nájazd</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">A7 3.0 TDI quattro S-line zo SR</span><span class="loc">Bratislava</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/audi-a7-s-line-30-tdi-quattro-180kw-at7-2014-aj-na-splatky-protiucet/AmXuLPlu26L/" target="_blank" rel="noopener">Audi A7 S-line 3.0 TDI Quattro 180kW AT/7 2014 / AJ NA SPLÁTKY / PROTIÚČET</a></h3>
+  <div class="facts">2014 · 294 478 km · 3.0 TDI V6 150–257 kW · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">11 990 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">15 000 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+20.1 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:67%"></span></div>
+  <ul class="pc"><li class="pro">2014, 3.0 TDI 180 kW, quattro, 7-st. automat, 294 tis. km</li><li class="pro">Slovenské auto, garážované, sezónne prezutie</li><li class="pro">~20 % pod férovou cenou</li><li class="con">Vysoký nájazd</li><li class="con">Predáva autobazár</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">A7 3.0 TDI z SR od 1. majiteľa</span><span class="loc">Bardejov</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197777037/audi-a7.php" target="_blank" rel="noopener">Audi a7</a></h3>
+  <div class="facts">2010 · 288 000 km · 3.0 TDI V6 150–257 kW · prevodovka ? · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">8 500 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">10 170 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+16.4 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:55%"></span></div>
+  <ul class="pc"><li class="pro">12/2010, 3.0 TDI 180 kW, 288 tis. km</li><li class="pro">Kúpené nové v SR, jeden majiteľ</li><li class="pro">~16 % pod férovou cenou</li><li class="con">Prevodovka neuvedená</li><li class="con">Vysoký nájazd</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">A7 3.0 TDI quattro s Matrix a webasto</span><span class="loc">Poprad</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/audi-a7-sportback-30-tdi-quattro-313k-prestigo-s-tronic-230kw313hp-matrix-webasto-rozvody/AeoDllEIU1j/" target="_blank" rel="noopener">Audi A7 Sportback 3.0 TDI quattro S tronic 230kW Matrix Webasto Rozvody</a></h3>
+  <div class="facts">2013 · 235 000 km · 3.0 TDI V6 150–257 kW · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · dovezené</div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">13 400 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">15 400 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+13.0 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:43%"></span></div>
+  <ul class="pc"><li class="pro">2013, 3.0 TDI 230 kW, quattro, S tronic, 235 tis. km</li><li class="pro">Matrix svetlá, nočné videnie, Bose; rozvody pri 200 tis. km</li><li class="pro">~13 % pod férovou cenou</li><li class="con">Predáva autobazár</li></ul>
+</article></div>
+<div class="subhead">Špeciálne prípady</div>
+<div class="cards"></div>
+
+<h2>Cena vs. nájazd: celý trh na jednom grafe</h2>
+<p class="section-lead">Každý bod je jeden inzerát. Čím nižšie bod leží oproti ostatným s podobným nájazdom, tým je auto lacnejšie.
+Krúžkom sú označené odporúčané ponuky. Prejdi myšou na bod a uvidíš detail.</p>
+<div class="chart-wrap" id="chartWrap">
+  <div class="legend" id="legend"></div>
+  <svg id="chart" width="100%" height="420" role="img" aria-label="Bodový graf ceny a nájazdu inzerátov"></svg>
+  <div class="tip" id="tip"></div>
+</div>
+
+<h2>Porovnanie motorov</h2>
+<p class="section-lead">Hodnotenie (hviezdičky) zohľadňuje spoľahlivosť, spoľahlivosť a náklady na prevádzku a pomer cena/výkon.
+Číselné stĺpce sú mediány z ohodnotených inzerátov.</p>
+<div class="table-scroll">
+<table>
+  <thead><tr><th>Motor</th><th>Hodnotenie</th><th class="num">Ponúk</th><th class="num">Medián ceny</th><th class="num">Medián roku</th><th class="num">Medián km</th></tr></thead>
+  <tbody>
+<tr>
+  <td><b>Plug-in hybrid 55 TFSI e</b><div class="sub">Benzín 2.0 + elektromotor 270–300 kW, quattro. Over stav batérie.</div></td>
+  <td><span class="stars" aria-label="3 z 5">★★★<span class="off">★★</span></span></td>
+  <td class="num">6</td>
+  <td class="num"><div class="cellbar"><span style="width:93%"></span></div>34 250 €</td>
+  <td class="num">2020</td>
+  <td class="num">127 294 km</td>
+</tr>
+<tr>
+  <td><b>3.0 TDI V6 150–257 kW</b><div class="sub">Diesel V6 204–350 k (aj BiTDI a S7 TDI). Ťahavý; over DPF, reťaz rozvodov a AdBlue.</div></td>
+  <td><span class="stars" aria-label="4 z 5">★★★★<span class="off">★</span></span></td>
+  <td class="num">66</td>
+  <td class="num"><div class="cellbar"><span style="width:51%"></span></div>18 995 €</td>
+  <td class="num">2015</td>
+  <td class="num">226 692 km</td>
+</tr>
+<tr>
+  <td><b>4.0 TFSI V8 (S7 / RS7) 309–441 kW</b><div class="sub">Benzín V8 420–600 k. Veľmi výkonný; drahý servis a vysoká spotreba.</div></td>
+  <td><span class="stars" aria-label="3 z 5">★★★<span class="off">★★</span></span></td>
+  <td class="num">2</td>
+  <td class="num"><div class="cellbar"><span style="width:87%"></span></div>32 250 €</td>
+  <td class="num">2018</td>
+  <td class="num">203 000 km</td>
+</tr>
+<tr>
+  <td><b>2.0 / 3.0 TFSI benzín 180–250 kW</b><div class="sub">Turbobenzín 245–340 k. Svižný; pri 3.0 TFSI (kompresor) over spotrebu oleja.</div></td>
+  <td><span class="stars" aria-label="3 z 5">★★★<span class="off">★★</span></span></td>
+  <td class="num">18</td>
+  <td class="num"><div class="cellbar"><span style="width:100%"></span></div>36 950 €</td>
+  <td class="num">2018</td>
+  <td class="num">161 684 km</td>
+</tr></tbody>
+</table>
+</div>
+<div class="explain">
+  <p><b>Audi A7 Sportback</b> je veľké 5-dverové kupé na technike A6 – prvá generácia <b>4G</b> (2010–2017, facelift 2014)
+  a druhá <b>4K</b> (2018+). Športové verzie <b>S7</b> a <b>RS7</b> sú v analýze zahrnuté.</p>
+  <p><b>Ktorý motor zvoliť?</b> Najrozšírenejší je diesel <b>3.0 TDI</b> s pohonom quattro. Benzínové V8 v S7 / RS7 majú vysoké náklady.</p>
+</div>
+
+<h2>Na čo si dať pozor</h2>
+<div class="warn">
+  <p><b>Lacné kvôli extrémnemu nájazdu</b> (viac ako 35 tis. km ročne, typicky flotila alebo taxi):</p>
+  <ul><li><a href='https://auto.bazos.sk/inzerat/197577955/audi-a7-sportback-50-30-tdi-s-line-quattro-286k-odpocet-dph.php' target='_blank' rel='noopener'>Audi A7 Sportback 50 3.0 TDI S-Line Quattro 286k odpočet DPH</a>: 2019, 286 000 km → 39 000 km/rok. Lacné je kvôli nájazdu.</li><li><a href='https://www.autobazar.eu/detail/audi-a7-sportback-50-30-tdi-s-line-quattro-286k-aj-na-splatky-protiucet/Am7ijEPgUTQ/' target='_blank' rel='noopener'>Audi A7 Sportback 50 3.0 TDI S-Line Quattro 286k / AJ NA SPLÁTKY / PROTIÚČET</a>: 2018, 292 813 km → 35 000 km/rok. Lacné je kvôli nájazdu.</li></ul>
+  <p><b>Ďalšie veci, ktoré sme v inzerátoch našli:</b></p><ul><li>V mnohých inzerátoch iných Audi znamená „A7“ 7-stupňovú automatickú prevodovku – tieto inzeráty sme vyradili.</li><li>Mild hybridy (mHEV) nie sú plug-in – v analýze sú medzi dieselmi a benzínmi.</li><li>Vyradili sme inzeráty s nesediacim nájazdom a duplicity.</li></ul><p><b>Vyradené z porovnania</b> (poškodené autá alebo nezmyselné údaje – model ich nehodnotí):</p><ul><li><a href='https://auto.bazos.sk/inzerat/197779157/audi-a7-sportback-30-bitdi-quattro-exclusive.php' target='_blank' rel='noopener'>Audi A7 Sportback 3.0 BiTDI quattro Exclusive</a> (20 799 €): 74000 km/rok je nereálne – skontroluj rok a km</li><li><a href='https://www.autobazar.eu/detail/audi-a7-sportback-30-tdi-quattro-s-tronic-180kw245hp-a7/AePH3u2Ods7/' target='_blank' rel='noopener'>Audi A7 Sportback 3.0 TDI quattro S tronic 180kW245HP A7</a> (9 499 €): podozrivo nízky nájazd</li></ul><p><b>A6, A8, A5 Sportback a iné modely z vyhľadávania, inzeráty s chybným nájazdom</b> (59 inzerátov) sme z rebríčka vynechali.</p>
+  <p>Ďalších <b>35</b> inzerátov nemá v texte rok alebo kilometre, takže ich nebolo možné ohodnotiť.
+  Ak ťa niektorý zaujme, predajcu sa na tieto údaje opýtaj.</p>
+</div>
+
+<h2>Kompletný rebríček</h2>
+<p class="section-lead">Všetky ohodnotené inzeráty. Kliknutím na hlavičku stĺpca zoraďuješ, filtrom zužuješ výber.</p>
+<div class="filters">
+  <select id="fEngine"><option value="">Všetky motory</option></select>
+  <select id="fTrans"><option value="">Každá prevodovka</option><option value="automatic">Automat</option><option value="manual">Manuál</option></select>
+  <select id="fSeller"><option value="">Všetci predajcovia</option><option value="nodealer">Bez autobazárov</option></select>
+  <select id="fSource"><option value="">Všetky portály</option><option value="bazos">bazoš</option><option value="autobazar">autobazar.eu</option><option value="bazarsk">bazar.sk</option></select>
+  <select id="fBody" hidden><option value=""></option></select>
+  <select id="fOrigin"><option value="">Akýkoľvek pôvod</option><option value="SR">Kúpené v SR</option><option value="dovoz">Dovoz</option></select>
+  <input id="fMax" type="number" placeholder="Max. cena €" step="500" min="0" style="width:120px">
+  <span class="count" id="count"></span>
+</div>
+<div class="table-scroll">
+<table id="tbl">
+  <thead><tr>
+    <th class="sortable" data-k="title">Inzerát</th>
+    <th class="sortable num" data-k="year">Rok</th>
+    <th class="sortable num" data-k="km">Km</th>
+    <th class="sortable num" data-k="price_gross">Cena</th>
+    <th class="sortable num" data-k="fair_price">Férová</th>
+    <th class="sortable num" data-k="discount_pct">Pod trhom ▾</th>
+  </tr></thead>
+  <tbody></tbody>
+</table>
+</div>
+
+<h2>Pred kúpou over</h2>
+<ul class="check">
+  <li>VIN cez Cebia / autoDNA (história km, havárie)</li>
+  <li>3.0 TDI: DPF, reťaz rozvodov, AdBlue</li>
+  <li>S tronic / Tiptronic: plynulosť radenia, výmena oleja</li>
+  <li>Vzduchový podvozok (ak je)</li>
+  <li>Elektronika (MMI, Matrix LED, asistenty)</li>
+  <li>STK/EK protokol a dátum platnosti</li>
+</ul>
+
+<footer>
+  Zdroj: auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (len ponuky zo Slovenska, to isté auto na viacerých portáloch je započítané raz), sťahované cez lokálny MCP server bazos-mcp (nástroj <code>fair_price</code>), 22. 11. 2026.
+  Model: ridge regresia log(ceny s DPH) podľa veku, veku², km, km², prevodovky, typu predajcu, motora, karosérie, pohonu 4x4, pôvodu (SR / dovoz) a portálu. Vzorka 92
+  inzerátov, R² 89 %. Parametre sú vyťažené z textu inzerátov, a preto môžu obsahovať chyby. Odporúčané ponuky sme overili
+  prečítaním celého inzerátu. Hodnotenie motorov je odborný odhad, nie výsledok modelu.
+</footer>
+</main>
+
+<script>
+const DATA = [{"id": "197489160", "url": "https://auto.bazos.sk/inzerat/197489160/audi-a7-30bitdi-quattro.php", "title": "AUDI A7 3.0BiTDI Quattro", "price": 11800, "price_gross": 11800, "fair_price": 17700.0, "discount_pct": 33.4, "verdict": "výrazne pod trhom – over prečo", "year": 2015, "km": 242000, "km_per_year": 21400.0, "eg": "3.0 TDI V6 150–257 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Detva", "flags": ["prevodovka nezistená"], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "ab-AefMC2RfYo8", "url": "https://www.autobazar.eu/detail/audi-a7-sportback-50-30-tdi-mhev-quattro-tiptronic/AefMC2RfYo8/", "title": "Audi A7 Sportback 50 3.0 TDI mHEV quattro tiptronic", "price": 28000, "price_gross": 28000, "fair_price": 41230.0, "discount_pct": 32.1, "verdict": "výrazne pod trhom – over prečo", "year": 2019, "km": 46930, "km_per_year": 6400.0, "eg": "3.0 TDI V6 150–257 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Košice-Juh", "flags": [], "pick": "top", "source": "autobazar", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "ab-Amq_z7gSyLJ", "url": "https://www.autobazar.eu/detail/audi-a7-180kw-at-quattro/Amq_z7gSyLJ/", "title": "AUDI A7 Sportback 3.0 TDI  Quattro, S Tronic", "price": 8999, "price_gross": 8999, "fair_price": 12070.0, "discount_pct": 25.4, "verdict": "výrazne pod trhom – over prečo", "year": 2012, "km": 297820, "km_per_year": 20800.0, "eg": "3.0 TDI V6 150–257 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava - Vajnory", "flags": [], "pick": "budget", "source": "autobazar", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "ab-AmmVW4Fv3lk", "url": "https://www.autobazar.eu/detail/audi-a7-sportback-competition-30-tdi-quattro-326k-tiptronic/AmmVW4Fv3lk/", "title": "Audi A7 Sportback competition 3.0 TDI quattro 326k tiptronic", "price": 22800, "price_gross": 22800, "fair_price": 29190.0, "discount_pct": 21.9, "verdict": "výrazne pod trhom – over prečo", "year": 2017, "km": 80600, "km_per_year": 8600.0, "eg": "3.0 TDI V6 150–257 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Pezinok", "flags": [], "pick": "top", "source": "autobazar", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "ab-AmXuLPlu26L", "url": "https://www.autobazar.eu/detail/audi-a7-s-line-30-tdi-quattro-180kw-at7-2014-aj-na-splatky-protiucet/AmXuLPlu26L/", "title": "Audi A7 S-line 3.0 TDI Quattro 180kW AT/7 2014 / AJ NA SPLÁTKY / PROTIÚČET", "price": 11990, "price_gross": 11990, "fair_price": 15000.0, "discount_pct": 20.1, "verdict": "výrazne pod trhom – over prečo", "year": 2014, "km": 294478, "km_per_year": 23900.0, "eg": "3.0 TDI V6 150–257 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": "budget", "source": "autobazar", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "ab-AeQhaK0Oxsi", "url": "https://www.autobazar.eu/detail/audi-a7-sportback-competition-30-tdi-quattro-326k-tiptronic-240kw326hp-a8/AeQhaK0Oxsi/", "title": "Audi A7 Sportback competition 3.0 TDI quattro 326k tiptronic 240kW326HP A8", "price": 23500, "price_gross": 23500, "fair_price": 29070.0, "discount_pct": 19.2, "verdict": "výrazne pod trhom – over prečo", "year": 2018, "km": 179000, "km_per_year": 21500.0, "eg": "3.0 TDI V6 150–257 kW", "cg": 1, "transmission": "automatic", "seller_type": "private", "location": "Zvolen", "flags": [], "pick": "top", "source": "autobazar", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "197777037", "url": "https://auto.bazos.sk/inzerat/197777037/audi-a7.php", "title": "Audi a7", "price": 8500, "price_gross": 8500, "fair_price": 10170.0, "discount_pct": 16.4, "verdict": "výrazne pod trhom – over prečo", "year": 2010, "km": 288000, "km_per_year": 17600.0, "eg": "3.0 TDI V6 150–257 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Bardejov", "flags": ["prevodovka nezistená"], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "196392832", "url": "https://auto.bazos.sk/inzerat/196392832/audi-a7-sportback-30-tdi-prestige-multitronic.php", "title": "Audi A7 Sportback 3.0 TDI Prestige multitronic", "price": 13490, "price_gross": 13490, "fair_price": 16140.0, "discount_pct": 16.4, "verdict": "výrazne pod trhom – over prečo", "year": 2014, "km": 180807, "km_per_year": 14700.0, "eg": "3.0 TDI V6 150–257 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Žilina", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmiTioYQrYv", "url": "https://www.autobazar.eu/detail/audi-a7-sportback-30-tdi-prestige-multitronic/AmiTioYQrYv/", "price": 13490}], "body": "hatch"}, {"id": "197007865", "url": "https://auto.bazos.sk/inzerat/197007865/audi-a7.php", "title": "Audi A7", "price": 9000, "price_gross": 9000, "fair_price": 10700.0, "discount_pct": 15.9, "verdict": "výrazne pod trhom – over prečo", "year": 2011, "km": 232621, "km_per_year": 15200.0, "eg": "2.0 / 3.0 TFSI benzín 180–250 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Hurbanovo", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "197117038", "url": "https://auto.bazos.sk/inzerat/197117038/predam-nadherne-audi-a7-sportback-50-tfsi-e-plug-in-hybrid.php", "title": "Predám nádherné Audi A7 Sportback 50 TFSI e Plug-in Hybrid,", "price": 33000, "price_gross": 33000, "fair_price": 39200.0, "discount_pct": 15.8, "verdict": "výrazne pod trhom – over prečo", "year": 2022, "km": 44000, "km_per_year": 10200.0, "eg": "Plug-in hybrid 55 TFSI e", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Malacky", "flags": [], "pick": "top", "source": "bazos", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "197217957", "url": "https://auto.bazos.sk/inzerat/197217957/audi-a7-sportback-50-tfsi-e-quattro-s-line-odo-pass-kera.php", "title": "Audi A7 Sportback 50 TFSI e quattro S-line | ODO-Pass | Kera", "price": 38000, "price_gross": 38000, "fair_price": 45060.0, "discount_pct": 15.7, "verdict": "výrazne pod trhom – over prečo", "year": 2021, "km": 124589, "km_per_year": 23400.0, "eg": "Plug-in hybrid 55 TFSI e", "cg": 2, "transmission": "automatic", "seller_type": "uncertain", "location": "Trenčín", "flags": [], "pick": "top", "source": "bazos", "origin": "dovoz", "also_listed": [{"source": "autobazar", "id": "ab-AeYwqIQhAZR", "url": "https://www.autobazar.eu/detail/audi-a7-audi-a7-sportback-50-tfsi-e-quattro-s-line-odo-pass-keramika/AeYwqIQhAZR/", "price": 38000}], "body": "hatch"}, {"id": "197174155", "url": "https://auto.bazos.sk/inzerat/197174155/audi-a7-30tdi-c7-quattro-s-line-200kw-at7-2018.php", "title": "Audi A7 3.0TDI C7 Quattro S-line 200kW AT/7 2018", "price": 19990, "price_gross": 19990, "fair_price": 23520.0, "discount_pct": 15.0, "verdict": "výrazne pod trhom – over prečo", "year": 2018, "km": 234827, "km_per_year": 28200.0, "eg": "3.0 TDI V6 150–257 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Prievidza", "flags": [], "pick": "top", "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmV4qio2IHN", "url": "https://www.autobazar.eu/detail/audi-a7-30-tdi-quattro-s-line-200kw-at7-2018-aj-na-splatky-protiucet/AmV4qio2IHN/", "price": 19990}], "body": "hatch"}, {"id": "ab-Am23xKsLmVm", "url": "https://www.autobazar.eu/detail/audi-a7-sportback-28-fsi150-kw-prestige-quattro-s-tronic/Am23xKsLmVm/", "title": "Audi A7 Sportback 2.8 FSI/150 KW PRESTIGE QUATTRO S-TRONIC + R19", "price": 12500, "price_gross": 12500, "fair_price": 14680.0, "discount_pct": 14.8, "verdict": "pod trhom", "year": 2013, "km": 250277, "km_per_year": 18800.0, "eg": "2.0 / 3.0 TFSI benzín 180–250 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Dubnica nad Váhom", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "hatch"}, {"id": "ab-AeX2IuFSUhd", "url": "https://www.autobazar.eu/detail/audi-a7-30-tdi-automat-servkniha/AeX2IuFSUhd/", "title": "Audi A7 3.0 TDI, 4X4, Automat, Serv.kniha", "price": 11400, "price_gross": 11400, "fair_price": 13280.0, "discount_pct": 14.1, "verdict": "pod trhom", "year": 2011, "km": 149240, "km_per_year": 9700.0, "eg": "3.0 TDI V6 150–257 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Banská Bystrica", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "ab-AmVSjKhpxdt", "url": "https://www.autobazar.eu/detail/audi-a7-sportback-55-tfsie-s-line-quattro-at7/AmVSjKhpxdt/", "title": "Audi A7 Sportback 55 TFSIe, S-Line, Quattro AT/7", "price": 27552, "price_gross": 27552, "fair_price": 31790.0, "discount_pct": 13.3, "verdict": "pod trhom", "year": 2020, "km": 186911, "km_per_year": 29500.0, "eg": "Plug-in hybrid 55 TFSI e", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": "top", "source": "autobazar", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "ab-AeoDllEIU1j", "url": "https://www.autobazar.eu/detail/audi-a7-sportback-30-tdi-quattro-313k-prestigo-s-tronic-230kw313hp-matrix-webasto-rozvody/AeoDllEIU1j/", "title": "Audi A7 Sportback 3.0 TDI quattro S tronic 230kW Matrix Webasto Rozvody", "price": 13400, "price_gross": 13400, "fair_price": 15400.0, "discount_pct": 13.0, "verdict": "pod trhom", "year": 2013, "km": 235000, "km_per_year": 17600.0, "eg": "3.0 TDI V6 150–257 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Poprad", "flags": [], "pick": "budget", "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "hatch"}, {"id": "ab-AmuHvh-UxC1", "url": "https://www.autobazar.eu/detail/audi-a7-30-tdi-mhev-quattro-tiptronic-s-line-210kw-2020-aj-na-splatky-protiucet/AmuHvh-UxC1/", "title": "Audi A7 3.0 TDI mHEV quattro tiptronic S-line, 210kW (2020) / AJ NA SPLÁTKY / PROTIÚČET", "price": 31500, "price_gross": 31500, "fair_price": 36130.0, "discount_pct": 12.8, "verdict": "pod trhom", "year": 2020, "km": 200219, "km_per_year": 31600.0, "eg": "3.0 TDI V6 150–257 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Košice-Pereš", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "197149525", "url": "https://auto.bazos.sk/inzerat/197149525/audi-a7-30-tdi-mhev-quattro-tiptronic-s-line-210kw-2020.php", "price": 31500}], "body": "hatch"}, {"id": "197458089", "url": "https://auto.bazos.sk/inzerat/197458089/audi-a7-30-tfsi-v6-quattro-228kw.php", "title": "AUDI A7 – 3.0 TFSI V6 QUATTRO 228kw", "price": 9500, "price_gross": 9500, "fair_price": 10790.0, "discount_pct": 12.0, "verdict": "pod trhom", "year": 2011, "km": 290000, "km_per_year": 18900.0, "eg": "2.0 / 3.0 TFSI benzín 180–250 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Námestovo", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "197340891", "url": "https://auto.bazos.sk/inzerat/197340891/2018-audi-a7-55-tfsi-250kw.php", "title": "2018 Audi A7 55 TFSI 250kW", "price": 30890, "price_gross": 30890, "fair_price": 33600.0, "discount_pct": 8.1, "verdict": "pod trhom", "year": 2018, "km": 186500, "km_per_year": 22400.0, "eg": "2.0 / 3.0 TFSI benzín 180–250 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Kežmarok", "flags": [], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "hatch"}, {"id": "ab-Ae_NsOD4MNF", "url": "https://www.autobazar.eu/detail/audi-a7-sportback-55-30-tfsi-mhev-quattro-s-tronic-250kw340hp-a7/Ae_NsOD4MNF/", "title": "Audi A7 Sportback 55 3.0 TFSI mHEV quattro S tronic 250kW340HP A7", "price": 33000, "price_gross": 33000, "fair_price": 35440.0, "discount_pct": 6.9, "verdict": "férová cena", "year": 2018, "km": 141000, "km_per_year": 16900.0, "eg": "2.0 / 3.0 TFSI benzín 180–250 kW", "cg": 0, "transmission": "automatic", "seller_type": "private", "location": "Dolný Kubín", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "hatch"}, {"id": "196328747", "url": "https://auto.bazos.sk/inzerat/196328747/audi-a7-2012-30bitdi.php", "title": "Audi a7 2012 3.0bitdi", "price": 9999, "price_gross": 9999, "fair_price": 10740.0, "discount_pct": 6.9, "verdict": "férová cena", "year": 2012, "km": 389000, "km_per_year": 27100.0, "eg": "3.0 TDI V6 150–257 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Krupina", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "ab-AmZBoIisC83", "url": "https://www.autobazar.eu/detail/audi-a7-30-tdi-quattro-180kw-at7-2011-aj-na-splatky-protiucet/AmZBoIisC83/", "title": "Audi A7 3.0 TDI Quattro 180kW AT/7 2011 / AJ NA SPLÁTKY / PROTIÚČET", "price": 9990, "price_gross": 9990, "fair_price": 10640.0, "discount_pct": 6.1, "verdict": "férová cena", "year": 2011, "km": 316201, "km_per_year": 20600.0, "eg": "3.0 TDI V6 150–257 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197266085", "url": "https://auto.bazos.sk/inzerat/197266085/audi-a7-30-tdi-quattro-180kw-at7-2011.php", "price": 9990}], "body": "hatch"}, {"id": "196248610", "url": "https://auto.bazos.sk/inzerat/196248610/audi-a7-sportback-55-tfsi-e-quattro.php", "title": "Audi A7 Sportback 55 TFSI e quattro", "price": 35500, "price_gross": 35500, "fair_price": 37570.0, "discount_pct": 5.5, "verdict": "férová cena", "year": 2020, "km": 155000, "km_per_year": 24500.0, "eg": "Plug-in hybrid 55 TFSI e", "cg": 2, "transmission": null, "seller_type": "uncertain", "location": "Žilina", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "197675709", "url": "https://auto.bazos.sk/inzerat/197675709/audi-a7-sportback-30-td-i-2016-facelift.php", "title": "Audi A7 Sportback 3.0 TD I 2016 FACELIFT", "price": 17999, "price_gross": 17999, "fair_price": 19020.0, "discount_pct": 5.4, "verdict": "férová cena", "year": 2016, "km": 250000, "km_per_year": 24200.0, "eg": "2.0 / 3.0 TFSI benzín 180–250 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Ilava", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "197592191", "url": "https://auto.bazos.sk/inzerat/197592191/audi-a7-30tdi.php", "title": "Audi A7 3.0tdi", "price": 8700, "price_gross": 8700, "fair_price": 9160.0, "discount_pct": 5.1, "verdict": "férová cena", "year": 2011, "km": 325000, "km_per_year": 21200.0, "eg": "3.0 TDI V6 150–257 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Galanta", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "bs-39706197", "url": "https://auto.bazar.sk/39706197-audi-a7-3-0-tdi/", "title": "Audi A7 3.0 TDI", "price": 9000, "price_gross": 9000, "fair_price": 9380.0, "discount_pct": 4.1, "verdict": "férová cena", "year": 2010, "km": 321740, "km_per_year": 19700.0, "eg": "3.0 TDI V6 150–257 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava V - Petržalka", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "ab-AekOxbqrtP5", "url": "https://www.autobazar.eu/detail/audi-a7-sportback-30-tdi-quattro-s-tronic-180kw245hp-a7/AekOxbqrtP5/", "title": "Audi A7 Sportback 3.0 TDI quattro S tronic 180kW245HP A7", "price": 10500, "price_gross": 10500, "fair_price": 10930.0, "discount_pct": 3.9, "verdict": "férová cena", "year": 2011, "km": 280325, "km_per_year": 18300.0, "eg": "3.0 TDI V6 150–257 kW", "cg": 1, "transmission": "automatic", "seller_type": "private", "location": "Štiavnik", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "ab-AeNfUzDKey-", "url": "https://www.autobazar.eu/detail/audi-a7-sportback-50-30-tdi-mhev-quattro-tiptronic-210kw286hp-a8/AeNfUzDKey-/", "title": "Audi A7 Sportback 50 3.0 TDI mHEV quattro tiptronic 210kW286HP A8", "price": 26900, "price_gross": 26900, "fair_price": 27860.0, "discount_pct": 3.5, "verdict": "férová cena", "year": 2018, "km": 253000, "km_per_year": 30400.0, "eg": "3.0 TDI V6 150–257 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Humenné", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "197108904", "url": "https://auto.bazos.sk/inzerat/197108904/audi-a7-sportback-30-tdi-v6-180-kw-2014.php", "title": "Audi A7 Sportback 3.0 TDI V6 – 180 kW  – 2014", "price": 12500, "price_gross": 12500, "fair_price": 12940.0, "discount_pct": 3.4, "verdict": "férová cena", "year": 2014, "km": 333000, "km_per_year": 27000.0, "eg": "3.0 TDI V6 150–257 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Žilina", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "197667353", "url": "https://auto.bazos.sk/inzerat/197667353/audi-a7-50tdi-quattro.php", "title": "Audi A7 50TDI quattro", "price": 26490, "price_gross": 26490, "fair_price": 27300.0, "discount_pct": 3.0, "verdict": "férová cena", "year": 2018, "km": 217000, "km_per_year": 26000.0, "eg": "3.0 TDI V6 150–257 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Stará Ľubovňa", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "196037266", "url": "https://auto.bazos.sk/inzerat/196037266/audi-a7-c7-30-bitdi-230kw-3xsline.php", "title": "Audi A7 C7 3.0 BiTdi 230kw  3xsline", "price": 11300, "price_gross": 11300, "fair_price": 11630.0, "discount_pct": 2.9, "verdict": "férová cena", "year": 2013, "km": 332000, "km_per_year": 24900.0, "eg": "3.0 TDI V6 150–257 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Prešov", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "197355062", "url": "https://auto.bazos.sk/inzerat/197355062/audi-a7-competition-s-line-30-bitdi-240kw-rv2017.php", "title": "Audi A7 Competition s-line 3.0 Bitdi 240kw rv.2017", "price": 18500, "price_gross": 18500, "fair_price": 18960.0, "discount_pct": 2.4, "verdict": "férová cena", "year": 2017, "km": 296000, "km_per_year": 31700.0, "eg": "4.0 TFSI V8 (S7 / RS7) 309–441 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Galanta", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "ab-AeO7UtKyhUW", "url": "https://www.autobazar.eu/detail/audi-a7-sportback-competition-30-tdi-quattro-326k-tiptronic-240kw326hp-a8/AeO7UtKyhUW/", "title": "Audi A7 Sportback Competition 3.0 BiTDI 326k quattro Servisované Bohatá výbava", "price": 23999, "price_gross": 23999, "fair_price": 24480.0, "discount_pct": 2.0, "verdict": "férová cena", "year": 2017, "km": 196643, "km_per_year": 21100.0, "eg": "3.0 TDI V6 150–257 kW", "cg": 1, "transmission": "automatic", "seller_type": "private", "location": "Prešov", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "196806366", "url": "https://auto.bazos.sk/inzerat/196806366/audi-a7-sportback-competition-30-bitdi-326k-quattro-serviso.php", "price": 25999}], "body": "hatch"}, {"id": "ab-Am6EuZ5-c9Z", "url": "https://www.autobazar.eu/detail/audi-a7-sportback-30-tdi-mhev-quattro-210-kw-a8-aj-na-splatky-protiucet/Am6EuZ5-c9Z/", "title": "Audi A7 Sportback 3.0 TDI MHEV Quattro / 210 kW / A8 / AJ NA SPLÁTKY / PROTIÚČET /", "price": 42999, "price_gross": 42999, "fair_price": 43680.0, "discount_pct": 1.6, "verdict": "férová cena", "year": 2022, "km": 110389, "km_per_year": 25500.0, "eg": "3.0 TDI V6 150–257 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Košice-Pereš", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "ab-Am-RQWyyW2S", "url": "https://www.autobazar.eu/detail/audi-a7-sportback-55-30-tfsi-mhev-quattro-s-tronic/Am-RQWyyW2S/", "title": "Audi A7 Sportback 55 3.0 TFSI mHEV quattro S tronic", "price": 39500, "price_gross": 39500, "fair_price": 40130.0, "discount_pct": 1.6, "verdict": "férová cena", "year": 2019, "km": 134618, "km_per_year": 18400.0, "eg": "2.0 / 3.0 TFSI benzín 180–250 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Trenčín", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "197508854", "url": "https://auto.bazos.sk/inzerat/197508854/audi-a7-30-tfsi-mhev-s-line-quattro-250kw-2019.php", "price": 39990}], "body": "hatch"}, {"id": "ab-AeXGX5shSqB", "url": "https://www.autobazar.eu/detail/audi-a7-audi-a7-sportback-55-30l-tfsi-mhev-quattro-s-line-250kw/AeXGX5shSqB/", "title": "Audi A7 Audi A7 Sportback 55 3.0L TFSI mHEV quattro S-line 250kw", "price": 35900, "price_gross": 35900, "fair_price": 36400.0, "discount_pct": 1.4, "verdict": "férová cena", "year": 2019, "km": 171600, "km_per_year": 23400.0, "eg": "2.0 / 3.0 TFSI benzín 180–250 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava-Ružinov", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "hatch"}, {"id": "ab-AerMNug6xWK", "url": "https://www.autobazar.eu/detail/audi-a7-sportback-55-30-tfsi-mhev-quattro-s-tronic-250kw340hp-a7/AerMNug6xWK/", "title": "Audi A7 Sportback 55 3.0 TFSI mHEV quattro S tronic 250kW/340HP A7", "price": 40990, "price_gross": 40990, "fair_price": 40900.0, "discount_pct": -0.2, "verdict": "férová cena", "year": 2019, "km": 87000, "km_per_year": 11900.0, "eg": "2.0 / 3.0 TFSI benzín 180–250 kW", "cg": 0, "transmission": "automatic", "seller_type": "private", "location": "Močenok", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "197614511", "url": "https://auto.bazos.sk/inzerat/197614511/audi-a7-sportback-50-30-tdi-mhev-quattro-tiptronic.php", "title": "Audi A7 Sportback 50 3.0 TDI mHEV quattro tiptronic", "price": 29990, "price_gross": 29990, "fair_price": 29940.0, "discount_pct": -0.2, "verdict": "férová cena", "year": 2018, "km": 197000, "km_per_year": 23600.0, "eg": "3.0 TDI V6 150–257 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Malacky", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "ab-AezGFkx57gC", "url": "https://www.autobazar.eu/detail/audi-a7-sportback-30-tdi-quattro-s-tronic-180kw245hp-a7/AezGFkx57gC/", "title": "Audi A7 Sportback 3.0 TDI quattro S tronic 180kW245HP A7", "price": 11900, "price_gross": 11900, "fair_price": 11870.0, "discount_pct": -0.3, "verdict": "férová cena", "year": 2011, "km": 230000, "km_per_year": 15000.0, "eg": "3.0 TDI V6 150–257 kW", "cg": 1, "transmission": "automatic", "seller_type": "private", "location": "Košice", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "hatch"}, {"id": "197620122", "url": "https://auto.bazos.sk/inzerat/197620122/audi-a7-sportback-50-30-tdi-mhev-quattro-tiptronic-210kw286.php", "title": "Audi A7 Sportback 50 3.0 TDI mHEV quattro tiptronic 210kW286", "price": 29990, "price_gross": 29990, "fair_price": 29850.0, "discount_pct": -0.5, "verdict": "férová cena", "year": 2018, "km": 199000, "km_per_year": 23900.0, "eg": "3.0 TDI V6 150–257 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Banská Bystrica", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "197783156", "url": "https://auto.bazos.sk/inzerat/197783156/audi-a7-sportback-30-tdi-2016-facelift-mozna-vymena.php", "title": "Audi A7 Sportback 3.0 TDI 2016 FACELIFT Možná výmena", "price": 17990, "price_gross": 17990, "fair_price": 17860.0, "discount_pct": -0.7, "verdict": "férová cena", "year": 2016, "km": 239000, "km_per_year": 23100.0, "eg": "3.0 TDI V6 150–257 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Martin", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "197726709", "url": "https://auto.bazos.sk/inzerat/197726709/audi-a7-sportback-30-tdi-quattro-210-kw-matrix-led-bo.php", "title": "AUDI A7 SPORTBACK 3.0 TDI QUATTRO 210 kW | MATRIX LED | B&O", "price": 27000, "price_gross": 27000, "fair_price": 26820.0, "discount_pct": -0.7, "verdict": "férová cena", "year": 2018, "km": 229000, "km_per_year": 27500.0, "eg": "3.0 TDI V6 150–257 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Prešov", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "197273322", "url": "https://auto.bazos.sk/inzerat/197273322/audi-a7-sportback-30-bitdi-s-line-240kw-at8-2016.php", "title": "Audi A7 Sportback 3.0 BiTDI S-line 240kW AT/8 2016", "price": 19990, "price_gross": 19990, "fair_price": 19820.0, "discount_pct": -0.8, "verdict": "férová cena", "year": 2016, "km": 214157, "km_per_year": 20700.0, "eg": "3.0 TDI V6 150–257 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Snina", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmWjPry9EL_", "url": "https://www.autobazar.eu/detail/audi-a7-sportback-30-bitdi-s-line-2016-240kw-at8-aj-na-splatky-protiucet/AmWjPry9EL_/", "price": 19990}], "body": "hatch"}, {"id": "ab-AmupR-ImWXn", "url": "https://www.autobazar.eu/detail/audi-a7-sportback-competition-30-tdi-quattro-326k-tiptronic/AmupR-ImWXn/", "title": "Audi A7 Sportback competition 3.0 TDI quattro 326k tiptronic", "price": 22490, "price_gross": 22490, "fair_price": 22120.0, "discount_pct": -1.7, "verdict": "férová cena", "year": 2016, "km": 241000, "km_per_year": 23300.0, "eg": "3.0 TDI V6 150–257 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Nové Mesto nad Váhom", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "197634550", "url": "https://auto.bazos.sk/inzerat/197634550/audi-a7-sportback-competition-30-tdi-quattro-326k-tiptronic.php", "price": 22490}], "body": "hatch"}, {"id": "ab-AmE2Cx4Uh52", "url": "https://www.autobazar.eu/detail/audi-a7-sportback-quattro-30-210kw-m-hev/AmE2Cx4Uh52/", "title": "Audi A7 Sportback quattro S-Line 3.0 210kW  M-HEV", "price": 44990, "price_gross": 44990, "fair_price": 44100.0, "discount_pct": -2.0, "verdict": "férová cena", "year": 2022, "km": 104688, "km_per_year": 24200.0, "eg": "2.0 / 3.0 TFSI benzín 180–250 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Prešov", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "ab-AmSCo1ckuBx", "url": "https://www.autobazar.eu/detail/audi-a7-sportback-30-tdi-quattro-313k-prestigo-s-tronic/AmSCo1ckuBx/", "title": "Audi A7 Sportback 3.0 TDI quattro 313k Prestigo S tronic", "price": 12700, "price_gross": 12700, "fair_price": 12440.0, "discount_pct": -2.1, "verdict": "férová cena", "year": 2012, "km": 271780, "km_per_year": 19000.0, "eg": "3.0 TDI V6 150–257 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bytčica", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "ab-AmKI90kmkDx", "url": "https://www.autobazar.eu/detail/audi-a7-sportback-30-tdi-quattro-s-tronic/AmKI90kmkDx/", "title": "Audi A7 Sportback 3.0 TDI quattro S tronic", "price": 11000, "price_gross": 11000, "fair_price": 10710.0, "discount_pct": -2.7, "verdict": "férová cena", "year": 2011, "km": 299806, "km_per_year": 19600.0, "eg": "3.0 TDI V6 150–257 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Trnava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "197445625", "url": "https://auto.bazos.sk/inzerat/197445625/audi-a7-50-tdi-rs7-look-210-kw-quattro.php", "title": "Audi A7 50 TDI RS7 Look 210 kW Quattro", "price": 34000, "price_gross": 34000, "fair_price": 33060.0, "discount_pct": -2.8, "verdict": "férová cena", "year": 2018, "km": 165000, "km_per_year": 19800.0, "eg": "3.0 TDI V6 150–257 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Banská Bystrica", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "197691114", "url": "https://auto.bazos.sk/inzerat/197691114/audi-a7-sportback-30-tdi-quattro-320k-tiptronic.php", "title": "AUDI A7 SPORTBACK 3.0 TDI QUATTRO 320K TIPTRONIC", "price": 19900, "price_gross": 19900, "fair_price": 19300.0, "discount_pct": -3.1, "verdict": "férová cena", "year": 2014, "km": 139726, "km_per_year": 11300.0, "eg": "3.0 TDI V6 150–257 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Nitra", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-Am6-ZepClkC", "url": "https://www.autobazar.eu/detail/audi-a7-sportback-30-tdi-quattro-320k-tiptronic/Am6-ZepClkC/", "price": 19900}], "body": "hatch"}, {"id": "ab-Am0_zFlpk74", "url": "https://www.autobazar.eu/detail/audi-a7-sportback-30-tdi-272k-quattro-s-tronic/Am0_zFlpk74/", "title": "Audi A7 Sportback 3.0 TDI 272k quattro S-tronic", "price": 18990, "price_gross": 18990, "fair_price": 18340.0, "discount_pct": -3.5, "verdict": "férová cena", "year": 2015, "km": 215846, "km_per_year": 19000.0, "eg": "3.0 TDI V6 150–257 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Nová Dubnica", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "197675812", "url": "https://auto.bazos.sk/inzerat/197675812/audi-a7-sportback-30-tdi-272k-quattro-s-tronic-r20-rotor.php", "price": 18990}], "body": "hatch"}, {"id": "ab-AmdBt52et3r", "url": "https://www.autobazar.eu/detail/audi-a7-30-tfsi-mhev-s-line-quattro-250kw-zaruka-aj-na-splatky-protiucet/AmdBt52et3r/", "title": "Audi A7 3.0 TFSI mHEV S Line Quattro / 250kW /  / ZÁRUKA / AJ NA SPLÁTKY / PROTIÚČET", "price": 39990, "price_gross": 39990, "fair_price": 38620.0, "discount_pct": -3.5, "verdict": "férová cena", "year": 2019, "km": 133791, "km_per_year": 18200.0, "eg": "2.0 / 3.0 TFSI benzín 180–250 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "hatch"}, {"id": "197578753", "url": "https://auto.bazos.sk/inzerat/197578753/audi-a7-30-v6-quattro-180-kw-s-tronic-032012-224210-km.php", "title": "Audi A7 3.0 V6 quattro 180 kW, S tronic, 03/2012, 224210 km", "price": 13490, "price_gross": 13490, "fair_price": 12980.0, "discount_pct": -3.9, "verdict": "férová cena", "year": 2012, "km": 224210, "km_per_year": 15600.0, "eg": "3.0 TDI V6 150–257 kW", "cg": 1, "transmission": null, "seller_type": "dealer", "location": "Michalovce", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "ab-AmSV3g8jKmk", "url": "https://www.autobazar.eu/detail/audi-a7-sportback-30-tdi-180kw-quattro-s-tronic-aj-na-splatky-protiucet/AmSV3g8jKmk/", "title": "Audi A7 Sportback 3.0 TDI 180kW Quattro S-tronic / AJ NA SPLÁTKY / PROTIÚČET /", "price": 12990, "price_gross": 12990, "fair_price": 12320.0, "discount_pct": -5.4, "verdict": "férová cena", "year": 2011, "km": 207894, "km_per_year": 13600.0, "eg": "3.0 TDI V6 150–257 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Trenčín", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197662230", "url": "https://auto.bazos.sk/inzerat/197662230/audi-a7-sportback-30-tdi-180kw-quattro-s-tronic.php", "price": 12990}], "body": "hatch"}, {"id": "197646262", "url": "https://auto.bazos.sk/inzerat/197646262/audi-a7-sportback-55-30-tfsi-mhev-s-line-quattro-250kw-2019.php", "title": "Audi A7 3.0 55 TFSI mHEV S Line QUATTRO STRONIC 250kW 2019", "price": 37999, "price_gross": 37999, "fair_price": 36030.0, "discount_pct": -5.5, "verdict": "férová cena", "year": 2019, "km": 167657, "km_per_year": 22900.0, "eg": "2.0 / 3.0 TFSI benzín 180–250 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Skalica", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-Am2uxnlbP1Y", "url": "https://www.autobazar.eu/detail/audi-a7-30-s-line-250kw-at7-2019-aj-na-splatky-protiucet/Am2uxnlbP1Y/", "price": 37999}], "body": "hatch"}, {"id": "197501554", "url": "https://auto.bazos.sk/inzerat/197501554/audi-a7-c8-55-tfsi-250kw-quattro-financovanie-top-stav.php", "title": "REZERVOVANÉ Audi A7 C8 55 TFSI 250kW quattro", "price": 39490, "price_gross": 39490, "fair_price": 37100.0, "discount_pct": -6.4, "verdict": "férová cena", "year": 2018, "km": 155711, "km_per_year": 18700.0, "eg": "2.0 / 3.0 TFSI benzín 180–250 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AmwV7jZD7q5", "url": "https://www.autobazar.eu/detail/audi-a7-sportback-55-30-tfsi-mhev-quattro-s-tronic/AmwV7jZD7q5/", "price": 39490}], "body": "hatch"}, {"id": "ab-AeClpoRwjVc", "url": "https://www.autobazar.eu/detail/audi-a7-sportback-50-30-tdi-mhev-quattro-tiptronic-210kw286hp-a8/AeClpoRwjVc/", "title": "Audi A7 Sportback 50 3.0 TDI mHEV quattro tiptronic 210kW286HP A8", "price": 34800, "price_gross": 34800, "fair_price": 32660.0, "discount_pct": -6.6, "verdict": "férová cena", "year": 2018, "km": 180000, "km_per_year": 21600.0, "eg": "3.0 TDI V6 150–257 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "hatch"}, {"id": "197292083", "url": "https://auto.bazos.sk/inzerat/197292083/audi-a7-sportback-55-tfsie-phev-quatrro-s-tronic.php", "title": "Audi A7 Sportback 55 TFSIe PHEV Quatrro S Tronic S-Line", "price": 32900, "price_gross": 32900, "fair_price": 30660.0, "discount_pct": -7.3, "verdict": "nad trhom", "year": 2020, "km": 130000, "km_per_year": 20500.0, "eg": "Plug-in hybrid 55 TFSI e", "cg": 2, "transmission": null, "seller_type": "uncertain", "location": "Komárno", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "ab-AmjveCprquM", "url": "https://www.autobazar.eu/detail/audi-a7-sportback-audi-a7-30tdi-180kw-7sp/AmjveCprquM/", "title": "Audi A7 Sportback 3.0TDI 180kW 7SP.", "price": 14100, "price_gross": 14100, "fair_price": 13140.0, "discount_pct": -7.3, "verdict": "nad trhom", "year": 2012, "km": 181284, "km_per_year": 12600.0, "eg": "3.0 TDI V6 150–257 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Košice", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "hatch"}, {"id": "197662064", "url": "https://auto.bazos.sk/inzerat/197662064/audi-a7-30-bitdi-quattro-s-line-top-vybava.php", "title": "Audi A7 3.0 BiTDI quattro S line TOP výbava", "price": 14590, "price_gross": 14590, "fair_price": 13500.0, "discount_pct": -8.1, "verdict": "nad trhom", "year": 2013, "km": 291500, "km_per_year": 21900.0, "eg": "3.0 TDI V6 150–257 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Prievidza", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "197577955", "url": "https://auto.bazos.sk/inzerat/197577955/audi-a7-sportback-50-30-tdi-s-line-quattro-286k-odpocet-dph.php", "title": "Audi A7 Sportback 50 3.0 TDI S-Line Quattro 286k odpočet DPH", "price": 27990, "price_gross": 27990, "fair_price": 25820.0, "discount_pct": -8.4, "verdict": "nad trhom", "year": 2019, "km": 286000, "km_per_year": 39000.0, "eg": "3.0 TDI V6 150–257 kW", "cg": 1, "transmission": null, "seller_type": "dealer", "location": "Bratislava", "flags": ["vysoký nájazd 39000 km/rok – flotila / taxi?", "prevodovka nezistená"], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "hatch"}, {"id": "197409830", "url": "https://auto.bazos.sk/inzerat/197409830/audi-a7-competition-30-tdi-quattro-280-kw-top-vybava.php", "title": "Audi A7 Competition 3.0 TDI quattro 280 kW – TOP VÝBAVA", "price": 24999, "price_gross": 24999, "fair_price": 22970.0, "discount_pct": -8.8, "verdict": "nad trhom", "year": 2016, "km": 129000, "km_per_year": 12500.0, "eg": "3.0 TDI V6 150–257 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Stropkov", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "ab-AeiUn_TuTIA", "url": "https://www.autobazar.eu/detail/audi-a7-30-tdi-s-line-4x4-automat/AeiUn_TuTIA/", "title": "Audi A7 3.0 TDI, S-Line, 4X4, Automat", "price": 16000, "price_gross": 16000, "fair_price": 14700.0, "discount_pct": -8.9, "verdict": "nad trhom", "year": 2012, "km": 158965, "km_per_year": 11100.0, "eg": "3.0 TDI V6 150–257 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Nitriansky kraj", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "197082248", "url": "https://auto.bazos.sk/inzerat/197082248/audi-a7-sportback-s-line-2021.php", "title": "Audi A7 Sportback S-line 2021", "price": 37900, "price_gross": 37900, "fair_price": 34680.0, "discount_pct": -9.3, "verdict": "nad trhom", "year": 2021, "km": 119000, "km_per_year": 22300.0, "eg": "3.0 TDI V6 150–257 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Bratislava", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AeojdGn3tjl", "url": "https://www.autobazar.eu/detail/audi-a7-sportback-40-20-tdi-mhev-s-tronic-150kw204hp-a7/AeojdGn3tjl/", "price": 37900}], "body": "hatch"}, {"id": "196778952", "url": "https://auto.bazos.sk/inzerat/196778952/audi-a7-sportback-quattro-s-line.php", "title": "Audi A7 Sportback quattro S-line", "price": 40990, "price_gross": 40990, "fair_price": 37430.0, "discount_pct": -9.5, "verdict": "nad trhom", "year": 2020, "km": 166000, "km_per_year": 26200.0, "eg": "3.0 TDI V6 150–257 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Dunajská Streda", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AewuncrgNyy", "url": "https://www.autobazar.eu/detail/audi-a7-sportback-40-20-tdi-mhev-quattro-s-tronic-150kw204hp-a7/AewuncrgNyy/", "price": 39990}], "body": "hatch"}, {"id": "197606216", "url": "https://auto.bazos.sk/inzerat/197606216/a7-30-exclusive.php", "title": "A7 3.0 Exclusive", "price": 14900, "price_gross": 14900, "fair_price": 13520.0, "discount_pct": -10.2, "verdict": "nad trhom", "year": 2012, "km": 171000, "km_per_year": 11900.0, "eg": "3.0 TDI V6 150–257 kW", "cg": 1, "transmission": null, "seller_type": "dealer", "location": "Košice", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "hatch"}, {"id": "197568360", "url": "https://auto.bazos.sk/inzerat/197568360/audi-a7-sportback-30tdi-quatro-2014-nove-rozvody.php", "title": "AUDI A7 SPORTBACK 3.0TDI QUATRO 2014 Nové Rozvody", "price": 13900, "price_gross": 13900, "fair_price": 12520.0, "discount_pct": -11.0, "verdict": "nad trhom", "year": 2014, "km": 259000, "km_per_year": 21000.0, "eg": "3.0 TDI V6 150–257 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Stropkov", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "ab-AmnBchTxR5M", "url": "https://www.autobazar.eu/detail/audi-a7-sportback-50-tfsie-s-line/AmnBchTxR5M/", "title": "Audi A7 Sportback 50 TFSIe S line", "price": 48500, "price_gross": 48500, "fair_price": 43640.0, "discount_pct": -11.1, "verdict": "nad trhom", "year": 2024, "km": 77557, "km_per_year": 33200.0, "eg": "Plug-in hybrid 55 TFSI e", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Trenčín", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "hatch"}, {"id": "197298373", "url": "https://auto.bazos.sk/inzerat/197298373/audi-a7-c7-30-bitdi.php", "title": "Audi a7 c7 3.0 BiTdi", "price": 17500, "price_gross": 17500, "fair_price": 15720.0, "discount_pct": -11.3, "verdict": "nad trhom", "year": 2015, "km": 280000, "km_per_year": 24700.0, "eg": "3.0 TDI V6 150–257 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Snina", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "197722000", "url": "https://auto.bazos.sk/inzerat/197722000/audi-a7-competition-biturbo-240-kw.php", "title": "Audi A7 competition BiTDI240 kw", "price": 23900, "price_gross": 23900, "fair_price": 21450.0, "discount_pct": -11.4, "verdict": "nad trhom", "year": 2016, "km": 228000, "km_per_year": 22100.0, "eg": "3.0 TDI V6 150–257 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Púchov", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "196545728", "url": "https://auto.bazos.sk/inzerat/196545728/audi-a7-sportback-40-20-tdi-mhev-s-tronic-150kw204hp-a7.php", "title": "Audi A7 Sportback 40 2.0 TDI mHEV S tronic 150kW204HP A7", "price": 27990, "price_gross": 27990, "fair_price": 24810.0, "discount_pct": -12.8, "verdict": "nad trhom", "year": 2019, "km": 141000, "km_per_year": 19200.0, "eg": "3.0 TDI V6 150–257 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Michalovce", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-Aenm_w6OObq", "url": "https://www.autobazar.eu/detail/audi-a7-sportback-40-20-tdi-mhev-s-tronic-150kw204hp-a7/Aenm_w6OObq/", "price": 27990}], "body": "hatch"}, {"id": "ab-Am7ijEPgUTQ", "url": "https://www.autobazar.eu/detail/audi-a7-sportback-50-30-tdi-s-line-quattro-286k-aj-na-splatky-protiucet/Am7ijEPgUTQ/", "title": "Audi A7 Sportback 50 3.0 TDI S-Line Quattro 286k / AJ NA SPLÁTKY / PROTIÚČET", "price": 27990, "price_gross": 27990, "fair_price": 24790.0, "discount_pct": -12.9, "verdict": "nad trhom", "year": 2018, "km": 292813, "km_per_year": 35100.0, "eg": "3.0 TDI V6 150–257 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": ["vysoký nájazd 35000 km/rok – flotila / taxi?"], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "196753534", "url": "https://auto.bazos.sk/inzerat/196753534/audi-a7-bi-tdi-3x-s-line.php", "title": "Audi A7 Bi-tdi 3x S-line", "price": 15000, "price_gross": 15000, "fair_price": 13230.0, "discount_pct": -13.4, "verdict": "nad trhom", "year": 2012, "km": 290000, "km_per_year": 20200.0, "eg": "3.0 TDI V6 150–257 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Brezno", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "196940596", "url": "https://auto.bazos.sk/inzerat/196940596/audi-a7-55-tfsi-quattro-s-line-250kw-71-000-km.php", "title": "AUDI A7 55 TFSI QUATTRO S-LINE 250kW | 48V mHEV | TOP STAV |", "price": 40990, "price_gross": 40990, "fair_price": 35780.0, "discount_pct": -14.6, "verdict": "nad trhom", "year": 2019, "km": 85000, "km_per_year": 11600.0, "eg": "2.0 / 3.0 TFSI benzín 180–250 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Šaľa", "flags": [], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "hatch"}, {"id": "ab-Am5BZPQwDLP", "url": "https://www.autobazar.eu/detail/audi-a7-sportback-55-30-tfsi-mhev-quattro-s-tronic/Am5BZPQwDLP/", "title": "Audi A7 Sportback 55 3.0 TFSI mHEV quattro S tronic", "price": 49990, "price_gross": 49990, "fair_price": 43450.0, "discount_pct": -15.0, "verdict": "výrazne nad trhom", "year": 2019, "km": 86174, "km_per_year": 11800.0, "eg": "2.0 / 3.0 TFSI benzín 180–250 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Košice-Košická Nová Ves", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "hatch"}, {"id": "ab-Amo35on5CtE", "url": "https://www.autobazar.eu/detail/audi-a7-sportback-30-tfsi-quattro-s-tronic-220kw-aj-na-splatky-protiucet/Amo35on5CtE/", "title": "Audi A7 Sportback 3.0 TFSI quattro S tronic / 220kW /  / AJ NA SPLÁTKY / PROTIÚČET", "price": 12990, "price_gross": 12990, "fair_price": 11220.0, "discount_pct": -15.7, "verdict": "výrazne nad trhom", "year": 2011, "km": 306171, "km_per_year": 20000.0, "eg": "2.0 / 3.0 TFSI benzín 180–250 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "ab-AmMbsNRFunS", "url": "https://www.autobazar.eu/detail/audi-a7-sportback-30-tdi-quattro-at-2021/AmMbsNRFunS/", "title": "AUDI A7 Sportback 3.0 TDI Quattro AT 2021", "price": 39900, "price_gross": 39900, "fair_price": 34090.0, "discount_pct": -17.0, "verdict": "výrazne nad trhom", "year": 2021, "km": 150016, "km_per_year": 28100.0, "eg": "3.0 TDI V6 150–257 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "197550476", "url": "https://auto.bazos.sk/inzerat/197550476/audi-a7-sportback-30-tdi-quattro-prestigo-s-tronic.php", "title": "Audi A7 Sportback 3.0 TDI quattro Prestigo S tronic", "price": 14990, "price_gross": 14990, "fair_price": 12660.0, "discount_pct": -18.4, "verdict": "výrazne nad trhom", "year": 2012, "km": 256000, "km_per_year": 17900.0, "eg": "3.0 TDI V6 150–257 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Rimavská Sobota", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "197452310", "url": "https://auto.bazos.sk/inzerat/197452310/audi-a7-30-tdi-180kw-2011.php", "title": "Audi A7 3.0 TDI 180kw 2011", "price": 11800, "price_gross": 11800, "fair_price": 9960.0, "discount_pct": -18.5, "verdict": "výrazne nad trhom", "year": 2011, "km": 279000, "km_per_year": 18200.0, "eg": "3.0 TDI V6 150–257 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Považská Bystrica", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AeG4yia2b5u", "url": "https://www.autobazar.eu/detail/audi-a7-sportback-30-tdi-quattro-s-tronic-180kw245hp-a7/AeG4yia2b5u/", "price": 11800}], "body": "hatch"}, {"id": "196211760", "url": "https://auto.bazos.sk/inzerat/196211760/audi-a7-55-tfsi.php", "title": "Audi A7 55 TFSI", "price": 47490, "price_gross": 47490, "fair_price": 39950.0, "discount_pct": -18.9, "verdict": "výrazne nad trhom", "year": 2020, "km": 125000, "km_per_year": 19700.0, "eg": "2.0 / 3.0 TFSI benzín 180–250 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Žilina", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmHJ6ZQI_Zp", "url": "https://www.autobazar.eu/detail/audi-a7-55-tfsi/AmHJ6ZQI_Zp/", "price": 47490}], "body": "hatch"}, {"id": "196537073", "url": "https://auto.bazos.sk/inzerat/196537073/audi-a7-sportback-30-tdi-quattro.php", "title": "Audi A7 Sportback 3.0 TDI Quattro", "price": 17500, "price_gross": 17500, "fair_price": 14570.0, "discount_pct": -20.1, "verdict": "výrazne nad trhom", "year": 2015, "km": 264000, "km_per_year": 23300.0, "eg": "3.0 TDI V6 150–257 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Nitra", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "ab-Amjyv04jnCE", "url": "https://www.autobazar.eu/detail/audi-a7-sportback-50-30-tdi-mhev-s-line-top-stav-mozny-uver-leasing-bando/Amjyv04jnCE/", "title": "Audi A7 Sportback 50 3.0 TDI MHEV | S-line | Top Stav | B&O | Možný úver", "price": 36990, "price_gross": 36990, "fair_price": 30730.0, "discount_pct": -20.4, "verdict": "výrazne nad trhom", "year": 2018, "km": 159709, "km_per_year": 19200.0, "eg": "3.0 TDI V6 150–257 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Čachtice", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "196949210", "url": "https://auto.bazos.sk/inzerat/196949210/audi-a7-sportback-50-tdi-s-line-210-kw-top-stav-uver.php", "price": 36990}], "body": "hatch"}, {"id": "196507517", "url": "https://auto.bazos.sk/inzerat/196507517/audi-a7-30-bitdi-quattro-235-kw-3-s-line-top-vybava.php", "title": "Audi A7 3.0 BiTDI quattro 235 kW | 3× S line | TOP VÝBAVA", "price": 26000, "price_gross": 26000, "fair_price": 20570.0, "discount_pct": -26.4, "verdict": "výrazne nad trhom", "year": 2015, "km": 197000, "km_per_year": 17400.0, "eg": "2.0 / 3.0 TFSI benzín 180–250 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Brezno", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "ab-Am-mBAwjXLO", "url": "https://www.autobazar.eu/detail/audi-a7-30-tdi-quattro-top-vybava-aj-na-splatky-protihodnota/Am-mBAwjXLO/", "title": "Audi A7 3.0 TDI Quattro Top výbava / AJ NA SPLÁTKY - PROTIHODNOTA /", "price": 14990, "price_gross": 14990, "fair_price": 11850.0, "discount_pct": -26.5, "verdict": "výrazne nad trhom", "year": 2011, "km": 225383, "km_per_year": 14700.0, "eg": "3.0 TDI V6 150–257 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Trenčín", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "196215693", "url": "https://auto.bazos.sk/inzerat/196215693/audi-a7-sline-30tdi-240kw.php", "title": "Audi a7 s-line v6 3.0tdi 240kw", "price": 25100, "price_gross": 25100, "fair_price": 19580.0, "discount_pct": -28.2, "verdict": "výrazne nad trhom", "year": 2015, "km": 159000, "km_per_year": 14000.0, "eg": "3.0 TDI V6 150–257 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Prešov", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "ab-AmkamKG1E5v", "url": "https://www.autobazar.eu/detail/audi-a7-sportback-30-tdi-s-line-quattro-230kw-zaruka-aj-na-splatky-protiucet/AmkamKG1E5v/", "title": "Audi A7 Sportback 3.0 TDI S Line Quattro / 230kW / ZÁRUKA / AJ NA SPLÁTKY / PROTIÚČET", "price": 16300, "price_gross": 16300, "fair_price": 12670.0, "discount_pct": -28.7, "verdict": "výrazne nad trhom", "year": 2012, "km": 268409, "km_per_year": 18700.0, "eg": "3.0 TDI V6 150–257 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197245411", "url": "https://auto.bazos.sk/inzerat/197245411/audi-a7-sportback-30-tdi-s-line-quattro-230kw-2012.php", "price": 16300}], "body": "hatch"}, {"id": "196477531", "url": "https://auto.bazos.sk/inzerat/196477531/audi-a7-30-tdi-s-line.php", "title": "Audi A7 3.0 TDi S-line", "price": 20500, "price_gross": 20500, "fair_price": 15870.0, "discount_pct": -29.2, "verdict": "výrazne nad trhom", "year": 2015, "km": 210000, "km_per_year": 18500.0, "eg": "3.0 TDI V6 150–257 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Prešov", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "197709756", "url": "https://auto.bazos.sk/inzerat/197709756/audi-a7-sportback-45-tfsi-rs7-body-kit-180-kw-r21-20.php", "title": "AUDI A7 SPORTBACK 45 TFSI | RS7 BODY KIT | 180 kW | R21 | 20", "price": 46000, "price_gross": 46000, "fair_price": 35470.0, "discount_pct": -29.7, "verdict": "výrazne nad trhom", "year": 2019, "km": 110000, "km_per_year": 15000.0, "eg": "4.0 TFSI V8 (S7 / RS7) 309–441 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Trenčín", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "195881228", "url": "https://auto.bazos.sk/inzerat/195881228/audi-a7-biturbo.php", "title": "Audi a7 biturbo", "price": 19000, "price_gross": 19000, "fair_price": 14320.0, "discount_pct": -32.7, "verdict": "výrazne nad trhom", "year": 2015, "km": 320000, "km_per_year": 28200.0, "eg": "3.0 TDI V6 150–257 kW", "cg": 1, "transmission": null, "seller_type": "dealer", "location": "Komárno", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "197552872", "url": "https://auto.bazos.sk/inzerat/197552872/audi-a7-sportback-30bitdi-v6-s-line-quattro-235kw.php", "title": "Audi A7 Sportback 3.0BiTDI V6 S-Line Quattro 235kW", "price": 25590, "price_gross": 25590, "fair_price": 18690.0, "discount_pct": -36.9, "verdict": "výrazne nad trhom", "year": 2015, "km": 225131, "km_per_year": 19900.0, "eg": "3.0 TDI V6 150–257 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Tvrdošín", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "197193255", "url": "https://auto.bazos.sk/inzerat/197193255/audi-a7-sportback-30-tdi-quattro-full-s-line-2018.php", "title": "AUDI A7 SPORTBACK 3.0 TDI QUATTRO FULL S LINE – 2018", "price": 37990, "price_gross": 37990, "fair_price": 27000.0, "discount_pct": -40.7, "verdict": "výrazne nad trhom", "year": 2018, "km": 204000, "km_per_year": 24500.0, "eg": "3.0 TDI V6 150–257 kW", "cg": 1, "transmission": null, "seller_type": "dealer", "location": "Bardejov", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "hatch"}, {"id": "ab-Ae69WDoIl9T", "url": "https://www.autobazar.eu/detail/audi-a7-sportback-competition-30-tdi-quattro-326k-tiptron/Ae69WDoIl9T/", "title": "Audi A7 Sportback competition 3.0 TDI quattro 326k tiptron", "price": 24900, "price_gross": 24900, "fair_price": 17650.0, "discount_pct": -41.1, "verdict": "výrazne nad trhom", "year": 2015, "km": 303000, "km_per_year": 26700.0, "eg": "3.0 TDI V6 150–257 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Marcelová", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "ab-Am4Sf4HN-6g", "url": "https://www.autobazar.eu/detail/audi-a7-sportback-50-30-tdi-mhev-quattro-tiptronic/Am4Sf4HN-6g/", "title": "Audi A7 Sportback 50 3.0 TDI mHEV quattro tiptronic", "price": 66000, "price_gross": 66000, "fair_price": 44930.0, "discount_pct": -46.9, "verdict": "výrazne nad trhom", "year": 2020, "km": 33600, "km_per_year": 5300.0, "eg": "3.0 TDI V6 150–257 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Trenčín", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "hatch"}];
+const GROUPS = ["Benzín", "Diesel TDI", "Plug-in hybrid", "LPG a nezistený"];
+const BODY = {"hatch": "Sportback"};
+const fmt = n => Math.round(n).toLocaleString("sk-SK");
+const eur = n => fmt(n) + " €";
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const TRANS = {automatic: "automat", manual: "manuál"};
+const SRC = {bazos: "bazoš", autobazar: "autobazar.eu", bazarsk: "bazar.sk"};
+
+// --- theme toggle ---------------------------------------------------------
+document.getElementById("themeBtn").onclick = () => {
+  const root = document.documentElement;
+  const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  drawChart();
+};
+
+// --- scatter chart --------------------------------------------------------
+const legend = document.getElementById("legend");
+legend.innerHTML = GROUPS.map((g, i) => `<span><i style="background:var(--s${i+1})"></i>${g}</span>`).join("")
+  + `<span><i class="ring"></i>odporúčaná ponuka</span>`;
+
+function drawChart() {
+  const svg = document.getElementById("chart"), wrap = document.getElementById("chartWrap"), tip = document.getElementById("tip");
+  const W = svg.clientWidth, H = 420, m = {l: 56, r: 16, t: 10, b: 40};
+  const pts = DATA.filter(d => d.km && d.price_gross);
+  const xMax = Math.ceil(Math.max(...pts.map(d => d.km)) / 50000) * 50000;
+  const yMax = Math.ceil(Math.max(...pts.map(d => d.price_gross)) / 5000) * 5000;
+  const x = v => m.l + v / xMax * (W - m.l - m.r), y = v => H - m.b - v / yMax * (H - m.t - m.b);
+  let s = "";
+  for (let v = 0; v <= yMax; v += 5000)
+    s += `<line x1="${m.l}" x2="${W-m.r}" y1="${y(v)}" y2="${y(v)}" stroke="var(--grid)"/><text x="${m.l-8}" y="${y(v)+4}" text-anchor="end">${v/1000} tis. €</text>`;
+  const step = W < 520 ? 100000 : 50000;
+  for (let v = 0; v <= xMax; v += step)
+    s += `<text x="${x(v)}" y="${H-m.b+18}" text-anchor="middle">${v/1000} tis.</text>`;
+  s += `<text x="${(W+m.l)/2}" y="${H-6}" text-anchor="middle">nájazd (km)</text>`;
+  const order = [...pts].sort((a, b) => (a.pick ? 1 : 0) - (b.pick ? 1 : 0));
+  order.forEach(d => {
+    const cx = x(d.km), cy = y(d.price_gross);
+    if (d.pick) s += `<circle cx="${cx}" cy="${cy}" r="9" fill="none" stroke="var(--text)" stroke-width="2"/>`;
+    s += `<circle class="pt" data-id="${d.id}" cx="${cx}" cy="${cy}" r="5" fill="var(--s${d.cg+1})" stroke="var(--surface)" stroke-width="2"/>`;
+  });
+  // invisible bigger hit targets
+  order.forEach(d => s += `<circle class="hit" data-id="${d.id}" cx="${x(d.km)}" cy="${y(d.price_gross)}" r="11" fill="transparent" style="cursor:pointer"/>`);
+  svg.innerHTML = s;
+  const byId = Object.fromEntries(pts.map(d => [d.id, d]));
+  svg.querySelectorAll(".hit").forEach(c => {
+    c.onmouseenter = c.onmousemove = ev => {
+      const d = byId[c.dataset.id];
+      tip.innerHTML = `<b>${esc(d.title)}</b>
+        <div class="row"><span>Cena</span><span>${eur(d.price_gross)}</span></div>
+        <div class="row"><span>Férová cena</span><span>${eur(d.fair_price)}</span></div>
+        <div class="row"><span>Pod trhom</span><span>${d.discount_pct > 0 ? "+" : ""}${d.discount_pct.toLocaleString("sk-SK")} %</span></div>
+        <div class="row"><span>Zdroj</span><span>${SRC[d.source]}${d.also_listed.length ? " + " + d.also_listed.map(a => SRC[a.source]).join(", ") : ""}</span></div>
+        <div class="row"><span>Rok · km</span><span>${d.year} · ${fmt(d.km)}</span></div>
+        <div class="row"><span>Motor</span><span>${esc(d.eg)} ${TRANS[d.transmission] || ""}</span></div>`;
+      tip.style.display = "block";
+      const r = wrap.getBoundingClientRect();
+      let lx = ev.clientX - r.left + 14, ly = ev.clientY - r.top + 14;
+      if (lx + 290 > r.width) lx = ev.clientX - r.left - 290;
+      tip.style.left = lx + "px"; tip.style.top = ly + "px";
+    };
+    c.onmouseleave = () => tip.style.display = "none";
+    c.onclick = () => window.open(byId[c.dataset.id].url, "_blank", "noopener");
+  });
+}
+drawChart();
+addEventListener("resize", drawChart);
+
+// --- full table -----------------------------------------------------------
+const fEngine = document.getElementById("fEngine");
+[...new Set(DATA.map(d => d.eg))].sort().forEach(g => fEngine.insertAdjacentHTML("beforeend", `<option>${esc(g)}</option>`));
+let sortK = "discount_pct", sortDir = -1;
+function discCell(v) {
+  const w = Math.min(Math.abs(v), 30) / 30 * 50;
+  const bar = v >= 0 ? `left:50%;width:${w}%;background:var(--pos)` : `right:50%;width:${w}%;background:var(--neg)`;
+  return `<span class="disc">${v > 0 ? "+" : ""}${v.toLocaleString("sk-SK")} %<span class="dbar"><span style="${bar}"></span></span></span>`;
+}
+function renderTable() {
+  const max = parseFloat(document.getElementById("fMax").value) || Infinity;
+  const tr = document.getElementById("fTrans").value, se = document.getElementById("fSeller").value, en = fEngine.value;
+  const so = document.getElementById("fSource").value, og = document.getElementById("fOrigin").value;
+  const bo = document.getElementById("fBody").value;
+  const rows = DATA.filter(d => (!en || d.eg === en) && (!tr || d.transmission === tr)
+    && (!se || d.seller_type !== "dealer") && d.price_gross <= max
+    && (!so || d.source === so || d.also_listed.some(a => a.source === so)) && (!og || d.origin === og) && (!bo || d.body === bo))
+    .sort((a, b) => { const A = a[sortK], B = b[sortK]; return (typeof A === "string" ? A.localeCompare(B) : A - B) * sortDir; });
+  document.getElementById("count").textContent = `${rows.length} z ${DATA.length} inzerátov`;
+  document.querySelector("#tbl tbody").innerHTML = rows.map(d => `<tr>
+    <td><a href="${d.url}" target="_blank" rel="noopener">${esc(d.title)}</a> ${d.pick ? '<span class="badge pick">odporúčané</span>' : ""}
+      <div class="sub">${BODY[d.body] || "karoséria ?"} · ${esc(d.eg)} · ${TRANS[d.transmission] || "prevodovka ?"} · ${esc(d.location)} · ${d.seller_type === "dealer" ? "predajca/firma" : d.seller_type === "private" ? "súkromník" : "neisté"} · ${SRC[d.source]}${d.origin === "SR" ? " · kúpené v SR" : d.origin === "dovoz" ? " · dovoz" : ""}${d.also_listed.map(a => ` · <a href="${a.url}" target="_blank" rel="noopener">aj na ${SRC[a.source]}</a>`).join("")}</div>
+      ${d.flags.filter(f => !f.startsWith("prevodovka")).map(f => `<div class="flag">⚠ ${esc(f)}</div>`).join("")}</td>
+    <td class="num">${d.year}</td><td class="num">${fmt(d.km)}</td>
+    <td class="num">${eur(d.price_gross)}</td><td class="num">${eur(d.fair_price)}</td>
+    <td class="num">${discCell(d.discount_pct)}</td></tr>`).join("");
+  document.querySelectorAll("#tbl th.sortable").forEach(th => {
+    const base = th.textContent.replace(/ [▾▴]$/, "");
+    th.textContent = base + (th.dataset.k === sortK ? (sortDir < 0 ? " ▾" : " ▴") : "");
+  });
+}
+document.querySelectorAll("#tbl th.sortable").forEach(th => th.onclick = () => {
+  if (sortK === th.dataset.k) sortDir *= -1; else { sortK = th.dataset.k; sortDir = th.dataset.k === "title" ? 1 : -1; }
+  renderTable();
+});
+["fEngine", "fTrans", "fSeller", "fSource", "fBody", "fOrigin", "fMax"].forEach(id => document.getElementById(id).addEventListener("input", renderTable));
+renderTable();
+</script>
+<!-- ferovka-theme --><script defer src="/analytics-config.js"></script><script defer src="/analytics.js"></script><script id="ferovka-chart">/* Férovka – chart → ad links, injected into every report by sync-reports.mjs.
+ *
+ * The reports draw one invisible 11px "hit" circle per ad. In dense charts (and always on a narrow phone) those
+ * circles overlap and the one drawn last wins, so a click/tap often opened a neighbouring ad. Here the pointer is
+ * always resolved to the NEAREST point, the report's own tooltip is shown for that point, and a click opens its ad.
+ * Touch: the first tap shows the tooltip (with a hint), a second tap on the same point opens the ad.
+ */
+(() => {
+  let rows;
+  try { rows = DATA; } catch { return; } // eslint-disable-line no-undef
+  if (!Array.isArray(rows) || !rows.length || !("url" in rows[0])) return;
+  const byId = new Map(rows.map((d) => [String(d.id), d]));
+  const MOUSE = ["mouseover", "mouseout", "mouseenter", "mouseleave", "mousemove", "mousedown", "mouseup", "click"];
+  let lastPointer = "mouse", down = null;
+  // the finger position as it was – Chrome "snaps" the later click of a tap to the centre of a nearby clickable element
+  addEventListener("pointerdown", (e) => { lastPointer = e.pointerType || "mouse"; down = { clientX: e.clientX, clientY: e.clientY }; }, true);
+
+  // the old per-point hit circles must not be targets (they overlap, and touch snapping aims at them)
+  document.head.insertAdjacentHTML("beforeend", "<style>svg circle.hit[data-id],svg circle.pt[data-id]{pointer-events:none}</style>");
+
+  function nearest(svg, ev, radius) {
+    let best = null, bd = Infinity;
+    for (const c of svg.querySelectorAll("circle.pt[data-id]")) {
+      const r = c.getBoundingClientRect();
+      const dx = r.left + r.width / 2 - ev.clientX, dy = r.top + r.height / 2 - ev.clientY;
+      const d = dx * dx + dy * dy;
+      if (d <= bd) { bd = d; best = c; } // ties: the point drawn on top (later) wins – that is the one you see
+    }
+    return best && bd <= radius * radius ? best : null;
+  }
+
+  function bind(svg) {
+    if (svg.__fvLinks) return;
+    svg.__fvLinks = true;
+    let current = null, armed = null;
+    const hitOf = (pt) => pt && svg.querySelector(`circle.hit[data-id="${CSS.escape(pt.dataset.id)}"]`);
+    const fire = (el, type, ev) => {
+      if (!el) return;
+      const e = new MouseEvent(type, { clientX: ev.clientX, clientY: ev.clientY, bubbles: false });
+      e.__fv = true;
+      el.dispatchEvent(e);
+    };
+    const tip = () => (svg.parentElement && svg.parentElement.querySelector("#tip, .tip")) || document.getElementById("tip");
+    const mark = (pt) => {
+      if (current === pt) return;
+      if (current) current.setAttribute("r", current.__r || "5");
+      current = pt;
+      if (pt) { pt.__r = pt.__r || pt.getAttribute("r"); pt.setAttribute("r", String(+pt.__r + 2)); }
+    };
+    const show = (pt, ev, hint) => {
+      mark(pt);
+      if (!pt) { const t = tip(); if (t) t.style.display = "none"; return; }
+      fire(hitOf(pt), "mousemove", ev); // the report's own tooltip, for the nearest point
+      const t = tip();
+      if (t && hint) t.insertAdjacentHTML("beforeend", `<div class="fv-hint">Ťukni ešte raz – otvorí sa inzerát ↗</div>`);
+    };
+    const open = (pt) => {
+      const d = byId.get(pt.dataset.id);
+      if (d && d.url) {
+        try { window.FerovkaAnalytics?.listingClick(d.url, "chart"); } catch { /* analytics must never block an ad */ }
+        window.open(d.url, "_blank", "noopener");
+      }
+    };
+
+    // the per-circle handlers of the report never see real mouse events – only our synthetic ones
+    for (const type of MOUSE) {
+      svg.addEventListener(type, (ev) => {
+        if (ev.__fv) return;
+        ev.stopImmediatePropagation();
+        if (type === "mousemove" && lastPointer === "mouse") {
+          show(nearest(svg, ev, 18), ev, false);
+          svg.style.cursor = current ? "pointer" : "";
+        } else if (type === "mouseleave" && ev.target === svg && lastPointer === "mouse") {
+          show(null, ev);
+        } else if (type === "click") {
+          const touch = lastPointer !== "mouse";
+          const at = touch && down ? down : ev;
+          const pt = nearest(svg, at, touch ? 26 : 18);
+          if (!pt) { armed = null; show(null, ev); return; }
+          if (!touch || armed === pt) { armed = null; open(pt); }
+          else { armed = pt; show(pt, at, true); }
+        }
+      }, true);
+    }
+  }
+
+  const scan = () => document.querySelectorAll("svg").forEach((s) => s.querySelector("circle.pt[data-id]") && bind(s));
+  scan();
+  new MutationObserver(scan).observe(document.body, { childList: true, subtree: true });
+})();
+</script><script id="ferovka-filters">/* Férovka – filters for the whole report, injected into every model report by sync-reports.mjs.
+ *
+ * The reports render the chart (drawChart) and the full ranking (renderTable) from the global DATA array; their own
+ * filter bar only filters the table. Here the filter bar (kept in its place above the ranking) gets more filters (year, price from/to,
+ * km, fuel, discount, picks only, text search) and every filter applies to the chart and the ranking together: DATA is
+ * refilled in place with the matching ads and both are drawn again. "</script" can't occur inside this file.
+ */
+(() => {
+  let data;
+  try { data = DATA; } catch { return; } // eslint-disable-line no-undef
+  if (!Array.isArray(data) || !data.length || typeof renderTable !== "function") return; // eslint-disable-line no-undef
+  const bar = document.querySelector(".filters");
+  if (!bar || bar.dataset.fv) return;
+  bar.dataset.fv = "1";
+  const ALL = data.slice();
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+  const fmt = (n) => Math.round(n).toLocaleString("sk-SK");
+  const norm = (s) => String(s ?? "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+  let groups = null;
+  try { groups = GROUPS; } catch { /* report without groups */ } // eslint-disable-line no-undef
+
+  const FUEL = { diesel: "Diesel", petrol: "Benzín", hybrid: "Hybrid", "plug-in hybrid": "Plug-in hybrid", electric: "Elektro", lpg: "LPG", cng: "CNG" };
+  const fuelOf = (d) => {
+    const e = norm(d.eg);
+    if (/tdi|crdi|dci|hdi|diesel|\bd\b|cdi|\d+d\b|blue/.test(e)) return "Diesel";
+    if (/plug-in|phev|e-hybrid|recharge|\bgte\b|\bt8\b|\b\d{2}e\b|\b\d{3} ?e\b/.test(e)) return "Plug-in hybrid";
+    if (/elektro|electric|\bev\b/.test(e)) return "Elektro";
+    if (/cng|lpg|g-tec|g-tron|tgi|ecofuel/.test(e)) return "Plyn (CNG/LPG)";
+    if (/mild|mhev/.test(e)) return "Benzín"; // mild-hybrid petrol (the diesel ones say TDI / d above)
+    if (/hybrid|hev/.test(e)) return "Hybrid";
+    if (/tsi|tfsi|mpi|fsi|benzin|gdi|dpi|htp|12v|\bt\d\b|\bb[56]\b|\d+i\b|turbo|tce|\bs4\b|rs ?\d|amg|competition|\bm\d{2,3}i?\b|gti|\bx5 m\b/.test(e)) return "Benzín";
+    return d.fuel ? FUEL[d.fuel] || String(d.fuel) : null;
+  };
+
+  // --- controls ---------------------------------------------------------------------------------------------------
+  const years = ALL.map((d) => d.year).filter(Boolean);
+  const yMin = Math.min(...years), yMax = Math.max(...years);
+  const yearOpts = (label) => `<option value="">${label}</option>` +
+    Array.from({ length: yMax - yMin + 1 }, (_, i) => yMax - i).map((y) => `<option>${y}</option>`).join("");
+  const kms = [30000, 50000, 75000, 100000, 150000, 200000, 250000, 300000];
+  const fuels = [...new Set(ALL.map(fuelOf).filter(Boolean))].sort((a, b) => a.localeCompare(b, "sk"));
+  const showGroups = Array.isArray(groups) && groups.length > 1 && ALL.some((d) => Number.isInteger(d.cg));
+
+  const maxInput = $("fMax");
+  if (maxInput) { maxInput.placeholder = "Cena do €"; maxInput.title = "Najvyššia cena (s DPH)"; }
+  const html =
+    `<select id="fvYearFrom" title="Rok výroby od">${yearOpts("Rok od")}</select>` +
+    `<select id="fvYearTo" title="Rok výroby do">${yearOpts("Rok do")}</select>` +
+    `<input id="fvPriceMin" type="number" placeholder="Cena od €" step="500" min="0" title="Najnižšia cena (s DPH)" style="width:110px">`;
+  if (maxInput) maxInput.insertAdjacentHTML("beforebegin", html);
+  else bar.insertAdjacentHTML("afterbegin", html);
+  const more =
+    `<select id="fvKm" title="Najviac najazdených km"><option value="">Nájazd – všetky</option>${kms.map((k) => `<option value="${k}">do ${fmt(k)} km</option>`).join("")}</select>` +
+    (fuels.length > 1 ? `<select id="fvFuel" title="Palivo"><option value="">Všetky palivá</option>${fuels.map((f) => `<option>${esc(f)}</option>`).join("")}</select>` : "") +
+    (showGroups ? `<select id="fvGroup" title="Skupina motorov (farba v grafe)"><option value="">Všetky skupiny</option>${groups.map((g, i) => `<option value="${i}">${esc(g)}</option>`).join("")}</select>` : "") +
+    `<select id="fvDisc" title="O koľko je auto lacnejšie ako férová cena"><option value="">Cena – všetky</option><option value="0">pod férovou cenou</option><option value="10">aspoň 10 % pod trhom</option><option value="20">aspoň 20 % pod trhom</option></select>` +
+    `<input id="fvText" type="search" placeholder="Hľadať (výbava, mesto…)" title="Hľadá v názve inzerátu, motore a lokalite" style="width:170px">` +
+    `<label class="fv-check"><input id="fvPick" type="checkbox"> len odporúčané</label>` +
+    `<button type="button" id="fvReset" class="fv-reset">Zrušiť filtre</button>`;
+  const count = $("count");
+  if (count) count.insertAdjacentHTML("beforebegin", more);
+  else bar.insertAdjacentHTML("beforeend", more);
+
+  // the bar stays where it was – right above the ranking – and also drives the chart; the chart gets a pointer to it
+  const chart = $("chartWrap");
+  const box = document.createElement("div");
+  box.className = "fv-filters";
+  box.id = "filtre";
+  bar.before(box);
+  box.innerHTML = `<div class="fv-head"><b>Filtre</b><span>platia pre rebríček aj graf vyššie</span></div>`;
+  box.appendChild(bar);
+  const note = document.createElement("div");
+  note.className = "fv-note";
+  chart?.before(note);
+
+  document.head.insertAdjacentHTML("beforeend", `<style id="fv-filters-css">
+.fv-filters{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 14px 4px;margin:24px 0 8px}
+.fv-filters .fv-head{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;margin-bottom:8px}
+.fv-filters .fv-head span{color:var(--muted);font-size:13px}
+.fv-filters .filters{margin-bottom:8px}
+.fv-filters .filters .count{flex-basis:100%;margin-left:0}
+.fv-check{display:inline-flex;gap:6px;align-items:center;font-size:13px;color:var(--text-2,var(--text));white-space:nowrap}
+.fv-reset{background:none;border:1px solid var(--border);color:var(--text);border-radius:8px;padding:6px 10px;font:inherit;font-size:13px;cursor:pointer}
+.fv-reset:hover{background:var(--surface-2,var(--surface))}
+.fv-note{color:var(--muted);font-size:13px;margin:0 0 8px}
+.fv-note a{color:inherit}
+.fv-empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:14px;pointer-events:none}
+@media (max-width:600px){.fv-filters .filters select,.fv-filters .filters input[type=number],.fv-filters .filters input[type=search]{flex:1 1 calc(50% - 8px);min-width:0;width:auto!important}}
+</style>`);
+
+  // --- filtering --------------------------------------------------------------------------------------------------
+  const val = (id) => ($(id) ? $(id).value : "");
+  const num = (id) => { const v = parseFloat(val(id)); return Number.isFinite(v) ? v : null; };
+  function matches(d) {
+    const yf = num("fvYearFrom"), yt = num("fvYearTo"), pmin = num("fvPriceMin"), pmax = num("fMax"), km = num("fvKm"), disc = num("fvDisc");
+    const fuel = val("fvFuel"), grp = val("fvGroup"), q = norm(val("fvText")).trim();
+    if (yf != null && !(d.year >= yf)) return false;
+    if (yt != null && !(d.year <= yt)) return false;
+    if (pmin != null && !(d.price_gross >= pmin)) return false;
+    if (pmax != null && !(d.price_gross <= pmax)) return false;
+    if (km != null && !(d.km <= km)) return false;
+    if (disc != null && !(d.discount_pct > disc || (disc > 0 && d.discount_pct >= disc))) return false;
+    if (fuel && fuelOf(d) !== fuel) return false;
+    if (grp !== "" && String(d.cg) !== grp) return false;
+    if ($("fvPick")?.checked && !d.pick) return false;
+    if (q && !q.split(/\s+/).every((w) => norm(`${d.title} ${d.eg ?? ""} ${d.engine ?? ""} ${d.location ?? ""}`).includes(w))) return false;
+    // the report's own filters (engine, gearbox, seller, portal, body, origin) – same rules as its renderTable
+    const en = val("fEngine"), tr = val("fTrans"), se = val("fSeller"), so = val("fSource"), og = val("fOrigin"), bo = val("fBody");
+    if (en && d.eg !== en) return false;
+    if (tr && d.transmission !== tr) return false;
+    if (se && d.seller_type === "dealer") return false;
+    if (so && !(d.source === so || (d.also_listed || []).some((a) => a.source === so))) return false;
+    if (og && d.origin !== og) return false;
+    if (bo && d.body !== bo) return false;
+    return true;
+  }
+  const active = () => [...box.querySelectorAll("select, input")].filter((el) => (el.type === "checkbox" ? el.checked : el.value !== "")).length;
+
+  let drawing = false;
+  function apply() {
+    if (drawing) return;
+    drawing = true;
+    const rows = ALL.filter(matches);
+    data.length = 0;
+    data.push(...rows);
+    const wrap = $("chartWrap");
+    wrap?.querySelector(".fv-empty")?.remove();
+    const plotted = rows.filter((d) => d.km && d.price_gross).length;
+    try {
+      if (typeof drawChart === "function") { // eslint-disable-line no-undef
+        if (plotted) drawChart(); // eslint-disable-line no-undef
+        else { const svg = $("chart"); if (svg) svg.innerHTML = ""; }
+      }
+    } catch (e) { console.warn("chart", e); }
+    if (wrap && !plotted) {
+      if (getComputedStyle(wrap).position === "static") wrap.style.position = "relative";
+      wrap.insertAdjacentHTML("beforeend", `<div class="fv-empty">Filtrom nezodpovedá žiadny inzerát</div>`);
+    }
+    try { renderTable(); } catch (e) { console.warn("table", e); } // eslint-disable-line no-undef
+    const n = active();
+    if (count) count.textContent = `Zobrazených ${fmt(rows.length)} z ${fmt(ALL.length)} inzerátov` + (n ? ` · aktívne filtre: ${n}` : "");
+    note.innerHTML = n
+      ? `Zobrazených ${fmt(rows.length)} z ${fmt(ALL.length)} inzerátov podľa <a href="#filtre">filtrov pri rebríčku</a>.`
+      : `Filtre (rok, cena, nájazd, palivo…) nájdeš <a href="#filtre">pri kompletnom rebríčku</a> – platia aj pre tento graf.`;
+    drawing = false;
+  }
+  box.querySelectorAll("select, input").forEach((el) => el.addEventListener("input", apply));
+  $("fvPick")?.addEventListener("change", apply);
+  $("fvReset").addEventListener("click", () => {
+    box.querySelectorAll("select, input").forEach((el) => { if (el.type === "checkbox") el.checked = false; else el.value = ""; });
+    apply();
+  });
+  apply();
+})();
+</script><!-- /ferovka-theme -->
+</body>
+</html>

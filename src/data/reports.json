@@ -77,6 +77,19 @@
     }
   },
   {
+    "slug": "audi-a7",
+    "file": "audi-a7-analyza.html",
+    "name": "Audi A7",
+    "brand": "Audi",
+    "model": "A7",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Audi A7 (Sportback 2010–2025, aj S7 / RS7) od 8 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 382 inzerátov (207 na bazoši, 67 na autobazar.eu, 108 na bazar.sk) – prezreli sme 60 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 196 rôznych áut zo Slovenska.",
+    "ads": 196,
+    "median": "23 150 €",
+    "r2": "89 %"
+  },
+  {
     "slug": "audi-q2",
     "file": "audi-q2-analyza.html",
     "name": "Audi Q2",
@@ -192,7 +205,7 @@
     "median": "10 950 €",
     "r2": "86 %",
     "history": {
-      "updated_at": "2026-11-22T15:17:06",
+      "updated_at": "2026-11-22T19:28:36",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 184,
@@ -224,7 +237,7 @@
     "median": "16 800 €",
     "r2": "92 %",
     "history": {
-      "updated_at": "2026-11-22T15:17:06",
+      "updated_at": "2026-11-22T19:28:36",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 470,
@@ -256,7 +269,7 @@
     "median": "29 490 €",
     "r2": "90 %",
     "history": {
-      "updated_at": "2026-11-22T15:17:06",
+      "updated_at": "2026-11-22T19:28:36",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 112,
@@ -288,7 +301,7 @@
     "median": "18 990 €",
     "r2": "93 %",
     "history": {
-      "updated_at": "2026-11-22T15:17:06",
+      "updated_at": "2026-11-22T19:28:36",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 513,
@@ -308,6 +321,38 @@
     }
   },
   {
+    "slug": "bmw-7",
+    "file": "bmw-7-analyza.html",
+    "name": "BMW 7",
+    "brand": "BMW",
+    "model": "7",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov BMW 7 (F01/F02 2008–2015 a G11/G12 2015–2022) od 6 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 3 806 inzerátov (3 489 na bazoši, 157 na autobazar.eu, 160 na bazar.sk) – prezreli sme 13 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 312 rôznych áut zo Slovenska.",
+    "ads": 312,
+    "median": "25 900 €",
+    "r2": "95 %",
+    "history": {
+      "updated_at": "2026-11-22T19:28:36",
+      "as_of": "2026-11-22",
+      "coverage": "partial",
+      "baseline_count": 203,
+      "total_count": 203,
+      "active_count": 203,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 203,
+      "paired_median_change_pct": 0,
+      "historical_median": 25900,
+      "seen_median": 25900,
+      "seen_price_count": 203,
+      "last_observed_at": "2026-11-22T19:10:50"
+    }
+  },
+  {
     "slug": "bmw-m340",
     "file": "bmw-m340-analyza.html",
     "name": "BMW M340i / M340d",
@@ -320,7 +365,7 @@
     "median": "40 750 €",
     "r2": "86 %",
     "history": {
-      "updated_at": "2026-11-22T15:17:06",
+      "updated_at": "2026-11-22T19:28:36",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 17,
@@ -352,7 +397,7 @@
     "median": "18 990 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-22T15:17:06",
+      "updated_at": "2026-11-22T19:28:36",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 196,
@@ -384,7 +429,7 @@
     "median": "27 499 €",
     "r2": "95 %",
     "history": {
-      "updated_at": "2026-11-22T15:17:06",
+      "updated_at": "2026-11-22T19:28:36",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 186,
@@ -414,7 +459,26 @@
     "summary": "Analýza aktuálnych inzerátov BMW X4 (F26 a G02, 2014–2025, vrátane M40d / M40i, bez X4 M a nových áut z 2026) od 6 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 177 inzerátov (93 na bazoši, 83 na autobazar.eu, 1 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 133 rôznych áut zo Slovenska.",
     "ads": 133,
     "median": "28 000 €",
-    "r2": "95 %"
+    "r2": "95 %",
+    "history": {
+      "updated_at": "2026-11-22T19:28:36",
+      "as_of": "2026-11-22",
+      "coverage": "partial",
+      "baseline_count": 95,
+      "total_count": 95,
+      "active_count": 95,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 95,
+      "paired_median_change_pct": 0,
+      "historical_median": 28000,
+      "seen_median": 28000,
+      "seen_price_count": 95,
+      "last_observed_at": "2026-11-22T15:46:43"
+    }
   },
   {
     "slug": "bmw-x5",
@@ -429,7 +493,7 @@
     "median": "40 994 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-22T15:17:06",
+      "updated_at": "2026-11-22T19:28:36",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 433,
@@ -461,7 +525,7 @@
     "median": "29 999 €",
     "r2": "96 %",
     "history": {
-      "updated_at": "2026-11-22T15:17:06",
+      "updated_at": "2026-11-22T19:28:36",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 218,
@@ -1566,6 +1630,19 @@
     }
   },
   {
+    "slug": "mercedes-s",
+    "file": "mercedes-s-analyza.html",
+    "name": "Mercedes-Benz S",
+    "brand": "Mercedes-Benz",
+    "model": "S",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Mercedes-Benz S (W221 2005–2013 a W222 2013–2020) od 6 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 3 544 inzerátov (3 172 na bazoši, 213 na autobazar.eu, 159 na bazar.sk) – prezreli sme 15 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 311 rôznych áut zo Slovenska.",
+    "ads": 311,
+    "median": "29 999 €",
+    "r2": "94 %"
+  },
+  {
     "slug": "mini-cooper",
     "file": "mini-cooper-analyza.html",
     "name": "Mini Cooper",
@@ -1596,6 +1673,19 @@
       "seen_price_count": 89,
       "last_observed_at": "2026-11-22T00:09:53"
     }
+  },
+  {
+    "slug": "mini-countryman",
+    "file": "mini-countryman-analyza.html",
+    "name": "Mini Countryman",
+    "brand": "Mini",
+    "model": "Countryman",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Mini Countryman (R60 2010–2016, F60 2017–2023 a U25 2024+) od 4 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 204 inzerátov (50 na bazoši, 70 na autobazar.eu, 84 na bazar.sk) – prezreli sme 81 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 85 rôznych áut zo Slovenska.",
+    "ads": 85,
+    "median": "11 849 €",
+    "r2": "97 %"
   },
   {
     "slug": "mitsubishi-l200",
@@ -1994,6 +2084,19 @@
     "ads": 107,
     "median": "15 990 €",
     "r2": "95 %"
+  },
+  {
+    "slug": "land-rover-range-rover-sport",
+    "file": "land-rover-range-rover-sport-analyza.html",
+    "name": "Range Rover Sport",
+    "brand": "Range",
+    "model": "Rover Sport",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Range Rover Sport (L320 2005–2013, L494 2013–2022 a L461 2022+) od 6 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 501 inzerátov (82 na bazoši, 222 na autobazar.eu, 197 na bazar.sk) – prezreli sme 59 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 219 rôznych áut zo Slovenska.",
+    "ads": 219,
+    "median": "33 745 €",
+    "r2": "98 %"
   },
   {
     "slug": "renault-arkana",

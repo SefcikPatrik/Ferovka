@@ -1,0 +1,843 @@
+<!doctype html>
+<html lang="sk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mini Countryman – analýza ponúk</title>
+<style>
+:root {
+  color-scheme: light;
+  --bg: #f6f6f4; --surface: #fcfcfb; --surface-2: #f0efec; --border: #e2e1dc;
+  --text: #0b0b0b; --text-2: #52514e; --muted: #7a7974;
+  --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a;
+  --pos: #2a78d6; --neg: #eb6834; --accent: #2a78d6;
+  --good: #1d7f4e; --bad: #b4332f; --grid: #e8e7e3;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #121211; --surface: #1a1a19; --surface-2: #232321; --border: #33332f;
+    --text: #f0efec; --text-2: #c3c2b7; --muted: #8f8e86;
+    --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+    --pos: #3987e5; --neg: #d95926; --accent: #5598e7;
+    --good: #4cc38a; --bad: #f07a76; --grid: #2a2a27;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #121211; --surface: #1a1a19; --surface-2: #232321; --border: #33332f;
+  --text: #f0efec; --text-2: #c3c2b7; --muted: #8f8e86;
+  --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+  --pos: #3987e5; --neg: #d95926; --accent: #5598e7;
+  --good: #4cc38a; --bad: #f07a76; --grid: #2a2a27;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text);
+  font: 15px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+main { max-width: 1120px; margin: 0 auto; padding: 32px 16px 64px; }
+a { color: var(--accent); text-decoration: none; } a:hover { text-decoration: underline; }
+h1 { font-size: 30px; margin: 0 0 4px; letter-spacing: -.01em; }
+h2 { font-size: 21px; margin: 48px 0 6px; }
+h3 { font-size: 15px; margin: 6px 0 4px; line-height: 1.35; }
+.lead { color: var(--text-2); margin: 0 0 20px; max-width: 760px; }
+.section-lead { color: var(--text-2); margin: 0 0 16px; max-width: 800px; }
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
+.kpi { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+.kpi .v { font-size: 26px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.kpi .l { color: var(--text-2); font-size: 13px; }
+.explain { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; margin-top: 12px; }
+.explain p { margin: 6px 0; color: var(--text-2); }
+.explain b { color: var(--text); }
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; }
+.card-head { display: flex; justify-content: space-between; gap: 8px; font-size: 12px; }
+.tag { font-weight: 600; color: var(--accent); }
+.loc { color: var(--muted); }
+.facts { color: var(--text-2); font-size: 13px; }
+.prices { display: grid; grid-template-columns: 1.2fr 1fr .8fr; gap: 8px; margin: 12px 0 8px; }
+.lbl { display: block; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+.big { font-size: 22px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.mid { font-size: 16px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.good { color: var(--good); }
+.meter { height: 6px; background: var(--surface-2); border-radius: 4px; overflow: hidden; }
+.meter span { display: block; height: 100%; background: var(--s1); border-radius: 4px; }
+.news ul { margin: 6px 0 0; padding-left: 20px; } .news li { margin: 4px 0; } .news .down { color: var(--good, #1baf7a); font-weight: 600; }
+.note { font-size: 12.5px; background: var(--surface-2); border-radius: 6px; padding: 6px 8px; margin-top: 8px; color: var(--text-2); }
+.pc { list-style: none; padding: 0; margin: 10px 0 0; font-size: 13.5px; }
+.pc li { padding-left: 20px; position: relative; margin: 3px 0; }
+.pc li.pro::before { content: "+"; position: absolute; left: 4px; color: var(--good); font-weight: 700; }
+.pc li.con::before { content: "–"; position: absolute; left: 4px; color: var(--bad); font-weight: 700; }
+.subhead { font-size: 15px; color: var(--text-2); margin: 22px 0 10px; font-weight: 600; }
+.chart-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 14px 8px; position: relative; }
+.legend { display: flex; flex-wrap: wrap; gap: 16px; font-size: 13px; color: var(--text-2); margin: 0 0 6px 4px; }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; }
+.legend .ring { background: transparent; border: 2px solid var(--text); width: 12px; height: 12px; }
+svg text { fill: var(--muted); font-size: 11px; }
+.tip { position: absolute; pointer-events: none; background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+  padding: 8px 10px; font-size: 12.5px; box-shadow: 0 6px 20px rgba(0,0,0,.15); max-width: 280px; display: none; z-index: 5; }
+.tip b { display: block; margin-bottom: 2px; }
+.tip .row { display: flex; justify-content: space-between; gap: 12px; color: var(--text-2); }
+.tip .row span:last-child { color: var(--text); font-variant-numeric: tabular-nums; }
+table { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; font-size: 13.5px; }
+th, td { padding: 9px 10px; border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; }
+th { font-size: 12px; color: var(--text-2); font-weight: 600; background: var(--surface-2); white-space: nowrap; }
+th.sortable { cursor: pointer; user-select: none; } th.sortable:hover { color: var(--text); }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+.sub { color: var(--text-2); font-size: 12.5px; margin-top: 2px; }
+.stars { color: #c98500; letter-spacing: 1px; white-space: nowrap; } .stars .off { color: var(--border); }
+.cellbar { height: 5px; background: var(--surface-2); border-radius: 3px; margin-bottom: 4px; }
+.cellbar span { display: block; height: 100%; background: var(--s1); border-radius: 3px; }
+.disc { display: inline-flex; align-items: center; gap: 6px; justify-content: flex-end; }
+.dbar { width: 54px; height: 6px; background: var(--surface-2); border-radius: 3px; position: relative; }
+.dbar span { position: absolute; top: 0; height: 100%; border-radius: 3px; }
+.filters { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 10px; align-items: center; }
+.filters select, .filters input { background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 6px 8px; font: inherit; font-size: 13px; }
+.filters .count { color: var(--muted); font-size: 13px; margin-left: auto; }
+.table-scroll { overflow-x: auto; border-radius: 12px; }
+.badge { font-size: 11px; padding: 1px 6px; border-radius: 10px; background: var(--surface-2); color: var(--text-2); white-space: nowrap; }
+.badge.pick { background: var(--s1); color: #fff; }
+.flag { color: var(--bad); font-size: 12px; }
+.warn { background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--neg); border-radius: 10px; padding: 12px 16px; }
+.warn li { margin: 4px 0; }
+.check { columns: 2 300px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px 14px 34px; margin: 0; }
+.check li { margin: 4px 0; break-inside: avoid; }
+footer { color: var(--muted); font-size: 12.5px; margin-top: 48px; border-top: 1px solid var(--border); padding-top: 14px; }
+.theme-btn { float: right; background: var(--surface); color: var(--text-2); border: 1px solid var(--border); border-radius: 8px; padding: 5px 10px; cursor: pointer; font: inherit; font-size: 13px; }
+@media (max-width: 640px) { h1 { font-size: 24px; } .prices { grid-template-columns: 1fr 1fr 1fr; } .big { font-size: 18px; } th, td { padding: 7px 6px; } }
+</style>
+<!-- ferovka-theme --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"><style id="ferovka-theme">/* Férovka look for the generated analyses – injected by sync-reports.mjs after each report's own <style>.
+   Same palette and type as the site; chart colours (--s1..--s3) stay the validated set. */
+:root {
+  --bg: #f5f4ef; --surface: #fdfdfb; --surface-2: #eeede6; --border: #e1dfd6;
+  --text: #0f1513; --text-2: #4f5551; --muted: #6f746f;
+  --accent: #0b8a56; --good: #0b7a4b; --grid: #e6e4dc; --win: #dff3e9;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d110f; --surface: #151a17; --surface-2: #1d2420; --border: #2a322d;
+    --text: #eef1ec; --text-2: #b6bdb6; --muted: #8f978f;
+    --accent: #2fc583; --good: #4cd08f; --grid: #1f2622; --win: #143223;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d110f; --surface: #151a17; --surface-2: #1d2420; --border: #2a322d;
+  --text: #eef1ec; --text-2: #b6bdb6; --muted: #8f978f;
+  --accent: #2fc583; --good: #4cd08f; --grid: #1f2622; --win: #143223;
+}
+
+body { font-family: "Manrope", system-ui, sans-serif; }
+h1, h2 { letter-spacing: -0.02em; font-weight: 800; }
+.tag { color: var(--accent); }
+
+/* photo header (removed by the site's viewer, which shows its own) */
+.fv-hero { position: relative; margin: 0 0 26px; border-radius: 20px; overflow: hidden; aspect-ratio: 21 / 8; background: #0d110f; display: flex; }
+.fv-hero img { flex: 1; min-width: 0; height: 100%; object-fit: cover; animation: fv-zoom 1.4s cubic-bezier(.2,.7,.2,1) both; }
+.fv-collage img + img { border-left: 3px solid #0d110f; }
+.fv-hero::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(180deg, transparent 55%, rgb(13 17 15 / .75)),
+    repeating-linear-gradient(90deg, rgb(47 197 131 / .06) 0 1px, transparent 1px 48px); }
+.fv-hero figcaption { position: absolute; right: 12px; bottom: 8px; z-index: 1; font-size: 11px; color: rgb(255 255 255 / .75); }
+.fv-hero figcaption a { color: inherit; }
+
+/* cards & panels: softer, lift on hover */
+.card, .kpi, .explain, .chart-wrap, .box { border-radius: 16px; }
+.card { transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease; }
+.card:hover { transform: translateY(-3px); border-color: var(--accent); box-shadow: 0 14px 30px -18px rgb(0 0 0 / .45); }
+.badge.pick { background: var(--accent); }
+
+/* entrance animation */
+@keyframes fv-up { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes fv-zoom { from { transform: scale(1.08); filter: brightness(.6); } to { transform: none; filter: none; } }
+h1, .lead, .kpis, .cards .card { animation: fv-up .6s cubic-bezier(.2,.7,.2,1) both; }
+.lead { animation-delay: .08s; }
+.kpis { animation-delay: .16s; }
+.cards .card:nth-child(2) { animation-delay: .06s; }
+.cards .card:nth-child(3) { animation-delay: .12s; }
+.cards .card:nth-child(4) { animation-delay: .18s; }
+.cards .card:nth-child(5) { animation-delay: .24s; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+@media (max-width: 640px) { .fv-hero { aspect-ratio: 16 / 9; border-radius: 14px; } }
+
+/* touch: hint under the chart tooltip (report-chart.js) */
+.fv-hint { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--border, rgba(127,127,127,.3)); font-weight: 700; color: var(--accent, #2fc583); }
+</style><!-- /ferovka-theme -->
+</head>
+<body>
+<main><!-- ferovka-theme --><!-- /ferovka-theme -->
+<button class="theme-btn" id="themeBtn" type="button">Svetlý / tmavý</button>
+<h1>Mini Countryman – ktorá ponuka sa oplatí</h1>
+<p class="lead">Analýza aktuálnych inzerátov Mini Countryman (R60 2010–2016, F60 2017–2023 a U25 2024+) od 4 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 204 inzerátov (50 na bazoši, 70 na autobazar.eu, 84 na bazar.sk) – prezreli sme 81 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 85 rôznych áut zo Slovenska. Každé auto sme porovnali
+s <b>férovou cenou</b>: tú vypočítal model naučený na celom trhu podľa veku, nájazdu, motora, prevodovky a typu predajcu.</p>
+
+<div class="kpis">
+  <div class="kpi"><div class="v">85</div><div class="l">inzerátov Countrymanu (nad 4 000 €)</div></div>
+  <div class="kpi"><div class="v">66</div><div class="l">ohodnotených (majú rok aj km)</div></div>
+  <div class="kpi"><div class="v">11 849 €</div><div class="l">medián ceny s DPH</div></div>
+  <div class="kpi"><div class="v">97 %</div><div class="l">rozdielov v cenách vysvetlí model</div></div>
+</div>
+
+
+<h2>Odkiaľ sú dáta: bazoš, autobazar.eu a bazar.sk</h2>
+<div class="kpis">
+  <div class="kpi"><div class="v">26</div><div class="l">ohodnotených z bazoša</div></div>
+  <div class="kpi"><div class="v">27</div><div class="l">ohodnotených z autobazar.eu</div></div><div class="kpi"><div class="v">13</div><div class="l">ohodnotených z bazar.sk</div></div>
+  <div class="kpi"><div class="v">59</div><div class="l">áut bolo na viacerých portáloch – započítané raz</div></div>
+  <div class="kpi"><div class="v">15 / 17</div><div class="l">s uvedeným pôvodom SR / dovoz</div></div>
+</div>
+<div class="explain">
+  <p><b>Tri portály, jeden trh.</b> Bazoš prehľadal 49 inzerátov, autobazar.eu
+  70, bazar.sk 47. Ponuky z Česka (na autobazar.eu ich je veľa) sme vynechali. Autobazáre často dávajú
+  to isté auto na viac portálov. Takéto dvojice (33 v rebríčku) sme spojili podľa VIN alebo zhody roku, km a ceny,
+  aby sa v modeli nerátali dvakrát. Pri aute nájdeš odkaz na všetky ponuky – niekedy sa líšia cenou.</p>
+  <p><b>Rozdiel medzi portálmi:</b> rovnaké auto je na autobazar.eu v priemere +3,1 %
+  oproti bazošu. Na autobazar.eu predávajú hlavne firmy (21 z 27 ohodnotených). Na bazar.sk je rovnaké auto v priemere +4,0 % oproti bazošu.</p>
+  <p><b>Kúpené v SR vs. dovoz:</b> autá s uvedeným pôvodom zo SR sú oproti autám bez uvedeného pôvodu
+  -7,1 %, dovezené -4,3 %
+  (pri rovnakom veku, nájazde a motore). Pôvod zo SR je výhoda pri overovaní histórie, trh zaň však nepripláca – väčšina
+  inzerátov pôvod jednoducho neuvádza. V tabulke dole si môžeš nechať zobraziť len autá kúpené v SR.</p>
+</div>
+
+<h2>Čo hýbe cenou Mini Countryman</h2>
+<p class="section-lead">Toto sa model naučil z trhu. Keď porovnávaš dve autá, tieto čísla ti povedia, koľko má byť
+rozdiel v cene, aby to bolo fér.</p>
+<div class="kpis">
+  <div class="kpi"><div class="v">-3,7 %</div><div class="l">každých ďalších 10 000 km</div></div>
+  <div class="kpi"><div class="v">-4,7 %</div><div class="l">každý rok veku navyše</div></div>
+  <div class="kpi"><div class="v">+17 %</div><div class="l">príplatok za automat (DSG)</div></div>
+  <div class="kpi"><div class="v">+0,4 %</div><div class="l">príplatok u predajcu / firmy</div></div>
+  <div class="kpi"><div class="v">+26,1 %</div><div class="l">Countryman F60 a novší (2017+) oproti cene podľa veku</div></div>
+  <div class="kpi"><div class="v">+16,9 %</div><div class="l">príplatok za automat</div></div>
+</div>
+<div class="explain">
+  <p><b>Príklad:</b> dva rovnaké Countrymany Cooper D z roku 2018, jedno má 60 tis. km, druhé 120 tis. km. Druhé má byť
+  približne o 22 % lacnejšie (6 × -3,7 %). Ak je lacnejšie len o 5 %, preplácaš kilometre.</p>
+  <p><b>Ako čítať „pod trhom“:</b> +15 % znamená, že auto stojí o 15 % menej, než by malo podľa trhu. Bežný rozptyl
+  cien je asi ±21 %, takže až zľava nad ~10–15 % je naozaj výnimočná. Pri takej zľave vždy zisti, prečo je auto lacné
+  (stav, história, nájazd).</p>
+  <p><b>DPH:</b> ceny uvedené bez DPH (napr. „10 300 € netto“) sme prepočítali na cenu s DPH, ktorú zaplatí súkromná osoba.</p>
+</div>
+
+<h2>Odporúčané ponuky</h2>
+<p class="section-lead">Kandidáti s najlepším pomerom cena / vek / nájazd, ktorých celý inzerát sme prečítali.
+Zoradené podľa toho, ako ich odporúčame.</p>
+<div class="subhead">Countryman F60 a novší (2017+) – najlepší pomer cena / vek</div>
+<div class="cards">
+<article class="card">
+  <div class="card-head"><span class="tag">Countryman C z 2025 s 13 tis. km z SR</span><span class="loc">Bratislava II - Ružinov</span></div>
+  <h3><a href="https://auto.bazar.sk/39384297-mini-countryman-c-1-5-mhev-essential-a-t/" target="_blank" rel="noopener">Mini Countryman C 1.5 mHEV Essential A/T</a></h3>
+  <div class="facts">2025 · 13 213 km · One / Cooper benzín 75–100 kW · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazar.sk</b> · kúpené v SR · aj na <a href='https://www.autobazar.eu/detail/mini-countryman-c/AbOFDLs7wnl/' target='_blank' rel='noopener'>autobazar.eu</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">30 900 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">38 570 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+19.9 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:66%"></span></div>
+  <ul class="pc"><li class="pro">1/2025, 1.5 mild hybrid 115 kW, automat, 13 tis. km</li><li class="pro">Nová generácia U25, pôvod SR, možný odpočet DPH</li><li class="pro">~20 % pod férovou cenou</li><li class="con">Predáva autobazár</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">Countryman Cooper SD z 11/2023</span><span class="loc">Zvolen</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/196014438/mini-countryman-cooper-sd-20-140-kw-190k-112023-dph.php" target="_blank" rel="noopener">MINI Countryman Cooper SD 2.0 140 kW / 190k, 11/2023, DPH,</a></h3>
+  <div class="facts">2023 · 45 200 km · Cooper D / SD diesel 82–140 kW · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">27 990 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">31 500 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+11.1 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:37%"></span></div>
+  <ul class="pc"><li class="pro">11/2023, 2.0 SD 140 kW, automat, 45 tis. km</li><li class="pro">Posledný ročník F60, odpočet DPH</li><li class="pro">~11 % pod férovou cenou</li><li class="con">Predáva autobazár</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">Countryman Cooper SE ALL4 plug-in hybrid</span><span class="loc">Košice-Nad jazerom</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/mini-countryman-cooper-s-all4-at-a8-5d2020-2023-plug-in-hybrid/Am423MmS2M1/" target="_blank" rel="noopener">Mini Countryman Cooper S ALL4 A/T, A8, 5d.(2020-2023) Plug-in hybrid</a></h3>
+  <div class="facts">2021 · 82 095 km · Plug-in hybrid SE / elektro · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · dovezené · aj na <a href='https://auto.bazos.sk/inzerat/196367905/mini-countryman-cooper-s-all4-at-a8-5d2020-2023-plug-i.php' target='_blank' rel='noopener'>bazoš</a> · aj na <a href='https://auto.bazos.sk/inzerat/196310588/mini-countryman-cooper-s-all4-at.php' target='_blank' rel='noopener'>bazoš</a> · aj na <a href='https://auto.bazar.sk/39756082-mini-countryman-cooper-s-all4-a-t-a8-5d-2020-2023-plug-in-hybrid/' target='_blank' rel='noopener'>bazar.sk</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">16 490 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">18 940 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+12.9 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:43%"></span></div>
+  <ul class="pc"><li class="pro">2021, 1.5 plug-in hybrid, ALL4, 8-st. automat, 82 tis. km</li><li class="pro">Po facelifte, pohon 4x4</li><li class="pro">~13 % pod férovou cenou</li><li class="con">Predáva autobazár</li><li class="con">Over stav batérie</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">Countryman Cooper S ALL4 z 2018</span><span class="loc">Bratislava V - Petržalka</span></div>
+  <h3><a href="https://auto.bazar.sk/39636000-mini-countryman-cooper-s-all4/" target="_blank" rel="noopener">MINI Countryman Cooper S ALL4</a></h3>
+  <div class="facts">2018 · 119 145 km · Cooper S / JCW benzín 131–233 kW · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazar.sk</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">15 000 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">16 800 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+10.7 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:36%"></span></div>
+  <ul class="pc"><li class="pro">2018, Cooper S 141 kW, ALL4, automat, 119 tis. km</li><li class="pro">Kožený volant, multifunkčný volant, strešné nosiče</li><li class="pro">~11 % pod férovou cenou</li><li class="con">Predáva autobazár</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">Countryman 1.5 automat z 12/2021</span><span class="loc">Nové Mesto n.Váhom</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197334126/mini-countryman.php" target="_blank" rel="noopener">Mini Countryman</a></h3>
+  <div class="facts">2021 · 128 612 km · One / Cooper benzín 75–100 kW · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazoš</b> · aj na <a href='https://www.autobazar.eu/detail/mini-countryman/AmXBkM6yADG/' target='_blank' rel='noopener'>autobazar.eu</a> · aj na <a href='https://auto.bazar.sk/39760300-mini-countryman/' target='_blank' rel='noopener'>bazar.sk</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">14 490 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">16 040 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+9.7 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:32%"></span></div>
+  <ul class="pc"><li class="pro">12/2021, 1.5 benzín 100 kW, automat, 129 tis. km</li><li class="pro">Po facelifte</li><li class="pro">~10 % pod férovou cenou</li><li class="con">Predáva autobazár</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">Súkromník: Countryman ALL4 z SR so 64 tis. km</span><span class="loc">Košice</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/mini-cooper-s-countryman-all4/AeHmn9JlCh_/" target="_blank" rel="noopener">Mini Countryman Mini Cooper Countryman 4ALL</a></h3>
+  <div class="facts">2018 · 64 000 km · Cooper S / JCW benzín 131–233 kW · automat · súkromník</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · kúpené v SR</div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">17 100 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">18 890 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+9.5 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:32%"></span></div>
+  <ul class="pc"><li class="pro">2018, benzín, ALL4, automat, 64 tis. km</li><li class="pro">Pôvod SR, nízky nájazd</li><li class="pro">~10 % pod férovou cenou</li><li class="con">Inzerát bez popisu</li></ul>
+</article></div>
+<div class="subhead">Lacnejšie Countrymany do 10 000 €</div>
+<div class="cards">
+<article class="card">
+  <div class="card-head"><span class="tag">Countryman Cooper S ALL4 automat</span><span class="loc">Svätý Jur</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/mini-cooper-s-countryman-all4-steptronic/Am9f7WrRS1t/" target="_blank" rel="noopener">Mini Cooper S Countryman ALL4 Steptronic</a></h3>
+  <div class="facts">2014 · 150 036 km · Cooper S / JCW benzín 131–233 kW · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · dovezené · aj na <a href='https://auto.bazos.sk/inzerat/197724386/mini-cooper-s-countryman-all4-steptronic.php' target='_blank' rel='noopener'>bazoš</a> · aj na <a href='https://auto.bazar.sk/39771373-mini-cooper-s-countryman-all4-steptronic/' target='_blank' rel='noopener'>bazar.sk</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">7 999 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">10 380 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+22.9 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:76%"></span></div>
+  <ul class="pc"><li class="pro">2014, Cooper S, ALL4, Steptronic, 150 tis. km</li><li class="pro">Možnosť kontroly na zdviháku</li><li class="pro">~23 % pod férovou cenou</li><li class="con">Predáva autobazár</li><li class="con">Dovoz</li><li class="con">R60 – over reťaz rozvodov</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">Countryman Cooper D ALL4 za 4 499 €</span><span class="loc">Bratislava</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197770094/mini-countryman-2011-160-d-cooper-d-all4.php" target="_blank" rel="noopener">Mini Countryman 2011 1.60 D Cooper D All4</a></h3>
+  <div class="facts">2011 · 201 518 km · Cooper D / SD diesel 82–140 kW · manuál · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazoš</b> · aj na <a href='https://www.autobazar.eu/detail/mini-countryman-160-d-cooper-d-all4/Amch00qtGuW/' target='_blank' rel='noopener'>autobazar.eu</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">4 499 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">5 690 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+20.9 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:70%"></span></div>
+  <ul class="pc"><li class="pro">2011, 1.6 D, ALL4, manuál, 202 tis. km</li><li class="pro">Originálne km, servisná knižka, všetko funkčné</li><li class="pro">~21 % pod férovou cenou</li><li class="con">Predáva autobazár</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">Countryman Cooper D ALL4 s automatom ZF</span><span class="loc">Prievidza</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197668069/mini-cooper-countryman-20-d-all4-4x4-automat-165-000-km.php" target="_blank" rel="noopener">Mini Cooper COUNTRYMAN 2.0 D ALL4 (4x4), AUTOMAT, 165 000 km</a></h3>
+  <div class="facts">2011 · 165 000 km · One / Cooper benzín 75–100 kW · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">5 990 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">7 200 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+16.8 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:56%"></span></div>
+  <ul class="pc"><li class="pro">2011, 2.0 D 82 kW, ALL4, 6-st. automat, 165 tis. km</li><li class="pro">Pohon 4x4, automat</li><li class="pro">~17 % pod férovou cenou</li><li class="con">Predáva autobazár</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">Countryman R60 1.6 D so 150 tis. km</span><span class="loc">Košice-okolie</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197736819/predam-mini-countryman-r60-16-d-66-kw-2012-150tiskm.php" target="_blank" rel="noopener">Predám MINI Countryman R60 1.6 D (66 kW), 2012-150tis.km</a></h3>
+  <div class="facts">2012 · 150 000 km · Cooper D / SD diesel 82–140 kW · manuál · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">5 999 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">7 020 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+14.6 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:49%"></span></div>
+  <ul class="pc"><li class="pro">2012, 1.6 D 66 kW, manuál, 150 tis. km</li><li class="pro">Pravidelne servisované, veľmi dobrý technický stav</li><li class="pro">~15 % pod férovou cenou</li><li class="con">Predajca neistý</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">Countryman Cooper D ALL4 s novými rozvodmi</span><span class="loc">Košice-Myslava</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/mini-countryman-cooper-d-all4/AmTITPQ8fv7/" target="_blank" rel="noopener">Mini Countryman Cooper D ALL4</a></h3>
+  <div class="facts">2013 · 178 756 km · Cooper D / SD diesel 82–140 kW · manuál · neisté</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · aj na <a href='https://auto.bazar.sk/39766061-mini-countryman-cooper-d-all4/' target='_blank' rel='noopener'>bazar.sk</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">5 999 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">6 840 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+12.2 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:41%"></span></div>
+  <ul class="pc"><li class="pro">2013, Cooper D, ALL4, manuál, 179 tis. km</li><li class="pro">Rozvody vymenené pri 175 tis. km</li><li class="pro">~12 % pod férovou cenou</li><li class="con">Krátky inzerát</li></ul>
+</article></div>
+<div class="subhead">Špeciálne prípady</div>
+<div class="cards"></div>
+
+<h2>Cena vs. nájazd: celý trh na jednom grafe</h2>
+<p class="section-lead">Každý bod je jeden inzerát. Čím nižšie bod leží oproti ostatným s podobným nájazdom, tým je auto lacnejšie.
+Krúžkom sú označené odporúčané ponuky. Prejdi myšou na bod a uvidíš detail.</p>
+<div class="chart-wrap" id="chartWrap">
+  <div class="legend" id="legend"></div>
+  <svg id="chart" width="100%" height="420" role="img" aria-label="Bodový graf ceny a nájazdu inzerátov"></svg>
+  <div class="tip" id="tip"></div>
+</div>
+
+<h2>Porovnanie motorov</h2>
+<p class="section-lead">Hodnotenie (hviezdičky) zohľadňuje spoľahlivosť, spoľahlivosť a náklady na prevádzku a pomer cena/výkon.
+Číselné stĺpce sú mediány z ohodnotených inzerátov.</p>
+<div class="table-scroll">
+<table>
+  <thead><tr><th>Motor</th><th>Hodnotenie</th><th class="num">Ponúk</th><th class="num">Medián ceny</th><th class="num">Medián roku</th><th class="num">Medián km</th></tr></thead>
+  <tbody>
+<tr>
+  <td><b>Plug-in hybrid SE / elektro</b><div class="sub">Cooper SE ALL4 (plug-in, 2017–2023) alebo elektrický Countryman E / SE (2024+). Over stav batérie.</div></td>
+  <td><span class="stars" aria-label="3 z 5">★★★<span class="off">★★</span></span></td>
+  <td class="num">6</td>
+  <td class="num"><div class="cellbar"><span style="width:100%"></span></div>18 700 €</td>
+  <td class="num">2022</td>
+  <td class="num">83 148 km</td>
+</tr>
+<tr>
+  <td><b>Cooper D / SD diesel 82–140 kW</b><div class="sub">Diesel 112–190 k (od BMW). Úsporný; over DPF, reťaz rozvodov a dvojhmotu.</div></td>
+  <td><span class="stars" aria-label="3 z 5">★★★<span class="off">★★</span></span></td>
+  <td class="num">25</td>
+  <td class="num"><div class="cellbar"><span style="width:48%"></span></div>8 990 €</td>
+  <td class="num">2014</td>
+  <td class="num">143 636 km</td>
+</tr>
+<tr>
+  <td><b>Cooper S / JCW benzín 131–233 kW</b><div class="sub">Turbobenzín 178–317 k. Svižný; pri R60 over reťaz rozvodov a spotrebu oleja.</div></td>
+  <td><span class="stars" aria-label="3 z 5">★★★<span class="off">★★</span></span></td>
+  <td class="num">26</td>
+  <td class="num"><div class="cellbar"><span style="width:94%"></span></div>17 500 €</td>
+  <td class="num">2018</td>
+  <td class="num">77 000 km</td>
+</tr>
+<tr>
+  <td><b>One / Cooper benzín 75–100 kW</b><div class="sub">Benzín 102–136 k. Jednoduchší, úspornejší.</div></td>
+  <td><span class="stars" aria-label="3 z 5">★★★<span class="off">★★</span></span></td>
+  <td class="num">9</td>
+  <td class="num"><div class="cellbar"><span style="width:52%"></span></div>9 800 €</td>
+  <td class="num">2017</td>
+  <td class="num">165 000 km</td>
+</tr></tbody>
+</table>
+</div>
+<div class="explain">
+  <p><b>Mini Countryman</b> je najväčšie Mini – kompaktný crossover s 5 dverami, aj s pohonom <b>ALL4</b>. Generácia <b>R60</b> (2010–2016),
+  <b>F60</b> (2017–2023, na technike BMW X1) a <b>U25</b> (od 2024).</p>
+  <p><b>Ktorý motor zvoliť?</b> Pri F60 sú spoľahlivé benzíny <b>Cooper</b> (1.5) a diesel <b>Cooper D</b>. Staršie R60 s benzínom 1.6
+  majú známe problémy s reťazou rozvodov.</p>
+</div>
+
+<h2>Na čo si dať pozor</h2>
+<div class="warn">
+  <p><b>Lacné kvôli extrémnemu nájazdu</b> (viac ako 35 tis. km ročne, typicky flotila alebo taxi):</p>
+  <ul><li><a href='https://www.autobazar.eu/detail/mini-cooper-countryman-se-all4/AmN4BI9ExB9/' target='_blank' rel='noopener'>Mini Cooper Countryman SE ALL4</a>: 2022, 188 786 km → 44 000 km/rok. Lacné je kvôli nájazdu.</li></ul>
+  <p><b>Ďalšie veci, ktoré sme v inzerátoch našli:</b></p><ul><li>Staršie Countrymany R60 (2010–2016) s benzínom 1.6 majú známe problémy s reťazou rozvodov – over servisnú históriu.</li><li>Nové autá zo skladu a inzeráty českých predajcov sme do analýzy nezarátali.</li></ul><p><b>Mini Cooper (hatchback), Clubman, Paceman, Aceman a iné modely z vyhľadávania, inzeráty s chybným nájazdom</b> (5 inzerátov) sme z rebríčka vynechali.</p>
+  <p>Ďalších <b>9</b> inzerátov nemá v texte rok alebo kilometre, takže ich nebolo možné ohodnotiť.
+  Ak ťa niektorý zaujme, predajcu sa na tieto údaje opýtaj.</p>
+</div>
+
+<h2>Kompletný rebríček</h2>
+<p class="section-lead">Všetky ohodnotené inzeráty. Kliknutím na hlavičku stĺpca zoraďuješ, filtrom zužuješ výber.</p>
+<div class="filters">
+  <select id="fEngine"><option value="">Všetky motory</option></select>
+  <select id="fTrans"><option value="">Každá prevodovka</option><option value="automatic">Automat</option><option value="manual">Manuál</option></select>
+  <select id="fSeller"><option value="">Všetci predajcovia</option><option value="nodealer">Bez autobazárov</option></select>
+  <select id="fSource"><option value="">Všetky portály</option><option value="bazos">bazoš</option><option value="autobazar">autobazar.eu</option><option value="bazarsk">bazar.sk</option></select>
+  <select id="fBody" hidden><option value=""></option></select>
+  <select id="fOrigin"><option value="">Akýkoľvek pôvod</option><option value="SR">Kúpené v SR</option><option value="dovoz">Dovoz</option></select>
+  <input id="fMax" type="number" placeholder="Max. cena €" step="500" min="0" style="width:120px">
+  <span class="count" id="count"></span>
+</div>
+<div class="table-scroll">
+<table id="tbl">
+  <thead><tr>
+    <th class="sortable" data-k="title">Inzerát</th>
+    <th class="sortable num" data-k="year">Rok</th>
+    <th class="sortable num" data-k="km">Km</th>
+    <th class="sortable num" data-k="price_gross">Cena</th>
+    <th class="sortable num" data-k="fair_price">Férová</th>
+    <th class="sortable num" data-k="discount_pct">Pod trhom ▾</th>
+  </tr></thead>
+  <tbody></tbody>
+</table>
+</div>
+
+<h2>Pred kúpou over</h2>
+<ul class="check">
+  <li>VIN cez Cebia / autoDNA (história km, havárie)</li>
+  <li>R60 (2010–2016): reťaz rozvodov, spotreba oleja, termostat</li>
+  <li>Diesel: DPF, dvojhmota</li>
+  <li>Automat Steptronic: plynulosť radenia</li>
+  <li>Plug-in hybrid SE: stav batérie</li>
+  <li>STK/EK protokol a dátum platnosti</li>
+</ul>
+
+<footer>
+  Zdroj: auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (len ponuky zo Slovenska, to isté auto na viacerých portáloch je započítané raz), sťahované cez lokálny MCP server bazos-mcp (nástroj <code>fair_price</code>), 22. 11. 2026.
+  Model: ridge regresia log(ceny s DPH) podľa veku, veku², km, km², prevodovky, typu predajcu, motora, karosérie, pohonu 4x4, pôvodu (SR / dovoz) a portálu. Vzorka 66
+  inzerátov, R² 97 %. Parametre sú vyťažené z textu inzerátov, a preto môžu obsahovať chyby. Odporúčané ponuky sme overili
+  prečítaním celého inzerátu. Hodnotenie motorov je odborný odhad, nie výsledok modelu.
+</footer>
+</main>
+
+<script>
+const DATA = [{"id": "ab-Am9f7WrRS1t", "url": "https://www.autobazar.eu/detail/mini-cooper-s-countryman-all4-steptronic/Am9f7WrRS1t/", "title": "Mini Cooper S Countryman ALL4 Steptronic", "price": 7999, "price_gross": 7999, "fair_price": 10380.0, "discount_pct": 22.9, "verdict": "výrazne pod trhom – over prečo", "year": 2014, "km": 150036, "km_per_year": 12200.0, "eg": "Cooper S / JCW benzín 131–233 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Svätý Jur", "flags": [], "pick": "budget", "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "197724386", "url": "https://auto.bazos.sk/inzerat/197724386/mini-cooper-s-countryman-all4-steptronic.php", "price": 7999}, {"source": "bazarsk", "id": "bs-39771373", "url": "https://auto.bazar.sk/39771373-mini-cooper-s-countryman-all4-steptronic/", "price": 7999}], "body": "suv"}, {"id": "197770094", "url": "https://auto.bazos.sk/inzerat/197770094/mini-countryman-2011-160-d-cooper-d-all4.php", "title": "Mini Countryman 2011 1.60 D Cooper D All4", "price": 4499, "price_gross": 4499, "fair_price": 5690.0, "discount_pct": 20.9, "verdict": "výrazne pod trhom – over prečo", "year": 2011, "km": 201518, "km_per_year": 13100.0, "eg": "Cooper D / SD diesel 82–140 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-Amch00qtGuW", "url": "https://www.autobazar.eu/detail/mini-countryman-160-d-cooper-d-all4/Amch00qtGuW/", "price": 4499}], "body": "suv"}, {"id": "bs-39384297", "url": "https://auto.bazar.sk/39384297-mini-countryman-c-1-5-mhev-essential-a-t/", "title": "Mini Countryman C 1.5 mHEV Essential A/T", "price": 30900, "price_gross": 30900, "fair_price": 38570.0, "discount_pct": 19.9, "verdict": "výrazne pod trhom – over prečo", "year": 2025, "km": 13213, "km_per_year": 9900.0, "eg": "One / Cooper benzín 75–100 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava II - Ružinov", "flags": [], "pick": "top", "source": "bazarsk", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AbOFDLs7wnl", "url": "https://www.autobazar.eu/detail/mini-countryman-c/AbOFDLs7wnl/", "price": 30900}], "body": "suv"}, {"id": "197668069", "url": "https://auto.bazos.sk/inzerat/197668069/mini-cooper-countryman-20-d-all4-4x4-automat-165-000-km.php", "title": "Mini Cooper COUNTRYMAN 2.0 D ALL4 (4x4), AUTOMAT, 165 000 km", "price": 5990, "price_gross": 5990, "fair_price": 7200.0, "discount_pct": 16.8, "verdict": "výrazne pod trhom – over prečo", "year": 2011, "km": 165000, "km_per_year": 10800.0, "eg": "One / Cooper benzín 75–100 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Prievidza", "flags": [], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-Amcw2XgBcFn", "url": "https://www.autobazar.eu/detail/mini-countryman/Amcw2XgBcFn/", "title": "Mini Countryman", "price": 4690, "price_gross": 4690, "fair_price": 5610.0, "discount_pct": 16.4, "verdict": "výrazne pod trhom – over prečo", "year": 2011, "km": 229000, "km_per_year": 14900.0, "eg": "Cooper D / SD diesel 82–140 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Kysucké Nové Mesto", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-37688211", "url": "https://auto.bazar.sk/37688211-mini-countryman/", "price": 4690}, {"source": "bazos", "id": "196999831", "url": "https://auto.bazos.sk/inzerat/196999831/mini-countryman-cooper.php", "price": 4690}], "body": "suv"}, {"id": "197736819", "url": "https://auto.bazos.sk/inzerat/197736819/predam-mini-countryman-r60-16-d-66-kw-2012-150tiskm.php", "title": "Predám MINI Countryman R60 1.6 D (66 kW), 2012-150tis.km", "price": 5999, "price_gross": 5999, "fair_price": 7020.0, "discount_pct": 14.6, "verdict": "pod trhom", "year": 2012, "km": 150000, "km_per_year": 10500.0, "eg": "Cooper D / SD diesel 82–140 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Košice-okolie", "flags": [], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AmcS9JBguXH", "url": "https://www.autobazar.eu/detail/mini-countryman-16-one-d-66kw-6-stup-manual/AmcS9JBguXH/", "title": "Mini Countryman 1.6 ONE D 66kW 6-stup. manuál", "price": 5990, "price_gross": 5990, "fair_price": 6990.0, "discount_pct": 14.3, "verdict": "pod trhom", "year": 2012, "km": 139000, "km_per_year": 9700.0, "eg": "Cooper D / SD diesel 82–140 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazarsk", "id": "bs-39544383", "url": "https://auto.bazar.sk/39544383-mini-countryman-1-6-one-d-66kw-6-stup-manual/", "price": 5990}], "body": "suv"}, {"id": "197202538", "url": "https://auto.bazos.sk/inzerat/197202538/mini-cooper-4x4-countryman.php", "title": "Mini Cooper 4x4 Countryman", "price": 5500, "price_gross": 5500, "fair_price": 6370.0, "discount_pct": 13.7, "verdict": "pod trhom", "year": 2014, "km": 196000, "km_per_year": 15900.0, "eg": "Cooper D / SD diesel 82–140 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Sabinov", "flags": [], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "suv"}, {"id": "ab-Am423MmS2M1", "url": "https://www.autobazar.eu/detail/mini-countryman-cooper-s-all4-at-a8-5d2020-2023-plug-in-hybrid/Am423MmS2M1/", "title": "Mini Countryman Cooper S ALL4 A/T, A8, 5d.(2020-2023) Plug-in hybrid", "price": 16490, "price_gross": 16490, "fair_price": 18940.0, "discount_pct": 12.9, "verdict": "pod trhom", "year": 2021, "km": 82095, "km_per_year": 15400.0, "eg": "Plug-in hybrid SE / elektro", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Košice-Nad jazerom", "flags": [], "pick": "top", "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "196367905", "url": "https://auto.bazos.sk/inzerat/196367905/mini-countryman-cooper-s-all4-at-a8-5d2020-2023-plug-i.php", "price": 16490}, {"source": "bazos", "id": "196310588", "url": "https://auto.bazos.sk/inzerat/196310588/mini-countryman-cooper-s-all4-at.php", "price": 16490}, {"source": "bazarsk", "id": "bs-39756082", "url": "https://auto.bazar.sk/39756082-mini-countryman-cooper-s-all4-a-t-a8-5d-2020-2023-plug-in-hybrid/", "price": 16490}], "body": "suv"}, {"id": "ab-AmTITPQ8fv7", "url": "https://www.autobazar.eu/detail/mini-countryman-cooper-d-all4/AmTITPQ8fv7/", "title": "Mini Countryman Cooper D ALL4", "price": 5999, "price_gross": 5999, "fair_price": 6840.0, "discount_pct": 12.2, "verdict": "pod trhom", "year": 2013, "km": 178756, "km_per_year": 13400.0, "eg": "Cooper D / SD diesel 82–140 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Košice-Myslava", "flags": [], "pick": "budget", "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39766061", "url": "https://auto.bazar.sk/39766061-mini-countryman-cooper-d-all4/", "price": 5999}], "body": "suv"}, {"id": "197575497", "url": "https://auto.bazos.sk/inzerat/197575497/mini-countryman-all4-at-16i-jcw.php", "title": "Mini Countryman All4 A/T 1.6i, JCW", "price": 7500, "price_gross": 7500, "fair_price": 8450.0, "discount_pct": 11.3, "verdict": "pod trhom", "year": 2013, "km": 105000, "km_per_year": 7900.0, "eg": "Cooper S / JCW benzín 131–233 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Michalovce", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "196014438", "url": "https://auto.bazos.sk/inzerat/196014438/mini-countryman-cooper-sd-20-140-kw-190k-112023-dph.php", "title": "MINI Countryman Cooper SD 2.0 140 kW / 190k, 11/2023, DPH,", "price": 27990, "price_gross": 27990, "fair_price": 31500.0, "discount_pct": 11.1, "verdict": "pod trhom", "year": 2023, "km": 45200, "km_per_year": 13600.0, "eg": "Cooper D / SD diesel 82–140 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Zvolen", "flags": [], "pick": "top", "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "bs-39636000", "url": "https://auto.bazar.sk/39636000-mini-countryman-cooper-s-all4/", "title": "MINI Countryman Cooper S ALL4", "price": 15000, "price_gross": 15000, "fair_price": 16800.0, "discount_pct": 10.7, "verdict": "pod trhom", "year": 2018, "km": 119145, "km_per_year": 14300.0, "eg": "Cooper S / JCW benzín 131–233 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava V - Petržalka", "flags": [], "pick": "top", "source": "bazarsk", "origin": null, "also_listed": [], "body": "suv"}, {"id": "197334126", "url": "https://auto.bazos.sk/inzerat/197334126/mini-countryman.php", "title": "Mini Countryman", "price": 14490, "price_gross": 14490, "fair_price": 16040.0, "discount_pct": 9.7, "verdict": "pod trhom", "year": 2021, "km": 128612, "km_per_year": 24100.0, "eg": "One / Cooper benzín 75–100 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Nové Mesto n.Váhom", "flags": [], "pick": "top", "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmXBkM6yADG", "url": "https://www.autobazar.eu/detail/mini-countryman/AmXBkM6yADG/", "price": 14490}, {"source": "bazarsk", "id": "bs-39760300", "url": "https://auto.bazar.sk/39760300-mini-countryman/", "price": 14490}], "body": "suv"}, {"id": "ab-AeHmn9JlCh_", "url": "https://www.autobazar.eu/detail/mini-cooper-s-countryman-all4/AeHmn9JlCh_/", "title": "Mini Countryman Mini Cooper Countryman 4ALL", "price": 17100, "price_gross": 17100, "fair_price": 18890.0, "discount_pct": 9.5, "verdict": "pod trhom", "year": 2018, "km": 64000, "km_per_year": 7700.0, "eg": "Cooper S / JCW benzín 131–233 kW", "cg": 0, "transmission": "automatic", "seller_type": "private", "location": "Košice", "flags": [], "pick": "top", "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "196841264", "url": "https://auto.bazos.sk/inzerat/196841264/2017-mini-countryman.php", "title": "2017 Mini Countryman", "price": 9800, "price_gross": 9800, "fair_price": 10800.0, "discount_pct": 9.2, "verdict": "pod trhom", "year": 2017, "km": 190000, "km_per_year": 20400.0, "eg": "One / Cooper benzín 75–100 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Zlaté Moravce", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "bs-39702346", "url": "https://auto.bazar.sk/39702346-mini-countryman-cooper-1-6/", "title": "Mini Countryman Cooper 1.6", "price": 4990, "price_gross": 4990, "fair_price": 5490.0, "discount_pct": 9.1, "verdict": "pod trhom", "year": 2012, "km": 203000, "km_per_year": 14200.0, "eg": "One / Cooper benzín 75–100 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava I - Staré Mesto", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-Am9xRH7qYSN", "url": "https://www.autobazar.eu/detail/mini-countryman-s-20-jcw-all4-at/Am9xRH7qYSN/", "title": "Mini Countryman S 2.0 JCW ALL4 A/T", "price": 40753, "price_gross": 40753, "fair_price": 44700.0, "discount_pct": 8.8, "verdict": "pod trhom", "year": 2025, "km": 15000, "km_per_year": 11300.0, "eg": "Cooper S / JCW benzín 131–233 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava-Nové Mesto", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39595358", "url": "https://auto.bazar.sk/39595358-mini-countryman-s-2-0-jcw-all4-a-t/", "price": 40753}], "body": "suv"}, {"id": "ab-Amtj6HhWzEY", "url": "https://www.autobazar.eu/detail/mini-countryman-cooper-s-steptronic/Amtj6HhWzEY/", "title": "Mini Countryman Cooper S ALL4 Steptronic", "price": 6999, "price_gross": 6999, "fair_price": 7660.0, "discount_pct": 8.7, "verdict": "pod trhom", "year": 2011, "km": 190804, "km_per_year": 12400.0, "eg": "Cooper S / JCW benzín 131–233 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Košice-Staré Mesto", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "197521249", "url": "https://auto.bazos.sk/inzerat/197521249/mini-countryman-cooper-s-steptronic.php", "price": 6999}, {"source": "bazarsk", "id": "bs-39595359", "url": "https://auto.bazar.sk/39595359-mini-countryman-cooper-s-all4-steptronic/", "price": 6999}], "body": "suv"}, {"id": "ab-AmxwPopdTx-", "url": "https://www.autobazar.eu/detail/mini-countryman-cooper-at/AmxwPopdTx-/", "title": "Mini Countryman Cooper A/T", "price": 14990, "price_gross": 14990, "fair_price": 16390.0, "discount_pct": 8.5, "verdict": "pod trhom", "year": 2021, "km": 140000, "km_per_year": 26300.0, "eg": "One / Cooper benzín 75–100 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39754894", "url": "https://auto.bazar.sk/39754894-mini-countryman-cooper-a-t/", "price": 14990}], "body": "suv"}, {"id": "196785010", "url": "https://auto.bazos.sk/inzerat/196785010/mini-countryman-cooper-s.php", "title": "Mini Countryman Cooper S", "price": 14900, "price_gross": 14900, "fair_price": 16250.0, "discount_pct": 8.3, "verdict": "pod trhom", "year": 2018, "km": 90000, "km_per_year": 10800.0, "eg": "Cooper S / JCW benzín 131–233 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Skalica", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "bs-39627648", "url": "https://auto.bazar.sk/39627648-mini-countryman-s-all4/", "title": "MINI Countryman S ALL4", "price": 34499, "price_gross": 34499, "fair_price": 36080.0, "discount_pct": 4.4, "verdict": "férová cena", "year": 2024, "km": 19300, "km_per_year": 8300.0, "eg": "Cooper S / JCW benzín 131–233 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava III - Vajnory", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AbWZ0JTCBFA", "url": "https://www.autobazar.eu/detail/mini-countryman-s-all4/AbWZ0JTCBFA/", "price": 34499}], "body": "suv"}, {"id": "196074356", "url": "https://auto.bazos.sk/inzerat/196074356/mini-cooper-countryman-s-all4-16-135-kw.php", "title": "MINI Cooper Countryman S ALL4 1,6 / 135 kW", "price": 4900, "price_gross": 4900, "fair_price": 5120.0, "discount_pct": 4.3, "verdict": "férová cena", "year": 2011, "km": 198000, "km_per_year": 12900.0, "eg": "Cooper S / JCW benzín 131–233 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Topoľčany", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "197576703", "url": "https://auto.bazos.sk/inzerat/197576703/mini-cooper-countryman-20-sd-all4-mozny-odpocet-dph.php", "title": "Mini Cooper Countryman 2.0 SD ALL4 (MOŽNÝ ODPOČET DPH)", "price": 25990, "price_gross": 25990, "fair_price": 27060.0, "discount_pct": 4.0, "verdict": "férová cena", "year": 2022, "km": 51517, "km_per_year": 11900.0, "eg": "Cooper D / SD diesel 82–140 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Nové Zámky", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "197302766", "url": "https://auto.bazos.sk/inzerat/197302766/mini-countryman-se-all4-aut-hev-165kw-dph-102018.php", "title": "MINI COUNTRYMAN SE ALL4 AUT. HEV 165kw DPH 10/2018", "price": 11600, "price_gross": 11600, "fair_price": 12040.0, "discount_pct": 3.6, "verdict": "férová cena", "year": 2018, "km": 236137, "km_per_year": 28300.0, "eg": "Plug-in hybrid SE / elektro", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Zahraničie", "flags": [], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "suv"}, {"id": "196914080", "url": "https://auto.bazos.sk/inzerat/196914080/mini-countryman-cooper-all4-at.php", "title": "Mini Countryman Cooper ALL4 A/T", "price": 14400, "price_gross": 14400, "fair_price": 14830.0, "discount_pct": 2.9, "verdict": "férová cena", "year": 2017, "km": 121497, "km_per_year": 13000.0, "eg": "Cooper D / SD diesel 82–140 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Ružomberok", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "197701044", "url": "https://auto.bazos.sk/inzerat/197701044/mini-countryman-cooper-d-all4-2011.php", "title": "MINI COUNTRYMAN COOPER D ALL4 | 2011", "price": 5490, "price_gross": 5490, "fair_price": 5630.0, "discount_pct": 2.5, "verdict": "férová cena", "year": 2011, "km": 269805, "km_per_year": 17600.0, "eg": "Cooper D / SD diesel 82–140 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Dunajská Streda", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39697182", "url": "https://auto.bazar.sk/39697182-mini-countryman-cooper-d-all4/", "price": 5490}, {"source": "autobazar", "id": "ab-AmIGKrXXS3I", "url": "https://www.autobazar.eu/detail/mini-countryman-cooper-d-all4/AmIGKrXXS3I/", "price": 5490}], "body": "suv"}, {"id": "ab-Ae0vGyHZi-v", "url": "https://www.autobazar.eu/detail/mini-countryman-cooper-classic-paket-automat/Ae0vGyHZi-v/", "title": "MINI Countryman Cooper, Classic Paket, Automat", "price": 19500, "price_gross": 19500, "fair_price": 19850.0, "discount_pct": 1.8, "verdict": "férová cena", "year": 2022, "km": 102272, "km_per_year": 23600.0, "eg": "One / Cooper benzín 75–100 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Dunajská Streda", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39729528", "url": "https://auto.bazar.sk/39729528-mini-countryman-cooper/", "price": 20000}], "body": "suv"}, {"id": "bs-39657116", "url": "https://auto.bazar.sk/39657116-mini-countryman-s-2-0-mhev-essential-all4-a-t/", "title": "Mini Countryman S 2.0 mHEV Essential ALL4 A/T", "price": 38400, "price_gross": 38400, "fair_price": 38890.0, "discount_pct": 1.3, "verdict": "férová cena", "year": 2025, "km": 18649, "km_per_year": 14000.0, "eg": "Cooper S / JCW benzín 131–233 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava II - Ružinov", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AbBKqMJOOar", "url": "https://www.autobazar.eu/detail/mini-countryman-s-all4/AbBKqMJOOar/", "price": 38400}], "body": "suv"}, {"id": "ab-AmnNT_9yAOF", "url": "https://www.autobazar.eu/detail/mini-countryman-cooper-sd-all4-at-105kw-a6-aj-na-splatky-protiucet/AmnNT_9yAOF/", "title": "MINI Countryman Cooper SD ALL4 A/T, 105kW, A6 / AJ NA SPLÁTKY / PROTIÚČET /", "price": 9990, "price_gross": 9990, "fair_price": 10090.0, "discount_pct": 1.0, "verdict": "férová cena", "year": 2015, "km": 143636, "km_per_year": 12700.0, "eg": "Cooper D / SD diesel 82–140 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197391590", "url": "https://auto.bazos.sk/inzerat/197391590/mini-countryman-cooper-sd-all4-at-105kw-a6-2015.php", "price": 9990}, {"source": "bazarsk", "id": "bs-39765650", "url": "https://auto.bazar.sk/39765650-mini-countryman-cooper-sd-all4-a-t-105kw-a6-aj-na-splatky-protiucet/", "price": 9990}], "body": "suv"}, {"id": "ab-AmZN2530_YQ", "url": "https://www.autobazar.eu/detail/mini-countryman-s-20-mhev-classic-all4-at/AmZN2530_YQ/", "title": "Mini Countryman S 2.0 mHEV Classic ALL4 A/T", "price": 38130, "price_gross": 38130, "fair_price": 38490.0, "discount_pct": 0.9, "verdict": "férová cena", "year": 2024, "km": 11573, "km_per_year": 5000.0, "eg": "Cooper S / JCW benzín 131–233 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-39734744", "url": "https://auto.bazar.sk/39734744-mini-countryman-s-2-0-mhev-classic-all4-a-t/", "price": 38130}], "body": "suv"}, {"id": "ab-AmoEoKlak1x", "url": "https://www.autobazar.eu/detail/mini-countryman-cooper-d/AmoEoKlak1x/", "title": "Mini Countryman Cooper D", "price": 6990, "price_gross": 6990, "fair_price": 7030.0, "discount_pct": 0.6, "verdict": "férová cena", "year": 2015, "km": 186671, "km_per_year": 16500.0, "eg": "Cooper D / SD diesel 82–140 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Podlužany", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "195865963", "url": "https://auto.bazos.sk/inzerat/195865963/mini-countryman-cooper-16-d.php", "price": 6990}, {"source": "bazarsk", "id": "bs-39708803", "url": "https://auto.bazar.sk/39708803-mini-countryman-cooper-d/", "price": 6990}], "body": "suv"}, {"id": "ab-Ammv-UgN8j9", "url": "https://www.autobazar.eu/detail/mini-countryman-cooper-d-all4-at/Ammv-UgN8j9/", "title": "Mini Countryman Cooper D ALL4 A/T", "price": 18890, "price_gross": 18890, "fair_price": 18820.0, "discount_pct": -0.4, "verdict": "férová cena", "year": 2019, "km": 104125, "km_per_year": 14200.0, "eg": "Cooper D / SD diesel 82–140 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Trenčianska Turná", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "197616025", "url": "https://auto.bazos.sk/inzerat/197616025/mini-countryman-cooper-d-all4-at.php", "price": 18890}, {"source": "bazarsk", "id": "bs-39688844", "url": "https://auto.bazar.sk/39688844-mini-countryman-cooper-d-all4-a-t/", "price": 18890}], "body": "suv"}, {"id": "195815955", "url": "https://auto.bazos.sk/inzerat/195815955/mini-countryman-16d.php", "title": "Mini Countryman 1.6D", "price": 9990, "price_gross": 9990, "fair_price": 9880.0, "discount_pct": -1.1, "verdict": "férová cena", "year": 2013, "km": 85000, "km_per_year": 6400.0, "eg": "Cooper D / SD diesel 82–140 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Michalovce", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmEES2wE7q2", "url": "https://www.autobazar.eu/detail/mini-countryman-16d/AmEES2wE7q2/", "price": 9990}, {"source": "bazarsk", "id": "bs-38566133", "url": "https://auto.bazar.sk/38566133-mini-countryman-1-6d/", "price": 9990}], "body": "suv"}, {"id": "ab-AeFaSn_NDzr", "url": "https://www.autobazar.eu/detail/mini-countryman-s-20-jcw-all4-at-160kw217hp-a7/AeFaSn_NDzr/", "title": "Mini Countryman S 2.0 ALL4 AT 160kW217HP A7", "price": 39900, "price_gross": 39900, "fair_price": 39380.0, "discount_pct": -1.3, "verdict": "férová cena", "year": 2025, "km": 21000, "km_per_year": 15800.0, "eg": "Cooper S / JCW benzín 131–233 kW", "cg": 0, "transmission": "automatic", "seller_type": "private", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "197545371", "url": "https://auto.bazos.sk/inzerat/197545371/mini-cooper-countryman-16-benzin-automat.php", "title": "MINI Cooper Countryman 1.6 benzín – automat", "price": 5500, "price_gross": 5500, "fair_price": 5420.0, "discount_pct": -1.5, "verdict": "férová cena", "year": 2010, "km": 185000, "km_per_year": 11300.0, "eg": "One / Cooper benzín 75–100 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Hlohovec", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AmwhdyqaNuC", "url": "https://www.autobazar.eu/detail/mini-countryman-cooper-d-82kw-2016-aj-na-splatky-protiucet/AmwhdyqaNuC/", "title": "Mini Countryman Cooper D, 82kW (2016) / AJ NA SPLÁTKY / PROTIÚČET /", "price": 8500, "price_gross": 8500, "fair_price": 8340.0, "discount_pct": -1.9, "verdict": "férová cena", "year": 2016, "km": 139224, "km_per_year": 13500.0, "eg": "Cooper D / SD diesel 82–140 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Trenčín", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "197435014", "url": "https://auto.bazos.sk/inzerat/197435014/mini-countryman-cooper-d-82kw-2016.php", "price": 8500}, {"source": "bazarsk", "id": "bs-39759392", "url": "https://auto.bazar.sk/39759392-mini-countryman-cooper-d-82kw-2016-aj-na-splatky-protiucet/", "price": 8500}], "body": "suv"}, {"id": "196855098", "url": "https://auto.bazos.sk/inzerat/196855098/mini-countryman-cooper-s-all4-16-turbo-135-kw-manual.php", "title": "MINI Countryman Cooper S ALL4 1.6 Turbo 135 kW, manuál,", "price": 6700, "price_gross": 6700, "fair_price": 6570.0, "discount_pct": -2.0, "verdict": "férová cena", "year": 2011, "km": 149660, "km_per_year": 9800.0, "eg": "Cooper S / JCW benzín 131–233 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Prešov", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AeRjbbI2lgv", "url": "https://www.autobazar.eu/detail/mini-countryman-cooper-s-all4-16-turbo-135-kw-manual-panorama-19-oz-zimne-kolesa/AeRjbbI2lgv/", "price": 6700}], "body": "suv"}, {"id": "ab-Ae7IzYalvst", "url": "https://www.autobazar.eu/detail/mini-countryman-92kw-se-all4/Ae7IzYalvst/", "title": "Mini Countryman 92kw  SE ALL4", "price": 20500, "price_gross": 20500, "fair_price": 20020.0, "discount_pct": -2.4, "verdict": "férová cena", "year": 2020, "km": 84200, "km_per_year": 13300.0, "eg": "Plug-in hybrid SE / elektro", "cg": 2, "transmission": "automatic", "seller_type": "private", "location": "Pezinok", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "suv"}, {"id": "bs-39735187", "url": "https://auto.bazar.sk/39735187-mini-countryman-cooper-d-a-t/", "title": "Mini Countryman Cooper D A/T", "price": 7990, "price_gross": 7990, "fair_price": 7750.0, "discount_pct": -3.0, "verdict": "férová cena", "year": 2014, "km": 194414, "km_per_year": 15800.0, "eg": "Cooper D / SD diesel 82–140 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Tornaľa", "flags": [], "pick": null, "source": "bazarsk", "origin": "dovoz", "also_listed": [{"source": "autobazar", "id": "ab-Amg1FKtCSs3", "url": "https://www.autobazar.eu/detail/mini-countryman-cooper-d-at/Amg1FKtCSs3/", "price": 7990}, {"source": "bazos", "id": "196507375", "url": "https://auto.bazos.sk/inzerat/196507375/mini-countryman-cooper-d-at.php", "price": 7990}], "body": "suv"}, {"id": "ab-AmkB8sYt5Pu", "url": "https://www.autobazar.eu/detail/mini-countryman-jcw-all4-at/AmkB8sYt5Pu/", "title": "Mini Countryman JCW ALL4 A/T", "price": 24250, "price_gross": 24250, "fair_price": 23440.0, "discount_pct": -3.5, "verdict": "férová cena", "year": 2019, "km": 58000, "km_per_year": 7900.0, "eg": "Cooper S / JCW benzín 131–233 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AeLl6rp4Cd6", "url": "https://www.autobazar.eu/detail/mini-countryman-20t-john-cooper-works-170kw-all4-at8/AeLl6rp4Cd6/", "title": "Mini Countryman 2.0T, John Cooper Works, 170kW, ALL4, AT8", "price": 17900, "price_gross": 17900, "fair_price": 17170.0, "discount_pct": -4.2, "verdict": "férová cena", "year": 2018, "km": 123000, "km_per_year": 14800.0, "eg": "Cooper S / JCW benzín 131–233 kW", "cg": 0, "transmission": "automatic", "seller_type": "private", "location": "Banská Bystrica", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "196201906", "url": "https://auto.bazos.sk/inzerat/196201906/mini-countryman-d-at.php", "title": "Mini Countryman D A/T", "price": 8990, "price_gross": 8990, "fair_price": 8600.0, "discount_pct": -4.5, "verdict": "férová cena", "year": 2014, "km": 160044, "km_per_year": 13000.0, "eg": "Cooper D / SD diesel 82–140 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmRnBJLP6n0", "url": "https://www.autobazar.eu/detail/mini-countryman-d-at/AmRnBJLP6n0/", "price": 8990}, {"source": "bazarsk", "id": "bs-39627708", "url": "https://auto.bazar.sk/39627708-mini-countryman-d-a-t/", "price": 8990}], "body": "suv"}, {"id": "bs-33355800", "url": "https://auto.bazar.sk/33355800-mini-countryman-cooper-d-all4/", "title": "MINI Countryman Cooper D ALL4", "price": 12098, "price_gross": 12098, "fair_price": 11580.0, "discount_pct": -4.5, "verdict": "férová cena", "year": 2014, "km": 66203, "km_per_year": 5400.0, "eg": "Cooper D / SD diesel 82–140 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Nové Zámky", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "suv"}, {"id": "bs-34351147", "url": "https://auto.bazar.sk/34351147-mini-countryman-cooper-d/", "title": "MINI Countryman Cooper D", "price": 8599, "price_gross": 8599, "fair_price": 8150.0, "discount_pct": -5.5, "verdict": "férová cena", "year": 2011, "km": 130652, "km_per_year": 8500.0, "eg": "Cooper D / SD diesel 82–140 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Nové Zámky", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AmiqjDUHeO1", "url": "https://www.autobazar.eu/detail/mini-countryman-s-20-mhev-classic-all4-at/AmiqjDUHeO1/", "title": "Mini Countryman S 2.0 mHEV Classic ALL4 A/T", "price": 41648, "price_gross": 41648, "fair_price": 39330.0, "discount_pct": -5.9, "verdict": "férová cena", "year": 2025, "km": 12431, "km_per_year": 9300.0, "eg": "Cooper S / JCW benzín 131–233 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava-Staré Mesto", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-39479352", "url": "https://auto.bazar.sk/39479352-mini-countryman-s-2-0-mhev-classic-all4-a-t/", "price": 41648}], "body": "suv"}, {"id": "197248381", "url": "https://auto.bazos.sk/inzerat/197248381/mini-cooper-s-r60-countryman-lci.php", "title": "Mini Cooper S R60 Countryman LCI", "price": 8600, "price_gross": 8600, "fair_price": 8120.0, "discount_pct": -5.9, "verdict": "férová cena", "year": 2014, "km": 140000, "km_per_year": 11400.0, "eg": "Cooper S / JCW benzín 131–233 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Levice", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AmEIiscyizaX", "url": "https://www.autobazar.eu/detail/mini-countryman/AmEIiscyizaX/", "title": "Mini Countryman", "price": 7200, "price_gross": 7200, "fair_price": 6760.0, "discount_pct": -6.5, "verdict": "férová cena", "year": 2011, "km": 138000, "km_per_year": 9000.0, "eg": "Cooper D / SD diesel 82–140 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Podbrezová", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazos", "id": "197706038", "url": "https://auto.bazos.sk/inzerat/197706038/mini-countryman-4x4-16d-rv102011-naj-135-000-km.php", "price": 7200}, {"source": "bazarsk", "id": "bs-33368597", "url": "https://auto.bazar.sk/33368597-mini-countryman/", "price": 7200}], "body": "suv"}, {"id": "ab-AeTWwnyGcuk", "url": "https://www.autobazar.eu/detail/mini-countryman-4x4-tazne-nove-pneu/AeTWwnyGcuk/", "title": "Mini Countryman - 4x4 - ťažné - nové pneu", "price": 18200, "price_gross": 18200, "fair_price": 16850.0, "discount_pct": -8.0, "verdict": "nad trhom", "year": 2020, "km": 133500, "km_per_year": 21100.0, "eg": "Cooper D / SD diesel 82–140 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Smolenice", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "196663249", "url": "https://auto.bazos.sk/inzerat/196663249/mini-countryman-s.php", "title": "Mini Countryman S", "price": 13900, "price_gross": 13900, "fair_price": 12860.0, "discount_pct": -8.1, "verdict": "nad trhom", "year": 2019, "km": 160000, "km_per_year": 21800.0, "eg": "Cooper S / JCW benzín 131–233 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Trnava", "flags": [], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [{"source": "autobazar", "id": "ab-Ae4iL9hKtur", "url": "https://www.autobazar.eu/detail/mini-countryman-mini-coutryman-s/Ae4iL9hKtur/", "price": 13900}], "body": "suv"}, {"id": "ab-Am_ySJmZ6bk", "url": "https://www.autobazar.eu/detail/mini-countryman-20-john-cooper-works-all4-at-led-360kam-tazne-panorama/Am_ySJmZ6bk/", "title": "Mini Countryman 2.0 John Cooper Works ALL4 A/T, LED, 360kam, Ťažné, Panorama", "price": 46990, "price_gross": 46990, "fair_price": 42830.0, "discount_pct": -9.7, "verdict": "nad trhom", "year": 2024, "km": 34969, "km_per_year": 15000.0, "eg": "Cooper S / JCW benzín 131–233 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Michalovce", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39692589", "url": "https://auto.bazar.sk/39692589-mini-countryman-2-0-john-cooper-works-all4-a-t-led-360kam-tazne-panorama/", "price": 46990}], "body": "suv"}, {"id": "197559268", "url": "https://auto.bazos.sk/inzerat/197559268/mini-one-countryman-r60-rv2014-72kwzimnegumy.php", "title": "Mini One Countryman R60 r.v.2014;72kW;1,6cm3,+zimnegumy", "price": 6800, "price_gross": 6800, "fair_price": 6190.0, "discount_pct": -9.9, "verdict": "nad trhom", "year": 2014, "km": 192000, "km_per_year": 15600.0, "eg": "One / Cooper benzín 75–100 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Senec", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "bs-38579211", "url": "https://auto.bazar.sk/38579211-mini-countryman-s-all4/", "title": "Mini Countryman S ALL4", "price": 33913, "price_gross": 33913, "fair_price": 30410.0, "discount_pct": -11.5, "verdict": "nad trhom", "year": 2024, "km": 46000, "km_per_year": 19700.0, "eg": "Cooper S / JCW benzín 131–233 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Ostrava", "flags": [], "pick": null, "source": "bazarsk", "origin": "dovoz", "also_listed": [{"source": "autobazar", "id": "ab-AbI9y1RSeE-a", "url": "https://www.autobazar.eu/detail/mini-countryman-s-all4/AbI9y1RSeE-a/", "price": 33913}], "body": "suv"}, {"id": "bs-38624833", "url": "https://auto.bazar.sk/38624833-mini-countryman-c/", "title": "Mini Countryman C", "price": 33708, "price_gross": 33708, "fair_price": 30140.0, "discount_pct": -11.8, "verdict": "nad trhom", "year": 2024, "km": 44000, "km_per_year": 18900.0, "eg": "Cooper S / JCW benzín 131–233 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Ostrava", "flags": [], "pick": null, "source": "bazarsk", "origin": "dovoz", "also_listed": [{"source": "autobazar", "id": "ab-Abol-dwunJzv", "url": "https://www.autobazar.eu/detail/mini-countryman-c/Abol-dwunJzv/", "price": 33708}], "body": "suv"}, {"id": "ab-Aeoi8IIIitf", "url": "https://www.autobazar.eu/detail/mini-countryman-jcw-20-benzin-221kw-automat-prevodovka-4x4/Aeoi8IIIitf/", "title": "Mini Countryman JCW 2.0 Benzín 221kW Automat. prevodovka 4x4", "price": 43999, "price_gross": 43999, "fair_price": 39320.0, "discount_pct": -11.9, "verdict": "nad trhom", "year": 2024, "km": 33000, "km_per_year": 14100.0, "eg": "Cooper S / JCW benzín 131–233 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Prešov", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "196583778", "url": "https://auto.bazos.sk/inzerat/196583778/mini-countryman-cooper-s-all4-4x4-automat-panorama.php", "title": "MINI Countryman Cooper S ALL4 – 4x4, automat, panoráma", "price": 9900, "price_gross": 9900, "fair_price": 8700.0, "discount_pct": -13.8, "verdict": "nad trhom", "year": 2013, "km": 200000, "km_per_year": 15000.0, "eg": "Cooper S / JCW benzín 131–233 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Banská Bystrica", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "bs-39776438", "url": "https://auto.bazar.sk/39776438-mini-countryman-se-all4/", "title": "MINI Countryman SE ALL4", "price": 48400, "price_gross": 48400, "fair_price": 42230.0, "discount_pct": -14.6, "verdict": "nad trhom", "year": 2025, "km": 2518, "km_per_year": 1900.0, "eg": "Plug-in hybrid SE / elektro", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava II - Ružinov", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "ab-AmN4BI9ExB9", "url": "https://www.autobazar.eu/detail/mini-cooper-countryman-se-all4/AmN4BI9ExB9/", "title": "Mini Cooper Countryman SE ALL4", "price": 16900, "price_gross": 16900, "fair_price": 14500.0, "discount_pct": -16.6, "verdict": "výrazne nad trhom", "year": 2022, "km": 188786, "km_per_year": 43600.0, "eg": "Plug-in hybrid SE / elektro", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": ["vysoký nájazd 44000 km/rok – flotila / taxi?"], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39647099", "url": "https://auto.bazar.sk/39647099-mini-cooper-countryman-se-all4/", "price": 16900}], "body": "suv"}, {"id": "bs-38829383", "url": "https://auto.bazar.sk/38829383-mini-countryman-jcw-all4/", "title": "Mini Countryman JCW ALL4", "price": 49323, "price_gross": 49323, "fair_price": 41650.0, "discount_pct": -18.4, "verdict": "výrazne nad trhom", "year": 2025, "km": 9000, "km_per_year": 6800.0, "eg": "Cooper S / JCW benzín 131–233 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Ostrava", "flags": [], "pick": null, "source": "bazarsk", "origin": "dovoz", "also_listed": [{"source": "autobazar", "id": "ab-AbdsCOotZNw", "url": "https://www.autobazar.eu/detail/mini-countryman-jcw-all4/AbdsCOotZNw/", "price": 49323}], "body": "suv"}, {"id": "196921442", "url": "https://auto.bazos.sk/inzerat/196921442/mini-cooper-s-countryman-r60.php", "title": "MINI Cooper S Countryman (R60)", "price": 8600, "price_gross": 8600, "fair_price": 7170.0, "discount_pct": -19.9, "verdict": "výrazne nad trhom", "year": 2011, "km": 164989, "km_per_year": 10800.0, "eg": "Cooper S / JCW benzín 131–233 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Trebišov", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "196372813", "url": "https://auto.bazos.sk/inzerat/196372813/mini-countryman-cooper-20-sd-all4-xenon-navi-koza-panorama.php", "title": "Mini Countryman Cooper 2.0 SD ALL4 XENON NAVI KOŽA PANORAMA", "price": 10590, "price_gross": 10590, "fair_price": 8450.0, "discount_pct": -25.3, "verdict": "výrazne nad trhom", "year": 2013, "km": 132591, "km_per_year": 9900.0, "eg": "Cooper D / SD diesel 82–140 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Spišská Nová Ves", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-Amu1eGjjIk_", "url": "https://www.autobazar.eu/detail/mini-countryman-cooper-s-e-1-5-all4/Amu1eGjjIk_/", "title": "Mini Countryman Cooper S E   1,5 ALL4", "price": 47250, "price_gross": 47250, "fair_price": 36770.0, "discount_pct": -28.5, "verdict": "výrazne nad trhom", "year": 2023, "km": 4475, "km_per_year": 1300.0, "eg": "Plug-in hybrid SE / elektro", "cg": 2, "transmission": "manual", "seller_type": "dealer", "location": "Banská Bystrica", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "suv"}, {"id": "ab-AmU_YlweCDy", "url": "https://www.autobazar.eu/detail/mini-countryman-cooper-d-all4-a-t/AmU_YlweCDy/", "title": "Mini Countryman Cooper D ALL4 A/T", "price": 8999, "price_gross": 8999, "fair_price": 6870.0, "discount_pct": -31.0, "verdict": "výrazne nad trhom", "year": 2012, "km": 190723, "km_per_year": 13300.0, "eg": "Cooper D / SD diesel 82–140 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Michalovce", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "197194496", "url": "https://auto.bazos.sk/inzerat/197194496/mini-countryman-cooper-d-all4-at.php", "price": 8999}, {"source": "bazos", "id": "195909184", "url": "https://auto.bazos.sk/inzerat/195909184/mini-countryman-all4.php", "price": 8990}, {"source": "bazarsk", "id": "bs-39103530", "url": "https://auto.bazar.sk/39103530-mini-countryman-cooper-d-all4-a-t/", "price": 8999}], "body": "suv"}, {"id": "bs-35013344", "url": "https://auto.bazar.sk/35013344-mini-countryman-cooper-s-all4/", "title": "Mini Countryman Cooper S ALL4", "price": 10490, "price_gross": 10490, "fair_price": 7960.0, "discount_pct": -31.8, "verdict": "výrazne nad trhom", "year": 2010, "km": 178696, "km_per_year": 10900.0, "eg": "Cooper S / JCW benzín 131–233 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Nitra", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "suv"}, {"id": "196525121", "url": "https://auto.bazos.sk/inzerat/196525121/mini-countryman-cooper-16-one-d-koza-panorama.php", "title": "Mini Countryman Cooper 1,6 One D KOŽA PANORAMA", "price": 9590, "price_gross": 9590, "fair_price": 7080.0, "discount_pct": -35.5, "verdict": "výrazne nad trhom", "year": 2013, "km": 172322, "km_per_year": 12900.0, "eg": "Cooper D / SD diesel 82–140 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Spišská Nová Ves", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "197734792", "url": "https://auto.bazos.sk/inzerat/197734792/mini-countryman-cooper-sd-all4-at.php", "title": "Mini Countryman Cooper SD ALL4 A/T", "price": 18899, "price_gross": 18899, "fair_price": 13510.0, "discount_pct": -39.9, "verdict": "výrazne nad trhom", "year": 2017, "km": 176790, "km_per_year": 18900.0, "eg": "Cooper D / SD diesel 82–140 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Piešťany", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}];
+const GROUPS = ["Benzín", "Diesel", "Elektro / plug-in hybrid", "LPG a nezistený"];
+const BODY = {"suv": "crossover"};
+const fmt = n => Math.round(n).toLocaleString("sk-SK");
+const eur = n => fmt(n) + " €";
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const TRANS = {automatic: "automat", manual: "manuál"};
+const SRC = {bazos: "bazoš", autobazar: "autobazar.eu", bazarsk: "bazar.sk"};
+
+// --- theme toggle ---------------------------------------------------------
+document.getElementById("themeBtn").onclick = () => {
+  const root = document.documentElement;
+  const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  drawChart();
+};
+
+// --- scatter chart --------------------------------------------------------
+const legend = document.getElementById("legend");
+legend.innerHTML = GROUPS.map((g, i) => `<span><i style="background:var(--s${i+1})"></i>${g}</span>`).join("")
+  + `<span><i class="ring"></i>odporúčaná ponuka</span>`;
+
+function drawChart() {
+  const svg = document.getElementById("chart"), wrap = document.getElementById("chartWrap"), tip = document.getElementById("tip");
+  const W = svg.clientWidth, H = 420, m = {l: 56, r: 16, t: 10, b: 40};
+  const pts = DATA.filter(d => d.km && d.price_gross);
+  const xMax = Math.ceil(Math.max(...pts.map(d => d.km)) / 50000) * 50000;
+  const yMax = Math.ceil(Math.max(...pts.map(d => d.price_gross)) / 5000) * 5000;
+  const x = v => m.l + v / xMax * (W - m.l - m.r), y = v => H - m.b - v / yMax * (H - m.t - m.b);
+  let s = "";
+  for (let v = 0; v <= yMax; v += 5000)
+    s += `<line x1="${m.l}" x2="${W-m.r}" y1="${y(v)}" y2="${y(v)}" stroke="var(--grid)"/><text x="${m.l-8}" y="${y(v)+4}" text-anchor="end">${v/1000} tis. €</text>`;
+  const step = W < 520 ? 100000 : 50000;
+  for (let v = 0; v <= xMax; v += step)
+    s += `<text x="${x(v)}" y="${H-m.b+18}" text-anchor="middle">${v/1000} tis.</text>`;
+  s += `<text x="${(W+m.l)/2}" y="${H-6}" text-anchor="middle">nájazd (km)</text>`;
+  const order = [...pts].sort((a, b) => (a.pick ? 1 : 0) - (b.pick ? 1 : 0));
+  order.forEach(d => {
+    const cx = x(d.km), cy = y(d.price_gross);
+    if (d.pick) s += `<circle cx="${cx}" cy="${cy}" r="9" fill="none" stroke="var(--text)" stroke-width="2"/>`;
+    s += `<circle class="pt" data-id="${d.id}" cx="${cx}" cy="${cy}" r="5" fill="var(--s${d.cg+1})" stroke="var(--surface)" stroke-width="2"/>`;
+  });
+  // invisible bigger hit targets
+  order.forEach(d => s += `<circle class="hit" data-id="${d.id}" cx="${x(d.km)}" cy="${y(d.price_gross)}" r="11" fill="transparent" style="cursor:pointer"/>`);
+  svg.innerHTML = s;
+  const byId = Object.fromEntries(pts.map(d => [d.id, d]));
+  svg.querySelectorAll(".hit").forEach(c => {
+    c.onmouseenter = c.onmousemove = ev => {
+      const d = byId[c.dataset.id];
+      tip.innerHTML = `<b>${esc(d.title)}</b>
+        <div class="row"><span>Cena</span><span>${eur(d.price_gross)}</span></div>
+        <div class="row"><span>Férová cena</span><span>${eur(d.fair_price)}</span></div>
+        <div class="row"><span>Pod trhom</span><span>${d.discount_pct > 0 ? "+" : ""}${d.discount_pct.toLocaleString("sk-SK")} %</span></div>
+        <div class="row"><span>Zdroj</span><span>${SRC[d.source]}${d.also_listed.length ? " + " + d.also_listed.map(a => SRC[a.source]).join(", ") : ""}</span></div>
+        <div class="row"><span>Rok · km</span><span>${d.year} · ${fmt(d.km)}</span></div>
+        <div class="row"><span>Motor</span><span>${esc(d.eg)} ${TRANS[d.transmission] || ""}</span></div>`;
+      tip.style.display = "block";
+      const r = wrap.getBoundingClientRect();
+      let lx = ev.clientX - r.left + 14, ly = ev.clientY - r.top + 14;
+      if (lx + 290 > r.width) lx = ev.clientX - r.left - 290;
+      tip.style.left = lx + "px"; tip.style.top = ly + "px";
+    };
+    c.onmouseleave = () => tip.style.display = "none";
+    c.onclick = () => window.open(byId[c.dataset.id].url, "_blank", "noopener");
+  });
+}
+drawChart();
+addEventListener("resize", drawChart);
+
+// --- full table -----------------------------------------------------------
+const fEngine = document.getElementById("fEngine");
+[...new Set(DATA.map(d => d.eg))].sort().forEach(g => fEngine.insertAdjacentHTML("beforeend", `<option>${esc(g)}</option>`));
+let sortK = "discount_pct", sortDir = -1;
+function discCell(v) {
+  const w = Math.min(Math.abs(v), 30) / 30 * 50;
+  const bar = v >= 0 ? `left:50%;width:${w}%;background:var(--pos)` : `right:50%;width:${w}%;background:var(--neg)`;
+  return `<span class="disc">${v > 0 ? "+" : ""}${v.toLocaleString("sk-SK")} %<span class="dbar"><span style="${bar}"></span></span></span>`;
+}
+function renderTable() {
+  const max = parseFloat(document.getElementById("fMax").value) || Infinity;
+  const tr = document.getElementById("fTrans").value, se = document.getElementById("fSeller").value, en = fEngine.value;
+  const so = document.getElementById("fSource").value, og = document.getElementById("fOrigin").value;
+  const bo = document.getElementById("fBody").value;
+  const rows = DATA.filter(d => (!en || d.eg === en) && (!tr || d.transmission === tr)
+    && (!se || d.seller_type !== "dealer") && d.price_gross <= max
+    && (!so || d.source === so || d.also_listed.some(a => a.source === so)) && (!og || d.origin === og) && (!bo || d.body === bo))
+    .sort((a, b) => { const A = a[sortK], B = b[sortK]; return (typeof A === "string" ? A.localeCompare(B) : A - B) * sortDir; });
+  document.getElementById("count").textContent = `${rows.length} z ${DATA.length} inzerátov`;
+  document.querySelector("#tbl tbody").innerHTML = rows.map(d => `<tr>
+    <td><a href="${d.url}" target="_blank" rel="noopener">${esc(d.title)}</a> ${d.pick ? '<span class="badge pick">odporúčané</span>' : ""}
+      <div class="sub">${BODY[d.body] || "karoséria ?"} · ${esc(d.eg)} · ${TRANS[d.transmission] || "prevodovka ?"} · ${esc(d.location)} · ${d.seller_type === "dealer" ? "predajca/firma" : d.seller_type === "private" ? "súkromník" : "neisté"} · ${SRC[d.source]}${d.origin === "SR" ? " · kúpené v SR" : d.origin === "dovoz" ? " · dovoz" : ""}${d.also_listed.map(a => ` · <a href="${a.url}" target="_blank" rel="noopener">aj na ${SRC[a.source]}</a>`).join("")}</div>
+      ${d.flags.filter(f => !f.startsWith("prevodovka")).map(f => `<div class="flag">⚠ ${esc(f)}</div>`).join("")}</td>
+    <td class="num">${d.year}</td><td class="num">${fmt(d.km)}</td>
+    <td class="num">${eur(d.price_gross)}</td><td class="num">${eur(d.fair_price)}</td>
+    <td class="num">${discCell(d.discount_pct)}</td></tr>`).join("");
+  document.querySelectorAll("#tbl th.sortable").forEach(th => {
+    const base = th.textContent.replace(/ [▾▴]$/, "");
+    th.textContent = base + (th.dataset.k === sortK ? (sortDir < 0 ? " ▾" : " ▴") : "");
+  });
+}
+document.querySelectorAll("#tbl th.sortable").forEach(th => th.onclick = () => {
+  if (sortK === th.dataset.k) sortDir *= -1; else { sortK = th.dataset.k; sortDir = th.dataset.k === "title" ? 1 : -1; }
+  renderTable();
+});
+["fEngine", "fTrans", "fSeller", "fSource", "fBody", "fOrigin", "fMax"].forEach(id => document.getElementById(id).addEventListener("input", renderTable));
+renderTable();
+</script>
+<!-- ferovka-theme --><script defer src="/analytics-config.js"></script><script defer src="/analytics.js"></script><script id="ferovka-chart">/* Férovka – chart → ad links, injected into every report by sync-reports.mjs.
+ *
+ * The reports draw one invisible 11px "hit" circle per ad. In dense charts (and always on a narrow phone) those
+ * circles overlap and the one drawn last wins, so a click/tap often opened a neighbouring ad. Here the pointer is
+ * always resolved to the NEAREST point, the report's own tooltip is shown for that point, and a click opens its ad.
+ * Touch: the first tap shows the tooltip (with a hint), a second tap on the same point opens the ad.
+ */
+(() => {
+  let rows;
+  try { rows = DATA; } catch { return; } // eslint-disable-line no-undef
+  if (!Array.isArray(rows) || !rows.length || !("url" in rows[0])) return;
+  const byId = new Map(rows.map((d) => [String(d.id), d]));
+  const MOUSE = ["mouseover", "mouseout", "mouseenter", "mouseleave", "mousemove", "mousedown", "mouseup", "click"];
+  let lastPointer = "mouse", down = null;
+  // the finger position as it was – Chrome "snaps" the later click of a tap to the centre of a nearby clickable element
+  addEventListener("pointerdown", (e) => { lastPointer = e.pointerType || "mouse"; down = { clientX: e.clientX, clientY: e.clientY }; }, true);
+
+  // the old per-point hit circles must not be targets (they overlap, and touch snapping aims at them)
+  document.head.insertAdjacentHTML("beforeend", "<style>svg circle.hit[data-id],svg circle.pt[data-id]{pointer-events:none}</style>");
+
+  function nearest(svg, ev, radius) {
+    let best = null, bd = Infinity;
+    for (const c of svg.querySelectorAll("circle.pt[data-id]")) {
+      const r = c.getBoundingClientRect();
+      const dx = r.left + r.width / 2 - ev.clientX, dy = r.top + r.height / 2 - ev.clientY;
+      const d = dx * dx + dy * dy;
+      if (d <= bd) { bd = d; best = c; } // ties: the point drawn on top (later) wins – that is the one you see
+    }
+    return best && bd <= radius * radius ? best : null;
+  }
+
+  function bind(svg) {
+    if (svg.__fvLinks) return;
+    svg.__fvLinks = true;
+    let current = null, armed = null;
+    const hitOf = (pt) => pt && svg.querySelector(`circle.hit[data-id="${CSS.escape(pt.dataset.id)}"]`);
+    const fire = (el, type, ev) => {
+      if (!el) return;
+      const e = new MouseEvent(type, { clientX: ev.clientX, clientY: ev.clientY, bubbles: false });
+      e.__fv = true;
+      el.dispatchEvent(e);
+    };
+    const tip = () => (svg.parentElement && svg.parentElement.querySelector("#tip, .tip")) || document.getElementById("tip");
+    const mark = (pt) => {
+      if (current === pt) return;
+      if (current) current.setAttribute("r", current.__r || "5");
+      current = pt;
+      if (pt) { pt.__r = pt.__r || pt.getAttribute("r"); pt.setAttribute("r", String(+pt.__r + 2)); }
+    };
+    const show = (pt, ev, hint) => {
+      mark(pt);
+      if (!pt) { const t = tip(); if (t) t.style.display = "none"; return; }
+      fire(hitOf(pt), "mousemove", ev); // the report's own tooltip, for the nearest point
+      const t = tip();
+      if (t && hint) t.insertAdjacentHTML("beforeend", `<div class="fv-hint">Ťukni ešte raz – otvorí sa inzerát ↗</div>`);
+    };
+    const open = (pt) => {
+      const d = byId.get(pt.dataset.id);
+      if (d && d.url) {
+        try { window.FerovkaAnalytics?.listingClick(d.url, "chart"); } catch { /* analytics must never block an ad */ }
+        window.open(d.url, "_blank", "noopener");
+      }
+    };
+
+    // the per-circle handlers of the report never see real mouse events – only our synthetic ones
+    for (const type of MOUSE) {
+      svg.addEventListener(type, (ev) => {
+        if (ev.__fv) return;
+        ev.stopImmediatePropagation();
+        if (type === "mousemove" && lastPointer === "mouse") {
+          show(nearest(svg, ev, 18), ev, false);
+          svg.style.cursor = current ? "pointer" : "";
+        } else if (type === "mouseleave" && ev.target === svg && lastPointer === "mouse") {
+          show(null, ev);
+        } else if (type === "click") {
+          const touch = lastPointer !== "mouse";
+          const at = touch && down ? down : ev;
+          const pt = nearest(svg, at, touch ? 26 : 18);
+          if (!pt) { armed = null; show(null, ev); return; }
+          if (!touch || armed === pt) { armed = null; open(pt); }
+          else { armed = pt; show(pt, at, true); }
+        }
+      }, true);
+    }
+  }
+
+  const scan = () => document.querySelectorAll("svg").forEach((s) => s.querySelector("circle.pt[data-id]") && bind(s));
+  scan();
+  new MutationObserver(scan).observe(document.body, { childList: true, subtree: true });
+})();
+</script><script id="ferovka-filters">/* Férovka – filters for the whole report, injected into every model report by sync-reports.mjs.
+ *
+ * The reports render the chart (drawChart) and the full ranking (renderTable) from the global DATA array; their own
+ * filter bar only filters the table. Here the filter bar (kept in its place above the ranking) gets more filters (year, price from/to,
+ * km, fuel, discount, picks only, text search) and every filter applies to the chart and the ranking together: DATA is
+ * refilled in place with the matching ads and both are drawn again. "</script" can't occur inside this file.
+ */
+(() => {
+  let data;
+  try { data = DATA; } catch { return; } // eslint-disable-line no-undef
+  if (!Array.isArray(data) || !data.length || typeof renderTable !== "function") return; // eslint-disable-line no-undef
+  const bar = document.querySelector(".filters");
+  if (!bar || bar.dataset.fv) return;
+  bar.dataset.fv = "1";
+  const ALL = data.slice();
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+  const fmt = (n) => Math.round(n).toLocaleString("sk-SK");
+  const norm = (s) => String(s ?? "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+  let groups = null;
+  try { groups = GROUPS; } catch { /* report without groups */ } // eslint-disable-line no-undef
+
+  const FUEL = { diesel: "Diesel", petrol: "Benzín", hybrid: "Hybrid", "plug-in hybrid": "Plug-in hybrid", electric: "Elektro", lpg: "LPG", cng: "CNG" };
+  const fuelOf = (d) => {
+    const e = norm(d.eg);
+    if (/tdi|crdi|dci|hdi|diesel|\bd\b|cdi|\d+d\b|blue/.test(e)) return "Diesel";
+    if (/plug-in|phev|e-hybrid|recharge|\bgte\b|\bt8\b|\b\d{2}e\b|\b\d{3} ?e\b/.test(e)) return "Plug-in hybrid";
+    if (/elektro|electric|\bev\b/.test(e)) return "Elektro";
+    if (/cng|lpg|g-tec|g-tron|tgi|ecofuel/.test(e)) return "Plyn (CNG/LPG)";
+    if (/mild|mhev/.test(e)) return "Benzín"; // mild-hybrid petrol (the diesel ones say TDI / d above)
+    if (/hybrid|hev/.test(e)) return "Hybrid";
+    if (/tsi|tfsi|mpi|fsi|benzin|gdi|dpi|htp|12v|\bt\d\b|\bb[56]\b|\d+i\b|turbo|tce|\bs4\b|rs ?\d|amg|competition|\bm\d{2,3}i?\b|gti|\bx5 m\b/.test(e)) return "Benzín";
+    return d.fuel ? FUEL[d.fuel] || String(d.fuel) : null;
+  };
+
+  // --- controls ---------------------------------------------------------------------------------------------------
+  const years = ALL.map((d) => d.year).filter(Boolean);
+  const yMin = Math.min(...years), yMax = Math.max(...years);
+  const yearOpts = (label) => `<option value="">${label}</option>` +
+    Array.from({ length: yMax - yMin + 1 }, (_, i) => yMax - i).map((y) => `<option>${y}</option>`).join("");
+  const kms = [30000, 50000, 75000, 100000, 150000, 200000, 250000, 300000];
+  const fuels = [...new Set(ALL.map(fuelOf).filter(Boolean))].sort((a, b) => a.localeCompare(b, "sk"));
+  const showGroups = Array.isArray(groups) && groups.length > 1 && ALL.some((d) => Number.isInteger(d.cg));
+
+  const maxInput = $("fMax");
+  if (maxInput) { maxInput.placeholder = "Cena do €"; maxInput.title = "Najvyššia cena (s DPH)"; }
+  const html =
+    `<select id="fvYearFrom" title="Rok výroby od">${yearOpts("Rok od")}</select>` +
+    `<select id="fvYearTo" title="Rok výroby do">${yearOpts("Rok do")}</select>` +
+    `<input id="fvPriceMin" type="number" placeholder="Cena od €" step="500" min="0" title="Najnižšia cena (s DPH)" style="width:110px">`;
+  if (maxInput) maxInput.insertAdjacentHTML("beforebegin", html);
+  else bar.insertAdjacentHTML("afterbegin", html);
+  const more =
+    `<select id="fvKm" title="Najviac najazdených km"><option value="">Nájazd – všetky</option>${kms.map((k) => `<option value="${k}">do ${fmt(k)} km</option>`).join("")}</select>` +
+    (fuels.length > 1 ? `<select id="fvFuel" title="Palivo"><option value="">Všetky palivá</option>${fuels.map((f) => `<option>${esc(f)}</option>`).join("")}</select>` : "") +
+    (showGroups ? `<select id="fvGroup" title="Skupina motorov (farba v grafe)"><option value="">Všetky skupiny</option>${groups.map((g, i) => `<option value="${i}">${esc(g)}</option>`).join("")}</select>` : "") +
+    `<select id="fvDisc" title="O koľko je auto lacnejšie ako férová cena"><option value="">Cena – všetky</option><option value="0">pod férovou cenou</option><option value="10">aspoň 10 % pod trhom</option><option value="20">aspoň 20 % pod trhom</option></select>` +
+    `<input id="fvText" type="search" placeholder="Hľadať (výbava, mesto…)" title="Hľadá v názve inzerátu, motore a lokalite" style="width:170px">` +
+    `<label class="fv-check"><input id="fvPick" type="checkbox"> len odporúčané</label>` +
+    `<button type="button" id="fvReset" class="fv-reset">Zrušiť filtre</button>`;
+  const count = $("count");
+  if (count) count.insertAdjacentHTML("beforebegin", more);
+  else bar.insertAdjacentHTML("beforeend", more);
+
+  // the bar stays where it was – right above the ranking – and also drives the chart; the chart gets a pointer to it
+  const chart = $("chartWrap");
+  const box = document.createElement("div");
+  box.className = "fv-filters";
+  box.id = "filtre";
+  bar.before(box);
+  box.innerHTML = `<div class="fv-head"><b>Filtre</b><span>platia pre rebríček aj graf vyššie</span></div>`;
+  box.appendChild(bar);
+  const note = document.createElement("div");
+  note.className = "fv-note";
+  chart?.before(note);
+
+  document.head.insertAdjacentHTML("beforeend", `<style id="fv-filters-css">
+.fv-filters{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 14px 4px;margin:24px 0 8px}
+.fv-filters .fv-head{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;margin-bottom:8px}
+.fv-filters .fv-head span{color:var(--muted);font-size:13px}
+.fv-filters .filters{margin-bottom:8px}
+.fv-filters .filters .count{flex-basis:100%;margin-left:0}
+.fv-check{display:inline-flex;gap:6px;align-items:center;font-size:13px;color:var(--text-2,var(--text));white-space:nowrap}
+.fv-reset{background:none;border:1px solid var(--border);color:var(--text);border-radius:8px;padding:6px 10px;font:inherit;font-size:13px;cursor:pointer}
+.fv-reset:hover{background:var(--surface-2,var(--surface))}
+.fv-note{color:var(--muted);font-size:13px;margin:0 0 8px}
+.fv-note a{color:inherit}
+.fv-empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:14px;pointer-events:none}
+@media (max-width:600px){.fv-filters .filters select,.fv-filters .filters input[type=number],.fv-filters .filters input[type=search]{flex:1 1 calc(50% - 8px);min-width:0;width:auto!important}}
+</style>`);
+
+  // --- filtering --------------------------------------------------------------------------------------------------
+  const val = (id) => ($(id) ? $(id).value : "");
+  const num = (id) => { const v = parseFloat(val(id)); return Number.isFinite(v) ? v : null; };
+  function matches(d) {
+    const yf = num("fvYearFrom"), yt = num("fvYearTo"), pmin = num("fvPriceMin"), pmax = num("fMax"), km = num("fvKm"), disc = num("fvDisc");
+    const fuel = val("fvFuel"), grp = val("fvGroup"), q = norm(val("fvText")).trim();
+    if (yf != null && !(d.year >= yf)) return false;
+    if (yt != null && !(d.year <= yt)) return false;
+    if (pmin != null && !(d.price_gross >= pmin)) return false;
+    if (pmax != null && !(d.price_gross <= pmax)) return false;
+    if (km != null && !(d.km <= km)) return false;
+    if (disc != null && !(d.discount_pct > disc || (disc > 0 && d.discount_pct >= disc))) return false;
+    if (fuel && fuelOf(d) !== fuel) return false;
+    if (grp !== "" && String(d.cg) !== grp) return false;
+    if ($("fvPick")?.checked && !d.pick) return false;
+    if (q && !q.split(/\s+/).every((w) => norm(`${d.title} ${d.eg ?? ""} ${d.engine ?? ""} ${d.location ?? ""}`).includes(w))) return false;
+    // the report's own filters (engine, gearbox, seller, portal, body, origin) – same rules as its renderTable
+    const en = val("fEngine"), tr = val("fTrans"), se = val("fSeller"), so = val("fSource"), og = val("fOrigin"), bo = val("fBody");
+    if (en && d.eg !== en) return false;
+    if (tr && d.transmission !== tr) return false;
+    if (se && d.seller_type === "dealer") return false;
+    if (so && !(d.source === so || (d.also_listed || []).some((a) => a.source === so))) return false;
+    if (og && d.origin !== og) return false;
+    if (bo && d.body !== bo) return false;
+    return true;
+  }
+  const active = () => [...box.querySelectorAll("select, input")].filter((el) => (el.type === "checkbox" ? el.checked : el.value !== "")).length;
+
+  let drawing = false;
+  function apply() {
+    if (drawing) return;
+    drawing = true;
+    const rows = ALL.filter(matches);
+    data.length = 0;
+    data.push(...rows);
+    const wrap = $("chartWrap");
+    wrap?.querySelector(".fv-empty")?.remove();
+    const plotted = rows.filter((d) => d.km && d.price_gross).length;
+    try {
+      if (typeof drawChart === "function") { // eslint-disable-line no-undef
+        if (plotted) drawChart(); // eslint-disable-line no-undef
+        else { const svg = $("chart"); if (svg) svg.innerHTML = ""; }
+      }
+    } catch (e) { console.warn("chart", e); }
+    if (wrap && !plotted) {
+      if (getComputedStyle(wrap).position === "static") wrap.style.position = "relative";
+      wrap.insertAdjacentHTML("beforeend", `<div class="fv-empty">Filtrom nezodpovedá žiadny inzerát</div>`);
+    }
+    try { renderTable(); } catch (e) { console.warn("table", e); } // eslint-disable-line no-undef
+    const n = active();
+    if (count) count.textContent = `Zobrazených ${fmt(rows.length)} z ${fmt(ALL.length)} inzerátov` + (n ? ` · aktívne filtre: ${n}` : "");
+    note.innerHTML = n
+      ? `Zobrazených ${fmt(rows.length)} z ${fmt(ALL.length)} inzerátov podľa <a href="#filtre">filtrov pri rebríčku</a>.`
+      : `Filtre (rok, cena, nájazd, palivo…) nájdeš <a href="#filtre">pri kompletnom rebríčku</a> – platia aj pre tento graf.`;
+    drawing = false;
+  }
+  box.querySelectorAll("select, input").forEach((el) => el.addEventListener("input", apply));
+  $("fvPick")?.addEventListener("change", apply);
+  $("fvReset").addEventListener("click", () => {
+    box.querySelectorAll("select, input").forEach((el) => { if (el.type === "checkbox") el.checked = false; else el.value = ""; });
+    apply();
+  });
+  apply();
+})();
+</script><!-- /ferovka-theme -->
+</body>
+</html>
