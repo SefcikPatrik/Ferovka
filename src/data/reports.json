@@ -700,6 +700,19 @@
     "r2": "94 %"
   },
   {
+    "slug": "hyundai-getz",
+    "file": "hyundai-getz-analyza.html",
+    "name": "Hyundai Getz",
+    "brand": "Hyundai",
+    "model": "Getz",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Hyundai Getz (2002–2011) od 800 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 35 inzerátov (22 na bazoši, 6 na autobazar.eu, 7 na bazar.sk) – prezreli sme 94 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 27 rôznych áut zo Slovenska.",
+    "ads": 27,
+    "median": "1 325 €",
+    "r2": "86 %"
+  },
+  {
     "slug": "hyundai-i30",
     "file": "hyundai-i30-analyza.html",
     "name": "Hyundai i30",
@@ -955,6 +968,19 @@
     "ads": 27,
     "median": "11 000 €",
     "r2": "96 %"
+  },
+  {
+    "slug": "kia-soul",
+    "file": "kia-soul-analyza.html",
+    "name": "Kia Soul",
+    "brand": "Kia",
+    "model": "Soul",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Kia Soul (2009–2024, spaľovacie aj elektrické) od 2 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 36 inzerátov (18 na bazoši, 11 na autobazar.eu, 7 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 30 rôznych áut zo Slovenska.",
+    "ads": 30,
+    "median": "2 990 €",
+    "r2": "94 %"
   },
   {
     "slug": "kia-sportage",
@@ -1605,6 +1631,38 @@
     "r2": "62 %"
   },
   {
+    "slug": "peugeot-206",
+    "file": "peugeot-206-analyza.html",
+    "name": "Peugeot 206",
+    "brand": "Peugeot",
+    "model": "206",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Peugeot 206 (206 a 206+, 1998–2012) od 700 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 309 inzerátov (212 na bazoši, 33 na autobazar.eu, 64 na bazar.sk) – prezreli sme 68 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 185 rôznych áut zo Slovenska.",
+    "ads": 185,
+    "median": "1 575 €",
+    "r2": "78 %",
+    "history": {
+      "updated_at": "2026-11-22T18:47:31",
+      "as_of": "2026-11-22",
+      "coverage": "partial",
+      "baseline_count": 90,
+      "total_count": 90,
+      "active_count": 90,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 90,
+      "paired_median_change_pct": 0,
+      "historical_median": 1575,
+      "seen_median": 1575,
+      "seen_price_count": 90,
+      "last_observed_at": "2026-11-22T18:41:11"
+    }
+  },
+  {
     "slug": "peugeot-207",
     "file": "peugeot-207-analyza.html",
     "name": "Peugeot 207",
@@ -1617,7 +1675,7 @@
     "median": "2 500 €",
     "r2": "67 %",
     "history": {
-      "updated_at": "2026-11-22T16:51:16",
+      "updated_at": "2026-11-22T18:47:31",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 115,
@@ -1633,7 +1691,39 @@
       "historical_median": 2500,
       "seen_median": 2500,
       "seen_price_count": 115,
-      "last_observed_at": "2026-11-22T16:38:30"
+      "last_observed_at": "2026-11-22T17:22:34"
+    }
+  },
+  {
+    "slug": "peugeot-301",
+    "file": "peugeot-301-analyza.html",
+    "name": "Peugeot 301",
+    "brand": "Peugeot",
+    "model": "301",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Peugeot 301 (2012–2022, sedan) od 2 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 108 inzerátov (56 na bazoši, 26 na autobazar.eu, 26 na bazar.sk) – prezreli sme 83 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 70 rôznych áut zo Slovenska.",
+    "ads": 70,
+    "median": "4 200 €",
+    "r2": "83 %",
+    "history": {
+      "updated_at": "2026-11-22T18:47:31",
+      "as_of": "2026-11-22",
+      "coverage": "partial",
+      "baseline_count": 53,
+      "total_count": 53,
+      "active_count": 53,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 53,
+      "paired_median_change_pct": 0,
+      "historical_median": 4200,
+      "seen_median": 4200,
+      "seen_price_count": 53,
+      "last_observed_at": "2026-11-22T18:42:57"
     }
   },
   {
@@ -1647,7 +1737,26 @@
     "summary": "Analýza aktuálnych inzerátov Peugeot 307 (2001–2008, hatchback, SW / Break kombi aj CC kabriolet) od 800 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 155 inzerátov (104 na bazoši, 28 na autobazar.eu, 23 na bazar.sk) – prezreli sme 83 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 104 rôznych áut zo Slovenska.",
     "ads": 104,
     "median": "1 800 €",
-    "r2": "79 %"
+    "r2": "79 %",
+    "history": {
+      "updated_at": "2026-11-22T18:47:31",
+      "as_of": "2026-11-22",
+      "coverage": "partial",
+      "baseline_count": 58,
+      "total_count": 58,
+      "active_count": 58,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 58,
+      "paired_median_change_pct": 0,
+      "historical_median": 1800,
+      "seen_median": 1800,
+      "seen_price_count": 58,
+      "last_observed_at": "2026-11-22T17:05:15"
+    }
   },
   {
     "slug": "peugeot-407",
@@ -1660,7 +1769,26 @@
     "summary": "Analýza aktuálnych inzerátov Peugeot 407 (2004–2011, sedan, kombi SW aj kupé) od 1 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 114 inzerátov (89 na bazoši, 10 na autobazar.eu, 15 na bazar.sk) – prezreli sme 68 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 71 rôznych áut zo Slovenska.",
     "ads": 71,
     "median": "1 950 €",
-    "r2": "72 %"
+    "r2": "72 %",
+    "history": {
+      "updated_at": "2026-11-22T18:47:31",
+      "as_of": "2026-11-22",
+      "coverage": "partial",
+      "baseline_count": 41,
+      "total_count": 41,
+      "active_count": 41,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 41,
+      "paired_median_change_pct": 0,
+      "historical_median": 1950,
+      "seen_median": 1950,
+      "seen_price_count": 41,
+      "last_observed_at": "2026-11-22T17:23:13"
+    }
   },
   {
     "slug": "peugeot-rifter",
@@ -1675,7 +1803,7 @@
     "median": "10 990 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-22T16:51:16",
+      "updated_at": "2026-11-22T18:47:31",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 111,
@@ -2481,6 +2609,19 @@
       "seen_price_count": 529,
       "last_observed_at": "2026-11-22T01:25:07"
     }
+  },
+  {
+    "slug": "volvo-s60",
+    "file": "volvo-s60-analyza.html",
+    "name": "Volvo S60",
+    "brand": "Volvo",
+    "model": "S60",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Volvo S60 (2010–2024, sedan) od 3 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 94 inzerátov (44 na bazoši, 30 na autobazar.eu, 20 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 61 rôznych áut zo Slovenska.",
+    "ads": 61,
+    "median": "19 900 €",
+    "r2": "94 %"
   },
   {
     "slug": "volvo-v40",
@@ -4159,7 +4300,7 @@
     "median": "12 499 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-22T16:51:16",
+      "updated_at": "2026-11-22T18:47:31",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 261,
@@ -4191,7 +4332,7 @@
     "median": "8 700 €",
     "r2": "92 %",
     "history": {
-      "updated_at": "2026-11-22T16:51:16",
+      "updated_at": "2026-11-22T18:47:31",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 279,
@@ -4223,7 +4364,7 @@
     "median": "13 990 €",
     "r2": "96 %",
     "history": {
-      "updated_at": "2026-11-22T16:51:16",
+      "updated_at": "2026-11-22T18:47:31",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 359,
@@ -4255,7 +4396,7 @@
     "median": "7 570 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-22T16:51:16",
+      "updated_at": "2026-11-22T18:47:31",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 440,
@@ -4287,7 +4428,7 @@
     "median": "15 900 €",
     "r2": "93 %",
     "history": {
-      "updated_at": "2026-11-22T16:51:16",
+      "updated_at": "2026-11-22T18:47:31",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 126,
@@ -4319,7 +4460,7 @@
     "median": "7 925 €",
     "r2": "92 %",
     "history": {
-      "updated_at": "2026-11-22T16:51:16",
+      "updated_at": "2026-11-22T18:47:31",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 148,
