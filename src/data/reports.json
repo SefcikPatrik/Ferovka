@@ -467,7 +467,7 @@
     "median": "6 200 €",
     "r2": "92 %",
     "history": {
-      "updated_at": "2026-11-22T12:30:00",
+      "updated_at": "2026-11-22T17:40:30",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 110,
@@ -487,6 +487,38 @@
     }
   },
   {
+    "slug": "citroen-c5",
+    "file": "citroen-c5-analyza.html",
+    "name": "Citroën C5",
+    "brand": "Citroën",
+    "model": "C5",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Citroën C5 (C5 druhej a tretej generácie 2004–2017, sedan aj kombi Tourer) od 1 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 284 inzerátov (120 na bazoši, 143 na autobazar.eu, 21 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 200 rôznych áut zo Slovenska.",
+    "ads": 200,
+    "median": "3 345 €",
+    "r2": "98 %",
+    "history": {
+      "updated_at": "2026-11-22T17:40:30",
+      "as_of": "2026-11-22",
+      "coverage": "partial",
+      "baseline_count": 52,
+      "total_count": 52,
+      "active_count": 52,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 52,
+      "paired_median_change_pct": 0,
+      "historical_median": 3345,
+      "seen_median": 3345,
+      "seen_price_count": 52,
+      "last_observed_at": "2026-11-22T17:34:14"
+    }
+  },
+  {
     "slug": "citroen-c5-aircross",
     "file": "citroen-c5-aircross-analyza.html",
     "name": "Citroën C5 Aircross",
@@ -499,7 +531,7 @@
     "median": "16 400 €",
     "r2": "97 %",
     "history": {
-      "updated_at": "2026-11-22T12:30:00",
+      "updated_at": "2026-11-22T17:40:30",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 54,
@@ -515,7 +547,7 @@
       "historical_median": 16400,
       "seen_median": 16400,
       "seen_price_count": 54,
-      "last_observed_at": "2026-11-22T00:12:53"
+      "last_observed_at": "2026-11-22T17:32:50"
     }
   },
   {
@@ -1251,6 +1283,19 @@
     "r2": "86 %"
   },
   {
+    "slug": "opel-antara",
+    "file": "opel-antara-analyza.html",
+    "name": "Opel Antara",
+    "brand": "Opel",
+    "model": "Antara",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Opel Antara (2006–2015) od 2 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 73 inzerátov (30 na bazoši, 21 na autobazar.eu, 22 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 54 rôznych áut zo Slovenska.",
+    "ads": 54,
+    "median": "5 100 €",
+    "r2": "92 %"
+  },
+  {
     "slug": "opel-vectra",
     "file": "opel-vectra-analyza.html",
     "name": "Opel Vectra C",
@@ -1558,6 +1603,19 @@
     "ads": 171,
     "median": "21 677 €",
     "r2": "97 %"
+  },
+  {
+    "slug": "suzuki-jimny",
+    "file": "suzuki-jimny-analyza.html",
+    "name": "Suzuki Jimny",
+    "brand": "Suzuki",
+    "model": "Jimny",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Suzuki Jimny (tretia generácia 1998–2018 a štvrtá generácia 2018+) od 3 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 115 inzerátov (89 na bazoši, 0 na autobazar.eu, 26 na bazar.sk) – prezreli sme 97 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 100 rôznych áut zo Slovenska.",
+    "ads": 100,
+    "median": "6 100 €",
+    "r2": "94 %"
   },
   {
     "slug": "skoda-fabia",
@@ -2225,7 +2283,7 @@
     "median": "9 700 €",
     "r2": "92 %",
     "history": {
-      "updated_at": "2026-11-22T12:30:00",
+      "updated_at": "2026-11-22T17:40:30",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 182,
@@ -2257,7 +2315,7 @@
     "median": "8 195 €",
     "r2": "95 %",
     "history": {
-      "updated_at": "2026-11-22T12:30:00",
+      "updated_at": "2026-11-22T17:40:30",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 188,
@@ -2289,7 +2347,7 @@
     "median": "6 100 €",
     "r2": "80 %",
     "history": {
-      "updated_at": "2026-11-22T12:30:00",
+      "updated_at": "2026-11-22T17:40:30",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 84,
