@@ -564,6 +564,19 @@
     "r2": "98 %"
   },
   {
+    "slug": "fiat-punto",
+    "file": "fiat-punto-analyza.html",
+    "name": "Fiat Punto",
+    "brand": "Fiat",
+    "model": "Punto",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Fiat Punto (Grande Punto, Punto Evo a Punto 2005–2018) od 1 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 145 inzerátov (96 na bazoši, 17 na autobazar.eu, 32 na bazar.sk) – prezreli sme 95 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 121 rôznych áut zo Slovenska.",
+    "ads": 121,
+    "median": "2 100 €",
+    "r2": "74 %"
+  },
+  {
     "slug": "ford-ranger",
     "file": "ford-ranger-analyza.html",
     "name": "Ford Ranger",
@@ -1212,6 +1225,38 @@
     "r2": "86 %"
   },
   {
+    "slug": "peugeot-207",
+    "file": "peugeot-207-analyza.html",
+    "name": "Peugeot 207",
+    "brand": "Peugeot",
+    "model": "207",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Peugeot 207 (2006–2014, hatchback, SW kombi aj CC kabriolet) od 1 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 327 inzerátov (208 na bazoši, 55 na autobazar.eu, 64 na bazar.sk) – prezreli sme 65 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 164 rôznych áut zo Slovenska.",
+    "ads": 164,
+    "median": "2 500 €",
+    "r2": "67 %",
+    "history": {
+      "updated_at": "2026-11-22T16:51:16",
+      "as_of": "2026-11-22",
+      "coverage": "partial",
+      "baseline_count": 115,
+      "total_count": 115,
+      "active_count": 115,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 115,
+      "paired_median_change_pct": 0,
+      "historical_median": 2500,
+      "seen_median": 2500,
+      "seen_price_count": 115,
+      "last_observed_at": "2026-11-22T16:38:30"
+    }
+  },
+  {
     "slug": "peugeot-rifter",
     "file": "peugeot-rifter-analyza.html",
     "name": "Peugeot Rifter / Partner",
@@ -1224,7 +1269,7 @@
     "median": "10 990 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-22T14:08:31",
+      "updated_at": "2026-11-22T16:51:16",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 111,
@@ -1678,6 +1723,19 @@
       "seen_price_count": 165,
       "last_observed_at": "2026-11-22T16:00:30"
     }
+  },
+  {
+    "slug": "vw-transporter",
+    "file": "vw-transporter-analyza.html",
+    "name": "Volkswagen Multivan / Caravelle / Transporter",
+    "brand": "Volkswagen",
+    "model": "Multivan / Caravelle / Transporter",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov VW Multivan / Caravelle / Transporter (T5, T6, T6.1 a T7, 2008–2025, osobné verzie 6–9 miest vrátane California, bez dodávok N1 a nových áut z 2026) od 5 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 1 111 inzerátov (709 na bazoši, 165 na autobazar.eu, 237 na bazar.sk) – prezreli sme 87 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 722 rôznych áut zo Slovenska.",
+    "ads": 722,
+    "median": "24 175 €",
+    "r2": "84 %"
   },
   {
     "slug": "vw-tiguan",
@@ -3369,7 +3427,7 @@
     "median": "12 499 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-22T14:08:31",
+      "updated_at": "2026-11-22T16:51:16",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 261,
@@ -3401,23 +3459,23 @@
     "median": "8 700 €",
     "r2": "92 %",
     "history": {
-      "updated_at": "2026-11-22T14:08:31",
+      "updated_at": "2026-11-22T16:51:16",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 279,
-      "total_count": 279,
-      "active_count": 0,
+      "total_count": 280,
+      "active_count": 2,
       "inactive_count": 0,
-      "unverified_count": 279,
-      "new_count": 0,
+      "unverified_count": 278,
+      "new_count": 1,
       "price_changed_count": 0,
       "price_lowered_count": 0,
-      "paired_count": 0,
-      "paired_median_change_pct": null,
-      "historical_median": 8700,
-      "seen_median": null,
-      "seen_price_count": 0,
-      "last_observed_at": "2026-11-21T17:59:40"
+      "paired_count": 1,
+      "paired_median_change_pct": 0,
+      "historical_median": 8750,
+      "seen_median": 10500,
+      "seen_price_count": 2,
+      "last_observed_at": "2026-11-22T16:36:45"
     }
   },
   {
@@ -3433,7 +3491,7 @@
     "median": "13 990 €",
     "r2": "96 %",
     "history": {
-      "updated_at": "2026-11-22T14:08:31",
+      "updated_at": "2026-11-22T16:51:16",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 359,
@@ -3465,7 +3523,7 @@
     "median": "7 570 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-22T14:08:31",
+      "updated_at": "2026-11-22T16:51:16",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 440,
@@ -3497,7 +3555,7 @@
     "median": "15 900 €",
     "r2": "93 %",
     "history": {
-      "updated_at": "2026-11-22T14:08:31",
+      "updated_at": "2026-11-22T16:51:16",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 126,
@@ -3529,7 +3587,7 @@
     "median": "7 925 €",
     "r2": "92 %",
     "history": {
-      "updated_at": "2026-11-22T14:08:31",
+      "updated_at": "2026-11-22T16:51:16",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 148,
