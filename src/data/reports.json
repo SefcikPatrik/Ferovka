@@ -1,5 +1,18 @@
 [
   {
+    "slug": "alfa-romeo-giulietta",
+    "file": "alfa-romeo-giulietta-analyza.html",
+    "name": "Alfa Romeo Giulietta",
+    "brand": "Alfa",
+    "model": "Romeo Giulietta",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Alfa Romeo Giulietta (2010–2020) od 2 500 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 59 inzerátov (30 na bazoši, 16 na autobazar.eu, 13 na bazar.sk) – prezreli sme 81 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 37 rôznych áut zo Slovenska.",
+    "ads": 37,
+    "median": "5 995 €",
+    "r2": "78 %"
+  },
+  {
     "slug": "audi-a4",
     "file": "audi-a4-analyza.html",
     "name": "Audi A4",
@@ -609,6 +622,19 @@
     }
   },
   {
+    "slug": "dacia-lodgy",
+    "file": "dacia-lodgy-analyza.html",
+    "name": "Dacia Lodgy",
+    "brand": "Dacia",
+    "model": "Lodgy",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Dacia Lodgy (2012–2022, 5 aj 7 miest) od 2 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 102 inzerátov (37 na bazoši, 43 na autobazar.eu, 22 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 65 rôznych áut zo Slovenska.",
+    "ads": 65,
+    "median": "6 400 €",
+    "r2": "93 %"
+  },
+  {
     "slug": "fiat-doblo",
     "file": "fiat-doblo-analyza.html",
     "name": "Fiat Doblo",
@@ -918,6 +944,19 @@
     }
   },
   {
+    "slug": "kia-optima",
+    "file": "kia-optima-analyza.html",
+    "name": "Kia Optima",
+    "brand": "Kia",
+    "model": "Optima",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Kia Optima (2010–2020, sedan aj kombi SW) od 3 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 50 inzerátov (28 na bazoši, 13 na autobazar.eu, 9 na bazar.sk) – prezreli sme 80 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 27 rôznych áut zo Slovenska.",
+    "ads": 27,
+    "median": "11 000 €",
+    "r2": "96 %"
+  },
+  {
     "slug": "kia-sportage",
     "file": "kia-sportage-analyza.html",
     "name": "Kia Sportage",
@@ -1006,6 +1045,19 @@
       "seen_price_count": 21,
       "last_observed_at": "2026-11-22T00:03:05"
     }
+  },
+  {
+    "slug": "mazda-5",
+    "file": "mazda-5-analyza.html",
+    "name": "Mazda 5",
+    "brand": "Mazda",
+    "model": "5",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Mazda 5 (2005–2015, 7 miest) od 1 500 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 786 inzerátov (742 na bazoši, 29 na autobazar.eu, 15 na bazar.sk) – prezreli sme 11 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 50 rôznych áut zo Slovenska.",
+    "ads": 50,
+    "median": "3 990 €",
+    "r2": "72 %"
   },
   {
     "slug": "mazda-cx-3",
@@ -1732,7 +1784,7 @@
     "median": "18 000 €",
     "r2": "92 %",
     "history": {
-      "updated_at": "2026-11-22T12:30:00",
+      "updated_at": "2026-11-22T18:30:11",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 31,
@@ -1762,7 +1814,58 @@
     "summary": "Analýza aktuálnych inzerátov Renault Austral (2022–2025, mild hybrid aj full hybrid, bez nových áut z 2026) od 12 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 96 inzerátov (12 na bazoši, 49 na autobazar.eu, 35 na bazar.sk) – prezreli sme 65 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 47 rôznych áut zo Slovenska.",
     "ads": 47,
     "median": "26 900 €",
-    "r2": "80 %"
+    "r2": "80 %",
+    "history": {
+      "updated_at": "2026-11-22T18:30:11",
+      "as_of": "2026-11-22",
+      "coverage": "partial",
+      "baseline_count": 13,
+      "total_count": 13,
+      "active_count": 13,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 13,
+      "paired_median_change_pct": 0,
+      "historical_median": 26900,
+      "seen_median": 26900,
+      "seen_price_count": 13,
+      "last_observed_at": "2026-11-22T16:30:07"
+    }
+  },
+  {
+    "slug": "renault-kangoo",
+    "file": "renault-kangoo-analyza.html",
+    "name": "Renault Kangoo",
+    "brand": "Renault",
+    "model": "Kangoo",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Renault Kangoo (osobné verzie 2008–2024, 5 aj 7 miest) od 1 500 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 242 inzerátov (66 na bazoši, 80 na autobazar.eu, 96 na bazar.sk) – prezreli sme 90 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 137 rôznych áut zo Slovenska.",
+    "ads": 137,
+    "median": "9 185 €",
+    "r2": "95 %",
+    "history": {
+      "updated_at": "2026-11-22T18:30:11",
+      "as_of": "2026-11-22",
+      "coverage": "partial",
+      "baseline_count": 48,
+      "total_count": 48,
+      "active_count": 48,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 48,
+      "paired_median_change_pct": 0,
+      "historical_median": 9185,
+      "seen_median": 9185,
+      "seen_price_count": 48,
+      "last_observed_at": "2026-11-22T18:20:27"
+    }
   },
   {
     "slug": "renault-laguna",
@@ -1775,7 +1878,26 @@
     "summary": "Analýza aktuálnych inzerátov Renault Laguna (Laguna II 2001–2007 a Laguna III 2007–2015, liftback, Grandtour aj kupé) od 1 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 106 inzerátov (59 na bazoši, 29 na autobazar.eu, 18 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 79 rôznych áut zo Slovenska.",
     "ads": 79,
     "median": "2 300 €",
-    "r2": "83 %"
+    "r2": "83 %",
+    "history": {
+      "updated_at": "2026-11-22T18:30:11",
+      "as_of": "2026-11-22",
+      "coverage": "partial",
+      "baseline_count": 55,
+      "total_count": 55,
+      "active_count": 55,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 55,
+      "paired_median_change_pct": 0,
+      "historical_median": 2300,
+      "seen_median": 2300,
+      "seen_price_count": 55,
+      "last_observed_at": "2026-11-22T17:07:50"
+    }
   },
   {
     "slug": "renault-twingo",
@@ -1788,7 +1910,26 @@
     "summary": "Analýza aktuálnych inzerátov Renault Twingo (druhá a tretia generácia 2007–2024, vrátane elektrického Twinga E-Tech) od 1 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 83 inzerátov (25 na bazoši, 39 na autobazar.eu, 19 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 38 rôznych áut zo Slovenska.",
     "ads": 38,
     "median": "3 700 €",
-    "r2": "99 %"
+    "r2": "99 %",
+    "history": {
+      "updated_at": "2026-11-22T18:30:11",
+      "as_of": "2026-11-22",
+      "coverage": "partial",
+      "baseline_count": 19,
+      "total_count": 19,
+      "active_count": 19,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 19,
+      "paired_median_change_pct": 0,
+      "historical_median": 3700,
+      "seen_median": 3700,
+      "seen_price_count": 19,
+      "last_observed_at": "2026-11-22T16:54:34"
+    }
   },
   {
     "slug": "seat-altea",
@@ -4210,7 +4351,7 @@
     "median": "11 000 €",
     "r2": "78 %",
     "history": {
-      "updated_at": "2026-11-22T12:30:00",
+      "updated_at": "2026-11-22T18:30:11",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 43,
@@ -4242,7 +4383,7 @@
     "median": "5 000 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-22T12:30:00",
+      "updated_at": "2026-11-22T18:30:11",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 56,
@@ -5586,7 +5727,7 @@
     "median": "14 500 €",
     "r2": "97 %",
     "history": {
-      "updated_at": "2026-11-22T12:30:00",
+      "updated_at": "2026-11-22T18:30:11",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 102,
@@ -5618,7 +5759,7 @@
     "median": "7 000 €",
     "r2": "96 %",
     "history": {
-      "updated_at": "2026-11-22T12:30:00",
+      "updated_at": "2026-11-22T18:30:11",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 181,
@@ -5650,7 +5791,7 @@
     "median": "6 299 €",
     "r2": "90 %",
     "history": {
-      "updated_at": "2026-11-22T12:30:00",
+      "updated_at": "2026-11-22T18:30:11",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 210,
