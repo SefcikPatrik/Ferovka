@@ -1,0 +1,856 @@
+<!doctype html>
+<html lang="sk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jeep Compass – analýza ponúk</title>
+<style>
+:root {
+  color-scheme: light;
+  --bg: #f6f6f4; --surface: #fcfcfb; --surface-2: #f0efec; --border: #e2e1dc;
+  --text: #0b0b0b; --text-2: #52514e; --muted: #7a7974;
+  --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a;
+  --pos: #2a78d6; --neg: #eb6834; --accent: #2a78d6;
+  --good: #1d7f4e; --bad: #b4332f; --grid: #e8e7e3;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #121211; --surface: #1a1a19; --surface-2: #232321; --border: #33332f;
+    --text: #f0efec; --text-2: #c3c2b7; --muted: #8f8e86;
+    --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+    --pos: #3987e5; --neg: #d95926; --accent: #5598e7;
+    --good: #4cc38a; --bad: #f07a76; --grid: #2a2a27;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #121211; --surface: #1a1a19; --surface-2: #232321; --border: #33332f;
+  --text: #f0efec; --text-2: #c3c2b7; --muted: #8f8e86;
+  --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+  --pos: #3987e5; --neg: #d95926; --accent: #5598e7;
+  --good: #4cc38a; --bad: #f07a76; --grid: #2a2a27;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text);
+  font: 15px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+main { max-width: 1120px; margin: 0 auto; padding: 32px 16px 64px; }
+a { color: var(--accent); text-decoration: none; } a:hover { text-decoration: underline; }
+h1 { font-size: 30px; margin: 0 0 4px; letter-spacing: -.01em; }
+h2 { font-size: 21px; margin: 48px 0 6px; }
+h3 { font-size: 15px; margin: 6px 0 4px; line-height: 1.35; }
+.lead { color: var(--text-2); margin: 0 0 20px; max-width: 760px; }
+.section-lead { color: var(--text-2); margin: 0 0 16px; max-width: 800px; }
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
+.kpi { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+.kpi .v { font-size: 26px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.kpi .l { color: var(--text-2); font-size: 13px; }
+.explain { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; margin-top: 12px; }
+.explain p { margin: 6px 0; color: var(--text-2); }
+.explain b { color: var(--text); }
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; }
+.card-head { display: flex; justify-content: space-between; gap: 8px; font-size: 12px; }
+.tag { font-weight: 600; color: var(--accent); }
+.loc { color: var(--muted); }
+.facts { color: var(--text-2); font-size: 13px; }
+.prices { display: grid; grid-template-columns: 1.2fr 1fr .8fr; gap: 8px; margin: 12px 0 8px; }
+.lbl { display: block; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+.big { font-size: 22px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.mid { font-size: 16px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.good { color: var(--good); }
+.meter { height: 6px; background: var(--surface-2); border-radius: 4px; overflow: hidden; }
+.meter span { display: block; height: 100%; background: var(--s1); border-radius: 4px; }
+.news ul { margin: 6px 0 0; padding-left: 20px; } .news li { margin: 4px 0; } .news .down { color: var(--good, #1baf7a); font-weight: 600; }
+.note { font-size: 12.5px; background: var(--surface-2); border-radius: 6px; padding: 6px 8px; margin-top: 8px; color: var(--text-2); }
+.pc { list-style: none; padding: 0; margin: 10px 0 0; font-size: 13.5px; }
+.pc li { padding-left: 20px; position: relative; margin: 3px 0; }
+.pc li.pro::before { content: "+"; position: absolute; left: 4px; color: var(--good); font-weight: 700; }
+.pc li.con::before { content: "–"; position: absolute; left: 4px; color: var(--bad); font-weight: 700; }
+.subhead { font-size: 15px; color: var(--text-2); margin: 22px 0 10px; font-weight: 600; }
+.chart-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 14px 8px; position: relative; }
+.legend { display: flex; flex-wrap: wrap; gap: 16px; font-size: 13px; color: var(--text-2); margin: 0 0 6px 4px; }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; }
+.legend .ring { background: transparent; border: 2px solid var(--text); width: 12px; height: 12px; }
+svg text { fill: var(--muted); font-size: 11px; }
+.tip { position: absolute; pointer-events: none; background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+  padding: 8px 10px; font-size: 12.5px; box-shadow: 0 6px 20px rgba(0,0,0,.15); max-width: 280px; display: none; z-index: 5; }
+.tip b { display: block; margin-bottom: 2px; }
+.tip .row { display: flex; justify-content: space-between; gap: 12px; color: var(--text-2); }
+.tip .row span:last-child { color: var(--text); font-variant-numeric: tabular-nums; }
+table { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; font-size: 13.5px; }
+th, td { padding: 9px 10px; border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; }
+th { font-size: 12px; color: var(--text-2); font-weight: 600; background: var(--surface-2); white-space: nowrap; }
+th.sortable { cursor: pointer; user-select: none; } th.sortable:hover { color: var(--text); }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+.sub { color: var(--text-2); font-size: 12.5px; margin-top: 2px; }
+.stars { color: #c98500; letter-spacing: 1px; white-space: nowrap; } .stars .off { color: var(--border); }
+.cellbar { height: 5px; background: var(--surface-2); border-radius: 3px; margin-bottom: 4px; }
+.cellbar span { display: block; height: 100%; background: var(--s1); border-radius: 3px; }
+.disc { display: inline-flex; align-items: center; gap: 6px; justify-content: flex-end; }
+.dbar { width: 54px; height: 6px; background: var(--surface-2); border-radius: 3px; position: relative; }
+.dbar span { position: absolute; top: 0; height: 100%; border-radius: 3px; }
+.filters { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 10px; align-items: center; }
+.filters select, .filters input { background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 6px 8px; font: inherit; font-size: 13px; }
+.filters .count { color: var(--muted); font-size: 13px; margin-left: auto; }
+.table-scroll { overflow-x: auto; border-radius: 12px; }
+.badge { font-size: 11px; padding: 1px 6px; border-radius: 10px; background: var(--surface-2); color: var(--text-2); white-space: nowrap; }
+.badge.pick { background: var(--s1); color: #fff; }
+.flag { color: var(--bad); font-size: 12px; }
+.warn { background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--neg); border-radius: 10px; padding: 12px 16px; }
+.warn li { margin: 4px 0; }
+.check { columns: 2 300px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px 14px 34px; margin: 0; }
+.check li { margin: 4px 0; break-inside: avoid; }
+footer { color: var(--muted); font-size: 12.5px; margin-top: 48px; border-top: 1px solid var(--border); padding-top: 14px; }
+.theme-btn { float: right; background: var(--surface); color: var(--text-2); border: 1px solid var(--border); border-radius: 8px; padding: 5px 10px; cursor: pointer; font: inherit; font-size: 13px; }
+@media (max-width: 640px) { h1 { font-size: 24px; } .prices { grid-template-columns: 1fr 1fr 1fr; } .big { font-size: 18px; } th, td { padding: 7px 6px; } }
+</style>
+<!-- ferovka-theme --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"><style id="ferovka-theme">/* Férovka look for the generated analyses – injected by sync-reports.mjs after each report's own <style>.
+   Same palette and type as the site; chart colours (--s1..--s3) stay the validated set. */
+:root {
+  --bg: #f5f4ef; --surface: #fdfdfb; --surface-2: #eeede6; --border: #e1dfd6;
+  --text: #0f1513; --text-2: #4f5551; --muted: #6f746f;
+  --accent: #0b8a56; --good: #0b7a4b; --grid: #e6e4dc; --win: #dff3e9;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d110f; --surface: #151a17; --surface-2: #1d2420; --border: #2a322d;
+    --text: #eef1ec; --text-2: #b6bdb6; --muted: #8f978f;
+    --accent: #2fc583; --good: #4cd08f; --grid: #1f2622; --win: #143223;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d110f; --surface: #151a17; --surface-2: #1d2420; --border: #2a322d;
+  --text: #eef1ec; --text-2: #b6bdb6; --muted: #8f978f;
+  --accent: #2fc583; --good: #4cd08f; --grid: #1f2622; --win: #143223;
+}
+
+body { font-family: "Manrope", system-ui, sans-serif; }
+h1, h2 { letter-spacing: -0.02em; font-weight: 800; }
+.tag { color: var(--accent); }
+
+/* photo header (removed by the site's viewer, which shows its own) */
+.fv-hero { position: relative; margin: 0 0 26px; border-radius: 20px; overflow: hidden; aspect-ratio: 21 / 8; background: #0d110f; display: flex; }
+.fv-hero img { flex: 1; min-width: 0; height: 100%; object-fit: cover; animation: fv-zoom 1.4s cubic-bezier(.2,.7,.2,1) both; }
+.fv-collage img + img { border-left: 3px solid #0d110f; }
+.fv-hero::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(180deg, transparent 55%, rgb(13 17 15 / .75)),
+    repeating-linear-gradient(90deg, rgb(47 197 131 / .06) 0 1px, transparent 1px 48px); }
+.fv-hero figcaption { position: absolute; right: 12px; bottom: 8px; z-index: 1; font-size: 11px; color: rgb(255 255 255 / .75); }
+.fv-hero figcaption a { color: inherit; }
+
+/* cards & panels: softer, lift on hover */
+.card, .kpi, .explain, .chart-wrap, .box { border-radius: 16px; }
+.card { transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease; }
+.card:hover { transform: translateY(-3px); border-color: var(--accent); box-shadow: 0 14px 30px -18px rgb(0 0 0 / .45); }
+.badge.pick { background: var(--accent); }
+
+/* entrance animation */
+@keyframes fv-up { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes fv-zoom { from { transform: scale(1.08); filter: brightness(.6); } to { transform: none; filter: none; } }
+h1, .lead, .kpis, .cards .card { animation: fv-up .6s cubic-bezier(.2,.7,.2,1) both; }
+.lead { animation-delay: .08s; }
+.kpis { animation-delay: .16s; }
+.cards .card:nth-child(2) { animation-delay: .06s; }
+.cards .card:nth-child(3) { animation-delay: .12s; }
+.cards .card:nth-child(4) { animation-delay: .18s; }
+.cards .card:nth-child(5) { animation-delay: .24s; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+@media (max-width: 640px) { .fv-hero { aspect-ratio: 16 / 9; border-radius: 14px; } }
+
+/* touch: hint under the chart tooltip (report-chart.js) */
+.fv-hint { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--border, rgba(127,127,127,.3)); font-weight: 700; color: var(--accent, #2fc583); }
+</style><!-- /ferovka-theme -->
+</head>
+<body>
+<main><!-- ferovka-theme --><!-- /ferovka-theme -->
+<button class="theme-btn" id="themeBtn" type="button">Svetlý / tmavý</button>
+<h1>Jeep Compass – ktorá ponuka sa oplatí</h1>
+<p class="lead">Analýza aktuálnych inzerátov Jeep Compass (druhá generácia 2017–2025, bez nových áut z 2026) od 6 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 255 inzerátov (56 na bazoši, 103 na autobazar.eu, 96 na bazar.sk) – prezreli sme 95 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 139 rôznych áut zo Slovenska. Každé auto sme porovnali
+s <b>férovou cenou</b>: tú vypočítal model naučený na celom trhu podľa veku, nájazdu, motora, prevodovky a typu predajcu.</p>
+
+<div class="kpis">
+  <div class="kpi"><div class="v">139</div><div class="l">inzerátov Compassu (nad 6 000 €)</div></div>
+  <div class="kpi"><div class="v">73</div><div class="l">ohodnotených (majú rok aj km)</div></div>
+  <div class="kpi"><div class="v">16 200 €</div><div class="l">medián ceny s DPH</div></div>
+  <div class="kpi"><div class="v">94 %</div><div class="l">rozdielov v cenách vysvetlí model</div></div>
+</div>
+
+
+<h2>Odkiaľ sú dáta: bazoš, autobazar.eu a bazar.sk</h2>
+<div class="kpis">
+  <div class="kpi"><div class="v">32</div><div class="l">ohodnotených z bazoša</div></div>
+  <div class="kpi"><div class="v">28</div><div class="l">ohodnotených z autobazar.eu</div></div><div class="kpi"><div class="v">13</div><div class="l">ohodnotených z bazar.sk</div></div>
+  <div class="kpi"><div class="v">95</div><div class="l">áut bolo na viacerých portáloch – započítané raz</div></div>
+  <div class="kpi"><div class="v">34 / 5</div><div class="l">s uvedeným pôvodom SR / dovoz</div></div>
+</div>
+<div class="explain">
+  <p><b>Tri portály, jeden trh.</b> Bazoš prehľadal 56 inzerátov, autobazar.eu
+  103, bazar.sk 83. Ponuky z Česka (na autobazar.eu ich je veľa) sme vynechali. Autobazáre často dávajú
+  to isté auto na viac portálov. Takéto dvojice (34 v rebríčku) sme spojili podľa VIN alebo zhody roku, km a ceny,
+  aby sa v modeli nerátali dvakrát. Pri aute nájdeš odkaz na všetky ponuky – niekedy sa líšia cenou.</p>
+  <p><b>Rozdiel medzi portálmi:</b> rovnaké auto je na autobazar.eu v priemere +0,5 %
+  oproti bazošu. Na autobazar.eu predávajú hlavne firmy (22 z 28 ohodnotených). Na bazar.sk je rovnaké auto v priemere +6,6 % oproti bazošu.</p>
+  <p><b>Kúpené v SR vs. dovoz:</b> autá s uvedeným pôvodom zo SR sú oproti autám bez uvedeného pôvodu
+  +0,1 %, dovezené +9,6 %
+  (pri rovnakom veku, nájazde a motore). Pôvod zo SR je výhoda pri overovaní histórie, trh zaň však nepripláca – väčšina
+  inzerátov pôvod jednoducho neuvádza. V tabulke dole si môžeš nechať zobraziť len autá kúpené v SR.</p>
+</div>
+
+<h2>Čo hýbe cenou Compassu</h2>
+<p class="section-lead">Toto sa model naučil z trhu. Keď porovnávaš dve autá, tieto čísla ti povedia, koľko má byť
+rozdiel v cene, aby to bolo fér.</p>
+<div class="kpis">
+  <div class="kpi"><div class="v">-3,0 %</div><div class="l">každých ďalších 10 000 km</div></div>
+  <div class="kpi"><div class="v">-10,5 %</div><div class="l">každý rok veku navyše</div></div>
+  <div class="kpi"><div class="v">+15 %</div><div class="l">príplatok za automat (DSG)</div></div>
+  <div class="kpi"><div class="v">-5,1 %</div><div class="l">príplatok u predajcu / firmy</div></div>
+  <div class="kpi"><div class="v">-9,9 %</div><div class="l">Compass po facelifte (2021+) oproti cene podľa veku</div></div>
+  <div class="kpi"><div class="v">+15,1 %</div><div class="l">príplatok za automat</div></div>
+</div>
+<div class="explain">
+  <p><b>Príklad:</b> dva rovnaké Compassy 1.3 T4 z roku 2021, jedno má 60 tis. km, druhé 120 tis. km. Druhé má byť
+  približne o 18 % lacnejšie (6 × -3,0 %). Ak je lacnejšie len o 5 %, preplácaš kilometre.</p>
+  <p><b>Ako čítať „pod trhom“:</b> +15 % znamená, že auto stojí o 15 % menej, než by malo podľa trhu. Bežný rozptyl
+  cien je asi ±14 %, takže až zľava nad ~10–15 % je naozaj výnimočná. Pri takej zľave vždy zisti, prečo je auto lacné
+  (stav, história, nájazd).</p>
+  <p><b>DPH:</b> ceny uvedené bez DPH (napr. „10 300 € netto“) sme prepočítali na cenu s DPH, ktorú zaplatí súkromná osoba.</p>
+</div>
+
+<h2>Odporúčané ponuky</h2>
+<p class="section-lead">Kandidáti s najlepším pomerom cena / vek / nájazd, ktorých celý inzerát sme prečítali.
+Zoradené podľa toho, ako ich odporúčame.</p>
+<div class="subhead">Compass po facelifte (2021+) – najlepší pomer cena / vek</div>
+<div class="cards">
+<article class="card">
+  <div class="card-head"><span class="tag">Compass 1.3 Turbo automat z 2022</span><span class="loc">Trenčín</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/196856123/predam-jeep-compass-13turbo-longitude.php" target="_blank" rel="noopener">Predám Jeep Compass 1.3turbo Longitude</a></h3>
+  <div class="facts">2022 · 108 000 km · 1.3 T4 / 1.4 MultiAir / 1.5 e-Hybrid 96–125 kW · automat · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">12 800 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">16 590 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+22.9 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:76%"></span></div>
+  <ul class="pc"><li class="pro">2022, 1.3 Turbo, automat, Longitude, 108 tis. km</li><li class="pro">LED, Apple CarPlay bezdrôtovo, sledovanie jazdných pruhov</li><li class="pro">~23 % pod férovou cenou</li><li class="con">Vysoký nájazd na vek</li><li class="con">Predajca neistý</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 3 dni (od 19. 11.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Compass 4xe plug-in hybrid s 19 tis. km</span><span class="loc">Prešov</span></div>
+  <h3><a href="https://auto.bazar.sk/39525366-jeep-compass-sustainability-1-3-gse-phev-240k-4x4/" target="_blank" rel="noopener">Jeep Compass Sustainability 1,3 GSE PHEV 240k 4x4</a></h3>
+  <div class="facts">2023 · 19 490 km · Plug-in hybrid 4xe 140–176 kW · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazar.sk</b> · kúpené v SR · aj na <a href='https://www.autobazar.eu/detail/jeep-compass-sustainability-13-gse-phev-240k-4x4/AmxjEOIzMQI/' target='_blank' rel='noopener'>autobazar.eu</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">24 890 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">30 740 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+19.0 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:63%"></span></div>
+  <ul class="pc"><li class="pro">3/2023, 1.3 PHEV 240 k, 4x4, automat, 19 tis. km</li><li class="pro">Kúpené v SR, uvedený VIN</li><li class="pro">~19 % pod férovou cenou</li><li class="con">Over stav batérie a nabíjanie</li><li class="con">Predáva autobazár</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 7 dní (od 15. 11.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Compass od 1. majiteľa so servisom Jeep</span><span class="loc">Rimavská Sobota</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/196421387/jeep-compass.php" target="_blank" rel="noopener">JEEP COMPASS</a></h3>
+  <div class="facts">2021 · 65 326 km · 1.3 T4 / 1.4 MultiAir / 1.5 e-Hybrid 96–125 kW · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazoš</b> · kúpené v SR</div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">12 999 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">15 540 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+16.4 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:55%"></span></div>
+  <ul class="pc"><li class="pro">2021, 1.3 Turbo, automat, 65 tis. km</li><li class="pro">Kúpené v SR, 1. majiteľ, servis len Jeep/Fiat, 2 kľúče, sezónne prezutie</li><li class="pro">~16 % pod férovou cenou</li><li class="con">Predáva autobazár</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke aspoň 41 dní</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Compass e-Hybrid Altitude z 2024</span><span class="loc">Senec</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197557907/jeep-compass-15-multiair-e-hybrid-altitude-96-kw-full-led.php" target="_blank" rel="noopener">Jeep Compass 1.5 MultiAir e-Hybrid Altitude 96 kW | FULL LED</a></h3>
+  <div class="facts">2024 · 17 169 km · 1.3 T4 / 1.4 MultiAir / 1.5 e-Hybrid 96–125 kW · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazoš</b> · dovezené · aj na <a href='https://www.autobazar.eu/detail/jeep-compass-15-e-hybrid-altitude-at/AmUAdBj7XjQ/' target='_blank' rel='noopener'>autobazar.eu</a> · aj na <a href='https://auto.bazar.sk/39731352-jeep-compass-1-5-e-hybrid-altitude-a-t/' target='_blank' rel='noopener'>bazar.sk</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">22 700 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">26 510 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+14.4 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:48%"></span></div>
+  <ul class="pc"><li class="pro">2024, 1.5 e-Hybrid 96 kW, 7-st. automat, 17 tis. km</li><li class="pro">LED, adaptívny tempomat, digitálny kokpit, kamera</li><li class="pro">~14 % pod férovou cenou</li><li class="con">Dovoz</li><li class="con">Predáva autobazár</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 7 dní (od 15. 11.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Compass Night Eagle automat so 46 tis. km</span><span class="loc">Prešov</span></div>
+  <h3><a href="https://auto.bazar.sk/39777216-jeep-compass-1-3-turbo-a-t-night-eagle-110kw/" target="_blank" rel="noopener">Jeep Compass 1.3 TURBO A/T Night Eagle 110kW</a></h3>
+  <div class="facts">2021 · 46 420 km · 1.3 T4 / 1.4 MultiAir / 1.5 e-Hybrid 96–125 kW · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazar.sk</b> · kúpené v SR · aj na <a href='https://www.autobazar.eu/detail/jeep-compass-13-turbo-at-night-eagle-110kw/AmUn14g314y/' target='_blank' rel='noopener'>autobazar.eu</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">15 999 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">18 090 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+11.5 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:38%"></span></div>
+  <ul class="pc"><li class="pro">1/2021, 1.3 Turbo 110 kW, automat, Night Eagle, 46 tis. km</li><li class="pro">Kúpené v SR, uvedený VIN</li><li class="pro">~12 % pod férovou cenou</li><li class="con">Predáva autobazár</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 2 dni (od 20. 11.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Súkromník: Compass hybrid v záruke do 2028</span><span class="loc">Pezinok</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/jeep-compass-hev/AeNvy4xUMMk/" target="_blank" rel="noopener">Jeep Compass HEV</a></h3>
+  <div class="facts">2023 · 41 200 km · 1.3 T4 / 1.4 MultiAir / 1.5 e-Hybrid 96–125 kW · automat · súkromník</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · kúpené v SR · aj na <a href='https://auto.bazos.sk/inzerat/196458258/predam-jeep-compass-limited-15-mhev-rv-072023-37100km.php' target='_blank' rel='noopener'>bazoš</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">18 800 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">20 670 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+9.1 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:30%"></span></div>
+  <ul class="pc"><li class="pro">2023, 1.5 e-Hybrid, automat, 41 tis. km</li><li class="pro">Kúpené v SR, záruka do 07/2028, servis v autorizovanom servise Jeep, ťažné</li><li class="pro">~9 % pod férovou cenou</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 98 dní (od 16. 8.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Compass od 1. majiteľa so servisom u značky</span><span class="loc">Dolný Kubín</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/196958776/jeep-compass.php" target="_blank" rel="noopener">Jeep Compass</a></h3>
+  <div class="facts">2022 · 102 000 km · 1.3 T4 / 1.4 MultiAir / 1.5 e-Hybrid 96–125 kW · prevodovka ? · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">15 900 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">16 930 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+6.1 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:20%"></span></div>
+  <ul class="pc"><li class="pro">2022, 1.3 Turbo, 102 tis. km</li><li class="pro">1. majiteľ, servis výhradne v autorizovanom servise Jeep, kompletná servisná knižka</li><li class="pro">~6 % pod férovou cenou</li><li class="con">Predajca neistý</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke aspoň 25 dní</p><!-- history-card:end --></article></div>
+<div class="subhead">Lacnejšie Compassy do 18 000 €</div>
+<div class="cards">
+<article class="card">
+  <div class="card-head"><span class="tag">Compass 2.0 MultiJet 4x4 z SR za 9 000 €</span><span class="loc">Košice</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/jeep-compass-20-multijet-longitude-4x4-sr2maj/Ae_OzzMRuAZ/" target="_blank" rel="noopener">Jeep Compass 2.0 MultiJet, Longitude, 4X4, SR,2.maj</a></h3>
+  <div class="facts">2018 · 95 346 km · 2.0 MultiJet 103–125 kW · manuál · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">9 000 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">11 800 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+23.7 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:79%"></span></div>
+  <ul class="pc"><li class="pro">2018, 2.0 MultiJet, 4x4, manuál, Longitude, 95 tis. km</li><li class="pro">Kúpené v SR, 2. majiteľ, možný odpočet DPH</li><li class="pro">~24 % pod férovou cenou</li><li class="con">AAA AUTO – pri financovaní je cena 7 700 €, over cenu v hotovosti</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 25 dní (od 28. 10.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Compass 2.0 MultiJet 4x4 Limited automat</span><span class="loc">Nitra</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197660318/jeep-compass-20-multijet-140-4x4-limited-at9.php" target="_blank" rel="noopener">Jeep Compass 2.0 Multijet 140 4x4 Limited AT9</a></h3>
+  <div class="facts">2020 · 69 150 km · 2.0 MultiJet 103–125 kW · automat · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b> · kúpené v SR · aj na <a href='https://www.autobazar.eu/detail/jeep-compass-20-diesel-103kw-automat-prevodovka-4x4/AeXk8Qu6IEA/' target='_blank' rel='noopener'>autobazar.eu</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">14 500 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">18 020 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+19.5 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:65%"></span></div>
+  <ul class="pc"><li class="pro">11/2020, 2.0 MultiJet 103 kW, 4x4, 9-st. automat, Limited, 69 tis. km</li><li class="pro">Kúpené v SR</li><li class="pro">~20 % pod férovou cenou</li><li class="con">Predajca neistý</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 4 dni (od 18. 11.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Súkromník: Compass 2.0 MultiJet 4WD automat</span><span class="loc">Hlohovec</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/jeep-compass-20l-mjet-140-4wd-longitude-at-103kw140hp-a9/AenXIVh_PhQ/" target="_blank" rel="noopener">Jeep Compass 2.0L MJet 140 4WD Longitude AT 103kW140HP A9</a></h3>
+  <div class="facts">2017 · 256 000 km · 2.0 MultiJet 103–125 kW · automat · súkromník</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · kúpené v SR</div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">9 000 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">10 760 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+16.4 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:55%"></span></div>
+  <ul class="pc"><li class="pro">2017, 2.0 MultiJet 103 kW, 4x4, 9-st. automat, Longitude, 256 tis. km</li><li class="pro">Kúpené v SR</li><li class="pro">~16 % pod férovou cenou</li><li class="con">Veľmi vysoký nájazd</li><li class="con">Inzerát bez textu</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 287 dní (od 8. 2.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Compass 1.4 MultiAir 170 k automat</span><span class="loc">Bratislava V - Petržalka</span></div>
+  <h3><a href="https://auto.bazar.sk/39675994-jeep-compass-1-4-multiair/" target="_blank" rel="noopener">Jeep Compass 1.4 MultiAir</a></h3>
+  <div class="facts">2019 · 72 833 km · 1.3 T4 / 1.4 MultiAir / 1.5 e-Hybrid 96–125 kW · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazar.sk</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">14 300 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">15 970 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+10.4 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:35%"></span></div>
+  <ul class="pc"><li class="pro">2019, 1.4 MultiAir 125 kW, automat, 73 tis. km</li><li class="pro">Adaptívny tempomat, ťažné</li><li class="pro">~10 % pod férovou cenou</li><li class="con">Pravdepodobne AAA AUTO – over cenu v hotovosti</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">Nový inzerát</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Compass 2.0 MultiJet 4x4 s výpisom km</span><span class="loc">Partizánske</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197114812/jeep-compass-4x4-automat-122019-20td-103kw.php" target="_blank" rel="noopener">Jeep Compass 4x4 automat 12/2019 2.0TD 103kW</a></h3>
+  <div class="facts">2019 · 178 000 km · 2.0 MultiJet 103–125 kW · automat · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">12 500 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">13 070 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+4.3 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:14%"></span></div>
+  <ul class="pc"><li class="pro">12/2019, 2.0 MultiJet 103 kW, 4x4, 9-st. automat, 178 tis. km</li><li class="pro">Garancia km cez ODO-Pass, sledovanie jazdných pruhov, uvedený VIN</li><li class="con">Cena zhruba na úrovni trhu</li><li class="con">Predajca neistý</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 9 dní (od 13. 11.)</p><!-- history-card:end --></article></div>
+<div class="subhead">Špeciálne prípady</div>
+<div class="cards"></div>
+
+<h2>Cena vs. nájazd: celý trh na jednom grafe</h2>
+<p class="section-lead">Každý bod je jeden inzerát. Čím nižšie bod leží oproti ostatným s podobným nájazdom, tým je auto lacnejšie.
+Krúžkom sú označené odporúčané ponuky. Prejdi myšou na bod a uvidíš detail.</p>
+<div class="chart-wrap" id="chartWrap">
+  <div class="legend" id="legend"></div>
+  <svg id="chart" width="100%" height="420" role="img" aria-label="Bodový graf ceny a nájazdu inzerátov"></svg>
+  <div class="tip" id="tip"></div>
+</div>
+
+<h2>Porovnanie motorov</h2>
+<p class="section-lead">Hodnotenie (hviezdičky) zohľadňuje spoľahlivosť, spoľahlivosť a náklady na prevádzku a pomer cena/výkon.
+Číselné stĺpce sú mediány z ohodnotených inzerátov.</p>
+<div class="table-scroll">
+<table>
+  <thead><tr><th>Motor</th><th>Hodnotenie</th><th class="num">Ponúk</th><th class="num">Medián ceny</th><th class="num">Medián roku</th><th class="num">Medián km</th></tr></thead>
+  <tbody>
+<tr>
+  <td><b>Plug-in hybrid 4xe 140–176 kW</b><div class="sub">1.3 turbo + elektromotor vzadu (4x4), ~45 km na elektrinu. Over batériu a nabíjanie.</div></td>
+  <td><span class="stars" aria-label="3 z 5">★★★<span class="off">★★</span></span></td>
+  <td class="num">9</td>
+  <td class="num"><div class="cellbar"><span style="width:100%"></span></div>25 499 €</td>
+  <td class="num">2023</td>
+  <td class="num">43 193 km</td>
+</tr>
+<tr>
+  <td><b>2.0 MultiJet 103–125 kW</b><div class="sub">Silnejší diesel 140–170 k, vždy 4x4 a 9-st. automat. Ťahavý; over DPF a AdBlue.</div></td>
+  <td><span class="stars" aria-label="3 z 5">★★★<span class="off">★★</span></span></td>
+  <td class="num">17</td>
+  <td class="num"><div class="cellbar"><span style="width:51%"></span></div>12 900 €</td>
+  <td class="num">2018</td>
+  <td class="num">127 678 km</td>
+</tr>
+<tr>
+  <td><b>1.6 MultiJet 88–96 kW</b><div class="sub">Diesel 120–130 k, predný pohon. Úsporný; over DPF a AdBlue.</div></td>
+  <td><span class="stars" aria-label="3 z 5">★★★<span class="off">★★</span></span></td>
+  <td class="num">2</td>
+  <td class="num"><div class="cellbar"><span style="width:60%"></span></div>15 400 €</td>
+  <td class="num">2020</td>
+  <td class="num">54 513 km</td>
+</tr>
+<tr>
+  <td><b>1.3 T4 / 1.4 MultiAir / 1.5 e-Hybrid 96–125 kW</b><div class="sub">Turbobenzín 130–170 k (od 2022 aj 1.5 mild hybrid). Svižný; over automat DDCT.</div></td>
+  <td><span class="stars" aria-label="3 z 5">★★★<span class="off">★★</span></span></td>
+  <td class="num">45</td>
+  <td class="num"><div class="cellbar"><span style="width:66%"></span></div>16 900 €</td>
+  <td class="num">2021</td>
+  <td class="num">71 698 km</td>
+</tr></tbody>
+</table>
+</div>
+<div class="explain">
+  <p><b>Jeep Compass II</b> (od 2017, facelift 2021 s novým interiérom) je kompaktné SUV – väčší brat Renegade, konkurent
+  Tiguanu a Sportage. Verzie <b>Trailhawk</b> a <b>4xe</b> majú pohon 4x4.</p>
+  <p><b>Ktorý motor zvoliť?</b> Na bežné jazdenie <b>1.3 T4</b> benzín. Na veľa km <b>1.6 MultiJet</b>. Plug-in <b>4xe</b> má zmysel len
+  s nabíjaním doma.</p>
+</div>
+
+<h2>Na čo si dať pozor</h2>
+<div class="warn">
+  <p><b>Lacné kvôli extrémnemu nájazdu</b> (viac ako 35 tis. km ročne, typicky flotila alebo taxi):</p>
+  <ul><li>Žiadne výrazné prípady.</li></ul>
+  <p><b>Ďalšie veci, ktoré sme v inzerátoch našli:</b></p><ul><li>Asi 30 ponúk sú nové Compassy z 2026 – tie sme nezarátali.</li><li>Novšie Compassy 1.5 e-Hybrid sú mild hybridy (bez nabíjania) – nezamieňaj ich s plug-in hybridom 4xe.</li><li>Pri inzerátoch AAA AUTO je uvedená <b>cena pri financovaní</b> – pri platbe v hotovosti môže byť iná.</li></ul><p><b>Vyradené z porovnania</b> (poškodené autá alebo nezmyselné údaje – model ich nehodnotí):</p><ul><li><a href='https://www.autobazar.eu/detail/jeep-compass-15-mhev-7dct-altitude/Amt5AHJdHey/' target='_blank' rel='noopener'>JEEP Compass 1,5 MHEV 7DCT Altitude</a> (24 990 €): podozrivo nízky nájazd</li><li><a href='https://www.autobazar.eu/detail/jeep-compass-15-mhev-7dct-altitude/AmZpzPVvKh6/' target='_blank' rel='noopener'>JEEP Compass 1,5 MHEV 7DCT Altitude</a> (24 990 €): podozrivo nízky nájazd</li><li><a href='https://www.autobazar.eu/detail/jeep-compass-first-edition-electric-74kw/AmZPfxj9jSW/' target='_blank' rel='noopener'>Jeep Compass First Edition Electric 74kw</a> (45 990 €): podozrivo nízky nájazd</li><li><a href='https://www.autobazar.eu/detail/jeep-compass-first-edition-e-hybrid-145k/Am9Lhp0Z9lh/' target='_blank' rel='noopener'>Jeep Compass First Edition e-hybrid 145k</a> (32 790 €): podozrivo nízky nájazd</li><li><a href='https://www.autobazar.eu/detail/jeep-compass-12-2026-first-edition-e-hybrid-145k/AmAK9Je0T-v/' target='_blank' rel='noopener'>Jeep Compass 1,2 2026 First Edition e-Hybrid 145k</a> (34 990 €): 435000 km/rok je nereálne – skontroluj rok a km</li><li><a href='https://www.autobazar.eu/detail/jeep-compass-altitude-15-130k/Am-mUvjusEO/' target='_blank' rel='noopener'>Jeep Compass Altitude 1.5 130k</a> (30 850 €): podozrivo nízky nájazd</li><li><a href='https://www.autobazar.eu/detail/jeep-compass-15-mhev-7dct-altitude/AmqLMkgb2uz/' target='_blank' rel='noopener'>JEEP Compass 1,5 MHEV 7DCT Altitude</a> (24 990 €): podozrivo nízky nájazd</li><li><a href='https://www.autobazar.eu/detail/jeep-compass-15-mhev-7dct-altitude/AmHJIu0suEt/' target='_blank' rel='noopener'>JEEP Compass 1,5 MHEV 7DCT Altitude</a> (24 990 €): podozrivo nízky nájazd</li></ul><p><b>Prvá generácia (do 2016), Renegade, Cherokee a iné modely z vyhľadávania, nové autá z 2026, inzeráty s chybným nájazdom</b> (41 inzerátov) sme z rebríčka vynechali.</p>
+  <p>Ďalších <b>8</b> inzerátov nemá v texte rok alebo kilometre, takže ich nebolo možné ohodnotiť.
+  Ak ťa niektorý zaujme, predajcu sa na tieto údaje opýtaj.</p>
+</div>
+
+<h2>Kompletný rebríček</h2>
+<p class="section-lead">Všetky ohodnotené inzeráty. Kliknutím na hlavičku stĺpca zoraďuješ, filtrom zužuješ výber.</p>
+<div class="filters">
+  <select id="fEngine"><option value="">Všetky motory</option></select>
+  <select id="fTrans"><option value="">Každá prevodovka</option><option value="automatic">Automat</option><option value="manual">Manuál</option></select>
+  <select id="fSeller"><option value="">Všetci predajcovia</option><option value="nodealer">Bez autobazárov</option></select>
+  <select id="fSource"><option value="">Všetky portály</option><option value="bazos">bazoš</option><option value="autobazar">autobazar.eu</option><option value="bazarsk">bazar.sk</option></select>
+  <select id="fBody" hidden><option value=""></option></select>
+  <select id="fOrigin"><option value="">Akýkoľvek pôvod</option><option value="SR">Kúpené v SR</option><option value="dovoz">Dovoz</option></select>
+  <input id="fMax" type="number" placeholder="Max. cena €" step="500" min="0" style="width:120px">
+  <span class="count" id="count"></span>
+</div>
+<div class="table-scroll">
+<table id="tbl">
+  <thead><tr>
+    <th class="sortable" data-k="title">Inzerát</th>
+    <th class="sortable num" data-k="year">Rok</th>
+    <th class="sortable num" data-k="km">Km</th>
+    <th class="sortable num" data-k="price_gross">Cena</th>
+    <th class="sortable num" data-k="fair_price">Férová</th>
+    <th class="sortable num" data-k="discount_pct">Pod trhom ▾</th>
+  </tr></thead>
+  <tbody></tbody>
+</table>
+</div>
+
+<h2>Pred kúpou over</h2>
+<ul class="check">
+  <li>VIN cez Cebia / autoDNA (história km, havárie)</li>
+  <li>Servisná história – Jeep servis ju vie podľa VIN vytiahnuť</li>
+  <li>Automat 9-st. / DDCT: plynulé radenie, trhanie pri pomalej jazde</li>
+  <li>MultiJet: DPF, AdBlue; 4xe: stav batérie, nabíjanie</li>
+  <li>Elektronika: infotainment, senzory – všetko vyskúšaj</li>
+  <li>STK/EK protokol a dátum platnosti</li>
+</ul>
+
+<footer>
+  Zdroj: auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (len ponuky zo Slovenska, to isté auto na viacerých portáloch je započítané raz), sťahované cez lokálny MCP server bazos-mcp (nástroj <code>fair_price</code>), 22. 11. 2026.
+  Model: ridge regresia log(ceny s DPH) podľa veku, veku², km, km², prevodovky, typu predajcu, motora, karosérie, pohonu 4x4, pôvodu (SR / dovoz) a portálu. Vzorka 73
+  inzerátov, R² 94 %. Parametre sú vyťažené z textu inzerátov, a preto môžu obsahovať chyby. Odporúčané ponuky sme overili
+  prečítaním celého inzerátu. Hodnotenie motorov je odborný odhad, nie výsledok modelu.
+</footer>
+</main>
+
+<script>
+const DATA = [{"id": "ab-Ae_OzzMRuAZ", "url": "https://www.autobazar.eu/detail/jeep-compass-20-multijet-longitude-4x4-sr2maj/Ae_OzzMRuAZ/", "title": "Jeep Compass 2.0 MultiJet, Longitude, 4X4, SR,2.maj", "price": 9000, "price_gross": 9000, "fair_price": 11800.0, "discount_pct": 23.7, "verdict": "výrazne pod trhom – over prečo", "year": 2018, "km": 95346, "km_per_year": 11400.0, "eg": "2.0 MultiJet 103–125 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Košice", "flags": [], "pick": "budget", "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "196856123", "url": "https://auto.bazos.sk/inzerat/196856123/predam-jeep-compass-13turbo-longitude.php", "title": "Predám Jeep Compass 1.3turbo Longitude", "price": 12800, "price_gross": 12800, "fair_price": 16590.0, "discount_pct": 22.9, "verdict": "výrazne pod trhom – over prečo", "year": 2022, "km": 108000, "km_per_year": 24900.0, "eg": "1.3 T4 / 1.4 MultiAir / 1.5 e-Hybrid 96–125 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Trenčín", "flags": [], "pick": "top", "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "197660318", "url": "https://auto.bazos.sk/inzerat/197660318/jeep-compass-20-multijet-140-4x4-limited-at9.php", "title": "Jeep Compass 2.0 Multijet 140 4x4 Limited AT9", "price": 14500, "price_gross": 14500, "fair_price": 18020.0, "discount_pct": 19.5, "verdict": "výrazne pod trhom – over prečo", "year": 2020, "km": 69150, "km_per_year": 10900.0, "eg": "2.0 MultiJet 103–125 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Nitra", "flags": [], "pick": "budget", "source": "bazos", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AeXk8Qu6IEA", "url": "https://www.autobazar.eu/detail/jeep-compass-20-diesel-103kw-automat-prevodovka-4x4/AeXk8Qu6IEA/", "price": 14500}], "body": "suv"}, {"id": "bs-39525366", "url": "https://auto.bazar.sk/39525366-jeep-compass-sustainability-1-3-gse-phev-240k-4x4/", "title": "Jeep Compass Sustainability 1,3 GSE PHEV 240k 4x4", "price": 24890, "price_gross": 24890, "fair_price": 30740.0, "discount_pct": 19.0, "verdict": "výrazne pod trhom – over prečo", "year": 2023, "km": 19490, "km_per_year": 5800.0, "eg": "Plug-in hybrid 4xe 140–176 kW", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Prešov", "flags": [], "pick": "top", "source": "bazarsk", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AmxjEOIzMQI", "url": "https://www.autobazar.eu/detail/jeep-compass-sustainability-13-gse-phev-240k-4x4/AmxjEOIzMQI/", "price": 24890}], "body": "suv"}, {"id": "ab-AenXIVh_PhQ", "url": "https://www.autobazar.eu/detail/jeep-compass-20l-mjet-140-4wd-longitude-at-103kw140hp-a9/AenXIVh_PhQ/", "title": "Jeep Compass 2.0L MJet 140 4WD Longitude AT 103kW140HP A9", "price": 9000, "price_gross": 9000, "fair_price": 10760.0, "discount_pct": 16.4, "verdict": "výrazne pod trhom – over prečo", "year": 2017, "km": 256000, "km_per_year": 27400.0, "eg": "2.0 MultiJet 103–125 kW", "cg": 1, "transmission": "automatic", "seller_type": "private", "location": "Hlohovec", "flags": [], "pick": "budget", "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "196421387", "url": "https://auto.bazos.sk/inzerat/196421387/jeep-compass.php", "title": "JEEP COMPASS", "price": 12999, "price_gross": 12999, "fair_price": 15540.0, "discount_pct": 16.4, "verdict": "výrazne pod trhom – over prečo", "year": 2021, "km": 65326, "km_per_year": 12200.0, "eg": "1.3 T4 / 1.4 MultiAir / 1.5 e-Hybrid 96–125 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Rimavská Sobota", "flags": [], "pick": "top", "source": "bazos", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "197557907", "url": "https://auto.bazos.sk/inzerat/197557907/jeep-compass-15-multiair-e-hybrid-altitude-96-kw-full-led.php", "title": "Jeep Compass 1.5 MultiAir e-Hybrid Altitude 96 kW | FULL LED", "price": 22700, "price_gross": 22700, "fair_price": 26510.0, "discount_pct": 14.4, "verdict": "pod trhom", "year": 2024, "km": 17169, "km_per_year": 7400.0, "eg": "1.3 T4 / 1.4 MultiAir / 1.5 e-Hybrid 96–125 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Senec", "flags": [], "pick": "top", "source": "bazos", "origin": "dovoz", "also_listed": [{"source": "autobazar", "id": "ab-AmUAdBj7XjQ", "url": "https://www.autobazar.eu/detail/jeep-compass-15-e-hybrid-altitude-at/AmUAdBj7XjQ/", "price": 22700}, {"source": "bazarsk", "id": "bs-39731352", "url": "https://auto.bazar.sk/39731352-jeep-compass-1-5-e-hybrid-altitude-a-t/", "price": 22700}], "body": "suv"}, {"id": "bs-39777216", "url": "https://auto.bazar.sk/39777216-jeep-compass-1-3-turbo-a-t-night-eagle-110kw/", "title": "Jeep Compass 1.3 TURBO A/T Night Eagle 110kW", "price": 15999, "price_gross": 15999, "fair_price": 18090.0, "discount_pct": 11.5, "verdict": "pod trhom", "year": 2021, "km": 46420, "km_per_year": 8700.0, "eg": "1.3 T4 / 1.4 MultiAir / 1.5 e-Hybrid 96–125 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Prešov", "flags": [], "pick": "top", "source": "bazarsk", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AmUn14g314y", "url": "https://www.autobazar.eu/detail/jeep-compass-13-turbo-at-night-eagle-110kw/AmUn14g314y/", "price": 15999}], "body": "suv"}, {"id": "bs-39634213", "url": "https://auto.bazar.sk/39634213-jeep-compass-1-3-t-gdi/", "title": "Jeep Compass 1.3 T-GDI", "price": 12800, "price_gross": 12800, "fair_price": 14410.0, "discount_pct": 11.2, "verdict": "pod trhom", "year": 2020, "km": 71205, "km_per_year": 11200.0, "eg": "1.3 T4 / 1.4 MultiAir / 1.5 e-Hybrid 96–125 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava V - Petržalka", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "suv"}, {"id": "197593348", "url": "https://auto.bazos.sk/inzerat/197593348/jeep-ccompass.php", "title": "Jeep. Ccompass", "price": 16900, "price_gross": 16900, "fair_price": 18860.0, "discount_pct": 10.4, "verdict": "pod trhom", "year": 2022, "km": 74000, "km_per_year": 17100.0, "eg": "1.3 T4 / 1.4 MultiAir / 1.5 e-Hybrid 96–125 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Šaľa", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "bs-39675994", "url": "https://auto.bazar.sk/39675994-jeep-compass-1-4-multiair/", "title": "Jeep Compass 1.4 MultiAir", "price": 14300, "price_gross": 14300, "fair_price": 15970.0, "discount_pct": 10.4, "verdict": "pod trhom", "year": 2019, "km": 72833, "km_per_year": 9900.0, "eg": "1.3 T4 / 1.4 MultiAir / 1.5 e-Hybrid 96–125 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava V - Petržalka", "flags": [], "pick": "budget", "source": "bazarsk", "origin": null, "also_listed": [], "body": "suv"}, {"id": "bs-39632328", "url": "https://auto.bazar.sk/39632328-jeep-compass-1-3-t-gdi/", "title": "Jeep Compass 1.3 T-GDI", "price": 16500, "price_gross": 16500, "fair_price": 18260.0, "discount_pct": 9.6, "verdict": "pod trhom", "year": 2022, "km": 71698, "km_per_year": 16500.0, "eg": "1.3 T4 / 1.4 MultiAir / 1.5 e-Hybrid 96–125 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava V - Petržalka", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AeNvy4xUMMk", "url": "https://www.autobazar.eu/detail/jeep-compass-hev/AeNvy4xUMMk/", "title": "Jeep Compass HEV", "price": 18800, "price_gross": 18800, "fair_price": 20670.0, "discount_pct": 9.1, "verdict": "pod trhom", "year": 2023, "km": 41200, "km_per_year": 12400.0, "eg": "1.3 T4 / 1.4 MultiAir / 1.5 e-Hybrid 96–125 kW", "cg": 0, "transmission": "automatic", "seller_type": "private", "location": "Pezinok", "flags": [], "pick": "top", "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "196458258", "url": "https://auto.bazos.sk/inzerat/196458258/predam-jeep-compass-limited-15-mhev-rv-072023-37100km.php", "price": 18800}], "body": "suv"}, {"id": "197249247", "url": "https://auto.bazos.sk/inzerat/197249247/jeep-compass-15-mhev-96-kw-a7-2023.php", "title": "Jeep Compass 1.5 MHEV 96 kW", "price": 16990, "price_gross": 16990, "fair_price": 18350.0, "discount_pct": 7.4, "verdict": "pod trhom", "year": 2023, "km": 61192, "km_per_year": 18400.0, "eg": "1.3 T4 / 1.4 MultiAir / 1.5 e-Hybrid 96–125 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Galanta", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmsOUyEMtQJ", "url": "https://www.autobazar.eu/detail/jeep-compass-15-mhev-96-kw-aj-na-splatky-protiucet/AmsOUyEMtQJ/", "price": 16990}, {"source": "bazarsk", "id": "bs-39760970", "url": "https://auto.bazar.sk/39760970-jeep-compass-1-5-mhev-96-kw-aj-na-splatky-protiucet/", "price": 16990}], "body": "suv"}, {"id": "ab-AmlW1xr83fE", "url": "https://www.autobazar.eu/detail/jeep-compass-13-night-eagle-a6-110kw/AmlW1xr83fE/", "title": "Jeep Compass 1,3 Night Eagle A6  110kW", "price": 14999, "price_gross": 14999, "fair_price": 16190.0, "discount_pct": 7.3, "verdict": "pod trhom", "year": 2020, "km": 84763, "km_per_year": 13400.0, "eg": "1.3 T4 / 1.4 MultiAir / 1.5 e-Hybrid 96–125 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "196715165", "url": "https://auto.bazos.sk/inzerat/196715165/jeep-compass-13-night-eagle-a6-110kw.php", "price": 14999}, {"source": "bazarsk", "id": "bs-39591000", "url": "https://auto.bazar.sk/39591000-jeep-compass-1-3-night-eagle-a6-110kw/", "price": 14999}], "body": "suv"}, {"id": "bs-39691095", "url": "https://auto.bazar.sk/39691095-jeep-compass-1-3-t-gdi/", "title": "Jeep Compass 1.3 T-GDI", "price": 14300, "price_gross": 14300, "fair_price": 15400.0, "discount_pct": 7.1, "verdict": "pod trhom", "year": 2020, "km": 49702, "km_per_year": 7800.0, "eg": "1.3 T4 / 1.4 MultiAir / 1.5 e-Hybrid 96–125 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava V - Petržalka", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "suv"}, {"id": "195873185", "url": "https://auto.bazos.sk/inzerat/195873185/jeep-compass.php", "title": "Jeep Compass", "price": 10500, "price_gross": 10500, "fair_price": 11250.0, "discount_pct": 6.7, "verdict": "férová cena", "year": 2018, "km": 132000, "km_per_year": 15800.0, "eg": "2.0 MultiJet 103–125 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Nitra", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "bs-39655041", "url": "https://auto.bazar.sk/39655041-jeep-compass-1-4i-longitude-a-t-110kw/", "title": "Jeep Compass 1.4i Longitude A/T 110kW", "price": 16500, "price_gross": 16500, "fair_price": 17680.0, "discount_pct": 6.7, "verdict": "férová cena", "year": 2022, "km": 103667, "km_per_year": 23900.0, "eg": "1.3 T4 / 1.4 MultiAir / 1.5 e-Hybrid 96–125 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Štiavnička", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-Am9NMf0UeNU", "url": "https://www.autobazar.eu/detail/jeep-compass-14i-longitude-at-110kw/Am9NMf0UeNU/", "price": 16500}, {"source": "bazos", "id": "197500746", "url": "https://auto.bazos.sk/inzerat/197500746/jeep-compass-15-e-hybrid-longitude-at-110kw.php", "price": 16500}], "body": "suv"}, {"id": "196958776", "url": "https://auto.bazos.sk/inzerat/196958776/jeep-compass.php", "title": "Jeep Compass", "price": 15900, "price_gross": 15900, "fair_price": 16930.0, "discount_pct": 6.1, "verdict": "férová cena", "year": 2022, "km": 102000, "km_per_year": 23500.0, "eg": "1.3 T4 / 1.4 MultiAir / 1.5 e-Hybrid 96–125 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Dolný Kubín", "flags": ["prevodovka nezistená"], "pick": "top", "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-Am9waGUH3v7", "url": "https://www.autobazar.eu/detail/jeep-compass-summit-15-turbo-mhev-130k-7dct-fwd/Am9waGUH3v7/", "title": "Jeep Compass SUMMIT 1.5 TURBO MHEV 130k 7DCT FWD", "price": 23990, "price_gross": 23990, "fair_price": 25390.0, "discount_pct": 5.5, "verdict": "férová cena", "year": 2024, "km": 30620, "km_per_year": 13100.0, "eg": "1.3 T4 / 1.4 MultiAir / 1.5 e-Hybrid 96–125 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Stupava", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-39758629", "url": "https://auto.bazar.sk/39758629-jeep-compass-summit-1-5-turbo-mhev-130k-7dct-fwd/", "price": 23990}], "body": "suv"}, {"id": "197521409", "url": "https://auto.bazos.sk/inzerat/197521409/jeep-compass-night-eagle-72022-47000km.php", "title": "Jeep Compass - Night eagle, 7/2022, 47000km", "price": 16900, "price_gross": 16900, "fair_price": 17760.0, "discount_pct": 4.8, "verdict": "férová cena", "year": 2022, "km": 47000, "km_per_year": 10800.0, "eg": "1.3 T4 / 1.4 MultiAir / 1.5 e-Hybrid 96–125 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Revúca", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "ab-AeBO3JZqBmz", "url": "https://www.autobazar.eu/detail/jeep-compass-16-multijet-servkniha-klima-tempomat/AeBO3JZqBmz/", "title": "Jeep Compass 1.6 MultiJet, Serv.kniha, Klíma, Tempomat", "price": 13000, "price_gross": 13000, "fair_price": 13630.0, "discount_pct": 4.6, "verdict": "férová cena", "year": 2019, "km": 68210, "km_per_year": 9300.0, "eg": "1.6 MultiJet 88–96 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Prešovský kraj", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-Am0qju1TlDl9", "url": "https://www.autobazar.eu/detail/jeep-compass-13-gse-night-eagle-ii/Am0qju1TlDl9/", "title": "Jeep Compass 1.3 GSE Night Eagle II", "price": 19999, "price_gross": 19999, "fair_price": 20890.0, "discount_pct": 4.3, "verdict": "férová cena", "year": 2023, "km": 29881, "km_per_year": 9000.0, "eg": "1.3 T4 / 1.4 MultiAir / 1.5 e-Hybrid 96–125 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Trenčín", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197569407", "url": "https://auto.bazos.sk/inzerat/197569407/jeep-compass-13-gse-night-eagle-ii.php", "price": 19999}, {"source": "bazarsk", "id": "bs-39155747", "url": "https://auto.bazar.sk/39155747-jeep-compass-1-3-gse-night-eagle-ii/", "price": 19999}], "body": "suv"}, {"id": "197114812", "url": "https://auto.bazos.sk/inzerat/197114812/jeep-compass-4x4-automat-122019-20td-103kw.php", "title": "Jeep Compass 4x4 automat 12/2019 2.0TD 103kW", "price": 12500, "price_gross": 12500, "fair_price": 13070.0, "discount_pct": 4.3, "verdict": "férová cena", "year": 2019, "km": 178000, "km_per_year": 24300.0, "eg": "2.0 MultiJet 103–125 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Partizánske", "flags": [], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AediHdzb8EP", "url": "https://www.autobazar.eu/detail/jeep-compass-13-80th-anniversary/AediHdzb8EP/", "title": "Jeep Compass 1.3 80th Anniversary", "price": 19500, "price_gross": 19500, "fair_price": 20310.0, "discount_pct": 4.0, "verdict": "férová cena", "year": 2022, "km": 58433, "km_per_year": 13500.0, "eg": "1.3 T4 / 1.4 MultiAir / 1.5 e-Hybrid 96–125 kW", "cg": 0, "transmission": "automatic", "seller_type": "private", "location": "Prievidza", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "197495753", "url": "https://auto.bazos.sk/inzerat/197495753/jeep-compass-13-phev-trailhawk-awd-at6-132kw-2024-v-zaruke.php", "title": "Jeep Compass 1.3 PHEV Trailhawk AWD AT6 132kW 2024/ V Záruke", "price": 28990, "price_gross": 28990, "fair_price": 30100.0, "discount_pct": 3.7, "verdict": "férová cena", "year": 2024, "km": 43193, "km_per_year": 18500.0, "eg": "Plug-in hybrid 4xe 140–176 kW", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AmlZdz12ve1", "url": "https://www.autobazar.eu/detail/jeep-compass-13-phev-trailhawk-awd-at6-132kw-2024-aj-na-splatky-protiucet/AmlZdz12ve1/", "price": 28990}, {"source": "bazarsk", "id": "bs-39769174", "url": "https://auto.bazar.sk/39769174-jeep-compass-1-3-phev-trailhawk-awd-at-6-132kw-2024-aj-na-splatky-protiucet/", "price": 28990}], "body": "suv"}, {"id": "ab-Ae7fT35pZMq", "url": "https://www.autobazar.eu/detail/jeep-compass-jeep-compass-limited-15-e-hybrid-130k-automat/Ae7fT35pZMq/", "title": "Jeep Compass Jeep Compass LIMITED 1.5 e-Hybrid 130k, automat", "price": 19990, "price_gross": 19990, "fair_price": 20730.0, "discount_pct": 3.6, "verdict": "férová cena", "year": 2023, "km": 41500, "km_per_year": 12500.0, "eg": "1.3 T4 / 1.4 MultiAir / 1.5 e-Hybrid 96–125 kW", "cg": 0, "transmission": "automatic", "seller_type": "private", "location": "Skalica", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "ab-AmmSC6HkAaY", "url": "https://www.autobazar.eu/detail/jeep-compass-13-gse-t4-110kw-80th-anniversary-aj-na-splatky-protiucet/AmmSC6HkAaY/", "title": "Jeep Compass 1.3 GSE T4 110kW 80th Anniversary / AJ NA SPLÁTKY / PROTIÚČET /", "price": 18999, "price_gross": 18999, "fair_price": 19600.0, "discount_pct": 3.1, "verdict": "férová cena", "year": 2022, "km": 53200, "km_per_year": 12300.0, "eg": "1.3 T4 / 1.4 MultiAir / 1.5 e-Hybrid 96–125 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Trenčín", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197400910", "url": "https://auto.bazos.sk/inzerat/197400910/jeep-compass-13-gse-t4-110kw-80th-anniversary.php", "price": 18999}, {"source": "bazarsk", "id": "bs-39760072", "url": "https://auto.bazar.sk/39760072-jeep-compass-1-3-gse-t4-110kw-80th-anniversary-aj-na-splatky-protiucet/", "price": 18999}], "body": "suv"}, {"id": "ab-Amwy_T1ZcFw", "url": "https://www.autobazar.eu/detail/jeep-compass-13-turbo-night-eagle-96kw-m6-zaruka-aj-na-splatky-protiucet/Amwy_T1ZcFw/", "title": "Jeep Compass 1.3 TURBO Night Eagle / 96kW / M6 / ZÁRUKA / AJ NA SPLÁTKY / PROTIÚČET", "price": 12990, "price_gross": 12990, "fair_price": 13380.0, "discount_pct": 2.9, "verdict": "férová cena", "year": 2020, "km": 109853, "km_per_year": 17300.0, "eg": "1.3 T4 / 1.4 MultiAir / 1.5 e-Hybrid 96–125 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197350704", "url": "https://auto.bazos.sk/inzerat/197350704/jeep-compass-13-turbo-night-eagle-96kw-m6-2020.php", "price": 12990}, {"source": "bazarsk", "id": "bs-39754445", "url": "https://auto.bazar.sk/39754445-jeep-compass-1-3-turbo-night-eagle-96kw-m6-zaruka-aj-na-splatky-protiucet/", "price": 12990}], "body": "suv"}, {"id": "197689300", "url": "https://auto.bazos.sk/inzerat/197689300/jeep-compass-13-gse-automat-2022-1majitel-odpocet-dph.php", "title": "JEEP COMPASS 1.3 GSE Automat 2022 | 1.majiteľ | odpočet DPH", "price": 15950, "price_gross": 15950, "fair_price": 16390.0, "discount_pct": 2.7, "verdict": "férová cena", "year": 2022, "km": 117150, "km_per_year": 27000.0, "eg": "1.3 T4 / 1.4 MultiAir / 1.5 e-Hybrid 96–125 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Sabinov", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AmSQQ_pYGtL", "url": "https://www.autobazar.eu/detail/jeep-compass-13-gse-longitude-at-110kw/AmSQQ_pYGtL/", "price": 15950}, {"source": "bazarsk", "id": "bs-39693964", "url": "https://auto.bazar.sk/39693964-jeep-compass-1-3-gse-longitude-a-t-110kw/", "price": 15950}], "body": "suv"}, {"id": "197082258", "url": "https://auto.bazos.sk/inzerat/197082258/predam-vozidlo-jeep-compass.php", "title": "Predám vozidlo JEEP COMPASS", "price": 14500, "price_gross": 14500, "fair_price": 14870.0, "discount_pct": 2.5, "verdict": "férová cena", "year": 2021, "km": 100000, "km_per_year": 18800.0, "eg": "1.3 T4 / 1.4 MultiAir / 1.5 e-Hybrid 96–125 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Nové Zámky", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "195938157", "url": "https://auto.bazos.sk/inzerat/195938157/jeep-compass-night-eagle-4x4-13-turbo-phev-at-2023.php", "title": "JEEP COMPASS NIGHT EAGLE, 4x4, 1.3 TURBO PHEV, AT, 2023", "price": 25499, "price_gross": 25499, "fair_price": 25940.0, "discount_pct": 1.7, "verdict": "férová cena", "year": 2023, "km": 47812, "km_per_year": 14300.0, "eg": "Plug-in hybrid 4xe 140–176 kW", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Poprad", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AmG3vmhbki4", "url": "https://www.autobazar.eu/detail/jeep-compass-13-firefly-turbo-turbo/AmG3vmhbki4/", "title": "Jeep Compass 1.3 FireFly Turbo Turbo", "price": 14490, "price_gross": 14490, "fair_price": 14730.0, "discount_pct": 1.6, "verdict": "férová cena", "year": 2021, "km": 96002, "km_per_year": 18000.0, "eg": "1.3 T4 / 1.4 MultiAir / 1.5 e-Hybrid 96–125 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Martin", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39732127", "url": "https://auto.bazar.sk/39732127-jeep-compass-1-3-firefly-turbo-turbo/", "price": 14490}], "body": "suv"}, {"id": "197020826", "url": "https://auto.bazos.sk/inzerat/197020826/jeep-compass-20-diesel-4x4-automat.php", "title": "Jeep Compass 2.0 diesel 4x4 automat", "price": 11990, "price_gross": 11990, "fair_price": 12150.0, "discount_pct": 1.3, "verdict": "férová cena", "year": 2017, "km": 137000, "km_per_year": 14700.0, "eg": "2.0 MultiJet 103–125 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Gelnica", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AmT4UAa7uTQ", "url": "https://www.autobazar.eu/detail/jeep-compass-15-e-hybrid-night-eagle-ii-at/AmT4UAa7uTQ/", "title": "Jeep Compass 1.5 e-Hybrid Night Eagle II A/T", "price": 24900, "price_gross": 24900, "fair_price": 25190.0, "discount_pct": 1.2, "verdict": "férová cena", "year": 2024, "km": 15075, "km_per_year": 6500.0, "eg": "1.3 T4 / 1.4 MultiAir / 1.5 e-Hybrid 96–125 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Lovinobaňa", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-39758528", "url": "https://auto.bazar.sk/39758528-jeep-compass-1-5-e-hybrid-night-eagle-ii-a-t/", "price": 24900}], "body": "suv"}, {"id": "197109236", "url": "https://auto.bazos.sk/inzerat/197109236/jeep-compass-13-gse-automat-2021.php", "title": "Jeep Compass 1.3 GSE Automat 2021", "price": 15000, "price_gross": 15000, "fair_price": 14930.0, "discount_pct": -0.4, "verdict": "férová cena", "year": 2021, "km": 135068, "km_per_year": 25300.0, "eg": "1.3 T4 / 1.4 MultiAir / 1.5 e-Hybrid 96–125 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Medzilaborce", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "bs-39729545", "url": "https://auto.bazar.sk/39729545-jeep-compass-1-3-t-gdi/", "title": "Jeep Compass 1.3 T-GDI", "price": 13600, "price_gross": 13600, "fair_price": 13410.0, "discount_pct": -1.4, "verdict": "férová cena", "year": 2021, "km": 94009, "km_per_year": 17600.0, "eg": "1.3 T4 / 1.4 MultiAir / 1.5 e-Hybrid 96–125 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava V - Petržalka", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AmNX_8Qbyes", "url": "https://www.autobazar.eu/detail/jeep-compass-14l-multiair-103-kw-6g-2wd-limited/AmNX_8Qbyes/", "title": "Jeep Compass 1.4L MultiAir 103 kW 6G 2WD Limited", "price": 14990, "price_gross": 14990, "fair_price": 14720.0, "discount_pct": -1.8, "verdict": "férová cena", "year": 2019, "km": 50308, "km_per_year": 6900.0, "eg": "1.3 T4 / 1.4 MultiAir / 1.5 e-Hybrid 96–125 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Vranov nad Topľou", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-39536587", "url": "https://auto.bazar.sk/39536587-jeep-compass-1-4l-multiair-103-kw-6g-2wd-limited/", "price": 14990}], "body": "suv"}, {"id": "197357114", "url": "https://auto.bazos.sk/inzerat/197357114/jeep-compass-20l-mjet-awd-limited-103kw-a9-2018.php", "title": "Jeep Compass 2.0L MJet AWD Limited / 103kW / A9 / 2018", "price": 13000, "price_gross": 13000, "fair_price": 12740.0, "discount_pct": -2.0, "verdict": "férová cena", "year": 2018, "km": 120072, "km_per_year": 14400.0, "eg": "2.0 MultiJet 103–125 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "196770358", "url": "https://auto.bazos.sk/inzerat/196770358/jeep-compass-4xe-4x4-13-turbo-phev-241ps-odpocet-dph.php", "title": "JEEP COMPASS 4XE  4x4, 1.3 TURBO PHEV 241PS odpocet DPH", "price": 25705, "price_gross": 25705, "fair_price": 25150.0, "discount_pct": -2.2, "verdict": "férová cena", "year": 2022, "km": 24652, "km_per_year": 5700.0, "eg": "Plug-in hybrid 4xe 140–176 kW", "cg": 2, "transmission": null, "seller_type": "dealer", "location": "Košice", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AmMJGNUDS6D", "url": "https://www.autobazar.eu/detail/jeep-compass/AmMJGNUDS6D/", "title": "Jeep Compass 1,5 e-hybrid 130k LIMITED", "price": 20690, "price_gross": 20690, "fair_price": 20230.0, "discount_pct": -2.3, "verdict": "férová cena", "year": 2023, "km": 33000, "km_per_year": 9900.0, "eg": "1.3 T4 / 1.4 MultiAir / 1.5 e-Hybrid 96–125 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava-Petržalka", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39551164", "url": "https://auto.bazar.sk/39551164-jeep-compass-1-5-e-hybrid-130k-limited/", "price": 20690}], "body": "suv"}, {"id": "ab-AmrJRsqC3ay", "url": "https://www.autobazar.eu/detail/jeep-compass-13-gse-t4-150-ddct-110kw-2021-aj-na-splatky-protiucet/AmrJRsqC3ay/", "title": "Jeep Compass 1.3 GSE T4 150 DDCT, 110kW, 2021 / AJ NA SPLÁTKY / PROTIÚČET /", "price": 15790, "price_gross": 15790, "fair_price": 15360.0, "discount_pct": -2.8, "verdict": "férová cena", "year": 2021, "km": 101629, "km_per_year": 19100.0, "eg": "1.3 T4 / 1.4 MultiAir / 1.5 e-Hybrid 96–125 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-39775461", "url": "https://auto.bazar.sk/39775461-jeep-compass-1-3-gse-t4-150-ddct-110kw-2021-aj-na-splatky-protiucet/", "price": 15790}], "body": "suv"}, {"id": "ab-Amx8epUn0XW", "url": "https://www.autobazar.eu/detail/jeep-compass/Amx8epUn0XW/", "title": "Jeep Compass 2.0L MJET 140 4WD Limited A/T", "price": 16200, "price_gross": 16200, "fair_price": 15730.0, "discount_pct": -3.0, "verdict": "férová cena", "year": 2019, "km": 103655, "km_per_year": 14100.0, "eg": "2.0 MultiJet 103–125 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava-Lamač", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazarsk", "id": "bs-39575946", "url": "https://auto.bazar.sk/39575946-jeep-compass-2-0l-mjet-140-4wd-limited-a-t/", "price": 16200}], "body": "suv"}, {"id": "197461575", "url": "https://auto.bazos.sk/inzerat/197461575/jeep-compass-20l-mjet-4wd-103kw-2017-1majitel.php", "title": "Jeep Compass 2.0L MJet 4WD 103kW 2017 / 1.Majiteľ", "price": 10500, "price_gross": 10500, "fair_price": 10170.0, "discount_pct": -3.2, "verdict": "férová cena", "year": 2017, "km": 129719, "km_per_year": 13900.0, "eg": "2.0 MultiJet 103–125 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Žilina", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AmP09OJx068", "url": "https://www.autobazar.eu/detail/jeep-compass-20l-mjet-4wd-103kw-2017-aj-na-splatky-protiucet/AmP09OJx068/", "price": 10500}, {"source": "bazarsk", "id": "bs-39759904", "url": "https://auto.bazar.sk/39759904-jeep-compass-2-0l-mjet-4wd-103kw-2017-aj-na-splatky-protiucet/", "price": 10500}], "body": "suv"}, {"id": "ab-AeXYPaA14Mg", "url": "https://www.autobazar.eu/detail/jeep-compass-14-multiair-longitude-sr1maj/AeXYPaA14Mg/", "title": "Jeep Compass 1.4 MultiAir, Longitude, SR,1.maj", "price": 12400, "price_gross": 12400, "fair_price": 11950.0, "discount_pct": -3.8, "verdict": "férová cena", "year": 2018, "km": 95674, "km_per_year": 11500.0, "eg": "1.3 T4 / 1.4 MultiAir / 1.5 e-Hybrid 96–125 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39691063", "url": "https://auto.bazar.sk/39691063-jeep-compass-1-4-multiair/", "price": 12700}], "body": "suv"}, {"id": "ab-AeUDDYdI2wV", "url": "https://www.autobazar.eu/detail/jeep-compass-13-gse-150-80th-anniversary-at-111kw151hp-a6/AeUDDYdI2wV/", "title": "Jeep Compass 1.3 GSE 150 80th Anniversary AT 111kW151HP A6", "price": 20900, "price_gross": 20900, "fair_price": 20140.0, "discount_pct": -3.8, "verdict": "férová cena", "year": 2021, "km": 29043, "km_per_year": 5400.0, "eg": "1.3 T4 / 1.4 MultiAir / 1.5 e-Hybrid 96–125 kW", "cg": 0, "transmission": "automatic", "seller_type": "private", "location": "Nitra", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "bs-39525786", "url": "https://auto.bazar.sk/39525786-jeep-compass/", "title": "Jeep Compass", "price": 27700, "price_gross": 27700, "fair_price": 26680.0, "discount_pct": -3.8, "verdict": "férová cena", "year": 2024, "km": 7600, "km_per_year": 3300.0, "eg": "Plug-in hybrid 4xe 140–176 kW", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Revúca", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-Am1RDIJrP9n", "url": "https://www.autobazar.eu/detail/jeep-compass/Am1RDIJrP9n/", "price": 27700}], "body": "suv"}, {"id": "ab-AewJXaMK6BY", "url": "https://www.autobazar.eu/detail/jeep-compass-14-multiair-sr2maj-servkniha-klima/AewJXaMK6BY/", "title": "Jeep Compass 1.4 MultiAir, SR,2.maj, Serv.kniha, Klíma", "price": 11700, "price_gross": 11700, "fair_price": 11220.0, "discount_pct": -4.2, "verdict": "férová cena", "year": 2018, "km": 122212, "km_per_year": 14700.0, "eg": "1.3 T4 / 1.4 MultiAir / 1.5 e-Hybrid 96–125 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Prešovský kraj", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39672428", "url": "https://auto.bazar.sk/39672428-jeep-compass-1-4-multiair/", "price": 12000}], "body": "suv"}, {"id": "196559421", "url": "https://auto.bazos.sk/inzerat/196559421/jeep-compass-limited-20d-4x4.php", "title": "Jeep Compass Limited 2.0 MJet 4x4 AT", "price": 11900, "price_gross": 11900, "fair_price": 11420.0, "discount_pct": -4.2, "verdict": "férová cena", "year": 2018, "km": 283300, "km_per_year": 34000.0, "eg": "2.0 MultiJet 103–125 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Galanta", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "196638129", "url": "https://auto.bazos.sk/inzerat/196638129/jeep-compass-20l-mjet-140-4wd-limited-at.php", "title": "Jeep Compass 2.0L MJet 140 4WD Limited A/T", "price": 14490, "price_gross": 14490, "fair_price": 13880.0, "discount_pct": -4.4, "verdict": "férová cena", "year": 2018, "km": 105704, "km_per_year": 12700.0, "eg": "2.0 MultiJet 103–125 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Bratislava", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-Aml016sNoq8", "url": "https://www.autobazar.eu/detail/jeep-compass-13-turbo-phev-limited/Aml016sNoq8/", "title": "Jeep Compass", "price": 18500, "price_gross": 18500, "fair_price": 17680.0, "discount_pct": -4.6, "verdict": "férová cena", "year": 2022, "km": 78000, "km_per_year": 18000.0, "eg": "1.3 T4 / 1.4 MultiAir / 1.5 e-Hybrid 96–125 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Malacky", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-38972859", "url": "https://auto.bazar.sk/38972859-jeep-compass/", "price": 18500}], "body": "suv"}, {"id": "197457716", "url": "https://auto.bazos.sk/inzerat/197457716/jeep-compass-20l-mjet-diesel-4x4-9st-aut-183000km-rv2018.php", "title": "Jeep Compass 2.0L MJet diesel 4x4 9st. Aut. 183000km rv2018", "price": 12900, "price_gross": 12900, "fair_price": 12310.0, "discount_pct": -4.8, "verdict": "férová cena", "year": 2018, "km": 183000, "km_per_year": 22000.0, "eg": "2.0 MultiJet 103–125 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Nitra", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "196007319", "url": "https://auto.bazos.sk/inzerat/196007319/predam-jeep-compass-upland-13turbo-phev-mozny-odpocet-dph.php", "title": "Predám Jeep Compass Upland 1,3TURBO PHEV MOŽNÝ ODPOČET DPH", "price": 21990, "price_gross": 21990, "fair_price": 20990.0, "discount_pct": -4.8, "verdict": "férová cena", "year": 2022, "km": 55000, "km_per_year": 12700.0, "eg": "Plug-in hybrid 4xe 140–176 kW", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Martin", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "bs-39708371", "url": "https://auto.bazar.sk/39708371-jeep-compass-1-3-t-gdi/", "title": "Jeep Compass 1.3 T-GDI", "price": 16200, "price_gross": 16200, "fair_price": 15240.0, "discount_pct": -6.3, "verdict": "férová cena", "year": 2021, "km": 99186, "km_per_year": 18600.0, "eg": "1.3 T4 / 1.4 MultiAir / 1.5 e-Hybrid 96–125 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava V - Petržalka", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "suv"}, {"id": "197505612", "url": "https://auto.bazos.sk/inzerat/197505612/jeep-compass-13-gse-night-eagle.php", "title": "Jeep Compass 1.3 GSE Night Eagle", "price": 23990, "price_gross": 23990, "fair_price": 22500.0, "discount_pct": -6.6, "verdict": "férová cena", "year": 2023, "km": 8400, "km_per_year": 2500.0, "eg": "1.3 T4 / 1.4 MultiAir / 1.5 e-Hybrid 96–125 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Bardejov", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "197456304", "url": "https://auto.bazos.sk/inzerat/197456304/jeep-compass-13-t-110kw-80th-anniversary.php", "title": "Jeep Compass 1.3 T 110kw 80th Anniversary", "price": 19500, "price_gross": 19500, "fair_price": 18180.0, "discount_pct": -7.3, "verdict": "nad trhom", "year": 2021, "km": 58433, "km_per_year": 11000.0, "eg": "1.3 T4 / 1.4 MultiAir / 1.5 e-Hybrid 96–125 kW", "cg": 0, "transmission": "automatic", "seller_type": "private", "location": "Prievidza", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "197127564", "url": "https://auto.bazos.sk/inzerat/197127564/jeep-compass-13-gse-limited.php", "title": "Jeep Compass 1.3 GSE LIMITED", "price": 20300, "price_gross": 20300, "fair_price": 18840.0, "discount_pct": -7.7, "verdict": "nad trhom", "year": 2022, "km": 82301, "km_per_year": 19000.0, "eg": "1.3 T4 / 1.4 MultiAir / 1.5 e-Hybrid 96–125 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Prešov", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "197117052", "url": "https://auto.bazos.sk/inzerat/197117052/jeep-compass-4xe-plug-in-hybrid-4x4-190-ps-2023.php", "title": "Jeep Compass 4xe Plug-in Hybrid | 4x4 | 2021", "price": 18500, "price_gross": 18500, "fair_price": 16980.0, "discount_pct": -9.0, "verdict": "nad trhom", "year": 2021, "km": 78500, "km_per_year": 14700.0, "eg": "Plug-in hybrid 4xe 140–176 kW", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Malacky", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "195873378", "url": "https://auto.bazos.sk/inzerat/195873378/jeep-compass-limited.php", "title": "Jeep compass limited", "price": 15550, "price_gross": 15550, "fair_price": 14240.0, "discount_pct": -9.2, "verdict": "nad trhom", "year": 2021, "km": 118253, "km_per_year": 22200.0, "eg": "1.3 T4 / 1.4 MultiAir / 1.5 e-Hybrid 96–125 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Dunajská Streda", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-Am_JLIKubDP", "url": "https://www.autobazar.eu/detail/jeep-compass-13-turbo-phev-limited/Am_JLIKubDP/", "title": "Jeep Compass 1.3 TURBO PHEV Limited", "price": 17990, "price_gross": 17990, "fair_price": 16450.0, "discount_pct": -9.4, "verdict": "nad trhom", "year": 2021, "km": 149999, "km_per_year": 28100.0, "eg": "Plug-in hybrid 4xe 140–176 kW", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Bodza", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "196472885", "url": "https://auto.bazos.sk/inzerat/196472885/jeep-compass-13-turbo-phev-limited.php", "price": 17990}, {"source": "bazarsk", "id": "bs-39733580", "url": "https://auto.bazar.sk/39733580-jeep-compass-1-3-turbo-phev-limited/", "price": 17990}], "body": "suv"}, {"id": "bs-39307469", "url": "https://auto.bazar.sk/39307469-jeep-compass-1-3-turbo-night-eagle/", "title": "Jeep Compass 1.3 TURBO Night Eagle", "price": 17990, "price_gross": 17990, "fair_price": 16350.0, "discount_pct": -10.0, "verdict": "nad trhom", "year": 2021, "km": 55500, "km_per_year": 10400.0, "eg": "1.3 T4 / 1.4 MultiAir / 1.5 e-Hybrid 96–125 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava I - Staré Mesto", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197094244", "url": "https://auto.bazos.sk/inzerat/197094244/jeep-compass-13-turbo-night-eagle-96kw130hp-m6.php", "price": 14690}], "body": "suv"}, {"id": "197400462", "url": "https://auto.bazos.sk/inzerat/197400462/jeep-compass-15-e-hybrid-limited-a7-v-zaruke-novy-olej.php", "title": "Jeep Compass 1.5 e-Hybrid LIMITED A7 - v ZÁRUKE - Nový olej", "price": 24999, "price_gross": 24999, "fair_price": 22640.0, "discount_pct": -10.4, "verdict": "nad trhom", "year": 2024, "km": 35935, "km_per_year": 15400.0, "eg": "1.3 T4 / 1.4 MultiAir / 1.5 e-Hybrid 96–125 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-Amcv_xCbLk0", "url": "https://www.autobazar.eu/detail/jeep-compass-15-e-hybrid-limited-a7-v-zaruke-novy-olej-a-filtre/Amcv_xCbLk0/", "price": 24999}, {"source": "bazos", "id": "196594850", "url": "https://auto.bazos.sk/inzerat/196594850/jeep-compass-15-e-hybrid-limited-a7-zaruka-novy-olej.php", "price": 24999}, {"source": "bazarsk", "id": "bs-39554334", "url": "https://auto.bazar.sk/39554334-jeep-compass-1-5-e-hybrid-limited-a7-v-zaruke-novy-olej-a-filtre/", "price": 24999}], "body": "suv"}, {"id": "ab-AmNDl2tbqOD", "url": "https://www.autobazar.eu/detail/jeep-compass-20l-mjet-4wd-limited-103kw-a9-zaruka-aj-na-splatky-protiucet/AmNDl2tbqOD/", "title": "Jeep Compass 2.0L MJet 4WD Limited / 103kW / A9 / ZÁRUKA / AJ NA SPLÁTKY / PROTIÚČET", "price": 15200, "price_gross": 15200, "fair_price": 13700.0, "discount_pct": -11.0, "verdict": "nad trhom", "year": 2019, "km": 124430, "km_per_year": 17000.0, "eg": "2.0 MultiJet 103–125 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Trenčín", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197468280", "url": "https://auto.bazos.sk/inzerat/197468280/jeep-compass-20l-mjet-4wd-limited-103kw-a9-2019.php", "price": 15200}, {"source": "bazarsk", "id": "bs-39759556", "url": "https://auto.bazar.sk/39759556-jeep-compass-2-0l-mjet-4wd-limited-103kw-a9-zaruka-aj-na-splatky-protiucet/", "price": 15200}], "body": "suv"}, {"id": "ab-AmGq4lnz9_f", "url": "https://www.autobazar.eu/detail/jeep-compass-13-turbo-night-eagle-96kw-mt6-2020-aj-na-splatky-protiucet/AmGq4lnz9_f/", "title": "Jeep Compass 1.3 TURBO Night Eagle 96kW MT/6 2020 / AJ NA SPLÁTKY / PROTIÚČET", "price": 16999, "price_gross": 16999, "fair_price": 15280.0, "discount_pct": -11.3, "verdict": "nad trhom", "year": 2020, "km": 61027, "km_per_year": 9600.0, "eg": "1.3 T4 / 1.4 MultiAir / 1.5 e-Hybrid 96–125 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Trenčín", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197635830", "url": "https://auto.bazos.sk/inzerat/197635830/jeep-compass-13-turbo-night-eagle-96kw-mt6-2020.php", "price": 16999}, {"source": "bazarsk", "id": "bs-39759745", "url": "https://auto.bazar.sk/39759745-jeep-compass-1-3-turbo-night-eagle-96kw-mt-6-2020-aj-na-splatky-protiucet/", "price": 16999}], "body": "suv"}, {"id": "196576529", "url": "https://auto.bazos.sk/inzerat/196576529/jeep-compass-16-racing-longitude-88kw.php", "title": "Jeep Compass 1.6 Racing Longitude 88kW", "price": 17800, "price_gross": 17800, "fair_price": 15980.0, "discount_pct": -11.4, "verdict": "nad trhom", "year": 2021, "km": 40816, "km_per_year": 7700.0, "eg": "1.6 MultiJet 88–96 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Košice", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-Aeqt5_XlNmM", "url": "https://www.autobazar.eu/detail/jeep-compass-14-multiair-4x4-automat/Aeqt5_XlNmM/", "title": "Jeep Compass 1.4 MultiAir 4x4 automat", "price": 16999, "price_gross": 16999, "fair_price": 15030.0, "discount_pct": -13.1, "verdict": "nad trhom", "year": 2018, "km": 130000, "km_per_year": 15600.0, "eg": "1.3 T4 / 1.4 MultiAir / 1.5 e-Hybrid 96–125 kW", "cg": 0, "transmission": "automatic", "seller_type": "private", "location": "Spišské Bystré", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "suv"}, {"id": "ab-AmOWZZaFnIA", "url": "https://www.autobazar.eu/detail/jeep-compass-longitude-103kw-mt6-aj-na-splatky-protiucet/AmOWZZaFnIA/", "title": "Jeep Compass Longitude 103kW MT/6 / AJ NA SPLÁTKY / PROTIÚČET", "price": 15990, "price_gross": 15990, "fair_price": 13990.0, "discount_pct": -14.3, "verdict": "nad trhom", "year": 2020, "km": 88386, "km_per_year": 14000.0, "eg": "2.0 MultiJet 103–125 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Trenčín", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-39759085", "url": "https://auto.bazar.sk/39759085-jeep-compass-longitude-103kw-mt-6-aj-na-splatky-protiucet/", "price": 15990}], "body": "suv"}, {"id": "ab-AmzN2X6LpLL", "url": "https://www.autobazar.eu/detail/jeep-compass-20l-mjet-140-4wd-limited/AmzN2X6LpLL/", "title": "Jeep Compass 2.0L MJet 140 4WD Limited", "price": 12490, "price_gross": 12490, "fair_price": 10820.0, "discount_pct": -15.4, "verdict": "výrazne nad trhom", "year": 2019, "km": 179116, "km_per_year": 24400.0, "eg": "2.0 MultiJet 103–125 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Vrútky", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197470174", "url": "https://auto.bazos.sk/inzerat/197470174/jeep-compass-20-multijet-4x4-limited.php", "price": 12490}, {"source": "bazarsk", "id": "bs-39694672", "url": "https://auto.bazar.sk/39694672-jeep-compass-2-0l-mjet-140-4wd-limited/", "price": 12490}], "body": "suv"}, {"id": "196725337", "url": "https://auto.bazos.sk/inzerat/196725337/jeep-compass-trailhawk-20-l.php", "title": "Jeep compass trailhawk 2,0 l", "price": 20000, "price_gross": 20000, "fair_price": 17200.0, "discount_pct": -16.3, "verdict": "výrazne nad trhom", "year": 2020, "km": 70000, "km_per_year": 11100.0, "eg": "2.0 MultiJet 103–125 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Žarnovica", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "ab-AeqQ-5JhvWA", "url": "https://www.autobazar.eu/detail/jeep-compass-13-t-gdi-automat-servkniha-koza/AeqQ-5JhvWA/", "title": "Jeep Compass 1.3 T-GDI, Automat, Serv.kniha, Koža", "price": 17300, "price_gross": 17300, "fair_price": 14560.0, "discount_pct": -18.9, "verdict": "výrazne nad trhom", "year": 2021, "km": 100624, "km_per_year": 18900.0, "eg": "1.3 T4 / 1.4 MultiAir / 1.5 e-Hybrid 96–125 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "bs-39697455", "url": "https://auto.bazar.sk/39697455-jeep-compass-2-0l-mjet-140-4wd-limited-a-t/", "title": "Jeep Compass 2.0L MJet 140 4WD Limited A/T", "price": 14999, "price_gross": 14999, "fair_price": 12540.0, "discount_pct": -19.6, "verdict": "výrazne nad trhom", "year": 2017, "km": 127678, "km_per_year": 13700.0, "eg": "2.0 MultiJet 103–125 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Pezinok", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AmCJJD41mgl", "url": "https://www.autobazar.eu/detail/jeep-compass-20l-mjet-140-4wd-limited-at/AmCJJD41mgl/", "price": 14999}], "body": "suv"}, {"id": "197044839", "url": "https://auto.bazos.sk/inzerat/197044839/na-predaj-jeep-compass-4x4-automat.php", "title": "Na predaj Jeep Compass 4x4 automat", "price": 16999, "price_gross": 16999, "fair_price": 13930.0, "discount_pct": -22.0, "verdict": "výrazne nad trhom", "year": 2017, "km": 130000, "km_per_year": 13900.0, "eg": "1.3 T4 / 1.4 MultiAir / 1.5 e-Hybrid 96–125 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Poprad", "flags": [], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "suv"}, {"id": "bs-37088312", "url": "https://auto.bazar.sk/37088312-jeep-compass-high-upland-1-3t-phev-240k-eawd-6at/", "title": "Jeep Compass High Upland 1.3T PHEV 240k eAWD 6AT", "price": 39999, "price_gross": 39999, "fair_price": 28300.0, "discount_pct": -41.3, "verdict": "výrazne nad trhom", "year": 2023, "km": 22000, "km_per_year": 6600.0, "eg": "Plug-in hybrid 4xe 140–176 kW", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Trenčín", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmTK-nXD0st", "url": "https://www.autobazar.eu/detail/jeep-compass-high-upland-13t-phev-240k-eawd-6at/AmTK-nXD0st/", "price": 39999}], "body": "suv"}];
+const GROUPS = ["Benzín", "Diesel MultiJet", "Plug-in hybrid 4xe a nezistený"];
+const BODY = {"suv": "SUV"};
+const fmt = n => Math.round(n).toLocaleString("sk-SK");
+const eur = n => fmt(n) + " €";
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const TRANS = {automatic: "automat", manual: "manuál"};
+const SRC = {bazos: "bazoš", autobazar: "autobazar.eu", bazarsk: "bazar.sk"};
+
+// --- theme toggle ---------------------------------------------------------
+document.getElementById("themeBtn").onclick = () => {
+  const root = document.documentElement;
+  const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  drawChart();
+};
+
+// --- scatter chart --------------------------------------------------------
+const legend = document.getElementById("legend");
+legend.innerHTML = GROUPS.map((g, i) => `<span><i style="background:var(--s${i+1})"></i>${g}</span>`).join("")
+  + `<span><i class="ring"></i>odporúčaná ponuka</span>`;
+
+function drawChart() {
+  const svg = document.getElementById("chart"), wrap = document.getElementById("chartWrap"), tip = document.getElementById("tip");
+  const W = svg.clientWidth, H = 420, m = {l: 56, r: 16, t: 10, b: 40};
+  const pts = DATA.filter(d => d.km && d.price_gross);
+  const xMax = Math.ceil(Math.max(...pts.map(d => d.km)) / 50000) * 50000;
+  const yMax = Math.ceil(Math.max(...pts.map(d => d.price_gross)) / 5000) * 5000;
+  const x = v => m.l + v / xMax * (W - m.l - m.r), y = v => H - m.b - v / yMax * (H - m.t - m.b);
+  let s = "";
+  for (let v = 0; v <= yMax; v += 5000)
+    s += `<line x1="${m.l}" x2="${W-m.r}" y1="${y(v)}" y2="${y(v)}" stroke="var(--grid)"/><text x="${m.l-8}" y="${y(v)+4}" text-anchor="end">${v/1000} tis. €</text>`;
+  const step = W < 520 ? 100000 : 50000;
+  for (let v = 0; v <= xMax; v += step)
+    s += `<text x="${x(v)}" y="${H-m.b+18}" text-anchor="middle">${v/1000} tis.</text>`;
+  s += `<text x="${(W+m.l)/2}" y="${H-6}" text-anchor="middle">nájazd (km)</text>`;
+  const order = [...pts].sort((a, b) => (a.pick ? 1 : 0) - (b.pick ? 1 : 0));
+  order.forEach(d => {
+    const cx = x(d.km), cy = y(d.price_gross);
+    if (d.pick) s += `<circle cx="${cx}" cy="${cy}" r="9" fill="none" stroke="var(--text)" stroke-width="2"/>`;
+    s += `<circle class="pt" data-id="${d.id}" cx="${cx}" cy="${cy}" r="5" fill="var(--s${d.cg+1})" stroke="var(--surface)" stroke-width="2"/>`;
+  });
+  // invisible bigger hit targets
+  order.forEach(d => s += `<circle class="hit" data-id="${d.id}" cx="${x(d.km)}" cy="${y(d.price_gross)}" r="11" fill="transparent" style="cursor:pointer"/>`);
+  svg.innerHTML = s;
+  const byId = Object.fromEntries(pts.map(d => [d.id, d]));
+  svg.querySelectorAll(".hit").forEach(c => {
+    c.onmouseenter = c.onmousemove = ev => {
+      const d = byId[c.dataset.id];
+      tip.innerHTML = `<b>${esc(d.title)}</b>
+        <div class="row"><span>Cena</span><span>${eur(d.price_gross)}</span></div>
+        <div class="row"><span>Férová cena</span><span>${eur(d.fair_price)}</span></div>
+        <div class="row"><span>Pod trhom</span><span>${d.discount_pct > 0 ? "+" : ""}${d.discount_pct.toLocaleString("sk-SK")} %</span></div>
+        <div class="row"><span>Zdroj</span><span>${SRC[d.source]}${d.also_listed.length ? " + " + d.also_listed.map(a => SRC[a.source]).join(", ") : ""}</span></div>
+        <div class="row"><span>Rok · km</span><span>${d.year} · ${fmt(d.km)}</span></div>
+        <div class="row"><span>Motor</span><span>${esc(d.eg)} ${TRANS[d.transmission] || ""}</span></div>`;
+      tip.style.display = "block";
+      const r = wrap.getBoundingClientRect();
+      let lx = ev.clientX - r.left + 14, ly = ev.clientY - r.top + 14;
+      if (lx + 290 > r.width) lx = ev.clientX - r.left - 290;
+      tip.style.left = lx + "px"; tip.style.top = ly + "px";
+    };
+    c.onmouseleave = () => tip.style.display = "none";
+    c.onclick = () => window.open(byId[c.dataset.id].url, "_blank", "noopener");
+  });
+}
+drawChart();
+addEventListener("resize", drawChart);
+
+// --- full table -----------------------------------------------------------
+const fEngine = document.getElementById("fEngine");
+[...new Set(DATA.map(d => d.eg))].sort().forEach(g => fEngine.insertAdjacentHTML("beforeend", `<option>${esc(g)}</option>`));
+let sortK = "discount_pct", sortDir = -1;
+function discCell(v) {
+  const w = Math.min(Math.abs(v), 30) / 30 * 50;
+  const bar = v >= 0 ? `left:50%;width:${w}%;background:var(--pos)` : `right:50%;width:${w}%;background:var(--neg)`;
+  return `<span class="disc">${v > 0 ? "+" : ""}${v.toLocaleString("sk-SK")} %<span class="dbar"><span style="${bar}"></span></span></span>`;
+}
+function renderTable() {
+  const max = parseFloat(document.getElementById("fMax").value) || Infinity;
+  const tr = document.getElementById("fTrans").value, se = document.getElementById("fSeller").value, en = fEngine.value;
+  const so = document.getElementById("fSource").value, og = document.getElementById("fOrigin").value;
+  const bo = document.getElementById("fBody").value;
+  const rows = DATA.filter(d => (!en || d.eg === en) && (!tr || d.transmission === tr)
+    && (!se || d.seller_type !== "dealer") && d.price_gross <= max
+    && (!so || d.source === so || d.also_listed.some(a => a.source === so)) && (!og || d.origin === og) && (!bo || d.body === bo))
+    .sort((a, b) => { const A = a[sortK], B = b[sortK]; return (typeof A === "string" ? A.localeCompare(B) : A - B) * sortDir; });
+  document.getElementById("count").textContent = `${rows.length} z ${DATA.length} inzerátov`;
+  document.querySelector("#tbl tbody").innerHTML = rows.map(d => `<tr>
+    <td><a href="${d.url}" target="_blank" rel="noopener">${esc(d.title)}</a> ${d.pick ? '<span class="badge pick">odporúčané</span>' : ""}
+      <div class="sub">${BODY[d.body] || "karoséria ?"} · ${esc(d.eg)} · ${TRANS[d.transmission] || "prevodovka ?"} · ${esc(d.location)} · ${d.seller_type === "dealer" ? "predajca/firma" : d.seller_type === "private" ? "súkromník" : "neisté"} · ${SRC[d.source]}${d.origin === "SR" ? " · kúpené v SR" : d.origin === "dovoz" ? " · dovoz" : ""}${d.also_listed.map(a => ` · <a href="${a.url}" target="_blank" rel="noopener">aj na ${SRC[a.source]}</a>`).join("")}</div>
+      ${d.flags.filter(f => !f.startsWith("prevodovka")).map(f => `<div class="flag">⚠ ${esc(f)}</div>`).join("")}</td>
+    <td class="num">${d.year}</td><td class="num">${fmt(d.km)}</td>
+    <td class="num">${eur(d.price_gross)}</td><td class="num">${eur(d.fair_price)}</td>
+    <td class="num">${discCell(d.discount_pct)}</td></tr>`).join("");
+  document.querySelectorAll("#tbl th.sortable").forEach(th => {
+    const base = th.textContent.replace(/ [▾▴]$/, "");
+    th.textContent = base + (th.dataset.k === sortK ? (sortDir < 0 ? " ▾" : " ▴") : "");
+  });
+}
+document.querySelectorAll("#tbl th.sortable").forEach(th => th.onclick = () => {
+  if (sortK === th.dataset.k) sortDir *= -1; else { sortK = th.dataset.k; sortDir = th.dataset.k === "title" ? 1 : -1; }
+  renderTable();
+});
+["fEngine", "fTrans", "fSeller", "fSource", "fBody", "fOrigin", "fMax"].forEach(id => document.getElementById(id).addEventListener("input", renderTable));
+renderTable();
+</script>
+<!-- ferovka-theme --><script defer src="/analytics-config.js"></script><script defer src="/analytics.js"></script><script id="ferovka-chart">/* Férovka – chart → ad links, injected into every report by sync-reports.mjs.
+ *
+ * The reports draw one invisible 11px "hit" circle per ad. In dense charts (and always on a narrow phone) those
+ * circles overlap and the one drawn last wins, so a click/tap often opened a neighbouring ad. Here the pointer is
+ * always resolved to the NEAREST point, the report's own tooltip is shown for that point, and a click opens its ad.
+ * Touch: the first tap shows the tooltip (with a hint), a second tap on the same point opens the ad.
+ */
+(() => {
+  let rows;
+  try { rows = DATA; } catch { return; } // eslint-disable-line no-undef
+  if (!Array.isArray(rows) || !rows.length || !("url" in rows[0])) return;
+  const byId = new Map(rows.map((d) => [String(d.id), d]));
+  const MOUSE = ["mouseover", "mouseout", "mouseenter", "mouseleave", "mousemove", "mousedown", "mouseup", "click"];
+  let lastPointer = "mouse", down = null;
+  // the finger position as it was – Chrome "snaps" the later click of a tap to the centre of a nearby clickable element
+  addEventListener("pointerdown", (e) => { lastPointer = e.pointerType || "mouse"; down = { clientX: e.clientX, clientY: e.clientY }; }, true);
+
+  // the old per-point hit circles must not be targets (they overlap, and touch snapping aims at them)
+  document.head.insertAdjacentHTML("beforeend", "<style>svg circle.hit[data-id],svg circle.pt[data-id]{pointer-events:none}</style>");
+
+  function nearest(svg, ev, radius) {
+    let best = null, bd = Infinity;
+    for (const c of svg.querySelectorAll("circle.pt[data-id]")) {
+      const r = c.getBoundingClientRect();
+      const dx = r.left + r.width / 2 - ev.clientX, dy = r.top + r.height / 2 - ev.clientY;
+      const d = dx * dx + dy * dy;
+      if (d <= bd) { bd = d; best = c; } // ties: the point drawn on top (later) wins – that is the one you see
+    }
+    return best && bd <= radius * radius ? best : null;
+  }
+
+  function bind(svg) {
+    if (svg.__fvLinks) return;
+    svg.__fvLinks = true;
+    let current = null, armed = null;
+    const hitOf = (pt) => pt && svg.querySelector(`circle.hit[data-id="${CSS.escape(pt.dataset.id)}"]`);
+    const fire = (el, type, ev) => {
+      if (!el) return;
+      const e = new MouseEvent(type, { clientX: ev.clientX, clientY: ev.clientY, bubbles: false });
+      e.__fv = true;
+      el.dispatchEvent(e);
+    };
+    const tip = () => (svg.parentElement && svg.parentElement.querySelector("#tip, .tip")) || document.getElementById("tip");
+    const mark = (pt) => {
+      if (current === pt) return;
+      if (current) current.setAttribute("r", current.__r || "5");
+      current = pt;
+      if (pt) { pt.__r = pt.__r || pt.getAttribute("r"); pt.setAttribute("r", String(+pt.__r + 2)); }
+    };
+    const show = (pt, ev, hint) => {
+      mark(pt);
+      if (!pt) { const t = tip(); if (t) t.style.display = "none"; return; }
+      fire(hitOf(pt), "mousemove", ev); // the report's own tooltip, for the nearest point
+      const t = tip();
+      if (t && hint) t.insertAdjacentHTML("beforeend", `<div class="fv-hint">Ťukni ešte raz – otvorí sa inzerát ↗</div>`);
+    };
+    const open = (pt) => {
+      const d = byId.get(pt.dataset.id);
+      if (d && d.url) {
+        try { window.FerovkaAnalytics?.listingClick(d.url, "chart"); } catch { /* analytics must never block an ad */ }
+        window.open(d.url, "_blank", "noopener");
+      }
+    };
+
+    // the per-circle handlers of the report never see real mouse events – only our synthetic ones
+    for (const type of MOUSE) {
+      svg.addEventListener(type, (ev) => {
+        if (ev.__fv) return;
+        ev.stopImmediatePropagation();
+        if (type === "mousemove" && lastPointer === "mouse") {
+          show(nearest(svg, ev, 18), ev, false);
+          svg.style.cursor = current ? "pointer" : "";
+        } else if (type === "mouseleave" && ev.target === svg && lastPointer === "mouse") {
+          show(null, ev);
+        } else if (type === "click") {
+          const touch = lastPointer !== "mouse";
+          const at = touch && down ? down : ev;
+          const pt = nearest(svg, at, touch ? 26 : 18);
+          if (!pt) { armed = null; show(null, ev); return; }
+          if (!touch || armed === pt) { armed = null; open(pt); }
+          else { armed = pt; show(pt, at, true); }
+        }
+      }, true);
+    }
+  }
+
+  const scan = () => document.querySelectorAll("svg").forEach((s) => s.querySelector("circle.pt[data-id]") && bind(s));
+  scan();
+  new MutationObserver(scan).observe(document.body, { childList: true, subtree: true });
+})();
+</script><script id="ferovka-filters">/* Férovka – filters for the whole report, injected into every model report by sync-reports.mjs.
+ *
+ * The reports render the chart (drawChart) and the full ranking (renderTable) from the global DATA array; their own
+ * filter bar only filters the table. Here the filter bar (kept in its place above the ranking) gets more filters (year, price from/to,
+ * km, fuel, discount, picks only, text search) and every filter applies to the chart and the ranking together: DATA is
+ * refilled in place with the matching ads and both are drawn again. "</script" can't occur inside this file.
+ */
+(() => {
+  let data;
+  try { data = DATA; } catch { return; } // eslint-disable-line no-undef
+  if (!Array.isArray(data) || !data.length || typeof renderTable !== "function") return; // eslint-disable-line no-undef
+  const bar = document.querySelector(".filters");
+  if (!bar || bar.dataset.fv) return;
+  bar.dataset.fv = "1";
+  const ALL = data.slice();
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+  const fmt = (n) => Math.round(n).toLocaleString("sk-SK");
+  const norm = (s) => String(s ?? "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+  let groups = null;
+  try { groups = GROUPS; } catch { /* report without groups */ } // eslint-disable-line no-undef
+
+  const FUEL = { diesel: "Diesel", petrol: "Benzín", hybrid: "Hybrid", "plug-in hybrid": "Plug-in hybrid", electric: "Elektro", lpg: "LPG", cng: "CNG" };
+  const fuelOf = (d) => {
+    const e = norm(d.eg);
+    if (/tdi|crdi|dci|hdi|diesel|\bd\b|cdi|\d+d\b|blue/.test(e)) return "Diesel";
+    if (/plug-in|phev|e-hybrid|recharge|\bgte\b|\bt8\b|\b\d{2}e\b|\b\d{3} ?e\b/.test(e)) return "Plug-in hybrid";
+    if (/elektro|electric|\bev\b/.test(e)) return "Elektro";
+    if (/cng|lpg|g-tec|g-tron|tgi|ecofuel/.test(e)) return "Plyn (CNG/LPG)";
+    if (/mild|mhev/.test(e)) return "Benzín"; // mild-hybrid petrol (the diesel ones say TDI / d above)
+    if (/hybrid|hev/.test(e)) return "Hybrid";
+    if (/tsi|tfsi|mpi|fsi|benzin|gdi|dpi|htp|12v|\bt\d\b|\bb[56]\b|\d+i\b|turbo|tce|\bs4\b|rs ?\d|amg|competition|\bm\d{2,3}i?\b|gti|\bx5 m\b/.test(e)) return "Benzín";
+    return d.fuel ? FUEL[d.fuel] || String(d.fuel) : null;
+  };
+
+  // --- controls ---------------------------------------------------------------------------------------------------
+  const years = ALL.map((d) => d.year).filter(Boolean);
+  const yMin = Math.min(...years), yMax = Math.max(...years);
+  const yearOpts = (label) => `<option value="">${label}</option>` +
+    Array.from({ length: yMax - yMin + 1 }, (_, i) => yMax - i).map((y) => `<option>${y}</option>`).join("");
+  const kms = [30000, 50000, 75000, 100000, 150000, 200000, 250000, 300000];
+  const fuels = [...new Set(ALL.map(fuelOf).filter(Boolean))].sort((a, b) => a.localeCompare(b, "sk"));
+  const showGroups = Array.isArray(groups) && groups.length > 1 && ALL.some((d) => Number.isInteger(d.cg));
+
+  const maxInput = $("fMax");
+  if (maxInput) { maxInput.placeholder = "Cena do €"; maxInput.title = "Najvyššia cena (s DPH)"; }
+  const html =
+    `<select id="fvYearFrom" title="Rok výroby od">${yearOpts("Rok od")}</select>` +
+    `<select id="fvYearTo" title="Rok výroby do">${yearOpts("Rok do")}</select>` +
+    `<input id="fvPriceMin" type="number" placeholder="Cena od €" step="500" min="0" title="Najnižšia cena (s DPH)" style="width:110px">`;
+  if (maxInput) maxInput.insertAdjacentHTML("beforebegin", html);
+  else bar.insertAdjacentHTML("afterbegin", html);
+  const more =
+    `<select id="fvKm" title="Najviac najazdených km"><option value="">Nájazd – všetky</option>${kms.map((k) => `<option value="${k}">do ${fmt(k)} km</option>`).join("")}</select>` +
+    (fuels.length > 1 ? `<select id="fvFuel" title="Palivo"><option value="">Všetky palivá</option>${fuels.map((f) => `<option>${esc(f)}</option>`).join("")}</select>` : "") +
+    (showGroups ? `<select id="fvGroup" title="Skupina motorov (farba v grafe)"><option value="">Všetky skupiny</option>${groups.map((g, i) => `<option value="${i}">${esc(g)}</option>`).join("")}</select>` : "") +
+    `<select id="fvDisc" title="O koľko je auto lacnejšie ako férová cena"><option value="">Cena – všetky</option><option value="0">pod férovou cenou</option><option value="10">aspoň 10 % pod trhom</option><option value="20">aspoň 20 % pod trhom</option></select>` +
+    `<input id="fvText" type="search" placeholder="Hľadať (výbava, mesto…)" title="Hľadá v názve inzerátu, motore a lokalite" style="width:170px">` +
+    `<label class="fv-check"><input id="fvPick" type="checkbox"> len odporúčané</label>` +
+    `<button type="button" id="fvReset" class="fv-reset">Zrušiť filtre</button>`;
+  const count = $("count");
+  if (count) count.insertAdjacentHTML("beforebegin", more);
+  else bar.insertAdjacentHTML("beforeend", more);
+
+  // the bar stays where it was – right above the ranking – and also drives the chart; the chart gets a pointer to it
+  const chart = $("chartWrap");
+  const box = document.createElement("div");
+  box.className = "fv-filters";
+  box.id = "filtre";
+  bar.before(box);
+  box.innerHTML = `<div class="fv-head"><b>Filtre</b><span>platia pre rebríček aj graf vyššie</span></div>`;
+  box.appendChild(bar);
+  const note = document.createElement("div");
+  note.className = "fv-note";
+  chart?.before(note);
+
+  document.head.insertAdjacentHTML("beforeend", `<style id="fv-filters-css">
+.fv-filters{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 14px 4px;margin:24px 0 8px}
+.fv-filters .fv-head{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;margin-bottom:8px}
+.fv-filters .fv-head span{color:var(--muted);font-size:13px}
+.fv-filters .filters{margin-bottom:8px}
+.fv-filters .filters .count{flex-basis:100%;margin-left:0}
+.fv-check{display:inline-flex;gap:6px;align-items:center;font-size:13px;color:var(--text-2,var(--text));white-space:nowrap}
+.fv-reset{background:none;border:1px solid var(--border);color:var(--text);border-radius:8px;padding:6px 10px;font:inherit;font-size:13px;cursor:pointer}
+.fv-reset:hover{background:var(--surface-2,var(--surface))}
+.fv-note{color:var(--muted);font-size:13px;margin:0 0 8px}
+.fv-note a{color:inherit}
+.fv-empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:14px;pointer-events:none}
+@media (max-width:600px){.fv-filters .filters select,.fv-filters .filters input[type=number],.fv-filters .filters input[type=search]{flex:1 1 calc(50% - 8px);min-width:0;width:auto!important}}
+</style>`);
+
+  // --- filtering --------------------------------------------------------------------------------------------------
+  const val = (id) => ($(id) ? $(id).value : "");
+  const num = (id) => { const v = parseFloat(val(id)); return Number.isFinite(v) ? v : null; };
+  function matches(d) {
+    const yf = num("fvYearFrom"), yt = num("fvYearTo"), pmin = num("fvPriceMin"), pmax = num("fMax"), km = num("fvKm"), disc = num("fvDisc");
+    const fuel = val("fvFuel"), grp = val("fvGroup"), q = norm(val("fvText")).trim();
+    if (yf != null && !(d.year >= yf)) return false;
+    if (yt != null && !(d.year <= yt)) return false;
+    if (pmin != null && !(d.price_gross >= pmin)) return false;
+    if (pmax != null && !(d.price_gross <= pmax)) return false;
+    if (km != null && !(d.km <= km)) return false;
+    if (disc != null && !(d.discount_pct > disc || (disc > 0 && d.discount_pct >= disc))) return false;
+    if (fuel && fuelOf(d) !== fuel) return false;
+    if (grp !== "" && String(d.cg) !== grp) return false;
+    if ($("fvPick")?.checked && !d.pick) return false;
+    if (q && !q.split(/\s+/).every((w) => norm(`${d.title} ${d.eg ?? ""} ${d.engine ?? ""} ${d.location ?? ""}`).includes(w))) return false;
+    // the report's own filters (engine, gearbox, seller, portal, body, origin) – same rules as its renderTable
+    const en = val("fEngine"), tr = val("fTrans"), se = val("fSeller"), so = val("fSource"), og = val("fOrigin"), bo = val("fBody");
+    if (en && d.eg !== en) return false;
+    if (tr && d.transmission !== tr) return false;
+    if (se && d.seller_type === "dealer") return false;
+    if (so && !(d.source === so || (d.also_listed || []).some((a) => a.source === so))) return false;
+    if (og && d.origin !== og) return false;
+    if (bo && d.body !== bo) return false;
+    return true;
+  }
+  const active = () => [...box.querySelectorAll("select, input")].filter((el) => (el.type === "checkbox" ? el.checked : el.value !== "")).length;
+
+  let drawing = false;
+  function apply() {
+    if (drawing) return;
+    drawing = true;
+    const rows = ALL.filter(matches);
+    data.length = 0;
+    data.push(...rows);
+    const wrap = $("chartWrap");
+    wrap?.querySelector(".fv-empty")?.remove();
+    const plotted = rows.filter((d) => d.km && d.price_gross).length;
+    try {
+      if (typeof drawChart === "function") { // eslint-disable-line no-undef
+        if (plotted) drawChart(); // eslint-disable-line no-undef
+        else { const svg = $("chart"); if (svg) svg.innerHTML = ""; }
+      }
+    } catch (e) { console.warn("chart", e); }
+    if (wrap && !plotted) {
+      if (getComputedStyle(wrap).position === "static") wrap.style.position = "relative";
+      wrap.insertAdjacentHTML("beforeend", `<div class="fv-empty">Filtrom nezodpovedá žiadny inzerát</div>`);
+    }
+    try { renderTable(); } catch (e) { console.warn("table", e); } // eslint-disable-line no-undef
+    const n = active();
+    if (count) count.textContent = `Zobrazených ${fmt(rows.length)} z ${fmt(ALL.length)} inzerátov` + (n ? ` · aktívne filtre: ${n}` : "");
+    note.innerHTML = n
+      ? `Zobrazených ${fmt(rows.length)} z ${fmt(ALL.length)} inzerátov podľa <a href="#filtre">filtrov pri rebríčku</a>.`
+      : `Filtre (rok, cena, nájazd, palivo…) nájdeš <a href="#filtre">pri kompletnom rebríčku</a> – platia aj pre tento graf.`;
+    drawing = false;
+  }
+  box.querySelectorAll("select, input").forEach((el) => el.addEventListener("input", apply));
+  $("fvPick")?.addEventListener("change", apply);
+  $("fvReset").addEventListener("click", () => {
+    box.querySelectorAll("select, input").forEach((el) => { if (el.type === "checkbox") el.checked = false; else el.value = ""; });
+    apply();
+  });
+  apply();
+})();
+</script><!-- /ferovka-theme -->
+</body>
+</html>
