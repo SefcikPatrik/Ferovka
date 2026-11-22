@@ -1,0 +1,868 @@
+<!doctype html>
+<html lang="sk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mercedes-Benz GLB – analýza ponúk</title>
+<style>
+:root {
+  color-scheme: light;
+  --bg: #f6f6f4; --surface: #fcfcfb; --surface-2: #f0efec; --border: #e2e1dc;
+  --text: #0b0b0b; --text-2: #52514e; --muted: #7a7974;
+  --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a;
+  --pos: #2a78d6; --neg: #eb6834; --accent: #2a78d6;
+  --good: #1d7f4e; --bad: #b4332f; --grid: #e8e7e3;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #121211; --surface: #1a1a19; --surface-2: #232321; --border: #33332f;
+    --text: #f0efec; --text-2: #c3c2b7; --muted: #8f8e86;
+    --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+    --pos: #3987e5; --neg: #d95926; --accent: #5598e7;
+    --good: #4cc38a; --bad: #f07a76; --grid: #2a2a27;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #121211; --surface: #1a1a19; --surface-2: #232321; --border: #33332f;
+  --text: #f0efec; --text-2: #c3c2b7; --muted: #8f8e86;
+  --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+  --pos: #3987e5; --neg: #d95926; --accent: #5598e7;
+  --good: #4cc38a; --bad: #f07a76; --grid: #2a2a27;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text);
+  font: 15px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+main { max-width: 1120px; margin: 0 auto; padding: 32px 16px 64px; }
+a { color: var(--accent); text-decoration: none; } a:hover { text-decoration: underline; }
+h1 { font-size: 30px; margin: 0 0 4px; letter-spacing: -.01em; }
+h2 { font-size: 21px; margin: 48px 0 6px; }
+h3 { font-size: 15px; margin: 6px 0 4px; line-height: 1.35; }
+.lead { color: var(--text-2); margin: 0 0 20px; max-width: 760px; }
+.section-lead { color: var(--text-2); margin: 0 0 16px; max-width: 800px; }
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
+.kpi { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+.kpi .v { font-size: 26px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.kpi .l { color: var(--text-2); font-size: 13px; }
+.explain { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; margin-top: 12px; }
+.explain p { margin: 6px 0; color: var(--text-2); }
+.explain b { color: var(--text); }
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; }
+.card-head { display: flex; justify-content: space-between; gap: 8px; font-size: 12px; }
+.tag { font-weight: 600; color: var(--accent); }
+.loc { color: var(--muted); }
+.facts { color: var(--text-2); font-size: 13px; }
+.prices { display: grid; grid-template-columns: 1.2fr 1fr .8fr; gap: 8px; margin: 12px 0 8px; }
+.lbl { display: block; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+.big { font-size: 22px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.mid { font-size: 16px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.good { color: var(--good); }
+.meter { height: 6px; background: var(--surface-2); border-radius: 4px; overflow: hidden; }
+.meter span { display: block; height: 100%; background: var(--s1); border-radius: 4px; }
+.news ul { margin: 6px 0 0; padding-left: 20px; } .news li { margin: 4px 0; } .news .down { color: var(--good, #1baf7a); font-weight: 600; }
+.note { font-size: 12.5px; background: var(--surface-2); border-radius: 6px; padding: 6px 8px; margin-top: 8px; color: var(--text-2); }
+.pc { list-style: none; padding: 0; margin: 10px 0 0; font-size: 13.5px; }
+.pc li { padding-left: 20px; position: relative; margin: 3px 0; }
+.pc li.pro::before { content: "+"; position: absolute; left: 4px; color: var(--good); font-weight: 700; }
+.pc li.con::before { content: "–"; position: absolute; left: 4px; color: var(--bad); font-weight: 700; }
+.subhead { font-size: 15px; color: var(--text-2); margin: 22px 0 10px; font-weight: 600; }
+.chart-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 14px 8px; position: relative; }
+.legend { display: flex; flex-wrap: wrap; gap: 16px; font-size: 13px; color: var(--text-2); margin: 0 0 6px 4px; }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; }
+.legend .ring { background: transparent; border: 2px solid var(--text); width: 12px; height: 12px; }
+svg text { fill: var(--muted); font-size: 11px; }
+.tip { position: absolute; pointer-events: none; background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+  padding: 8px 10px; font-size: 12.5px; box-shadow: 0 6px 20px rgba(0,0,0,.15); max-width: 280px; display: none; z-index: 5; }
+.tip b { display: block; margin-bottom: 2px; }
+.tip .row { display: flex; justify-content: space-between; gap: 12px; color: var(--text-2); }
+.tip .row span:last-child { color: var(--text); font-variant-numeric: tabular-nums; }
+table { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; font-size: 13.5px; }
+th, td { padding: 9px 10px; border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; }
+th { font-size: 12px; color: var(--text-2); font-weight: 600; background: var(--surface-2); white-space: nowrap; }
+th.sortable { cursor: pointer; user-select: none; } th.sortable:hover { color: var(--text); }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+.sub { color: var(--text-2); font-size: 12.5px; margin-top: 2px; }
+.stars { color: #c98500; letter-spacing: 1px; white-space: nowrap; } .stars .off { color: var(--border); }
+.cellbar { height: 5px; background: var(--surface-2); border-radius: 3px; margin-bottom: 4px; }
+.cellbar span { display: block; height: 100%; background: var(--s1); border-radius: 3px; }
+.disc { display: inline-flex; align-items: center; gap: 6px; justify-content: flex-end; }
+.dbar { width: 54px; height: 6px; background: var(--surface-2); border-radius: 3px; position: relative; }
+.dbar span { position: absolute; top: 0; height: 100%; border-radius: 3px; }
+.filters { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 10px; align-items: center; }
+.filters select, .filters input { background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 6px 8px; font: inherit; font-size: 13px; }
+.filters .count { color: var(--muted); font-size: 13px; margin-left: auto; }
+.table-scroll { overflow-x: auto; border-radius: 12px; }
+.badge { font-size: 11px; padding: 1px 6px; border-radius: 10px; background: var(--surface-2); color: var(--text-2); white-space: nowrap; }
+.badge.pick { background: var(--s1); color: #fff; }
+.flag { color: var(--bad); font-size: 12px; }
+.warn { background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--neg); border-radius: 10px; padding: 12px 16px; }
+.warn li { margin: 4px 0; }
+.check { columns: 2 300px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px 14px 34px; margin: 0; }
+.check li { margin: 4px 0; break-inside: avoid; }
+footer { color: var(--muted); font-size: 12.5px; margin-top: 48px; border-top: 1px solid var(--border); padding-top: 14px; }
+.theme-btn { float: right; background: var(--surface); color: var(--text-2); border: 1px solid var(--border); border-radius: 8px; padding: 5px 10px; cursor: pointer; font: inherit; font-size: 13px; }
+@media (max-width: 640px) { h1 { font-size: 24px; } .prices { grid-template-columns: 1fr 1fr 1fr; } .big { font-size: 18px; } th, td { padding: 7px 6px; } }
+</style>
+<!-- ferovka-theme --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"><style id="ferovka-theme">/* Férovka look for the generated analyses – injected by sync-reports.mjs after each report's own <style>.
+   Same palette and type as the site; chart colours (--s1..--s3) stay the validated set. */
+:root {
+  --bg: #f5f4ef; --surface: #fdfdfb; --surface-2: #eeede6; --border: #e1dfd6;
+  --text: #0f1513; --text-2: #4f5551; --muted: #6f746f;
+  --accent: #0b8a56; --good: #0b7a4b; --grid: #e6e4dc; --win: #dff3e9;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d110f; --surface: #151a17; --surface-2: #1d2420; --border: #2a322d;
+    --text: #eef1ec; --text-2: #b6bdb6; --muted: #8f978f;
+    --accent: #2fc583; --good: #4cd08f; --grid: #1f2622; --win: #143223;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d110f; --surface: #151a17; --surface-2: #1d2420; --border: #2a322d;
+  --text: #eef1ec; --text-2: #b6bdb6; --muted: #8f978f;
+  --accent: #2fc583; --good: #4cd08f; --grid: #1f2622; --win: #143223;
+}
+
+body { font-family: "Manrope", system-ui, sans-serif; }
+h1, h2 { letter-spacing: -0.02em; font-weight: 800; }
+.tag { color: var(--accent); }
+
+/* photo header (removed by the site's viewer, which shows its own) */
+.fv-hero { position: relative; margin: 0 0 26px; border-radius: 20px; overflow: hidden; aspect-ratio: 21 / 8; background: #0d110f; display: flex; }
+.fv-hero img { flex: 1; min-width: 0; height: 100%; object-fit: cover; animation: fv-zoom 1.4s cubic-bezier(.2,.7,.2,1) both; }
+.fv-collage img + img { border-left: 3px solid #0d110f; }
+.fv-hero::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(180deg, transparent 55%, rgb(13 17 15 / .75)),
+    repeating-linear-gradient(90deg, rgb(47 197 131 / .06) 0 1px, transparent 1px 48px); }
+.fv-hero figcaption { position: absolute; right: 12px; bottom: 8px; z-index: 1; font-size: 11px; color: rgb(255 255 255 / .75); }
+.fv-hero figcaption a { color: inherit; }
+
+/* cards & panels: softer, lift on hover */
+.card, .kpi, .explain, .chart-wrap, .box { border-radius: 16px; }
+.card { transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease; }
+.card:hover { transform: translateY(-3px); border-color: var(--accent); box-shadow: 0 14px 30px -18px rgb(0 0 0 / .45); }
+.badge.pick { background: var(--accent); }
+
+/* entrance animation */
+@keyframes fv-up { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes fv-zoom { from { transform: scale(1.08); filter: brightness(.6); } to { transform: none; filter: none; } }
+h1, .lead, .kpis, .cards .card { animation: fv-up .6s cubic-bezier(.2,.7,.2,1) both; }
+.lead { animation-delay: .08s; }
+.kpis { animation-delay: .16s; }
+.cards .card:nth-child(2) { animation-delay: .06s; }
+.cards .card:nth-child(3) { animation-delay: .12s; }
+.cards .card:nth-child(4) { animation-delay: .18s; }
+.cards .card:nth-child(5) { animation-delay: .24s; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+@media (max-width: 640px) { .fv-hero { aspect-ratio: 16 / 9; border-radius: 14px; } }
+
+/* touch: hint under the chart tooltip (report-chart.js) */
+.fv-hint { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--border, rgba(127,127,127,.3)); font-weight: 700; color: var(--accent, #2fc583); }
+</style><!-- /ferovka-theme -->
+</head>
+<body>
+<main><!-- ferovka-theme --><!-- /ferovka-theme -->
+<button class="theme-btn" id="themeBtn" type="button">Svetlý / tmavý</button>
+<h1>Mercedes-Benz GLB – ktorá ponuka sa oplatí</h1>
+<p class="lead">Analýza aktuálnych inzerátov Mercedes-Benz GLB (X247, 2019–2025, vrátane 7-miestnych, bez elektrického EQB a nových áut z 2026) od 10 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 2 796 inzerátov (2 627 na bazoši, 168 na autobazar.eu, 1 na bazar.sk) – prezreli sme 7 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 150 rôznych áut zo Slovenska. Každé auto sme porovnali
+s <b>férovou cenou</b>: tú vypočítal model naučený na celom trhu podľa veku, nájazdu, motora, prevodovky a typu predajcu.</p>
+
+<div class="kpis">
+  <div class="kpi"><div class="v">150</div><div class="l">inzerátov GLB (nad 10 000 €)</div></div>
+  <div class="kpi"><div class="v">71</div><div class="l">ohodnotených (majú rok aj km)</div></div>
+  <div class="kpi"><div class="v">32 500 €</div><div class="l">medián ceny s DPH</div></div>
+  <div class="kpi"><div class="v">96 %</div><div class="l">rozdielov v cenách vysvetlí model</div></div>
+</div>
+
+
+<h2>Odkiaľ sú dáta: bazoš, autobazar.eu a bazar.sk</h2>
+<div class="kpis">
+  <div class="kpi"><div class="v">22</div><div class="l">ohodnotených z bazoša</div></div>
+  <div class="kpi"><div class="v">49</div><div class="l">ohodnotených z autobazar.eu</div></div><div class="kpi"><div class="v">0</div><div class="l">ohodnotených z bazar.sk</div></div>
+  <div class="kpi"><div class="v">23</div><div class="l">áut bolo na viacerých portáloch – započítané raz</div></div>
+  <div class="kpi"><div class="v">12 / 15</div><div class="l">s uvedeným pôvodom SR / dovoz</div></div>
+</div>
+<div class="explain">
+  <p><b>Tri portály, jeden trh.</b> Bazoš prehľadal 41 inzerátov, autobazar.eu
+  168, bazar.sk 0. Ponuky z Česka (na autobazar.eu ich je veľa) sme vynechali. Autobazáre často dávajú
+  to isté auto na viac portálov. Takéto dvojice (20 v rebríčku) sme spojili podľa VIN alebo zhody roku, km a ceny,
+  aby sa v modeli nerátali dvakrát. Pri aute nájdeš odkaz na všetky ponuky – niekedy sa líšia cenou.</p>
+  <p><b>Rozdiel medzi portálmi:</b> rovnaké auto je na autobazar.eu v priemere -1,0 %
+  oproti bazošu. Na autobazar.eu predávajú hlavne firmy (42 z 49 ohodnotených).</p>
+  <p><b>Kúpené v SR vs. dovoz:</b> autá s uvedeným pôvodom zo SR sú oproti autám bez uvedeného pôvodu
+  -3,5 %, dovezené +0,1 %
+  (pri rovnakom veku, nájazde a motore). Pôvod zo SR je výhoda pri overovaní histórie, trh zaň však nepripláca – väčšina
+  inzerátov pôvod jednoducho neuvádza. V tabulke dole si môžeš nechať zobraziť len autá kúpené v SR.</p>
+</div>
+
+<h2>Čo hýbe cenou Mercedesu GLB</h2>
+<p class="section-lead">Toto sa model naučil z trhu. Keď porovnávaš dve autá, tieto čísla ti povedia, koľko má byť
+rozdiel v cene, aby to bolo fér.</p>
+<div class="kpis">
+  <div class="kpi"><div class="v">-1,0 %</div><div class="l">každých ďalších 10 000 km</div></div>
+  <div class="kpi"><div class="v">-16,7 %</div><div class="l">každý rok veku navyše</div></div>
+  <div class="kpi"><div class="v">+3868 %</div><div class="l">príplatok za automat (DSG)</div></div>
+  <div class="kpi"><div class="v">+1,0 %</div><div class="l">príplatok u predajcu / firmy</div></div>
+  <div class="kpi"><div class="v">+6,9 %</div><div class="l">GLB po facelifte (2023+) oproti cene podľa veku</div></div>
+  <div class="kpi"><div class="v">+3867,8 %</div><div class="l">príplatok za automat</div></div>
+</div>
+<div class="explain">
+  <p><b>Príklad:</b> dva rovnaké GLB 200 d z roku 2021, jedno má 60 tis. km, druhé 120 tis. km. Druhé má byť
+  približne o 6 % lacnejšie (6 × -1,0 %). Ak je lacnejšie len o 5 %, preplácaš kilometre.</p>
+  <p><b>Ako čítať „pod trhom“:</b> +15 % znamená, že auto stojí o 15 % menej, než by malo podľa trhu. Bežný rozptyl
+  cien je asi ±10 %, takže až zľava nad ~10–15 % je naozaj výnimočná. Pri takej zľave vždy zisti, prečo je auto lacné
+  (stav, história, nájazd).</p>
+  <p><b>DPH:</b> ceny uvedené bez DPH (napr. „10 300 € netto“) sme prepočítali na cenu s DPH, ktorú zaplatí súkromná osoba.</p>
+</div>
+
+<h2>Odporúčané ponuky</h2>
+<p class="section-lead">Kandidáti s najlepším pomerom cena / vek / nájazd, ktorých celý inzerát sme prečítali.
+Zoradené podľa toho, ako ich odporúčame.</p>
+<div class="subhead">GLB po facelifte (2023+) – najlepší pomer cena / vek</div>
+<div class="cards">
+<article class="card">
+  <div class="card-head"><span class="tag">GLB 220 4MATIC z 2025 s 11 tis. km</span><span class="loc">Bratislava</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/mercedes-benz-glb-220-4matic/AmFMCmG0n9Z/" target="_blank" rel="noopener">MERCEDES-BENZ GLB 220 4MATIC</a></h3>
+  <div class="facts">2025 · 10 707 km · GLB 220 / 250 / AMG 35 benzín 140–225 kW · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">43 899 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">52 480 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+16.4 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:55%"></span></div>
+  <ul class="pc"><li class="pro">2025, 2.0 benzín, 4x4, automat, 11 tis. km</li><li class="pro">STK/EK do 09/2029, asistenčná služba Mobilo</li><li class="pro">~16 % pod férovou cenou</li><li class="con">Predáva autobazár</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">GLB 180 z 2025 v Manufaktur červenej</span><span class="loc">Bratislava-Petržalka</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/mercedes-benz-glb-180/Ab1hhsPYDQJ/" target="_blank" rel="noopener">Mercedes-Benz GLB 180</a></h3>
+  <div class="facts">2025 · 27 034 km · GLB 180 / 200 1.3 / 1.5 benzín 100–120 kW · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">37 900 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">43 690 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+13.3 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:44%"></span></div>
+  <ul class="pc"><li class="pro">2025, benzín, automat, 27 tis. km</li><li class="pro">Lak Manufaktur patagónska červená</li><li class="pro">~13 % pod férovou cenou</li><li class="con">Krátky inzerát</li><li class="con">Predáva autobazár</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">GLB 200 d 4MATIC so zárukou do 2031</span><span class="loc">Nové Zámky</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/mercedes-benz-glb-200-d-4matic/AmD15Hdw1dK/" target="_blank" rel="noopener">MERCEDES-BENZ GLB 200 d 4MATIC</a></h3>
+  <div class="facts">2025 · 53 331 km · GLB 200 d / 220 d 2.0 diesel 110–140 kW · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">41 500 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">47 110 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+11.9 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:40%"></span></div>
+  <ul class="pc"><li class="pro">2025, 2.0 diesel, 4x4, 8-st. automat, 53 tis. km</li><li class="pro">Záruka do 04/2031 alebo 200 000 km, PZP na rok zadarmo</li><li class="pro">~12 % pod férovou cenou</li><li class="con">Predáva autobazár</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">GLB 200 mild hybrid z 2025 z SR</span><span class="loc">Dunajská Streda</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/mercedes-benz-glb-200-mhev-at/AmpSP-1JAfG/" target="_blank" rel="noopener">Mercedes-Benz GLB 200 mHEV A/T</a></h3>
+  <div class="facts">2025 · 13 704 km · GLB 180 / 200 1.3 / 1.5 benzín 100–120 kW · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · kúpené v SR</div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">39 500 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">43 180 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+8.5 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:28%"></span></div>
+  <ul class="pc"><li class="pro">2025, 1.5 benzín mild hybrid, automat, 14 tis. km</li><li class="pro">Kúpené v SR, cenníková cena 59 679 €</li><li class="pro">~9 % pod férovou cenou</li><li class="con">Predáva autobazár</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">GLB 200 d 4MATIC z 2024</span><span class="loc">Michalovce</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/196645183/mercedes-benz-glb-200-d-4matic-pzp-na-1rok-zdarma.php" target="_blank" rel="noopener">MERCEDES-BENZ GLB 200 d 4MATIC, PZP NA 1ROK ZDARMA</a></h3>
+  <div class="facts">2024 · 61 431 km · GLB 200 d / 220 d 2.0 diesel 110–140 kW · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">38 990 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">42 360 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+8.0 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:27%"></span></div>
+  <ul class="pc"><li class="pro">11/2024, 2.0 diesel, 4x4, 8G-DCT, 61 tis. km</li><li class="pro">Terénny technický balík, PZP na rok zadarmo</li><li class="pro">~8 % pod férovou cenou</li><li class="con">Predáva autobazár</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">GLB 200 d 4MATIC AMG Line s ťažným</span><span class="loc">Košice</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/196940339/glb-200-formatic.php" target="_blank" rel="noopener">GLB 200 Formatic</a></h3>
+  <div class="facts">2024 · 28 000 km · GLB 200 d / 220 d 2.0 diesel 110–140 kW · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">36 400 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">38 820 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+6.2 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:21%"></span></div>
+  <ul class="pc"><li class="pro">6/2024, 2.0 diesel 110 kW, 4x4, 8-st. automat, 28 tis. km</li><li class="pro">AMG Line, ťažné, LED Multibeam, el. kufor, sezónne prezutie</li><li class="pro">~6 % pod férovou cenou</li><li class="con">Predáva autobazár</li></ul>
+</article></div>
+<div class="subhead">Lacnejšie GLB do 30 000 €</div>
+<div class="cards">
+<article class="card">
+  <div class="card-head"><span class="tag">GLB 180 d automat do 20 000 €</span><span class="loc">Bratislava</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/mercedes-benz-glb-180d-at-85kw116hp-a8/AePef8MzM-C/" target="_blank" rel="noopener">Mercedes-Benz GLB 180d AT 85kW116HP A8</a></h3>
+  <div class="facts">2021 · 118 000 km · GLB 180 d 2.0 diesel 85 kW · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · aj na <a href='https://auto.bazos.sk/inzerat/196952771/mercedes-glb-180d-at-2021-118-000-k-odpocet-dph.php' target='_blank' rel='noopener'>bazoš</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">19 990 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">23 890 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+16.3 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:54%"></span></div>
+  <ul class="pc"><li class="pro">2021, 2.0 diesel 85 kW, 8-st. automat, 118 tis. km</li><li class="pro">Modrá metalíza, svetlý interiér</li><li class="pro">~16 % pod férovou cenou</li><li class="con">Predáva autobazár</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">Súkromník: GLB 200 d s novými pneumatikami</span><span class="loc">Leopoldov</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/mercedes-benz-glb-200d-at-110kw150hp-a8/AejK3xD7Ikx/" target="_blank" rel="noopener">Mercedes-Benz GLB 200d AT 110kW150HP A8</a></h3>
+  <div class="facts">2021 · 148 000 km · GLB 200 d / 220 d 2.0 diesel 110–140 kW · automat · súkromník</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · dovezené · aj na <a href='https://auto.bazos.sk/inzerat/196567041/predam-mercedes-benz-glb200d.php' target='_blank' rel='noopener'>bazoš</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">21 000 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">24 300 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+13.6 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:45%"></span></div>
+  <ul class="pc"><li class="pro">2021, 2.0 diesel 110 kW, 8-st. automat, 148 tis. km</li><li class="pro">Nové pneumatiky, posledný servis 02/2026</li><li class="pro">~14 % pod férovou cenou</li><li class="con">Dovoz</li><li class="con">Krátky inzerát</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">GLB 180 d s 93 tis. km</span><span class="loc">Senec</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/196562898/predam-mercedes-glb-180-2021.php" target="_blank" rel="noopener">Predam Mercedes GLB 180d 2021 93000km</a></h3>
+  <div class="facts">2021 · 93 000 km · GLB 180 d 2.0 diesel 85 kW · automat · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">23 000 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">25 090 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+8.3 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:28%"></span></div>
+  <ul class="pc"><li class="pro">6/2021, 2.0 diesel 85 kW, 8-st. automat, 93 tis. km</li><li class="pro">Adaptívny tempomat</li><li class="pro">~8 % pod férovou cenou</li><li class="con">Predajca neistý</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">GLB 200 AMG Line z SR</span><span class="loc">Nitra</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/196638580/mercedes-benz-glb-200-52020-87610km-kupene-v-sr.php" target="_blank" rel="noopener">Mercedes - Benz GLB 200 AMG Line,5/2020,87.610km,Kúpené v SR</a></h3>
+  <div class="facts">2020 · 87 610 km · GLB 180 / 200 1.3 / 1.5 benzín 100–120 kW · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazoš</b> · kúpené v SR · aj na <a href='https://www.autobazar.eu/detail/mercedes-benz-glb-200-at-120kw163hp-a7/AepVG6tAXD9/' target='_blank' rel='noopener'>autobazar.eu</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">26 400 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">28 670 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+7.9 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:26%"></span></div>
+  <ul class="pc"><li class="pro">5/2020, 1.3 benzín 120 kW, 7-st. automat, AMG Line, 88 tis. km</li><li class="pro">Kúpené v SR</li><li class="pro">~8 % pod férovou cenou</li><li class="con">Predáva autobazár</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">GLB 200 d 4Matic AMG Line s 49 tis. km</span><span class="loc">Rimavská Sobota</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197381206/mercedes-benz-glb-220d-4matic-at-amg-line.php" target="_blank" rel="noopener">Mercedes-Benz GLB 200d 4Matic A/T AMG line</a></h3>
+  <div class="facts">2021 · 49 165 km · GLB 200 d / 220 d 2.0 diesel 110–140 kW · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazoš</b> · aj na <a href='https://www.autobazar.eu/detail/mercedes-benz-glb-200d-4matic-aj-na-splatky-protiucet/AmLzI6RlBBD/' target='_blank' rel='noopener'>autobazar.eu</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">29 990 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">32 300 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+7.2 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:24%"></span></div>
+  <ul class="pc"><li class="pro">10/2021, 2.0 diesel 110 kW, 4x4, 8-st. automat, 49 tis. km</li><li class="pro">AMG Line, garancia km a pôvodu</li><li class="pro">~7 % pod férovou cenou</li><li class="con">Predáva autobazár</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">GLB 250 4MATIC s panorámou</span><span class="loc">Svätý Jur</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/mercedes-benz-glb-250-amg-line-panorama-4matic-at/AmiCmBQZjBl/" target="_blank" rel="noopener">Mercedes-Benz GLB 250 AMG Line PANORAMA 4MATIC A/T</a></h3>
+  <div class="facts">2020 · 102 748 km · GLB 220 / 250 / AMG 35 benzín 140–225 kW · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · dovezené</div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">29 999 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">32 350 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+7.3 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:24%"></span></div>
+  <ul class="pc"><li class="pro">2020, 2.0 benzín, 4x4, automat, AMG Line, 103 tis. km</li><li class="pro">Panoramatická strecha, cena vrátane prihlásenia a novej STK/EK</li><li class="pro">~7 % pod férovou cenou</li><li class="con">Dovoz</li><li class="con">Predáva autobazár</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">GLB 180 d so 63 tis. km</span><span class="loc">Malacky</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197123166/mercedes-benz-glb-180d-63-022-km.php" target="_blank" rel="noopener">Mercedes Benz GLB 180D 63 022 km</a></h3>
+  <div class="facts">2020 · 63 022 km · GLB 180 d 2.0 diesel 85 kW · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazoš</b> · aj na <a href='https://www.autobazar.eu/detail/mercedes-benz-glb-180d-at-85kw116hp-a8/AefrzAs2Tet/' target='_blank' rel='noopener'>autobazar.eu</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">25 999 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">27 900 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+6.8 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:23%"></span></div>
+  <ul class="pc"><li class="pro">2020, 2.0 diesel, automat, 63 tis. km</li><li class="pro">LED High Performance, navigácia MBUX, kamera, el. kufor</li><li class="pro">~7 % pod férovou cenou</li><li class="con">Predáva autobazár</li></ul>
+</article></div>
+<div class="subhead">Špeciálne prípady</div>
+<div class="cards"></div>
+
+<h2>Cena vs. nájazd: celý trh na jednom grafe</h2>
+<p class="section-lead">Každý bod je jeden inzerát. Čím nižšie bod leží oproti ostatným s podobným nájazdom, tým je auto lacnejšie.
+Krúžkom sú označené odporúčané ponuky. Prejdi myšou na bod a uvidíš detail.</p>
+<div class="chart-wrap" id="chartWrap">
+  <div class="legend" id="legend"></div>
+  <svg id="chart" width="100%" height="420" role="img" aria-label="Bodový graf ceny a nájazdu inzerátov"></svg>
+  <div class="tip" id="tip"></div>
+</div>
+
+<h2>Porovnanie motorov</h2>
+<p class="section-lead">Hodnotenie (hviezdičky) zohľadňuje spoľahlivosť, spoľahlivosť a náklady na prevádzku a pomer cena/výkon.
+Číselné stĺpce sú mediány z ohodnotených inzerátov.</p>
+<div class="table-scroll">
+<table>
+  <thead><tr><th>Motor</th><th>Hodnotenie</th><th class="num">Ponúk</th><th class="num">Medián ceny</th><th class="num">Medián roku</th><th class="num">Medián km</th></tr></thead>
+  <tbody>
+<tr>
+  <td><b>GLB 200 d / 220 d 2.0 diesel 110–140 kW</b><div class="sub">Diesel 150–190 k, s 8-st. automatom (220 d vždy 4MATIC). Úsporný; over DPF a AdBlue.</div></td>
+  <td><span class="stars" aria-label="4 z 5">★★★★<span class="off">★</span></span></td>
+  <td class="num">38</td>
+  <td class="num"><div class="cellbar"><span style="width:92%"></span></div>36 650 €</td>
+  <td class="num">2024</td>
+  <td class="num">51 248 km</td>
+</tr>
+<tr>
+  <td><b>GLB 180 d 2.0 diesel 85 kW</b><div class="sub">Slabší diesel 116 k. Úsporný, ale pomalší pri plnom obsadení.</div></td>
+  <td><span class="stars" aria-label="3 z 5">★★★<span class="off">★★</span></span></td>
+  <td class="num">12</td>
+  <td class="num"><div class="cellbar"><span style="width:57%"></span></div>22 750 €</td>
+  <td class="num">2021</td>
+  <td class="num">142 272 km</td>
+</tr>
+<tr>
+  <td><b>GLB 220 / 250 / AMG 35 benzín 140–225 kW</b><div class="sub">2.0 turbobenzín 190–306 k, 4MATIC. Svižný, ale smädnejší.</div></td>
+  <td><span class="stars" aria-label="3 z 5">★★★<span class="off">★★</span></span></td>
+  <td class="num">9</td>
+  <td class="num"><div class="cellbar"><span style="width:100%"></span></div>39 999 €</td>
+  <td class="num">2023</td>
+  <td class="num">87 126 km</td>
+</tr>
+<tr>
+  <td><b>GLB 180 / 200 1.3 / 1.5 benzín 100–120 kW</b><div class="sub">1.3 turbobenzín 136–163 k (od Renaultu, od 2023 1.5 mild hybrid), 7-st. automat DCT. Na bežné jazdenie stačí.</div></td>
+  <td><span class="stars" aria-label="3 z 5">★★★<span class="off">★★</span></span></td>
+  <td class="num">12</td>
+  <td class="num"><div class="cellbar"><span style="width:69%"></span></div>27 695 €</td>
+  <td class="num">2021</td>
+  <td class="num">72 408 km</td>
+</tr></tbody>
+</table>
+</div>
+<div class="explain">
+  <p><b>Mercedes GLB</b> (X247, od 2019, facelift 2023) je hranaté rodinné SUV na technike triedy A / B – s veľkým kufrom
+  a voliteľne <b>7 miestami</b>. Konkurent Škody Kodiaq a VW Tiguan Allspace.</p>
+  <p><b>Ktorý motor zvoliť?</b> Univerzálny je diesel <b>200 d / 220 d</b> s 8-st. automatom. Benzín <b>200</b> stačí na kratšie trasy.</p>
+</div>
+
+<h2>Na čo si dať pozor</h2>
+<div class="warn">
+  <p><b>Lacné kvôli extrémnemu nájazdu</b> (viac ako 35 tis. km ročne, typicky flotila alebo taxi):</p>
+  <ul><li><a href='https://www.autobazar.eu/detail/mercedes-benz-glb-200-4matic-benzin-top/AeytMp2uKhY/' target='_blank' rel='noopener'>Mercedes-Benz GLB 200 4MATIC benzín TOP</a>: 2022, 217 160 km → 50 000 km/rok. Lacné je kvôli nájazdu.</li><li><a href='https://auto.bazos.sk/inzerat/197711501/mercedes-benz-glb-200d.php' target='_blank' rel='noopener'>Mercedes-Benz GLB 200d</a>: 2021, 231 000 km → 43 000 km/rok. Lacné je kvôli nájazdu.</li><li><a href='https://www.autobazar.eu/detail/mercedes-benz-glb-180d-at8-1majitel-sr-top-stav-servkniha/Ae3MPrgIfh1/' target='_blank' rel='noopener'>Mercedes-Benz GLB 180d AT, 2022, 1.Majiteľ, Kúpené v SR, Premium Výbava TOP stav</a>: 2022, 172 662 km → 40 000 km/rok. Lacné je kvôli nájazdu.</li><li><a href='https://auto.bazos.sk/inzerat/197182363/mercedes-benz-glb-180d-at.php' target='_blank' rel='noopener'>Mercedes-Benz GLB 180d A/T</a>: 2021, 210 629 km → 40 000 km/rok. Lacné je kvôli nájazdu.</li><li><a href='https://www.autobazar.eu/detail/mercedes-benz-glb-180d-at-85kw116hp-a8/AeeZtjEW0TK/' target='_blank' rel='noopener'>Mercedes-Benz GLB 180d AT 85kW116HP A8</a>: 2023, 129 750 km → 39 000 km/rok. Lacné je kvôli nájazdu.</li><li><a href='https://auto.bazos.sk/inzerat/197070924/mercedes-benz-glb-200.php' target='_blank' rel='noopener'>Mercedes-Benz GLB 200</a>: 2020, 243 000 km → 38 000 km/rok. Lacné je kvôli nájazdu.</li><li><a href='https://auto.bazos.sk/inzerat/196324508/mercedes-benz-glb-20-180d-at-2021.php' target='_blank' rel='noopener'>Mercedes-Benz GLB 2,0 d , 180d A/T, 2021</a>: 2021, 204 000 km → 38 000 km/rok. Lacné je kvôli nájazdu.</li><li><a href='https://www.autobazar.eu/detail/mercedes-benz-glb-200d-progressive/AelwrO5SO8Z/' target='_blank' rel='noopener'>Mercedes-Benz GLB 200d Progressive</a>: 2021, 199 790 km → 38 000 km/rok. Lacné je kvôli nájazdu.</li><li><a href='https://www.autobazar.eu/detail/mercedes-benz-glb-180d-at/AmlsOZCniiq/' target='_blank' rel='noopener'>Mercedes-Benz GLB 180d A/T</a>: 2021, 199 000 km → 37 000 km/rok. Lacné je kvôli nájazdu.</li></ul>
+  <p><b>Ďalšie veci, ktoré sme v inzerátoch našli:</b></p><ul><li>Asi 40 ponúk sú nové GLB z 2026 – tie sme nezarátali.</li><li>Veľa ponúk z 2025 sú predvádzacie autá od predajcov Mercedes – majú zvyčajne záruku a nízky nájazd.</li><li>Označenie „GLB 200“ môže byť benzín aj diesel (200 d) – over palivo v technickom preukaze.</li></ul><p><b>Vyradené z porovnania</b> (poškodené autá alebo nezmyselné údaje – model ich nehodnotí):</p><ul><li><a href='https://www.autobazar.eu/detail/mercedes-benz-glb-200d-4matic-at/AmyDkMUcQg_/' target='_blank' rel='noopener'>Mercedes-Benz GLB 200d 4MATIC A/T</a> (32 600 €): cena je o 46 % pod trhom – havarované, na diely, záloha/splátka namiesto ceny alebo podvod</li><li><a href='https://auto.bazos.sk/inzerat/196374351/mercedes-benz-glb-200-4matic-amg-benzin-120-kw-2023-top-stav.php' target='_blank' rel='noopener'>Mercedes-Benz GLB 200 4MATIC AMG Benzín 120 kW 2023 TOP STAV</a> (22 990 €): 65000 km/rok je nereálne – skontroluj rok a km</li></ul><p><b>GLA, GLC, EQB a iné modely z vyhľadávania, nové autá z 2026, inzeráty s chybným nájazdom</b> (44 inzerátov) sme z rebríčka vynechali.</p>
+  <p>Ďalších <b>25</b> inzerátov nemá v texte rok alebo kilometre, takže ich nebolo možné ohodnotiť.
+  Ak ťa niektorý zaujme, predajcu sa na tieto údaje opýtaj.</p>
+</div>
+
+<h2>Kompletný rebríček</h2>
+<p class="section-lead">Všetky ohodnotené inzeráty. Kliknutím na hlavičku stĺpca zoraďuješ, filtrom zužuješ výber.</p>
+<div class="filters">
+  <select id="fEngine"><option value="">Všetky motory</option></select>
+  <select id="fTrans"><option value="">Každá prevodovka</option><option value="automatic">Automat</option><option value="manual">Manuál</option></select>
+  <select id="fSeller"><option value="">Všetci predajcovia</option><option value="nodealer">Bez autobazárov</option></select>
+  <select id="fSource"><option value="">Všetky portály</option><option value="bazos">bazoš</option><option value="autobazar">autobazar.eu</option><option value="bazarsk">bazar.sk</option></select>
+  <select id="fBody" hidden><option value=""></option></select>
+  <select id="fOrigin"><option value="">Akýkoľvek pôvod</option><option value="SR">Kúpené v SR</option><option value="dovoz">Dovoz</option></select>
+  <input id="fMax" type="number" placeholder="Max. cena €" step="500" min="0" style="width:120px">
+  <span class="count" id="count"></span>
+</div>
+<div class="table-scroll">
+<table id="tbl">
+  <thead><tr>
+    <th class="sortable" data-k="title">Inzerát</th>
+    <th class="sortable num" data-k="year">Rok</th>
+    <th class="sortable num" data-k="km">Km</th>
+    <th class="sortable num" data-k="price_gross">Cena</th>
+    <th class="sortable num" data-k="fair_price">Férová</th>
+    <th class="sortable num" data-k="discount_pct">Pod trhom ▾</th>
+  </tr></thead>
+  <tbody></tbody>
+</table>
+</div>
+
+<h2>Pred kúpou over</h2>
+<ul class="check">
+  <li>VIN cez Cebia / autoDNA (história km, havárie, leasing)</li>
+  <li>Servisná história – Mercedes dealer ju vie podľa VIN vytiahnuť</li>
+  <li>Automat DCT (benzín) / 8G-DCT (diesel): plynulý rozjazd, trhanie</li>
+  <li>Diesel: DPF, AdBlue</li>
+  <li>7-miestne: stav tretieho radu a mechanizmu sklápania</li>
+  <li>STK/EK protokol a dátum platnosti; cena s DPH alebo bez DPH, ak predáva firma</li>
+</ul>
+
+<footer>
+  Zdroj: auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (len ponuky zo Slovenska, to isté auto na viacerých portáloch je započítané raz), sťahované cez lokálny MCP server bazos-mcp (nástroj <code>fair_price</code>), 22. 11. 2026.
+  Model: ridge regresia log(ceny s DPH) podľa veku, veku², km, km², prevodovky, typu predajcu, motora, karosérie, pohonu 4x4, pôvodu (SR / dovoz) a portálu. Vzorka 71
+  inzerátov, R² 96 %. Parametre sú vyťažené z textu inzerátov, a preto môžu obsahovať chyby. Odporúčané ponuky sme overili
+  prečítaním celého inzerátu. Hodnotenie motorov je odborný odhad, nie výsledok modelu.
+</footer>
+</main>
+
+<script>
+const DATA = [{"id": "ab-AmFMCmG0n9Z", "url": "https://www.autobazar.eu/detail/mercedes-benz-glb-220-4matic/AmFMCmG0n9Z/", "title": "MERCEDES-BENZ GLB 220 4MATIC", "price": 43899, "price_gross": 43899, "fair_price": 52480.0, "discount_pct": 16.4, "verdict": "výrazne pod trhom – over prečo", "year": 2025, "km": 10707, "km_per_year": 8000.0, "eg": "GLB 220 / 250 / AMG 35 benzín 140–225 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": "top", "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AePef8MzM-C", "url": "https://www.autobazar.eu/detail/mercedes-benz-glb-180d-at-85kw116hp-a8/AePef8MzM-C/", "title": "Mercedes-Benz GLB 180d AT 85kW116HP A8", "price": 19990, "price_gross": 19990, "fair_price": 23890.0, "discount_pct": 16.3, "verdict": "výrazne pod trhom – over prečo", "year": 2021, "km": 118000, "km_per_year": 22100.0, "eg": "GLB 180 d 2.0 diesel 85 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": "budget", "source": "autobazar", "origin": null, "also_listed": [{"source": "bazos", "id": "196952771", "url": "https://auto.bazos.sk/inzerat/196952771/mercedes-glb-180d-at-2021-118-000-k-odpocet-dph.php", "price": 19990}], "body": "suv"}, {"id": "ab-AejK3xD7Ikx", "url": "https://www.autobazar.eu/detail/mercedes-benz-glb-200d-at-110kw150hp-a8/AejK3xD7Ikx/", "title": "Mercedes-Benz GLB 200d AT 110kW150HP A8", "price": 21000, "price_gross": 21000, "fair_price": 24300.0, "discount_pct": 13.6, "verdict": "pod trhom", "year": 2021, "km": 148000, "km_per_year": 27800.0, "eg": "GLB 200 d / 220 d 2.0 diesel 110–140 kW", "cg": 1, "transmission": "automatic", "seller_type": "private", "location": "Leopoldov", "flags": [], "pick": "budget", "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "196567041", "url": "https://auto.bazos.sk/inzerat/196567041/predam-mercedes-benz-glb200d.php", "price": 21000}], "body": "suv"}, {"id": "ab-Ab1hhsPYDQJ", "url": "https://www.autobazar.eu/detail/mercedes-benz-glb-180/Ab1hhsPYDQJ/", "title": "Mercedes-Benz GLB 180", "price": 37900, "price_gross": 37900, "fair_price": 43690.0, "discount_pct": 13.3, "verdict": "pod trhom", "year": 2025, "km": 27034, "km_per_year": 20300.0, "eg": "GLB 180 / 200 1.3 / 1.5 benzín 100–120 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava-Petržalka", "flags": [], "pick": "top", "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AmD15Hdw1dK", "url": "https://www.autobazar.eu/detail/mercedes-benz-glb-200-d-4matic/AmD15Hdw1dK/", "title": "MERCEDES-BENZ GLB 200 d 4MATIC", "price": 41500, "price_gross": 41500, "fair_price": 47110.0, "discount_pct": 11.9, "verdict": "pod trhom", "year": 2025, "km": 53331, "km_per_year": 40000.0, "eg": "GLB 200 d / 220 d 2.0 diesel 110–140 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Nové Zámky", "flags": [], "pick": "top", "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AmrS53LV0BM", "url": "https://www.autobazar.eu/detail/mercedes-benz-glb-200-d-4matic/AmrS53LV0BM/", "title": "MERCEDES-BENZ GLB 200 d 4MATIC", "price": 43750, "price_gross": 43750, "fair_price": 48280.0, "discount_pct": 9.4, "verdict": "pod trhom", "year": 2025, "km": 34575, "km_per_year": 25900.0, "eg": "GLB 200 d / 220 d 2.0 diesel 110–140 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Nitra", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AmP2Fkt_iue", "url": "https://www.autobazar.eu/detail/mercedes-benz-glb-220-4matic/AmP2Fkt_iue/", "title": "MERCEDES-BENZ GLB 220 4MATIC", "price": 47499, "price_gross": 47499, "fair_price": 52150.0, "discount_pct": 8.9, "verdict": "pod trhom", "year": 2025, "km": 17273, "km_per_year": 13000.0, "eg": "GLB 220 / 250 / AMG 35 benzín 140–225 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AmpSP-1JAfG", "url": "https://www.autobazar.eu/detail/mercedes-benz-glb-200-mhev-at/AmpSP-1JAfG/", "title": "Mercedes-Benz GLB 200 mHEV A/T", "price": 39500, "price_gross": 39500, "fair_price": 43180.0, "discount_pct": 8.5, "verdict": "pod trhom", "year": 2025, "km": 13704, "km_per_year": 10300.0, "eg": "GLB 180 / 200 1.3 / 1.5 benzín 100–120 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Dunajská Streda", "flags": [], "pick": "top", "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "196562898", "url": "https://auto.bazos.sk/inzerat/196562898/predam-mercedes-glb-180-2021.php", "title": "Predam Mercedes GLB 180d 2021 93000km", "price": 23000, "price_gross": 23000, "fair_price": 25090.0, "discount_pct": 8.3, "verdict": "pod trhom", "year": 2021, "km": 93000, "km_per_year": 17400.0, "eg": "GLB 180 d 2.0 diesel 85 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Senec", "flags": [], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "196645183", "url": "https://auto.bazos.sk/inzerat/196645183/mercedes-benz-glb-200-d-4matic-pzp-na-1rok-zdarma.php", "title": "MERCEDES-BENZ GLB 200 d 4MATIC, PZP NA 1ROK ZDARMA", "price": 38990, "price_gross": 38990, "fair_price": 42360.0, "discount_pct": 8.0, "verdict": "pod trhom", "year": 2024, "km": 61431, "km_per_year": 26300.0, "eg": "GLB 200 d / 220 d 2.0 diesel 110–140 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Michalovce", "flags": [], "pick": "top", "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "196638580", "url": "https://auto.bazos.sk/inzerat/196638580/mercedes-benz-glb-200-52020-87610km-kupene-v-sr.php", "title": "Mercedes - Benz GLB 200 AMG Line,5/2020,87.610km,Kúpené v SR", "price": 26400, "price_gross": 26400, "fair_price": 28670.0, "discount_pct": 7.9, "verdict": "pod trhom", "year": 2020, "km": 87610, "km_per_year": 13800.0, "eg": "GLB 180 / 200 1.3 / 1.5 benzín 100–120 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Nitra", "flags": [], "pick": "budget", "source": "bazos", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AepVG6tAXD9", "url": "https://www.autobazar.eu/detail/mercedes-benz-glb-200-at-120kw163hp-a7/AepVG6tAXD9/", "price": 26400}], "body": "suv"}, {"id": "196324508", "url": "https://auto.bazos.sk/inzerat/196324508/mercedes-benz-glb-20-180d-at-2021.php", "title": "Mercedes-Benz GLB 2,0 d , 180d A/T, 2021", "price": 17999, "price_gross": 17999, "fair_price": 19530.0, "discount_pct": 7.8, "verdict": "pod trhom", "year": 2021, "km": 204000, "km_per_year": 38300.0, "eg": "GLB 180 d 2.0 diesel 85 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Senec", "flags": ["vysoký nájazd 38000 km/rok – flotila / taxi?"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "197070924", "url": "https://auto.bazos.sk/inzerat/197070924/mercedes-benz-glb-200.php", "title": "Mercedes-Benz GLB 200", "price": 18800, "price_gross": 18800, "fair_price": 20340.0, "discount_pct": 7.6, "verdict": "pod trhom", "year": 2020, "km": 243000, "km_per_year": 38400.0, "eg": "GLB 180 / 200 1.3 / 1.5 benzín 100–120 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": ["vysoký nájazd 38000 km/rok – flotila / taxi?"], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "suv"}, {"id": "ab-AmlsOZCniiq", "url": "https://www.autobazar.eu/detail/mercedes-benz-glb-180d-at/AmlsOZCniiq/", "title": "Mercedes-Benz GLB 180d A/T", "price": 17987, "price_gross": 17987, "fair_price": 19420.0, "discount_pct": 7.4, "verdict": "pod trhom", "year": 2021, "km": 199000, "km_per_year": 37300.0, "eg": "GLB 180 d 2.0 diesel 85 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Senec", "flags": ["vysoký nájazd 37000 km/rok – flotila / taxi?"], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AmiCmBQZjBl", "url": "https://www.autobazar.eu/detail/mercedes-benz-glb-250-amg-line-panorama-4matic-at/AmiCmBQZjBl/", "title": "Mercedes-Benz GLB 250 AMG Line PANORAMA 4MATIC A/T", "price": 29999, "price_gross": 29999, "fair_price": 32350.0, "discount_pct": 7.3, "verdict": "pod trhom", "year": 2020, "km": 102748, "km_per_year": 16200.0, "eg": "GLB 220 / 250 / AMG 35 benzín 140–225 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Svätý Jur", "flags": [], "pick": "budget", "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "suv"}, {"id": "197381206", "url": "https://auto.bazos.sk/inzerat/197381206/mercedes-benz-glb-220d-4matic-at-amg-line.php", "title": "Mercedes-Benz GLB 200d 4Matic A/T AMG line", "price": 29990, "price_gross": 29990, "fair_price": 32300.0, "discount_pct": 7.2, "verdict": "pod trhom", "year": 2021, "km": 49165, "km_per_year": 9200.0, "eg": "GLB 200 d / 220 d 2.0 diesel 110–140 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Rimavská Sobota", "flags": [], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmLzI6RlBBD", "url": "https://www.autobazar.eu/detail/mercedes-benz-glb-200d-4matic-aj-na-splatky-protiucet/AmLzI6RlBBD/", "price": 29990}], "body": "suv"}, {"id": "197123166", "url": "https://auto.bazos.sk/inzerat/197123166/mercedes-benz-glb-180d-63-022-km.php", "title": "Mercedes Benz GLB 180D 63 022 km", "price": 25999, "price_gross": 25999, "fair_price": 27900.0, "discount_pct": 6.8, "verdict": "férová cena", "year": 2020, "km": 63022, "km_per_year": 10000.0, "eg": "GLB 180 d 2.0 diesel 85 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Malacky", "flags": [], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AefrzAs2Tet", "url": "https://www.autobazar.eu/detail/mercedes-benz-glb-180d-at-85kw116hp-a8/AefrzAs2Tet/", "price": 25999}], "body": "suv"}, {"id": "ab-AmFxw_qBs9i", "url": "https://www.autobazar.eu/detail/mercedes-benz-glb-200-amg-line/AmFxw_qBs9i/", "title": "Mercedes-Benz GLB 200 AMG Line", "price": 27490, "price_gross": 27490, "fair_price": 29430.0, "discount_pct": 6.6, "verdict": "férová cena", "year": 2020, "km": 65915, "km_per_year": 10400.0, "eg": "GLB 180 / 200 1.3 / 1.5 benzín 100–120 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Ivanka pri Dunaji", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "ab-Ae34nFN4JKq", "url": "https://www.autobazar.eu/detail/mercedes-benz-glb-200/Ae34nFN4JKq/", "title": "Mercedes-Benz GLB 200", "price": 21800, "price_gross": 21800, "fair_price": 23280.0, "discount_pct": 6.4, "verdict": "férová cena", "year": 2021, "km": 164800, "km_per_year": 30900.0, "eg": "GLB 200 d / 220 d 2.0 diesel 110–140 kW", "cg": 1, "transmission": "automatic", "seller_type": "private", "location": "Martin", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "suv"}, {"id": "196940339", "url": "https://auto.bazos.sk/inzerat/196940339/glb-200-formatic.php", "title": "GLB 200 Formatic", "price": 36400, "price_gross": 36400, "fair_price": 38820.0, "discount_pct": 6.2, "verdict": "férová cena", "year": 2024, "km": 28000, "km_per_year": 12000.0, "eg": "GLB 200 d / 220 d 2.0 diesel 110–140 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Košice", "flags": [], "pick": "top", "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AmnCHWZoe5_", "url": "https://www.autobazar.eu/detail/mercedes-benz-glb-200-d/AmnCHWZoe5_/", "title": "MERCEDES-BENZ GLB 200 d", "price": 42899, "price_gross": 42899, "fair_price": 45420.0, "discount_pct": 5.6, "verdict": "férová cena", "year": 2025, "km": 19593, "km_per_year": 14700.0, "eg": "GLB 200 d / 220 d 2.0 diesel 110–140 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "197016586", "url": "https://auto.bazos.sk/inzerat/197016586/mercedes-benz-glb-200-diesel-velky-display-nova-stk.php", "title": "Mercedes - Benz GLB 200, DIESEL,  veľký display, NOVA STK", "price": 22300, "price_gross": 22300, "fair_price": 23570.0, "discount_pct": 5.4, "verdict": "férová cena", "year": 2021, "km": 167800, "km_per_year": 31500.0, "eg": "GLB 200 d / 220 d 2.0 diesel 110–140 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Martin", "flags": [], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "suv"}, {"id": "ab-AmYxWoE_D_X", "url": "https://www.autobazar.eu/detail/mercedes-benz-glb-200-at/AmYxWoE_D_X/", "title": "Mercedes-Benz GLB 200 A/T", "price": 27990, "price_gross": 27990, "fair_price": 29540.0, "discount_pct": 5.2, "verdict": "férová cena", "year": 2020, "km": 63481, "km_per_year": 10000.0, "eg": "GLB 180 / 200 1.3 / 1.5 benzín 100–120 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava-Staré Mesto", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "196977430", "url": "https://auto.bazos.sk/inzerat/196977430/mercedes-glb-200d.php", "title": "Mercedes GLB 200d", "price": 22300, "price_gross": 22300, "fair_price": 23530.0, "discount_pct": 5.2, "verdict": "férová cena", "year": 2020, "km": 160000, "km_per_year": 25300.0, "eg": "GLB 200 d / 220 d 2.0 diesel 110–140 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Tvrdošín", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "197182363", "url": "https://auto.bazos.sk/inzerat/197182363/mercedes-benz-glb-180d-at.php", "title": "Mercedes-Benz GLB 180d A/T", "price": 17990, "price_gross": 17990, "fair_price": 18930.0, "discount_pct": 5.0, "verdict": "férová cena", "year": 2021, "km": 210629, "km_per_year": 39500.0, "eg": "GLB 180 d 2.0 diesel 85 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Nové Zámky", "flags": ["vysoký nájazd 39000 km/rok – flotila / taxi?"], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmZIjJ32rwk", "url": "https://www.autobazar.eu/detail/mercedes-benz-glb-180d-at/AmZIjJ32rwk/", "price": 17990}], "body": "suv"}, {"id": "ab-AerU6vsRws4", "url": "https://www.autobazar.eu/detail/mercedes-benz-glb-220d-amg-line/AerU6vsRws4/", "title": "Mercedes-Benz GLB 220d AMG-Line", "price": 33990, "price_gross": 33990, "fair_price": 35760.0, "discount_pct": 4.9, "verdict": "férová cena", "year": 2023, "km": 75000, "km_per_year": 22500.0, "eg": "GLB 200 d / 220 d 2.0 diesel 110–140 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AmwwELPRdGd", "url": "https://www.autobazar.eu/detail/mercedes-benz-glb-200-d/AmwwELPRdGd/", "title": "MERCEDES-BENZ GLB 200 d", "price": 36900, "price_gross": 36900, "fair_price": 38820.0, "discount_pct": 4.9, "verdict": "férová cena", "year": 2024, "km": 19127, "km_per_year": 8200.0, "eg": "GLB 200 d / 220 d 2.0 diesel 110–140 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Nové Zámky", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-Am8SMQdFjue", "url": "https://www.autobazar.eu/detail/mercedes-benz-glb-200/Am8SMQdFjue/", "title": "MERCEDES-BENZ GLB 200", "price": 42899, "price_gross": 42899, "fair_price": 44500.0, "discount_pct": 3.6, "verdict": "férová cena", "year": 2025, "km": 19204, "km_per_year": 14400.0, "eg": "GLB 180 / 200 1.3 / 1.5 benzín 100–120 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "197648783", "url": "https://auto.bazos.sk/inzerat/197648783/mercedes-benz-glb-200-progressive-120-kw-automat-78-90.php", "title": "Mercedes-Benz GLB 200 Progressive | 120 kW | Automat", "price": 27900, "price_gross": 27900, "fair_price": 28840.0, "discount_pct": 3.3, "verdict": "férová cena", "year": 2021, "km": 78900, "km_per_year": 14800.0, "eg": "GLB 180 / 200 1.3 / 1.5 benzín 100–120 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Trnava", "flags": [], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [{"source": "autobazar", "id": "ab-AmjgkKsdD57", "url": "https://www.autobazar.eu/detail/mercedes-benz-glb-200-at/AmjgkKsdD57/", "price": 27900}], "body": "suv"}, {"id": "195993757", "url": "https://auto.bazos.sk/inzerat/195993757/mercedes-benz-glb-200-d-4matic-amg-line.php", "title": "MERCEDES-BENZ GLB 200 d 4MATIC AMG Line", "price": 39990, "price_gross": 39990, "fair_price": 41190.0, "discount_pct": 2.9, "verdict": "férová cena", "year": 2024, "km": 43299, "km_per_year": 18600.0, "eg": "GLB 200 d / 220 d 2.0 diesel 110–140 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Prešov", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "197634557", "url": "https://auto.bazos.sk/inzerat/197634557/mercedes-benz-glb-20-diesel-110kw-8at-4x4.php", "title": "Mercedes-Benz GLB 2.0 Diesel 110kW 8AT 4x4", "price": 41900, "price_gross": 41900, "fair_price": 42940.0, "discount_pct": 2.4, "verdict": "férová cena", "year": 2025, "km": 32400, "km_per_year": 24300.0, "eg": "GLB 200 d / 220 d 2.0 diesel 110–140 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Košice", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AeIgqNOb42v", "url": "https://www.autobazar.eu/detail/mercedes-benz-glb-20-diesel-110kw-8at-4x4/AeIgqNOb42v/", "price": 41900}], "body": "suv"}, {"id": "ab-AmB--RXPX2Q", "url": "https://www.autobazar.eu/detail/mercedes-benz-glb-200d-at/AmB--RXPX2Q/", "title": "Mercedes-Benz GLB 200d A/T", "price": 24500, "price_gross": 24500, "fair_price": 24840.0, "discount_pct": 1.3, "verdict": "férová cena", "year": 2022, "km": 145380, "km_per_year": 33500.0, "eg": "GLB 200 d / 220 d 2.0 diesel 110–140 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Štiavnička", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "197333181", "url": "https://auto.bazos.sk/inzerat/197333181/mercedes-benz-glb-200d-at-led-navi-kamera.php", "price": 24500}], "body": "suv"}, {"id": "ab-AedOP9aI78u", "url": "https://www.autobazar.eu/detail/mercedes-benz-glb-200-at-120kw163hp-a7/AedOP9aI78u/", "title": "Mercedes-Benz GLB 200 AT 120kW163HP A7", "price": 25900, "price_gross": 25900, "fair_price": 26250.0, "discount_pct": 1.3, "verdict": "férová cena", "year": 2021, "km": 105000, "km_per_year": 19700.0, "eg": "GLB 180 / 200 1.3 / 1.5 benzín 100–120 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "ab-AmrIi6fS-kk", "url": "https://www.autobazar.eu/detail/mercedes-benz-glb-250-4matic-at/AmrIi6fS-kk/", "title": "Mercedes-Benz GLB 250 4MATIC A/T", "price": 30000, "price_gross": 30000, "fair_price": 30350.0, "discount_pct": 1.2, "verdict": "férová cena", "year": 2021, "km": 111309, "km_per_year": 20900.0, "eg": "GLB 220 / 250 / AMG 35 benzín 140–225 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Nitra", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AmdotMgGkCQ", "url": "https://www.autobazar.eu/detail/glb-180-d/AmdotMgGkCQ/", "title": "Mercedes-Benz GLB 180 d", "price": 34900, "price_gross": 34900, "fair_price": 35270.0, "discount_pct": 1.1, "verdict": "férová cena", "year": 2024, "km": 20310, "km_per_year": 8700.0, "eg": "GLB 180 d 2.0 diesel 85 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Trenčín", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AeeZtjEW0TK", "url": "https://www.autobazar.eu/detail/mercedes-benz-glb-180d-at-85kw116hp-a8/AeeZtjEW0TK/", "title": "Mercedes-Benz GLB 180d AT 85kW116HP A8", "price": 25990, "price_gross": 25990, "fair_price": 26230.0, "discount_pct": 0.9, "verdict": "férová cena", "year": 2023, "km": 129750, "km_per_year": 38900.0, "eg": "GLB 180 d 2.0 diesel 85 kW", "cg": 1, "transmission": "automatic", "seller_type": "private", "location": "Prievidza", "flags": ["vysoký nájazd 39000 km/rok – flotila / taxi?"], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "197383877", "url": "https://auto.bazos.sk/inzerat/197383877/predam-mecedes-benz-glb180.php", "price": 25990}], "body": "suv"}, {"id": "ab-AmmeGxQRc26", "url": "https://www.autobazar.eu/detail/mercedes-benz-glb-200d-4matic-at/AmmeGxQRc26/", "title": "Mercedes-Benz GLB 200d 4MATIC A/T", "price": 27990, "price_gross": 27990, "fair_price": 28220.0, "discount_pct": 0.8, "verdict": "férová cena", "year": 2020, "km": 125330, "km_per_year": 19800.0, "eg": "GLB 200 d / 220 d 2.0 diesel 110–140 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Nový Život", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "196564127", "url": "https://auto.bazos.sk/inzerat/196564127/mercedes-benz-glb-200d-4matic-at.php", "price": 27990}], "body": "suv"}, {"id": "ab-AmJP190UxnY", "url": "https://www.autobazar.eu/detail/mercedes-benz-glb-220-4matic/AmJP190UxnY/", "title": "MERCEDES-BENZ GLB 220 4MATIC", "price": 51900, "price_gross": 51900, "fair_price": 52200.0, "discount_pct": 0.6, "verdict": "férová cena", "year": 2025, "km": 16248, "km_per_year": 12200.0, "eg": "GLB 220 / 250 / AMG 35 benzín 140–225 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-Amg2t4RObOO", "url": "https://www.autobazar.eu/detail/mercedes-benz-glb-200-at/Amg2t4RObOO/", "title": "Mercedes-Benz GLB 200 A/T", "price": 24990, "price_gross": 24990, "fair_price": 25110.0, "discount_pct": 0.5, "verdict": "férová cena", "year": 2021, "km": 126218, "km_per_year": 23700.0, "eg": "GLB 180 / 200 1.3 / 1.5 benzín 100–120 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Nové Mesto nad Váhom", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197044965", "url": "https://auto.bazos.sk/inzerat/197044965/mercedes-benz-glb-200-at.php", "price": 24990}], "body": "suv"}, {"id": "197580208", "url": "https://auto.bazos.sk/inzerat/197580208/mercedes-benz-glb-200d-4matic.php", "title": "Mercedes-Benz GLB 200d 4MATIC", "price": 28350, "price_gross": 28350, "fair_price": 28360.0, "discount_pct": 0.1, "verdict": "férová cena", "year": 2021, "km": 118036, "km_per_year": 22100.0, "eg": "GLB 200 d / 220 d 2.0 diesel 110–140 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Dunajská Streda", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-Aepk8J-tmy8", "url": "https://www.autobazar.eu/detail/mercedes-benz-glb-200/Aepk8J-tmy8/", "title": "Mercedes-Benz GLB 200", "price": 37000, "price_gross": 37000, "fair_price": 36910.0, "discount_pct": -0.2, "verdict": "férová cena", "year": 2024, "km": 36890, "km_per_year": 15800.0, "eg": "GLB 180 / 200 1.3 / 1.5 benzín 100–120 kW", "cg": 0, "transmission": "automatic", "seller_type": "private", "location": "Trnava", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "suv"}, {"id": "ab-Am6PCahU3mY", "url": "https://www.autobazar.eu/detail/mercedes-benz-glb-200-d-4matic/Am6PCahU3mY/", "title": "MERCEDES-BENZ GLB 200 d 4MATIC", "price": 41989, "price_gross": 41989, "fair_price": 41920.0, "discount_pct": -0.2, "verdict": "férová cena", "year": 2024, "km": 19929, "km_per_year": 8500.0, "eg": "GLB 200 d / 220 d 2.0 diesel 110–140 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Prešov", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-Amd9SUIt2Kd", "url": "https://www.autobazar.eu/detail/mercedes-benz-glb-200-d-4matic/Amd9SUIt2Kd/", "title": "MERCEDES-BENZ GLB 200 d 4MATIC", "price": 48989, "price_gross": 48989, "fair_price": 48780.0, "discount_pct": -0.4, "verdict": "férová cena", "year": 2025, "km": 25705, "km_per_year": 19300.0, "eg": "GLB 200 d / 220 d 2.0 diesel 110–140 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Prešov", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AmW1FXj5i1z", "url": "https://www.autobazar.eu/detail/mercedes-amg-glb-35-4matic/AmW1FXj5i1z/", "title": "MERCEDES-AMG GLB 35 4MATIC", "price": 39999, "price_gross": 39999, "fair_price": 39550.0, "discount_pct": -1.1, "verdict": "férová cena", "year": 2023, "km": 89695, "km_per_year": 26900.0, "eg": "GLB 220 / 250 / AMG 35 benzín 140–225 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Prešov", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AmqKpRWRFKn", "url": "https://www.autobazar.eu/detail/mercedes-benz-glb-200d-a-t/AmqKpRWRFKn/", "title": "Mercedes-Benz GLB 200d A/T", "price": 22499, "price_gross": 22499, "fair_price": 22020.0, "discount_pct": -2.2, "verdict": "férová cena", "year": 2020, "km": 204111, "km_per_year": 32200.0, "eg": "GLB 200 d / 220 d 2.0 diesel 110–140 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "suv"}, {"id": "ab-Ae9eP2EbG90", "url": "https://www.autobazar.eu/detail/mercedes-benz-glb-200d-at-110kw150hp-a8/Ae9eP2EbG90/", "title": "Mercedes-Benz GLB 200d AT 110kW150HP A8", "price": 32500, "price_gross": 32500, "fair_price": 31790.0, "discount_pct": -2.2, "verdict": "férová cena", "year": 2020, "km": 28480, "km_per_year": 4500.0, "eg": "GLB 200 d / 220 d 2.0 diesel 110–140 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Rimavská Sobota", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AelwrO5SO8Z", "url": "https://www.autobazar.eu/detail/mercedes-benz-glb-200d-progressive/AelwrO5SO8Z/", "title": "Mercedes-Benz GLB 200d Progressive", "price": 21900, "price_gross": 21900, "fair_price": 21320.0, "discount_pct": -2.7, "verdict": "férová cena", "year": 2021, "km": 199790, "km_per_year": 37500.0, "eg": "GLB 200 d / 220 d 2.0 diesel 110–140 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Trenčín", "flags": ["vysoký nájazd 37000 km/rok – flotila / taxi?"], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "196869946", "url": "https://auto.bazos.sk/inzerat/196869946/mercedes-glb.php", "price": 21990}], "body": "suv"}, {"id": "ab-AmY4VKoBgkr", "url": "https://www.autobazar.eu/detail/mercedes-benz-glb-200-d/AmY4VKoBgkr/", "title": "MERCEDES-BENZ GLB 200 d", "price": 46899, "price_gross": 46899, "fair_price": 45530.0, "discount_pct": -3.0, "verdict": "férová cena", "year": 2025, "km": 17378, "km_per_year": 13000.0, "eg": "GLB 200 d / 220 d 2.0 diesel 110–140 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AeOYwFp871j", "url": "https://www.autobazar.eu/detail/mercedes-benz-glb-180d-at-85kw116hp-a8/AeOYwFp871j/", "title": "Mercedes-Benz GLB 180d AT 85kW116HP A8", "price": 24990, "price_gross": 24990, "fair_price": 24200.0, "discount_pct": -3.3, "verdict": "férová cena", "year": 2021, "km": 107200, "km_per_year": 20100.0, "eg": "GLB 180 d 2.0 diesel 85 kW", "cg": 1, "transmission": "automatic", "seller_type": "private", "location": "Miloslavov", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "suv"}, {"id": "ab-AmivDX5dsVN", "url": "https://www.autobazar.eu/detail/mercedes-benz-glb-220-d-4-matic/AmivDX5dsVN/", "title": "MERCEDES-BENZ GLB 220 d 4 MATIC", "price": 51900, "price_gross": 51900, "fair_price": 50180.0, "discount_pct": -3.4, "verdict": "férová cena", "year": 2025, "km": 19491, "km_per_year": 14600.0, "eg": "GLB 200 d / 220 d 2.0 diesel 110–140 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Nové Zámky", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AmoTtXGyI5S", "url": "https://www.autobazar.eu/detail/mercedes-benz-glb-200-d-4matic/AmoTtXGyI5S/", "title": "MERCEDES-BENZ GLB 200 d 4MATIC", "price": 50989, "price_gross": 50989, "fair_price": 49200.0, "discount_pct": -3.6, "verdict": "férová cena", "year": 2025, "km": 17634, "km_per_year": 13200.0, "eg": "GLB 200 d / 220 d 2.0 diesel 110–140 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Prešov", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "197049630", "url": "https://auto.bazos.sk/inzerat/197049630/mercedes-glb-250-benzin-165kw-amg-line.php", "title": "Mercedes GLB 250 Benzín 165kw. AMG LINE", "price": 26000, "price_gross": 26000, "fair_price": 25020.0, "discount_pct": -3.9, "verdict": "férová cena", "year": 2020, "km": 178000, "km_per_year": 28100.0, "eg": "GLB 220 / 250 / AMG 35 benzín 140–225 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Revúca", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-Amru-j9b26A", "url": "https://www.autobazar.eu/detail/mercedes-benz-glb-200d-at/Amru-j9b26A/", "title": "Mercedes-Benz GLB 200d A/T", "price": 39990, "price_gross": 39990, "fair_price": 38360.0, "discount_pct": -4.3, "verdict": "férová cena", "year": 2024, "km": 30000, "km_per_year": 12900.0, "eg": "GLB 200 d / 220 d 2.0 diesel 110–140 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava-Staré Mesto", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazos", "id": "197560390", "url": "https://auto.bazos.sk/inzerat/197560390/mercedes-benz-glb-200d-100kw-at-7-miestne-v-zaruke.php", "price": 39990}], "body": "suv"}, {"id": "ab-AmfOYywfA0o", "url": "https://www.autobazar.eu/detail/mercedes-benz-glb-200-d/AmfOYywfA0o/", "title": "Mercedes-Benz GLB 200 d", "price": 35990, "price_gross": 35990, "fair_price": 34450.0, "discount_pct": -4.5, "verdict": "férová cena", "year": 2023, "km": 30516, "km_per_year": 9200.0, "eg": "GLB 200 d / 220 d 2.0 diesel 110–140 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Trnava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "196006885", "url": "https://auto.bazos.sk/inzerat/196006885/mercedes-benz-glb-180d-at-mesacne-349e.php", "title": "Mercedes-Benz GLB 180d A/T, Mesačne: 349€", "price": 21990, "price_gross": 21990, "fair_price": 20960.0, "discount_pct": -4.9, "verdict": "férová cena", "year": 2020, "km": 192015, "km_per_year": 30300.0, "eg": "GLB 180 d 2.0 diesel 85 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Dunajská Streda", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmiEfcIoGc9", "url": "https://www.autobazar.eu/detail/mercedes-benz-glb-180d-at/AmiEfcIoGc9/", "price": 21990}], "body": "suv"}, {"id": "ab-AeytMp2uKhY", "url": "https://www.autobazar.eu/detail/mercedes-benz-glb-200-4matic-benzin-top/AeytMp2uKhY/", "title": "Mercedes-Benz GLB 200 4MATIC benzín TOP", "price": 22990, "price_gross": 22990, "fair_price": 21890.0, "discount_pct": -5.0, "verdict": "férová cena", "year": 2022, "km": 217160, "km_per_year": 50100.0, "eg": "GLB 180 / 200 1.3 / 1.5 benzín 100–120 kW", "cg": 0, "transmission": "automatic", "seller_type": "private", "location": "Lučenec", "flags": ["vysoký nájazd 50000 km/rok – flotila / taxi?"], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "197711501", "url": "https://auto.bazos.sk/inzerat/197711501/mercedes-benz-glb-200d.php", "title": "Mercedes-Benz GLB 200d", "price": 20490, "price_gross": 20490, "fair_price": 19500.0, "discount_pct": -5.1, "verdict": "férová cena", "year": 2021, "km": 231000, "km_per_year": 43300.0, "eg": "GLB 200 d / 220 d 2.0 diesel 110–140 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Trenčín", "flags": ["vysoký nájazd 43000 km/rok – flotila / taxi?"], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "suv"}, {"id": "ab-AmFa9WuMyaA", "url": "https://www.autobazar.eu/detail/mercedes-benz-glb-250-4matic/AmFa9WuMyaA/", "title": "MERCEDES-BENZ GLB 250 4MATIC, PZP NA 1ROK ZDARMA!", "price": 35990, "price_gross": 35990, "fair_price": 33270.0, "discount_pct": -8.2, "verdict": "nad trhom", "year": 2020, "km": 87126, "km_per_year": 13800.0, "eg": "GLB 220 / 250 / AMG 35 benzín 140–225 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Michalovce", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazos", "id": "196645521", "url": "https://auto.bazos.sk/inzerat/196645521/mercedes-benz-glb-250-4matic-pzp-na-1rok-zdarma.php", "price": 35990}], "body": "suv"}, {"id": "ab-AmN203xOm02", "url": "https://www.autobazar.eu/detail/mercedes-benz-glb-200d-at/AmN203xOm02/", "title": "Mercedes-Benz GLB 200d A/T", "price": 28900, "price_gross": 28900, "fair_price": 26350.0, "discount_pct": -9.7, "verdict": "nad trhom", "year": 2021, "km": 98500, "km_per_year": 18500.0, "eg": "GLB 200 d / 220 d 2.0 diesel 110–140 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava-Podunajské Biskupice", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197122608", "url": "https://auto.bazos.sk/inzerat/197122608/mercedes-benz-glb-200d.php", "price": 28900}], "body": "suv"}, {"id": "ab-AmdzRe1Vixu", "url": "https://www.autobazar.eu/detail/mercedes-benz-glb-200-d/AmdzRe1Vixu/", "title": "MERCEDES-BENZ GLB 200 d", "price": 49980, "price_gross": 49980, "fair_price": 45460.0, "discount_pct": -9.9, "verdict": "nad trhom", "year": 2025, "km": 18814, "km_per_year": 14100.0, "eg": "GLB 200 d / 220 d 2.0 diesel 110–140 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-Amk5JB2NAUW", "url": "https://www.autobazar.eu/detail/mercedes-benz-glb-200-d/Amk5JB2NAUW/", "title": "MERCEDES-BENZ GLB 200 d", "price": 49899, "price_gross": 49899, "fair_price": 45110.0, "discount_pct": -10.6, "verdict": "nad trhom", "year": 2025, "km": 25947, "km_per_year": 19500.0, "eg": "GLB 200 d / 220 d 2.0 diesel 110–140 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-Ae3MPrgIfh1", "url": "https://www.autobazar.eu/detail/mercedes-benz-glb-180d-at8-1majitel-sr-top-stav-servkniha/Ae3MPrgIfh1/", "title": "Mercedes-Benz GLB 180d AT, 2022, 1.Majiteľ, Kúpené v SR, Premium Výbava TOP stav", "price": 22500, "price_gross": 22500, "fair_price": 20310.0, "discount_pct": -10.8, "verdict": "nad trhom", "year": 2022, "km": 172662, "km_per_year": 39800.0, "eg": "GLB 180 d 2.0 diesel 85 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Trnava", "flags": ["vysoký nájazd 40000 km/rok – flotila / taxi?"], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197040582", "url": "https://auto.bazos.sk/inzerat/197040582/mercedes-benz-glb-180d-at-20221majitelsrpremium-vybava.php", "price": 22500}], "body": "suv"}, {"id": "196346988", "url": "https://auto.bazos.sk/inzerat/196346988/mercedes-glb-4x4-2024-amg-line.php", "title": "Mercedes, glb, 4x4, 2024, amg line, DPH", "price": 44499, "price_gross": 44499, "fair_price": 39720.0, "discount_pct": -12.0, "verdict": "nad trhom", "year": 2024, "km": 60000, "km_per_year": 25700.0, "eg": "GLB 200 d / 220 d 2.0 diesel 110–140 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Žilina", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AmP9IFEvxOA", "url": "https://www.autobazar.eu/detail/mercedes-benz-glb-200-d-4matic/AmP9IFEvxOA/", "title": "MERCEDES-BENZ GLB 200 d 4MATIC", "price": 34999, "price_gross": 34999, "fair_price": 30840.0, "discount_pct": -13.5, "verdict": "nad trhom", "year": 2021, "km": 73639, "km_per_year": 13800.0, "eg": "GLB 200 d / 220 d 2.0 diesel 110–140 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Prešov", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AmRX900Ohv6", "url": "https://www.autobazar.eu/detail/mercedes-benz-glb-200-d/AmRX900Ohv6/", "title": "MERCEDES-BENZ GLB 200 d", "price": 51980, "price_gross": 51980, "fair_price": 45730.0, "discount_pct": -13.7, "verdict": "nad trhom", "year": 2025, "km": 12800, "km_per_year": 9600.0, "eg": "GLB 200 d / 220 d 2.0 diesel 110–140 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AmuEliuI02C", "url": "https://www.autobazar.eu/detail/mercedes-benz-glb-4-matic-220-d-140kw-luxury-at-plusf1-7-miestfullgarancia-kmoverene/AmuEliuI02C/", "title": "Mercedes-Benz GLB 4-MATIC 220 D 140kW LUXURY AT+F1 =7-MIEST=FULL=GARANCIA KM=OVERENÉ", "price": 31999, "price_gross": 31999, "fair_price": 27930.0, "discount_pct": -14.6, "verdict": "nad trhom", "year": 2021, "km": 135555, "km_per_year": 25400.0, "eg": "GLB 200 d / 220 d 2.0 diesel 110–140 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Martin", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "suv"}, {"id": "ab-AmewXeDLdn6", "url": "https://www.autobazar.eu/detail/mercedes-benz-glb-200-d/AmewXeDLdn6/", "title": "MERCEDES-BENZ GLB 200 d", "price": 52900, "price_gross": 52900, "fair_price": 45790.0, "discount_pct": -15.5, "verdict": "výrazne nad trhom", "year": 2025, "km": 11384, "km_per_year": 8500.0, "eg": "GLB 200 d / 220 d 2.0 diesel 110–140 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "197697973", "url": "https://auto.bazos.sk/inzerat/197697973/mercedes-benz-glb.php", "title": "Mercedes-Benz GLB", "price": 33500, "price_gross": 33500, "fair_price": 27740.0, "discount_pct": -20.7, "verdict": "výrazne nad trhom", "year": 2022, "km": 98000, "km_per_year": 22600.0, "eg": "GLB 200 d / 220 d 2.0 diesel 110–140 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Trenčín", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "196973866", "url": "https://auto.bazos.sk/inzerat/196973866/mercedes-benz-glb-mercedes-amg-35-4matic-at.php", "title": "Mercedes-Benz GLB Mercedes-AMG 35 4MATIC AT/225 kW (306 k)", "price": 49990, "price_gross": 49990, "fair_price": 40580.0, "discount_pct": -23.2, "verdict": "výrazne nad trhom", "year": 2023, "km": 58096, "km_per_year": 17400.0, "eg": "GLB 220 / 250 / AMG 35 benzín 140–225 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Nové Zámky", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AmV4p0uvY9F", "url": "https://www.autobazar.eu/detail/mercedes-benz-glb-mercedes-amg-35-4matic-at/AmV4p0uvY9F/", "price": 49990}, {"source": "bazos", "id": "197551470", "url": "https://auto.bazos.sk/inzerat/197551470/mercedes-benz-glb-200dfull-lednavilane-assisttazne2023.php", "price": 25799}, {"source": "autobazar", "id": "ab-Am7Fquf5v-O", "url": "https://www.autobazar.eu/detail/mercedes-benz-glb-200d-at/Am7Fquf5v-O/", "price": 25799}], "body": "suv"}, {"id": "ab-Aer_oRjyW2A", "url": "https://www.autobazar.eu/detail/mercedes-benz-glb-220d-at-140kw190hp-a8/Aer_oRjyW2A/", "title": "Mercedes-Benz GLB 220d AT 140kW190HP A8", "price": 37000, "price_gross": 37000, "fair_price": 30010.0, "discount_pct": -23.3, "verdict": "výrazne nad trhom", "year": 2020, "km": 119158, "km_per_year": 18800.0, "eg": "GLB 200 d / 220 d 2.0 diesel 110–140 kW", "cg": 1, "transmission": "automatic", "seller_type": "private", "location": "Dunajská Streda", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "suv"}, {"id": "196371634", "url": "https://auto.bazos.sk/inzerat/196371634/mercedes-benz-glb-180d-at-v-zaruke-mozny-odpocet-dph.php", "title": "Mercedes-Benz GLB 180d A/T • V záruke • MOŽNÝ ODPOČET DPH", "price": 28100, "price_gross": 28100, "fair_price": 22380.0, "discount_pct": -25.5, "verdict": "výrazne nad trhom", "year": 2020, "km": 154794, "km_per_year": 24400.0, "eg": "GLB 180 d 2.0 diesel 85 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Nitra", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-Am6WcHSuT7z", "url": "https://www.autobazar.eu/detail/mercedes-benz-glb-180d-at/Am6WcHSuT7z/", "price": 28100}], "body": "suv"}];
+const GROUPS = ["Benzín", "Diesel", "Nezistený"];
+const BODY = {"suv": "SUV"};
+const fmt = n => Math.round(n).toLocaleString("sk-SK");
+const eur = n => fmt(n) + " €";
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const TRANS = {automatic: "automat", manual: "manuál"};
+const SRC = {bazos: "bazoš", autobazar: "autobazar.eu", bazarsk: "bazar.sk"};
+
+// --- theme toggle ---------------------------------------------------------
+document.getElementById("themeBtn").onclick = () => {
+  const root = document.documentElement;
+  const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  drawChart();
+};
+
+// --- scatter chart --------------------------------------------------------
+const legend = document.getElementById("legend");
+legend.innerHTML = GROUPS.map((g, i) => `<span><i style="background:var(--s${i+1})"></i>${g}</span>`).join("")
+  + `<span><i class="ring"></i>odporúčaná ponuka</span>`;
+
+function drawChart() {
+  const svg = document.getElementById("chart"), wrap = document.getElementById("chartWrap"), tip = document.getElementById("tip");
+  const W = svg.clientWidth, H = 420, m = {l: 56, r: 16, t: 10, b: 40};
+  const pts = DATA.filter(d => d.km && d.price_gross);
+  const xMax = Math.ceil(Math.max(...pts.map(d => d.km)) / 50000) * 50000;
+  const yMax = Math.ceil(Math.max(...pts.map(d => d.price_gross)) / 5000) * 5000;
+  const x = v => m.l + v / xMax * (W - m.l - m.r), y = v => H - m.b - v / yMax * (H - m.t - m.b);
+  let s = "";
+  for (let v = 0; v <= yMax; v += 5000)
+    s += `<line x1="${m.l}" x2="${W-m.r}" y1="${y(v)}" y2="${y(v)}" stroke="var(--grid)"/><text x="${m.l-8}" y="${y(v)+4}" text-anchor="end">${v/1000} tis. €</text>`;
+  const step = W < 520 ? 100000 : 50000;
+  for (let v = 0; v <= xMax; v += step)
+    s += `<text x="${x(v)}" y="${H-m.b+18}" text-anchor="middle">${v/1000} tis.</text>`;
+  s += `<text x="${(W+m.l)/2}" y="${H-6}" text-anchor="middle">nájazd (km)</text>`;
+  const order = [...pts].sort((a, b) => (a.pick ? 1 : 0) - (b.pick ? 1 : 0));
+  order.forEach(d => {
+    const cx = x(d.km), cy = y(d.price_gross);
+    if (d.pick) s += `<circle cx="${cx}" cy="${cy}" r="9" fill="none" stroke="var(--text)" stroke-width="2"/>`;
+    s += `<circle class="pt" data-id="${d.id}" cx="${cx}" cy="${cy}" r="5" fill="var(--s${d.cg+1})" stroke="var(--surface)" stroke-width="2"/>`;
+  });
+  // invisible bigger hit targets
+  order.forEach(d => s += `<circle class="hit" data-id="${d.id}" cx="${x(d.km)}" cy="${y(d.price_gross)}" r="11" fill="transparent" style="cursor:pointer"/>`);
+  svg.innerHTML = s;
+  const byId = Object.fromEntries(pts.map(d => [d.id, d]));
+  svg.querySelectorAll(".hit").forEach(c => {
+    c.onmouseenter = c.onmousemove = ev => {
+      const d = byId[c.dataset.id];
+      tip.innerHTML = `<b>${esc(d.title)}</b>
+        <div class="row"><span>Cena</span><span>${eur(d.price_gross)}</span></div>
+        <div class="row"><span>Férová cena</span><span>${eur(d.fair_price)}</span></div>
+        <div class="row"><span>Pod trhom</span><span>${d.discount_pct > 0 ? "+" : ""}${d.discount_pct.toLocaleString("sk-SK")} %</span></div>
+        <div class="row"><span>Zdroj</span><span>${SRC[d.source]}${d.also_listed.length ? " + " + d.also_listed.map(a => SRC[a.source]).join(", ") : ""}</span></div>
+        <div class="row"><span>Rok · km</span><span>${d.year} · ${fmt(d.km)}</span></div>
+        <div class="row"><span>Motor</span><span>${esc(d.eg)} ${TRANS[d.transmission] || ""}</span></div>`;
+      tip.style.display = "block";
+      const r = wrap.getBoundingClientRect();
+      let lx = ev.clientX - r.left + 14, ly = ev.clientY - r.top + 14;
+      if (lx + 290 > r.width) lx = ev.clientX - r.left - 290;
+      tip.style.left = lx + "px"; tip.style.top = ly + "px";
+    };
+    c.onmouseleave = () => tip.style.display = "none";
+    c.onclick = () => window.open(byId[c.dataset.id].url, "_blank", "noopener");
+  });
+}
+drawChart();
+addEventListener("resize", drawChart);
+
+// --- full table -----------------------------------------------------------
+const fEngine = document.getElementById("fEngine");
+[...new Set(DATA.map(d => d.eg))].sort().forEach(g => fEngine.insertAdjacentHTML("beforeend", `<option>${esc(g)}</option>`));
+let sortK = "discount_pct", sortDir = -1;
+function discCell(v) {
+  const w = Math.min(Math.abs(v), 30) / 30 * 50;
+  const bar = v >= 0 ? `left:50%;width:${w}%;background:var(--pos)` : `right:50%;width:${w}%;background:var(--neg)`;
+  return `<span class="disc">${v > 0 ? "+" : ""}${v.toLocaleString("sk-SK")} %<span class="dbar"><span style="${bar}"></span></span></span>`;
+}
+function renderTable() {
+  const max = parseFloat(document.getElementById("fMax").value) || Infinity;
+  const tr = document.getElementById("fTrans").value, se = document.getElementById("fSeller").value, en = fEngine.value;
+  const so = document.getElementById("fSource").value, og = document.getElementById("fOrigin").value;
+  const bo = document.getElementById("fBody").value;
+  const rows = DATA.filter(d => (!en || d.eg === en) && (!tr || d.transmission === tr)
+    && (!se || d.seller_type !== "dealer") && d.price_gross <= max
+    && (!so || d.source === so || d.also_listed.some(a => a.source === so)) && (!og || d.origin === og) && (!bo || d.body === bo))
+    .sort((a, b) => { const A = a[sortK], B = b[sortK]; return (typeof A === "string" ? A.localeCompare(B) : A - B) * sortDir; });
+  document.getElementById("count").textContent = `${rows.length} z ${DATA.length} inzerátov`;
+  document.querySelector("#tbl tbody").innerHTML = rows.map(d => `<tr>
+    <td><a href="${d.url}" target="_blank" rel="noopener">${esc(d.title)}</a> ${d.pick ? '<span class="badge pick">odporúčané</span>' : ""}
+      <div class="sub">${BODY[d.body] || "karoséria ?"} · ${esc(d.eg)} · ${TRANS[d.transmission] || "prevodovka ?"} · ${esc(d.location)} · ${d.seller_type === "dealer" ? "predajca/firma" : d.seller_type === "private" ? "súkromník" : "neisté"} · ${SRC[d.source]}${d.origin === "SR" ? " · kúpené v SR" : d.origin === "dovoz" ? " · dovoz" : ""}${d.also_listed.map(a => ` · <a href="${a.url}" target="_blank" rel="noopener">aj na ${SRC[a.source]}</a>`).join("")}</div>
+      ${d.flags.filter(f => !f.startsWith("prevodovka")).map(f => `<div class="flag">⚠ ${esc(f)}</div>`).join("")}</td>
+    <td class="num">${d.year}</td><td class="num">${fmt(d.km)}</td>
+    <td class="num">${eur(d.price_gross)}</td><td class="num">${eur(d.fair_price)}</td>
+    <td class="num">${discCell(d.discount_pct)}</td></tr>`).join("");
+  document.querySelectorAll("#tbl th.sortable").forEach(th => {
+    const base = th.textContent.replace(/ [▾▴]$/, "");
+    th.textContent = base + (th.dataset.k === sortK ? (sortDir < 0 ? " ▾" : " ▴") : "");
+  });
+}
+document.querySelectorAll("#tbl th.sortable").forEach(th => th.onclick = () => {
+  if (sortK === th.dataset.k) sortDir *= -1; else { sortK = th.dataset.k; sortDir = th.dataset.k === "title" ? 1 : -1; }
+  renderTable();
+});
+["fEngine", "fTrans", "fSeller", "fSource", "fBody", "fOrigin", "fMax"].forEach(id => document.getElementById(id).addEventListener("input", renderTable));
+renderTable();
+</script>
+<!-- ferovka-theme --><script defer src="/analytics-config.js"></script><script defer src="/analytics.js"></script><script id="ferovka-chart">/* Férovka – chart → ad links, injected into every report by sync-reports.mjs.
+ *
+ * The reports draw one invisible 11px "hit" circle per ad. In dense charts (and always on a narrow phone) those
+ * circles overlap and the one drawn last wins, so a click/tap often opened a neighbouring ad. Here the pointer is
+ * always resolved to the NEAREST point, the report's own tooltip is shown for that point, and a click opens its ad.
+ * Touch: the first tap shows the tooltip (with a hint), a second tap on the same point opens the ad.
+ */
+(() => {
+  let rows;
+  try { rows = DATA; } catch { return; } // eslint-disable-line no-undef
+  if (!Array.isArray(rows) || !rows.length || !("url" in rows[0])) return;
+  const byId = new Map(rows.map((d) => [String(d.id), d]));
+  const MOUSE = ["mouseover", "mouseout", "mouseenter", "mouseleave", "mousemove", "mousedown", "mouseup", "click"];
+  let lastPointer = "mouse", down = null;
+  // the finger position as it was – Chrome "snaps" the later click of a tap to the centre of a nearby clickable element
+  addEventListener("pointerdown", (e) => { lastPointer = e.pointerType || "mouse"; down = { clientX: e.clientX, clientY: e.clientY }; }, true);
+
+  // the old per-point hit circles must not be targets (they overlap, and touch snapping aims at them)
+  document.head.insertAdjacentHTML("beforeend", "<style>svg circle.hit[data-id],svg circle.pt[data-id]{pointer-events:none}</style>");
+
+  function nearest(svg, ev, radius) {
+    let best = null, bd = Infinity;
+    for (const c of svg.querySelectorAll("circle.pt[data-id]")) {
+      const r = c.getBoundingClientRect();
+      const dx = r.left + r.width / 2 - ev.clientX, dy = r.top + r.height / 2 - ev.clientY;
+      const d = dx * dx + dy * dy;
+      if (d <= bd) { bd = d; best = c; } // ties: the point drawn on top (later) wins – that is the one you see
+    }
+    return best && bd <= radius * radius ? best : null;
+  }
+
+  function bind(svg) {
+    if (svg.__fvLinks) return;
+    svg.__fvLinks = true;
+    let current = null, armed = null;
+    const hitOf = (pt) => pt && svg.querySelector(`circle.hit[data-id="${CSS.escape(pt.dataset.id)}"]`);
+    const fire = (el, type, ev) => {
+      if (!el) return;
+      const e = new MouseEvent(type, { clientX: ev.clientX, clientY: ev.clientY, bubbles: false });
+      e.__fv = true;
+      el.dispatchEvent(e);
+    };
+    const tip = () => (svg.parentElement && svg.parentElement.querySelector("#tip, .tip")) || document.getElementById("tip");
+    const mark = (pt) => {
+      if (current === pt) return;
+      if (current) current.setAttribute("r", current.__r || "5");
+      current = pt;
+      if (pt) { pt.__r = pt.__r || pt.getAttribute("r"); pt.setAttribute("r", String(+pt.__r + 2)); }
+    };
+    const show = (pt, ev, hint) => {
+      mark(pt);
+      if (!pt) { const t = tip(); if (t) t.style.display = "none"; return; }
+      fire(hitOf(pt), "mousemove", ev); // the report's own tooltip, for the nearest point
+      const t = tip();
+      if (t && hint) t.insertAdjacentHTML("beforeend", `<div class="fv-hint">Ťukni ešte raz – otvorí sa inzerát ↗</div>`);
+    };
+    const open = (pt) => {
+      const d = byId.get(pt.dataset.id);
+      if (d && d.url) {
+        try { window.FerovkaAnalytics?.listingClick(d.url, "chart"); } catch { /* analytics must never block an ad */ }
+        window.open(d.url, "_blank", "noopener");
+      }
+    };
+
+    // the per-circle handlers of the report never see real mouse events – only our synthetic ones
+    for (const type of MOUSE) {
+      svg.addEventListener(type, (ev) => {
+        if (ev.__fv) return;
+        ev.stopImmediatePropagation();
+        if (type === "mousemove" && lastPointer === "mouse") {
+          show(nearest(svg, ev, 18), ev, false);
+          svg.style.cursor = current ? "pointer" : "";
+        } else if (type === "mouseleave" && ev.target === svg && lastPointer === "mouse") {
+          show(null, ev);
+        } else if (type === "click") {
+          const touch = lastPointer !== "mouse";
+          const at = touch && down ? down : ev;
+          const pt = nearest(svg, at, touch ? 26 : 18);
+          if (!pt) { armed = null; show(null, ev); return; }
+          if (!touch || armed === pt) { armed = null; open(pt); }
+          else { armed = pt; show(pt, at, true); }
+        }
+      }, true);
+    }
+  }
+
+  const scan = () => document.querySelectorAll("svg").forEach((s) => s.querySelector("circle.pt[data-id]") && bind(s));
+  scan();
+  new MutationObserver(scan).observe(document.body, { childList: true, subtree: true });
+})();
+</script><script id="ferovka-filters">/* Férovka – filters for the whole report, injected into every model report by sync-reports.mjs.
+ *
+ * The reports render the chart (drawChart) and the full ranking (renderTable) from the global DATA array; their own
+ * filter bar only filters the table. Here the filter bar (kept in its place above the ranking) gets more filters (year, price from/to,
+ * km, fuel, discount, picks only, text search) and every filter applies to the chart and the ranking together: DATA is
+ * refilled in place with the matching ads and both are drawn again. "</script" can't occur inside this file.
+ */
+(() => {
+  let data;
+  try { data = DATA; } catch { return; } // eslint-disable-line no-undef
+  if (!Array.isArray(data) || !data.length || typeof renderTable !== "function") return; // eslint-disable-line no-undef
+  const bar = document.querySelector(".filters");
+  if (!bar || bar.dataset.fv) return;
+  bar.dataset.fv = "1";
+  const ALL = data.slice();
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+  const fmt = (n) => Math.round(n).toLocaleString("sk-SK");
+  const norm = (s) => String(s ?? "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+  let groups = null;
+  try { groups = GROUPS; } catch { /* report without groups */ } // eslint-disable-line no-undef
+
+  const FUEL = { diesel: "Diesel", petrol: "Benzín", hybrid: "Hybrid", "plug-in hybrid": "Plug-in hybrid", electric: "Elektro", lpg: "LPG", cng: "CNG" };
+  const fuelOf = (d) => {
+    const e = norm(d.eg);
+    if (/tdi|crdi|dci|hdi|diesel|\bd\b|cdi|\d+d\b|blue/.test(e)) return "Diesel";
+    if (/plug-in|phev|e-hybrid|recharge|\bgte\b|\bt8\b|\b\d{2}e\b|\b\d{3} ?e\b/.test(e)) return "Plug-in hybrid";
+    if (/elektro|electric|\bev\b/.test(e)) return "Elektro";
+    if (/cng|lpg|g-tec|g-tron|tgi|ecofuel/.test(e)) return "Plyn (CNG/LPG)";
+    if (/mild|mhev/.test(e)) return "Benzín"; // mild-hybrid petrol (the diesel ones say TDI / d above)
+    if (/hybrid|hev/.test(e)) return "Hybrid";
+    if (/tsi|tfsi|mpi|fsi|benzin|gdi|dpi|htp|12v|\bt\d\b|\bb[56]\b|\d+i\b|turbo|tce|\bs4\b|rs ?\d|amg|competition|\bm\d{2,3}i?\b|gti|\bx5 m\b/.test(e)) return "Benzín";
+    return d.fuel ? FUEL[d.fuel] || String(d.fuel) : null;
+  };
+
+  // --- controls ---------------------------------------------------------------------------------------------------
+  const years = ALL.map((d) => d.year).filter(Boolean);
+  const yMin = Math.min(...years), yMax = Math.max(...years);
+  const yearOpts = (label) => `<option value="">${label}</option>` +
+    Array.from({ length: yMax - yMin + 1 }, (_, i) => yMax - i).map((y) => `<option>${y}</option>`).join("");
+  const kms = [30000, 50000, 75000, 100000, 150000, 200000, 250000, 300000];
+  const fuels = [...new Set(ALL.map(fuelOf).filter(Boolean))].sort((a, b) => a.localeCompare(b, "sk"));
+  const showGroups = Array.isArray(groups) && groups.length > 1 && ALL.some((d) => Number.isInteger(d.cg));
+
+  const maxInput = $("fMax");
+  if (maxInput) { maxInput.placeholder = "Cena do €"; maxInput.title = "Najvyššia cena (s DPH)"; }
+  const html =
+    `<select id="fvYearFrom" title="Rok výroby od">${yearOpts("Rok od")}</select>` +
+    `<select id="fvYearTo" title="Rok výroby do">${yearOpts("Rok do")}</select>` +
+    `<input id="fvPriceMin" type="number" placeholder="Cena od €" step="500" min="0" title="Najnižšia cena (s DPH)" style="width:110px">`;
+  if (maxInput) maxInput.insertAdjacentHTML("beforebegin", html);
+  else bar.insertAdjacentHTML("afterbegin", html);
+  const more =
+    `<select id="fvKm" title="Najviac najazdených km"><option value="">Nájazd – všetky</option>${kms.map((k) => `<option value="${k}">do ${fmt(k)} km</option>`).join("")}</select>` +
+    (fuels.length > 1 ? `<select id="fvFuel" title="Palivo"><option value="">Všetky palivá</option>${fuels.map((f) => `<option>${esc(f)}</option>`).join("")}</select>` : "") +
+    (showGroups ? `<select id="fvGroup" title="Skupina motorov (farba v grafe)"><option value="">Všetky skupiny</option>${groups.map((g, i) => `<option value="${i}">${esc(g)}</option>`).join("")}</select>` : "") +
+    `<select id="fvDisc" title="O koľko je auto lacnejšie ako férová cena"><option value="">Cena – všetky</option><option value="0">pod férovou cenou</option><option value="10">aspoň 10 % pod trhom</option><option value="20">aspoň 20 % pod trhom</option></select>` +
+    `<input id="fvText" type="search" placeholder="Hľadať (výbava, mesto…)" title="Hľadá v názve inzerátu, motore a lokalite" style="width:170px">` +
+    `<label class="fv-check"><input id="fvPick" type="checkbox"> len odporúčané</label>` +
+    `<button type="button" id="fvReset" class="fv-reset">Zrušiť filtre</button>`;
+  const count = $("count");
+  if (count) count.insertAdjacentHTML("beforebegin", more);
+  else bar.insertAdjacentHTML("beforeend", more);
+
+  // the bar stays where it was – right above the ranking – and also drives the chart; the chart gets a pointer to it
+  const chart = $("chartWrap");
+  const box = document.createElement("div");
+  box.className = "fv-filters";
+  box.id = "filtre";
+  bar.before(box);
+  box.innerHTML = `<div class="fv-head"><b>Filtre</b><span>platia pre rebríček aj graf vyššie</span></div>`;
+  box.appendChild(bar);
+  const note = document.createElement("div");
+  note.className = "fv-note";
+  chart?.before(note);
+
+  document.head.insertAdjacentHTML("beforeend", `<style id="fv-filters-css">
+.fv-filters{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 14px 4px;margin:24px 0 8px}
+.fv-filters .fv-head{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;margin-bottom:8px}
+.fv-filters .fv-head span{color:var(--muted);font-size:13px}
+.fv-filters .filters{margin-bottom:8px}
+.fv-filters .filters .count{flex-basis:100%;margin-left:0}
+.fv-check{display:inline-flex;gap:6px;align-items:center;font-size:13px;color:var(--text-2,var(--text));white-space:nowrap}
+.fv-reset{background:none;border:1px solid var(--border);color:var(--text);border-radius:8px;padding:6px 10px;font:inherit;font-size:13px;cursor:pointer}
+.fv-reset:hover{background:var(--surface-2,var(--surface))}
+.fv-note{color:var(--muted);font-size:13px;margin:0 0 8px}
+.fv-note a{color:inherit}
+.fv-empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:14px;pointer-events:none}
+@media (max-width:600px){.fv-filters .filters select,.fv-filters .filters input[type=number],.fv-filters .filters input[type=search]{flex:1 1 calc(50% - 8px);min-width:0;width:auto!important}}
+</style>`);
+
+  // --- filtering --------------------------------------------------------------------------------------------------
+  const val = (id) => ($(id) ? $(id).value : "");
+  const num = (id) => { const v = parseFloat(val(id)); return Number.isFinite(v) ? v : null; };
+  function matches(d) {
+    const yf = num("fvYearFrom"), yt = num("fvYearTo"), pmin = num("fvPriceMin"), pmax = num("fMax"), km = num("fvKm"), disc = num("fvDisc");
+    const fuel = val("fvFuel"), grp = val("fvGroup"), q = norm(val("fvText")).trim();
+    if (yf != null && !(d.year >= yf)) return false;
+    if (yt != null && !(d.year <= yt)) return false;
+    if (pmin != null && !(d.price_gross >= pmin)) return false;
+    if (pmax != null && !(d.price_gross <= pmax)) return false;
+    if (km != null && !(d.km <= km)) return false;
+    if (disc != null && !(d.discount_pct > disc || (disc > 0 && d.discount_pct >= disc))) return false;
+    if (fuel && fuelOf(d) !== fuel) return false;
+    if (grp !== "" && String(d.cg) !== grp) return false;
+    if ($("fvPick")?.checked && !d.pick) return false;
+    if (q && !q.split(/\s+/).every((w) => norm(`${d.title} ${d.eg ?? ""} ${d.engine ?? ""} ${d.location ?? ""}`).includes(w))) return false;
+    // the report's own filters (engine, gearbox, seller, portal, body, origin) – same rules as its renderTable
+    const en = val("fEngine"), tr = val("fTrans"), se = val("fSeller"), so = val("fSource"), og = val("fOrigin"), bo = val("fBody");
+    if (en && d.eg !== en) return false;
+    if (tr && d.transmission !== tr) return false;
+    if (se && d.seller_type === "dealer") return false;
+    if (so && !(d.source === so || (d.also_listed || []).some((a) => a.source === so))) return false;
+    if (og && d.origin !== og) return false;
+    if (bo && d.body !== bo) return false;
+    return true;
+  }
+  const active = () => [...box.querySelectorAll("select, input")].filter((el) => (el.type === "checkbox" ? el.checked : el.value !== "")).length;
+
+  let drawing = false;
+  function apply() {
+    if (drawing) return;
+    drawing = true;
+    const rows = ALL.filter(matches);
+    data.length = 0;
+    data.push(...rows);
+    const wrap = $("chartWrap");
+    wrap?.querySelector(".fv-empty")?.remove();
+    const plotted = rows.filter((d) => d.km && d.price_gross).length;
+    try {
+      if (typeof drawChart === "function") { // eslint-disable-line no-undef
+        if (plotted) drawChart(); // eslint-disable-line no-undef
+        else { const svg = $("chart"); if (svg) svg.innerHTML = ""; }
+      }
+    } catch (e) { console.warn("chart", e); }
+    if (wrap && !plotted) {
+      if (getComputedStyle(wrap).position === "static") wrap.style.position = "relative";
+      wrap.insertAdjacentHTML("beforeend", `<div class="fv-empty">Filtrom nezodpovedá žiadny inzerát</div>`);
+    }
+    try { renderTable(); } catch (e) { console.warn("table", e); } // eslint-disable-line no-undef
+    const n = active();
+    if (count) count.textContent = `Zobrazených ${fmt(rows.length)} z ${fmt(ALL.length)} inzerátov` + (n ? ` · aktívne filtre: ${n}` : "");
+    note.innerHTML = n
+      ? `Zobrazených ${fmt(rows.length)} z ${fmt(ALL.length)} inzerátov podľa <a href="#filtre">filtrov pri rebríčku</a>.`
+      : `Filtre (rok, cena, nájazd, palivo…) nájdeš <a href="#filtre">pri kompletnom rebríčku</a> – platia aj pre tento graf.`;
+    drawing = false;
+  }
+  box.querySelectorAll("select, input").forEach((el) => el.addEventListener("input", apply));
+  $("fvPick")?.addEventListener("change", apply);
+  $("fvReset").addEventListener("click", () => {
+    box.querySelectorAll("select, input").forEach((el) => { if (el.type === "checkbox") el.checked = false; else el.value = ""; });
+    apply();
+  });
+  apply();
+})();
+</script><!-- /ferovka-theme -->
+</body>
+</html>
