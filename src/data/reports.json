@@ -1115,6 +1115,38 @@
     }
   },
   {
+    "slug": "porsche-cayenne",
+    "file": "porsche-cayenne-analyza.html",
+    "name": "Porsche Cayenne",
+    "brand": "Porsche",
+    "model": "Cayenne",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Porsche Cayenne (92A a 9YA, 2011–2025, vrátane Coupé a hybridov, bez nových áut z 2026) od 8 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 415 inzerátov (122 na bazoši, 165 na autobazar.eu, 128 na bazar.sk) – prezreli sme 96 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 233 rôznych áut zo Slovenska.",
+    "ads": 233,
+    "median": "35 990 €",
+    "r2": "96 %",
+    "history": {
+      "updated_at": "2026-11-22T15:42:46",
+      "as_of": "2026-11-22",
+      "coverage": "partial",
+      "baseline_count": 123,
+      "total_count": 123,
+      "active_count": 123,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 123,
+      "paired_median_change_pct": 0,
+      "historical_median": 35990,
+      "seen_median": 35990,
+      "seen_price_count": 123,
+      "last_observed_at": "2026-11-22T15:34:21"
+    }
+  },
+  {
     "slug": "land-rover-evoque",
     "file": "land-rover-evoque-analyza.html",
     "name": "Range Rover Evoque",
@@ -1171,6 +1203,19 @@
     "ads": 150,
     "median": "15 575 €",
     "r2": "95 %"
+  },
+  {
+    "slug": "subaru-outback",
+    "file": "subaru-outback-analyza.html",
+    "name": "Subaru Outback",
+    "brand": "Subaru",
+    "model": "Outback",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Subaru Outback (BR, BS a BT, 2010–2025, bez nových áut z 2026) od 4 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 376 inzerátov (97 na bazoši, 119 na autobazar.eu, 160 na bazar.sk) – prezreli sme 93 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 171 rôznych áut zo Slovenska.",
+    "ads": 171,
+    "median": "21 677 €",
+    "r2": "97 %"
   },
   {
     "slug": "skoda-fabia",
