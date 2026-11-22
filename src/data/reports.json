@@ -641,6 +641,19 @@
     }
   },
   {
+    "slug": "hyundai-ioniq-5",
+    "file": "hyundai-ioniq-5-analyza.html",
+    "name": "Hyundai Ioniq 5",
+    "brand": "Hyundai",
+    "model": "Ioniq 5",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Hyundai Ioniq 5 (2021–2025, elektro, bez Ioniq 5 N a nových áut z 2026) od 15 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 56 inzerátov (15 na bazoši, 14 na autobazar.eu, 27 na bazar.sk) – prezreli sme 52 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 26 rôznych áut zo Slovenska.",
+    "ads": 26,
+    "median": "29 700 €",
+    "r2": "94 %"
+  },
+  {
     "slug": "hyundai-tucson",
     "file": "hyundai-tucson-analyza.html",
     "name": "Hyundai Tucson",
@@ -826,7 +839,7 @@
     "median": "7 790 €",
     "r2": "98 %",
     "history": {
-      "updated_at": "2026-11-22T12:30:00",
+      "updated_at": "2026-11-22T16:33:03",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 21,
@@ -856,7 +869,58 @@
     "summary": "Analýza aktuálnych inzerátov Mazda CX-3 (2015–2022) od 4 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 85 inzerátov (33 na bazoši, 40 na autobazar.eu, 12 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 47 rôznych áut zo Slovenska.",
     "ads": 47,
     "median": "11 000 €",
-    "r2": "86 %"
+    "r2": "86 %",
+    "history": {
+      "updated_at": "2026-11-22T16:33:03",
+      "as_of": "2026-11-22",
+      "coverage": "partial",
+      "baseline_count": 34,
+      "total_count": 34,
+      "active_count": 34,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 34,
+      "paired_median_change_pct": 0,
+      "historical_median": 11000,
+      "seen_median": 11000,
+      "seen_price_count": 34,
+      "last_observed_at": "2026-11-22T14:45:33"
+    }
+  },
+  {
+    "slug": "mazda-cx-60",
+    "file": "mazda-cx-60-analyza.html",
+    "name": "Mazda CX-60",
+    "brand": "Mazda",
+    "model": "CX-60",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Mazda CX-60 (2022–2025, diesel, benzín aj plug-in hybrid, bez nových áut z 2026) od 15 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 154 inzerátov (30 na bazoši, 60 na autobazar.eu, 64 na bazar.sk) – prezreli sme 60 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 66 rôznych áut zo Slovenska.",
+    "ads": 66,
+    "median": "33 990 €",
+    "r2": "85 %",
+    "history": {
+      "updated_at": "2026-11-22T16:33:03",
+      "as_of": "2026-11-22",
+      "coverage": "partial",
+      "baseline_count": 47,
+      "total_count": 47,
+      "active_count": 47,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 47,
+      "paired_median_change_pct": 0,
+      "historical_median": 33990,
+      "seen_median": 33990,
+      "seen_price_count": 47,
+      "last_observed_at": "2026-11-22T16:31:31"
+    }
   },
   {
     "slug": "mercedes-a",
@@ -1287,6 +1351,19 @@
       "seen_price_count": 31,
       "last_observed_at": "2026-11-22T01:44:20"
     }
+  },
+  {
+    "slug": "renault-austral",
+    "file": "renault-austral-analyza.html",
+    "name": "Renault Austral",
+    "brand": "Renault",
+    "model": "Austral",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Renault Austral (2022–2025, mild hybrid aj full hybrid, bez nových áut z 2026) od 12 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 96 inzerátov (12 na bazoši, 49 na autobazar.eu, 35 na bazar.sk) – prezreli sme 65 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 47 rôznych áut zo Slovenska.",
+    "ads": 47,
+    "median": "26 900 €",
+    "r2": "80 %"
   },
   {
     "slug": "subaru-forester",
@@ -2876,7 +2953,7 @@
     "median": "9 145 €",
     "r2": "95 %",
     "history": {
-      "updated_at": "2026-11-22T12:30:00",
+      "updated_at": "2026-11-22T16:33:03",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 164,
@@ -2908,7 +2985,7 @@
     "median": "8 500 €",
     "r2": "90 %",
     "history": {
-      "updated_at": "2026-11-22T12:30:00",
+      "updated_at": "2026-11-22T16:33:03",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 190,
@@ -2940,7 +3017,7 @@
     "median": "19 990 €",
     "r2": "96 %",
     "history": {
-      "updated_at": "2026-11-22T12:30:00",
+      "updated_at": "2026-11-22T16:33:03",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 36,
@@ -2972,7 +3049,7 @@
     "median": "12 990 €",
     "r2": "95 %",
     "history": {
-      "updated_at": "2026-11-22T12:30:00",
+      "updated_at": "2026-11-22T16:33:03",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 191,
