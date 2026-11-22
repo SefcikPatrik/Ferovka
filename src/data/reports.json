@@ -749,6 +749,38 @@
     }
   },
   {
+    "slug": "citroen-c1",
+    "file": "citroen-c1-analyza.html",
+    "name": "Citroën C1",
+    "brand": "Citroën",
+    "model": "C1",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Citroën C1 (C1 I 2005–2014 a C1 II 2014–2022) od 1 500 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 34 inzerátov (17 na bazoši, 10 na autobazar.eu, 7 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 26 rôznych áut zo Slovenska.",
+    "ads": 26,
+    "median": "3 800 €",
+    "r2": "95 %",
+    "history": {
+      "updated_at": "2026-11-22T20:27:03",
+      "as_of": "2026-11-22",
+      "coverage": "partial",
+      "baseline_count": 19,
+      "total_count": 19,
+      "active_count": 19,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 19,
+      "paired_median_change_pct": 0,
+      "historical_median": 3800,
+      "seen_median": 3800,
+      "seen_price_count": 19,
+      "last_observed_at": "2026-11-22T20:22:20"
+    }
+  },
+  {
     "slug": "citroen-c3-picasso",
     "file": "citroen-c3-picasso-analyza.html",
     "name": "Citroën C3 Picasso",
@@ -759,7 +791,26 @@
     "summary": "Analýza aktuálnych inzerátov Citroën C3 Picasso (2009–2017) od 1 500 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 1 987 inzerátov (1 249 na bazoši, 384 na autobazar.eu, 354 na bazar.sk) – prezreli sme 37 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 435 rôznych áut zo Slovenska.",
     "ads": 435,
     "median": "4 100 €",
-    "r2": "96 %"
+    "r2": "96 %",
+    "history": {
+      "updated_at": "2026-11-22T20:27:03",
+      "as_of": "2026-11-22",
+      "coverage": "partial",
+      "baseline_count": 50,
+      "total_count": 50,
+      "active_count": 50,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 50,
+      "paired_median_change_pct": 0,
+      "historical_median": 4100,
+      "seen_median": 4100,
+      "seen_price_count": 50,
+      "last_observed_at": "2026-11-22T18:06:19"
+    }
   },
   {
     "slug": "citroen-c4",
@@ -774,7 +825,7 @@
     "median": "6 200 €",
     "r2": "92 %",
     "history": {
-      "updated_at": "2026-11-22T17:40:30",
+      "updated_at": "2026-11-22T20:27:03",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 110,
@@ -794,6 +845,38 @@
     }
   },
   {
+    "slug": "citroen-c4-cactus",
+    "file": "citroen-c4-cactus-analyza.html",
+    "name": "Citroën C4 Cactus",
+    "brand": "Citroën",
+    "model": "C4 Cactus",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Citroën C4 Cactus (2014–2020 vrátane faceliftu 2018) od 3 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 84 inzerátov (24 na bazoši, 42 na autobazar.eu, 18 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 42 rôznych áut zo Slovenska.",
+    "ads": 42,
+    "median": "6 795 €",
+    "r2": "87 %",
+    "history": {
+      "updated_at": "2026-11-22T20:27:03",
+      "as_of": "2026-11-22",
+      "coverage": "partial",
+      "baseline_count": 36,
+      "total_count": 36,
+      "active_count": 36,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 36,
+      "paired_median_change_pct": 0,
+      "historical_median": 6795,
+      "seen_median": 6795,
+      "seen_price_count": 36,
+      "last_observed_at": "2026-11-22T20:23:50"
+    }
+  },
+  {
     "slug": "citroen-c5",
     "file": "citroen-c5-analyza.html",
     "name": "Citroën C5",
@@ -806,7 +889,7 @@
     "median": "3 345 €",
     "r2": "98 %",
     "history": {
-      "updated_at": "2026-11-22T17:40:30",
+      "updated_at": "2026-11-22T20:27:03",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 52,
@@ -838,7 +921,7 @@
     "median": "16 400 €",
     "r2": "97 %",
     "history": {
-      "updated_at": "2026-11-22T17:40:30",
+      "updated_at": "2026-11-22T20:27:03",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 54,
@@ -2496,6 +2579,19 @@
     }
   },
   {
+    "slug": "renault-talisman",
+    "file": "renault-talisman-analyza.html",
+    "name": "Renault Talisman",
+    "brand": "Renault",
+    "model": "Talisman",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Renault Talisman (sedan a Grandtour 2015–2022) od 4 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 54 inzerátov (18 na bazoši, 25 na autobazar.eu, 11 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 34 rôznych áut zo Slovenska.",
+    "ads": 34,
+    "median": "9 200 €",
+    "r2": "74 %"
+  },
+  {
     "slug": "renault-twingo",
     "file": "renault-twingo-analyza.html",
     "name": "Renault Twingo",
@@ -2887,6 +2983,19 @@
     }
   },
   {
+    "slug": "vw-beetle",
+    "file": "vw-beetle-analyza.html",
+    "name": "Volkswagen Beetle",
+    "brand": "Volkswagen",
+    "model": "Beetle",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Volkswagen Beetle (New Beetle 1998–2010 a Beetle 2011–2019, aj kabriolet) od 2 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 73 inzerátov (36 na bazoši, 9 na autobazar.eu, 28 na bazar.sk) – prezreli sme 63 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 37 rôznych áut zo Slovenska.",
+    "ads": 37,
+    "median": "6 300 €",
+    "r2": "91 %"
+  },
+  {
     "slug": "vw-golf",
     "file": "vw-golf-analyza.html",
     "name": "Volkswagen Golf",
@@ -3013,6 +3122,19 @@
       "seen_price_count": 322,
       "last_observed_at": "2026-11-22T16:47:22"
     }
+  },
+  {
+    "slug": "vw-scirocco",
+    "file": "vw-scirocco-analyza.html",
+    "name": "Volkswagen Scirocco",
+    "brand": "Volkswagen",
+    "model": "Scirocco",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Volkswagen Scirocco (Scirocco III 2008–2017) od 3 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 60 inzerátov (33 na bazoši, 20 na autobazar.eu, 7 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 33 rôznych áut zo Slovenska.",
+    "ads": 33,
+    "median": "8 200 €",
+    "r2": "93 %"
   },
   {
     "slug": "vw-tiguan",
@@ -3328,7 +3450,7 @@
     "median": "9 700 €",
     "r2": "92 %",
     "history": {
-      "updated_at": "2026-11-22T17:40:30",
+      "updated_at": "2026-11-22T20:27:03",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 182,
@@ -3360,23 +3482,23 @@
     "median": "8 195 €",
     "r2": "95 %",
     "history": {
-      "updated_at": "2026-11-22T17:40:30",
+      "updated_at": "2026-11-22T20:27:03",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 188,
-      "total_count": 188,
-      "active_count": 0,
+      "total_count": 190,
+      "active_count": 143,
       "inactive_count": 0,
-      "unverified_count": 188,
-      "new_count": 0,
-      "price_changed_count": 0,
-      "price_lowered_count": 0,
-      "paired_count": 0,
-      "paired_median_change_pct": null,
-      "historical_median": 8195,
-      "seen_median": null,
-      "seen_price_count": 0,
-      "last_observed_at": "2026-11-21T23:48:16"
+      "unverified_count": 47,
+      "new_count": 2,
+      "price_changed_count": 1,
+      "price_lowered_count": 1,
+      "paired_count": 135,
+      "paired_median_change_pct": 0,
+      "historical_median": 8145,
+      "seen_median": 8500,
+      "seen_price_count": 137,
+      "last_observed_at": "2026-11-22T18:06:15"
     }
   },
   {
@@ -3392,7 +3514,7 @@
     "median": "6 100 €",
     "r2": "80 %",
     "history": {
-      "updated_at": "2026-11-22T17:40:30",
+      "updated_at": "2026-11-22T20:27:03",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 84,
