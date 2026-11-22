@@ -700,6 +700,19 @@
     "r2": "94 %"
   },
   {
+    "slug": "honda-accord",
+    "file": "honda-accord-analyza.html",
+    "name": "Honda Accord",
+    "brand": "Honda",
+    "model": "Accord",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Honda Accord (2003–2015, sedan aj kombi Tourer) od 1 500 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 58 inzerátov (53 na bazoši, 0 na autobazar.eu, 5 na bazar.sk) – prezreli sme 95 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 52 rôznych áut zo Slovenska.",
+    "ads": 52,
+    "median": "4 199 €",
+    "r2": "81 %"
+  },
+  {
     "slug": "hyundai-getz",
     "file": "hyundai-getz-analyza.html",
     "name": "Hyundai Getz",
@@ -822,6 +835,38 @@
     }
   },
   {
+    "slug": "chevrolet-aveo",
+    "file": "chevrolet-aveo-analyza.html",
+    "name": "Chevrolet Aveo",
+    "brand": "Chevrolet",
+    "model": "Aveo",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Chevrolet Aveo (2006–2015, hatchback aj sedan) od 1 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 53 inzerátov (26 na bazoši, 12 na autobazar.eu, 15 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 42 rôznych áut zo Slovenska.",
+    "ads": 42,
+    "median": "2 200 €",
+    "r2": "83 %",
+    "history": {
+      "updated_at": "2026-11-22T19:00:49",
+      "as_of": "2026-11-22",
+      "coverage": "partial",
+      "baseline_count": 31,
+      "total_count": 31,
+      "active_count": 31,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 31,
+      "paired_median_change_pct": 0,
+      "historical_median": 2200,
+      "seen_median": 2200,
+      "seen_price_count": 31,
+      "last_observed_at": "2026-11-22T18:54:22"
+    }
+  },
+  {
     "slug": "chevrolet-captiva",
     "file": "chevrolet-captiva-analyza.html",
     "name": "Chevrolet Captiva",
@@ -832,7 +877,26 @@
     "summary": "Analýza aktuálnych inzerátov Chevrolet Captiva (2006–2015, 5 aj 7 miest) od 2 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 82 inzerátov (41 na bazoši, 25 na autobazar.eu, 16 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 62 rôznych áut zo Slovenska.",
     "ads": 62,
     "median": "4 499 €",
-    "r2": "66 %"
+    "r2": "66 %",
+    "history": {
+      "updated_at": "2026-11-22T19:00:49",
+      "as_of": "2026-11-22",
+      "coverage": "partial",
+      "baseline_count": 44,
+      "total_count": 44,
+      "active_count": 44,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 44,
+      "paired_median_change_pct": 0,
+      "historical_median": 4499,
+      "seen_median": 4499,
+      "seen_price_count": 44,
+      "last_observed_at": "2026-11-22T17:26:55"
+    }
   },
   {
     "slug": "chevrolet-cruze",
@@ -845,7 +909,26 @@
     "summary": "Analýza aktuálnych inzerátov Chevrolet Cruze (2009–2015, sedan, hatchback aj kombi SW) od 1 500 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 76 inzerátov (32 na bazoši, 16 na autobazar.eu, 28 na bazar.sk) – prezreli sme 88 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 54 rôznych áut zo Slovenska.",
     "ads": 54,
     "median": "3 550 €",
-    "r2": "80 %"
+    "r2": "80 %",
+    "history": {
+      "updated_at": "2026-11-22T19:00:49",
+      "as_of": "2026-11-22",
+      "coverage": "partial",
+      "baseline_count": 42,
+      "total_count": 42,
+      "active_count": 42,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 42,
+      "paired_median_change_pct": 0,
+      "historical_median": 3550,
+      "seen_median": 3550,
+      "seen_price_count": 42,
+      "last_observed_at": "2026-11-22T17:01:59"
+    }
   },
   {
     "slug": "jeep-compass",
@@ -1545,6 +1628,19 @@
       "seen_price_count": 37,
       "last_observed_at": "2026-11-22T14:32:30"
     }
+  },
+  {
+    "slug": "mitsubishi-lancer",
+    "file": "mitsubishi-lancer-analyza.html",
+    "name": "Mitsubishi Lancer",
+    "brand": "Mitsubishi",
+    "model": "Lancer",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Mitsubishi Lancer (2003–2017, sedan aj Sportback) od 1 500 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 44 inzerátov (30 na bazoši, 8 na autobazar.eu, 6 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 32 rôznych áut zo Slovenska.",
+    "ads": 32,
+    "median": "4 450 €",
+    "r2": "75 %"
   },
   {
     "slug": "mitsubishi-pajero",
