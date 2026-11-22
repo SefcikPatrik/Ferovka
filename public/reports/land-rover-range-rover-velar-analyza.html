@@ -1,0 +1,750 @@
+<!doctype html>
+<html lang="sk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Range Rover Velar – analýza ponúk</title>
+<style>
+:root {
+  color-scheme: light;
+  --bg: #f6f6f4; --surface: #fcfcfb; --surface-2: #f0efec; --border: #e2e1dc;
+  --text: #0b0b0b; --text-2: #52514e; --muted: #7a7974;
+  --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a;
+  --pos: #2a78d6; --neg: #eb6834; --accent: #2a78d6;
+  --good: #1d7f4e; --bad: #b4332f; --grid: #e8e7e3;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #121211; --surface: #1a1a19; --surface-2: #232321; --border: #33332f;
+    --text: #f0efec; --text-2: #c3c2b7; --muted: #8f8e86;
+    --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+    --pos: #3987e5; --neg: #d95926; --accent: #5598e7;
+    --good: #4cc38a; --bad: #f07a76; --grid: #2a2a27;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #121211; --surface: #1a1a19; --surface-2: #232321; --border: #33332f;
+  --text: #f0efec; --text-2: #c3c2b7; --muted: #8f8e86;
+  --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+  --pos: #3987e5; --neg: #d95926; --accent: #5598e7;
+  --good: #4cc38a; --bad: #f07a76; --grid: #2a2a27;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text);
+  font: 15px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+main { max-width: 1120px; margin: 0 auto; padding: 32px 16px 64px; }
+a { color: var(--accent); text-decoration: none; } a:hover { text-decoration: underline; }
+h1 { font-size: 30px; margin: 0 0 4px; letter-spacing: -.01em; }
+h2 { font-size: 21px; margin: 48px 0 6px; }
+h3 { font-size: 15px; margin: 6px 0 4px; line-height: 1.35; }
+.lead { color: var(--text-2); margin: 0 0 20px; max-width: 760px; }
+.section-lead { color: var(--text-2); margin: 0 0 16px; max-width: 800px; }
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
+.kpi { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+.kpi .v { font-size: 26px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.kpi .l { color: var(--text-2); font-size: 13px; }
+.explain { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; margin-top: 12px; }
+.explain p { margin: 6px 0; color: var(--text-2); }
+.explain b { color: var(--text); }
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; }
+.card-head { display: flex; justify-content: space-between; gap: 8px; font-size: 12px; }
+.tag { font-weight: 600; color: var(--accent); }
+.loc { color: var(--muted); }
+.facts { color: var(--text-2); font-size: 13px; }
+.prices { display: grid; grid-template-columns: 1.2fr 1fr .8fr; gap: 8px; margin: 12px 0 8px; }
+.lbl { display: block; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+.big { font-size: 22px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.mid { font-size: 16px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.good { color: var(--good); }
+.meter { height: 6px; background: var(--surface-2); border-radius: 4px; overflow: hidden; }
+.meter span { display: block; height: 100%; background: var(--s1); border-radius: 4px; }
+.news ul { margin: 6px 0 0; padding-left: 20px; } .news li { margin: 4px 0; } .news .down { color: var(--good, #1baf7a); font-weight: 600; }
+.note { font-size: 12.5px; background: var(--surface-2); border-radius: 6px; padding: 6px 8px; margin-top: 8px; color: var(--text-2); }
+.pc { list-style: none; padding: 0; margin: 10px 0 0; font-size: 13.5px; }
+.pc li { padding-left: 20px; position: relative; margin: 3px 0; }
+.pc li.pro::before { content: "+"; position: absolute; left: 4px; color: var(--good); font-weight: 700; }
+.pc li.con::before { content: "–"; position: absolute; left: 4px; color: var(--bad); font-weight: 700; }
+.subhead { font-size: 15px; color: var(--text-2); margin: 22px 0 10px; font-weight: 600; }
+.chart-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 14px 8px; position: relative; }
+.legend { display: flex; flex-wrap: wrap; gap: 16px; font-size: 13px; color: var(--text-2); margin: 0 0 6px 4px; }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; }
+.legend .ring { background: transparent; border: 2px solid var(--text); width: 12px; height: 12px; }
+svg text { fill: var(--muted); font-size: 11px; }
+.tip { position: absolute; pointer-events: none; background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+  padding: 8px 10px; font-size: 12.5px; box-shadow: 0 6px 20px rgba(0,0,0,.15); max-width: 280px; display: none; z-index: 5; }
+.tip b { display: block; margin-bottom: 2px; }
+.tip .row { display: flex; justify-content: space-between; gap: 12px; color: var(--text-2); }
+.tip .row span:last-child { color: var(--text); font-variant-numeric: tabular-nums; }
+table { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; font-size: 13.5px; }
+th, td { padding: 9px 10px; border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; }
+th { font-size: 12px; color: var(--text-2); font-weight: 600; background: var(--surface-2); white-space: nowrap; }
+th.sortable { cursor: pointer; user-select: none; } th.sortable:hover { color: var(--text); }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+.sub { color: var(--text-2); font-size: 12.5px; margin-top: 2px; }
+.stars { color: #c98500; letter-spacing: 1px; white-space: nowrap; } .stars .off { color: var(--border); }
+.cellbar { height: 5px; background: var(--surface-2); border-radius: 3px; margin-bottom: 4px; }
+.cellbar span { display: block; height: 100%; background: var(--s1); border-radius: 3px; }
+.disc { display: inline-flex; align-items: center; gap: 6px; justify-content: flex-end; }
+.dbar { width: 54px; height: 6px; background: var(--surface-2); border-radius: 3px; position: relative; }
+.dbar span { position: absolute; top: 0; height: 100%; border-radius: 3px; }
+.filters { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 10px; align-items: center; }
+.filters select, .filters input { background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 6px 8px; font: inherit; font-size: 13px; }
+.filters .count { color: var(--muted); font-size: 13px; margin-left: auto; }
+.table-scroll { overflow-x: auto; border-radius: 12px; }
+.badge { font-size: 11px; padding: 1px 6px; border-radius: 10px; background: var(--surface-2); color: var(--text-2); white-space: nowrap; }
+.badge.pick { background: var(--s1); color: #fff; }
+.flag { color: var(--bad); font-size: 12px; }
+.warn { background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--neg); border-radius: 10px; padding: 12px 16px; }
+.warn li { margin: 4px 0; }
+.check { columns: 2 300px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px 14px 34px; margin: 0; }
+.check li { margin: 4px 0; break-inside: avoid; }
+footer { color: var(--muted); font-size: 12.5px; margin-top: 48px; border-top: 1px solid var(--border); padding-top: 14px; }
+.theme-btn { float: right; background: var(--surface); color: var(--text-2); border: 1px solid var(--border); border-radius: 8px; padding: 5px 10px; cursor: pointer; font: inherit; font-size: 13px; }
+@media (max-width: 640px) { h1 { font-size: 24px; } .prices { grid-template-columns: 1fr 1fr 1fr; } .big { font-size: 18px; } th, td { padding: 7px 6px; } }
+</style>
+<!-- ferovka-theme --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"><style id="ferovka-theme">/* Férovka look for the generated analyses – injected by sync-reports.mjs after each report's own <style>.
+   Same palette and type as the site; chart colours (--s1..--s3) stay the validated set. */
+:root {
+  --bg: #f5f4ef; --surface: #fdfdfb; --surface-2: #eeede6; --border: #e1dfd6;
+  --text: #0f1513; --text-2: #4f5551; --muted: #6f746f;
+  --accent: #0b8a56; --good: #0b7a4b; --grid: #e6e4dc; --win: #dff3e9;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d110f; --surface: #151a17; --surface-2: #1d2420; --border: #2a322d;
+    --text: #eef1ec; --text-2: #b6bdb6; --muted: #8f978f;
+    --accent: #2fc583; --good: #4cd08f; --grid: #1f2622; --win: #143223;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d110f; --surface: #151a17; --surface-2: #1d2420; --border: #2a322d;
+  --text: #eef1ec; --text-2: #b6bdb6; --muted: #8f978f;
+  --accent: #2fc583; --good: #4cd08f; --grid: #1f2622; --win: #143223;
+}
+
+body { font-family: "Manrope", system-ui, sans-serif; }
+h1, h2 { letter-spacing: -0.02em; font-weight: 800; }
+.tag { color: var(--accent); }
+
+/* photo header (removed by the site's viewer, which shows its own) */
+.fv-hero { position: relative; margin: 0 0 26px; border-radius: 20px; overflow: hidden; aspect-ratio: 21 / 8; background: #0d110f; display: flex; }
+.fv-hero img { flex: 1; min-width: 0; height: 100%; object-fit: cover; animation: fv-zoom 1.4s cubic-bezier(.2,.7,.2,1) both; }
+.fv-collage img + img { border-left: 3px solid #0d110f; }
+.fv-hero::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(180deg, transparent 55%, rgb(13 17 15 / .75)),
+    repeating-linear-gradient(90deg, rgb(47 197 131 / .06) 0 1px, transparent 1px 48px); }
+.fv-hero figcaption { position: absolute; right: 12px; bottom: 8px; z-index: 1; font-size: 11px; color: rgb(255 255 255 / .75); }
+.fv-hero figcaption a { color: inherit; }
+
+/* cards & panels: softer, lift on hover */
+.card, .kpi, .explain, .chart-wrap, .box { border-radius: 16px; }
+.card { transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease; }
+.card:hover { transform: translateY(-3px); border-color: var(--accent); box-shadow: 0 14px 30px -18px rgb(0 0 0 / .45); }
+.badge.pick { background: var(--accent); }
+
+/* entrance animation */
+@keyframes fv-up { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes fv-zoom { from { transform: scale(1.08); filter: brightness(.6); } to { transform: none; filter: none; } }
+h1, .lead, .kpis, .cards .card { animation: fv-up .6s cubic-bezier(.2,.7,.2,1) both; }
+.lead { animation-delay: .08s; }
+.kpis { animation-delay: .16s; }
+.cards .card:nth-child(2) { animation-delay: .06s; }
+.cards .card:nth-child(3) { animation-delay: .12s; }
+.cards .card:nth-child(4) { animation-delay: .18s; }
+.cards .card:nth-child(5) { animation-delay: .24s; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+@media (max-width: 640px) { .fv-hero { aspect-ratio: 16 / 9; border-radius: 14px; } }
+
+/* touch: hint under the chart tooltip (report-chart.js) */
+.fv-hint { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--border, rgba(127,127,127,.3)); font-weight: 700; color: var(--accent, #2fc583); }
+</style><!-- /ferovka-theme -->
+</head>
+<body>
+<main><!-- ferovka-theme --><!-- /ferovka-theme -->
+<button class="theme-btn" id="themeBtn" type="button">Svetlý / tmavý</button>
+<h1>Range Rover Velar – ktorá ponuka sa oplatí</h1>
+<p class="lead">Analýza aktuálnych inzerátov Range Rover Velar (2017+) od 15 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 1 023 inzerátov (41 na bazoši, 894 na autobazar.eu, 88 na bazar.sk) – prezreli sme 14 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 104 rôznych áut zo Slovenska. Každé auto sme porovnali
+s <b>férovou cenou</b>: tú vypočítal model naučený na celom trhu podľa veku, nájazdu, motora, prevodovky a typu predajcu.</p>
+
+<div class="kpis">
+  <div class="kpi"><div class="v">104</div><div class="l">inzerátov Velaru (nad 15 000 €)</div></div>
+  <div class="kpi"><div class="v">76</div><div class="l">ohodnotených (majú rok aj km)</div></div>
+  <div class="kpi"><div class="v">30 249 €</div><div class="l">medián ceny s DPH</div></div>
+  <div class="kpi"><div class="v">94 %</div><div class="l">rozdielov v cenách vysvetlí model</div></div>
+</div>
+
+
+<h2>Odkiaľ sú dáta: bazoš, autobazar.eu a bazar.sk</h2>
+<div class="kpis">
+  <div class="kpi"><div class="v">26</div><div class="l">ohodnotených z bazoša</div></div>
+  <div class="kpi"><div class="v">48</div><div class="l">ohodnotených z autobazar.eu</div></div><div class="kpi"><div class="v">2</div><div class="l">ohodnotených z bazar.sk</div></div>
+  <div class="kpi"><div class="v">26</div><div class="l">áut bolo na viacerých portáloch – započítané raz</div></div>
+  <div class="kpi"><div class="v">23 / 14</div><div class="l">s uvedeným pôvodom SR / dovoz</div></div>
+</div>
+<div class="explain">
+  <p><b>Tri portály, jeden trh.</b> Bazoš prehľadal 41 inzerátov, autobazar.eu
+  104, bazar.sk 2. Ponuky z Česka (na autobazar.eu ich je veľa) sme vynechali. Autobazáre často dávajú
+  to isté auto na viac portálov. Takéto dvojice (26 v rebríčku) sme spojili podľa VIN alebo zhody roku, km a ceny,
+  aby sa v modeli nerátali dvakrát. Pri aute nájdeš odkaz na všetky ponuky – niekedy sa líšia cenou.</p>
+  <p><b>Rozdiel medzi portálmi:</b> rovnaké auto je na autobazar.eu v priemere +0,1 %
+  oproti bazošu. Na autobazar.eu predávajú hlavne firmy (44 z 48 ohodnotených).</p>
+  <p><b>Kúpené v SR vs. dovoz:</b> autá s uvedeným pôvodom zo SR sú oproti autám bez uvedeného pôvodu
+  +2,9 %, dovezené +2,2 %
+  (pri rovnakom veku, nájazde a motore). Pôvod zo SR je výhoda pri overovaní histórie, trh zaň však nepripláca – väčšina
+  inzerátov pôvod jednoducho neuvádza. V tabulke dole si môžeš nechať zobraziť len autá kúpené v SR.</p>
+</div>
+
+<h2>Čo hýbe cenou Range Rovera Velar</h2>
+<p class="section-lead">Toto sa model naučil z trhu. Keď porovnávaš dve autá, tieto čísla ti povedia, koľko má byť
+rozdiel v cene, aby to bolo fér.</p>
+<div class="kpis">
+  <div class="kpi"><div class="v">-3,3 %</div><div class="l">každých ďalších 10 000 km</div></div>
+  <div class="kpi"><div class="v">-4,4 %</div><div class="l">každý rok veku navyše</div></div>
+  <div class="kpi"><div class="v">+3860 %</div><div class="l">príplatok za automat (DSG)</div></div>
+  <div class="kpi"><div class="v">+10,2 %</div><div class="l">príplatok u predajcu / firmy</div></div>
+  <div class="kpi"><div class="v">+8,6 %</div><div class="l">Velar po facelifte (2021+) oproti cene podľa veku</div></div>
+  <div class="kpi"><div class="v">+3859,8 %</div><div class="l">príplatok za automat</div></div>
+</div>
+<div class="explain">
+  <p><b>Príklad:</b> dva rovnaké Velary D300 z roku 2019, jedno má 60 tis. km, druhé 120 tis. km. Druhé má byť
+  približne o 20 % lacnejšie (6 × -3,3 %). Ak je lacnejšie len o 5 %, preplácaš kilometre.</p>
+  <p><b>Ako čítať „pod trhom“:</b> +15 % znamená, že auto stojí o 15 % menej, než by malo podľa trhu. Bežný rozptyl
+  cien je asi ±18 %, takže až zľava nad ~10–15 % je naozaj výnimočná. Pri takej zľave vždy zisti, prečo je auto lacné
+  (stav, história, nájazd).</p>
+  <p><b>DPH:</b> ceny uvedené bez DPH (napr. „10 300 € netto“) sme prepočítali na cenu s DPH, ktorú zaplatí súkromná osoba.</p>
+</div>
+
+<h2>Odporúčané ponuky</h2>
+<p class="section-lead">Kandidáti s najlepším pomerom cena / vek / nájazd, ktorých celý inzerát sme prečítali.
+Zoradené podľa toho, ako ich odporúčame.</p>
+<div class="subhead">Velar po facelifte (2021+) – najlepší pomer cena / vek</div>
+<div class="cards">
+<article class="card">
+  <div class="card-head"><span class="tag">Velar P400e plug-in hybrid z 2023</span><span class="loc">Komárno</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197796968/land-rover-range-rover-velar-p400e-r-dynamic-404-ps-plug-in.php" target="_blank" rel="noopener">Land Rover Range Rover Velar P400E R-DYNAMIC 404 PS Plug-in</a></h3>
+  <div class="facts">2023 · 62 100 km · Plug-in hybrid P400e · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazoš</b> · aj na <a href='https://www.autobazar.eu/detail/land-rover-range-rover-velar-p400e-r-dynamic-404-ps/AmVl7_rhF6t/' target='_blank' rel='noopener'>autobazar.eu</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">41 500 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">47 810 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+13.2 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:44%"></span></div>
+  <ul class="pc"><li class="pro">2023, P400e 297 kW, 4x4, automat, 62 tis. km</li><li class="pro">Najnovší ročník v ponuke za rozumnú cenu</li><li class="pro">~13 % pod férovou cenou</li><li class="con">Over stav batérie a nabíjanie</li><li class="con">Predáva autobazár</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">Velar D200 R-Dynamic z 2022</span><span class="loc">Prešov</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/195944514/range-rover-velar-r-dynamic-2022-d200-4x4.php" target="_blank" rel="noopener">RANGE ROVER VELAR R-DYNAMIC (2022) D200 4x4</a></h3>
+  <div class="facts">2022 · 135 000 km · D180 / D200 diesel 132–150 kW · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">26 990 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">31 510 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+14.3 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:48%"></span></div>
+  <ul class="pc"><li class="pro">2022, D200 150 kW, 4x4, automat, 135 tis. km</li><li class="pro">Po facelifte</li><li class="pro">~14 % pod férovou cenou</li><li class="con">Predáva autobazár, pôvod neuvedený</li></ul>
+</article></div>
+<div class="subhead">Lacnejšie Velary do 30 000 €</div>
+<div class="cards">
+<article class="card">
+  <div class="card-head"><span class="tag">Velar 2.0D R-Dynamic z SR so servisnou históriou</span><span class="loc">Piešťany</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197794753/range-rover-velar-20d-r-dynamic-dph-akontacia-od-0.php" target="_blank" rel="noopener">Range Rover Velar 2.0D R-Dynamic | DPH | Akontácia od 0%</a></h3>
+  <div class="facts">2018 · 153 173 km · D240 / D275 / D300 diesel 177–221 kW · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazoš</b> · kúpené v SR · aj na <a href='https://www.autobazar.eu/detail/land-rover-range-rover-velar-20d-i4-r-dynamic-s-awd-at/Amq4rD3bo3I/' target='_blank' rel='noopener'>autobazar.eu</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">21 000 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">24 530 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+14.4 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:48%"></span></div>
+  <ul class="pc"><li class="pro">2018, 2.0 diesel, 4x4, automat, 153 tis. km</li><li class="pro">Kúpené v SR, úplná servisná história</li><li class="pro">~14 % pod férovou cenou</li><li class="con">Predáva autobazár</li><li class="con">Over, či je cena s DPH</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">Velar D180 R-Dynamic za 23 500 €</span><span class="loc">Bánovce nad Bebravou</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197099283/range-rover-velar-r-dynamic.php" target="_blank" rel="noopener">Range Rover Velar R-Dynamic</a></h3>
+  <div class="facts">2019 · 137 000 km · D180 / D200 diesel 132–150 kW · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">23 500 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">28 550 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+17.7 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:59%"></span></div>
+  <ul class="pc"><li class="pro">2019 (MR 2020), 2.0 D180, automat ZF, 137 tis. km</li><li class="pro">Pravidelne servisovaný</li><li class="pro">~18 % pod férovou cenou</li><li class="con">Predáva autobazár, pôvod neuvedený</li></ul>
+</article></div>
+<div class="subhead">Špeciálne prípady</div>
+<div class="cards"></div>
+
+<h2>Cena vs. nájazd: celý trh na jednom grafe</h2>
+<p class="section-lead">Každý bod je jeden inzerát. Čím nižšie bod leží oproti ostatným s podobným nájazdom, tým je auto lacnejšie.
+Krúžkom sú označené odporúčané ponuky. Prejdi myšou na bod a uvidíš detail.</p>
+<div class="chart-wrap" id="chartWrap">
+  <div class="legend" id="legend"></div>
+  <svg id="chart" width="100%" height="420" role="img" aria-label="Bodový graf ceny a nájazdu inzerátov"></svg>
+  <div class="tip" id="tip"></div>
+</div>
+
+<h2>Porovnanie motorov</h2>
+<p class="section-lead">Hodnotenie (hviezdičky) zohľadňuje spoľahlivosť, spoľahlivosť a náklady na prevádzku a pomer cena/výkon.
+Číselné stĺpce sú mediány z ohodnotených inzerátov.</p>
+<div class="table-scroll">
+<table>
+  <thead><tr><th>Motor</th><th>Hodnotenie</th><th class="num">Ponúk</th><th class="num">Medián ceny</th><th class="num">Medián roku</th><th class="num">Medián km</th></tr></thead>
+  <tbody>
+<tr>
+  <td><b>Plug-in hybrid P400e</b><div class="sub">Benzín 2.0 + elektromotor 297 kW. Over stav batérie a nabíjanie.</div></td>
+  <td><span class="stars" aria-label="3 z 5">★★★<span class="off">★★</span></span></td>
+  <td class="num">5</td>
+  <td class="num"><div class="cellbar"><span style="width:100%"></span></div>69 990 €</td>
+  <td class="num">2025</td>
+  <td class="num">14 600 km</td>
+</tr>
+<tr>
+  <td><b>D240 / D275 / D300 diesel 177–221 kW</b><div class="sub">Diesel 2.0 (240 k) alebo 3.0 V6 / R6 (275–300 k). Ťahavý; over DPF, AdBlue a vzduchový podvozok.</div></td>
+  <td><span class="stars" aria-label="3 z 5">★★★<span class="off">★★</span></span></td>
+  <td class="num">27</td>
+  <td class="num"><div class="cellbar"><span style="width:37%"></span></div>26 000 €</td>
+  <td class="num">2019</td>
+  <td class="num">122 000 km</td>
+</tr>
+<tr>
+  <td><b>D180 / D200 diesel 132–150 kW</b><div class="sub">Diesel 2.0 180–204 k. Úspornejší; pri rýchlej jazde slabší na veľké auto.</div></td>
+  <td><span class="stars" aria-label="3 z 5">★★★<span class="off">★★</span></span></td>
+  <td class="num">25</td>
+  <td class="num"><div class="cellbar"><span style="width:45%"></span></div>31 500 €</td>
+  <td class="num">2021</td>
+  <td class="num">99 150 km</td>
+</tr>
+<tr>
+  <td><b>P250 / P300 / P380 / P400 benzín 184–294 kW</b><div class="sub">Benzín 2.0 alebo 3.0 V6 / R6 250–400 k. Svižný, vyššia spotreba.</div></td>
+  <td><span class="stars" aria-label="3 z 5">★★★<span class="off">★★</span></span></td>
+  <td class="num">19</td>
+  <td class="num"><div class="cellbar"><span style="width:58%"></span></div>40 900 €</td>
+  <td class="num">2020</td>
+  <td class="num">88 000 km</td>
+</tr></tbody>
+</table>
+</div>
+<div class="explain">
+  <p><b>Range Rover Velar</b> (od 2017, facelift 2021 a 2023) je štýlové SUV medzi Evoque a Range Rover Sport, na technike Jaguaru F-Pace.</p>
+  <p><b>Ktorý motor zvoliť?</b> Najrozšírenejšie sú diesely <b>D180 / D240</b> a silnejší <b>D300</b>. Pri plug-in hybride P400e over batériu.</p>
+</div>
+
+<h2>Na čo si dať pozor</h2>
+<div class="warn">
+  <p><b>Lacné kvôli extrémnemu nájazdu</b> (viac ako 35 tis. km ročne, typicky flotila alebo taxi):</p>
+  <ul><li><a href='https://auto.bazos.sk/inzerat/197351484/land-rover-range-rover-velar-2020-4x4-at8-132kw.php' target='_blank' rel='noopener'>Land Rover Range Rover Velar 2020 4x4 AT/8 132kW</a>: 2020, 225 608 km → 36 000 km/rok. Lacné je kvôli nájazdu.</li></ul>
+  <p><b>Podozrivo nízky nájazd na vek</b> – preklep alebo stočené km, over cez Cebiu:</p><ul><li><a href='https://www.autobazar.eu/detail/land-rover-range-rover-velar-20-221kw-at8-aj-na-splatky-protiucet/AmJ4Fnh9AEl/' target='_blank' rel='noopener'>Land Rover Range Rover Velar 2.0 221kW AT/8 / AJ NA SPLÁTKY / PROTIÚČET</a> (34 990 €): rok 2018 a len 10 945 km</li></ul><p><b>Ďalšie veci, ktoré sme v inzerátoch našli:</b></p><ul><li>Nové a predvádzacie autá zo skladu predajcov sme do analýzy ojazdených áut nezarátali.</li><li>Pri niektorých inzerátoch AAA AUTO je uvedená „cena pri financovaní“ – bez úveru môže byť cena vyššia.</li><li>Range Rover, Range Rover Sport a Evoque majú samostatné analýzy.</li></ul><p><b>Vyradené z porovnania</b> (poškodené autá alebo nezmyselné údaje – model ich nehodnotí):</p><ul><li><a href='https://www.autobazar.eu/detail/range-rover-velar-s-d200-awd-automat-mhev/AbkuZBQx4Dx/' target='_blank' rel='noopener'>Range Rover Velar S D200 AWD AUTOMAT MHEV</a> (68 990 €): podozrivo nízky nájazd</li><li><a href='https://www.autobazar.eu/detail/land-rover-range-rover-velar/Am7TcZXCBFB/' target='_blank' rel='noopener'>Range Rover Velar 3.D 300PS MHEV Dynamic SE AWD Auto - VÝPREDAJ SKLADU!</a> (75 990 €): podozrivo nízky nájazd</li><li><a href='https://www.autobazar.eu/detail/land-rover-range-rover-velar/AmG11HSAWpB/' target='_blank' rel='noopener'>Range Rover Velar 2.0P 404PS PHEV S AWD Auto - VÝPREDAJ SKLADU!</a> (72 990 €): podozrivo nízky nájazd</li></ul><p><b>Range Rover, Sport, Evoque a iné modely z vyhľadávania, nové autá zo skladu, inzeráty s chybným nájazdom</b> (10 inzerátov) sme z rebríčka vynechali.</p>
+  <p>Ďalších <b>6</b> inzerátov nemá v texte rok alebo kilometre, takže ich nebolo možné ohodnotiť.
+  Ak ťa niektorý zaujme, predajcu sa na tieto údaje opýtaj.</p>
+</div>
+
+<h2>Kompletný rebríček</h2>
+<p class="section-lead">Všetky ohodnotené inzeráty. Kliknutím na hlavičku stĺpca zoraďuješ, filtrom zužuješ výber.</p>
+<div class="filters">
+  <select id="fEngine"><option value="">Všetky motory</option></select>
+  <select id="fTrans"><option value="">Každá prevodovka</option><option value="automatic">Automat</option><option value="manual">Manuál</option></select>
+  <select id="fSeller"><option value="">Všetci predajcovia</option><option value="nodealer">Bez autobazárov</option></select>
+  <select id="fSource"><option value="">Všetky portály</option><option value="bazos">bazoš</option><option value="autobazar">autobazar.eu</option><option value="bazarsk">bazar.sk</option></select>
+  <select id="fBody" hidden><option value=""></option></select>
+  <select id="fOrigin"><option value="">Akýkoľvek pôvod</option><option value="SR">Kúpené v SR</option><option value="dovoz">Dovoz</option></select>
+  <input id="fMax" type="number" placeholder="Max. cena €" step="500" min="0" style="width:120px">
+  <span class="count" id="count"></span>
+</div>
+<div class="table-scroll">
+<table id="tbl">
+  <thead><tr>
+    <th class="sortable" data-k="title">Inzerát</th>
+    <th class="sortable num" data-k="year">Rok</th>
+    <th class="sortable num" data-k="km">Km</th>
+    <th class="sortable num" data-k="price_gross">Cena</th>
+    <th class="sortable num" data-k="fair_price">Férová</th>
+    <th class="sortable num" data-k="discount_pct">Pod trhom ▾</th>
+  </tr></thead>
+  <tbody></tbody>
+</table>
+</div>
+
+<h2>Pred kúpou over</h2>
+<ul class="check">
+  <li>VIN cez Cebia / autoDNA (história km, havárie) a servisná história</li>
+  <li>Vzduchový podvozok (ak je)</li>
+  <li>Diesel: DPF, AdBlue, pri 2.0 Ingenium reťaz rozvodov</li>
+  <li>Elektronika (Touch Pro Duo, kamery)</li>
+  <li>Plug-in hybrid: stav batérie</li>
+  <li>STK/EK protokol a dátum platnosti</li>
+</ul>
+
+<footer>
+  Zdroj: auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (len ponuky zo Slovenska, to isté auto na viacerých portáloch je započítané raz), sťahované cez lokálny MCP server bazos-mcp (nástroj <code>fair_price</code>), 22. 11. 2026.
+  Model: ridge regresia log(ceny s DPH) podľa veku, veku², km, km², prevodovky, typu predajcu, motora, karosérie, pohonu 4x4, pôvodu (SR / dovoz) a portálu. Vzorka 76
+  inzerátov, R² 94 %. Parametre sú vyťažené z textu inzerátov, a preto môžu obsahovať chyby. Odporúčané ponuky sme overili
+  prečítaním celého inzerátu. Hodnotenie motorov je odborný odhad, nie výsledok modelu.
+</footer>
+</main>
+
+<script>
+const DATA = [{"id": "197099283", "url": "https://auto.bazos.sk/inzerat/197099283/range-rover-velar-r-dynamic.php", "title": "Range Rover Velar R-Dynamic", "price": 23500, "price_gross": 23500, "fair_price": 28550.0, "discount_pct": 17.7, "verdict": "výrazne pod trhom – over prečo", "year": 2019, "km": 137000, "km_per_year": 18700.0, "eg": "D180 / D200 diesel 132–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bánovce nad Bebravou", "flags": [], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AejjHFEU5W_", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-velar-rr-velar/AejjHFEU5W_/", "title": "Land Rover Range Rover Velar RR Velar", "price": 22900, "price_gross": 22900, "fair_price": 26910.0, "discount_pct": 14.9, "verdict": "pod trhom", "year": 2021, "km": 120109, "km_per_year": 22500.0, "eg": "D240 / D275 / D300 diesel 177–221 kW", "cg": 1, "transmission": "automatic", "seller_type": "private", "location": "Dubnica nad Váhom", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "197794753", "url": "https://auto.bazos.sk/inzerat/197794753/range-rover-velar-20d-r-dynamic-dph-akontacia-od-0.php", "title": "Range Rover Velar 2.0D R-Dynamic | DPH | Akontácia od 0%", "price": 21000, "price_gross": 21000, "fair_price": 24530.0, "discount_pct": 14.4, "verdict": "pod trhom", "year": 2018, "km": 153173, "km_per_year": 18400.0, "eg": "D240 / D275 / D300 diesel 177–221 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Piešťany", "flags": [], "pick": "budget", "source": "bazos", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-Amq4rD3bo3I", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-velar-20d-i4-r-dynamic-s-awd-at/Amq4rD3bo3I/", "price": 21000}], "body": "suv"}, {"id": "195944514", "url": "https://auto.bazos.sk/inzerat/195944514/range-rover-velar-r-dynamic-2022-d200-4x4.php", "title": "RANGE ROVER VELAR R-DYNAMIC (2022) D200 4x4", "price": 26990, "price_gross": 26990, "fair_price": 31510.0, "discount_pct": 14.3, "verdict": "pod trhom", "year": 2022, "km": 135000, "km_per_year": 31200.0, "eg": "D180 / D200 diesel 132–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Prešov", "flags": [], "pick": "top", "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AmJ4Fnh9AEl", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-velar-20-221kw-at8-aj-na-splatky-protiucet/AmJ4Fnh9AEl/", "title": "Land Rover Range Rover Velar 2.0 221kW AT/8 / AJ NA SPLÁTKY / PROTIÚČET", "price": 34990, "price_gross": 34990, "fair_price": 40620.0, "discount_pct": 13.9, "verdict": "pod trhom", "year": 2018, "km": 10945, "km_per_year": 1300.0, "eg": "P250 / P300 / P380 / P400 benzín 184–294 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Trenčín", "flags": ["nezvyčajne nízky nájazd na vek (10 945 km) – over  či nejde o preklep"], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197676261", "url": "https://auto.bazos.sk/inzerat/197676261/land-rover-range-rover-velar-20-221kw-at8-1majitel.php", "price": 34990}], "body": "suv"}, {"id": "197796968", "url": "https://auto.bazos.sk/inzerat/197796968/land-rover-range-rover-velar-p400e-r-dynamic-404-ps-plug-in.php", "title": "Land Rover Range Rover Velar P400E R-DYNAMIC 404 PS Plug-in", "price": 41500, "price_gross": 41500, "fair_price": 47810.0, "discount_pct": 13.2, "verdict": "pod trhom", "year": 2023, "km": 62100, "km_per_year": 18600.0, "eg": "Plug-in hybrid P400e", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Komárno", "flags": [], "pick": "top", "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmVl7_rhF6t", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-velar-p400e-r-dynamic-404-ps/AmVl7_rhF6t/", "price": 41500}], "body": "suv"}, {"id": "ab-Am_g1cOrBw0", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-velar-20d-i4-d200-mhev-r-dynamic-s-awd-a-t/Am_g1cOrBw0/", "title": "Land Rover Range Rover Velar 2.0D I4 D200 MHEV R-Dynamic S AWD A/T", "price": 24990, "price_gross": 24990, "fair_price": 28740.0, "discount_pct": 13.0, "verdict": "pod trhom", "year": 2021, "km": 156000, "km_per_year": 29300.0, "eg": "D180 / D200 diesel 132–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Trebišov", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "196769329", "url": "https://auto.bazos.sk/inzerat/196769329/land-rover-range-rover-velar-20d-i4-d200-mhev-r-dynamic-s.php", "price": 24990}], "body": "suv"}, {"id": "197351484", "url": "https://auto.bazos.sk/inzerat/197351484/land-rover-range-rover-velar-2020-4x4-at8-132kw.php", "title": "Land Rover Range Rover Velar 2020 4x4 AT/8 132kW", "price": 20990, "price_gross": 20990, "fair_price": 23780.0, "discount_pct": 11.7, "verdict": "pod trhom", "year": 2020, "km": 225608, "km_per_year": 35600.0, "eg": "D180 / D200 diesel 132–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Dunajská Streda", "flags": ["vysoký nájazd 36000 km/rok – flotila / taxi?"], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmxZfw-QinM", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-velar-2020-4x4-at8-132kw-aj-na-splatky-protiucet/AmxZfw-QinM/", "price": 19990}], "body": "suv"}, {"id": "ab-AeF2sbL4pzT", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-velar-20d-i4-d200-mhev-r-dynamic-se-awd-at-150kw204hp-a8/AeF2sbL4pzT/", "title": "Land Rover Range Rover Velar 2.0D I4 D200 MHEV R-Dynamic SE AWD AT 150kW204HP A8", "price": 27990, "price_gross": 27990, "fair_price": 31550.0, "discount_pct": 11.3, "verdict": "pod trhom", "year": 2022, "km": 136000, "km_per_year": 31400.0, "eg": "D180 / D200 diesel 132–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Košice", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "suv"}, {"id": "ab-Ama89dRW3Ku", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-velar-177kw-aj-na-splatkyprotiucet/Ama89dRW3Ku/", "title": "Land Rover Range Rover Velar 177kw /AJ NA SPLÁTKY/PROTIÚČET/", "price": 22990, "price_gross": 22990, "fair_price": 25890.0, "discount_pct": 11.2, "verdict": "pod trhom", "year": 2019, "km": 114688, "km_per_year": 15600.0, "eg": "D240 / D275 / D300 diesel 177–221 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "197491833", "url": "https://auto.bazos.sk/inzerat/197491833/land-rover-range-rover-velar-177kw.php", "price": 22990}], "body": "suv"}, {"id": "ab-AevYraI9j3S", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-velar-d300r-dynamic-hse-4x4-automat/AevYraI9j3S/", "title": "Land Rover Range Rover Velar D300R-Dynamic HSE, 4X4, Automat", "price": 26000, "price_gross": 26000, "fair_price": 29170.0, "discount_pct": 10.9, "verdict": "pod trhom", "year": 2020, "km": 114257, "km_per_year": 18000.0, "eg": "D240 / D275 / D300 diesel 177–221 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Nové Zámky", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "197506844", "url": "https://auto.bazos.sk/inzerat/197506844/land-rover-velar-20d-r-dynamic-4x4-1maj-full-iba-125t-km.php", "title": "Land Rover Velar 2.0D R-Dynamic 4x4 1.Maj Full, Iba 125t. km", "price": 22490, "price_gross": 22490, "fair_price": 25170.0, "discount_pct": 10.7, "verdict": "pod trhom", "year": 2018, "km": 125000, "km_per_year": 15000.0, "eg": "P250 / P300 / P380 / P400 benzín 184–294 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Nitra", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AeX89GGF0lt", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-velar-30d-v6-300k-sd6-s-awd-at-220kw300hp-a8/AeX89GGF0lt/", "title": "Land Rover Range Rover Velar 3.0D V6 300k SD6 S AWD AT 220kW300HP A8", "price": 23000, "price_gross": 23000, "fair_price": 25750.0, "discount_pct": 10.7, "verdict": "pod trhom", "year": 2018, "km": 125000, "km_per_year": 15000.0, "eg": "D240 / D275 / D300 diesel 177–221 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Mútne", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "196591267", "url": "https://auto.bazos.sk/inzerat/196591267/land-rover-range-rover-velar-30d-v6-300k-sd6-s-awd-at-220kw.php", "price": 23000}], "body": "suv"}, {"id": "ab-AmdHEoz-uPx", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-velar-20d-td4-r-dynamic-s/AmdHEoz-uPx/", "title": "Land Rover Range Rover Velar 2.0D TD4 R-Dynamic S", "price": 23899, "price_gross": 23899, "fair_price": 26650.0, "discount_pct": 10.3, "verdict": "pod trhom", "year": 2020, "km": 113111, "km_per_year": 17900.0, "eg": "D180 / D200 diesel 132–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "suv"}, {"id": "ab-AmyILVCKfzP", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-velar-20d-td4-s-awd-a-t/AmyILVCKfzP/", "title": "Land Rover Range Rover Velar 2.0D TD4 S AWD A/T", "price": 23499, "price_gross": 23499, "fair_price": 26020.0, "discount_pct": 9.7, "verdict": "pod trhom", "year": 2019, "km": 104184, "km_per_year": 14200.0, "eg": "D180 / D200 diesel 132–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "suv"}, {"id": "197289467", "url": "https://auto.bazos.sk/inzerat/197289467/land-rover-range-rover-velar.php", "title": "LAND ROVER Range Rover Velar", "price": 21000, "price_gross": 21000, "fair_price": 23170.0, "discount_pct": 9.4, "verdict": "pod trhom", "year": 2020, "km": 220000, "km_per_year": 34700.0, "eg": "D240 / D275 / D300 diesel 177–221 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Trnava", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-Am-pUAAQca4", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-velar-30d-i6-d300-r-dynamic-se/Am-pUAAQca4/", "title": "Land Rover Range Rover Velar 3.0D I6 D300 R-Dynamic SE", "price": 38990, "price_gross": 38990, "fair_price": 43030.0, "discount_pct": 9.4, "verdict": "pod trhom", "year": 2022, "km": 88900, "km_per_year": 20500.0, "eg": "D240 / D275 / D300 diesel 177–221 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Žilina", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AmUesyD37bq", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-velar-20d-i4-d200-mhev-dynamic-se-awd-at/AmUesyD37bq/", "title": "Land Rover Range Rover Velar 2.0D I4 D200 MHEV Dynamic SE AWD A/T", "price": 59990, "price_gross": 59990, "fair_price": 66140.0, "discount_pct": 9.3, "verdict": "pod trhom", "year": 2026, "km": 14699, "km_per_year": 44100.0, "eg": "D180 / D200 diesel 132–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Trenčín", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "196007828", "url": "https://auto.bazos.sk/inzerat/196007828/land-rover-range-rover-velar-p250-20l-benzin-turbo-250ps.php", "title": "Land Rover Range Rover Velar. p250, 2.0l benzin turbo 250ps.", "price": 29990, "price_gross": 29990, "fair_price": 32980.0, "discount_pct": 9.1, "verdict": "pod trhom", "year": 2019, "km": 100000, "km_per_year": 13600.0, "eg": "D180 / D200 diesel 132–150 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Nové Zámky", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "ab-AmZntkbPnjR", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-velar/AmZntkbPnjR/", "title": "Range Rover Velar 2.0P 404PS PHEV S AWD Auto - VÝPREDAJ SKLADU!", "price": 69990, "price_gross": 69990, "fair_price": 76300.0, "discount_pct": 8.3, "verdict": "pod trhom", "year": 2025, "km": 5676, "km_per_year": 4300.0, "eg": "Plug-in hybrid P400e", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Trenčín", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "ab-AmAU61_AtrN", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-velar-20d-i4-r-dynamic-hse-awd-a-t/AmAU61_AtrN/", "title": "Land Rover Range Rover Velar 2.0D I4 R-Dynamic HSE AWD A/T", "price": 27900, "price_gross": 27900, "fair_price": 30030.0, "discount_pct": 7.1, "verdict": "pod trhom", "year": 2017, "km": 66700, "km_per_year": 7100.0, "eg": "D240 / D275 / D300 diesel 177–221 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Šamorín", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "196844397", "url": "https://auto.bazos.sk/inzerat/196844397/land-rover-range-rover-velar-20d-hse-awd-at.php", "price": 27900}], "body": "suv"}, {"id": "ab-AeGBqRWMQcz", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-velar-d240-r-dynamic-s-4x4-automat/AeGBqRWMQcz/", "title": "Land Rover Range Rover Velar D240, R-Dynamic S, 4X4, Automat", "price": 24000, "price_gross": 24000, "fair_price": 25750.0, "discount_pct": 6.8, "verdict": "férová cena", "year": 2017, "km": 86260, "km_per_year": 9200.0, "eg": "D240 / D275 / D300 diesel 177–221 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Prešovský kraj", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "196914056", "url": "https://auto.bazos.sk/inzerat/196914056/land-rover-range-rover-velar-30d-v6-sd6-300k-hse-awd-at.php", "title": "Land Rover Range Rover Velar 3.0D V6 SD6 300k HSE AWD A/T", "price": 25500, "price_gross": 25500, "fair_price": 27230.0, "discount_pct": 6.4, "verdict": "férová cena", "year": 2017, "km": 167882, "km_per_year": 18000.0, "eg": "D240 / D275 / D300 diesel 177–221 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Ružomberok", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "197399478", "url": "https://auto.bazos.sk/inzerat/197399478/land-rover-range-rover-velar-20-si4-hse-awd-at-184kw250hp.php", "title": "Land Rover Range Rover Velar 2.0 Si4 HSE AWD AT 184kW250HP", "price": 26990, "price_gross": 26990, "fair_price": 28770.0, "discount_pct": 6.2, "verdict": "férová cena", "year": 2019, "km": 75900, "km_per_year": 10400.0, "eg": "P250 / P300 / P380 / P400 benzín 184–294 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Nové Mesto n.Váhom", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AeqWLY3g725", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-velar-20-si4-hse-awd-at-184kw250hp-a8-kupeny-v-sr/AeqWLY3g725/", "price": 26990}], "body": "suv"}, {"id": "ab-AmvdxjVbjUp", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-velar-d300-mhev-r-dynamic-se-awd-auto-vypredaj-skladu/AmvdxjVbjUp/", "title": "Range Rover Velar 3.0D 300PS MHEV R-Dynamic SE AWD Auto - VÝPREDAJ SKLADU!", "price": 45990, "price_gross": 45990, "fair_price": 49030.0, "discount_pct": 6.2, "verdict": "férová cena", "year": 2022, "km": 73000, "km_per_year": 16800.0, "eg": "P250 / P300 / P380 / P400 benzín 184–294 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Trenčín", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "197493151", "url": "https://auto.bazos.sk/inzerat/197493151/land-rover-range-rover-velar-20d-i4-d200-mhev-dynamic-se.php", "title": "Land Rover Range Rover Velar 2.0D I4 D200 MHEV Dynamic SE AW", "price": 47700, "price_gross": 47700, "fair_price": 50770.0, "discount_pct": 6.0, "verdict": "férová cena", "year": 2024, "km": 36591, "km_per_year": 15700.0, "eg": "D180 / D200 diesel 132–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [{"source": "autobazar", "id": "ab-Am8WqFORlgl", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-velar-20d-i4-d200-mhev-dynamic-se-awd-at-150-kw-zaruka-do-2029/Am8WqFORlgl/", "price": 47700}], "body": "suv"}, {"id": "197207651", "url": "https://auto.bazos.sk/inzerat/197207651/land-rover-range-rover-velar-limited-edition.php", "title": "Land Rover Range Rover Velar Limited Edition", "price": 41990, "price_gross": 41990, "fair_price": 43830.0, "discount_pct": 4.2, "verdict": "férová cena", "year": 2021, "km": 76500, "km_per_year": 14300.0, "eg": "D180 / D200 diesel 132–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Ilava", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-Am1RBKpf5Kt", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-velar-30d-i6-d300-mhev-r-dynamic-hse-awd-at/Am1RBKpf5Kt/", "price": 41990}], "body": "suv"}, {"id": "bs-39633905", "url": "https://auto.bazar.sk/39633905-land-rover-range-rover-velar-d240/", "title": "Land Rover Range Rover Velar D240", "price": 25000, "price_gross": 25000, "fair_price": 26030.0, "discount_pct": 4.0, "verdict": "férová cena", "year": 2017, "km": 86260, "km_per_year": 9200.0, "eg": "D240 / D275 / D300 diesel 177–221 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava V - Petržalka", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "suv"}, {"id": "197358146", "url": "https://auto.bazos.sk/inzerat/197358146/land-rover-range-rover-velar-20d-177kw-at8-2018.php", "title": "Land Rover Range Rover Velar 2.0D 177kW AT/8 2018", "price": 24490, "price_gross": 24490, "fair_price": 25360.0, "discount_pct": 3.4, "verdict": "férová cena", "year": 2018, "km": 123779, "km_per_year": 14900.0, "eg": "D240 / D275 / D300 diesel 177–221 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Banská Bystrica", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmhhAPQSWsY", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-velar-20d-177kw-at8-2018-aj-na-splatky-protiucet/AmhhAPQSWsY/", "price": 24490}], "body": "suv"}, {"id": "ab-Am7zSTJWSH2", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-velar/Am7zSTJWSH2/", "title": "Land Rover Range Velar 3.0DMHEV Dynamic SE - VÝPREDAJ SKLADU!", "price": 54990, "price_gross": 54990, "fair_price": 56950.0, "discount_pct": 3.4, "verdict": "férová cena", "year": 2023, "km": 40778, "km_per_year": 12200.0, "eg": "D240 / D275 / D300 diesel 177–221 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Trenčín", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "ab-AmbR3GNs2kN", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-velar/AmbR3GNs2kN/", "title": "Land Rover Range Rover Velar", "price": 30500, "price_gross": 30500, "fair_price": 31340.0, "discount_pct": 2.7, "verdict": "férová cena", "year": 2019, "km": 66000, "km_per_year": 9000.0, "eg": "D180 / D200 diesel 132–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Košice-Vyšné Opátske", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AmCqXsHS69V", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-velar-20d-i4-d200-mhev-dynamic-se-awd-at/AmCqXsHS69V/", "title": "Land Rover Range Rover Velar 2.0D I4 D200 MHEV Dynamic SE AWD A/T", "price": 61500, "price_gross": 61500, "fair_price": 63090.0, "discount_pct": 2.5, "verdict": "férová cena", "year": 2025, "km": 2953, "km_per_year": 2200.0, "eg": "D180 / D200 diesel 132–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava-Nové Mesto", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AeCdiVcy6um", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-velar-30d-v6-sd6-300k-r-dynamic-hse-awd-at-220kw300hp-a8/AeCdiVcy6um/", "title": "Land Rover Range Rover Velar 3.0D V6 SD6 300k R-Dynamic HSE AWD AT 220kW300HP A8", "price": 26000, "price_gross": 26000, "fair_price": 26410.0, "discount_pct": 1.6, "verdict": "férová cena", "year": 2019, "km": 200500, "km_per_year": 27300.0, "eg": "D240 / D275 / D300 diesel 177–221 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Tvrdošín", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "ab-Am9DDkyIue8", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-velar-30-v6-si6-r-dynamic-hse/Am9DDkyIue8/", "title": "Land Rover Range Rover Velar 3.0 V6 Si6 R-Dynamic HSE", "price": 29900, "price_gross": 29900, "fair_price": 30310.0, "discount_pct": 1.3, "verdict": "férová cena", "year": 2018, "km": 112370, "km_per_year": 13500.0, "eg": "P250 / P300 / P380 / P400 benzín 184–294 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Košice-Ťahanovce", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "ab-AewOHOfQTHt", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-velar-240k-zaruka-12026/AewOHOfQTHt/", "title": "Land Rover Range Rover Velar 240k novy servis", "price": 24990, "price_gross": 24990, "fair_price": 25230.0, "discount_pct": 0.9, "verdict": "férová cena", "year": 2019, "km": 84500, "km_per_year": 11500.0, "eg": "D240 / D275 / D300 diesel 177–221 kW", "cg": 1, "transmission": "automatic", "seller_type": "private", "location": "Holíč", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "197747634", "url": "https://auto.bazos.sk/inzerat/197747634/rage-rover-velar-r-dynamic-20-land-rover.php", "title": "Rage Rover Velar R-Dynamic 2.0 Land Rover", "price": 24499, "price_gross": 24499, "fair_price": 24480.0, "discount_pct": -0.1, "verdict": "férová cena", "year": 2019, "km": 160000, "km_per_year": 21800.0, "eg": "P250 / P300 / P380 / P400 benzín 184–294 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Čadca", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-Am4TIBTHKbm", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-velar-20i-i4-p250-r-dynamic-se-awd-at/Am4TIBTHKbm/", "title": "Land Rover Range Rover Velar 2.0i I4 P250 R-Dynamic SE AWD A/T", "price": 40900, "price_gross": 40900, "fair_price": 40340.0, "discount_pct": -1.4, "verdict": "férová cena", "year": 2022, "km": 72530, "km_per_year": 16700.0, "eg": "P250 / P300 / P380 / P400 benzín 184–294 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Štiavnička", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "196412701", "url": "https://auto.bazos.sk/inzerat/196412701/land-rover-range-rover-velar-20i-i4-p250-r-dynamic-se-awd-a.php", "price": 40900}], "body": "suv"}, {"id": "197004009", "url": "https://auto.bazos.sk/inzerat/197004009/land-rover-range-rover-velar-20d-i4-r-dynamic-at.php", "title": "Land Rover Range Rover Velar  2.0D I4 R-Dynamic  A/T", "price": 31500, "price_gross": 31500, "fair_price": 31080.0, "discount_pct": -1.4, "verdict": "férová cena", "year": 2022, "km": 99150, "km_per_year": 22900.0, "eg": "D180 / D200 diesel 132–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Rimavská Sobota", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AefVZfFvKyr", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-velar-20d-i4-d200-mhev-r-dynamic-se-awd-at-150kw204hp-a8/AefVZfFvKyr/", "price": 31500}], "body": "suv"}, {"id": "ab-AmtSgBvMwvm", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-velar-hse-r-dynamic-30-sc/AmtSgBvMwvm/", "title": "LAND ROVER Range Rover Velar HSE R-Dynamic 3.0 S/C", "price": 29900, "price_gross": 29900, "fair_price": 29450.0, "discount_pct": -1.5, "verdict": "férová cena", "year": 2018, "km": 112366, "km_per_year": 13500.0, "eg": "P250 / P300 / P380 / P400 benzín 184–294 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Košice-Ťahanovce", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AmneNYTAvQ9", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-velar-30d-v6-sd6-300k-first-edition/AmneNYTAvQ9/", "title": "Land Rover Range Rover Velar 3.0D V6 SD6 300k First Edition", "price": 29500, "price_gross": 29500, "fair_price": 29030.0, "discount_pct": -1.6, "verdict": "férová cena", "year": 2018, "km": 122000, "km_per_year": 14600.0, "eg": "D240 / D275 / D300 diesel 177–221 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Tovarníky", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "ab-Am5P9YuTbwD", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-velar-30d-i6-d300-mhev-r-dynamic-hse-awd-a-t/Am5P9YuTbwD/", "title": "Land Rover Range Rover Velar 3.0D I6 D300 MHEV R-Dynamic HSE AWD A/T", "price": 45990, "price_gross": 45990, "fair_price": 45280.0, "discount_pct": -1.6, "verdict": "férová cena", "year": 2021, "km": 88000, "km_per_year": 16500.0, "eg": "P250 / P300 / P380 / P400 benzín 184–294 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "ab-AmGJyl1_Qy0", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-velar-20i-i4-p250-dynamic-se-awd-at/AmGJyl1_Qy0/", "title": "Land Rover Range Rover Velar 2.0i I4 P250 Dynamic SE AWD A/T", "price": 52890, "price_gross": 52890, "fair_price": 51950.0, "discount_pct": -1.8, "verdict": "férová cena", "year": 2024, "km": 42655, "km_per_year": 18300.0, "eg": "P250 / P300 / P380 / P400 benzín 184–294 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "bs-39633418", "url": "https://auto.bazar.sk/39633418-land-rover-range-rover-velar-d300/", "title": "Land Rover Range Rover Velar D300", "price": 27000, "price_gross": 27000, "fair_price": 26530.0, "discount_pct": -1.8, "verdict": "férová cena", "year": 2020, "km": 114257, "km_per_year": 18000.0, "eg": "D240 / D275 / D300 diesel 177–221 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava V - Petržalka", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "suv"}, {"id": "197100570", "url": "https://auto.bazos.sk/inzerat/197100570/land-rover-rr-velar-p250-r-dynamic-184-kw-servis.php", "title": "Land Rover RR Velar P250 250 PS, full servis, head-up", "price": 44900, "price_gross": 44900, "fair_price": 43680.0, "discount_pct": -2.8, "verdict": "férová cena", "year": 2022, "km": 89571, "km_per_year": 20700.0, "eg": "P250 / P300 / P380 / P400 benzín 184–294 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Senec", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-Am9cVjxhT-b", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-velar-20-p250-r-dynamic/Am9cVjxhT-b/", "price": 44900}], "body": "suv"}, {"id": "197575823", "url": "https://auto.bazos.sk/inzerat/197575823/range-rover-velar-30i-i6-p400-mhev-r-dynamic-hse-at-294-kw.php", "title": "Range Rover Velar 3.0i I6 P400 MHEV R-Dynamic HSE A/T 294 kW", "price": 48990, "price_gross": 48990, "fair_price": 47390.0, "discount_pct": -3.4, "verdict": "férová cena", "year": 2021, "km": 61000, "km_per_year": 11400.0, "eg": "P250 / P300 / P380 / P400 benzín 184–294 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Trenčín", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmKId3Ln_g1", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-velar-30i-i6-p400-mhev-r-dynamic-hse-awd-at/AmKId3Ln_g1/", "price": 48990}], "body": "suv"}, {"id": "ab-AeCoOSaWADF", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-velar-land-rover-range-rover-velar/AeCoOSaWADF/", "title": "Land Rover Range Rover Velar Land Rover Range Rover Velar", "price": 26000, "price_gross": 26000, "fair_price": 25070.0, "discount_pct": -3.7, "verdict": "férová cena", "year": 2020, "km": 180000, "km_per_year": 28400.0, "eg": "D240 / D275 / D300 diesel 177–221 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Holíč", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "suv"}, {"id": "ab-AmVSy4ZjOUd", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-velar/AmVSy4ZjOUd/", "title": "Land Rover Range Rover Velar P400 400 PS, SK, záruka do 6/29", "price": 64990, "price_gross": 64990, "fair_price": 62490.0, "discount_pct": -4.0, "verdict": "férová cena", "year": 2024, "km": 39400, "km_per_year": 16900.0, "eg": "P250 / P300 / P380 / P400 benzín 184–294 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Rovinka", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "196969688", "url": "https://auto.bazos.sk/inzerat/196969688/land-rover-range-rover-velar-20d-awd-at.php", "title": "🚙 Land Rover Range Rover Velar 2.0D AWD A/T |", "price": 22500, "price_gross": 22500, "fair_price": 21600.0, "discount_pct": -4.2, "verdict": "férová cena", "year": 2018, "km": 167160, "km_per_year": 20100.0, "eg": "D180 / D200 diesel 132–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Martin", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmP16sQOKmt", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-velar-20d/AmP16sQOKmt/", "price": 22500}], "body": "suv"}, {"id": "ab-Ame_Kv-YbGBa", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-velar-20d-i4-d200-dynamic-se/Ame_Kv-YbGBa/", "title": "Land Rover Range Rover Velar 2.0D I4 D200 Dynamic SE", "price": 77990, "price_gross": 77990, "fair_price": 74810.0, "discount_pct": -4.3, "verdict": "férová cena", "year": 2026, "km": 3100, "km_per_year": 9300.0, "eg": "D180 / D200 diesel 132–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Žilina", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AmfLsF5bWGF", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-velar-20l-diesel-132kw-a8-aj-na-splatky-protiucet/AmfLsF5bWGF/", "title": "Land Rover Range Rover Velar 2.0L diesel, 132kW, A8, / AJ NA SPLÁTKY / PROTIÚČET /", "price": 35990, "price_gross": 35990, "fair_price": 34460.0, "discount_pct": -4.4, "verdict": "férová cena", "year": 2021, "km": 78477, "km_per_year": 14700.0, "eg": "D180 / D200 diesel 132–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Trenčín", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197424331", "url": "https://auto.bazos.sk/inzerat/197424331/land-rover-range-rover-velar-20l-diesel-132kw-a8.php", "price": 35990}], "body": "suv"}, {"id": "ab-Abq_Xh6Y81W", "url": "https://www.autobazar.eu/detail/range-rover-velar-dynamic-se-d200-awd-mhev/Abq_Xh6Y81W/", "title": "Land Rover Range Rover Velar 2.0D I4 D200 MHEV Dynamic SE AWD A/T", "price": 49990, "price_gross": 49990, "fair_price": 47510.0, "discount_pct": -5.2, "verdict": "férová cena", "year": 2024, "km": 45000, "km_per_year": 19300.0, "eg": "D180 / D200 diesel 132–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Nitra", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-Am1KWhZe7Z-", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-velar-20i-i4-p400e-phev-dynamic-se-awd-at/Am1KWhZe7Z-/", "title": "Land Rover Range Rover Velar 2.0i I4 P400e PHEV Dynamic SE AWD A/T", "price": 83990, "price_gross": 83990, "fair_price": 79630.0, "discount_pct": -5.5, "verdict": "férová cena", "year": 2025, "km": 3300, "km_per_year": 2500.0, "eg": "Plug-in hybrid P400e", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AmG_p_L5-tp", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-velar-30d-v6-sd6-300k-r-dynamic-awd-at-221-kw-a8-aj-na-splatky/AmG_p_L5-tp/", "title": "Land Rover Range Rover Velar 3.0D V6 SD6 300k R-Dynamic AWD A/T, 221 kW, A8 / AJ NA SPLÁTKY", "price": 26990, "price_gross": 26990, "fair_price": 25520.0, "discount_pct": -5.7, "verdict": "férová cena", "year": 2018, "km": 199320, "km_per_year": 23900.0, "eg": "D240 / D275 / D300 diesel 177–221 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197601070", "url": "https://auto.bazos.sk/inzerat/197601070/land-rover-range-rover-velar-30d-v6-sd6-r-dynamic-awd-2018.php", "price": 26990}], "body": "suv"}, {"id": "ab-Ab-deBeD0mJ", "url": "https://www.autobazar.eu/detail/range-rover-velar-belgravia-edition-d200-awd-automat-mhev/Ab-deBeD0mJ/", "title": "Land Rover Range Rover Velar 2.0D I4 D200 MHEV Dynamic SE AWD A/T", "price": 71990, "price_gross": 71990, "fair_price": 67680.0, "discount_pct": -6.4, "verdict": "férová cena", "year": 2026, "km": 5000, "km_per_year": 15000.0, "eg": "D180 / D200 diesel 132–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Nitra", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AmJvbClYuHr", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-velar-20i-i4-p400e-phev-dynamic-se-awd-at/AmJvbClYuHr/", "title": "Land Rover Range Rover Velar 2.0i I4 P400e PHEV Dynamic SE AWD A/T", "price": 79900, "price_gross": 79900, "fair_price": 74970.0, "discount_pct": -6.6, "verdict": "férová cena", "year": 2025, "km": 14600, "km_per_year": 11000.0, "eg": "Plug-in hybrid P400e", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-Amjrg7T3ID_", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-velar-20-land-rover/Amjrg7T3ID_/", "title": "Land Rover Range Rover Velar 2,0 LAND ROVER", "price": 25990, "price_gross": 25990, "fair_price": 24280.0, "discount_pct": -7.1, "verdict": "nad trhom", "year": 2019, "km": 180000, "km_per_year": 24500.0, "eg": "P250 / P300 / P380 / P400 benzín 184–294 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Žilina", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "197672721", "url": "https://auto.bazos.sk/inzerat/197672721/land-rover-rage-rover-velar-20-td4-r-dynamic.php", "title": "Land Rover Rage Rover Velar 2.0 TD4 R-Dynamic", "price": 21900, "price_gross": 21900, "fair_price": 20390.0, "discount_pct": -7.4, "verdict": "nad trhom", "year": 2017, "km": 192747, "km_per_year": 20700.0, "eg": "D180 / D200 diesel 132–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Martin", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmX5xXU7uBC", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-velar-20d-td4-r-dynamic-base-awd-at/AmX5xXU7uBC/", "price": 21900}], "body": "suv"}, {"id": "ab-AmJxBN7YxJU", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-velar-30d-i6-d300-mhev-r-dynamic-hse-awd-at/AmJxBN7YxJU/", "title": "Land Rover Range Rover Velar 3.0D I6 D300 MHEV R-Dynamic HSE AWD A/T", "price": 44990, "price_gross": 44990, "fair_price": 41770.0, "discount_pct": -7.7, "verdict": "nad trhom", "year": 2022, "km": 137000, "km_per_year": 31600.0, "eg": "P250 / P300 / P380 / P400 benzín 184–294 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Levice", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "ab-AmiXa6WFGjR", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-velar-20d-i4-d200-mhev-r-dynamic-se-awd-a-t/AmiXa6WFGjR/", "title": "Land Rover Range Rover Velar 2.0D I4 D200 MHEV R-Dynamic SE AWD A/T", "price": 39880, "price_gross": 39880, "fair_price": 36920.0, "discount_pct": -8.0, "verdict": "nad trhom", "year": 2021, "km": 61000, "km_per_year": 11400.0, "eg": "D180 / D200 diesel 132–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava-Nové Mesto", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AmqzEc23yf6", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-velar-20d-i4-d200-dynamic-se/AmqzEc23yf6/", "title": "Land Rover Range Rover Velar 2.0D I4 D200 Dynamic SE", "price": 73990, "price_gross": 73990, "fair_price": 68400.0, "discount_pct": -8.2, "verdict": "nad trhom", "year": 2025, "km": 4600, "km_per_year": 3500.0, "eg": "D180 / D200 diesel 132–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Žilina", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AmGdRKoRv69", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-velar-r-dynamic-awd-a-t-8-plusf1-full-servisgarancia-92tkmoverene-vozidlo/AmGdRKoRv69/", "title": "Land Rover Range Rover Velar R-DYNAMIC AWD A/T 8*+F1 FULL SERVIS=GARANCIA 92TKM=OVERENÉ VOZIDLO", "price": 28999, "price_gross": 28999, "fair_price": 26540.0, "discount_pct": -9.3, "verdict": "nad trhom", "year": 2018, "km": 92069, "km_per_year": 11000.0, "eg": "D240 / D275 / D300 diesel 177–221 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Martin", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "suv"}, {"id": "196392439", "url": "https://auto.bazos.sk/inzerat/196392439/land-rover-range-rover-velar-30d-v6-300-ps-4wd-r-dynamic-se.php", "title": "Land Rover Range Rover Velar 3.0D V6 300 PS 4WD R-Dynamic SE", "price": 32999, "price_gross": 32999, "fair_price": 29410.0, "discount_pct": -12.2, "verdict": "nad trhom", "year": 2019, "km": 142868, "km_per_year": 19500.0, "eg": "D240 / D275 / D300 diesel 177–221 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Kežmarok", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmToaReA_Nk", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-velar-30d-v6-300-ps-4wd-r-dynamic-se/AmToaReA_Nk/", "price": 32999}], "body": "suv"}, {"id": "ab-AmeYcVqgDIUU", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-velar-r-dynamic-awd-a-t-8-plusf1-full-servisgarancia-92tkmoverene-vozidlo/AmeYcVqgDIUU/", "title": "Land Rover Range Rover Velar R-Dynamic AWD A/T 8*+F1 FULL SERVIS=GARANCIA 92TKM=OVERENÉ VOZIDLO", "price": 29999, "price_gross": 29999, "fair_price": 26540.0, "discount_pct": -13.0, "verdict": "nad trhom", "year": 2018, "km": 92069, "km_per_year": 11000.0, "eg": "D240 / D275 / D300 diesel 177–221 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Martin", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "suv"}, {"id": "197366316", "url": "https://auto.bazos.sk/inzerat/197366316/range-rover-velar-20d-i4-s-awd-at-177-kw-a8-2017.php", "title": "Range Rover Velar 2.0D I4 S AWD A/T, 177 kW, A8, 2017", "price": 25499, "price_gross": 25499, "fair_price": 22490.0, "discount_pct": -13.4, "verdict": "nad trhom", "year": 2017, "km": 167191, "km_per_year": 17900.0, "eg": "D240 / D275 / D300 diesel 177–221 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Námestovo", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmML3Lg32E1", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-velar-20d-i4-s-awd-at-177-kw-a8-aj-na-splatky-protiucet/AmML3Lg32E1/", "price": 25499}], "body": "suv"}, {"id": "ab-AmybmBGdGYQ", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-velar-30d-i6-d300-mhev-dynamic-se-awd-at/AmybmBGdGYQ/", "title": "Land Rover Range Rover Velar 3.0D I6 D300 MHEV Dynamic SE AWD A/T", "price": 89990, "price_gross": 89990, "fair_price": 78970.0, "discount_pct": -14.0, "verdict": "nad trhom", "year": 2025, "km": 18000, "km_per_year": 13500.0, "eg": "P250 / P300 / P380 / P400 benzín 184–294 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "ab-AmE-23LmQIj", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-velar-p400-r-dynamic-awd-acc/AmE-23LmQIj/", "title": "Land Rover Range Rover Velar P400 R-Dynamic PHEV AWD ACC", "price": 48999, "price_gross": 48999, "fair_price": 42770.0, "discount_pct": -14.6, "verdict": "nad trhom", "year": 2022, "km": 73300, "km_per_year": 16900.0, "eg": "Plug-in hybrid P400e", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Banská Bystrica", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazos", "id": "197337036", "url": "https://auto.bazos.sk/inzerat/197337036/land-rover-range-rover-velar-p400-r-dynamic-phev-awd-acc.php", "price": 48999}], "body": "suv"}, {"id": "ab-AeKpuQKp-op", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-velar-r-dynamic-se-awd-240-ps-meridian-servis-lr-dph/AeKpuQKp-op/", "title": "Land Rover Range Rover Velar R-Dynamic SE 240PS ODPOČET DPH", "price": 27900, "price_gross": 27900, "fair_price": 24080.0, "discount_pct": -15.9, "verdict": "výrazne nad trhom", "year": 2019, "km": 149688, "km_per_year": 20400.0, "eg": "D240 / D275 / D300 diesel 177–221 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava-Ružinov", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "195885462", "url": "https://auto.bazos.sk/inzerat/195885462/range-rover-velar-r-dynamic-se-awd-240ps-meridian-dph.php", "price": 27900}], "body": "suv"}, {"id": "ab-AeyZhxYDjtZ", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-velar-s180/AeyZhxYDjtZ/", "title": "Land Rover Range Rover Velar S180", "price": 28500, "price_gross": 28500, "fair_price": 24430.0, "discount_pct": -16.7, "verdict": "výrazne nad trhom", "year": 2019, "km": 111165, "km_per_year": 15200.0, "eg": "D180 / D200 diesel 132–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Dolný Kubín", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "196438810", "url": "https://auto.bazos.sk/inzerat/196438810/land-rover-range-rover-velar-20d-i4-r-dynamic-s-awd-at.php", "title": "Land Rover Range Rover Velar 2.0D I4 R-Dynamic S AWD A/T", "price": 33990, "price_gross": 33990, "fair_price": 29130.0, "discount_pct": -16.7, "verdict": "výrazne nad trhom", "year": 2019, "km": 86050, "km_per_year": 11700.0, "eg": "D240 / D275 / D300 diesel 177–221 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Martin", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmI9xXt_svf", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-velar-20d-i4-r-dynamic-s-awd-a-t/AmI9xXt_svf/", "price": 33990}], "body": "suv"}, {"id": "ab-AemU-G4z9qF", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-velar-30d-4x4/AemU-G4z9qF/", "title": "Land Rover Range Rover Velar 3.0D 4x4", "price": 44900, "price_gross": 44900, "fair_price": 38490.0, "discount_pct": -16.7, "verdict": "výrazne nad trhom", "year": 2022, "km": 137000, "km_per_year": 31600.0, "eg": "D240 / D275 / D300 diesel 177–221 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Levice", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "197432444", "url": "https://auto.bazos.sk/inzerat/197432444/range-rover-velar-r-dynamic-30-bitdi-221kw.php", "title": "Range Rover Velar R-Dynamic 3.0 BiTdi 221kw", "price": 30499, "price_gross": 30499, "fair_price": 25470.0, "discount_pct": -19.7, "verdict": "výrazne nad trhom", "year": 2019, "km": 158000, "km_per_year": 21500.0, "eg": "P250 / P300 / P380 / P400 benzín 184–294 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Košice", "flags": [], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "suv"}, {"id": "196469387", "url": "https://auto.bazos.sk/inzerat/196469387/range-rover-velar-hse-i6.php", "title": "Range Rover Velar HSE i6 - najvyššia výbava", "price": 47900, "price_gross": 47900, "fair_price": 39770.0, "discount_pct": -20.4, "verdict": "výrazne nad trhom", "year": 2021, "km": 106000, "km_per_year": 19900.0, "eg": "D180 / D200 diesel 132–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Trnava", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "197696857", "url": "https://auto.bazos.sk/inzerat/197696857/land-rover-range-rover-velar.php", "title": "Land Rover Range Rover Velar", "price": 34900, "price_gross": 34900, "fair_price": 28770.0, "discount_pct": -21.3, "verdict": "výrazne nad trhom", "year": 2020, "km": 183000, "km_per_year": 28900.0, "eg": "P250 / P300 / P380 / P400 benzín 184–294 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Žarnovica", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "suv"}, {"id": "ab-AmQWTjRa-bv", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-velar-20d-i4-d200-mhev-dynamic-se-awd-at/AmQWTjRa-bv/", "title": "Land Rover Range Rover Velar 2.0D I4 D200 MHEV Dynamic SE AWD A/T", "price": 79990, "price_gross": 79990, "fair_price": 65090.0, "discount_pct": -22.9, "verdict": "výrazne nad trhom", "year": 2025, "km": 2500, "km_per_year": 1900.0, "eg": "D180 / D200 diesel 132–150 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "197242761", "url": "https://auto.bazos.sk/inzerat/197242761/land-rover-range-rover-velar-r-dynamic-at8-221kw-2017.php", "title": "Land Rover Range Rover Velar R Dynamic AT/8 221kW 2017", "price": 31490, "price_gross": 31490, "fair_price": 25090.0, "discount_pct": -25.5, "verdict": "výrazne nad trhom", "year": 2017, "km": 146128, "km_per_year": 15700.0, "eg": "D240 / D275 / D300 diesel 177–221 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Trnava", "flags": [], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [{"source": "autobazar", "id": "ab-AmsSdt9lQP6", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-velar-r-dynamic-at8-221kw-2017-aj-na-splatky-protiucet/AmsSdt9lQP6/", "price": 31490}], "body": "suv"}, {"id": "ab-AmHXtHnEdFz", "url": "https://www.autobazar.eu/detail/land-rover-range-rover-velar-50-v8-svab-dynamic-awd-at/AmHXtHnEdFz/", "title": "Land Rover Range Rover Velar 5.0 V8 SVAB Dynamic AWD A/T", "price": 49990, "price_gross": 49990, "fair_price": 37920.0, "discount_pct": -31.8, "verdict": "výrazne nad trhom", "year": 2020, "km": 65200, "km_per_year": 10300.0, "eg": "P250 / P300 / P380 / P400 benzín 184–294 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}];
+const GROUPS = ["Benzín", "Diesel", "Plug-in hybrid", "LPG a nezistený"];
+const BODY = {"suv": "SUV"};
+const fmt = n => Math.round(n).toLocaleString("sk-SK");
+const eur = n => fmt(n) + " €";
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const TRANS = {automatic: "automat", manual: "manuál"};
+const SRC = {bazos: "bazoš", autobazar: "autobazar.eu", bazarsk: "bazar.sk"};
+
+// --- theme toggle ---------------------------------------------------------
+document.getElementById("themeBtn").onclick = () => {
+  const root = document.documentElement;
+  const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  drawChart();
+};
+
+// --- scatter chart --------------------------------------------------------
+const legend = document.getElementById("legend");
+legend.innerHTML = GROUPS.map((g, i) => `<span><i style="background:var(--s${i+1})"></i>${g}</span>`).join("")
+  + `<span><i class="ring"></i>odporúčaná ponuka</span>`;
+
+function drawChart() {
+  const svg = document.getElementById("chart"), wrap = document.getElementById("chartWrap"), tip = document.getElementById("tip");
+  const W = svg.clientWidth, H = 420, m = {l: 56, r: 16, t: 10, b: 40};
+  const pts = DATA.filter(d => d.km && d.price_gross);
+  const xMax = Math.ceil(Math.max(...pts.map(d => d.km)) / 50000) * 50000;
+  const yMax = Math.ceil(Math.max(...pts.map(d => d.price_gross)) / 5000) * 5000;
+  const x = v => m.l + v / xMax * (W - m.l - m.r), y = v => H - m.b - v / yMax * (H - m.t - m.b);
+  let s = "";
+  for (let v = 0; v <= yMax; v += 5000)
+    s += `<line x1="${m.l}" x2="${W-m.r}" y1="${y(v)}" y2="${y(v)}" stroke="var(--grid)"/><text x="${m.l-8}" y="${y(v)+4}" text-anchor="end">${v/1000} tis. €</text>`;
+  const step = W < 520 ? 100000 : 50000;
+  for (let v = 0; v <= xMax; v += step)
+    s += `<text x="${x(v)}" y="${H-m.b+18}" text-anchor="middle">${v/1000} tis.</text>`;
+  s += `<text x="${(W+m.l)/2}" y="${H-6}" text-anchor="middle">nájazd (km)</text>`;
+  const order = [...pts].sort((a, b) => (a.pick ? 1 : 0) - (b.pick ? 1 : 0));
+  order.forEach(d => {
+    const cx = x(d.km), cy = y(d.price_gross);
+    if (d.pick) s += `<circle cx="${cx}" cy="${cy}" r="9" fill="none" stroke="var(--text)" stroke-width="2"/>`;
+    s += `<circle class="pt" data-id="${d.id}" cx="${cx}" cy="${cy}" r="5" fill="var(--s${d.cg+1})" stroke="var(--surface)" stroke-width="2"/>`;
+  });
+  // invisible bigger hit targets
+  order.forEach(d => s += `<circle class="hit" data-id="${d.id}" cx="${x(d.km)}" cy="${y(d.price_gross)}" r="11" fill="transparent" style="cursor:pointer"/>`);
+  svg.innerHTML = s;
+  const byId = Object.fromEntries(pts.map(d => [d.id, d]));
+  svg.querySelectorAll(".hit").forEach(c => {
+    c.onmouseenter = c.onmousemove = ev => {
+      const d = byId[c.dataset.id];
+      tip.innerHTML = `<b>${esc(d.title)}</b>
+        <div class="row"><span>Cena</span><span>${eur(d.price_gross)}</span></div>
+        <div class="row"><span>Férová cena</span><span>${eur(d.fair_price)}</span></div>
+        <div class="row"><span>Pod trhom</span><span>${d.discount_pct > 0 ? "+" : ""}${d.discount_pct.toLocaleString("sk-SK")} %</span></div>
+        <div class="row"><span>Zdroj</span><span>${SRC[d.source]}${d.also_listed.length ? " + " + d.also_listed.map(a => SRC[a.source]).join(", ") : ""}</span></div>
+        <div class="row"><span>Rok · km</span><span>${d.year} · ${fmt(d.km)}</span></div>
+        <div class="row"><span>Motor</span><span>${esc(d.eg)} ${TRANS[d.transmission] || ""}</span></div>`;
+      tip.style.display = "block";
+      const r = wrap.getBoundingClientRect();
+      let lx = ev.clientX - r.left + 14, ly = ev.clientY - r.top + 14;
+      if (lx + 290 > r.width) lx = ev.clientX - r.left - 290;
+      tip.style.left = lx + "px"; tip.style.top = ly + "px";
+    };
+    c.onmouseleave = () => tip.style.display = "none";
+    c.onclick = () => window.open(byId[c.dataset.id].url, "_blank", "noopener");
+  });
+}
+drawChart();
+addEventListener("resize", drawChart);
+
+// --- full table -----------------------------------------------------------
+const fEngine = document.getElementById("fEngine");
+[...new Set(DATA.map(d => d.eg))].sort().forEach(g => fEngine.insertAdjacentHTML("beforeend", `<option>${esc(g)}</option>`));
+let sortK = "discount_pct", sortDir = -1;
+function discCell(v) {
+  const w = Math.min(Math.abs(v), 30) / 30 * 50;
+  const bar = v >= 0 ? `left:50%;width:${w}%;background:var(--pos)` : `right:50%;width:${w}%;background:var(--neg)`;
+  return `<span class="disc">${v > 0 ? "+" : ""}${v.toLocaleString("sk-SK")} %<span class="dbar"><span style="${bar}"></span></span></span>`;
+}
+function renderTable() {
+  const max = parseFloat(document.getElementById("fMax").value) || Infinity;
+  const tr = document.getElementById("fTrans").value, se = document.getElementById("fSeller").value, en = fEngine.value;
+  const so = document.getElementById("fSource").value, og = document.getElementById("fOrigin").value;
+  const bo = document.getElementById("fBody").value;
+  const rows = DATA.filter(d => (!en || d.eg === en) && (!tr || d.transmission === tr)
+    && (!se || d.seller_type !== "dealer") && d.price_gross <= max
+    && (!so || d.source === so || d.also_listed.some(a => a.source === so)) && (!og || d.origin === og) && (!bo || d.body === bo))
+    .sort((a, b) => { const A = a[sortK], B = b[sortK]; return (typeof A === "string" ? A.localeCompare(B) : A - B) * sortDir; });
+  document.getElementById("count").textContent = `${rows.length} z ${DATA.length} inzerátov`;
+  document.querySelector("#tbl tbody").innerHTML = rows.map(d => `<tr>
+    <td><a href="${d.url}" target="_blank" rel="noopener">${esc(d.title)}</a> ${d.pick ? '<span class="badge pick">odporúčané</span>' : ""}
+      <div class="sub">${BODY[d.body] || "karoséria ?"} · ${esc(d.eg)} · ${TRANS[d.transmission] || "prevodovka ?"} · ${esc(d.location)} · ${d.seller_type === "dealer" ? "predajca/firma" : d.seller_type === "private" ? "súkromník" : "neisté"} · ${SRC[d.source]}${d.origin === "SR" ? " · kúpené v SR" : d.origin === "dovoz" ? " · dovoz" : ""}${d.also_listed.map(a => ` · <a href="${a.url}" target="_blank" rel="noopener">aj na ${SRC[a.source]}</a>`).join("")}</div>
+      ${d.flags.filter(f => !f.startsWith("prevodovka")).map(f => `<div class="flag">⚠ ${esc(f)}</div>`).join("")}</td>
+    <td class="num">${d.year}</td><td class="num">${fmt(d.km)}</td>
+    <td class="num">${eur(d.price_gross)}</td><td class="num">${eur(d.fair_price)}</td>
+    <td class="num">${discCell(d.discount_pct)}</td></tr>`).join("");
+  document.querySelectorAll("#tbl th.sortable").forEach(th => {
+    const base = th.textContent.replace(/ [▾▴]$/, "");
+    th.textContent = base + (th.dataset.k === sortK ? (sortDir < 0 ? " ▾" : " ▴") : "");
+  });
+}
+document.querySelectorAll("#tbl th.sortable").forEach(th => th.onclick = () => {
+  if (sortK === th.dataset.k) sortDir *= -1; else { sortK = th.dataset.k; sortDir = th.dataset.k === "title" ? 1 : -1; }
+  renderTable();
+});
+["fEngine", "fTrans", "fSeller", "fSource", "fBody", "fOrigin", "fMax"].forEach(id => document.getElementById(id).addEventListener("input", renderTable));
+renderTable();
+</script>
+<!-- ferovka-theme --><script defer src="/analytics-config.js"></script><script defer src="/analytics.js"></script><script id="ferovka-chart">/* Férovka – chart → ad links, injected into every report by sync-reports.mjs.
+ *
+ * The reports draw one invisible 11px "hit" circle per ad. In dense charts (and always on a narrow phone) those
+ * circles overlap and the one drawn last wins, so a click/tap often opened a neighbouring ad. Here the pointer is
+ * always resolved to the NEAREST point, the report's own tooltip is shown for that point, and a click opens its ad.
+ * Touch: the first tap shows the tooltip (with a hint), a second tap on the same point opens the ad.
+ */
+(() => {
+  let rows;
+  try { rows = DATA; } catch { return; } // eslint-disable-line no-undef
+  if (!Array.isArray(rows) || !rows.length || !("url" in rows[0])) return;
+  const byId = new Map(rows.map((d) => [String(d.id), d]));
+  const MOUSE = ["mouseover", "mouseout", "mouseenter", "mouseleave", "mousemove", "mousedown", "mouseup", "click"];
+  let lastPointer = "mouse", down = null;
+  // the finger position as it was – Chrome "snaps" the later click of a tap to the centre of a nearby clickable element
+  addEventListener("pointerdown", (e) => { lastPointer = e.pointerType || "mouse"; down = { clientX: e.clientX, clientY: e.clientY }; }, true);
+
+  // the old per-point hit circles must not be targets (they overlap, and touch snapping aims at them)
+  document.head.insertAdjacentHTML("beforeend", "<style>svg circle.hit[data-id],svg circle.pt[data-id]{pointer-events:none}</style>");
+
+  function nearest(svg, ev, radius) {
+    let best = null, bd = Infinity;
+    for (const c of svg.querySelectorAll("circle.pt[data-id]")) {
+      const r = c.getBoundingClientRect();
+      const dx = r.left + r.width / 2 - ev.clientX, dy = r.top + r.height / 2 - ev.clientY;
+      const d = dx * dx + dy * dy;
+      if (d <= bd) { bd = d; best = c; } // ties: the point drawn on top (later) wins – that is the one you see
+    }
+    return best && bd <= radius * radius ? best : null;
+  }
+
+  function bind(svg) {
+    if (svg.__fvLinks) return;
+    svg.__fvLinks = true;
+    let current = null, armed = null;
+    const hitOf = (pt) => pt && svg.querySelector(`circle.hit[data-id="${CSS.escape(pt.dataset.id)}"]`);
+    const fire = (el, type, ev) => {
+      if (!el) return;
+      const e = new MouseEvent(type, { clientX: ev.clientX, clientY: ev.clientY, bubbles: false });
+      e.__fv = true;
+      el.dispatchEvent(e);
+    };
+    const tip = () => (svg.parentElement && svg.parentElement.querySelector("#tip, .tip")) || document.getElementById("tip");
+    const mark = (pt) => {
+      if (current === pt) return;
+      if (current) current.setAttribute("r", current.__r || "5");
+      current = pt;
+      if (pt) { pt.__r = pt.__r || pt.getAttribute("r"); pt.setAttribute("r", String(+pt.__r + 2)); }
+    };
+    const show = (pt, ev, hint) => {
+      mark(pt);
+      if (!pt) { const t = tip(); if (t) t.style.display = "none"; return; }
+      fire(hitOf(pt), "mousemove", ev); // the report's own tooltip, for the nearest point
+      const t = tip();
+      if (t && hint) t.insertAdjacentHTML("beforeend", `<div class="fv-hint">Ťukni ešte raz – otvorí sa inzerát ↗</div>`);
+    };
+    const open = (pt) => {
+      const d = byId.get(pt.dataset.id);
+      if (d && d.url) {
+        try { window.FerovkaAnalytics?.listingClick(d.url, "chart"); } catch { /* analytics must never block an ad */ }
+        window.open(d.url, "_blank", "noopener");
+      }
+    };
+
+    // the per-circle handlers of the report never see real mouse events – only our synthetic ones
+    for (const type of MOUSE) {
+      svg.addEventListener(type, (ev) => {
+        if (ev.__fv) return;
+        ev.stopImmediatePropagation();
+        if (type === "mousemove" && lastPointer === "mouse") {
+          show(nearest(svg, ev, 18), ev, false);
+          svg.style.cursor = current ? "pointer" : "";
+        } else if (type === "mouseleave" && ev.target === svg && lastPointer === "mouse") {
+          show(null, ev);
+        } else if (type === "click") {
+          const touch = lastPointer !== "mouse";
+          const at = touch && down ? down : ev;
+          const pt = nearest(svg, at, touch ? 26 : 18);
+          if (!pt) { armed = null; show(null, ev); return; }
+          if (!touch || armed === pt) { armed = null; open(pt); }
+          else { armed = pt; show(pt, at, true); }
+        }
+      }, true);
+    }
+  }
+
+  const scan = () => document.querySelectorAll("svg").forEach((s) => s.querySelector("circle.pt[data-id]") && bind(s));
+  scan();
+  new MutationObserver(scan).observe(document.body, { childList: true, subtree: true });
+})();
+</script><script id="ferovka-filters">/* Férovka – filters for the whole report, injected into every model report by sync-reports.mjs.
+ *
+ * The reports render the chart (drawChart) and the full ranking (renderTable) from the global DATA array; their own
+ * filter bar only filters the table. Here the filter bar (kept in its place above the ranking) gets more filters (year, price from/to,
+ * km, fuel, discount, picks only, text search) and every filter applies to the chart and the ranking together: DATA is
+ * refilled in place with the matching ads and both are drawn again. "</script" can't occur inside this file.
+ */
+(() => {
+  let data;
+  try { data = DATA; } catch { return; } // eslint-disable-line no-undef
+  if (!Array.isArray(data) || !data.length || typeof renderTable !== "function") return; // eslint-disable-line no-undef
+  const bar = document.querySelector(".filters");
+  if (!bar || bar.dataset.fv) return;
+  bar.dataset.fv = "1";
+  const ALL = data.slice();
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+  const fmt = (n) => Math.round(n).toLocaleString("sk-SK");
+  const norm = (s) => String(s ?? "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+  let groups = null;
+  try { groups = GROUPS; } catch { /* report without groups */ } // eslint-disable-line no-undef
+
+  const FUEL = { diesel: "Diesel", petrol: "Benzín", hybrid: "Hybrid", "plug-in hybrid": "Plug-in hybrid", electric: "Elektro", lpg: "LPG", cng: "CNG" };
+  const fuelOf = (d) => {
+    const e = norm(d.eg);
+    if (/tdi|crdi|dci|hdi|diesel|\bd\b|cdi|\d+d\b|blue/.test(e)) return "Diesel";
+    if (/plug-in|phev|e-hybrid|recharge|\bgte\b|\bt8\b|\b\d{2}e\b|\b\d{3} ?e\b/.test(e)) return "Plug-in hybrid";
+    if (/elektro|electric|\bev\b/.test(e)) return "Elektro";
+    if (/cng|lpg|g-tec|g-tron|tgi|ecofuel/.test(e)) return "Plyn (CNG/LPG)";
+    if (/mild|mhev/.test(e)) return "Benzín"; // mild-hybrid petrol (the diesel ones say TDI / d above)
+    if (/hybrid|hev/.test(e)) return "Hybrid";
+    if (/tsi|tfsi|mpi|fsi|benzin|gdi|dpi|htp|12v|\bt\d\b|\bb[56]\b|\d+i\b|turbo|tce|\bs4\b|rs ?\d|amg|competition|\bm\d{2,3}i?\b|gti|\bx5 m\b/.test(e)) return "Benzín";
+    return d.fuel ? FUEL[d.fuel] || String(d.fuel) : null;
+  };
+
+  // --- controls ---------------------------------------------------------------------------------------------------
+  const years = ALL.map((d) => d.year).filter(Boolean);
+  const yMin = Math.min(...years), yMax = Math.max(...years);
+  const yearOpts = (label) => `<option value="">${label}</option>` +
+    Array.from({ length: yMax - yMin + 1 }, (_, i) => yMax - i).map((y) => `<option>${y}</option>`).join("");
+  const kms = [30000, 50000, 75000, 100000, 150000, 200000, 250000, 300000];
+  const fuels = [...new Set(ALL.map(fuelOf).filter(Boolean))].sort((a, b) => a.localeCompare(b, "sk"));
+  const showGroups = Array.isArray(groups) && groups.length > 1 && ALL.some((d) => Number.isInteger(d.cg));
+
+  const maxInput = $("fMax");
+  if (maxInput) { maxInput.placeholder = "Cena do €"; maxInput.title = "Najvyššia cena (s DPH)"; }
+  const html =
+    `<select id="fvYearFrom" title="Rok výroby od">${yearOpts("Rok od")}</select>` +
+    `<select id="fvYearTo" title="Rok výroby do">${yearOpts("Rok do")}</select>` +
+    `<input id="fvPriceMin" type="number" placeholder="Cena od €" step="500" min="0" title="Najnižšia cena (s DPH)" style="width:110px">`;
+  if (maxInput) maxInput.insertAdjacentHTML("beforebegin", html);
+  else bar.insertAdjacentHTML("afterbegin", html);
+  const more =
+    `<select id="fvKm" title="Najviac najazdených km"><option value="">Nájazd – všetky</option>${kms.map((k) => `<option value="${k}">do ${fmt(k)} km</option>`).join("")}</select>` +
+    (fuels.length > 1 ? `<select id="fvFuel" title="Palivo"><option value="">Všetky palivá</option>${fuels.map((f) => `<option>${esc(f)}</option>`).join("")}</select>` : "") +
+    (showGroups ? `<select id="fvGroup" title="Skupina motorov (farba v grafe)"><option value="">Všetky skupiny</option>${groups.map((g, i) => `<option value="${i}">${esc(g)}</option>`).join("")}</select>` : "") +
+    `<select id="fvDisc" title="O koľko je auto lacnejšie ako férová cena"><option value="">Cena – všetky</option><option value="0">pod férovou cenou</option><option value="10">aspoň 10 % pod trhom</option><option value="20">aspoň 20 % pod trhom</option></select>` +
+    `<input id="fvText" type="search" placeholder="Hľadať (výbava, mesto…)" title="Hľadá v názve inzerátu, motore a lokalite" style="width:170px">` +
+    `<label class="fv-check"><input id="fvPick" type="checkbox"> len odporúčané</label>` +
+    `<button type="button" id="fvReset" class="fv-reset">Zrušiť filtre</button>`;
+  const count = $("count");
+  if (count) count.insertAdjacentHTML("beforebegin", more);
+  else bar.insertAdjacentHTML("beforeend", more);
+
+  // the bar stays where it was – right above the ranking – and also drives the chart; the chart gets a pointer to it
+  const chart = $("chartWrap");
+  const box = document.createElement("div");
+  box.className = "fv-filters";
+  box.id = "filtre";
+  bar.before(box);
+  box.innerHTML = `<div class="fv-head"><b>Filtre</b><span>platia pre rebríček aj graf vyššie</span></div>`;
+  box.appendChild(bar);
+  const note = document.createElement("div");
+  note.className = "fv-note";
+  chart?.before(note);
+
+  document.head.insertAdjacentHTML("beforeend", `<style id="fv-filters-css">
+.fv-filters{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 14px 4px;margin:24px 0 8px}
+.fv-filters .fv-head{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;margin-bottom:8px}
+.fv-filters .fv-head span{color:var(--muted);font-size:13px}
+.fv-filters .filters{margin-bottom:8px}
+.fv-filters .filters .count{flex-basis:100%;margin-left:0}
+.fv-check{display:inline-flex;gap:6px;align-items:center;font-size:13px;color:var(--text-2,var(--text));white-space:nowrap}
+.fv-reset{background:none;border:1px solid var(--border);color:var(--text);border-radius:8px;padding:6px 10px;font:inherit;font-size:13px;cursor:pointer}
+.fv-reset:hover{background:var(--surface-2,var(--surface))}
+.fv-note{color:var(--muted);font-size:13px;margin:0 0 8px}
+.fv-note a{color:inherit}
+.fv-empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:14px;pointer-events:none}
+@media (max-width:600px){.fv-filters .filters select,.fv-filters .filters input[type=number],.fv-filters .filters input[type=search]{flex:1 1 calc(50% - 8px);min-width:0;width:auto!important}}
+</style>`);
+
+  // --- filtering --------------------------------------------------------------------------------------------------
+  const val = (id) => ($(id) ? $(id).value : "");
+  const num = (id) => { const v = parseFloat(val(id)); return Number.isFinite(v) ? v : null; };
+  function matches(d) {
+    const yf = num("fvYearFrom"), yt = num("fvYearTo"), pmin = num("fvPriceMin"), pmax = num("fMax"), km = num("fvKm"), disc = num("fvDisc");
+    const fuel = val("fvFuel"), grp = val("fvGroup"), q = norm(val("fvText")).trim();
+    if (yf != null && !(d.year >= yf)) return false;
+    if (yt != null && !(d.year <= yt)) return false;
+    if (pmin != null && !(d.price_gross >= pmin)) return false;
+    if (pmax != null && !(d.price_gross <= pmax)) return false;
+    if (km != null && !(d.km <= km)) return false;
+    if (disc != null && !(d.discount_pct > disc || (disc > 0 && d.discount_pct >= disc))) return false;
+    if (fuel && fuelOf(d) !== fuel) return false;
+    if (grp !== "" && String(d.cg) !== grp) return false;
+    if ($("fvPick")?.checked && !d.pick) return false;
+    if (q && !q.split(/\s+/).every((w) => norm(`${d.title} ${d.eg ?? ""} ${d.engine ?? ""} ${d.location ?? ""}`).includes(w))) return false;
+    // the report's own filters (engine, gearbox, seller, portal, body, origin) – same rules as its renderTable
+    const en = val("fEngine"), tr = val("fTrans"), se = val("fSeller"), so = val("fSource"), og = val("fOrigin"), bo = val("fBody");
+    if (en && d.eg !== en) return false;
+    if (tr && d.transmission !== tr) return false;
+    if (se && d.seller_type === "dealer") return false;
+    if (so && !(d.source === so || (d.also_listed || []).some((a) => a.source === so))) return false;
+    if (og && d.origin !== og) return false;
+    if (bo && d.body !== bo) return false;
+    return true;
+  }
+  const active = () => [...box.querySelectorAll("select, input")].filter((el) => (el.type === "checkbox" ? el.checked : el.value !== "")).length;
+
+  let drawing = false;
+  function apply() {
+    if (drawing) return;
+    drawing = true;
+    const rows = ALL.filter(matches);
+    data.length = 0;
+    data.push(...rows);
+    const wrap = $("chartWrap");
+    wrap?.querySelector(".fv-empty")?.remove();
+    const plotted = rows.filter((d) => d.km && d.price_gross).length;
+    try {
+      if (typeof drawChart === "function") { // eslint-disable-line no-undef
+        if (plotted) drawChart(); // eslint-disable-line no-undef
+        else { const svg = $("chart"); if (svg) svg.innerHTML = ""; }
+      }
+    } catch (e) { console.warn("chart", e); }
+    if (wrap && !plotted) {
+      if (getComputedStyle(wrap).position === "static") wrap.style.position = "relative";
+      wrap.insertAdjacentHTML("beforeend", `<div class="fv-empty">Filtrom nezodpovedá žiadny inzerát</div>`);
+    }
+    try { renderTable(); } catch (e) { console.warn("table", e); } // eslint-disable-line no-undef
+    const n = active();
+    if (count) count.textContent = `Zobrazených ${fmt(rows.length)} z ${fmt(ALL.length)} inzerátov` + (n ? ` · aktívne filtre: ${n}` : "");
+    note.innerHTML = n
+      ? `Zobrazených ${fmt(rows.length)} z ${fmt(ALL.length)} inzerátov podľa <a href="#filtre">filtrov pri rebríčku</a>.`
+      : `Filtre (rok, cena, nájazd, palivo…) nájdeš <a href="#filtre">pri kompletnom rebríčku</a> – platia aj pre tento graf.`;
+    drawing = false;
+  }
+  box.querySelectorAll("select, input").forEach((el) => el.addEventListener("input", apply));
+  $("fvPick")?.addEventListener("change", apply);
+  $("fvReset").addEventListener("click", () => {
+    box.querySelectorAll("select, input").forEach((el) => { if (el.type === "checkbox") el.checked = false; else el.value = ""; });
+    apply();
+  });
+  apply();
+})();
+</script><!-- /ferovka-theme -->
+</body>
+</html>

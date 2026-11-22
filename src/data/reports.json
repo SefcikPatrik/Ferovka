@@ -345,7 +345,7 @@
     "median": "10 950 €",
     "r2": "86 %",
     "history": {
-      "updated_at": "2026-11-22T19:28:36",
+      "updated_at": "2026-11-22T20:10:58",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 184,
@@ -377,7 +377,7 @@
     "median": "16 800 €",
     "r2": "92 %",
     "history": {
-      "updated_at": "2026-11-22T19:28:36",
+      "updated_at": "2026-11-22T20:10:58",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 470,
@@ -409,7 +409,7 @@
     "median": "29 490 €",
     "r2": "90 %",
     "history": {
-      "updated_at": "2026-11-22T19:28:36",
+      "updated_at": "2026-11-22T20:10:58",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 112,
@@ -441,7 +441,7 @@
     "median": "18 990 €",
     "r2": "93 %",
     "history": {
-      "updated_at": "2026-11-22T19:28:36",
+      "updated_at": "2026-11-22T20:10:58",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 513,
@@ -473,7 +473,7 @@
     "median": "25 900 €",
     "r2": "95 %",
     "history": {
-      "updated_at": "2026-11-22T19:28:36",
+      "updated_at": "2026-11-22T20:10:58",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 203,
@@ -505,7 +505,7 @@
     "median": "40 750 €",
     "r2": "86 %",
     "history": {
-      "updated_at": "2026-11-22T19:28:36",
+      "updated_at": "2026-11-22T20:10:58",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 17,
@@ -537,7 +537,7 @@
     "median": "18 990 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-22T19:28:36",
+      "updated_at": "2026-11-22T20:10:58",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 196,
@@ -557,6 +557,38 @@
     }
   },
   {
+    "slug": "bmw-x2",
+    "file": "bmw-x2-analyza.html",
+    "name": "BMW X2",
+    "brand": "BMW",
+    "model": "X2",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov BMW X2 (F39 2018–2023 a U10 2024+) od 12 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 155 inzerátov (33 na bazoši, 66 na autobazar.eu, 56 na bazar.sk) – prezreli sme 65 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 78 rôznych áut zo Slovenska.",
+    "ads": 78,
+    "median": "21 950 €",
+    "r2": "94 %",
+    "history": {
+      "updated_at": "2026-11-22T20:10:58",
+      "as_of": "2026-11-22",
+      "coverage": "partial",
+      "baseline_count": 62,
+      "total_count": 62,
+      "active_count": 62,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 62,
+      "paired_median_change_pct": 0,
+      "historical_median": 21950,
+      "seen_median": 21950,
+      "seen_price_count": 62,
+      "last_observed_at": "2026-11-22T20:07:56"
+    }
+  },
+  {
     "slug": "bmw-x3",
     "file": "bmw-x3-analyza.html",
     "name": "BMW X3",
@@ -569,7 +601,7 @@
     "median": "27 499 €",
     "r2": "95 %",
     "history": {
-      "updated_at": "2026-11-22T19:28:36",
+      "updated_at": "2026-11-22T20:10:58",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 186,
@@ -601,7 +633,7 @@
     "median": "28 000 €",
     "r2": "95 %",
     "history": {
-      "updated_at": "2026-11-22T19:28:36",
+      "updated_at": "2026-11-22T20:10:58",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 95,
@@ -633,7 +665,7 @@
     "median": "40 994 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-22T19:28:36",
+      "updated_at": "2026-11-22T20:10:58",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 433,
@@ -665,7 +697,7 @@
     "median": "29 999 €",
     "r2": "96 %",
     "history": {
-      "updated_at": "2026-11-22T19:28:36",
+      "updated_at": "2026-11-22T20:10:58",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 218,
@@ -682,6 +714,38 @@
       "seen_median": 29999,
       "seen_price_count": 218,
       "last_observed_at": "2026-11-22T14:53:20"
+    }
+  },
+  {
+    "slug": "bmw-x7",
+    "file": "bmw-x7-analyza.html",
+    "name": "BMW X7",
+    "brand": "BMW",
+    "model": "X7",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov BMW X7 (G07 2019+, 6 aj 7 miest) od 30 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 289 inzerátov (59 na bazoši, 134 na autobazar.eu, 96 na bazar.sk) – prezreli sme 67 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 152 rôznych áut zo Slovenska.",
+    "ads": 152,
+    "median": "64 990 €",
+    "r2": "93 %",
+    "history": {
+      "updated_at": "2026-11-22T20:10:58",
+      "as_of": "2026-11-22",
+      "coverage": "partial",
+      "baseline_count": 113,
+      "total_count": 113,
+      "active_count": 113,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 113,
+      "paired_median_change_pct": 0,
+      "historical_median": 64990,
+      "seen_median": 64990,
+      "seen_price_count": 113,
+      "last_observed_at": "2026-11-22T20:03:16"
     }
   },
   {
@@ -1783,6 +1847,19 @@
     }
   },
   {
+    "slug": "mercedes-gls",
+    "file": "mercedes-gls-analyza.html",
+    "name": "Mercedes-Benz GLS",
+    "brand": "Mercedes-Benz",
+    "model": "GLS",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Mercedes-Benz GLS (X166 2015–2019 a X167 2019+, 7 miest) od 15 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 253 inzerátov (69 na bazoši, 182 na autobazar.eu, 2 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 190 rôznych áut zo Slovenska.",
+    "ads": 190,
+    "median": "70 000 €",
+    "r2": "93 %"
+  },
+  {
     "slug": "mercedes-s",
     "file": "mercedes-s-analyza.html",
     "name": "Mercedes-Benz S",
@@ -2276,6 +2353,19 @@
     "ads": 219,
     "median": "33 745 €",
     "r2": "98 %"
+  },
+  {
+    "slug": "land-rover-range-rover-velar",
+    "file": "land-rover-range-rover-velar-analyza.html",
+    "name": "Range Rover Velar",
+    "brand": "Range",
+    "model": "Rover Velar",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Range Rover Velar (2017+) od 15 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 1 023 inzerátov (41 na bazoši, 894 na autobazar.eu, 88 na bazar.sk) – prezreli sme 14 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 104 rôznych áut zo Slovenska.",
+    "ads": 104,
+    "median": "30 249 €",
+    "r2": "94 %"
   },
   {
     "slug": "renault-arkana",
