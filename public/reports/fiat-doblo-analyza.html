@@ -1,0 +1,843 @@
+<!doctype html>
+<html lang="sk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fiat Doblo – analýza ponúk</title>
+<style>
+:root {
+  color-scheme: light;
+  --bg: #f6f6f4; --surface: #fcfcfb; --surface-2: #f0efec; --border: #e2e1dc;
+  --text: #0b0b0b; --text-2: #52514e; --muted: #7a7974;
+  --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a;
+  --pos: #2a78d6; --neg: #eb6834; --accent: #2a78d6;
+  --good: #1d7f4e; --bad: #b4332f; --grid: #e8e7e3;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #121211; --surface: #1a1a19; --surface-2: #232321; --border: #33332f;
+    --text: #f0efec; --text-2: #c3c2b7; --muted: #8f8e86;
+    --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+    --pos: #3987e5; --neg: #d95926; --accent: #5598e7;
+    --good: #4cc38a; --bad: #f07a76; --grid: #2a2a27;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #121211; --surface: #1a1a19; --surface-2: #232321; --border: #33332f;
+  --text: #f0efec; --text-2: #c3c2b7; --muted: #8f8e86;
+  --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+  --pos: #3987e5; --neg: #d95926; --accent: #5598e7;
+  --good: #4cc38a; --bad: #f07a76; --grid: #2a2a27;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text);
+  font: 15px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+main { max-width: 1120px; margin: 0 auto; padding: 32px 16px 64px; }
+a { color: var(--accent); text-decoration: none; } a:hover { text-decoration: underline; }
+h1 { font-size: 30px; margin: 0 0 4px; letter-spacing: -.01em; }
+h2 { font-size: 21px; margin: 48px 0 6px; }
+h3 { font-size: 15px; margin: 6px 0 4px; line-height: 1.35; }
+.lead { color: var(--text-2); margin: 0 0 20px; max-width: 760px; }
+.section-lead { color: var(--text-2); margin: 0 0 16px; max-width: 800px; }
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
+.kpi { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+.kpi .v { font-size: 26px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.kpi .l { color: var(--text-2); font-size: 13px; }
+.explain { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; margin-top: 12px; }
+.explain p { margin: 6px 0; color: var(--text-2); }
+.explain b { color: var(--text); }
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; }
+.card-head { display: flex; justify-content: space-between; gap: 8px; font-size: 12px; }
+.tag { font-weight: 600; color: var(--accent); }
+.loc { color: var(--muted); }
+.facts { color: var(--text-2); font-size: 13px; }
+.prices { display: grid; grid-template-columns: 1.2fr 1fr .8fr; gap: 8px; margin: 12px 0 8px; }
+.lbl { display: block; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+.big { font-size: 22px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.mid { font-size: 16px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.good { color: var(--good); }
+.meter { height: 6px; background: var(--surface-2); border-radius: 4px; overflow: hidden; }
+.meter span { display: block; height: 100%; background: var(--s1); border-radius: 4px; }
+.news ul { margin: 6px 0 0; padding-left: 20px; } .news li { margin: 4px 0; } .news .down { color: var(--good, #1baf7a); font-weight: 600; }
+.note { font-size: 12.5px; background: var(--surface-2); border-radius: 6px; padding: 6px 8px; margin-top: 8px; color: var(--text-2); }
+.pc { list-style: none; padding: 0; margin: 10px 0 0; font-size: 13.5px; }
+.pc li { padding-left: 20px; position: relative; margin: 3px 0; }
+.pc li.pro::before { content: "+"; position: absolute; left: 4px; color: var(--good); font-weight: 700; }
+.pc li.con::before { content: "–"; position: absolute; left: 4px; color: var(--bad); font-weight: 700; }
+.subhead { font-size: 15px; color: var(--text-2); margin: 22px 0 10px; font-weight: 600; }
+.chart-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 14px 8px; position: relative; }
+.legend { display: flex; flex-wrap: wrap; gap: 16px; font-size: 13px; color: var(--text-2); margin: 0 0 6px 4px; }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; }
+.legend .ring { background: transparent; border: 2px solid var(--text); width: 12px; height: 12px; }
+svg text { fill: var(--muted); font-size: 11px; }
+.tip { position: absolute; pointer-events: none; background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+  padding: 8px 10px; font-size: 12.5px; box-shadow: 0 6px 20px rgba(0,0,0,.15); max-width: 280px; display: none; z-index: 5; }
+.tip b { display: block; margin-bottom: 2px; }
+.tip .row { display: flex; justify-content: space-between; gap: 12px; color: var(--text-2); }
+.tip .row span:last-child { color: var(--text); font-variant-numeric: tabular-nums; }
+table { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; font-size: 13.5px; }
+th, td { padding: 9px 10px; border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; }
+th { font-size: 12px; color: var(--text-2); font-weight: 600; background: var(--surface-2); white-space: nowrap; }
+th.sortable { cursor: pointer; user-select: none; } th.sortable:hover { color: var(--text); }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+.sub { color: var(--text-2); font-size: 12.5px; margin-top: 2px; }
+.stars { color: #c98500; letter-spacing: 1px; white-space: nowrap; } .stars .off { color: var(--border); }
+.cellbar { height: 5px; background: var(--surface-2); border-radius: 3px; margin-bottom: 4px; }
+.cellbar span { display: block; height: 100%; background: var(--s1); border-radius: 3px; }
+.disc { display: inline-flex; align-items: center; gap: 6px; justify-content: flex-end; }
+.dbar { width: 54px; height: 6px; background: var(--surface-2); border-radius: 3px; position: relative; }
+.dbar span { position: absolute; top: 0; height: 100%; border-radius: 3px; }
+.filters { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 10px; align-items: center; }
+.filters select, .filters input { background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 6px 8px; font: inherit; font-size: 13px; }
+.filters .count { color: var(--muted); font-size: 13px; margin-left: auto; }
+.table-scroll { overflow-x: auto; border-radius: 12px; }
+.badge { font-size: 11px; padding: 1px 6px; border-radius: 10px; background: var(--surface-2); color: var(--text-2); white-space: nowrap; }
+.badge.pick { background: var(--s1); color: #fff; }
+.flag { color: var(--bad); font-size: 12px; }
+.warn { background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--neg); border-radius: 10px; padding: 12px 16px; }
+.warn li { margin: 4px 0; }
+.check { columns: 2 300px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px 14px 34px; margin: 0; }
+.check li { margin: 4px 0; break-inside: avoid; }
+footer { color: var(--muted); font-size: 12.5px; margin-top: 48px; border-top: 1px solid var(--border); padding-top: 14px; }
+.theme-btn { float: right; background: var(--surface); color: var(--text-2); border: 1px solid var(--border); border-radius: 8px; padding: 5px 10px; cursor: pointer; font: inherit; font-size: 13px; }
+@media (max-width: 640px) { h1 { font-size: 24px; } .prices { grid-template-columns: 1fr 1fr 1fr; } .big { font-size: 18px; } th, td { padding: 7px 6px; } }
+</style>
+<!-- ferovka-theme --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"><style id="ferovka-theme">/* Férovka look for the generated analyses – injected by sync-reports.mjs after each report's own <style>.
+   Same palette and type as the site; chart colours (--s1..--s3) stay the validated set. */
+:root {
+  --bg: #f5f4ef; --surface: #fdfdfb; --surface-2: #eeede6; --border: #e1dfd6;
+  --text: #0f1513; --text-2: #4f5551; --muted: #6f746f;
+  --accent: #0b8a56; --good: #0b7a4b; --grid: #e6e4dc; --win: #dff3e9;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d110f; --surface: #151a17; --surface-2: #1d2420; --border: #2a322d;
+    --text: #eef1ec; --text-2: #b6bdb6; --muted: #8f978f;
+    --accent: #2fc583; --good: #4cd08f; --grid: #1f2622; --win: #143223;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d110f; --surface: #151a17; --surface-2: #1d2420; --border: #2a322d;
+  --text: #eef1ec; --text-2: #b6bdb6; --muted: #8f978f;
+  --accent: #2fc583; --good: #4cd08f; --grid: #1f2622; --win: #143223;
+}
+
+body { font-family: "Manrope", system-ui, sans-serif; }
+h1, h2 { letter-spacing: -0.02em; font-weight: 800; }
+.tag { color: var(--accent); }
+
+/* photo header (removed by the site's viewer, which shows its own) */
+.fv-hero { position: relative; margin: 0 0 26px; border-radius: 20px; overflow: hidden; aspect-ratio: 21 / 8; background: #0d110f; display: flex; }
+.fv-hero img { flex: 1; min-width: 0; height: 100%; object-fit: cover; animation: fv-zoom 1.4s cubic-bezier(.2,.7,.2,1) both; }
+.fv-collage img + img { border-left: 3px solid #0d110f; }
+.fv-hero::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(180deg, transparent 55%, rgb(13 17 15 / .75)),
+    repeating-linear-gradient(90deg, rgb(47 197 131 / .06) 0 1px, transparent 1px 48px); }
+.fv-hero figcaption { position: absolute; right: 12px; bottom: 8px; z-index: 1; font-size: 11px; color: rgb(255 255 255 / .75); }
+.fv-hero figcaption a { color: inherit; }
+
+/* cards & panels: softer, lift on hover */
+.card, .kpi, .explain, .chart-wrap, .box { border-radius: 16px; }
+.card { transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease; }
+.card:hover { transform: translateY(-3px); border-color: var(--accent); box-shadow: 0 14px 30px -18px rgb(0 0 0 / .45); }
+.badge.pick { background: var(--accent); }
+
+/* entrance animation */
+@keyframes fv-up { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes fv-zoom { from { transform: scale(1.08); filter: brightness(.6); } to { transform: none; filter: none; } }
+h1, .lead, .kpis, .cards .card { animation: fv-up .6s cubic-bezier(.2,.7,.2,1) both; }
+.lead { animation-delay: .08s; }
+.kpis { animation-delay: .16s; }
+.cards .card:nth-child(2) { animation-delay: .06s; }
+.cards .card:nth-child(3) { animation-delay: .12s; }
+.cards .card:nth-child(4) { animation-delay: .18s; }
+.cards .card:nth-child(5) { animation-delay: .24s; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+@media (max-width: 640px) { .fv-hero { aspect-ratio: 16 / 9; border-radius: 14px; } }
+
+/* touch: hint under the chart tooltip (report-chart.js) */
+.fv-hint { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--border, rgba(127,127,127,.3)); font-weight: 700; color: var(--accent, #2fc583); }
+</style><!-- /ferovka-theme -->
+</head>
+<body>
+<main><!-- ferovka-theme --><!-- /ferovka-theme -->
+<button class="theme-btn" id="themeBtn" type="button">Svetlý / tmavý</button>
+<h1>Fiat Doblo – ktorá ponuka sa oplatí</h1>
+<p class="lead">Analýza aktuálnych inzerátov Fiat Doblo (osobné verzie 2005–2022, 5 aj 7 miest) od 1 500 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 411 inzerátov (169 na bazoši, 82 na autobazar.eu, 160 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 314 rôznych áut zo Slovenska. Každé auto sme porovnali
+s <b>férovou cenou</b>: tú vypočítal model naučený na celom trhu podľa veku, nájazdu, motora, prevodovky a typu predajcu.</p>
+
+<div class="kpis">
+  <div class="kpi"><div class="v">314</div><div class="l">inzerátov Dobla (nad 1 500 €)</div></div>
+  <div class="kpi"><div class="v">96</div><div class="l">ohodnotených (majú rok aj km)</div></div>
+  <div class="kpi"><div class="v">7 692 €</div><div class="l">medián ceny s DPH</div></div>
+  <div class="kpi"><div class="v">90 %</div><div class="l">rozdielov v cenách vysvetlí model</div></div>
+</div>
+
+
+<h2>Odkiaľ sú dáta: bazoš, autobazar.eu a bazar.sk</h2>
+<div class="kpis">
+  <div class="kpi"><div class="v">42</div><div class="l">ohodnotených z bazoša</div></div>
+  <div class="kpi"><div class="v">16</div><div class="l">ohodnotených z autobazar.eu</div></div><div class="kpi"><div class="v">38</div><div class="l">ohodnotených z bazar.sk</div></div>
+  <div class="kpi"><div class="v">90</div><div class="l">áut bolo na viacerých portáloch – započítané raz</div></div>
+  <div class="kpi"><div class="v">24 / 5</div><div class="l">s uvedeným pôvodom SR / dovoz</div></div>
+</div>
+<div class="explain">
+  <p><b>Tri portály, jeden trh.</b> Bazoš prehľadal 168 inzerátov, autobazar.eu
+  82, bazar.sk 151. Ponuky z Česka (na autobazar.eu ich je veľa) sme vynechali. Autobazáre často dávajú
+  to isté auto na viac portálov. Takéto dvojice (24 v rebríčku) sme spojili podľa VIN alebo zhody roku, km a ceny,
+  aby sa v modeli nerátali dvakrát. Pri aute nájdeš odkaz na všetky ponuky – niekedy sa líšia cenou.</p>
+  <p><b>Rozdiel medzi portálmi:</b> rovnaké auto je na autobazar.eu v priemere -1,2 %
+  oproti bazošu. Na autobazar.eu predávajú hlavne firmy (11 z 16 ohodnotených). Na bazar.sk je rovnaké auto v priemere -5,8 % oproti bazošu.</p>
+  <p><b>Kúpené v SR vs. dovoz:</b> autá s uvedeným pôvodom zo SR sú oproti autám bez uvedeného pôvodu
+  +4,1 %, dovezené -3,3 %
+  (pri rovnakom veku, nájazde a motore). Pôvod zo SR je výhoda pri overovaní histórie, trh zaň však nepripláca – väčšina
+  inzerátov pôvod jednoducho neuvádza. V tabulke dole si môžeš nechať zobraziť len autá kúpené v SR.</p>
+</div>
+
+<h2>Čo hýbe cenou Fiatu Doblo</h2>
+<p class="section-lead">Toto sa model naučil z trhu. Keď porovnávaš dve autá, tieto čísla ti povedia, koľko má byť
+rozdiel v cene, aby to bolo fér.</p>
+<div class="kpis">
+  <div class="kpi"><div class="v">-2,9 %</div><div class="l">každých ďalších 10 000 km</div></div>
+  <div class="kpi"><div class="v">-6,9 %</div><div class="l">každý rok veku navyše</div></div>
+  <div class="kpi"><div class="v">+30 %</div><div class="l">príplatok za automat (DSG)</div></div>
+  <div class="kpi"><div class="v">-2,8 %</div><div class="l">príplatok u predajcu / firmy</div></div>
+  <div class="kpi"><div class="v">+19,2 %</div><div class="l">Doblo druhej generácie (2010+) oproti cene podľa veku</div></div>
+  <div class="kpi"><div class="v">+30,5 %</div><div class="l">príplatok za automat</div></div>
+</div>
+<div class="explain">
+  <p><b>Príklad:</b> dve rovnaké Doblo 1.6 Multijet z roku 2015, jedno má 60 tis. km, druhé 120 tis. km. Druhé má byť
+  približne o 17 % lacnejšie (6 × -2,9 %). Ak je lacnejšie len o 5 %, preplácaš kilometre.</p>
+  <p><b>Ako čítať „pod trhom“:</b> +15 % znamená, že auto stojí o 15 % menej, než by malo podľa trhu. Bežný rozptyl
+  cien je asi ±24 %, takže až zľava nad ~10–15 % je naozaj výnimočná. Pri takej zľave vždy zisti, prečo je auto lacné
+  (stav, história, nájazd).</p>
+  <p><b>DPH:</b> ceny uvedené bez DPH (napr. „10 300 € netto“) sme prepočítali na cenu s DPH, ktorú zaplatí súkromná osoba.</p>
+</div>
+
+<h2>Odporúčané ponuky</h2>
+<p class="section-lead">Kandidáti s najlepším pomerom cena / vek / nájazd, ktorých celý inzerát sme prečítali.
+Zoradené podľa toho, ako ich odporúčame.</p>
+<div class="subhead">Doblo druhej generácie (2010+) – najlepší pomer cena / vek</div>
+<div class="cards">
+<article class="card">
+  <div class="card-head"><span class="tag">Doblo Panorama 1.4 T-Jet z 2019</span><span class="loc">Košice</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/fiat-doblo-panorama-14-t-jet-plus/AmRSwaBg7Z_/" target="_blank" rel="noopener">Fiat Dobló Panorama 1.4 T-Jet Plus</a></h3>
+  <div class="facts">2019 · 96 742 km · 1.4 benzín / 1.4 T-Jet 70–88 kW · manuál · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · kúpené v SR · aj na <a href='https://auto.bazar.sk/39551266-fiat-doblo-panorama-1-4-t-jet-plus/' target='_blank' rel='noopener'>bazar.sk</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">6 990 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">8 740 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+20.0 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:67%"></span></div>
+  <ul class="pc"><li class="pro">2019, 1.4 T-Jet benzín, manuál, 97 tis. km</li><li class="pro">Osobná verzia Panorama</li><li class="pro">~20 % pod férovou cenou</li><li class="con">Predáva autobazár</li><li class="con">Inzerát bez popisu</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">Doblo Panorama 1.4 T-Jet CNG s 60 tis. km</span><span class="loc">Prešov</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/196063473/fiat-doblo-panorama-14-t-jet-cng-plusn.php" target="_blank" rel="noopener">Fiat Dobló Panorama 1.4 T-Jet CNG Plus</a></h3>
+  <div class="facts">2019 · 59 600 km · LPG / CNG · manuál · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">7 500 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">8 850 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+15.3 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:51%"></span></div>
+  <ul class="pc"><li class="pro">12/2019, 1.4 T-Jet benzín + CNG 88 kW, 6-st. manuál, 60 tis. km</li><li class="pro">Továrenské CNG – lacná prevádzka, uvedený VIN</li><li class="pro">~15 % pod férovou cenou</li><li class="con">Over revíziu CNG nádrží</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">Doblo 1.4 T-Jet z operatívneho leasingu</span><span class="loc">Hlohovec</span></div>
+  <h3><a href="https://auto.bazar.sk/39578156-fiat-doblo-1-4-t-jet-88kw/" target="_blank" rel="noopener">Fiat Dobló 1.4 T-Jet 88kw</a></h3>
+  <div class="facts">2019 · 64 500 km · 1.4 benzín / 1.4 T-Jet 70–88 kW · manuál · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazar.sk</b> · kúpené v SR</div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">7 377 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">8 480 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+13.0 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:43%"></span></div>
+  <ul class="pc"><li class="pro">2019, 1.4 T-Jet 88 kW, manuál, 65 tis. km</li><li class="pro">Kompletná servisná história, garancia km</li><li class="pro">~13 % pod férovou cenou</li><li class="con">Predáva autobazár</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">Doblo 1.4 T-Jet z SR so 46 tis. km</span><span class="loc">Prešov</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197791087/fiat-doblo-14-t-jet-88kw45-tis-km-2019-dph.php" target="_blank" rel="noopener">Fiat Doblo 1,4 T-JET 88kw,❗45 tis. Km ❗, 2019, DPH</a></h3>
+  <div class="facts">2019 · 45 000 km · 1.4 benzín / 1.4 T-Jet 70–88 kW · prevodovka ? · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazoš</b> · kúpené v SR</div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">6 999 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">7 920 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+11.6 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:39%"></span></div>
+  <ul class="pc"><li class="pro">2019, 1.4 T-Jet 88 kW, 46 tis. km</li><li class="pro">Kúpené v SR, 1. majiteľ, pravidelný servis, odpočet DPH</li><li class="pro">~12 % pod férovou cenou</li><li class="con">Prevodovka neuvedená</li><li class="con">Predáva autobazár</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">Doblo 1.6 MultiJet so 124 tis. km</span><span class="loc">Bratislava V - Petržalka</span></div>
+  <h3><a href="https://auto.bazar.sk/39729358-fiat-doblo-1-6-multijet/" target="_blank" rel="noopener">Fiat Doblo 1.6 MultiJet</a></h3>
+  <div class="facts">2016 · 124 300 km · 1.6 / 2.0 Multijet 66–99 kW · manuál · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazar.sk</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">6 600 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">7 490 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+11.9 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:40%"></span></div>
+  <ul class="pc"><li class="pro">2016, 1.6 MultiJet 77 kW, manuál, 124 tis. km</li><li class="pro">Klimatizácia</li><li class="pro">~12 % pod férovou cenou</li><li class="con">Predáva autobazár</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">Doblo 1.3 Multijet z 2017 s 89 tis. km</span><span class="loc">Prešov</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197681830/doblo.php" target="_blank" rel="noopener">Fiat DOBLO 1.3 DIZEL 66KW</a></h3>
+  <div class="facts">2017 · 89 000 km · 1.3 / 1.9 Multijet 51–77 kW · prevodovka ? · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">4 700 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">7 610 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+38.3 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:100%"></span></div>
+  <ul class="pc"><li class="pro">2017, 1.3 diesel 66 kW, 89 tis. km</li><li class="pro">Nízky nájazd</li><li class="pro">~38 % pod férovou cenou</li><li class="con">Veľmi krátky inzerát – over, či ide o osobnú verziu</li></ul>
+</article></div>
+<div class="subhead">Lacnejšie Doblo do 4 000 €</div>
+<div class="cards">
+<article class="card">
+  <div class="card-head"><span class="tag">Doblo 1.6 MultiJet so 159 tis. km</span><span class="loc">Bratislava V - Petržalka</span></div>
+  <h3><a href="https://auto.bazar.sk/39447839-fiat-doblo-1-6-multijet/" target="_blank" rel="noopener">Fiat Doblo 1.6 MultiJet</a></h3>
+  <div class="facts">2012 · 159 456 km · 1.6 / 2.0 Multijet 66–99 kW · manuál · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazar.sk</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">4 200 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">5 370 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+21.7 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:72%"></span></div>
+  <ul class="pc"><li class="pro">2012, 1.6 MultiJet 77 kW, manuál, 159 tis. km</li><li class="pro">Klimatizácia, strešné nosiče</li><li class="pro">~22 % pod férovou cenou</li><li class="con">Predáva autobazár</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">Súkromník: Doblo 1.3 MJT s novými brzdami</span><span class="loc">Poprad</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/fiat-doblo-13-mjt-16v-el-55kw76hp-m5/AedQalMdO2Z/" target="_blank" rel="noopener">Fiat Dobló 1.3 MJT 16v EL 55kW76HP M5</a></h3>
+  <div class="facts">2010 · 213 000 km · 1.3 / 1.9 Multijet 51–77 kW · manuál · súkromník</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · kúpené v SR · aj na <a href='https://auto.bazos.sk/inzerat/196152016/fiat-doblo.php' target='_blank' rel='noopener'>bazoš</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">3 200 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">4 190 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+23.5 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:78%"></span></div>
+  <ul class="pc"><li class="pro">2010, 1.3 Multijet 55 kW, 5-st. manuál, 213 tis. km</li><li class="pro">STK do 7/2027, nové brzdy</li><li class="pro">~24 % pod férovou cenou</li><li class="con">Krátky inzerát</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">Doblo 1.6 Multijet s novými rozvodmi</span><span class="loc">Žilina</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/195845114/fiat-doblo-multijet-16.php" target="_blank" rel="noopener">Fiat doblo multijet 1.6</a></h3>
+  <div class="facts">2010 · 265 000 km · 1.6 / 2.0 Multijet 66–99 kW · prevodovka ? · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">3 199 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">3 890 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+17.8 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:59%"></span></div>
+  <ul class="pc"><li class="pro">2010, 1.6 Multijet 77 kW, 265 tis. km</li><li class="pro">Nové rozvody, brzdy, náprava, olej</li><li class="pro">~18 % pod férovou cenou</li><li class="con">Prevodovka neuvedená</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">Doblo 1.6 JTD Family s ťažným</span><span class="loc">Púchov</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197710826/fiat-doblo-16jtd-77kw-family-model-2011.php" target="_blank" rel="noopener">Fiat Doblo 1.6jtd 77kw Family model 2011</a></h3>
+  <div class="facts">2011 · 196 311 km · 1.6 / 2.0 Multijet 66–99 kW · prevodovka ? · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">4 050 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">4 690 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+13.7 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:46%"></span></div>
+  <ul class="pc"><li class="pro">2011, 1.6 JTD 77 kW, 196 tis. km</li><li class="pro">Nové rozvody, olej, filtre; 2 sady kolies, ťažné</li><li class="pro">~14 % pod férovou cenou</li><li class="con">Predáva autobazár</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">Doblo 1.3 JTD combi za 1 990 €</span><span class="loc">Púchov</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/196737422/fiat-doblo-13-jtd-combi-model-2009.php" target="_blank" rel="noopener">Fiat Doblo 1.3 jtd 55kw combi model 2009</a></h3>
+  <div class="facts">2009 · 196 528 km · 1.3 / 1.9 Multijet 51–77 kW · prevodovka ? · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">1 990 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">3 070 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+35.2 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:100%"></span></div>
+  <ul class="pc"><li class="pro">2009, 1.3 JTD 55 kW, 197 tis. km</li><li class="pro">Bez korózie, nehavarované, 2 sady kolies</li><li class="pro">~35 % pod férovou cenou</li><li class="con">Slúžilo ako pracovné auto</li></ul>
+</article></div>
+<div class="subhead">Špeciálne prípady</div>
+<div class="cards"></div>
+
+<h2>Cena vs. nájazd: celý trh na jednom grafe</h2>
+<p class="section-lead">Každý bod je jeden inzerát. Čím nižšie bod leží oproti ostatným s podobným nájazdom, tým je auto lacnejšie.
+Krúžkom sú označené odporúčané ponuky. Prejdi myšou na bod a uvidíš detail.</p>
+<div class="chart-wrap" id="chartWrap">
+  <div class="legend" id="legend"></div>
+  <svg id="chart" width="100%" height="420" role="img" aria-label="Bodový graf ceny a nájazdu inzerátov"></svg>
+  <div class="tip" id="tip"></div>
+</div>
+
+<h2>Porovnanie motorov</h2>
+<p class="section-lead">Hodnotenie (hviezdičky) zohľadňuje spoľahlivosť, spoľahlivosť a náklady na prevádzku a pomer cena/výkon.
+Číselné stĺpce sú mediány z ohodnotených inzerátov.</p>
+<div class="table-scroll">
+<table>
+  <thead><tr><th>Motor</th><th>Hodnotenie</th><th class="num">Ponúk</th><th class="num">Medián ceny</th><th class="num">Medián roku</th><th class="num">Medián km</th></tr></thead>
+  <tbody>
+<tr>
+  <td><b>LPG / CNG</b><div class="sub">Továrenské CNG (Natural Power) alebo dodatočné LPG – over revíziu nádrží a zápis v TP.</div></td>
+  <td><span class="stars" aria-label="3 z 5">★★★<span class="off">★★</span></span></td>
+  <td class="num">7</td>
+  <td class="num"><div class="cellbar"><span style="width:85%"></span></div>7 500 €</td>
+  <td class="num">2018</td>
+  <td class="num">85 964 km</td>
+</tr>
+<tr>
+  <td><b>1.6 / 2.0 Multijet 66–99 kW</b><div class="sub">Diesel 90–135 k. Ťahavý a úsporný; over DPF, vstrekovače a dvojhmotu.</div></td>
+  <td><span class="stars" aria-label="3 z 5">★★★<span class="off">★★</span></span></td>
+  <td class="num">41</td>
+  <td class="num"><div class="cellbar"><span style="width:75%"></span></div>6 600 €</td>
+  <td class="num">2015</td>
+  <td class="num">192 406 km</td>
+</tr>
+<tr>
+  <td><b>1.3 / 1.9 Multijet 51–77 kW</b><div class="sub">Menší diesel 70–105 k. Úsporný; pri 1.3 over reťaz rozvodov a turbo.</div></td>
+  <td><span class="stars" aria-label="3 z 5">★★★<span class="off">★★</span></span></td>
+  <td class="num">12</td>
+  <td class="num"><div class="cellbar"><span style="width:35%"></span></div>3 095 €</td>
+  <td class="num">2010</td>
+  <td class="num">192 331 km</td>
+</tr>
+<tr>
+  <td><b>1.4 benzín / 1.4 T-Jet 70–88 kW</b><div class="sub">Jednoduchý benzín 95–120 k. Lacný na servis, vhodný na LPG.</div></td>
+  <td><span class="stars" aria-label="3 z 5">★★★<span class="off">★★</span></span></td>
+  <td class="num">36</td>
+  <td class="num"><div class="cellbar"><span style="width:100%"></span></div>8 850 €</td>
+  <td class="num">2018</td>
+  <td class="num">68 878 km</td>
+</tr></tbody>
+</table>
+</div>
+<div class="explain">
+  <p><b>Fiat Doblo</b> je priestranné rodinné auto na báze dodávky s posuvnými bočnými dverami. Prvá generácia (2000–2010),
+  druhá (2010–2022, facelift 2015) má aj 7-miestnu verziu. Analýza zahŕňa len osobné verzie – dodávky Cargo (N1) sú vyradené.</p>
+  <p><b>Ktorý motor zvoliť?</b> Najrozšírenejší je diesel <b>1.6 Multijet</b>. Benzín <b>1.4</b> je jednoduchý; továrenská CNG verzia
+  <b>Natural Power</b> má nízke náklady na palivo.</p>
+</div>
+
+<h2>Na čo si dať pozor</h2>
+<div class="warn">
+  <p><b>Lacné kvôli extrémnemu nájazdu</b> (viac ako 35 tis. km ročne, typicky flotila alebo taxi):</p>
+  <ul><li><a href='https://www.autobazar.eu/detail/fiat-doblo-doblo-combi-20-16v-multijet-sx-e5-99kw135hp-m6/AeNKuGreisc/' target='_blank' rel='noopener'>Fiat Dobló Doblo Combi 2.0 16V MultiJet SX E5 99kW135HP M6</a>: 2015, 480 000 km → 42 000 km/rok. Lacné je kvôli nájazdu.</li><li><a href='https://auto.bazos.sk/inzerat/197174752/fiat-doblo-16-multijet-77kw-mt6-2021-kupene-v-sr.php' target='_blank' rel='noopener'>Fiat Dobló 1.6 MultiJet 77kW MT/6 2021 / Kúpené v SR</a>: 2021, 201 141 km → 38 000 km/rok. Lacné je kvôli nájazdu.</li></ul>
+  <p><b>Podozrivo nízky nájazd na vek</b> – preklep alebo stočené km, over cez Cebiu:</p><ul><li><a href='https://auto.bazar.sk/39595579-fiat-doblo-1-4-t-jet-88kw-m6-l1-base/' target='_blank' rel='noopener'>Fiat Dobló 1.4 T-Jet 88kw M6 L1 Base</a> (8 685 €): rok 2018 a len 31 353 km</li><li><a href='https://auto.bazar.sk/23123090-fiat-doblo-1-3-multijet-16v-base-55kw-m5-4d/' target='_blank' rel='noopener'>Fiat Dobló 1.3 MultiJet 16v BASE, 55kW, M5, 4d.</a> (9 000 €): rok 2014 a len 34 000 km</li></ul><p><b>Ďalšie veci, ktoré sme v inzerátoch našli:</b></p><ul><li>Takmer polovicu inzerátov tvoria dodávky Doblo Cargo (N1) – do analýzy sme ich nezarátali. Pri kúpe over v TP, že ide o osobné auto (M1).</li><li>Predajca z Levíc ponúka desiatky rovnakých Doblo 2018 z flotily a mnohé inzeruje dvakrát – duplicity sme vyradili.</li><li>Veľa Doblo má za sebou firemnú prevádzku s vysokým ročným nájazdom.</li></ul><p><b>Vyradené z porovnania</b> (poškodené autá alebo nezmyselné údaje – model ich nehodnotí):</p><ul><li><a href='https://www.autobazar.eu/detail/fiat-doblo-cargo/AmYqKLVjg9q/' target='_blank' rel='noopener'>Fiat Dobló Cargo</a> (1 990 €): cena je o 75 % pod trhom – havarované, na diely, záloha/splátka namiesto ceny alebo podvod</li><li><a href='https://www.autobazar.eu/detail/fiat-doblo-combi-l1-15-mtj-130k-8at/Am15EYMUprl/' target='_blank' rel='noopener'>Fiat Dobló Combi L1 1.5 MTJ 130k 8AT</a> (28 990 €): podozrivo nízky nájazd</li><li><a href='https://www.autobazar.eu/detail/fiat-doblo-combi-doblo-combi-l1-15-mtj-100k-6mt/AmoPYaK5xKo/' target='_blank' rel='noopener'>Fiat Dobló Combi Doblo Combi L1 1.5 MTJ 100k 6MT</a> (24 990 €): podozrivo nízky nájazd</li><li><a href='https://www.autobazar.eu/detail/fiat-doblo-combi-doblo-combi-l1-15-mtj-100k-6mt/AmbJfoiVI9V/' target='_blank' rel='noopener'>Fiat Dobló Combi Doblo Combi L1 1.5 MTJ 100k 6MT</a> (24 990 €): podozrivo nízky nájazd</li><li><a href='https://auto.bazos.sk/inzerat/197203141/predam-fiat-doblo-14-benzin-2018.php' target='_blank' rel='noopener'>Predám Fiat Doblo 1.4 benzín 2018</a> (1 800 €): havarované / poškodené – cena nie je porovnateľná s trhom</li><li><a href='https://www.autobazar.eu/detail/fiat-doblo-1-5-combi-l2-100k/Amz-Zd6gYq_V/' target='_blank' rel='noopener'>Fiat Dobló 1,5 Combi L2 100k</a> (24 990 €): 75000 km/rok je nereálne – skontroluj rok a km</li><li><a href='https://auto.bazos.sk/inzerat/196694906/fiat-doblo.php' target='_blank' rel='noopener'>Fiat DOBLO</a> (3 000 €): 132000 km/rok je nereálne – skontroluj rok a km</li><li><a href='https://auto.bazos.sk/inzerat/195938495/motor-a-prevodovka-fiat-doblo-16-mjet-2020.php' target='_blank' rel='noopener'>Motor a prevodovka Fiat Doblo 1.6 MJet 2020</a> (1 900 €): cena je o 86 % pod trhom – havarované, na diely, záloha/splátka namiesto ceny alebo podvod</li><li><a href='https://www.autobazar.eu/detail/fiat-doblo-combi-l1-15-mtj-130k-8at/Amgz6dqNLT8/' target='_blank' rel='noopener'>Fiat Dobló Combi L1 1.5 MTJ 130k 8AT</a> (28 990 €): podozrivo nízky nájazd</li><li><a href='https://www.autobazar.eu/detail/fiat-doblo-combi-15-mtj-102k-6mt/AmAe18lx75r/' target='_blank' rel='noopener'>Fiat Dobló Combi 1.5 MTJ 102k 6MT</a> (22 990 €): podozrivo nízky nájazd</li><li><a href='https://auto.bazar.sk/39772079-fiat-doblo-van-1-5-bluehdi-100-l2-950/' target='_blank' rel='noopener'>Fiat Dobló Van 1.5 BlueHDi 100 L2 950</a> (7 900 €): havarované / poškodené – cena nie je porovnateľná s trhom</li><li><a href='https://auto.bazar.sk/39754548-fiat-doblo-sx-1-6-mtj-77kw-m6-maxi-l2h1/' target='_blank' rel='noopener'>Fiat Dobló SX 1.6 MTJ 77kw M6 Maxi L2H1</a> (3 600 €): 92000 km/rok je nereálne – skontroluj rok a km</li><li><a href='https://auto.bazar.sk/39736127-fiat-doblo-van-1-5-bluehdi-100-l2-950/' target='_blank' rel='noopener'>Fiat Dobló Van 1.5 BlueHDi 100 L2 950</a> (8 100 €): 131000 km/rok je nereálne – skontroluj rok a km</li><li><a href='https://auto.bazar.sk/39708970-fiat-doblo-1-4-benzin-e6-manual-5-seats-vin-983/' target='_blank' rel='noopener'>FIAT DOBLO 1,4 benzín E6 manual 5 seats VIN 983</a> (8 500 €): podozrivo nízky nájazd</li><li><a href='https://auto.bazar.sk/39708969-fiat-doblo-1-4-benzin-e6-manual-5-seats-vin-983/' target='_blank' rel='noopener'>FIAT DOBLO 1,4 benzín E6 manual 5 seats VIN 983</a> (8 500 €): podozrivo nízky nájazd</li><li><a href='https://auto.bazar.sk/39673065-fiat-doblo-cargo-1-6-mtj-105k-sx-l2h1/' target='_blank' rel='noopener'>Fiat Dobló Cargo 1.6 MTJ 105k SX L2H1</a> (10 490 €): 65000 km/rok je nereálne – skontroluj rok a km</li><li><a href='https://auto.bazar.sk/39613481-fiat-doblo-cargo-1-4-t-jet-l2-base/' target='_blank' rel='noopener'>Fiat Dobló Cargo 1.4 T-Jet L2 Base</a> (6 500 €): havarované / poškodené – cena nie je porovnateľná s trhom</li><li><a href='https://auto.bazar.sk/39435977-fiat-doblo-l2-1-5mtj-100k-7miest-6mt/' target='_blank' rel='noopener'>Fiat Dobló L2 1,5MTJ 100k 7miest 6MT</a> (27 190 €): 300000 km/rok je nereálne – skontroluj rok a km</li><li><a href='https://auto.bazar.sk/39435530-fiat-doblo-l1-1-5mtj-100k-6mt/' target='_blank' rel='noopener'>Fiat Dobló L1 1,5MTJ 100k 6MT</a> (25 490 €): 300000 km/rok je nereálne – skontroluj rok a km</li><li><a href='https://auto.bazar.sk/39360855-fiat-doblo-cargo-1-6-mtj-105k-base-l2h1/' target='_blank' rel='noopener'>Fiat Dobló Cargo 1.6 MTJ 105k Base L2H1</a> (4 400 €): cena je o 62 % pod trhom – havarované, na diely, záloha/splátka namiesto ceny alebo podvod</li><li>… a ďalších 5.</li></ul><p><b>Dodávky (Doblo Cargo, N1), Fiorino, Qubo a iné modely z vyhľadávania, inzeráty s chybným nájazdom</b> (145 inzerátov) sme z rebríčka vynechali.</p>
+  <p>Ďalších <b>41</b> inzerátov nemá v texte rok alebo kilometre, takže ich nebolo možné ohodnotiť.
+  Ak ťa niektorý zaujme, predajcu sa na tieto údaje opýtaj.</p>
+</div>
+
+<h2>Kompletný rebríček</h2>
+<p class="section-lead">Všetky ohodnotené inzeráty. Kliknutím na hlavičku stĺpca zoraďuješ, filtrom zužuješ výber.</p>
+<div class="filters">
+  <select id="fEngine"><option value="">Všetky motory</option></select>
+  <select id="fTrans"><option value="">Každá prevodovka</option><option value="automatic">Automat</option><option value="manual">Manuál</option></select>
+  <select id="fSeller"><option value="">Všetci predajcovia</option><option value="nodealer">Bez autobazárov</option></select>
+  <select id="fSource"><option value="">Všetky portály</option><option value="bazos">bazoš</option><option value="autobazar">autobazar.eu</option><option value="bazarsk">bazar.sk</option></select>
+  <select id="fBody" hidden><option value=""></option></select>
+  <select id="fOrigin"><option value="">Akýkoľvek pôvod</option><option value="SR">Kúpené v SR</option><option value="dovoz">Dovoz</option></select>
+  <input id="fMax" type="number" placeholder="Max. cena €" step="500" min="0" style="width:120px">
+  <span class="count" id="count"></span>
+</div>
+<div class="table-scroll">
+<table id="tbl">
+  <thead><tr>
+    <th class="sortable" data-k="title">Inzerát</th>
+    <th class="sortable num" data-k="year">Rok</th>
+    <th class="sortable num" data-k="km">Km</th>
+    <th class="sortable num" data-k="price_gross">Cena</th>
+    <th class="sortable num" data-k="fair_price">Férová</th>
+    <th class="sortable num" data-k="discount_pct">Pod trhom ▾</th>
+  </tr></thead>
+  <tbody></tbody>
+</table>
+</div>
+
+<h2>Pred kúpou over</h2>
+<ul class="check">
+  <li>VIN cez Cebia / autoDNA (história km, havárie)</li>
+  <li>Over v TP, či je auto osobné (M1) a nie dodávka (N1)</li>
+  <li>Multijet: DPF, vstrekovače, dvojhmota</li>
+  <li>Posuvné dvere – vodiace lišty a zámky</li>
+  <li>Hrdza na prahoch a podvozku</li>
+  <li>STK/EK protokol a dátum platnosti</li>
+</ul>
+
+<footer>
+  Zdroj: auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (len ponuky zo Slovenska, to isté auto na viacerých portáloch je započítané raz), sťahované cez lokálny MCP server bazos-mcp (nástroj <code>fair_price</code>), 22. 11. 2026.
+  Model: ridge regresia log(ceny s DPH) podľa veku, veku², km, km², prevodovky, typu predajcu, motora, karosérie, pohonu 4x4, pôvodu (SR / dovoz) a portálu. Vzorka 96
+  inzerátov, R² 90 %. Parametre sú vyťažené z textu inzerátov, a preto môžu obsahovať chyby. Odporúčané ponuky sme overili
+  prečítaním celého inzerátu. Hodnotenie motorov je odborný odhad, nie výsledok modelu.
+</footer>
+</main>
+
+<script>
+const DATA = [{"id": "197329577", "url": "https://auto.bazos.sk/inzerat/197329577/fiat-doblo-16-jtd-rok-112010.php", "title": "Fiat Doblo 1.6 JTD rok 11/2010", "price": 1700, "price_gross": 1700, "fair_price": 3010.0, "discount_pct": 43.6, "verdict": "výrazne pod trhom – over prečo", "year": 2010, "km": 373000, "km_per_year": 22800.0, "eg": "1.6 / 2.0 Multijet 66–99 kW", "cg": 1, "transmission": null, "seller_type": "dealer", "location": "Trenčín", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197720852", "url": "https://auto.bazos.sk/inzerat/197720852/fiat-doblo-13-jtd-66kw.php", "title": "Fiat Doblo 1,3 JTD  66kw", "price": 1990, "price_gross": 1990, "fair_price": 3420.0, "discount_pct": 41.9, "verdict": "výrazne pod trhom – over prečo", "year": 2014, "km": 259874, "km_per_year": 21100.0, "eg": "1.3 / 1.9 Multijet 51–77 kW", "cg": 1, "transmission": null, "seller_type": "dealer", "location": "Rožňava", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197681830", "url": "https://auto.bazos.sk/inzerat/197681830/doblo.php", "title": "Fiat DOBLO 1.3 DIZEL 66KW", "price": 4700, "price_gross": 4700, "fair_price": 7610.0, "discount_pct": 38.3, "verdict": "výrazne pod trhom – over prečo", "year": 2017, "km": 89000, "km_per_year": 9500.0, "eg": "1.3 / 1.9 Multijet 51–77 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Prešov", "flags": ["prevodovka nezistená"], "pick": "top", "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "196737422", "url": "https://auto.bazos.sk/inzerat/196737422/fiat-doblo-13-jtd-combi-model-2009.php", "title": "Fiat Doblo 1.3 jtd 55kw combi model 2009", "price": 1990, "price_gross": 1990, "fair_price": 3070.0, "discount_pct": 35.2, "verdict": "výrazne pod trhom – over prečo", "year": 2009, "km": 196528, "km_per_year": 11300.0, "eg": "1.3 / 1.9 Multijet 51–77 kW", "cg": 1, "transmission": null, "seller_type": "dealer", "location": "Púchov", "flags": ["prevodovka nezistená"], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AeNKuGreisc", "url": "https://www.autobazar.eu/detail/fiat-doblo-doblo-combi-20-16v-multijet-sx-e5-99kw135hp-m6/AeNKuGreisc/", "title": "Fiat Dobló Doblo Combi 2.0 16V MultiJet SX E5 99kW135HP M6", "price": 3500, "price_gross": 3500, "fair_price": 4720.0, "discount_pct": 25.9, "verdict": "výrazne pod trhom – over prečo", "year": 2015, "km": 480000, "km_per_year": 42400.0, "eg": "1.6 / 2.0 Multijet 66–99 kW", "cg": 1, "transmission": "manual", "seller_type": "private", "location": "Banská Bystrica", "flags": ["vysoký nájazd 42000 km/rok – flotila / taxi?"], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "ab-AedQalMdO2Z", "url": "https://www.autobazar.eu/detail/fiat-doblo-13-mjt-16v-el-55kw76hp-m5/AedQalMdO2Z/", "title": "Fiat Dobló 1.3 MJT 16v EL 55kW76HP M5", "price": 3200, "price_gross": 3200, "fair_price": 4190.0, "discount_pct": 23.5, "verdict": "výrazne pod trhom – over prečo", "year": 2010, "km": 213000, "km_per_year": 13000.0, "eg": "1.3 / 1.9 Multijet 51–77 kW", "cg": 1, "transmission": "manual", "seller_type": "private", "location": "Poprad", "flags": [], "pick": "budget", "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "196152016", "url": "https://auto.bazos.sk/inzerat/196152016/fiat-doblo.php", "price": 3200}], "body": "mpv"}, {"id": "bs-39447839", "url": "https://auto.bazar.sk/39447839-fiat-doblo-1-6-multijet/", "title": "Fiat Doblo 1.6 MultiJet", "price": 4200, "price_gross": 4200, "fair_price": 5370.0, "discount_pct": 21.7, "verdict": "výrazne pod trhom – over prečo", "year": 2012, "km": 159456, "km_per_year": 11100.0, "eg": "1.6 / 2.0 Multijet 66–99 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava V - Petržalka", "flags": [], "pick": "budget", "source": "bazarsk", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AmRSwaBg7Z_", "url": "https://www.autobazar.eu/detail/fiat-doblo-panorama-14-t-jet-plus/AmRSwaBg7Z_/", "title": "Fiat Dobló Panorama 1.4 T-Jet Plus", "price": 6990, "price_gross": 6990, "fair_price": 8740.0, "discount_pct": 20.0, "verdict": "výrazne pod trhom – over prečo", "year": 2019, "km": 96742, "km_per_year": 13200.0, "eg": "1.4 benzín / 1.4 T-Jet 70–88 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Košice", "flags": [], "pick": "top", "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-39551266", "url": "https://auto.bazar.sk/39551266-fiat-doblo-panorama-1-4-t-jet-plus/", "price": 6990}], "body": "mpv"}, {"id": "195938182", "url": "https://auto.bazos.sk/inzerat/195938182/fiat-doblo-panorama-16-multijet.php", "title": "Fiat Doblo Panorama 1.6 Multijet", "price": 3700, "price_gross": 3700, "fair_price": 4610.0, "discount_pct": 19.8, "verdict": "výrazne pod trhom – over prečo", "year": 2014, "km": 300000, "km_per_year": 24300.0, "eg": "1.6 / 2.0 Multijet 66–99 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Trnava", "flags": [], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "mpv"}, {"id": "195845114", "url": "https://auto.bazos.sk/inzerat/195845114/fiat-doblo-multijet-16.php", "title": "Fiat doblo multijet 1.6", "price": 3199, "price_gross": 3199, "fair_price": 3890.0, "discount_pct": 17.8, "verdict": "výrazne pod trhom – over prečo", "year": 2010, "km": 265000, "km_per_year": 16200.0, "eg": "1.6 / 2.0 Multijet 66–99 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Žilina", "flags": ["prevodovka nezistená"], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "196524533", "url": "https://auto.bazos.sk/inzerat/196524533/predam-fiat-doblo.php", "title": "Predám Fiat Doblo", "price": 2000, "price_gross": 2000, "fair_price": 2430.0, "discount_pct": 17.6, "verdict": "výrazne pod trhom – over prečo", "year": 2005, "km": 289693, "km_per_year": 13600.0, "eg": "1.4 benzín / 1.4 T-Jet 70–88 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Prievidza", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197593991", "url": "https://auto.bazos.sk/inzerat/197593991/fiat-doblo-benzincng.php", "title": "Fiat Doblo benzin/CNG", "price": 2500, "price_gross": 2500, "fair_price": 3000.0, "discount_pct": 16.6, "verdict": "výrazne pod trhom – over prečo", "year": 2014, "km": 290000, "km_per_year": 23500.0, "eg": "LPG / CNG", "cg": 2, "transmission": null, "seller_type": "dealer", "location": "Senec", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "196063473", "url": "https://auto.bazos.sk/inzerat/196063473/fiat-doblo-panorama-14-t-jet-cng-plusn.php", "title": "Fiat Dobló Panorama 1.4 T-Jet CNG Plus", "price": 7500, "price_gross": 7500, "fair_price": 8850.0, "discount_pct": 15.3, "verdict": "výrazne pod trhom – over prečo", "year": 2019, "km": 59600, "km_per_year": 8100.0, "eg": "LPG / CNG", "cg": 2, "transmission": "manual", "seller_type": "uncertain", "location": "Prešov", "flags": [], "pick": "top", "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197710826", "url": "https://auto.bazos.sk/inzerat/197710826/fiat-doblo-16jtd-77kw-family-model-2011.php", "title": "Fiat Doblo 1.6jtd 77kw Family model 2011", "price": 4050, "price_gross": 4050, "fair_price": 4690.0, "discount_pct": 13.7, "verdict": "pod trhom", "year": 2011, "km": 196311, "km_per_year": 12800.0, "eg": "1.6 / 2.0 Multijet 66–99 kW", "cg": 1, "transmission": null, "seller_type": "dealer", "location": "Púchov", "flags": ["prevodovka nezistená"], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "bs-39578156", "url": "https://auto.bazar.sk/39578156-fiat-doblo-1-4-t-jet-88kw/", "title": "Fiat Dobló 1.4 T-Jet 88kw", "price": 7377, "price_gross": 7377, "fair_price": 8480.0, "discount_pct": 13.0, "verdict": "pod trhom", "year": 2019, "km": 64500, "km_per_year": 8800.0, "eg": "1.4 benzín / 1.4 T-Jet 70–88 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Hlohovec", "flags": [], "pick": "top", "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "bs-39729358", "url": "https://auto.bazar.sk/39729358-fiat-doblo-1-6-multijet/", "title": "Fiat Doblo 1.6 MultiJet", "price": 6600, "price_gross": 6600, "fair_price": 7490.0, "discount_pct": 11.9, "verdict": "pod trhom", "year": 2016, "km": 124300, "km_per_year": 12000.0, "eg": "1.6 / 2.0 Multijet 66–99 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava V - Petržalka", "flags": [], "pick": "top", "source": "bazarsk", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197791087", "url": "https://auto.bazos.sk/inzerat/197791087/fiat-doblo-14-t-jet-88kw45-tis-km-2019-dph.php", "title": "Fiat Doblo 1,4 T-JET 88kw,❗45 tis. Km ❗, 2019, DPH", "price": 6999, "price_gross": 6999, "fair_price": 7920.0, "discount_pct": 11.6, "verdict": "pod trhom", "year": 2019, "km": 45000, "km_per_year": 6100.0, "eg": "1.4 benzín / 1.4 T-Jet 70–88 kW", "cg": 0, "transmission": null, "seller_type": "dealer", "location": "Prešov", "flags": ["prevodovka nezistená"], "pick": "top", "source": "bazos", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "bs-39636913", "url": "https://auto.bazar.sk/39636913-fiat-doblo/", "title": "Fiat Dobló", "price": 8900, "price_gross": 8900, "fair_price": 10040.0, "discount_pct": 11.4, "verdict": "pod trhom", "year": 2019, "km": 54913, "km_per_year": 7500.0, "eg": "1.4 benzín / 1.4 T-Jet 70–88 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Košice-Západ", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "bs-39706183", "url": "https://auto.bazar.sk/39706183-fiat-doblo-1-6-multijet/", "title": "Fiat Doblo 1.6 MultiJet", "price": 5600, "price_gross": 5600, "fair_price": 6260.0, "discount_pct": 10.6, "verdict": "pod trhom", "year": 2013, "km": 221711, "km_per_year": 16600.0, "eg": "1.6 / 2.0 Multijet 66–99 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava V - Petržalka", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197614897", "url": "https://auto.bazos.sk/inzerat/197614897/fiat-doblo-s-vysokou-strechou-14-16v-benzin-plyn-rv-2012.php", "title": "Fiat Doblo s vysokou strechou 1,4 16v benzín plyn rv 2012", "price": 3300, "price_gross": 3300, "fair_price": 3680.0, "discount_pct": 10.4, "verdict": "pod trhom", "year": 2012, "km": 238300, "km_per_year": 16600.0, "eg": "LPG / CNG", "cg": 2, "transmission": "manual", "seller_type": "uncertain", "location": "Senec", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "bs-39633922", "url": "https://auto.bazar.sk/39633922-fiat-doblo-1-6-multijet/", "title": "Fiat Doblo 1.6 MultiJet", "price": 5100, "price_gross": 5100, "fair_price": 5670.0, "discount_pct": 10.1, "verdict": "pod trhom", "year": 2016, "km": 226867, "km_per_year": 22000.0, "eg": "1.6 / 2.0 Multijet 66–99 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava V - Petržalka", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197608490", "url": "https://auto.bazos.sk/inzerat/197608490/fiat-doblo-combi-16-jtd-66kw.php", "title": "Fiat Doblo Combi 1.6 JTD 66kW", "price": 4300, "price_gross": 4300, "fair_price": 4680.0, "discount_pct": 8.0, "verdict": "pod trhom", "year": 2011, "km": 305444, "km_per_year": 19900.0, "eg": "1.6 / 2.0 Multijet 66–99 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Bytča", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "196672771", "url": "https://auto.bazos.sk/inzerat/196672771/fiat-doblo-19jtd-88kw-dynamic-model-2010.php", "title": "Fiat Doblo 1.9jtd 88kw Dynamic model 2010", "price": 3350, "price_gross": 3350, "fair_price": 3620.0, "discount_pct": 7.4, "verdict": "pod trhom", "year": 2010, "km": 177000, "km_per_year": 10800.0, "eg": "1.6 / 2.0 Multijet 66–99 kW", "cg": 1, "transmission": null, "seller_type": "dealer", "location": "Púchov", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197656050", "url": "https://auto.bazos.sk/inzerat/197656050/fiat-doblo-15-blue-hdi-96kw.php", "title": "Fiat doblo 1.5 Blue HDI 96kw", "price": 15490, "price_gross": 15490, "fair_price": 16480.0, "discount_pct": 6.0, "verdict": "férová cena", "year": 2023, "km": 25000, "km_per_year": 7500.0, "eg": "1.6 / 2.0 Multijet 66–99 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Prešov", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AeRlOEVRB-E", "url": "https://www.autobazar.eu/detail/fiat-doblo-doblo-panorama-16-multijet-120-plus-88kw120hp-m6/AeRlOEVRB-E/", "title": "Fiat Dobló Doblo Panorama 1.6 MultiJet 120 Plus 88kW120HP M6", "price": 9550, "price_gross": 9550, "fair_price": 10140.0, "discount_pct": 5.8, "verdict": "férová cena", "year": 2020, "km": 191000, "km_per_year": 30200.0, "eg": "1.6 / 2.0 Multijet 66–99 kW", "cg": 1, "transmission": "manual", "seller_type": "private", "location": "Trnava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "bs-39742447", "url": "https://auto.bazar.sk/39742447-fiat-doblo-1-4-benzin-5-seats-manual-e6-vin-812/", "title": "FIAT DOBLO 1,4 benzín 5 seats manual E6 VIN 812", "price": 8900, "price_gross": 8900, "fair_price": 9430.0, "discount_pct": 5.7, "verdict": "férová cena", "year": 2018, "km": 45755, "km_per_year": 5500.0, "eg": "1.4 benzín / 1.4 T-Jet 70–88 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Levice", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-Amp3jM5H2L0", "url": "https://www.autobazar.eu/detail/fiat-doblo-14-benzin-5-seats-manual-e6-vin-812/Amp3jM5H2L0/", "price": 8900}], "body": "mpv"}, {"id": "bs-39679869", "url": "https://auto.bazar.sk/39679869-fiat-doblo-1-4-benzin-euro-6-manual-5-seats-vin-248/", "title": "FIAT DOBLO 1,4 benzín EURO 6 manuál 5 seats VIN 248", "price": 8500, "price_gross": 8500, "fair_price": 8950.0, "discount_pct": 5.0, "verdict": "férová cena", "year": 2018, "km": 62053, "km_per_year": 7400.0, "eg": "1.4 benzín / 1.4 T-Jet 70–88 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Levice", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-Amr07gYu4sd", "url": "https://www.autobazar.eu/detail/fiat-doblo-14-benzin-manual-5-seats-vin-725/Amr07gYu4sd/", "title": "FIAT DOBLO 1,4 benzín manuál 5 seats VIN 725", "price": 8900, "price_gross": 8900, "fair_price": 9350.0, "discount_pct": 4.8, "verdict": "férová cena", "year": 2018, "km": 63406, "km_per_year": 7600.0, "eg": "1.4 benzín / 1.4 T-Jet 70–88 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Levice", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197722292", "url": "https://auto.bazos.sk/inzerat/197722292/fiat-doblo-14-t-jet-88kw39-tis-km-2019-odpocet-dph.php", "title": "Fiat Doblo 1,4 T-JET 88kw,❗39 tis. Km ❗, 2019, odpočet DPH", "price": 7699, "price_gross": 7699, "fair_price": 8070.0, "discount_pct": 4.7, "verdict": "férová cena", "year": 2019, "km": 39000, "km_per_year": 5300.0, "eg": "1.4 benzín / 1.4 T-Jet 70–88 kW", "cg": 0, "transmission": null, "seller_type": "dealer", "location": "Prešov", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "197643312", "url": "https://auto.bazos.sk/inzerat/197643312/fiat-doblo-16-tdi.php", "title": "Fiat doblo 1.6 tdi", "price": 4499, "price_gross": 4499, "fair_price": 4720.0, "discount_pct": 4.7, "verdict": "férová cena", "year": 2015, "km": 303990, "km_per_year": 26800.0, "eg": "1.6 / 2.0 Multijet 66–99 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Trenčín", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "196772594", "url": "https://auto.bazos.sk/inzerat/196772594/fiat-doblo-professional-16-multijet-107000km.php", "title": "FIAT DOBLO PROFESSIONAL 1,6 Multijet 107000KM", "price": 8800, "price_gross": 8800, "fair_price": 9210.0, "discount_pct": 4.5, "verdict": "férová cena", "year": 2017, "km": 107752, "km_per_year": 11500.0, "eg": "1.6 / 2.0 Multijet 66–99 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Revúca", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "bs-39700400", "url": "https://auto.bazar.sk/39700400-fiat-doblo-1-4-benzin-5-seats-manual-vin-960/", "title": "FIAT DOBLO 1,4 benzín 5 seats manuál VIN 960", "price": 8800, "price_gross": 8800, "fair_price": 9170.0, "discount_pct": 4.0, "verdict": "férová cena", "year": 2018, "km": 54694, "km_per_year": 6600.0, "eg": "1.4 benzín / 1.4 T-Jet 70–88 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Levice", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmjERqC8GmK", "url": "https://www.autobazar.eu/detail/fiat-doblo-14-benzin-5-seats-manual-vin-960/AmjERqC8GmK/", "price": 8800}], "body": "mpv"}, {"id": "ab-AmqjO8WrIZF", "url": "https://www.autobazar.eu/detail/fiat-doblo-13-mtj-family/AmqjO8WrIZF/", "title": "Fiat Dobló 1.3 MTJ uprava na  Camper", "price": 2990, "price_gross": 2990, "fair_price": 3110.0, "discount_pct": 3.7, "verdict": "férová cena", "year": 2009, "km": 175100, "km_per_year": 10100.0, "eg": "1.3 / 1.9 Multijet 51–77 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Detva", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "197739500", "url": "https://auto.bazos.sk/inzerat/197739500/predam-fiat-doblo-13-mtj-uprava-na-camper.php", "price": 2990}, {"source": "bazarsk", "id": "bs-39777355", "url": "https://auto.bazar.sk/39777355-fiat-doblo-1-3-mtj-uprava-na-camper/", "price": 2990}], "body": "mpv"}, {"id": "197775750", "url": "https://auto.bazos.sk/inzerat/197775750/fiat-doblo-13-jtd-55kw-m5-multijet-rok-2007.php", "title": "Fiat Doblo 1.3 JTD 55kw M5 MultiJet Rok 2007", "price": 1980, "price_gross": 1980, "fair_price": 2050.0, "discount_pct": 3.5, "verdict": "férová cena", "year": 2007, "km": 312300, "km_per_year": 16200.0, "eg": "1.3 / 1.9 Multijet 51–77 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Pezinok", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "bs-39631609", "url": "https://auto.bazar.sk/39631609-fiat-doblo-1-4-t-jet-88kw-m6-l1-base/", "title": "Fiat Dobló 1.4 T-Jet 88kw M6 L1 Base", "price": 7685, "price_gross": 7685, "fair_price": 7930.0, "discount_pct": 3.1, "verdict": "férová cena", "year": 2018, "km": 62427, "km_per_year": 7500.0, "eg": "1.4 benzín / 1.4 T-Jet 70–88 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Hlohovec", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "ab-AmHQwFQ7bKA", "url": "https://www.autobazar.eu/detail/fiat-doblo-14-benzin-e6-manual-5-seats-vin-693/AmHQwFQ7bKA/", "title": "FIAT DOBLO 1,4 benzín E6 manual 5 seats VIN 693", "price": 8900, "price_gross": 8900, "fair_price": 9140.0, "discount_pct": 2.7, "verdict": "férová cena", "year": 2018, "km": 70383, "km_per_year": 8400.0, "eg": "1.4 benzín / 1.4 T-Jet 70–88 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Levice", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39695886", "url": "https://auto.bazar.sk/39695886-fiat-doblo-1-4-benzin-e6-manual-5-seats-vin-693/", "price": 8900}, {"source": "bazarsk", "id": "bs-39675566", "url": "https://auto.bazar.sk/39675566-fiat-doblo-1-4-benzin-e6-manual-5-seats-vin-693/", "price": 8900}], "body": "mpv"}, {"id": "ab-AeAddLbRNdE", "url": "https://www.autobazar.eu/detail/fiat-doblo-doblo-panorama-14-pop-70kw95hp-m5/AeAddLbRNdE/", "title": "Fiat Dobló Doblo Panorama 1.4 Pop 70kW95HP M5", "price": 7000, "price_gross": 7000, "fair_price": 7170.0, "discount_pct": 2.4, "verdict": "férová cena", "year": 2017, "km": 118000, "km_per_year": 12600.0, "eg": "1.4 benzín / 1.4 T-Jet 70–88 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Michalovce", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "bs-39709097", "url": "https://auto.bazar.sk/39709097-fiat-doblo-2-0-16v-multijet-sx/", "title": "Fiat Dobló 2.0 16V MultiJet SX", "price": 4990, "price_gross": 4990, "fair_price": 5090.0, "discount_pct": 2.0, "verdict": "férová cena", "year": 2011, "km": 247650, "km_per_year": 16200.0, "eg": "1.6 / 2.0 Multijet 66–99 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Veľký Krtíš", "flags": [], "pick": null, "source": "bazarsk", "origin": "dovoz", "also_listed": [{"source": "autobazar", "id": "ab-Am3uhEaO-D1", "url": "https://www.autobazar.eu/detail/fiat-doblo-20-16v-multijet-sx/Am3uhEaO-D1/", "price": 4990}, {"source": "bazos", "id": "195842142", "url": "https://auto.bazos.sk/inzerat/195842142/fiat-doblo-20-multijet-diesel-99kw-5-miest-nova-stk-spz.php", "price": 4990}], "body": "mpv"}, {"id": "bs-39706918", "url": "https://auto.bazar.sk/39706918-fiat-doblo-1-4-benzin-e6-manual-5-seats-vin-393/", "title": "FIAT DOBLO 1,4 benzín E6 manual 5 seats VIN 393", "price": 8900, "price_gross": 8900, "fair_price": 9020.0, "discount_pct": 1.4, "verdict": "férová cena", "year": 2019, "km": 64867, "km_per_year": 8800.0, "eg": "1.4 benzín / 1.4 T-Jet 70–88 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Levice", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmQDNS3t5Y_", "url": "https://www.autobazar.eu/detail/fiat-doblo-14-benzin-e6-manual-5-seats-vin-393/AmQDNS3t5Y_/", "price": 8900}], "body": "mpv"}, {"id": "bs-34352202", "url": "https://auto.bazar.sk/34352202-fiat-doblo-1-6-multijet/", "title": "Fiat Doblo 1.6 MultiJet", "price": 6300, "price_gross": 6300, "fair_price": 6370.0, "discount_pct": 1.1, "verdict": "férová cena", "year": 2012, "km": 134397, "km_per_year": 9400.0, "eg": "1.6 / 2.0 Multijet 66–99 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Nové Zámky", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "bs-39705259", "url": "https://auto.bazar.sk/39705259-fiat-doblo-1-4-benzin-5-seats-manual-e6-vin-124/", "title": "FIAT DOBLO 1,4 benzín 5 seats manual E6 VIN 124", "price": 7900, "price_gross": 7900, "fair_price": 7980.0, "discount_pct": 1.0, "verdict": "férová cena", "year": 2018, "km": 99048, "km_per_year": 11900.0, "eg": "1.4 benzín / 1.4 T-Jet 70–88 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Levice", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-Am0xiSOZQ9n", "url": "https://www.autobazar.eu/detail/fiat-doblo-14-benzin-5-seats-manual-e6-vin-124/Am0xiSOZQ9n/", "price": 7900}], "body": "mpv"}, {"id": "bs-39595579", "url": "https://auto.bazar.sk/39595579-fiat-doblo-1-4-t-jet-88kw-m6-l1-base/", "title": "Fiat Dobló 1.4 T-Jet 88kw M6 L1 Base", "price": 8685, "price_gross": 8685, "fair_price": 8770.0, "discount_pct": 1.0, "verdict": "férová cena", "year": 2018, "km": 31353, "km_per_year": 3800.0, "eg": "1.4 benzín / 1.4 T-Jet 70–88 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Hlohovec", "flags": ["nezvyčajne nízky nájazd na vek (31 353 km) – over  či nejde o preklep"], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "bs-39708978", "url": "https://auto.bazar.sk/39708978-fiat-doblo-1-4-benzin-manual-5-seats-vin-277/", "title": "FIAT DOBLO 1,4 benzín manuál 5 seats VIN 277", "price": 8900, "price_gross": 8900, "fair_price": 8940.0, "discount_pct": 0.4, "verdict": "férová cena", "year": 2018, "km": 47835, "km_per_year": 5700.0, "eg": "1.4 benzín / 1.4 T-Jet 70–88 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Levice", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-Ae5ZND6uDfg", "url": "https://www.autobazar.eu/detail/fiat-doblo-natural-power/Ae5ZND6uDfg/", "title": "Fiat Dobló Natural Power", "price": 3200, "price_gross": 3200, "fair_price": 3200.0, "discount_pct": -0.1, "verdict": "férová cena", "year": 2009, "km": 113851, "km_per_year": 6600.0, "eg": "LPG / CNG", "cg": 2, "transmission": "manual", "seller_type": "dealer", "location": "Bánovce nad Bebravou", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazarsk", "id": "bs-39775227", "url": "https://auto.bazar.sk/39775227-fiat-doblo-natural-power/", "price": 3200}], "body": "mpv"}, {"id": "bs-39759835", "url": "https://auto.bazar.sk/39759835-fiat-doblo-panorama-1-4-t-jet-plus-88-kw-m6-5d-aj-na-splatky-protiucet/", "title": "Fiat Dobló Panorama 1.4 T-Jet Plus, 88 kW, M6, 5d. / AJ NA SPLÁTKY / PROTIÚČET /", "price": 7990, "price_gross": 7990, "fair_price": 7970.0, "discount_pct": -0.2, "verdict": "férová cena", "year": 2020, "km": 109520, "km_per_year": 17300.0, "eg": "1.4 benzín / 1.4 T-Jet 70–88 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Stará Turá", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197401485", "url": "https://auto.bazos.sk/inzerat/197401485/fiat-doblo-panorama-14-t-jet-plus-88-kw-m6-2020-tazne.php", "price": 7990}], "body": "mpv"}, {"id": "195971019", "url": "https://auto.bazos.sk/inzerat/195971019/fiat-doblo-13jtd-55kw-dynamic-model-2008.php", "title": "Fiat Doblo 1.3jtd 55kw Dynamic model 2008", "price": 2790, "price_gross": 2790, "fair_price": 2780.0, "discount_pct": -0.3, "verdict": "férová cena", "year": 2008, "km": 188134, "km_per_year": 10300.0, "eg": "1.3 / 1.9 Multijet 51–77 kW", "cg": 1, "transmission": null, "seller_type": "dealer", "location": "Púchov", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AmdYirbrVFS", "url": "https://www.autobazar.eu/detail/fiat-doblo/AmdYirbrVFS/", "title": "Fiat Dobló Panorama 1.4 T-Jet CNG Plus", "price": 8900, "price_gross": 8900, "fair_price": 8850.0, "discount_pct": -0.6, "verdict": "férová cena", "year": 2019, "km": 85964, "km_per_year": 11700.0, "eg": "LPG / CNG", "cg": 2, "transmission": "manual", "seller_type": "dealer", "location": "Košice", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197574662", "url": "https://auto.bazos.sk/inzerat/197574662/fiat-doblo-panorama-14-t-jet-cng-plus.php", "price": 8900}, {"source": "bazarsk", "id": "bs-39623163", "url": "https://auto.bazar.sk/39623163-fiat-doblo-panorama-1-4-t-jet-cng-plus/", "price": 8900}], "body": "mpv"}, {"id": "197511829", "url": "https://auto.bazos.sk/inzerat/197511829/predam-fiat-doblo-16-multijet-77-kw.php", "title": "Predám Fiat Doblo 1.6 multijet 77 kw", "price": 13300, "price_gross": 13300, "fair_price": 13170.0, "discount_pct": -1.0, "verdict": "férová cena", "year": 2021, "km": 74000, "km_per_year": 13900.0, "eg": "1.6 / 2.0 Multijet 66–99 kW", "cg": 1, "transmission": null, "seller_type": "private", "location": "Galanta", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "bs-39578558", "url": "https://auto.bazar.sk/39578558-fiat-doblo-1-4-benzin-e6-5-seats-manual-vin-241/", "title": "FIAT DOBLO 1,4 benzín E6 5 seats manual VIN 241", "price": 8900, "price_gross": 8900, "fair_price": 8800.0, "discount_pct": -1.1, "verdict": "férová cena", "year": 2018, "km": 67324, "km_per_year": 8100.0, "eg": "1.4 benzín / 1.4 T-Jet 70–88 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Levice", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-Am-jBSRSHKh", "url": "https://www.autobazar.eu/detail/fiat-doblo-14-benzin-e6-5-seats-manual-vin-241/Am-jBSRSHKh/", "price": 8900}], "body": "mpv"}, {"id": "197466661", "url": "https://auto.bazos.sk/inzerat/197466661/fiat-doblo-malibu.php", "title": "Fiat Doblo Malibu", "price": 2500, "price_gross": 2500, "fair_price": 2470.0, "discount_pct": -1.2, "verdict": "férová cena", "year": 2007, "km": 281000, "km_per_year": 14500.0, "eg": "1.6 / 2.0 Multijet 66–99 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Liptovský Mikuláš", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "bs-39733403", "url": "https://auto.bazar.sk/39733403-fiat-doblo-1-4-benzin-manual-5-seats-e6-vin-721/", "title": "FIAT DOBLO 1,4 benzín manual 5 seats E6 VIN 721", "price": 8900, "price_gross": 8900, "fair_price": 8770.0, "discount_pct": -1.4, "verdict": "férová cena", "year": 2018, "km": 68348, "km_per_year": 8200.0, "eg": "1.4 benzín / 1.4 T-Jet 70–88 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Levice", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-Am4WojeCzaG", "url": "https://www.autobazar.eu/detail/fiat-doblo-14-benzin-manual-5-seats-e6-vin-721/Am4WojeCzaG/", "price": 8900}], "body": "mpv"}, {"id": "bs-39721476", "url": "https://auto.bazar.sk/39721476-fiat-doblo-1-4-benzin-5-seats-manual-vin-907/", "title": "FIAT DOBLO 1,4 benzín 5 seats manuál VIN 907", "price": 8500, "price_gross": 8500, "fair_price": 8380.0, "discount_pct": -1.5, "verdict": "férová cena", "year": 2018, "km": 83133, "km_per_year": 10000.0, "eg": "1.4 benzín / 1.4 T-Jet 70–88 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Levice", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-Am6AOg38aCr", "url": "https://www.autobazar.eu/detail/fiat-doblo-14-benzin-5-seats-manual-vin-907/Am6AOg38aCr/", "price": 8500}], "body": "mpv"}, {"id": "bs-39722674", "url": "https://auto.bazar.sk/39722674-fiat-doblo-1-4-benzin-5-seats-manual-vin-216/", "title": "FIAT DOBLO 1,4 benzín 5 seats manuál VIN 216", "price": 8800, "price_gross": 8800, "fair_price": 8660.0, "discount_pct": -1.7, "verdict": "férová cena", "year": 2018, "km": 72661, "km_per_year": 8700.0, "eg": "1.4 benzín / 1.4 T-Jet 70–88 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Levice", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "bs-39672491", "url": "https://auto.bazar.sk/39672491-fiat-doblo-1-4-benzin-5-seats-manual-e6-vin-272/", "title": "FIAT DOBLO 1,4 benzín 5 seats manual E6 VIN 272", "price": 8900, "price_gross": 8900, "fair_price": 8750.0, "discount_pct": -1.8, "verdict": "férová cena", "year": 2018, "km": 69408, "km_per_year": 8300.0, "eg": "1.4 benzín / 1.4 T-Jet 70–88 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Levice", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmQ3U1973cU", "url": "https://www.autobazar.eu/detail/fiat-doblo-14-benzin-5-seats-manual-e6-vin-272/AmQ3U1973cU/", "price": 8900}], "body": "mpv"}, {"id": "196629443", "url": "https://auto.bazos.sk/inzerat/196629443/fiat-doblo-16-jtd-88-kw-rok-2016-mt6.php", "title": "Fiat Doblo 1.6 JTD 88 kW rok 2016 MT/6", "price": 7700, "price_gross": 7700, "fair_price": 7550.0, "discount_pct": -2.0, "verdict": "férová cena", "year": 2016, "km": 157402, "km_per_year": 15200.0, "eg": "1.6 / 2.0 Multijet 66–99 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Považská Bystrica", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "bs-34352294", "url": "https://auto.bazar.sk/34352294-fiat-doblo-1-6-multijet/", "title": "Fiat Doblo 1.6 MultiJet", "price": 7000, "price_gross": 7000, "fair_price": 6850.0, "discount_pct": -2.2, "verdict": "férová cena", "year": 2015, "km": 158657, "km_per_year": 14000.0, "eg": "1.6 / 2.0 Multijet 66–99 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Nové Zámky", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "bs-39693004", "url": "https://auto.bazar.sk/39693004-fiat-doblo-1-4-benzin-manual-5-seats-vin-496/", "title": "FIAT DOBLO 1,4 benzín manuál 5 seats VIN 496", "price": 8900, "price_gross": 8900, "fair_price": 8700.0, "discount_pct": -2.3, "verdict": "férová cena", "year": 2018, "km": 71040, "km_per_year": 8500.0, "eg": "1.4 benzín / 1.4 T-Jet 70–88 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Levice", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197636019", "url": "https://auto.bazos.sk/inzerat/197636019/fiat-doblo.php", "title": "Fiat doblo 1.6.77kw 2010", "price": 3400, "price_gross": 3400, "fair_price": 3320.0, "discount_pct": -2.5, "verdict": "férová cena", "year": 2010, "km": 319000, "km_per_year": 19500.0, "eg": "1.4 benzín / 1.4 T-Jet 70–88 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Trebišov", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "bs-39728713", "url": "https://auto.bazar.sk/39728713-fiat-doblo-1-4-benzin-e6-5-seats-manual-vin-936/", "title": "FIAT DOBLO 1,4 benzín E6 5 seats manual VIN 936", "price": 8900, "price_gross": 8900, "fair_price": 8620.0, "discount_pct": -3.3, "verdict": "férová cena", "year": 2018, "km": 74127, "km_per_year": 8900.0, "eg": "1.4 benzín / 1.4 T-Jet 70–88 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Levice", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197482685", "url": "https://auto.bazos.sk/inzerat/197482685/fiat-doblo-panorama-16-multijet-120-plus.php", "title": "Fiat Dobló Panorama 1.6 MultiJet 120 Plus", "price": 7390, "price_gross": 7390, "fair_price": 7110.0, "discount_pct": -3.9, "verdict": "férová cena", "year": 2017, "km": 237401, "km_per_year": 25400.0, "eg": "1.6 / 2.0 Multijet 66–99 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Bánovce nad Bebravou", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "bs-39721474", "url": "https://auto.bazar.sk/39721474-fiat-doblo-1-4-benzin-5-seats-manual-e6-vin-034/", "title": "FIAT DOBLO 1,4 benzín 5 seats manual E6 VIN 034", "price": 7900, "price_gross": 7900, "fair_price": 7530.0, "discount_pct": -4.9, "verdict": "férová cena", "year": 2018, "km": 118421, "km_per_year": 14200.0, "eg": "1.4 benzín / 1.4 T-Jet 70–88 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Levice", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "bs-39760359", "url": "https://auto.bazar.sk/39760359-fiat-doblo-1-4-benzin-5-seats-manual-e6-vin-219/", "title": "FIAT DOBLO 1,4 benzín 5 seats manual E6 VIN 219", "price": 9500, "price_gross": 9500, "fair_price": 9050.0, "discount_pct": -5.0, "verdict": "férová cena", "year": 2019, "km": 81991, "km_per_year": 11200.0, "eg": "1.4 benzín / 1.4 T-Jet 70–88 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Levice", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-Am5VZTmlGTD", "url": "https://www.autobazar.eu/detail/fiat-doblo-14-family/Am5VZTmlGTD/", "title": "Fiat Dobló 1.4 Family", "price": 2999, "price_gross": 2999, "fair_price": 2820.0, "discount_pct": -6.2, "verdict": "férová cena", "year": 2008, "km": 233040, "km_per_year": 12700.0, "eg": "1.4 benzín / 1.4 T-Jet 70–88 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Michalovce", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazarsk", "id": "bs-39498531", "url": "https://auto.bazar.sk/39498531-fiat-doblo-1-4-family/", "price": 2999}], "body": "mpv"}, {"id": "197641111", "url": "https://auto.bazos.sk/inzerat/197641111/fiat-doblo-chladiarenskemraziarenske-auto.php", "title": "Fiat Doblo chladiarenske/mraziarenske auto", "price": 8999, "price_gross": 8999, "fair_price": 8410.0, "discount_pct": -7.0, "verdict": "férová cena", "year": 2019, "km": 151500, "km_per_year": 20700.0, "eg": "1.4 benzín / 1.4 T-Jet 70–88 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Prievidza", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "bs-39636454", "url": "https://auto.bazar.sk/39636454-fiat-doblo-1-6-multijet/", "title": "Fiat Doblo 1.6 MultiJet", "price": 9000, "price_gross": 9000, "fair_price": 8370.0, "discount_pct": -7.5, "verdict": "nad trhom", "year": 2018, "km": 132991, "km_per_year": 16000.0, "eg": "1.6 / 2.0 Multijet 66–99 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava V - Petržalka", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AeSAeHWIR7U", "url": "https://www.autobazar.eu/detail/fiat-doblo-2017-akcia/AeSAeHWIR7U/", "title": "Fiat Dobló 2017 - AKCIA", "price": 7500, "price_gross": 7500, "fair_price": 6910.0, "discount_pct": -8.5, "verdict": "nad trhom", "year": 2017, "km": 160877, "km_per_year": 17200.0, "eg": "1.4 benzín / 1.4 T-Jet 70–88 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava-Petržalka", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "ab-Ae_f4oJarYH", "url": "https://www.autobazar.eu/detail/fiat-doblo-fiat-doblo/Ae_f4oJarYH/", "title": "Fiat Dobló Fiat Doblo", "price": 12300, "price_gross": 12300, "fair_price": 11310.0, "discount_pct": -8.8, "verdict": "nad trhom", "year": 2022, "km": 37000, "km_per_year": 8500.0, "eg": "1.6 / 2.0 Multijet 66–99 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Rakovo", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197621881", "url": "https://auto.bazos.sk/inzerat/197621881/predaj-servisneho-vozidla-fiat-doblo.php", "price": 12300}], "body": "mpv"}, {"id": "bs-39703418", "url": "https://auto.bazar.sk/39703418-fiat-doblo-1-3-multijet/", "title": "Fiat Doblo 1.3 MultiJet", "price": 5600, "price_gross": 5600, "fair_price": 5150.0, "discount_pct": -8.8, "verdict": "nad trhom", "year": 2018, "km": 206325, "km_per_year": 24800.0, "eg": "1.3 / 1.9 Multijet 51–77 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava V - Petržalka", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "bs-39748949", "url": "https://auto.bazar.sk/39748949-fiat-doblo-panorama-1-4-t-jet-plus/", "title": "Fiat Dobló Panorama 1.4 T-Jet Plus", "price": 8900, "price_gross": 8900, "fair_price": 8170.0, "discount_pct": -8.9, "verdict": "nad trhom", "year": 2018, "km": 66101, "km_per_year": 7900.0, "eg": "1.4 benzín / 1.4 T-Jet 70–88 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Kremnica", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmfsqcdXENQ", "url": "https://www.autobazar.eu/detail/fiat-doblo-panorama-14-t-jet-plus/AmfsqcdXENQ/", "price": 8900}], "body": "mpv"}, {"id": "ab-AeUE1v7MEd5", "url": "https://www.autobazar.eu/detail/fiat-doblo-doblo-combi-16-16v-multijet-sx-e5-77kw105hp-m6/AeUE1v7MEd5/", "title": "Fiat Dobló ŤZP 1.6 16V 77kW105HP M6", "price": 8600, "price_gross": 8600, "fair_price": 7820.0, "discount_pct": -10.0, "verdict": "nad trhom", "year": 2014, "km": 146442, "km_per_year": 11900.0, "eg": "1.6 / 2.0 Multijet 66–99 kW", "cg": 1, "transmission": "manual", "seller_type": "private", "location": "Brezno", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "197174752", "url": "https://auto.bazos.sk/inzerat/197174752/fiat-doblo-16-multijet-77kw-mt6-2021-kupene-v-sr.php", "title": "Fiat Dobló 1.6 MultiJet 77kW MT/6 2021 / Kúpené v SR", "price": 10990, "price_gross": 10990, "fair_price": 9990.0, "discount_pct": -10.0, "verdict": "nad trhom", "year": 2021, "km": 201141, "km_per_year": 37700.0, "eg": "1.6 / 2.0 Multijet 66–99 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Žilina", "flags": ["vysoký nájazd 38000 km/rok – flotila / taxi?"], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-39759961", "url": "https://auto.bazar.sk/39759961-fiat-doblo-1-6-multijet-77kw-mt-6-2021-aj-na-splatky-protiucet/", "price": 10990}], "body": "mpv"}, {"id": "bs-39755286", "url": "https://auto.bazar.sk/39755286-fiat-doblo/", "title": "Fiat Dobló", "price": 10499, "price_gross": 10499, "fair_price": 9540.0, "discount_pct": -10.1, "verdict": "nad trhom", "year": 2017, "km": 44869, "km_per_year": 4800.0, "eg": "1.4 benzín / 1.4 T-Jet 70–88 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Svätý Jur", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "bs-39746566", "url": "https://auto.bazar.sk/39746566-fiat-doblo-1-4-t-jet-120k-plus-v-zaruke/", "title": "Fiat Dobló 1.4 T-Jet 120k Plus V ZÁRUKE!", "price": 9499, "price_gross": 9499, "fair_price": 8620.0, "discount_pct": -10.2, "verdict": "nad trhom", "year": 2019, "km": 59364, "km_per_year": 8100.0, "eg": "1.4 benzín / 1.4 T-Jet 70–88 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Poprad", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197588804", "url": "https://auto.bazos.sk/inzerat/197588804/fiat-doblo-2-miestne.php", "price": 9699}, {"source": "autobazar", "id": "ab-AmBsJ8YM6Lk", "url": "https://www.autobazar.eu/detail/fiat-doblo-14-t-jet-120k-plus-v-zaruke/AmBsJ8YM6Lk/", "price": 9499}], "body": "mpv"}, {"id": "197709507", "url": "https://auto.bazos.sk/inzerat/197709507/fiat-doblo-19jtd-88kw-dynamic-model-2008.php", "title": "Fiat Doblo 1.9jtd 88kw Dynamic model 2008", "price": 3250, "price_gross": 3250, "fair_price": 2890.0, "discount_pct": -12.3, "verdict": "nad trhom", "year": 2008, "km": 164475, "km_per_year": 9000.0, "eg": "1.6 / 2.0 Multijet 66–99 kW", "cg": 1, "transmission": null, "seller_type": "dealer", "location": "Púchov", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "195827167", "url": "https://auto.bazos.sk/inzerat/195827167/na-predaj.php", "title": "Na predaj", "price": 6000, "price_gross": 6000, "fair_price": 5340.0, "discount_pct": -12.4, "verdict": "nad trhom", "year": 2013, "km": 196455, "km_per_year": 14700.0, "eg": "1.6 / 2.0 Multijet 66–99 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Bratislava", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "196265240", "url": "https://auto.bazos.sk/inzerat/196265240/fiat-doblo-panorama-16-77-kw.php", "title": "Fiat Doblo Panorama 1.6 77 kW", "price": 4350, "price_gross": 4350, "fair_price": 3820.0, "discount_pct": -13.8, "verdict": "nad trhom", "year": 2010, "km": 272500, "km_per_year": 16700.0, "eg": "1.6 / 2.0 Multijet 66–99 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Levice", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "196977531", "url": "https://auto.bazos.sk/inzerat/196977531/fiat-doblo-16-multijet.php", "title": "FIAT DOBLO 1.6 MULTIJET", "price": 11600, "price_gross": 11600, "fair_price": 10120.0, "discount_pct": -14.7, "verdict": "nad trhom", "year": 2019, "km": 134500, "km_per_year": 18300.0, "eg": "1.6 / 2.0 Multijet 66–99 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Poprad", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197134000", "url": "https://auto.bazos.sk/inzerat/197134000/fiat-doblo-2016-16d.php", "title": "Fiat Doblo 2016 1.6D", "price": 7990, "price_gross": 7990, "fair_price": 6870.0, "discount_pct": -16.3, "verdict": "výrazne nad trhom", "year": 2016, "km": 192406, "km_per_year": 18600.0, "eg": "1.6 / 2.0 Multijet 66–99 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Topoľčany", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39722266", "url": "https://auto.bazar.sk/39722266-fiat-doblo-lounge-1-6-120k-multijet/", "price": 7990}, {"source": "autobazar", "id": "ab-AmOrW5FY_Xz", "url": "https://www.autobazar.eu/detail/fiat-doblo-lounge-16-120k-multijet/AmOrW5FY_Xz/", "price": 7990}], "body": "mpv"}, {"id": "196417556", "url": "https://auto.bazos.sk/inzerat/196417556/fiat-doblo-rv2011-16-66kw.php", "title": "Fiat Doblo r.v.2011 1.6  66kW", "price": 5190, "price_gross": 5190, "fair_price": 4440.0, "discount_pct": -17.0, "verdict": "výrazne nad trhom", "year": 2011, "km": 230000, "km_per_year": 15000.0, "eg": "1.6 / 2.0 Multijet 66–99 kW", "cg": 1, "transmission": null, "seller_type": "dealer", "location": "Žilina", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "196277841", "url": "https://auto.bazos.sk/inzerat/196277841/fiat-doblo-panorama-14-benzinlpg.php", "title": "Fiat Doblo Panorama 1,4 benzín+LPG", "price": 10990, "price_gross": 10990, "fair_price": 9210.0, "discount_pct": -19.3, "verdict": "výrazne nad trhom", "year": 2018, "km": 66000, "km_per_year": 7900.0, "eg": "LPG / CNG", "cg": 2, "transmission": "manual", "seller_type": "dealer", "location": "Bardejov", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-Aed4vPVQ-N_", "url": "https://www.autobazar.eu/detail/fiat-doblo-2019/Aed4vPVQ-N_/", "title": "Fiat Dobló 5 miestne", "price": 8999, "price_gross": 8999, "fair_price": 7540.0, "discount_pct": -19.3, "verdict": "výrazne nad trhom", "year": 2019, "km": 125000, "km_per_year": 17000.0, "eg": "1.6 / 2.0 Multijet 66–99 kW", "cg": 1, "transmission": "manual", "seller_type": "private", "location": "Rimavská Sobota", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "197544723", "url": "https://auto.bazos.sk/inzerat/197544723/fiat-doblo.php", "title": "Fiat Doblo", "price": 8990, "price_gross": 8990, "fair_price": 7500.0, "discount_pct": -19.9, "verdict": "výrazne nad trhom", "year": 2019, "km": 183000, "km_per_year": 25000.0, "eg": "1.4 benzín / 1.4 T-Jet 70–88 kW", "cg": 0, "transmission": null, "seller_type": "dealer", "location": "Liptovský Mikuláš", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "bs-23123090", "url": "https://auto.bazar.sk/23123090-fiat-doblo-1-3-multijet-16v-base-55kw-m5-4d/", "title": "Fiat Dobló 1.3 MultiJet 16v BASE, 55kW, M5, 4d.", "price": 9000, "price_gross": 9000, "fair_price": 7320.0, "discount_pct": -22.9, "verdict": "výrazne nad trhom", "year": 2014, "km": 34000, "km_per_year": 2800.0, "eg": "1.3 / 1.9 Multijet 51–77 kW", "cg": 1, "transmission": "manual", "seller_type": "private", "location": "Košice", "flags": ["nezvyčajne nízky nájazd na vek (34 000 km) – over  či nejde o preklep"], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197782317", "url": "https://auto.bazos.sk/inzerat/197782317/fiat-doblo-13jtd-70kw-4-valecdiesel-m-2021-naj21800km.php", "title": "FIAT DOBLO 1.3JTd 70KW-4-valec,DIESEL, M-2021, naj.21.800km", "price": 10450, "price_gross": 10450, "fair_price": 8470.0, "discount_pct": -23.4, "verdict": "výrazne nad trhom", "year": 2021, "km": 21800, "km_per_year": 4100.0, "eg": "1.6 / 2.0 Multijet 66–99 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Martin", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "196919202", "url": "https://auto.bazos.sk/inzerat/196919202/doblo-16-d-multijet.php", "title": "Doblo 1,6 D Multijet", "price": 6390, "price_gross": 6390, "fair_price": 5150.0, "discount_pct": -24.2, "verdict": "výrazne nad trhom", "year": 2017, "km": 317000, "km_per_year": 34000.0, "eg": "1.6 / 2.0 Multijet 66–99 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Partizánske", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197166565", "url": "https://auto.bazos.sk/inzerat/197166565/fiat-doblo-16-multijet-77-kw.php", "title": "Fiat Doblo 1.6 MultiJet 77 kW", "price": 12490, "price_gross": 12490, "fair_price": 9830.0, "discount_pct": -27.1, "verdict": "výrazne nad trhom", "year": 2020, "km": 162000, "km_per_year": 25600.0, "eg": "1.6 / 2.0 Multijet 66–99 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Kežmarok", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AeBlg5S5fUE", "url": "https://www.autobazar.eu/detail/fiat-doblo-16-diesel-77kw-manual-prevodovka/AeBlg5S5fUE/", "title": "Fiat Dobló 1.6 Diesel 77kW Manuál. prevodovka", "price": 17000, "price_gross": 17000, "fair_price": 13310.0, "discount_pct": -27.7, "verdict": "výrazne nad trhom", "year": 2022, "km": 123367, "km_per_year": 28500.0, "eg": "1.6 / 2.0 Multijet 66–99 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Rimavská Sobota", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197415988", "url": "https://auto.bazos.sk/inzerat/197415988/fiat-doblo-maxi.php", "price": 17000}], "body": "mpv"}, {"id": "bs-34353739", "url": "https://auto.bazar.sk/34353739-fiat-doblo-1-3-multijet/", "title": "Fiat Doblo 1.3 MultiJet", "price": 5500, "price_gross": 5500, "fair_price": 4240.0, "discount_pct": -29.6, "verdict": "výrazne nad trhom", "year": 2013, "km": 185928, "km_per_year": 13900.0, "eg": "1.6 / 2.0 Multijet 66–99 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Nové Zámky", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "bs-39046613", "url": "https://auto.bazar.sk/39046613-fiat-doblo-panorama-1-6-multijet-105-lounge-sr/", "title": "Fiat Dobló Panorama 1.6 MultiJet 105 Lounge SR", "price": 6799, "price_gross": 6799, "fair_price": 5230.0, "discount_pct": -30.1, "verdict": "výrazne nad trhom", "year": 2016, "km": 305243, "km_per_year": 29500.0, "eg": "1.6 / 2.0 Multijet 66–99 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Kalinkovo", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-Am_218LEukM", "url": "https://www.autobazar.eu/detail/fiat-doblo-panorama-16-multijet-105-lounge-sr/Am_218LEukM/", "price": 6799}, {"source": "bazos", "id": "197721135", "url": "https://auto.bazos.sk/inzerat/197721135/fiat-doblo-panorama-16-multijet-105-lounge-sr.php", "price": 6799}], "body": "mpv"}, {"id": "197697411", "url": "https://auto.bazos.sk/inzerat/197697411/fiat-doblo-13-jtd-55-kw-2009nove-gumybrzdy-olej-filtre.php", "title": "Fiat Doblo 1.3 JTD 55 kW, 2009,nové gumy,brzdy, olej, filtre", "price": 2490, "price_gross": 2490, "fair_price": 1900.0, "discount_pct": -31.0, "verdict": "výrazne nad trhom", "year": 2009, "km": 389412, "km_per_year": 22500.0, "eg": "1.3 / 1.9 Multijet 51–77 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Topoľčany", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197175359", "url": "https://auto.bazos.sk/inzerat/197175359/ponukam-na-predaj-fiat-doblo.php", "title": "Ponukam na predaj Fiat Doblo", "price": 6800, "price_gross": 6800, "fair_price": 5080.0, "discount_pct": -33.8, "verdict": "výrazne nad trhom", "year": 2016, "km": 239065, "km_per_year": 23100.0, "eg": "1.6 / 2.0 Multijet 66–99 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Svidník", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197175115", "url": "https://auto.bazos.sk/inzerat/197175115/doblo-chladiarenskemraziarenske-auto.php", "title": "Doblo chladiarenske/mraziarenske auto", "price": 9999, "price_gross": 9999, "fair_price": 6810.0, "discount_pct": -46.8, "verdict": "výrazne nad trhom", "year": 2019, "km": 140000, "km_per_year": 19100.0, "eg": "1.3 / 1.9 Multijet 51–77 kW", "cg": 1, "transmission": null, "seller_type": "dealer", "location": "Prievidza", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "bs-34352599", "url": "https://auto.bazar.sk/34352599-fiat-doblo-1-4-t-jet/", "title": "Fiat Doblo 1.4 T-Jet", "price": 14000, "price_gross": 14000, "fair_price": 9520.0, "discount_pct": -47.0, "verdict": "výrazne nad trhom", "year": 2019, "km": 25304, "km_per_year": 3500.0, "eg": "1.4 benzín / 1.4 T-Jet 70–88 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Nové Zámky", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197557428", "url": "https://auto.bazos.sk/inzerat/197557428/fiat-doblo-20-16v-multijet-xl-99-kw.php", "title": "Fiat Dobló 2.0 16V MultiJet XL 99 kw", "price": 11590, "price_gross": 11590, "fair_price": 7570.0, "discount_pct": -53.0, "verdict": "výrazne nad trhom", "year": 2015, "km": 213387, "km_per_year": 18800.0, "eg": "1.6 / 2.0 Multijet 66–99 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Bánovce nad Bebravou", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "bs-38067573", "url": "https://auto.bazar.sk/38067573-fiat-doblo-1-4-t-cng/", "title": "Fiat Doblo 1.4 T CNG", "price": 15067, "price_gross": 15067, "fair_price": 9720.0, "discount_pct": -55.1, "verdict": "výrazne nad trhom", "year": 2018, "km": 79535, "km_per_year": 9500.0, "eg": "LPG / CNG", "cg": 2, "transmission": "manual", "seller_type": "dealer", "location": "Praha 1", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "bs-39674731", "url": "https://auto.bazar.sk/39674731-fiat-doblo-1-3-multijet/", "title": "Fiat Doblo 1.3 MultiJet", "price": 5600, "price_gross": 5600, "fair_price": 3580.0, "discount_pct": -56.3, "verdict": "výrazne nad trhom", "year": 2010, "km": 167403, "km_per_year": 10200.0, "eg": "1.3 / 1.9 Multijet 51–77 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava V - Petržalka", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "mpv"}];
+const GROUPS = ["Benzín", "Diesel Multijet", "LPG / CNG a nezistený"];
+const BODY = {"mpv": "osobné MPV"};
+const fmt = n => Math.round(n).toLocaleString("sk-SK");
+const eur = n => fmt(n) + " €";
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const TRANS = {automatic: "automat", manual: "manuál"};
+const SRC = {bazos: "bazoš", autobazar: "autobazar.eu", bazarsk: "bazar.sk"};
+
+// --- theme toggle ---------------------------------------------------------
+document.getElementById("themeBtn").onclick = () => {
+  const root = document.documentElement;
+  const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  drawChart();
+};
+
+// --- scatter chart --------------------------------------------------------
+const legend = document.getElementById("legend");
+legend.innerHTML = GROUPS.map((g, i) => `<span><i style="background:var(--s${i+1})"></i>${g}</span>`).join("")
+  + `<span><i class="ring"></i>odporúčaná ponuka</span>`;
+
+function drawChart() {
+  const svg = document.getElementById("chart"), wrap = document.getElementById("chartWrap"), tip = document.getElementById("tip");
+  const W = svg.clientWidth, H = 420, m = {l: 56, r: 16, t: 10, b: 40};
+  const pts = DATA.filter(d => d.km && d.price_gross);
+  const xMax = Math.ceil(Math.max(...pts.map(d => d.km)) / 50000) * 50000;
+  const yMax = Math.ceil(Math.max(...pts.map(d => d.price_gross)) / 5000) * 5000;
+  const x = v => m.l + v / xMax * (W - m.l - m.r), y = v => H - m.b - v / yMax * (H - m.t - m.b);
+  let s = "";
+  for (let v = 0; v <= yMax; v += 5000)
+    s += `<line x1="${m.l}" x2="${W-m.r}" y1="${y(v)}" y2="${y(v)}" stroke="var(--grid)"/><text x="${m.l-8}" y="${y(v)+4}" text-anchor="end">${v/1000} tis. €</text>`;
+  const step = W < 520 ? 100000 : 50000;
+  for (let v = 0; v <= xMax; v += step)
+    s += `<text x="${x(v)}" y="${H-m.b+18}" text-anchor="middle">${v/1000} tis.</text>`;
+  s += `<text x="${(W+m.l)/2}" y="${H-6}" text-anchor="middle">nájazd (km)</text>`;
+  const order = [...pts].sort((a, b) => (a.pick ? 1 : 0) - (b.pick ? 1 : 0));
+  order.forEach(d => {
+    const cx = x(d.km), cy = y(d.price_gross);
+    if (d.pick) s += `<circle cx="${cx}" cy="${cy}" r="9" fill="none" stroke="var(--text)" stroke-width="2"/>`;
+    s += `<circle class="pt" data-id="${d.id}" cx="${cx}" cy="${cy}" r="5" fill="var(--s${d.cg+1})" stroke="var(--surface)" stroke-width="2"/>`;
+  });
+  // invisible bigger hit targets
+  order.forEach(d => s += `<circle class="hit" data-id="${d.id}" cx="${x(d.km)}" cy="${y(d.price_gross)}" r="11" fill="transparent" style="cursor:pointer"/>`);
+  svg.innerHTML = s;
+  const byId = Object.fromEntries(pts.map(d => [d.id, d]));
+  svg.querySelectorAll(".hit").forEach(c => {
+    c.onmouseenter = c.onmousemove = ev => {
+      const d = byId[c.dataset.id];
+      tip.innerHTML = `<b>${esc(d.title)}</b>
+        <div class="row"><span>Cena</span><span>${eur(d.price_gross)}</span></div>
+        <div class="row"><span>Férová cena</span><span>${eur(d.fair_price)}</span></div>
+        <div class="row"><span>Pod trhom</span><span>${d.discount_pct > 0 ? "+" : ""}${d.discount_pct.toLocaleString("sk-SK")} %</span></div>
+        <div class="row"><span>Zdroj</span><span>${SRC[d.source]}${d.also_listed.length ? " + " + d.also_listed.map(a => SRC[a.source]).join(", ") : ""}</span></div>
+        <div class="row"><span>Rok · km</span><span>${d.year} · ${fmt(d.km)}</span></div>
+        <div class="row"><span>Motor</span><span>${esc(d.eg)} ${TRANS[d.transmission] || ""}</span></div>`;
+      tip.style.display = "block";
+      const r = wrap.getBoundingClientRect();
+      let lx = ev.clientX - r.left + 14, ly = ev.clientY - r.top + 14;
+      if (lx + 290 > r.width) lx = ev.clientX - r.left - 290;
+      tip.style.left = lx + "px"; tip.style.top = ly + "px";
+    };
+    c.onmouseleave = () => tip.style.display = "none";
+    c.onclick = () => window.open(byId[c.dataset.id].url, "_blank", "noopener");
+  });
+}
+drawChart();
+addEventListener("resize", drawChart);
+
+// --- full table -----------------------------------------------------------
+const fEngine = document.getElementById("fEngine");
+[...new Set(DATA.map(d => d.eg))].sort().forEach(g => fEngine.insertAdjacentHTML("beforeend", `<option>${esc(g)}</option>`));
+let sortK = "discount_pct", sortDir = -1;
+function discCell(v) {
+  const w = Math.min(Math.abs(v), 30) / 30 * 50;
+  const bar = v >= 0 ? `left:50%;width:${w}%;background:var(--pos)` : `right:50%;width:${w}%;background:var(--neg)`;
+  return `<span class="disc">${v > 0 ? "+" : ""}${v.toLocaleString("sk-SK")} %<span class="dbar"><span style="${bar}"></span></span></span>`;
+}
+function renderTable() {
+  const max = parseFloat(document.getElementById("fMax").value) || Infinity;
+  const tr = document.getElementById("fTrans").value, se = document.getElementById("fSeller").value, en = fEngine.value;
+  const so = document.getElementById("fSource").value, og = document.getElementById("fOrigin").value;
+  const bo = document.getElementById("fBody").value;
+  const rows = DATA.filter(d => (!en || d.eg === en) && (!tr || d.transmission === tr)
+    && (!se || d.seller_type !== "dealer") && d.price_gross <= max
+    && (!so || d.source === so || d.also_listed.some(a => a.source === so)) && (!og || d.origin === og) && (!bo || d.body === bo))
+    .sort((a, b) => { const A = a[sortK], B = b[sortK]; return (typeof A === "string" ? A.localeCompare(B) : A - B) * sortDir; });
+  document.getElementById("count").textContent = `${rows.length} z ${DATA.length} inzerátov`;
+  document.querySelector("#tbl tbody").innerHTML = rows.map(d => `<tr>
+    <td><a href="${d.url}" target="_blank" rel="noopener">${esc(d.title)}</a> ${d.pick ? '<span class="badge pick">odporúčané</span>' : ""}
+      <div class="sub">${BODY[d.body] || "karoséria ?"} · ${esc(d.eg)} · ${TRANS[d.transmission] || "prevodovka ?"} · ${esc(d.location)} · ${d.seller_type === "dealer" ? "predajca/firma" : d.seller_type === "private" ? "súkromník" : "neisté"} · ${SRC[d.source]}${d.origin === "SR" ? " · kúpené v SR" : d.origin === "dovoz" ? " · dovoz" : ""}${d.also_listed.map(a => ` · <a href="${a.url}" target="_blank" rel="noopener">aj na ${SRC[a.source]}</a>`).join("")}</div>
+      ${d.flags.filter(f => !f.startsWith("prevodovka")).map(f => `<div class="flag">⚠ ${esc(f)}</div>`).join("")}</td>
+    <td class="num">${d.year}</td><td class="num">${fmt(d.km)}</td>
+    <td class="num">${eur(d.price_gross)}</td><td class="num">${eur(d.fair_price)}</td>
+    <td class="num">${discCell(d.discount_pct)}</td></tr>`).join("");
+  document.querySelectorAll("#tbl th.sortable").forEach(th => {
+    const base = th.textContent.replace(/ [▾▴]$/, "");
+    th.textContent = base + (th.dataset.k === sortK ? (sortDir < 0 ? " ▾" : " ▴") : "");
+  });
+}
+document.querySelectorAll("#tbl th.sortable").forEach(th => th.onclick = () => {
+  if (sortK === th.dataset.k) sortDir *= -1; else { sortK = th.dataset.k; sortDir = th.dataset.k === "title" ? 1 : -1; }
+  renderTable();
+});
+["fEngine", "fTrans", "fSeller", "fSource", "fBody", "fOrigin", "fMax"].forEach(id => document.getElementById(id).addEventListener("input", renderTable));
+renderTable();
+</script>
+<!-- ferovka-theme --><script defer src="/analytics-config.js"></script><script defer src="/analytics.js"></script><script id="ferovka-chart">/* Férovka – chart → ad links, injected into every report by sync-reports.mjs.
+ *
+ * The reports draw one invisible 11px "hit" circle per ad. In dense charts (and always on a narrow phone) those
+ * circles overlap and the one drawn last wins, so a click/tap often opened a neighbouring ad. Here the pointer is
+ * always resolved to the NEAREST point, the report's own tooltip is shown for that point, and a click opens its ad.
+ * Touch: the first tap shows the tooltip (with a hint), a second tap on the same point opens the ad.
+ */
+(() => {
+  let rows;
+  try { rows = DATA; } catch { return; } // eslint-disable-line no-undef
+  if (!Array.isArray(rows) || !rows.length || !("url" in rows[0])) return;
+  const byId = new Map(rows.map((d) => [String(d.id), d]));
+  const MOUSE = ["mouseover", "mouseout", "mouseenter", "mouseleave", "mousemove", "mousedown", "mouseup", "click"];
+  let lastPointer = "mouse", down = null;
+  // the finger position as it was – Chrome "snaps" the later click of a tap to the centre of a nearby clickable element
+  addEventListener("pointerdown", (e) => { lastPointer = e.pointerType || "mouse"; down = { clientX: e.clientX, clientY: e.clientY }; }, true);
+
+  // the old per-point hit circles must not be targets (they overlap, and touch snapping aims at them)
+  document.head.insertAdjacentHTML("beforeend", "<style>svg circle.hit[data-id],svg circle.pt[data-id]{pointer-events:none}</style>");
+
+  function nearest(svg, ev, radius) {
+    let best = null, bd = Infinity;
+    for (const c of svg.querySelectorAll("circle.pt[data-id]")) {
+      const r = c.getBoundingClientRect();
+      const dx = r.left + r.width / 2 - ev.clientX, dy = r.top + r.height / 2 - ev.clientY;
+      const d = dx * dx + dy * dy;
+      if (d <= bd) { bd = d; best = c; } // ties: the point drawn on top (later) wins – that is the one you see
+    }
+    return best && bd <= radius * radius ? best : null;
+  }
+
+  function bind(svg) {
+    if (svg.__fvLinks) return;
+    svg.__fvLinks = true;
+    let current = null, armed = null;
+    const hitOf = (pt) => pt && svg.querySelector(`circle.hit[data-id="${CSS.escape(pt.dataset.id)}"]`);
+    const fire = (el, type, ev) => {
+      if (!el) return;
+      const e = new MouseEvent(type, { clientX: ev.clientX, clientY: ev.clientY, bubbles: false });
+      e.__fv = true;
+      el.dispatchEvent(e);
+    };
+    const tip = () => (svg.parentElement && svg.parentElement.querySelector("#tip, .tip")) || document.getElementById("tip");
+    const mark = (pt) => {
+      if (current === pt) return;
+      if (current) current.setAttribute("r", current.__r || "5");
+      current = pt;
+      if (pt) { pt.__r = pt.__r || pt.getAttribute("r"); pt.setAttribute("r", String(+pt.__r + 2)); }
+    };
+    const show = (pt, ev, hint) => {
+      mark(pt);
+      if (!pt) { const t = tip(); if (t) t.style.display = "none"; return; }
+      fire(hitOf(pt), "mousemove", ev); // the report's own tooltip, for the nearest point
+      const t = tip();
+      if (t && hint) t.insertAdjacentHTML("beforeend", `<div class="fv-hint">Ťukni ešte raz – otvorí sa inzerát ↗</div>`);
+    };
+    const open = (pt) => {
+      const d = byId.get(pt.dataset.id);
+      if (d && d.url) {
+        try { window.FerovkaAnalytics?.listingClick(d.url, "chart"); } catch { /* analytics must never block an ad */ }
+        window.open(d.url, "_blank", "noopener");
+      }
+    };
+
+    // the per-circle handlers of the report never see real mouse events – only our synthetic ones
+    for (const type of MOUSE) {
+      svg.addEventListener(type, (ev) => {
+        if (ev.__fv) return;
+        ev.stopImmediatePropagation();
+        if (type === "mousemove" && lastPointer === "mouse") {
+          show(nearest(svg, ev, 18), ev, false);
+          svg.style.cursor = current ? "pointer" : "";
+        } else if (type === "mouseleave" && ev.target === svg && lastPointer === "mouse") {
+          show(null, ev);
+        } else if (type === "click") {
+          const touch = lastPointer !== "mouse";
+          const at = touch && down ? down : ev;
+          const pt = nearest(svg, at, touch ? 26 : 18);
+          if (!pt) { armed = null; show(null, ev); return; }
+          if (!touch || armed === pt) { armed = null; open(pt); }
+          else { armed = pt; show(pt, at, true); }
+        }
+      }, true);
+    }
+  }
+
+  const scan = () => document.querySelectorAll("svg").forEach((s) => s.querySelector("circle.pt[data-id]") && bind(s));
+  scan();
+  new MutationObserver(scan).observe(document.body, { childList: true, subtree: true });
+})();
+</script><script id="ferovka-filters">/* Férovka – filters for the whole report, injected into every model report by sync-reports.mjs.
+ *
+ * The reports render the chart (drawChart) and the full ranking (renderTable) from the global DATA array; their own
+ * filter bar only filters the table. Here the filter bar (kept in its place above the ranking) gets more filters (year, price from/to,
+ * km, fuel, discount, picks only, text search) and every filter applies to the chart and the ranking together: DATA is
+ * refilled in place with the matching ads and both are drawn again. "</script" can't occur inside this file.
+ */
+(() => {
+  let data;
+  try { data = DATA; } catch { return; } // eslint-disable-line no-undef
+  if (!Array.isArray(data) || !data.length || typeof renderTable !== "function") return; // eslint-disable-line no-undef
+  const bar = document.querySelector(".filters");
+  if (!bar || bar.dataset.fv) return;
+  bar.dataset.fv = "1";
+  const ALL = data.slice();
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+  const fmt = (n) => Math.round(n).toLocaleString("sk-SK");
+  const norm = (s) => String(s ?? "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+  let groups = null;
+  try { groups = GROUPS; } catch { /* report without groups */ } // eslint-disable-line no-undef
+
+  const FUEL = { diesel: "Diesel", petrol: "Benzín", hybrid: "Hybrid", "plug-in hybrid": "Plug-in hybrid", electric: "Elektro", lpg: "LPG", cng: "CNG" };
+  const fuelOf = (d) => {
+    const e = norm(d.eg);
+    if (/tdi|crdi|dci|hdi|diesel|\bd\b|cdi|\d+d\b|blue/.test(e)) return "Diesel";
+    if (/plug-in|phev|e-hybrid|recharge|\bgte\b|\bt8\b|\b\d{2}e\b|\b\d{3} ?e\b/.test(e)) return "Plug-in hybrid";
+    if (/elektro|electric|\bev\b/.test(e)) return "Elektro";
+    if (/cng|lpg|g-tec|g-tron|tgi|ecofuel/.test(e)) return "Plyn (CNG/LPG)";
+    if (/mild|mhev/.test(e)) return "Benzín"; // mild-hybrid petrol (the diesel ones say TDI / d above)
+    if (/hybrid|hev/.test(e)) return "Hybrid";
+    if (/tsi|tfsi|mpi|fsi|benzin|gdi|dpi|htp|12v|\bt\d\b|\bb[56]\b|\d+i\b|turbo|tce|\bs4\b|rs ?\d|amg|competition|\bm\d{2,3}i?\b|gti|\bx5 m\b/.test(e)) return "Benzín";
+    return d.fuel ? FUEL[d.fuel] || String(d.fuel) : null;
+  };
+
+  // --- controls ---------------------------------------------------------------------------------------------------
+  const years = ALL.map((d) => d.year).filter(Boolean);
+  const yMin = Math.min(...years), yMax = Math.max(...years);
+  const yearOpts = (label) => `<option value="">${label}</option>` +
+    Array.from({ length: yMax - yMin + 1 }, (_, i) => yMax - i).map((y) => `<option>${y}</option>`).join("");
+  const kms = [30000, 50000, 75000, 100000, 150000, 200000, 250000, 300000];
+  const fuels = [...new Set(ALL.map(fuelOf).filter(Boolean))].sort((a, b) => a.localeCompare(b, "sk"));
+  const showGroups = Array.isArray(groups) && groups.length > 1 && ALL.some((d) => Number.isInteger(d.cg));
+
+  const maxInput = $("fMax");
+  if (maxInput) { maxInput.placeholder = "Cena do €"; maxInput.title = "Najvyššia cena (s DPH)"; }
+  const html =
+    `<select id="fvYearFrom" title="Rok výroby od">${yearOpts("Rok od")}</select>` +
+    `<select id="fvYearTo" title="Rok výroby do">${yearOpts("Rok do")}</select>` +
+    `<input id="fvPriceMin" type="number" placeholder="Cena od €" step="500" min="0" title="Najnižšia cena (s DPH)" style="width:110px">`;
+  if (maxInput) maxInput.insertAdjacentHTML("beforebegin", html);
+  else bar.insertAdjacentHTML("afterbegin", html);
+  const more =
+    `<select id="fvKm" title="Najviac najazdených km"><option value="">Nájazd – všetky</option>${kms.map((k) => `<option value="${k}">do ${fmt(k)} km</option>`).join("")}</select>` +
+    (fuels.length > 1 ? `<select id="fvFuel" title="Palivo"><option value="">Všetky palivá</option>${fuels.map((f) => `<option>${esc(f)}</option>`).join("")}</select>` : "") +
+    (showGroups ? `<select id="fvGroup" title="Skupina motorov (farba v grafe)"><option value="">Všetky skupiny</option>${groups.map((g, i) => `<option value="${i}">${esc(g)}</option>`).join("")}</select>` : "") +
+    `<select id="fvDisc" title="O koľko je auto lacnejšie ako férová cena"><option value="">Cena – všetky</option><option value="0">pod férovou cenou</option><option value="10">aspoň 10 % pod trhom</option><option value="20">aspoň 20 % pod trhom</option></select>` +
+    `<input id="fvText" type="search" placeholder="Hľadať (výbava, mesto…)" title="Hľadá v názve inzerátu, motore a lokalite" style="width:170px">` +
+    `<label class="fv-check"><input id="fvPick" type="checkbox"> len odporúčané</label>` +
+    `<button type="button" id="fvReset" class="fv-reset">Zrušiť filtre</button>`;
+  const count = $("count");
+  if (count) count.insertAdjacentHTML("beforebegin", more);
+  else bar.insertAdjacentHTML("beforeend", more);
+
+  // the bar stays where it was – right above the ranking – and also drives the chart; the chart gets a pointer to it
+  const chart = $("chartWrap");
+  const box = document.createElement("div");
+  box.className = "fv-filters";
+  box.id = "filtre";
+  bar.before(box);
+  box.innerHTML = `<div class="fv-head"><b>Filtre</b><span>platia pre rebríček aj graf vyššie</span></div>`;
+  box.appendChild(bar);
+  const note = document.createElement("div");
+  note.className = "fv-note";
+  chart?.before(note);
+
+  document.head.insertAdjacentHTML("beforeend", `<style id="fv-filters-css">
+.fv-filters{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 14px 4px;margin:24px 0 8px}
+.fv-filters .fv-head{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;margin-bottom:8px}
+.fv-filters .fv-head span{color:var(--muted);font-size:13px}
+.fv-filters .filters{margin-bottom:8px}
+.fv-filters .filters .count{flex-basis:100%;margin-left:0}
+.fv-check{display:inline-flex;gap:6px;align-items:center;font-size:13px;color:var(--text-2,var(--text));white-space:nowrap}
+.fv-reset{background:none;border:1px solid var(--border);color:var(--text);border-radius:8px;padding:6px 10px;font:inherit;font-size:13px;cursor:pointer}
+.fv-reset:hover{background:var(--surface-2,var(--surface))}
+.fv-note{color:var(--muted);font-size:13px;margin:0 0 8px}
+.fv-note a{color:inherit}
+.fv-empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:14px;pointer-events:none}
+@media (max-width:600px){.fv-filters .filters select,.fv-filters .filters input[type=number],.fv-filters .filters input[type=search]{flex:1 1 calc(50% - 8px);min-width:0;width:auto!important}}
+</style>`);
+
+  // --- filtering --------------------------------------------------------------------------------------------------
+  const val = (id) => ($(id) ? $(id).value : "");
+  const num = (id) => { const v = parseFloat(val(id)); return Number.isFinite(v) ? v : null; };
+  function matches(d) {
+    const yf = num("fvYearFrom"), yt = num("fvYearTo"), pmin = num("fvPriceMin"), pmax = num("fMax"), km = num("fvKm"), disc = num("fvDisc");
+    const fuel = val("fvFuel"), grp = val("fvGroup"), q = norm(val("fvText")).trim();
+    if (yf != null && !(d.year >= yf)) return false;
+    if (yt != null && !(d.year <= yt)) return false;
+    if (pmin != null && !(d.price_gross >= pmin)) return false;
+    if (pmax != null && !(d.price_gross <= pmax)) return false;
+    if (km != null && !(d.km <= km)) return false;
+    if (disc != null && !(d.discount_pct > disc || (disc > 0 && d.discount_pct >= disc))) return false;
+    if (fuel && fuelOf(d) !== fuel) return false;
+    if (grp !== "" && String(d.cg) !== grp) return false;
+    if ($("fvPick")?.checked && !d.pick) return false;
+    if (q && !q.split(/\s+/).every((w) => norm(`${d.title} ${d.eg ?? ""} ${d.engine ?? ""} ${d.location ?? ""}`).includes(w))) return false;
+    // the report's own filters (engine, gearbox, seller, portal, body, origin) – same rules as its renderTable
+    const en = val("fEngine"), tr = val("fTrans"), se = val("fSeller"), so = val("fSource"), og = val("fOrigin"), bo = val("fBody");
+    if (en && d.eg !== en) return false;
+    if (tr && d.transmission !== tr) return false;
+    if (se && d.seller_type === "dealer") return false;
+    if (so && !(d.source === so || (d.also_listed || []).some((a) => a.source === so))) return false;
+    if (og && d.origin !== og) return false;
+    if (bo && d.body !== bo) return false;
+    return true;
+  }
+  const active = () => [...box.querySelectorAll("select, input")].filter((el) => (el.type === "checkbox" ? el.checked : el.value !== "")).length;
+
+  let drawing = false;
+  function apply() {
+    if (drawing) return;
+    drawing = true;
+    const rows = ALL.filter(matches);
+    data.length = 0;
+    data.push(...rows);
+    const wrap = $("chartWrap");
+    wrap?.querySelector(".fv-empty")?.remove();
+    const plotted = rows.filter((d) => d.km && d.price_gross).length;
+    try {
+      if (typeof drawChart === "function") { // eslint-disable-line no-undef
+        if (plotted) drawChart(); // eslint-disable-line no-undef
+        else { const svg = $("chart"); if (svg) svg.innerHTML = ""; }
+      }
+    } catch (e) { console.warn("chart", e); }
+    if (wrap && !plotted) {
+      if (getComputedStyle(wrap).position === "static") wrap.style.position = "relative";
+      wrap.insertAdjacentHTML("beforeend", `<div class="fv-empty">Filtrom nezodpovedá žiadny inzerát</div>`);
+    }
+    try { renderTable(); } catch (e) { console.warn("table", e); } // eslint-disable-line no-undef
+    const n = active();
+    if (count) count.textContent = `Zobrazených ${fmt(rows.length)} z ${fmt(ALL.length)} inzerátov` + (n ? ` · aktívne filtre: ${n}` : "");
+    note.innerHTML = n
+      ? `Zobrazených ${fmt(rows.length)} z ${fmt(ALL.length)} inzerátov podľa <a href="#filtre">filtrov pri rebríčku</a>.`
+      : `Filtre (rok, cena, nájazd, palivo…) nájdeš <a href="#filtre">pri kompletnom rebríčku</a> – platia aj pre tento graf.`;
+    drawing = false;
+  }
+  box.querySelectorAll("select, input").forEach((el) => el.addEventListener("input", apply));
+  $("fvPick")?.addEventListener("change", apply);
+  $("fvReset").addEventListener("click", () => {
+    box.querySelectorAll("select, input").forEach((el) => { if (el.type === "checkbox") el.checked = false; else el.value = ""; });
+    apply();
+  });
+  apply();
+})();
+</script><!-- /ferovka-theme -->
+</body>
+</html>

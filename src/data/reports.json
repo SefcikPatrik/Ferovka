@@ -154,6 +154,19 @@
     }
   },
   {
+    "slug": "audi-tt",
+    "file": "audi-tt-analyza.html",
+    "name": "Audi TT",
+    "brand": "Audi",
+    "model": "TT",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Audi TT (TT 8J 2006–2014 a TT 8S 2014–2023, kupé aj roadster, vrátane TTS) od 4 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 69 inzerátov (40 na bazoši, 19 na autobazar.eu, 10 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 53 rôznych áut zo Slovenska.",
+    "ads": 53,
+    "median": "8 300 €",
+    "r2": "96 %"
+  },
+  {
     "slug": "bmw-1",
     "file": "bmw-1-analyza.html",
     "name": "BMW 1",
@@ -583,6 +596,19 @@
     }
   },
   {
+    "slug": "fiat-doblo",
+    "file": "fiat-doblo-analyza.html",
+    "name": "Fiat Doblo",
+    "brand": "Fiat",
+    "model": "Doblo",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Fiat Doblo (osobné verzie 2005–2022, 5 aj 7 miest) od 1 500 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 411 inzerátov (169 na bazoši, 82 na autobazar.eu, 160 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 314 rôznych áut zo Slovenska.",
+    "ads": 314,
+    "median": "7 692 €",
+    "r2": "90 %"
+  },
+  {
     "slug": "fiat-panda",
     "file": "fiat-panda-analyza.html",
     "name": "Fiat Panda",
@@ -994,6 +1020,19 @@
     }
   },
   {
+    "slug": "mazda-mx-5",
+    "file": "mazda-mx-5-analyza.html",
+    "name": "Mazda MX-5",
+    "brand": "Mazda",
+    "model": "MX-5",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Mazda MX-5 (NB, NC a ND, 1998–2025, roadster aj RF) od 3 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 36 inzerátov (22 na bazoši, 11 na autobazar.eu, 3 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 26 rôznych áut zo Slovenska.",
+    "ads": 26,
+    "median": "8 400 €",
+    "r2": "82 %"
+  },
+  {
     "slug": "mercedes-a",
     "file": "mercedes-a-analyza.html",
     "name": "Mercedes-Benz A",
@@ -1250,7 +1289,7 @@
     "median": "18 499 €",
     "r2": "92 %",
     "history": {
-      "updated_at": "2026-11-22T14:38:45",
+      "updated_at": "2026-11-22T17:52:13",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 37,
@@ -1267,6 +1306,38 @@
       "seen_median": 18499,
       "seen_price_count": 37,
       "last_observed_at": "2026-11-22T14:32:30"
+    }
+  },
+  {
+    "slug": "mitsubishi-pajero",
+    "file": "mitsubishi-pajero-analyza.html",
+    "name": "Mitsubishi Pajero",
+    "brand": "Mitsubishi",
+    "model": "Pajero",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Mitsubishi Pajero (Pajero III / IV a Pajero Sport, 2000–2021) od 2 500 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 254 inzerátov (152 na bazoši, 38 na autobazar.eu, 64 na bazar.sk) – prezreli sme 87 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 186 rôznych áut zo Slovenska.",
+    "ads": 186,
+    "median": "8 245 €",
+    "r2": "76 %",
+    "history": {
+      "updated_at": "2026-11-22T17:52:13",
+      "as_of": "2026-11-22",
+      "coverage": "partial",
+      "baseline_count": 74,
+      "total_count": 74,
+      "active_count": 74,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 74,
+      "paired_median_change_pct": 0,
+      "historical_median": 8245,
+      "seen_median": 8245,
+      "seen_price_count": 74,
+      "last_observed_at": "2026-11-22T17:45:13"
     }
   },
   {
@@ -3435,7 +3506,7 @@
     "median": "9 900 €",
     "r2": "92 %",
     "history": {
-      "updated_at": "2026-11-22T14:38:45",
+      "updated_at": "2026-11-22T17:52:13",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 98,
@@ -3467,7 +3538,7 @@
     "median": "10 900 €",
     "r2": "93 %",
     "history": {
-      "updated_at": "2026-11-22T14:38:45",
+      "updated_at": "2026-11-22T17:52:13",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 94,
