@@ -1,0 +1,877 @@
+<!doctype html>
+<html lang="sk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Seat Altea – analýza ponúk</title>
+<style>
+:root {
+  color-scheme: light;
+  --bg: #f6f6f4; --surface: #fcfcfb; --surface-2: #f0efec; --border: #e2e1dc;
+  --text: #0b0b0b; --text-2: #52514e; --muted: #7a7974;
+  --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a;
+  --pos: #2a78d6; --neg: #eb6834; --accent: #2a78d6;
+  --good: #1d7f4e; --bad: #b4332f; --grid: #e8e7e3;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #121211; --surface: #1a1a19; --surface-2: #232321; --border: #33332f;
+    --text: #f0efec; --text-2: #c3c2b7; --muted: #8f8e86;
+    --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+    --pos: #3987e5; --neg: #d95926; --accent: #5598e7;
+    --good: #4cc38a; --bad: #f07a76; --grid: #2a2a27;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #121211; --surface: #1a1a19; --surface-2: #232321; --border: #33332f;
+  --text: #f0efec; --text-2: #c3c2b7; --muted: #8f8e86;
+  --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+  --pos: #3987e5; --neg: #d95926; --accent: #5598e7;
+  --good: #4cc38a; --bad: #f07a76; --grid: #2a2a27;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text);
+  font: 15px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+main { max-width: 1120px; margin: 0 auto; padding: 32px 16px 64px; }
+a { color: var(--accent); text-decoration: none; } a:hover { text-decoration: underline; }
+h1 { font-size: 30px; margin: 0 0 4px; letter-spacing: -.01em; }
+h2 { font-size: 21px; margin: 48px 0 6px; }
+h3 { font-size: 15px; margin: 6px 0 4px; line-height: 1.35; }
+.lead { color: var(--text-2); margin: 0 0 20px; max-width: 760px; }
+.section-lead { color: var(--text-2); margin: 0 0 16px; max-width: 800px; }
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
+.kpi { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+.kpi .v { font-size: 26px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.kpi .l { color: var(--text-2); font-size: 13px; }
+.explain { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; margin-top: 12px; }
+.explain p { margin: 6px 0; color: var(--text-2); }
+.explain b { color: var(--text); }
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; }
+.card-head { display: flex; justify-content: space-between; gap: 8px; font-size: 12px; }
+.tag { font-weight: 600; color: var(--accent); }
+.loc { color: var(--muted); }
+.facts { color: var(--text-2); font-size: 13px; }
+.prices { display: grid; grid-template-columns: 1.2fr 1fr .8fr; gap: 8px; margin: 12px 0 8px; }
+.lbl { display: block; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+.big { font-size: 22px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.mid { font-size: 16px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.good { color: var(--good); }
+.meter { height: 6px; background: var(--surface-2); border-radius: 4px; overflow: hidden; }
+.meter span { display: block; height: 100%; background: var(--s1); border-radius: 4px; }
+.news ul { margin: 6px 0 0; padding-left: 20px; } .news li { margin: 4px 0; } .news .down { color: var(--good, #1baf7a); font-weight: 600; }
+.note { font-size: 12.5px; background: var(--surface-2); border-radius: 6px; padding: 6px 8px; margin-top: 8px; color: var(--text-2); }
+.pc { list-style: none; padding: 0; margin: 10px 0 0; font-size: 13.5px; }
+.pc li { padding-left: 20px; position: relative; margin: 3px 0; }
+.pc li.pro::before { content: "+"; position: absolute; left: 4px; color: var(--good); font-weight: 700; }
+.pc li.con::before { content: "–"; position: absolute; left: 4px; color: var(--bad); font-weight: 700; }
+.subhead { font-size: 15px; color: var(--text-2); margin: 22px 0 10px; font-weight: 600; }
+.chart-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 14px 8px; position: relative; }
+.legend { display: flex; flex-wrap: wrap; gap: 16px; font-size: 13px; color: var(--text-2); margin: 0 0 6px 4px; }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; }
+.legend .ring { background: transparent; border: 2px solid var(--text); width: 12px; height: 12px; }
+svg text { fill: var(--muted); font-size: 11px; }
+.tip { position: absolute; pointer-events: none; background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+  padding: 8px 10px; font-size: 12.5px; box-shadow: 0 6px 20px rgba(0,0,0,.15); max-width: 280px; display: none; z-index: 5; }
+.tip b { display: block; margin-bottom: 2px; }
+.tip .row { display: flex; justify-content: space-between; gap: 12px; color: var(--text-2); }
+.tip .row span:last-child { color: var(--text); font-variant-numeric: tabular-nums; }
+table { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; font-size: 13.5px; }
+th, td { padding: 9px 10px; border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; }
+th { font-size: 12px; color: var(--text-2); font-weight: 600; background: var(--surface-2); white-space: nowrap; }
+th.sortable { cursor: pointer; user-select: none; } th.sortable:hover { color: var(--text); }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+.sub { color: var(--text-2); font-size: 12.5px; margin-top: 2px; }
+.stars { color: #c98500; letter-spacing: 1px; white-space: nowrap; } .stars .off { color: var(--border); }
+.cellbar { height: 5px; background: var(--surface-2); border-radius: 3px; margin-bottom: 4px; }
+.cellbar span { display: block; height: 100%; background: var(--s1); border-radius: 3px; }
+.disc { display: inline-flex; align-items: center; gap: 6px; justify-content: flex-end; }
+.dbar { width: 54px; height: 6px; background: var(--surface-2); border-radius: 3px; position: relative; }
+.dbar span { position: absolute; top: 0; height: 100%; border-radius: 3px; }
+.filters { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 10px; align-items: center; }
+.filters select, .filters input { background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 6px 8px; font: inherit; font-size: 13px; }
+.filters .count { color: var(--muted); font-size: 13px; margin-left: auto; }
+.table-scroll { overflow-x: auto; border-radius: 12px; }
+.badge { font-size: 11px; padding: 1px 6px; border-radius: 10px; background: var(--surface-2); color: var(--text-2); white-space: nowrap; }
+.badge.pick { background: var(--s1); color: #fff; }
+.flag { color: var(--bad); font-size: 12px; }
+.warn { background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--neg); border-radius: 10px; padding: 12px 16px; }
+.warn li { margin: 4px 0; }
+.check { columns: 2 300px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px 14px 34px; margin: 0; }
+.check li { margin: 4px 0; break-inside: avoid; }
+footer { color: var(--muted); font-size: 12.5px; margin-top: 48px; border-top: 1px solid var(--border); padding-top: 14px; }
+.theme-btn { float: right; background: var(--surface); color: var(--text-2); border: 1px solid var(--border); border-radius: 8px; padding: 5px 10px; cursor: pointer; font: inherit; font-size: 13px; }
+@media (max-width: 640px) { h1 { font-size: 24px; } .prices { grid-template-columns: 1fr 1fr 1fr; } .big { font-size: 18px; } th, td { padding: 7px 6px; } }
+</style>
+<!-- ferovka-theme --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"><style id="ferovka-theme">/* Férovka look for the generated analyses – injected by sync-reports.mjs after each report's own <style>.
+   Same palette and type as the site; chart colours (--s1..--s3) stay the validated set. */
+:root {
+  --bg: #f5f4ef; --surface: #fdfdfb; --surface-2: #eeede6; --border: #e1dfd6;
+  --text: #0f1513; --text-2: #4f5551; --muted: #6f746f;
+  --accent: #0b8a56; --good: #0b7a4b; --grid: #e6e4dc; --win: #dff3e9;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d110f; --surface: #151a17; --surface-2: #1d2420; --border: #2a322d;
+    --text: #eef1ec; --text-2: #b6bdb6; --muted: #8f978f;
+    --accent: #2fc583; --good: #4cd08f; --grid: #1f2622; --win: #143223;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d110f; --surface: #151a17; --surface-2: #1d2420; --border: #2a322d;
+  --text: #eef1ec; --text-2: #b6bdb6; --muted: #8f978f;
+  --accent: #2fc583; --good: #4cd08f; --grid: #1f2622; --win: #143223;
+}
+
+body { font-family: "Manrope", system-ui, sans-serif; }
+h1, h2 { letter-spacing: -0.02em; font-weight: 800; }
+.tag { color: var(--accent); }
+
+/* photo header (removed by the site's viewer, which shows its own) */
+.fv-hero { position: relative; margin: 0 0 26px; border-radius: 20px; overflow: hidden; aspect-ratio: 21 / 8; background: #0d110f; display: flex; }
+.fv-hero img { flex: 1; min-width: 0; height: 100%; object-fit: cover; animation: fv-zoom 1.4s cubic-bezier(.2,.7,.2,1) both; }
+.fv-collage img + img { border-left: 3px solid #0d110f; }
+.fv-hero::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(180deg, transparent 55%, rgb(13 17 15 / .75)),
+    repeating-linear-gradient(90deg, rgb(47 197 131 / .06) 0 1px, transparent 1px 48px); }
+.fv-hero figcaption { position: absolute; right: 12px; bottom: 8px; z-index: 1; font-size: 11px; color: rgb(255 255 255 / .75); }
+.fv-hero figcaption a { color: inherit; }
+
+/* cards & panels: softer, lift on hover */
+.card, .kpi, .explain, .chart-wrap, .box { border-radius: 16px; }
+.card { transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease; }
+.card:hover { transform: translateY(-3px); border-color: var(--accent); box-shadow: 0 14px 30px -18px rgb(0 0 0 / .45); }
+.badge.pick { background: var(--accent); }
+
+/* entrance animation */
+@keyframes fv-up { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes fv-zoom { from { transform: scale(1.08); filter: brightness(.6); } to { transform: none; filter: none; } }
+h1, .lead, .kpis, .cards .card { animation: fv-up .6s cubic-bezier(.2,.7,.2,1) both; }
+.lead { animation-delay: .08s; }
+.kpis { animation-delay: .16s; }
+.cards .card:nth-child(2) { animation-delay: .06s; }
+.cards .card:nth-child(3) { animation-delay: .12s; }
+.cards .card:nth-child(4) { animation-delay: .18s; }
+.cards .card:nth-child(5) { animation-delay: .24s; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+@media (max-width: 640px) { .fv-hero { aspect-ratio: 16 / 9; border-radius: 14px; } }
+
+/* touch: hint under the chart tooltip (report-chart.js) */
+.fv-hint { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--border, rgba(127,127,127,.3)); font-weight: 700; color: var(--accent, #2fc583); }
+</style><!-- /ferovka-theme -->
+</head>
+<body>
+<main><!-- ferovka-theme --><!-- /ferovka-theme -->
+<button class="theme-btn" id="themeBtn" type="button">Svetlý / tmavý</button>
+<h1>Seat Altea – ktorá ponuka sa oplatí</h1>
+<p class="lead">Analýza aktuálnych inzerátov Seat Altea (Altea a Altea XL / Freetrack, 2004–2015) od 1 500 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 220 inzerátov (121 na bazoši, 73 na autobazar.eu, 26 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 151 rôznych áut zo Slovenska. Každé auto sme porovnali
+s <b>férovou cenou</b>: tú vypočítal model naučený na celom trhu podľa veku, nájazdu, motora, prevodovky a typu predajcu.</p>
+
+<div class="kpis">
+  <div class="kpi"><div class="v">151</div><div class="l">inzerátov Altey (nad 1 500 €)</div></div>
+  <div class="kpi"><div class="v">109</div><div class="l">ohodnotených (majú rok aj km)</div></div>
+  <div class="kpi"><div class="v">3 550 €</div><div class="l">medián ceny s DPH</div></div>
+  <div class="kpi"><div class="v">59 %</div><div class="l">rozdielov v cenách vysvetlí model</div></div>
+</div>
+
+
+<h2>Odkiaľ sú dáta: bazoš, autobazar.eu a bazar.sk</h2>
+<div class="kpis">
+  <div class="kpi"><div class="v">63</div><div class="l">ohodnotených z bazoša</div></div>
+  <div class="kpi"><div class="v">30</div><div class="l">ohodnotených z autobazar.eu</div></div><div class="kpi"><div class="v">16</div><div class="l">ohodnotených z bazar.sk</div></div>
+  <div class="kpi"><div class="v">40</div><div class="l">áut bolo na viacerých portáloch – započítané raz</div></div>
+  <div class="kpi"><div class="v">10 / 20</div><div class="l">s uvedeným pôvodom SR / dovoz</div></div>
+</div>
+<div class="explain">
+  <p><b>Tri portály, jeden trh.</b> Bazoš prehľadal 117 inzerátov, autobazar.eu
+  73, bazar.sk 26. Ponuky z Česka (na autobazar.eu ich je veľa) sme vynechali. Autobazáre často dávajú
+  to isté auto na viac portálov. Takéto dvojice (26 v rebríčku) sme spojili podľa VIN alebo zhody roku, km a ceny,
+  aby sa v modeli nerátali dvakrát. Pri aute nájdeš odkaz na všetky ponuky – niekedy sa líšia cenou.</p>
+  <p><b>Rozdiel medzi portálmi:</b> rovnaké auto je na autobazar.eu v priemere -4,2 %
+  oproti bazošu. Na autobazar.eu predávajú hlavne firmy (21 z 30 ohodnotených). Na bazar.sk je rovnaké auto v priemere +19,4 % oproti bazošu.</p>
+  <p><b>Kúpené v SR vs. dovoz:</b> autá s uvedeným pôvodom zo SR sú oproti autám bez uvedeného pôvodu
+  -7,0 %, dovezené +8,1 %
+  (pri rovnakom veku, nájazde a motore). Pôvod zo SR je výhoda pri overovaní histórie, trh zaň však nepripláca – väčšina
+  inzerátov pôvod jednoducho neuvádza. V tabulke dole si môžeš nechať zobraziť len autá kúpené v SR.</p>
+</div>
+
+<h2>Čo hýbe cenou Seatu Altea</h2>
+<p class="section-lead">Toto sa model naučil z trhu. Keď porovnávaš dve autá, tieto čísla ti povedia, koľko má byť
+rozdiel v cene, aby to bolo fér.</p>
+<div class="kpis">
+  <div class="kpi"><div class="v">-3,0 %</div><div class="l">každých ďalších 10 000 km</div></div>
+  <div class="kpi"><div class="v">-6,2 %</div><div class="l">každý rok veku navyše</div></div>
+  <div class="kpi"><div class="v">+4 %</div><div class="l">príplatok za automat (DSG)</div></div>
+  <div class="kpi"><div class="v">-7,6 %</div><div class="l">príplatok u predajcu / firmy</div></div>
+  <div class="kpi"><div class="v">+10,6 %</div><div class="l">Altea po facelifte (2009+) oproti cene podľa veku</div></div>
+  <div class="kpi"><div class="v">+3,5 %</div><div class="l">príplatok za automat</div></div>
+</div>
+<div class="explain">
+  <p><b>Príklad:</b> dve rovnaké Altey XL 1.6 TDI z roku 2011, jedno má 60 tis. km, druhé 120 tis. km. Druhé má byť
+  približne o 18 % lacnejšie (6 × -3,0 %). Ak je lacnejšie len o 5 %, preplácaš kilometre.</p>
+  <p><b>Ako čítať „pod trhom“:</b> +15 % znamená, že auto stojí o 15 % menej, než by malo podľa trhu. Bežný rozptyl
+  cien je asi ±37 %, takže až zľava nad ~10–15 % je naozaj výnimočná. Pri takej zľave vždy zisti, prečo je auto lacné
+  (stav, história, nájazd).</p>
+  <p><b>DPH:</b> ceny uvedené bez DPH (napr. „10 300 € netto“) sme prepočítali na cenu s DPH, ktorú zaplatí súkromná osoba.</p>
+</div>
+
+<h2>Odporúčané ponuky</h2>
+<p class="section-lead">Kandidáti s najlepším pomerom cena / vek / nájazd, ktorých celý inzerát sme prečítali.
+Zoradené podľa toho, ako ich odporúčame.</p>
+<div class="subhead">Altea po facelifte (2009+) – najlepší pomer cena / vek</div>
+<div class="cards">
+<article class="card">
+  <div class="card-head"><span class="tag">Altea XL 2.0 TDI DSG s vymenenými rozvodmi</span><span class="loc">Žilina</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/196212394/seat-altea-xl-20-tdi-103-kw-dsg-rv-2011-229-tis-km.php" target="_blank" rel="noopener">Seat Altea XL 2.0 TDI 103 kW DSG, r.v. 2011, 229 tis. km</a></h3>
+  <div class="facts">2011 · 229 000 km · 2.0 TDI 103–125 kW · automat · Altea XL / Freetrack · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b> · dovezené · aj na <a href='https://www.autobazar.eu/detail/seat-altea-20-tdi-cr-dpf-style-dsg-103kw140hp-a6/AeXKX706NTY/' target='_blank' rel='noopener'>autobazar.eu</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">3 900 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">5 100 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+23.5 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:78%"></span></div>
+  <ul class="pc"><li class="pro">2011, 2.0 TDI 103 kW, automat DSG, 229 tis. km</li><li class="pro">Rozvody pri 210 tis. km, olej v DSG menený, uvedený VIN</li><li class="pro">~23 % pod férovou cenou</li><li class="con">Dovoz z Francúzska</li><li class="con">Predajca neistý</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke aspoň 48 dní</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Altea XL 1.6 TDI Style so 117 tis. km</span><span class="loc">Veľký Krtíš</span></div>
+  <h3><a href="https://auto.bazar.sk/39697657-seat-altea-xl-1-6-tdi-cr-style/" target="_blank" rel="noopener">Seat Altea XL 1.6 TDI CR Style</a></h3>
+  <div class="facts">2010 · 116 744 km · 1.6 / 1.9 TDI 66–77 kW · manuál · Altea XL / Freetrack · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazar.sk</b> · dovezené · aj na <a href='https://www.autobazar.eu/detail/seat-altea-xl-16-tdi-cr-style/AmNJLMIzRuo/' target='_blank' rel='noopener'>autobazar.eu</a> · aj na <a href='https://auto.bazos.sk/inzerat/197423653/seat-altea-xl-16-tdi-116tis-km-77kw-2010-klimavyhrev-sed.php' target='_blank' rel='noopener'>bazoš</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">4 490 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">5 760 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+22.0 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:73%"></span></div>
+  <ul class="pc"><li class="pro">2010, 1.6 TDI CR 77 kW, manuál, 117 tis. km</li><li class="pro">Nízky nájazd, uvedený VIN</li><li class="pro">~22 % pod férovou cenou</li><li class="con">Dovoz, predáva autobazár</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 11 dní (od 11. 11.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Altea XL 1.2 TSI facelift Chili</span><span class="loc">Partizánske</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/196949432/seat-altea-xl-2010-lift-1p-12-tsi-edicia-chili.php" target="_blank" rel="noopener">⭐️SEAT ALTEA XL 2010 lift (1P) 1,2 TSi edícia Chili</a></h3>
+  <div class="facts">2010 · 149 700 km · 1.2 / 1.4 / 1.8 TSI 77–118 kW · manuál · Altea XL / Freetrack · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazoš</b> · dovezené</div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">2 900 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">3 840 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+24.5 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:82%"></span></div>
+  <ul class="pc"><li class="pro">2010, 1.2 TSI 77 kW, manuál, 150 tis. km</li><li class="pro">Facelift, 10 airbagov</li><li class="pro">~25 % pod férovou cenou</li><li class="con">Dovoz, predáva autobazár</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">Nový inzerát</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Altea XL 1.2 TSI so 152 tis. km</span><span class="loc">Rimavská Sobota</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/196991504/seat-altea-xl-12-tsi.php" target="_blank" rel="noopener">Seat altea xl 1.2 Tsi</a></h3>
+  <div class="facts">2010 · 152 000 km · 1.2 / 1.4 / 1.8 TSI 77–118 kW · manuál · Altea XL / Freetrack · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">2 990 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">3 790 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+21.1 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:70%"></span></div>
+  <ul class="pc"><li class="pro">2010, 1.2 TSI 77 kW, 6-st. manuál, 152 tis. km</li><li class="pro">Multifunkčný volant, klimatizácia</li><li class="pro">~21 % pod férovou cenou</li><li class="con">Len 1 kľúč</li><li class="con">Predajca neistý</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke aspoň 24 dní</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Altea XL 1.4 TSI Copa po výmene reťaze</span><span class="loc">Senec</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197190572/seat-altea-xl-copa.php" target="_blank" rel="noopener">Seat Altea Xl 1.4 TSI 92kw Copa</a></h3>
+  <div class="facts">2012 · 165 000 km · 1.2 / 1.4 / 1.8 TSI 77–118 kW · manuál · Altea XL / Freetrack · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">3 700 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">4 560 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+18.8 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:63%"></span></div>
+  <ul class="pc"><li class="pro">2012, 1.4 TSI 92 kW, 6-st. manuál, 165 tis. km</li><li class="pro">Nová rozvodová reťaz, vodná pumpa, spojka; STK do 7/2028</li><li class="pro">~19 % pod férovou cenou</li><li class="con">Predajca neistý</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 18 dní (od 4. 11.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Altea Copa 1.6 TDI DSG</span><span class="loc">Žiar nad Hronom</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197402689/seat-altea-copa-16tdi-77kw-dsg-2012.php" target="_blank" rel="noopener">Seat Altea Copa, 1,6tdi 77kw DSG 2012</a></h3>
+  <div class="facts">2012 · 238 000 km · 1.6 / 1.9 TDI 66–77 kW · automat · Altea · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">3 200 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">4 050 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+20.9 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:70%"></span></div>
+  <ul class="pc"><li class="pro">2012, 1.6 TDI 77 kW, automat DSG, 238 tis. km</li><li class="pro">Nové tlmiče, uloženia a rozvody</li><li class="pro">~21 % pod férovou cenou</li><li class="con">Krátky inzerát, čoskoro výmena oleja</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 11 dní (od 11. 11.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Altea XL 1.4 TSI z SR po veľkom servise</span><span class="loc">Bratislava</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197684770/seat-altea-xl-2013-140-tsi-po-velkom-servise.php" target="_blank" rel="noopener">Seat Altea XL 2013 1.40 TSI Po veľkom servise</a></h3>
+  <div class="facts">2013 · 196 581 km · 1.2 / 1.4 / 1.8 TSI 77–118 kW · manuál · Altea XL / Freetrack · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazoš</b> · kúpené v SR · aj na <a href='https://www.autobazar.eu/detail/seat-altea-xl-140-tsi-po-velkom-servise/AmN9-WfqowE/' target='_blank' rel='noopener'>autobazar.eu</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">3 699 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">4 530 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+18.4 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:61%"></span></div>
+  <ul class="pc"><li class="pro">2013, 1.4 TSI 92 kW, 6-st. manuál, 197 tis. km</li><li class="pro">Kúpené v SR, rozvody, vodná pumpa, ODO Pass</li><li class="pro">~18 % pod férovou cenou</li><li class="con">Predáva autobazár</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 3 dni (od 19. 11.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Altea XL 1.6 TDI Style so servisnou knižkou</span><span class="loc">Levoča</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197626029/seat-altea-xl-16-tdi-cr-stylebixenonsportpodvozoknaviga.php" target="_blank" rel="noopener">Seat Altea XL 1.6 TDI CR Style,BiXenón,Šport.podvozok,Navigá</a></h3>
+  <div class="facts">2012 · 219 900 km · 1.6 / 1.9 TDI 66–77 kW · prevodovka ? · Altea XL / Freetrack · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b> · dovezené</div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">3 600 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">4 320 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+16.7 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:56%"></span></div>
+  <ul class="pc"><li class="pro">2012, 1.6 TDI 77 kW, 220 tis. km</li><li class="pro">Bi-xenón, navigácia, servisná knižka, STK do 9/2028</li><li class="pro">~17 % pod férovou cenou</li><li class="con">Dovoz z Holandska</li><li class="con">Prevodovka neuvedená</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 5 dní (od 17. 11.)</p><!-- history-card:end --></article></div>
+<div class="subhead">Lacnejšie Altey do 4 000 €</div>
+<div class="cards">
+<article class="card">
+  <div class="card-head"><span class="tag">Altea 1.9 TDI za 2 000 €</span><span class="loc">Kežmarok</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197421976/predam-seat-altea-19-tdi-105-koni.php" target="_blank" rel="noopener">PREDÁM SEAT ALTEA 1.9 TDI – 105 KONÍ</a></h3>
+  <div class="facts">2008 · 223 445 km · 1.6 / 1.9 TDI 66–77 kW · manuál · Altea · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">2 000 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">3 180 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+37.1 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:100%"></span></div>
+  <ul class="pc"><li class="pro">2008, 1.9 TDI 77 kW, manuál, 223 tis. km</li><li class="pro">STK/EK do 3/2028, sada kolies navyše</li><li class="pro">~37 % pod férovou cenou</li><li class="con">Predajca neistý</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 11 dní (od 11. 11.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Altea XL 1.9 TDI za 1 800 €</span><span class="loc">Prievidza</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197642355/seat-altea-xl-19-tdi-77-kw.php" target="_blank" rel="noopener">Seat Altea XL 1.9 TDI 77  KW</a></h3>
+  <div class="facts">2009 · 290 000 km · 1.6 / 1.9 TDI 66–77 kW · prevodovka ? · Altea XL / Freetrack · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">1 800 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">2 910 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+38.1 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:100%"></span></div>
+  <ul class="pc"><li class="pro">2009, 1.9 TDI 77 kW, 290 tis. km</li><li class="pro">Po výmene rozvodov, STK/EK do 2028</li><li class="pro">~38 % pod férovou cenou</li><li class="con">Vysoký nájazd</li><li class="con">Prevodovka neuvedená</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 4 dni (od 18. 11.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Altea XL 1.6 TDI s novou STK</span><span class="loc">Topoľčany</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197350762/seat-altea-xl.php" target="_blank" rel="noopener">SEAT ALTEA XL 1,6 TDI</a></h3>
+  <div class="facts">2011 · 297 000 km · 1.6 / 1.9 TDI 66–77 kW · prevodovka ? · Altea XL / Freetrack · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">2 250 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">2 910 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+22.7 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:76%"></span></div>
+  <ul class="pc"><li class="pro">2011, 1.6 TDI 77 kW, 297 tis. km</li><li class="pro">Rozvody menené 2024, automatická klíma, tempomat</li><li class="pro">~23 % pod férovou cenou</li><li class="con">Vysoký nájazd</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 13 dní (od 9. 11.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Altea XL 1.6 TDI od 2. majiteľa</span><span class="loc">Galanta</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197700646/seat-altea-xl-16.php" target="_blank" rel="noopener">Seat altea xl 1.6</a></h3>
+  <div class="facts">2010 · 227 000 km · 1.6 / 1.9 TDI 66–77 kW · manuál · Altea XL / Freetrack · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">2 999 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">3 490 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+14.0 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:47%"></span></div>
+  <ul class="pc"><li class="pro">2010, 1.6 TDI 77 kW, manuál, 227 tis. km</li><li class="pro">STK/EK do 2028, tempomat</li><li class="pro">~14 % pod férovou cenou</li><li class="con">Základná výbava</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 3 dni (od 19. 11.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Altea FR 1.9 TDI automat</span><span class="loc">Krupina</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/196595394/seat-altea-fr-19-tdi-77kw.php" target="_blank" rel="noopener">SEAT ALTEA FR 1.9 TDI (77kW) AUTOMAT</a></h3>
+  <div class="facts">2009 · 181 410 km · 1.6 / 1.9 TDI 66–77 kW · automat · Altea · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">3 900 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">4 330 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+10.0 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:33%"></span></div>
+  <ul class="pc"><li class="pro">2009, 1.9 TDI 77 kW, 6-st. automat, 181 tis. km</li><li class="pro">Výbava FR, nová STK/EK do 10/2028</li><li class="pro">~10 % pod férovou cenou</li><li class="con">Predajca neistý</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke aspoň 36 dní</p><!-- history-card:end --></article></div>
+<div class="subhead">Špeciálne prípady</div>
+<div class="cards"></div>
+
+<h2>Cena vs. nájazd: celý trh na jednom grafe</h2>
+<p class="section-lead">Každý bod je jeden inzerát. Čím nižšie bod leží oproti ostatným s podobným nájazdom, tým je auto lacnejšie.
+Krúžkom sú označené odporúčané ponuky. Prejdi myšou na bod a uvidíš detail.</p>
+<div class="chart-wrap" id="chartWrap">
+  <div class="legend" id="legend"></div>
+  <svg id="chart" width="100%" height="420" role="img" aria-label="Bodový graf ceny a nájazdu inzerátov"></svg>
+  <div class="tip" id="tip"></div>
+</div>
+
+<h2>Porovnanie motorov</h2>
+<p class="section-lead">Hodnotenie (hviezdičky) zohľadňuje spoľahlivosť, spoľahlivosť a náklady na prevádzku a pomer cena/výkon.
+Číselné stĺpce sú mediány z ohodnotených inzerátov.</p>
+<div class="table-scroll">
+<table>
+  <thead><tr><th>Motor</th><th>Hodnotenie</th><th class="num">Ponúk</th><th class="num">Medián ceny</th><th class="num">Medián roku</th><th class="num">Medián km</th></tr></thead>
+  <tbody>
+<tr>
+  <td><b>LPG</b><div class="sub">Dodatočne montované LPG – over revíziu a zápis plynu v TP.</div></td>
+  <td><span class="stars" aria-label="3 z 5">★★★<span class="off">★★</span></span></td>
+  <td class="num">1</td>
+  <td class="num"><div class="cellbar"><span style="width:100%"></span></div>7 500 €</td>
+  <td class="num">2007</td>
+  <td class="num">200 100 km</td>
+</tr>
+<tr>
+  <td><b>2.0 TDI 103–125 kW</b><div class="sub">Silný diesel 140–170 k. Ťahavý; pri PD verziách (do 2008) pozor na hlavu valcov a vstrekovače.</div></td>
+  <td><span class="stars" aria-label="3 z 5">★★★<span class="off">★★</span></span></td>
+  <td class="num">23</td>
+  <td class="num"><div class="cellbar"><span style="width:52%"></span></div>3 900 €</td>
+  <td class="num">2009</td>
+  <td class="num">229 000 km</td>
+</tr>
+<tr>
+  <td><b>1.6 / 1.9 TDI 66–77 kW</b><div class="sub">Najčastejší diesel 90–105 k. Odolný a úsporný (~5,5 l); over DPF (1.6 TDI) a dvojhmotu.</div></td>
+  <td><span class="stars" aria-label="4 z 5">★★★★<span class="off">★</span></span></td>
+  <td class="num">58</td>
+  <td class="num"><div class="cellbar"><span style="width:47%"></span></div>3 500 €</td>
+  <td class="num">2010</td>
+  <td class="num">225 222 km</td>
+</tr>
+<tr>
+  <td><b>1.2 / 1.4 / 1.8 TSI 77–118 kW</b><div class="sub">Turbobenzín 105–160 k. Pri 1.2 / 1.4 TSI do 2012 pozor na reťaz rozvodov a spotrebu oleja.</div></td>
+  <td><span class="stars" aria-label="3 z 5">★★★<span class="off">★★</span></span></td>
+  <td class="num">20</td>
+  <td class="num"><div class="cellbar"><span style="width:49%"></span></div>3 700 €</td>
+  <td class="num">2011</td>
+  <td class="num">181 590 km</td>
+</tr>
+<tr>
+  <td><b>1.6 MPI benzín 75 kW</b><div class="sub">Atmosférický benzín 102 k. Jednoduchý, vhodný na LPG.</div></td>
+  <td><span class="stars" aria-label="4 z 5">★★★★<span class="off">★</span></span></td>
+  <td class="num">7</td>
+  <td class="num"><div class="cellbar"><span style="width:39%"></span></div>2 950 €</td>
+  <td class="num">2007</td>
+  <td class="num">227 464 km</td>
+</tr></tbody>
+</table>
+</div>
+<div class="explain">
+  <p><b>Seat Altea</b> (2004–2015, facelift 2009) je kompaktné MPV na technike Golfu / Octavie s vyšším posedom. Predĺžená
+  <b>Altea XL</b> má veľký kufor, <b>Freetrack</b> je zvýšená verzia, niekedy s 4x4.</p>
+  <p><b>Ktorý motor zvoliť?</b> Najrozšírenejší a najodolnejší je <b>1.6 / 1.9 TDI</b>. Benzín <b>1.6 MPI</b> je jednoduchý a vhodný
+  na LPG.</p>
+</div>
+
+<h2>Na čo si dať pozor</h2>
+<div class="warn">
+  <p><b>Lacné kvôli extrémnemu nájazdu</b> (viac ako 35 tis. km ročne, typicky flotila alebo taxi):</p>
+  <ul><li><a href='https://auto.bazos.sk/inzerat/196209393/seat-altea-xl-16-tdi.php' target='_blank' rel='noopener'>Seat Altea xl 1.6 TDI</a>: 2013, 520 000 km → 39 000 km/rok. Lacné je kvôli nájazdu.</li></ul>
+  <p><b>Ďalšie veci, ktoré sme v inzerátoch našli:</b></p><ul><li>Väčšina Altey má 200 – 300 tis. km – pri nájazde nad 250 tis. km over výmenu rozvodov, spojky a dvojhmoty.</li><li>Pri inzerátoch AAA AUTO je uvedená <b>cena pri financovaní</b> – pri platbe v hotovosti môže byť iná.</li></ul><p><b>Vyradené z porovnania</b> (poškodené autá alebo nezmyselné údaje – model ich nehodnotí):</p><ul><li><a href='https://www.autobazar.eu/detail/seat-altea-xl-18-tsi-automat-servkniha/AerVlAyf5iy/' target='_blank' rel='noopener'>Seat Altea XL 1.8 TSI, Automat, Serv.kniha</a> (2 200 €): cena je o 47 % pod trhom – havarované, na diely, záloha/splátka namiesto ceny alebo podvod</li><li><a href='https://www.autobazar.eu/detail/seat-altea-15-tsi-fr/Aeb5Z1lrCDj/' target='_blank' rel='noopener'>Seat Altea 1.5 TSI FR</a> (17 700 €): 203000 km/rok je nereálne – skontroluj rok a km</li><li><a href='https://auto.bazos.sk/inzerat/196252232/seat-altea-xl.php' target='_blank' rel='noopener'>Seat Altea XL</a> (1 700 €): cena je o 47 % pod trhom – havarované, na diely, záloha/splátka namiesto ceny alebo podvod</li><li><a href='https://www.autobazar.eu/detail/seat-altea-xl-xl-16-tdi-cr-style-dsg-77kw105hp-a7/AeglwU1k5g2/' target='_blank' rel='noopener'>Seat Altea XL XL 1.6 TDI CR Style DSG 77kW105HP A7</a> (1 650 €): cena je o 53 % pod trhom – havarované, na diely, záloha/splátka namiesto ceny alebo podvod</li></ul><p><b>Leon, Toledo, Alhambra a iné modely z vyhľadávania, inzeráty s chybným nájazdom</b> (4 inzerátov) sme z rebríčka vynechali.</p>
+  <p>Ďalších <b>28</b> inzerátov nemá v texte rok alebo kilometre, takže ich nebolo možné ohodnotiť.
+  Ak ťa niektorý zaujme, predajcu sa na tieto údaje opýtaj.</p>
+</div>
+
+<h2>Kompletný rebríček</h2>
+<p class="section-lead">Všetky ohodnotené inzeráty. Kliknutím na hlavičku stĺpca zoraďuješ, filtrom zužuješ výber.</p>
+<div class="filters">
+  <select id="fEngine"><option value="">Všetky motory</option></select>
+  <select id="fTrans"><option value="">Každá prevodovka</option><option value="automatic">Automat</option><option value="manual">Manuál</option></select>
+  <select id="fSeller"><option value="">Všetci predajcovia</option><option value="nodealer">Bez autobazárov</option></select>
+  <select id="fSource"><option value="">Všetky portály</option><option value="bazos">bazoš</option><option value="autobazar">autobazar.eu</option><option value="bazarsk">bazar.sk</option></select>
+  <select id="fBody"><option value="">Altea aj XL</option><option value="mpv">Altea</option><option value="wagon">Altea xl / freetrack</option></select>
+  <select id="fOrigin"><option value="">Akýkoľvek pôvod</option><option value="SR">Kúpené v SR</option><option value="dovoz">Dovoz</option></select>
+  <input id="fMax" type="number" placeholder="Max. cena €" step="500" min="0" style="width:120px">
+  <span class="count" id="count"></span>
+</div>
+<div class="table-scroll">
+<table id="tbl">
+  <thead><tr>
+    <th class="sortable" data-k="title">Inzerát</th>
+    <th class="sortable num" data-k="year">Rok</th>
+    <th class="sortable num" data-k="km">Km</th>
+    <th class="sortable num" data-k="price_gross">Cena</th>
+    <th class="sortable num" data-k="fair_price">Férová</th>
+    <th class="sortable num" data-k="discount_pct">Pod trhom ▾</th>
+  </tr></thead>
+  <tbody></tbody>
+</table>
+</div>
+
+<h2>Pred kúpou over</h2>
+<ul class="check">
+  <li>VIN cez Cebia / autoDNA (história km, havárie)</li>
+  <li>TDI: DPF (1.6 TDI), dvojhmota, vstrekovače</li>
+  <li>TSI do 2012: hluk rozvodovej reťaze, spotreba oleja</li>
+  <li>DSG (ak je): plynulé radenie, výmena oleja</li>
+  <li>Hrdza na prahoch a podvozku</li>
+  <li>STK/EK protokol a dátum platnosti</li>
+</ul>
+
+<footer>
+  Zdroj: auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (len ponuky zo Slovenska, to isté auto na viacerých portáloch je započítané raz), sťahované cez lokálny MCP server bazos-mcp (nástroj <code>fair_price</code>), 22. 11. 2026.
+  Model: ridge regresia log(ceny s DPH) podľa veku, veku², km, km², prevodovky, typu predajcu, motora, karosérie, pohonu 4x4, pôvodu (SR / dovoz) a portálu. Vzorka 109
+  inzerátov, R² 59 %. Parametre sú vyťažené z textu inzerátov, a preto môžu obsahovať chyby. Odporúčané ponuky sme overili
+  prečítaním celého inzerátu. Hodnotenie motorov je odborný odhad, nie výsledok modelu.
+</footer>
+</main>
+
+<script>
+const DATA = [{"id": "197565170", "url": "https://auto.bazos.sk/inzerat/197565170/seat-altea-19-tdi.php", "title": "Seat Altea 1,9 TDI", "price": 1600, "price_gross": 1600, "fair_price": 2620.0, "discount_pct": 39.0, "verdict": "výrazne pod trhom – over prečo", "year": 2005, "km": 289000, "km_per_year": 13500.0, "eg": "1.6 / 1.9 TDI 66–77 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Poprad", "flags": [], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "mpv"}, {"id": "197642355", "url": "https://auto.bazos.sk/inzerat/197642355/seat-altea-xl-19-tdi-77-kw.php", "title": "Seat Altea XL 1.9 TDI 77  KW", "price": 1800, "price_gross": 1800, "fair_price": 2910.0, "discount_pct": 38.1, "verdict": "výrazne pod trhom – over prečo", "year": 2009, "km": 290000, "km_per_year": 16700.0, "eg": "1.6 / 1.9 TDI 66–77 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Prievidza", "flags": ["prevodovka nezistená"], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "197421976", "url": "https://auto.bazos.sk/inzerat/197421976/predam-seat-altea-19-tdi-105-koni.php", "title": "PREDÁM SEAT ALTEA 1.9 TDI – 105 KONÍ", "price": 2000, "price_gross": 2000, "fair_price": 3180.0, "discount_pct": 37.1, "verdict": "výrazne pod trhom – over prečo", "year": 2008, "km": 223445, "km_per_year": 12200.0, "eg": "1.6 / 1.9 TDI 66–77 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Kežmarok", "flags": [], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "196391645", "url": "https://auto.bazos.sk/inzerat/196391645/seat-altea-xl-20-tdi-automat.php", "title": "Seat Altea XL 2.0 TDI Automat", "price": 1500, "price_gross": 1500, "fair_price": 2200.0, "discount_pct": 31.8, "verdict": "výrazne pod trhom – over prečo", "year": 2009, "km": 390000, "km_per_year": 22500.0, "eg": "2.0 TDI 103–125 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Kysucké Nové Mesto", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "bs-39549059", "url": "https://auto.bazar.sk/39549059-seat-altea-2-0-tdi-fr-dpf/", "title": "Seat Altea 2.0 TDI FR DPF", "price": 2499, "price_gross": 2499, "fair_price": 3540.0, "discount_pct": 29.5, "verdict": "výrazne pod trhom – over prečo", "year": 2007, "km": 221062, "km_per_year": 11400.0, "eg": "2.0 TDI 103–125 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Smižany", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmZor_gQhc7", "url": "https://www.autobazar.eu/detail/seat-altea-20-tdi-fr-dpf/AmZor_gQhc7/", "price": 2499}], "body": "mpv"}, {"id": "197643041", "url": "https://auto.bazos.sk/inzerat/197643041/seat-altea-xl-20tdi-rv2007.php", "title": "Seat Altea XL 2.0tdi R.V.2007", "price": 2000, "price_gross": 2000, "fair_price": 2720.0, "discount_pct": 26.4, "verdict": "výrazne pod trhom – over prečo", "year": 2007, "km": 294000, "km_per_year": 15200.0, "eg": "2.0 TDI 103–125 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Zlaté Moravce", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "ab-AeJH_xFdd9j", "url": "https://www.autobazar.eu/detail/seat-altea-xl-20-tdi-freetrack-servkniha/AeJH_xFdd9j/", "title": "Seat Altea XL 2.0 TDI, Freetrack, 4X4, Serv.kniha", "price": 3200, "price_gross": 3200, "fair_price": 4290.0, "discount_pct": 25.5, "verdict": "výrazne pod trhom – over prečo", "year": 2009, "km": 139023, "km_per_year": 8000.0, "eg": "2.0 TDI 103–125 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Trenčiansky kraj", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "bs-39444552", "url": "https://auto.bazar.sk/39444552-seat-altea-xl-1-9-tdi-reference/", "title": "Seat Altea XL 1.9 TDi Reference", "price": 2699, "price_gross": 2699, "fair_price": 3600.0, "discount_pct": 25.0, "verdict": "výrazne pod trhom – over prečo", "year": 2007, "km": 202218, "km_per_year": 10500.0, "eg": "1.6 / 1.9 TDI 66–77 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Turany", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmLzH1WPwE-", "url": "https://www.autobazar.eu/detail/seat-altea-xl-19-tdi-reference/AmLzH1WPwE-/", "price": 2699}], "body": "wagon"}, {"id": "196949432", "url": "https://auto.bazos.sk/inzerat/196949432/seat-altea-xl-2010-lift-1p-12-tsi-edicia-chili.php", "title": "⭐️SEAT ALTEA XL 2010 lift (1P) 1,2 TSi edícia Chili", "price": 2900, "price_gross": 2900, "fair_price": 3840.0, "discount_pct": 24.5, "verdict": "výrazne pod trhom – over prečo", "year": 2010, "km": 149700, "km_per_year": 9200.0, "eg": "1.2 / 1.4 / 1.8 TSI 77–118 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Partizánske", "flags": [], "pick": "top", "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "wagon"}, {"id": "ab-AeSgQOBhGyF8", "url": "https://www.autobazar.eu/detail/seat-altea-xl-19-tdi-4x4-servkniha-klima/AeSgQOBhGyF8/", "title": "Seat Altea XL 1.9 TDI, 4X4, Serv.kniha, Klíma", "price": 3000, "price_gross": 3000, "fair_price": 3930.0, "discount_pct": 23.6, "verdict": "výrazne pod trhom – over prečo", "year": 2010, "km": 175250, "km_per_year": 10700.0, "eg": "1.6 / 1.9 TDI 66–77 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Žilinský kraj", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "196212394", "url": "https://auto.bazos.sk/inzerat/196212394/seat-altea-xl-20-tdi-103-kw-dsg-rv-2011-229-tis-km.php", "title": "Seat Altea XL 2.0 TDI 103 kW DSG, r.v. 2011, 229 tis. km", "price": 3900, "price_gross": 3900, "fair_price": 5100.0, "discount_pct": 23.5, "verdict": "výrazne pod trhom – over prečo", "year": 2011, "km": 229000, "km_per_year": 14900.0, "eg": "2.0 TDI 103–125 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Žilina", "flags": [], "pick": "top", "source": "bazos", "origin": "dovoz", "also_listed": [{"source": "autobazar", "id": "ab-AeXKX706NTY", "url": "https://www.autobazar.eu/detail/seat-altea-20-tdi-cr-dpf-style-dsg-103kw140hp-a6/AeXKX706NTY/", "price": 3900}], "body": "wagon"}, {"id": "197350762", "url": "https://auto.bazos.sk/inzerat/197350762/seat-altea-xl.php", "title": "SEAT ALTEA XL 1,6 TDI", "price": 2250, "price_gross": 2250, "fair_price": 2910.0, "discount_pct": 22.7, "verdict": "výrazne pod trhom – over prečo", "year": 2011, "km": 297000, "km_per_year": 19400.0, "eg": "1.6 / 1.9 TDI 66–77 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Topoľčany", "flags": ["prevodovka nezistená"], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "bs-39697657", "url": "https://auto.bazar.sk/39697657-seat-altea-xl-1-6-tdi-cr-style/", "title": "Seat Altea XL 1.6 TDI CR Style", "price": 4490, "price_gross": 4490, "fair_price": 5760.0, "discount_pct": 22.0, "verdict": "výrazne pod trhom – over prečo", "year": 2010, "km": 116744, "km_per_year": 7100.0, "eg": "1.6 / 1.9 TDI 66–77 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Veľký Krtíš", "flags": [], "pick": "top", "source": "bazarsk", "origin": "dovoz", "also_listed": [{"source": "autobazar", "id": "ab-AmNJLMIzRuo", "url": "https://www.autobazar.eu/detail/seat-altea-xl-16-tdi-cr-style/AmNJLMIzRuo/", "price": 4490}, {"source": "bazos", "id": "197423653", "url": "https://auto.bazos.sk/inzerat/197423653/seat-altea-xl-16-tdi-116tis-km-77kw-2010-klimavyhrev-sed.php", "price": 4490}], "body": "wagon"}, {"id": "197728937", "url": "https://auto.bazos.sk/inzerat/197728937/seat-altea-20-tdi-koza-xenon-bez-dpf.php", "title": "Seat Altea 2.0 tdi  --koža-xenon-bez DPF--", "price": 2799, "price_gross": 2799, "fair_price": 3580.0, "discount_pct": 21.8, "verdict": "výrazne pod trhom – over prečo", "year": 2006, "km": 195000, "km_per_year": 9600.0, "eg": "2.0 TDI 103–125 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Michalovce", "flags": [], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "mpv"}, {"id": "196991504", "url": "https://auto.bazos.sk/inzerat/196991504/seat-altea-xl-12-tsi.php", "title": "Seat altea xl 1.2 Tsi", "price": 2990, "price_gross": 2990, "fair_price": 3790.0, "discount_pct": 21.1, "verdict": "výrazne pod trhom – over prečo", "year": 2010, "km": 152000, "km_per_year": 9300.0, "eg": "1.2 / 1.4 / 1.8 TSI 77–118 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Rimavská Sobota", "flags": [], "pick": "top", "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "197402689", "url": "https://auto.bazos.sk/inzerat/197402689/seat-altea-copa-16tdi-77kw-dsg-2012.php", "title": "Seat Altea Copa, 1,6tdi 77kw DSG 2012", "price": 3200, "price_gross": 3200, "fair_price": 4050.0, "discount_pct": 20.9, "verdict": "výrazne pod trhom – over prečo", "year": 2012, "km": 238000, "km_per_year": 16600.0, "eg": "1.6 / 1.9 TDI 66–77 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Žiar nad Hronom", "flags": [], "pick": "top", "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "195905729", "url": "https://auto.bazos.sk/inzerat/195905729/predam-seat-altea-xl.php", "title": "Predam Seat altea xl", "price": 2200, "price_gross": 2200, "fair_price": 2730.0, "discount_pct": 19.3, "verdict": "výrazne pod trhom – over prečo", "year": 2011, "km": 315000, "km_per_year": 20500.0, "eg": "1.6 / 1.9 TDI 66–77 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Martin", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "197190572", "url": "https://auto.bazos.sk/inzerat/197190572/seat-altea-xl-copa.php", "title": "Seat Altea Xl 1.4 TSI 92kw Copa", "price": 3700, "price_gross": 3700, "fair_price": 4560.0, "discount_pct": 18.8, "verdict": "výrazne pod trhom – over prečo", "year": 2012, "km": 165000, "km_per_year": 11500.0, "eg": "1.2 / 1.4 / 1.8 TSI 77–118 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Senec", "flags": [], "pick": "top", "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "197684770", "url": "https://auto.bazos.sk/inzerat/197684770/seat-altea-xl-2013-140-tsi-po-velkom-servise.php", "title": "Seat Altea XL 2013 1.40 TSI Po veľkom servise", "price": 3699, "price_gross": 3699, "fair_price": 4530.0, "discount_pct": 18.4, "verdict": "výrazne pod trhom – over prečo", "year": 2013, "km": 196581, "km_per_year": 14700.0, "eg": "1.2 / 1.4 / 1.8 TSI 77–118 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": "top", "source": "bazos", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AmN9-WfqowE", "url": "https://www.autobazar.eu/detail/seat-altea-xl-140-tsi-po-velkom-servise/AmN9-WfqowE/", "price": 3699}], "body": "wagon"}, {"id": "196209393", "url": "https://auto.bazos.sk/inzerat/196209393/seat-altea-xl-16-tdi.php", "title": "Seat Altea xl 1.6 TDI", "price": 1500, "price_gross": 1500, "fair_price": 1840.0, "discount_pct": 18.4, "verdict": "výrazne pod trhom – over prečo", "year": 2013, "km": 520000, "km_per_year": 39000.0, "eg": "1.6 / 1.9 TDI 66–77 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Nitra", "flags": ["vysoký nájazd 39000 km/rok – flotila / taxi?", "prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "197626029", "url": "https://auto.bazos.sk/inzerat/197626029/seat-altea-xl-16-tdi-cr-stylebixenonsportpodvozoknaviga.php", "title": "Seat Altea XL 1.6 TDI CR Style,BiXenón,Šport.podvozok,Navigá", "price": 3600, "price_gross": 3600, "fair_price": 4320.0, "discount_pct": 16.7, "verdict": "výrazne pod trhom – over prečo", "year": 2012, "km": 219900, "km_per_year": 15300.0, "eg": "1.6 / 1.9 TDI 66–77 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Levoča", "flags": ["prevodovka nezistená"], "pick": "top", "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "wagon"}, {"id": "ab-Aes73Mr4WWYf", "url": "https://www.autobazar.eu/detail/seat-altea-xl-19-tdi-klima-tempomat/Aes73Mr4WWYf/", "title": "Seat Altea XL 1.9 TDI, Klíma, Tempomat", "price": 1800, "price_gross": 1800, "fair_price": 2150.0, "discount_pct": 16.1, "verdict": "výrazne pod trhom – over prečo", "year": 2007, "km": 298652, "km_per_year": 15400.0, "eg": "1.6 / 1.9 TDI 66–77 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Trenčiansky kraj", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "ab-AeJP1N9ycI4", "url": "https://www.autobazar.eu/detail/seat-altea-xl-16-tdi-servkniha-klima-tempomat/AeJP1N9ycI4/", "title": "Seat Altea XL 1.6 TDI, Serv.kniha, Klíma, Tempomat", "price": 4400, "price_gross": 4400, "fair_price": 5200.0, "discount_pct": 15.4, "verdict": "výrazne pod trhom – over prečo", "year": 2013, "km": 130661, "km_per_year": 9800.0, "eg": "1.6 / 1.9 TDI 66–77 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Lučenec", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "bs-39620821", "url": "https://auto.bazar.sk/39620821-seat-altea-xl-2-0-tdi-cr-dpf-style-dsg/", "title": "Seat Altea XL 2.0 TDI CR DPF Style DSG", "price": 4990, "price_gross": 4990, "fair_price": 5820.0, "discount_pct": 14.3, "verdict": "pod trhom", "year": 2011, "km": 189130, "km_per_year": 12300.0, "eg": "2.0 TDI 103–125 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Košice", "flags": [], "pick": null, "source": "bazarsk", "origin": "dovoz", "also_listed": [{"source": "autobazar", "id": "ab-Am0Rcu62P70", "url": "https://www.autobazar.eu/detail/seat-altea-xl-20-tdi-cr-dpf-style-dsg/Am0Rcu62P70/", "price": 4990}, {"source": "bazos", "id": "195975277", "url": "https://auto.bazos.sk/inzerat/195975277/seat-altea-xl-20-tdi-cr-dpf-style-dsg.php", "price": 4990}], "body": "wagon"}, {"id": "197700646", "url": "https://auto.bazos.sk/inzerat/197700646/seat-altea-xl-16.php", "title": "Seat altea xl 1.6", "price": 2999, "price_gross": 2999, "fair_price": 3490.0, "discount_pct": 14.0, "verdict": "pod trhom", "year": 2010, "km": 227000, "km_per_year": 13900.0, "eg": "1.6 / 1.9 TDI 66–77 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Galanta", "flags": [], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "bs-39605991", "url": "https://auto.bazar.sk/39605991-seat-altea-xl-1-9-tdi-77kw/", "title": "Seat Altea XL 1.9 TDI 77kw", "price": 2600, "price_gross": 2600, "fair_price": 2990.0, "discount_pct": 13.1, "verdict": "pod trhom", "year": 2008, "km": 247654, "km_per_year": 13500.0, "eg": "1.6 / 1.9 TDI 66–77 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Poprad", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [{"source": "bazos", "id": "196528861", "url": "https://auto.bazos.sk/inzerat/196528861/seat-altea-xl-19-tdi-77kw.php", "price": 2600}, {"source": "autobazar", "id": "ab-Am8RCa8Hu5j", "url": "https://www.autobazar.eu/detail/seat-altea-19-tdi-77kw/Am8RCa8Hu5j/", "price": 2600}], "body": "wagon"}, {"id": "197665475", "url": "https://auto.bazos.sk/inzerat/197665475/seat-altea-19-tdi.php", "title": "Seat Altea 1.9 TDI", "price": 2699, "price_gross": 2699, "fair_price": 3090.0, "discount_pct": 12.6, "verdict": "pod trhom", "year": 2006, "km": 174000, "km_per_year": 8600.0, "eg": "1.6 / 1.9 TDI 66–77 kW", "cg": 1, "transmission": null, "seller_type": "dealer", "location": "Prešov", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AeR6qGHHE7-", "url": "https://www.autobazar.eu/detail/seat-altea-16-klima-tempomat-po-stk/AeR6qGHHE7-/", "title": "Seat Altea 1.6, Klíma, Tempomat, po STK", "price": 2800, "price_gross": 2800, "fair_price": 3160.0, "discount_pct": 11.4, "verdict": "pod trhom", "year": 2007, "km": 136751, "km_per_year": 7100.0, "eg": "1.6 MPI benzín 75 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "195984046", "url": "https://auto.bazos.sk/inzerat/195984046/seat-altea-19-tdi-reference.php", "title": "Seat Altea 1.9 TDi Reference", "price": 2850, "price_gross": 2850, "fair_price": 3210.0, "discount_pct": 11.2, "verdict": "pod trhom", "year": 2008, "km": 193800, "km_per_year": 10600.0, "eg": "1.6 / 1.9 TDI 66–77 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Šaľa", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-Am97j6V6rP3", "url": "https://www.autobazar.eu/detail/seat-altea-19-tdi-reference/Am97j6V6rP3/", "price": 2850}, {"source": "bazarsk", "id": "bs-39714931", "url": "https://auto.bazar.sk/39714931-seat-altea-1-9-tdi-reference/", "price": 2850}], "body": "mpv"}, {"id": "196872022", "url": "https://auto.bazos.sk/inzerat/196872022/seat-altea-xl-2011.php", "title": "Seat Altea XL 2011", "price": 3900, "price_gross": 3900, "fair_price": 4390.0, "discount_pct": 11.1, "verdict": "pod trhom", "year": 2011, "km": 191000, "km_per_year": 12500.0, "eg": "2.0 TDI 103–125 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Vranov nad Topľou", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "ab-AexHtbPDUiX", "url": "https://www.autobazar.eu/detail/seat-altea-xl-16-tdi-automat-sr2maj/AexHtbPDUiX/", "title": "Seat Altea XL 1.6 TDI, Automat, SR,2.maj", "price": 3500, "price_gross": 3500, "fair_price": 3890.0, "discount_pct": 10.1, "verdict": "pod trhom", "year": 2013, "km": 239916, "km_per_year": 18000.0, "eg": "1.6 / 1.9 TDI 66–77 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Žilinský kraj", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "196595394", "url": "https://auto.bazos.sk/inzerat/196595394/seat-altea-fr-19-tdi-77kw.php", "title": "SEAT ALTEA FR 1.9 TDI (77kW) AUTOMAT", "price": 3900, "price_gross": 3900, "fair_price": 4330.0, "discount_pct": 10.0, "verdict": "pod trhom", "year": 2009, "km": 181410, "km_per_year": 10500.0, "eg": "1.6 / 1.9 TDI 66–77 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Krupina", "flags": [], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-Aeoxc-_A-W6", "url": "https://www.autobazar.eu/detail/seat-altea-12-tsi-klima-tempomat/Aeoxc-_A-W6/", "title": "Seat Altea 1.2 TSI, Klíma, Tempomat", "price": 3000, "price_gross": 3000, "fair_price": 3330.0, "discount_pct": 9.9, "verdict": "pod trhom", "year": 2010, "km": 156944, "km_per_year": 9600.0, "eg": "1.2 / 1.4 / 1.8 TSI 77–118 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Trenčiansky kraj", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "bs-35017837", "url": "https://auto.bazar.sk/35017837-seat-altea-xl-2-0-tdi-stylance/", "title": "Seat Altea XL 2.0 TDi Stylance", "price": 4200, "price_gross": 4200, "fair_price": 4650.0, "discount_pct": 9.7, "verdict": "pod trhom", "year": 2007, "km": 175981, "km_per_year": 9100.0, "eg": "2.0 TDI 103–125 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Trebišov", "flags": [], "pick": null, "source": "bazarsk", "origin": "dovoz", "also_listed": [], "body": "wagon"}, {"id": "197544914", "url": "https://auto.bazos.sk/inzerat/197544914/seat-altea.php", "title": "Seat Altea", "price": 2300, "price_gross": 2300, "fair_price": 2540.0, "discount_pct": 9.3, "verdict": "pod trhom", "year": 2008, "km": 280000, "km_per_year": 15300.0, "eg": "2.0 TDI 103–125 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Trnava", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197623474", "url": "https://auto.bazos.sk/inzerat/197623474/seat-altea-xl.php", "title": "Seat Altea XL rok 2012", "price": 3490, "price_gross": 3490, "fair_price": 3840.0, "discount_pct": 9.2, "verdict": "pod trhom", "year": 2012, "km": 193000, "km_per_year": 13500.0, "eg": "1.2 / 1.4 / 1.8 TSI 77–118 kW", "cg": 0, "transmission": null, "seller_type": "dealer", "location": "Rimavská Sobota", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "197158861", "url": "https://auto.bazos.sk/inzerat/197158861/seat-altea-19-tdi-77kw-2007.php", "title": "Seat altea 1.9 TDi 77kw 2007", "price": 1650, "price_gross": 1650, "fair_price": 1820.0, "discount_pct": 9.2, "verdict": "pod trhom", "year": 2006, "km": 345397, "km_per_year": 17000.0, "eg": "1.6 / 1.9 TDI 66–77 kW", "cg": 1, "transmission": null, "seller_type": "dealer", "location": "Partizánske", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "196758638", "url": "https://auto.bazos.sk/inzerat/196758638/seat-altea-xl-14tsi-92kw.php", "title": "Seat Altea XL 1.4tsi 92kw NOVÁ TK", "price": 2799, "price_gross": 2799, "fair_price": 3080.0, "discount_pct": 9.1, "verdict": "pod trhom", "year": 2011, "km": 245560, "km_per_year": 16000.0, "eg": "1.2 / 1.4 / 1.8 TSI 77–118 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Vranov nad Topľou", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "wagon"}, {"id": "ab-AekaFSegAqo", "url": "https://www.autobazar.eu/detail/seat-altea-xl-xl-20-tdi-cr-dpf-4x4-style-103kw140hp-m6/AekaFSegAqo/", "title": "Seat Altea XL XL 2.0 TDI CR DPF 4x4 Style 103kW140HP M6", "price": 4300, "price_gross": 4300, "fair_price": 4700.0, "discount_pct": 8.5, "verdict": "pod trhom", "year": 2011, "km": 224000, "km_per_year": 14600.0, "eg": "2.0 TDI 103–125 kW", "cg": 1, "transmission": "manual", "seller_type": "private", "location": "Košice", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "wagon"}, {"id": "197250193", "url": "https://auto.bazos.sk/inzerat/197250193/seat-altea-xl-16tdi-77kw.php", "title": "Seat altea xl 1.6tdi 77kw", "price": 5490, "price_gross": 5490, "fair_price": 5960.0, "discount_pct": 7.9, "verdict": "pod trhom", "year": 2014, "km": 149000, "km_per_year": 12100.0, "eg": "1.6 / 1.9 TDI 66–77 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Levice", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "bs-34353587", "url": "https://auto.bazar.sk/34353587-seat-altea-1-9-tdi/", "title": "Seat Altea 1.9 TDI", "price": 3300, "price_gross": 3300, "fair_price": 3560.0, "discount_pct": 7.3, "verdict": "pod trhom", "year": 2008, "km": 220604, "km_per_year": 12000.0, "eg": "1.6 / 1.9 TDI 66–77 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Nové Zámky", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "bs-39750330", "url": "https://auto.bazar.sk/39750330-seat-altea-1-6-tdi-cr-reference/", "title": "Seat Altea 1.6 TDI CR Reference", "price": 3499, "price_gross": 3499, "fair_price": 3770.0, "discount_pct": 7.2, "verdict": "pod trhom", "year": 2012, "km": 279340, "km_per_year": 19500.0, "eg": "1.6 / 1.9 TDI 66–77 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Smižany", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [{"source": "bazos", "id": "196991930", "url": "https://auto.bazos.sk/inzerat/196991930/seat-altea-16-tdi-cr-reference.php", "price": 3499}, {"source": "autobazar", "id": "ab-AmAmc-iy1rK", "url": "https://www.autobazar.eu/detail/seat-altea-16-tdi-cr-reference/AmAmc-iy1rK/", "price": 3499}], "body": "mpv"}, {"id": "ab-AmIDeZkp5xe", "url": "https://www.autobazar.eu/detail/seat-altea-16-tdi-cr-i-tech/AmIDeZkp5xe/", "title": "Seat Altea 1.6 TDI CR I-TECH", "price": 3800, "price_gross": 3800, "fair_price": 4070.0, "discount_pct": 6.7, "verdict": "férová cena", "year": 2014, "km": 271600, "km_per_year": 22000.0, "eg": "1.6 / 1.9 TDI 66–77 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Sekule", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazarsk", "id": "bs-39666682", "url": "https://auto.bazar.sk/39666682-seat-altea-1-6-tdi-cr-i-tech/", "price": 3800}], "body": "mpv"}, {"id": "bs-39750344", "url": "https://auto.bazar.sk/39750344-seat-altea-xl-1-2-tsi-copa/", "title": "Seat Altea XL 1.2 TSI COPA", "price": 4877, "price_gross": 4877, "fair_price": 5200.0, "discount_pct": 6.2, "verdict": "férová cena", "year": 2012, "km": 128000, "km_per_year": 8900.0, "eg": "1.2 / 1.4 / 1.8 TSI 77–118 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Bratislava II - Podunajské Biskupice", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [{"source": "bazos", "id": "197685854", "url": "https://auto.bazos.sk/inzerat/197685854/seat-altea-xl-12-tsi-copa.php", "price": 4877}, {"source": "autobazar", "id": "ab-AmxGnNb3dCr", "url": "https://www.autobazar.eu/detail/seat-altea-xl-12-tsi-copa/AmxGnNb3dCr/", "price": 4877}], "body": "wagon"}, {"id": "196513179", "url": "https://auto.bazos.sk/inzerat/196513179/seat-altea-4xl-4x4-103-kw-2011-manual.php", "title": "Seat Altea XL 4x4 103 kW 2011 - manual", "price": 4300, "price_gross": 4300, "fair_price": 4570.0, "discount_pct": 5.8, "verdict": "férová cena", "year": 2012, "km": 224000, "km_per_year": 15600.0, "eg": "2.0 TDI 103–125 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Košice", "flags": [], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "wagon"}, {"id": "196226617", "url": "https://auto.bazos.sk/inzerat/196226617/seat-altea-automat-20-tdi-103-kw.php", "title": "Seat Altea automat 2,0 TDI 103 kw", "price": 2999, "price_gross": 2999, "fair_price": 3180.0, "discount_pct": 5.7, "verdict": "férová cena", "year": 2005, "km": 240000, "km_per_year": 11300.0, "eg": "2.0 TDI 103–125 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Kežmarok", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197395876", "url": "https://auto.bazos.sk/inzerat/197395876/ponukam-seat-altea-xl-18tsi.php", "title": "Ponúkam seat altea XL 1.8tsi", "price": 4200, "price_gross": 4200, "fair_price": 4450.0, "discount_pct": 5.6, "verdict": "férová cena", "year": 2012, "km": 136000, "km_per_year": 9500.0, "eg": "1.2 / 1.4 / 1.8 TSI 77–118 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Bratislava", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "wagon"}, {"id": "ab-AeEj85aB9Oi", "url": "https://www.autobazar.eu/detail/seat-altea-16i-reference-75kw102hp-m5/AeEj85aB9Oi/", "title": "Seat Altea 1.6i Reference 75kW102HP M5", "price": 2250, "price_gross": 2250, "fair_price": 2360.0, "discount_pct": 4.8, "verdict": "férová cena", "year": 2006, "km": 227464, "km_per_year": 11200.0, "eg": "1.6 MPI benzín 75 kW", "cg": 0, "transmission": "manual", "seller_type": "private", "location": "Dunajská Streda", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "bs-39711401", "url": "https://auto.bazar.sk/39711401-seat-altea-freetrack-xl-2-0-tdi/", "title": "Seat Altea Freetrack XL 2.0 TDI", "price": 7999, "price_gross": 7999, "fair_price": 8390.0, "discount_pct": 4.7, "verdict": "férová cena", "year": 2014, "km": 146284, "km_per_year": 11900.0, "eg": "2.0 TDI 103–125 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Poprad", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [{"source": "bazos", "id": "195889684", "url": "https://auto.bazos.sk/inzerat/195889684/seat-altea-freetrack-xl-20-tdi.php", "price": 7999}, {"source": "autobazar", "id": "ab-AmIncLff6gH", "url": "https://www.autobazar.eu/detail/seat-altea-freetrack-xl-20-tdi/AmIncLff6gH/", "price": 7999}, {"source": "bazos", "id": "197358417", "url": "https://auto.bazos.sk/inzerat/197358417/seat-altea-xl-freetrack.php", "price": 7800}], "body": "wagon"}, {"id": "ab-Amm4LryfBa4", "url": "https://www.autobazar.eu/detail/seat-altea-xl-16-tdi-cr-reference/Amm4LryfBa4/", "title": "Seat Altea XL 1.6 TDI CR Reference", "price": 2990, "price_gross": 2990, "fair_price": 3130.0, "discount_pct": 4.5, "verdict": "férová cena", "year": 2012, "km": 270295, "km_per_year": 18900.0, "eg": "1.6 / 1.9 TDI 66–77 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Nové Mesto nad Váhom", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39727809", "url": "https://auto.bazar.sk/39727809-seat-altea-xl-1-6-tdi-cr-reference/", "price": 2990}, {"source": "bazos", "id": "197213165", "url": "https://auto.bazos.sk/inzerat/197213165/seat-altea-xl-16-tdi-cr-77kw-reference-m5.php", "price": 2990}], "body": "wagon"}, {"id": "196146288", "url": "https://auto.bazos.sk/inzerat/196146288/seat-altea-xl-stylance-18tsibenzin-bixenon-kup-sk.php", "title": "SEAT ALTEA XL STYLANCE 1.8TSI,BENZIN, BIXENON ,KUP SK", "price": 2999, "price_gross": 2999, "fair_price": 3140.0, "discount_pct": 4.4, "verdict": "férová cena", "year": 2010, "km": 239000, "km_per_year": 14600.0, "eg": "1.2 / 1.4 / 1.8 TSI 77–118 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Lučenec", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "196493395", "url": "https://auto.bazos.sk/inzerat/196493395/seat-altea-xl-14-tsi-92kw-rozvody-vymenene-stk-ek-82028.php", "title": "SEAT Altea XL 1.4 TSi 92kw, Rozvody vymenene, STK-EK 8/2028", "price": 3490, "price_gross": 3490, "fair_price": 3650.0, "discount_pct": 4.3, "verdict": "férová cena", "year": 2012, "km": 213500, "km_per_year": 14900.0, "eg": "1.2 / 1.4 / 1.8 TSI 77–118 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Senec", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "196803879", "url": "https://auto.bazos.sk/inzerat/196803879/seat-altea.php", "title": "seat altea", "price": 2300, "price_gross": 2300, "fair_price": 2400.0, "discount_pct": 4.0, "verdict": "férová cena", "year": 2005, "km": 263000, "km_per_year": 12300.0, "eg": "1.6 / 1.9 TDI 66–77 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Nové Mesto n.Váhom", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-Ae1iDsFk-Ef", "url": "https://www.autobazar.eu/detail/seat-altea-19-tdi-klima-tempomat-po-stk/Ae1iDsFk-Ef/", "title": "Seat Altea 1.9 TDI, Klíma, Tempomat, po STK", "price": 2200, "price_gross": 2200, "fair_price": 2290.0, "discount_pct": 3.9, "verdict": "férová cena", "year": 2007, "km": 278017, "km_per_year": 14400.0, "eg": "1.6 / 1.9 TDI 66–77 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Lučenec", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "196956059", "url": "https://auto.bazos.sk/inzerat/196956059/predam.php", "title": "Predám", "price": 3800, "price_gross": 3800, "fair_price": 3930.0, "discount_pct": 3.2, "verdict": "férová cena", "year": 2011, "km": 185679, "km_per_year": 12100.0, "eg": "1.6 MPI benzín 75 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Žilina", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "ab-Aew9o_PG-Ke", "url": "https://www.autobazar.eu/detail/seat-altea-12-tsi/Aew9o_PG-Ke/", "title": "Seat Altea 1.2 TSI, Klíma, Park. senzory, Klíma", "price": 3300, "price_gross": 3300, "fair_price": 3350.0, "discount_pct": 1.5, "verdict": "férová cena", "year": 2011, "km": 178319, "km_per_year": 11600.0, "eg": "1.2 / 1.4 / 1.8 TSI 77–118 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Lučenec", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "bs-34351674", "url": "https://auto.bazar.sk/34351674-seat-altea-xl-1-9-tdi/", "title": "Seat Altea XL 1.9 TDI", "price": 5564, "price_gross": 5564, "fair_price": 5630.0, "discount_pct": 1.1, "verdict": "férová cena", "year": 2010, "km": 133755, "km_per_year": 8200.0, "eg": "1.6 / 1.9 TDI 66–77 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Nové Zámky", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "196170818", "url": "https://auto.bazos.sk/inzerat/196170818/seat-altea-16-tdi-77kw-cayc-rv-2011.php", "title": "Seat Altea XL 1.6 TDI 77kW (CAYC) r.v. 2011", "price": 2900, "price_gross": 2900, "fair_price": 2930.0, "discount_pct": 1.0, "verdict": "férová cena", "year": 2011, "km": 305000, "km_per_year": 19900.0, "eg": "1.6 / 1.9 TDI 66–77 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Trnava", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "197443048", "url": "https://auto.bazos.sk/inzerat/197443048/seat-altea-19-tdi-77kw.php", "title": "Seat Altea 1.9 TDi 77kW", "price": 3100, "price_gross": 3100, "fair_price": 3120.0, "discount_pct": 0.7, "verdict": "férová cena", "year": 2007, "km": 216600, "km_per_year": 11200.0, "eg": "1.6 / 1.9 TDI 66–77 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Topoľčany", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AeTdxDr8tOs", "url": "https://www.autobazar.eu/detail/seat-altea-19-tdi/AeTdxDr8tOs/", "price": 3100}], "body": "mpv"}, {"id": "ab-Aev_z2e3DKA", "url": "https://www.autobazar.eu/detail/seat-altea-xl-16-tdi-sr1maj-klima-tempomat/Aev_z2e3DKA/", "title": "Seat Altea XL 1.6 TDI, SR,1.maj, Klíma, Tempomat", "price": 3500, "price_gross": 3500, "fair_price": 3520.0, "discount_pct": 0.5, "verdict": "férová cena", "year": 2013, "km": 261571, "km_per_year": 19600.0, "eg": "1.6 / 1.9 TDI 66–77 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Trenčiansky kraj", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "ab-Amq0p9m-z4-", "url": "https://www.autobazar.eu/detail/seat-altea-xl-14-16v-altea-xl/Amq0p9m-z4-/", "title": "Seat Altea XL 1,4 16V Altea XL", "price": 3790, "price_gross": 3790, "fair_price": 3800.0, "discount_pct": 0.2, "verdict": "férová cena", "year": 2011, "km": 161141, "km_per_year": 10500.0, "eg": "1.2 / 1.4 / 1.8 TSI 77–118 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Prievidza", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-39774190", "url": "https://auto.bazar.sk/39774190-seat-altea-xl-1-4-16v-altea-xl/", "price": 3790}], "body": "wagon"}, {"id": "196854230", "url": "https://auto.bazos.sk/inzerat/196854230/predam-seat-altea-freetrack-4x4.php", "title": "Predám Seat altea freetrack 4x4", "price": 3300, "price_gross": 3300, "fair_price": 3310.0, "discount_pct": 0.2, "verdict": "férová cena", "year": 2009, "km": 228000, "km_per_year": 13200.0, "eg": "2.0 TDI 103–125 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Topoľčany", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "195972258", "url": "https://auto.bazos.sk/inzerat/195972258/seat-altea.php", "title": "Seat altea", "price": 3800, "price_gross": 3800, "fair_price": 3790.0, "discount_pct": -0.3, "verdict": "férová cena", "year": 2011, "km": 240000, "km_per_year": 15700.0, "eg": "1.6 MPI benzín 75 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Levice", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-Aec-Ox-VT2F", "url": "https://www.autobazar.eu/detail/seat-altea-xl-16-tdi-cr-i-tech-77kw105hp-m5/Aec-Ox-VT2F/", "title": "Seat Altea XL 1.6 TDI CR I-TECH 77kW/105HP M5", "price": 5200, "price_gross": 5200, "fair_price": 5160.0, "discount_pct": -0.7, "verdict": "férová cena", "year": 2014, "km": 191500, "km_per_year": 15500.0, "eg": "1.6 / 1.9 TDI 66–77 kW", "cg": 1, "transmission": "manual", "seller_type": "private", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "197277830", "url": "https://auto.bazos.sk/inzerat/197277830/seat-altea-xl-16-tdi-i-tech-2014-192k-km.php", "price": 5200}], "body": "wagon"}, {"id": "197148999", "url": "https://auto.bazos.sk/inzerat/197148999/seat-altea-benzin-16-75kw.php", "title": "Seat Altea Benzín 1.6 75kw", "price": 1999, "price_gross": 1999, "fair_price": 1990.0, "discount_pct": -0.7, "verdict": "férová cena", "year": 2005, "km": 315000, "km_per_year": 14800.0, "eg": "1.6 MPI benzín 75 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Dunajská Streda", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197792084", "url": "https://auto.bazos.sk/inzerat/197792084/seat-altea-xl-freetrack-20tdi-nove-stkek.php", "title": "Seat Altea XL Freetrack 2,0TDI nové STK/EK", "price": 2500, "price_gross": 2500, "fair_price": 2440.0, "discount_pct": -2.3, "verdict": "férová cena", "year": 2007, "km": 320000, "km_per_year": 16600.0, "eg": "2.0 TDI 103–125 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Rožňava", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "197693556", "url": "https://auto.bazos.sk/inzerat/197693556/seat-altea-xl-16-tdi-cr-i-tech-dsg-77kw105hp-a7.php", "title": "✳️Seat Altea XL 1.6 TDI CR I-TECH DSG 77kW/105HP A7✳️", "price": 5650, "price_gross": 5650, "fair_price": 5520.0, "discount_pct": -2.4, "verdict": "férová cena", "year": 2014, "km": 197500, "km_per_year": 16000.0, "eg": "1.6 / 1.9 TDI 66–77 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Detva", "flags": [], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "wagon"}, {"id": "ab-Aekl58xMD_N", "url": "https://www.autobazar.eu/detail/seat-altea-16-tdi-cr-style-dsg-77kw105hp-a7/Aekl58xMD_N/", "title": "Seat Altea 1.6 TDI CR Style DSG 77kW105HP A7", "price": 5500, "price_gross": 5500, "fair_price": 5350.0, "discount_pct": -2.8, "verdict": "férová cena", "year": 2013, "km": 160000, "km_per_year": 12000.0, "eg": "1.6 / 1.9 TDI 66–77 kW", "cg": 1, "transmission": "automatic", "seller_type": "private", "location": "Trnava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazos", "id": "197096861", "url": "https://auto.bazos.sk/inzerat/197096861/seat-altea-16-tdi-automat.php", "price": 5500}], "body": "mpv"}, {"id": "196293655", "url": "https://auto.bazos.sk/inzerat/196293655/seat-altea-xl-14-tsi-92-kw-2009.php", "title": "SEAT Altea XL 1.4 TSI (92 kW), 2009", "price": 3599, "price_gross": 3599, "fair_price": 3450.0, "discount_pct": -4.2, "verdict": "férová cena", "year": 2009, "km": 215000, "km_per_year": 12400.0, "eg": "1.2 / 1.4 / 1.8 TSI 77–118 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Levoča", "flags": [], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "wagon"}, {"id": "196734863", "url": "https://auto.bazos.sk/inzerat/196734863/seat-altea-xl-14tsi.php", "title": "Seat altea xl 1.4tsi", "price": 3950, "price_gross": 3950, "fair_price": 3750.0, "discount_pct": -5.2, "verdict": "férová cena", "year": 2011, "km": 220000, "km_per_year": 14300.0, "eg": "1.2 / 1.4 / 1.8 TSI 77–118 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Martin", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "196877404", "url": "https://auto.bazos.sk/inzerat/196877404/seat-altea-16tdi-2014.php", "title": "Seat Altea 1.6TDi, 2014", "price": 4200, "price_gross": 4200, "fair_price": 3940.0, "discount_pct": -6.6, "verdict": "férová cena", "year": 2014, "km": 271000, "km_per_year": 22000.0, "eg": "1.6 / 1.9 TDI 66–77 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Malacky", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AeHJkIP5Gyo", "url": "https://www.autobazar.eu/detail/seat-altea-xl-16-tdi-sr2maj-servkniha-klima/AeHJkIP5Gyo/", "title": "Seat Altea XL 1.6 TDI, SR,2.maj, Serv.kniha, Klíma", "price": 4400, "price_gross": 4400, "fair_price": 4100.0, "discount_pct": -7.3, "verdict": "nad trhom", "year": 2011, "km": 154732, "km_per_year": 10100.0, "eg": "1.6 / 1.9 TDI 66–77 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Košice", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "ab-Aea-5_qMdI7", "url": "https://www.autobazar.eu/detail/seat-altea-xl-xl-19-tdi-stylance-77kw105hp-m5/Aea-5_qMdI7/", "title": "Seat Altea XL XL 1.9 TDi Stylance 77kW105HP M5", "price": 1800, "price_gross": 1800, "fair_price": 1660.0, "discount_pct": -8.2, "verdict": "nad trhom", "year": 2008, "km": 390736, "km_per_year": 21300.0, "eg": "1.6 / 1.9 TDI 66–77 kW", "cg": 1, "transmission": "manual", "seller_type": "private", "location": "Skalica", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197493862", "url": "https://auto.bazos.sk/inzerat/197493862/predam-seat-altea-xl-19tdi-stylence.php", "price": 1800}], "body": "wagon"}, {"id": "ab-AmNZAjNtVu_", "url": "https://www.autobazar.eu/detail/seat-altea-xl-19-tdi-105k-style/AmNZAjNtVu_/", "title": "Seat Altea XL 1.6 TDI CR Style", "price": 4199, "price_gross": 4199, "fair_price": 3870.0, "discount_pct": -8.5, "verdict": "nad trhom", "year": 2010, "km": 148416, "km_per_year": 9100.0, "eg": "1.6 / 1.9 TDI 66–77 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Tlmače", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "196887834", "url": "https://auto.bazos.sk/inzerat/196887834/seat-altea-xl-16-tdi-cr-style.php", "price": 4199}, {"source": "bazarsk", "id": "bs-39556128", "url": "https://auto.bazar.sk/39556128-seat-altea-xl-1-6-tdi-cr-style/", "price": 4199}], "body": "wagon"}, {"id": "196544995", "url": "https://auto.bazos.sk/inzerat/196544995/seat-altea-xl-12tsi.php", "title": "Seat altea xl 1.2tsi", "price": 2950, "price_gross": 2950, "fair_price": 2710.0, "discount_pct": -8.7, "verdict": "nad trhom", "year": 2010, "km": 300000, "km_per_year": 18400.0, "eg": "1.6 MPI benzín 75 kW", "cg": 0, "transmission": null, "seller_type": "dealer", "location": "Michalovce", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "ab-AeLHa-jrvnl", "url": "https://www.autobazar.eu/detail/seat-altea-xl-19-tdi-sr2maj-servkniha-klima/AeLHa-jrvnl/", "title": "Seat Altea XL 1.9 TDI, SR,2.maj, Serv.kniha, Klíma", "price": 4100, "price_gross": 4100, "fair_price": 3710.0, "discount_pct": -10.5, "verdict": "nad trhom", "year": 2010, "km": 205695, "km_per_year": 12600.0, "eg": "1.6 / 1.9 TDI 66–77 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Nitriansky kraj", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "196488855", "url": "https://auto.bazos.sk/inzerat/196488855/seat-altea-xl-12-tsi-copa-77kw105hp-m6.php", "title": "Seat Altea XL 1.2 TSI COPA 77kW105HP M6", "price": 3900, "price_gross": 3900, "fair_price": 3530.0, "discount_pct": -10.5, "verdict": "nad trhom", "year": 2012, "km": 227781, "km_per_year": 15900.0, "eg": "1.2 / 1.4 / 1.8 TSI 77–118 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Skalica", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "bs-23499502", "url": "https://auto.bazar.sk/23499502-seat-altea-1-6i-reference-75kw-m5-5d/", "title": "Seat Altea 1.6i Reference, 75kW, M5, 5d.", "price": 3500, "price_gross": 3500, "fair_price": 3150.0, "discount_pct": -11.2, "verdict": "nad trhom", "year": 2005, "km": 224000, "km_per_year": 10500.0, "eg": "1.6 MPI benzín 75 kW", "cg": 0, "transmission": "manual", "seller_type": "private", "location": "Stará Ľubovňa", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "bs-34352383", "url": "https://auto.bazar.sk/34352383-seat-altea-1-2-tsi/", "title": "Seat Altea 1.2 TSI", "price": 7599, "price_gross": 7599, "fair_price": 6790.0, "discount_pct": -11.9, "verdict": "nad trhom", "year": 2012, "km": 63386, "km_per_year": 4400.0, "eg": "1.2 / 1.4 / 1.8 TSI 77–118 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Nové Zámky", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AePYuwymhYq", "url": "https://www.autobazar.eu/detail/seat-altea-16-diesel-77kw-automat-prevodovka/AePYuwymhYq/", "title": "Seat Altea 1.6 Diesel 77kW Automat. převodovka", "price": 3500, "price_gross": 3500, "fair_price": 3090.0, "discount_pct": -13.3, "verdict": "nad trhom", "year": 2014, "km": 343000, "km_per_year": 27800.0, "eg": "1.6 / 1.9 TDI 66–77 kW", "cg": 1, "transmission": "automatic", "seller_type": "private", "location": "Nitra", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AelsO7jnweK", "url": "https://www.autobazar.eu/detail/seat-altea-19-tdi-105k-reference-77kw105hp-m5/AelsO7jnweK/", "title": "Seat Altea 1.9 TDI 105k Reference 77kW105HP M5", "price": 3550, "price_gross": 3550, "fair_price": 3130.0, "discount_pct": -13.5, "verdict": "nad trhom", "year": 2010, "km": 282000, "km_per_year": 17300.0, "eg": "1.6 / 1.9 TDI 66–77 kW", "cg": 1, "transmission": "manual", "seller_type": "private", "location": "Bratislava-Staré Mesto", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197491231", "url": "https://auto.bazos.sk/inzerat/197491231/seat-altea-xl-19tdi-77kw.php", "title": "SEAT Altea XL 1.9tdi 77kw", "price": 2999, "price_gross": 2999, "fair_price": 2620.0, "discount_pct": -14.7, "verdict": "nad trhom", "year": 2007, "km": 249000, "km_per_year": 12900.0, "eg": "1.6 / 1.9 TDI 66–77 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Levice", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AeUCmUSqSd_", "url": "https://www.autobazar.eu/detail/seat-altea-19-tdi-77kw105hp-m5/AeUCmUSqSd_/", "price": 2999}], "body": "wagon"}, {"id": "197316058", "url": "https://auto.bazos.sk/inzerat/197316058/seat-altea-xl-16-tdi.php", "title": "Seat Altea XL 1.6 TDi", "price": 5500, "price_gross": 5500, "fair_price": 4670.0, "discount_pct": -17.9, "verdict": "výrazne nad trhom", "year": 2011, "km": 152000, "km_per_year": 9900.0, "eg": "1.6 / 1.9 TDI 66–77 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Nitra", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "197723439", "url": "https://auto.bazos.sk/inzerat/197723439/seat-altea-xl-16-tdi-i-tech.php", "title": "Seat Altea XL 1.6 TDi I-Tech", "price": 4990, "price_gross": 4990, "fair_price": 4180.0, "discount_pct": -19.3, "verdict": "výrazne nad trhom", "year": 2015, "km": 311604, "km_per_year": 27500.0, "eg": "1.6 / 1.9 TDI 66–77 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Martin", "flags": [], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [{"source": "bazarsk", "id": "bs-39766282", "url": "https://auto.bazar.sk/39766282-seat-altea-1-6-tdi-cr-i-tech/", "price": 4990}, {"source": "autobazar", "id": "ab-Amnu2M37Si0", "url": "https://www.autobazar.eu/detail/seat-altea-16-tdi-cr-i-tech/Amnu2M37Si0/", "price": 4990}], "body": "wagon"}, {"id": "ab-Am73oCY3lY0", "url": "https://www.autobazar.eu/detail/seat-altea-16-tdi-cr-reference/Am73oCY3lY0/", "title": "Seat Altea 1.6 TDI CR Reference", "price": 4600, "price_gross": 4600, "fair_price": 3860.0, "discount_pct": -19.3, "verdict": "výrazne nad trhom", "year": 2013, "km": 178916, "km_per_year": 13400.0, "eg": "1.6 / 1.9 TDI 66–77 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Banská Bystrica", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197379961", "url": "https://auto.bazos.sk/inzerat/197379961/seat-altea-16-tdi-cr-reference.php", "price": 4600}, {"source": "bazarsk", "id": "bs-39765450", "url": "https://auto.bazar.sk/39765450-seat-altea-1-6-tdi-cr-reference/", "price": 4600}], "body": "mpv"}, {"id": "197222007", "url": "https://auto.bazos.sk/inzerat/197222007/seat-altea-xl-16-tdi-dsg-facelift-povodny-lak-tazne.php", "title": "Seat Altea XL 1,6 tdi dsg facelift pôvodný lak, ťažné", "price": 7190, "price_gross": 7190, "fair_price": 5960.0, "discount_pct": -20.7, "verdict": "výrazne nad trhom", "year": 2012, "km": 134000, "km_per_year": 9300.0, "eg": "1.6 / 1.9 TDI 66–77 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Trenčín", "flags": [], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "wagon"}, {"id": "195976653", "url": "https://auto.bazos.sk/inzerat/195976653/seat-altea-xl-4x4.php", "title": "SEAT ALTEA XL 4x4", "price": 6000, "price_gross": 6000, "fair_price": 4810.0, "discount_pct": -24.8, "verdict": "výrazne nad trhom", "year": 2010, "km": 121000, "km_per_year": 7400.0, "eg": "1.6 / 1.9 TDI 66–77 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Rožňava", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "ab-Ae8FCPtAkYP", "url": "https://www.autobazar.eu/detail/seat-altea-xl-14-tsi-tempomat-vyhrivani-sedacek/Ae8FCPtAkYP/", "title": "Seat Altea XL 1.4 TSI, Tempomat, Vyhřívání sedaček", "price": 4800, "price_gross": 4800, "fair_price": 3800.0, "discount_pct": -26.2, "verdict": "výrazne nad trhom", "year": 2012, "km": 184861, "km_per_year": 12900.0, "eg": "1.2 / 1.4 / 1.8 TSI 77–118 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "197766277", "url": "https://auto.bazos.sk/inzerat/197766277/seat-altea-2010-16-diesel-77-kw.php", "title": "Seat Altea 2010 1.6 Diesel 77 kW", "price": 3200, "price_gross": 3200, "fair_price": 2470.0, "discount_pct": -29.8, "verdict": "výrazne nad trhom", "year": 2010, "km": 313000, "km_per_year": 19200.0, "eg": "1.6 / 1.9 TDI 66–77 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Veľký Krtíš", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197072462", "url": "https://auto.bazos.sk/inzerat/197072462/seat-altea-xl-12-tsi.php", "title": "Seat Altea XL 1.2 TSI", "price": 4200, "price_gross": 4200, "fair_price": 3220.0, "discount_pct": -30.4, "verdict": "výrazne nad trhom", "year": 2010, "km": 198739, "km_per_year": 12200.0, "eg": "1.2 / 1.4 / 1.8 TSI 77–118 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Košice", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "196883745", "url": "https://auto.bazos.sk/inzerat/196883745/seat-altea-xl-4-freetrack-20tdi-2008.php", "title": "Seat Altea XL 4 Freetrack  2.0Tdi 2008", "price": 3200, "price_gross": 3200, "fair_price": 2450.0, "discount_pct": -30.5, "verdict": "výrazne nad trhom", "year": 2008, "km": 310088, "km_per_year": 16900.0, "eg": "2.0 TDI 103–125 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Liptovský Mikuláš", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "197226459", "url": "https://auto.bazos.sk/inzerat/197226459/seat-altea-xl.php", "title": "Seat Altea xl", "price": 4500, "price_gross": 4500, "fair_price": 3450.0, "discount_pct": -30.5, "verdict": "výrazne nad trhom", "year": 2011, "km": 270000, "km_per_year": 17600.0, "eg": "2.0 TDI 103–125 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Humenné", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "ab-AeUZIN-M4jP", "url": "https://www.autobazar.eu/detail/seat-altea-freetrack-seat-altea-freetrack/AeUZIN-M4jP/", "title": "Seat Altea Freetrack Seat Altea Freetrack", "price": 5490, "price_gross": 5490, "fair_price": 4130.0, "discount_pct": -32.8, "verdict": "výrazne nad trhom", "year": 2012, "km": 191338, "km_per_year": 13300.0, "eg": "1.6 / 1.9 TDI 66–77 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Trnava", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "197742803", "url": "https://auto.bazos.sk/inzerat/197742803/seat-altea-freetrack-16-tdi.php", "price": 5490}, {"source": "bazarsk", "id": "bs-39776705", "url": "https://auto.bazar.sk/39776705-seat-altea-freetrack-seat-altea-freetrack/", "price": 5490}], "body": "wagon"}, {"id": "197749714", "url": "https://auto.bazos.sk/inzerat/197749714/alte-xl-20tdi-103kw-6at.php", "title": "ALTE XL 2.0TDI 103kW 6A/T r.v. 2007", "price": 4000, "price_gross": 4000, "fair_price": 2890.0, "discount_pct": -38.3, "verdict": "výrazne nad trhom", "year": 2007, "km": 264000, "km_per_year": 13700.0, "eg": "2.0 TDI 103–125 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Dunajská Streda", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "ab-AmjI8AbBGxb", "url": "https://www.autobazar.eu/detail/seat-altea-xl-16-tdi-cr-style/AmjI8AbBGxb/", "title": "Seat Altea XL 1.6 TDI CR Style", "price": 6485, "price_gross": 6485, "fair_price": 4670.0, "discount_pct": -38.8, "verdict": "výrazne nad trhom", "year": 2012, "km": 136915, "km_per_year": 9600.0, "eg": "1.6 / 1.9 TDI 66–77 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Hlohovec", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39553259", "url": "https://auto.bazar.sk/39553259-seat-altea-xl-1-6-tdi-cr-style/", "price": 6485}], "body": "wagon"}, {"id": "ab-Am4feJfP-xw", "url": "https://www.autobazar.eu/detail/seat-altea-xl-19-tdi-stylance/Am4feJfP-xw/", "title": "Seat Altea XL 1.9 TDi Stylance", "price": 3790, "price_gross": 3790, "fair_price": 2720.0, "discount_pct": -39.5, "verdict": "výrazne nad trhom", "year": 2007, "km": 222500, "km_per_year": 11500.0, "eg": "1.6 / 1.9 TDI 66–77 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Bánovce nad Bebravou", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39172145", "url": "https://auto.bazar.sk/39172145-seat-altea-xl-1-9-tdi-stylance/", "price": 3790}], "body": "wagon"}, {"id": "197772418", "url": "https://auto.bazos.sk/inzerat/197772418/seat-altea-xl-freetrack-20-tdi-facelift.php", "title": "Seat Altea XL Freetrack 2.0 TDI Facelift", "price": 5790, "price_gross": 5790, "fair_price": 4140.0, "discount_pct": -39.8, "verdict": "výrazne nad trhom", "year": 2010, "km": 226957, "km_per_year": 13900.0, "eg": "2.0 TDI 103–125 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Poprad", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "195867978", "url": "https://auto.bazos.sk/inzerat/195867978/seat-altea-19-tdi.php", "title": "Seat altea, 1,9 TDI", "price": 3200, "price_gross": 3200, "fair_price": 2280.0, "discount_pct": -40.2, "verdict": "výrazne nad trhom", "year": 2005, "km": 303214, "km_per_year": 14200.0, "eg": "1.6 / 1.9 TDI 66–77 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Levice", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197640494", "url": "https://auto.bazos.sk/inzerat/197640494/predam-seat-altea-xl-freetrack-4x4-20tdi-125kw-cr-dovoz-it.php", "title": "PREDÁM SEAT ALTEA XL FREETRACK 4x4 2.0TDi 125kW CR dovoz IT", "price": 5999, "price_gross": 5999, "fair_price": 4160.0, "discount_pct": -44.2, "verdict": "výrazne nad trhom", "year": 2011, "km": 233253, "km_per_year": 15200.0, "eg": "2.0 TDI 103–125 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Prievidza", "flags": [], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "wagon"}, {"id": "196618304", "url": "https://auto.bazos.sk/inzerat/196618304/seat-altea-xl.php", "title": "Seat Altea XL automat dsg", "price": 5490, "price_gross": 5490, "fair_price": 3790.0, "discount_pct": -44.9, "verdict": "výrazne nad trhom", "year": 2011, "km": 194000, "km_per_year": 12700.0, "eg": "1.6 / 1.9 TDI 66–77 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Levice", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "196161631", "url": "https://auto.bazos.sk/inzerat/196161631/altea-xk-20-tdi-dsg.php", "title": "Altea XL 2,0 TDi Dsg", "price": 5290, "price_gross": 5290, "fair_price": 3560.0, "discount_pct": -48.4, "verdict": "výrazne nad trhom", "year": 2009, "km": 253000, "km_per_year": 14600.0, "eg": "2.0 TDI 103–125 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Prievidza", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "197246928", "url": "https://auto.bazos.sk/inzerat/197246928/seat-altea-19tdi-77kw.php", "title": "Seat altea 1.9tdi 77kW", "price": 2850, "price_gross": 2850, "fair_price": 1870.0, "discount_pct": -52.6, "verdict": "výrazne nad trhom", "year": 2006, "km": 371000, "km_per_year": 18200.0, "eg": "1.6 / 1.9 TDI 66–77 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Trenčín", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AeK1tChBLMa", "url": "https://www.autobazar.eu/detail/seat-altea-19-tdi-105k-reference-77kw105hp-m5/AeK1tChBLMa/", "title": "Seat Altea 1.9 TDI 105k Reference 77kW105HP M5", "price": 3499, "price_gross": 3499, "fair_price": 2250.0, "discount_pct": -55.5, "verdict": "výrazne nad trhom", "year": 2011, "km": 383000, "km_per_year": 25000.0, "eg": "1.6 / 1.9 TDI 66–77 kW", "cg": 1, "transmission": "manual", "seller_type": "private", "location": "Trstená na Ostrove", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "bs-8393249", "url": "https://auto.bazar.sk/8393249-seat-altea-xl-1-9-tdi-reference/", "title": "Seat Altea XL 1.9 TDi Reference", "price": 7590, "price_gross": 7590, "fair_price": 4800.0, "discount_pct": -58.1, "verdict": "výrazne nad trhom", "year": 2009, "km": 200000, "km_per_year": 11500.0, "eg": "1.6 / 1.9 TDI 66–77 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Poprad", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "196428981", "url": "https://auto.bazos.sk/inzerat/196428981/seat-altea-xl-20-tdi-dsg-103-kw-stylance.php", "title": "Seat Altea XL 2,0 TDi DSG 103 kW STYLANCE", "price": 5690, "price_gross": 5690, "fair_price": 3570.0, "discount_pct": -59.4, "verdict": "výrazne nad trhom", "year": 2009, "km": 252585, "km_per_year": 14600.0, "eg": "2.0 TDI 103–125 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Martin", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "bs-8393214", "url": "https://auto.bazar.sk/8393214-seat-altea-xl-1-6-tdi-style/", "title": "Seat Altea XL 1.6 TDI Style", "price": 9900, "price_gross": 9900, "fair_price": 6180.0, "discount_pct": -60.1, "verdict": "výrazne nad trhom", "year": 2010, "km": 133000, "km_per_year": 8100.0, "eg": "1.6 / 1.9 TDI 66–77 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Poprad", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "bs-23474922", "url": "https://auto.bazar.sk/23474922-seat-altea-xl-1-8-tsi-style-dsg-118kw-a7-5d/", "title": "Seat Altea XL 1.8 TSI Style DSG, 118kW, A7, 5d.", "price": 9990, "price_gross": 9990, "fair_price": 6070.0, "discount_pct": -64.5, "verdict": "výrazne nad trhom", "year": 2010, "km": 70000, "km_per_year": 4300.0, "eg": "1.2 / 1.4 / 1.8 TSI 77–118 kW", "cg": 0, "transmission": "automatic", "seller_type": "private", "location": "Trnava", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "ab-AeE4TZlMyl8", "url": "https://www.autobazar.eu/detail/seat-altea-xl-xl-19-tdi-stylance-77kw105hp-m5/AeE4TZlMyl8/", "title": "Seat Altea XL XL 1.9 TDi Stylance 77kW105HP M5", "price": 4490, "price_gross": 4490, "fair_price": 2720.0, "discount_pct": -64.9, "verdict": "výrazne nad trhom", "year": 2008, "km": 236000, "km_per_year": 12900.0, "eg": "1.6 / 1.9 TDI 66–77 kW", "cg": 1, "transmission": "manual", "seller_type": "private", "location": "Banská Bystrica", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "196522102", "url": "https://auto.bazos.sk/inzerat/196522102/seat-altea-xl-19-tdi-77kw-2008.php", "price": 4490}], "body": "wagon"}, {"id": "197397812", "url": "https://auto.bazos.sk/inzerat/197397812/seat-altea-xl16-75-kwlpgdovoz-talianskoneapol.php", "title": "Seat Altea XL,1.6 75 kw+Lpg,dovoz Taliansko,lacne vozenie", "price": 7500, "price_gross": 7500, "fair_price": 3120.0, "discount_pct": -140.3, "verdict": "výrazne nad trhom", "year": 2007, "km": 200100, "km_per_year": 10400.0, "eg": "LPG", "cg": 2, "transmission": null, "seller_type": "dealer", "location": "Prešov", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "wagon"}];
+const GROUPS = ["Benzín", "Diesel TDI", "LPG a nezistený"];
+const BODY = {"mpv": "Altea", "wagon": "Altea XL / Freetrack"};
+const fmt = n => Math.round(n).toLocaleString("sk-SK");
+const eur = n => fmt(n) + " €";
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const TRANS = {automatic: "automat", manual: "manuál"};
+const SRC = {bazos: "bazoš", autobazar: "autobazar.eu", bazarsk: "bazar.sk"};
+
+// --- theme toggle ---------------------------------------------------------
+document.getElementById("themeBtn").onclick = () => {
+  const root = document.documentElement;
+  const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  drawChart();
+};
+
+// --- scatter chart --------------------------------------------------------
+const legend = document.getElementById("legend");
+legend.innerHTML = GROUPS.map((g, i) => `<span><i style="background:var(--s${i+1})"></i>${g}</span>`).join("")
+  + `<span><i class="ring"></i>odporúčaná ponuka</span>`;
+
+function drawChart() {
+  const svg = document.getElementById("chart"), wrap = document.getElementById("chartWrap"), tip = document.getElementById("tip");
+  const W = svg.clientWidth, H = 420, m = {l: 56, r: 16, t: 10, b: 40};
+  const pts = DATA.filter(d => d.km && d.price_gross);
+  const xMax = Math.ceil(Math.max(...pts.map(d => d.km)) / 50000) * 50000;
+  const yMax = Math.ceil(Math.max(...pts.map(d => d.price_gross)) / 5000) * 5000;
+  const x = v => m.l + v / xMax * (W - m.l - m.r), y = v => H - m.b - v / yMax * (H - m.t - m.b);
+  let s = "";
+  for (let v = 0; v <= yMax; v += 5000)
+    s += `<line x1="${m.l}" x2="${W-m.r}" y1="${y(v)}" y2="${y(v)}" stroke="var(--grid)"/><text x="${m.l-8}" y="${y(v)+4}" text-anchor="end">${v/1000} tis. €</text>`;
+  const step = W < 520 ? 100000 : 50000;
+  for (let v = 0; v <= xMax; v += step)
+    s += `<text x="${x(v)}" y="${H-m.b+18}" text-anchor="middle">${v/1000} tis.</text>`;
+  s += `<text x="${(W+m.l)/2}" y="${H-6}" text-anchor="middle">nájazd (km)</text>`;
+  const order = [...pts].sort((a, b) => (a.pick ? 1 : 0) - (b.pick ? 1 : 0));
+  order.forEach(d => {
+    const cx = x(d.km), cy = y(d.price_gross);
+    if (d.pick) s += `<circle cx="${cx}" cy="${cy}" r="9" fill="none" stroke="var(--text)" stroke-width="2"/>`;
+    s += `<circle class="pt" data-id="${d.id}" cx="${cx}" cy="${cy}" r="5" fill="var(--s${d.cg+1})" stroke="var(--surface)" stroke-width="2"/>`;
+  });
+  // invisible bigger hit targets
+  order.forEach(d => s += `<circle class="hit" data-id="${d.id}" cx="${x(d.km)}" cy="${y(d.price_gross)}" r="11" fill="transparent" style="cursor:pointer"/>`);
+  svg.innerHTML = s;
+  const byId = Object.fromEntries(pts.map(d => [d.id, d]));
+  svg.querySelectorAll(".hit").forEach(c => {
+    c.onmouseenter = c.onmousemove = ev => {
+      const d = byId[c.dataset.id];
+      tip.innerHTML = `<b>${esc(d.title)}</b>
+        <div class="row"><span>Cena</span><span>${eur(d.price_gross)}</span></div>
+        <div class="row"><span>Férová cena</span><span>${eur(d.fair_price)}</span></div>
+        <div class="row"><span>Pod trhom</span><span>${d.discount_pct > 0 ? "+" : ""}${d.discount_pct.toLocaleString("sk-SK")} %</span></div>
+        <div class="row"><span>Zdroj</span><span>${SRC[d.source]}${d.also_listed.length ? " + " + d.also_listed.map(a => SRC[a.source]).join(", ") : ""}</span></div>
+        <div class="row"><span>Rok · km</span><span>${d.year} · ${fmt(d.km)}</span></div>
+        <div class="row"><span>Motor</span><span>${esc(d.eg)} ${TRANS[d.transmission] || ""}</span></div>`;
+      tip.style.display = "block";
+      const r = wrap.getBoundingClientRect();
+      let lx = ev.clientX - r.left + 14, ly = ev.clientY - r.top + 14;
+      if (lx + 290 > r.width) lx = ev.clientX - r.left - 290;
+      tip.style.left = lx + "px"; tip.style.top = ly + "px";
+    };
+    c.onmouseleave = () => tip.style.display = "none";
+    c.onclick = () => window.open(byId[c.dataset.id].url, "_blank", "noopener");
+  });
+}
+drawChart();
+addEventListener("resize", drawChart);
+
+// --- full table -----------------------------------------------------------
+const fEngine = document.getElementById("fEngine");
+[...new Set(DATA.map(d => d.eg))].sort().forEach(g => fEngine.insertAdjacentHTML("beforeend", `<option>${esc(g)}</option>`));
+let sortK = "discount_pct", sortDir = -1;
+function discCell(v) {
+  const w = Math.min(Math.abs(v), 30) / 30 * 50;
+  const bar = v >= 0 ? `left:50%;width:${w}%;background:var(--pos)` : `right:50%;width:${w}%;background:var(--neg)`;
+  return `<span class="disc">${v > 0 ? "+" : ""}${v.toLocaleString("sk-SK")} %<span class="dbar"><span style="${bar}"></span></span></span>`;
+}
+function renderTable() {
+  const max = parseFloat(document.getElementById("fMax").value) || Infinity;
+  const tr = document.getElementById("fTrans").value, se = document.getElementById("fSeller").value, en = fEngine.value;
+  const so = document.getElementById("fSource").value, og = document.getElementById("fOrigin").value;
+  const bo = document.getElementById("fBody").value;
+  const rows = DATA.filter(d => (!en || d.eg === en) && (!tr || d.transmission === tr)
+    && (!se || d.seller_type !== "dealer") && d.price_gross <= max
+    && (!so || d.source === so || d.also_listed.some(a => a.source === so)) && (!og || d.origin === og) && (!bo || d.body === bo))
+    .sort((a, b) => { const A = a[sortK], B = b[sortK]; return (typeof A === "string" ? A.localeCompare(B) : A - B) * sortDir; });
+  document.getElementById("count").textContent = `${rows.length} z ${DATA.length} inzerátov`;
+  document.querySelector("#tbl tbody").innerHTML = rows.map(d => `<tr>
+    <td><a href="${d.url}" target="_blank" rel="noopener">${esc(d.title)}</a> ${d.pick ? '<span class="badge pick">odporúčané</span>' : ""}
+      <div class="sub">${BODY[d.body] || "karoséria ?"} · ${esc(d.eg)} · ${TRANS[d.transmission] || "prevodovka ?"} · ${esc(d.location)} · ${d.seller_type === "dealer" ? "predajca/firma" : d.seller_type === "private" ? "súkromník" : "neisté"} · ${SRC[d.source]}${d.origin === "SR" ? " · kúpené v SR" : d.origin === "dovoz" ? " · dovoz" : ""}${d.also_listed.map(a => ` · <a href="${a.url}" target="_blank" rel="noopener">aj na ${SRC[a.source]}</a>`).join("")}</div>
+      ${d.flags.filter(f => !f.startsWith("prevodovka")).map(f => `<div class="flag">⚠ ${esc(f)}</div>`).join("")}</td>
+    <td class="num">${d.year}</td><td class="num">${fmt(d.km)}</td>
+    <td class="num">${eur(d.price_gross)}</td><td class="num">${eur(d.fair_price)}</td>
+    <td class="num">${discCell(d.discount_pct)}</td></tr>`).join("");
+  document.querySelectorAll("#tbl th.sortable").forEach(th => {
+    const base = th.textContent.replace(/ [▾▴]$/, "");
+    th.textContent = base + (th.dataset.k === sortK ? (sortDir < 0 ? " ▾" : " ▴") : "");
+  });
+}
+document.querySelectorAll("#tbl th.sortable").forEach(th => th.onclick = () => {
+  if (sortK === th.dataset.k) sortDir *= -1; else { sortK = th.dataset.k; sortDir = th.dataset.k === "title" ? 1 : -1; }
+  renderTable();
+});
+["fEngine", "fTrans", "fSeller", "fSource", "fBody", "fOrigin", "fMax"].forEach(id => document.getElementById(id).addEventListener("input", renderTable));
+renderTable();
+</script>
+<!-- ferovka-theme --><script defer src="/analytics-config.js"></script><script defer src="/analytics.js"></script><script id="ferovka-chart">/* Férovka – chart → ad links, injected into every report by sync-reports.mjs.
+ *
+ * The reports draw one invisible 11px "hit" circle per ad. In dense charts (and always on a narrow phone) those
+ * circles overlap and the one drawn last wins, so a click/tap often opened a neighbouring ad. Here the pointer is
+ * always resolved to the NEAREST point, the report's own tooltip is shown for that point, and a click opens its ad.
+ * Touch: the first tap shows the tooltip (with a hint), a second tap on the same point opens the ad.
+ */
+(() => {
+  let rows;
+  try { rows = DATA; } catch { return; } // eslint-disable-line no-undef
+  if (!Array.isArray(rows) || !rows.length || !("url" in rows[0])) return;
+  const byId = new Map(rows.map((d) => [String(d.id), d]));
+  const MOUSE = ["mouseover", "mouseout", "mouseenter", "mouseleave", "mousemove", "mousedown", "mouseup", "click"];
+  let lastPointer = "mouse", down = null;
+  // the finger position as it was – Chrome "snaps" the later click of a tap to the centre of a nearby clickable element
+  addEventListener("pointerdown", (e) => { lastPointer = e.pointerType || "mouse"; down = { clientX: e.clientX, clientY: e.clientY }; }, true);
+
+  // the old per-point hit circles must not be targets (they overlap, and touch snapping aims at them)
+  document.head.insertAdjacentHTML("beforeend", "<style>svg circle.hit[data-id],svg circle.pt[data-id]{pointer-events:none}</style>");
+
+  function nearest(svg, ev, radius) {
+    let best = null, bd = Infinity;
+    for (const c of svg.querySelectorAll("circle.pt[data-id]")) {
+      const r = c.getBoundingClientRect();
+      const dx = r.left + r.width / 2 - ev.clientX, dy = r.top + r.height / 2 - ev.clientY;
+      const d = dx * dx + dy * dy;
+      if (d <= bd) { bd = d; best = c; } // ties: the point drawn on top (later) wins – that is the one you see
+    }
+    return best && bd <= radius * radius ? best : null;
+  }
+
+  function bind(svg) {
+    if (svg.__fvLinks) return;
+    svg.__fvLinks = true;
+    let current = null, armed = null;
+    const hitOf = (pt) => pt && svg.querySelector(`circle.hit[data-id="${CSS.escape(pt.dataset.id)}"]`);
+    const fire = (el, type, ev) => {
+      if (!el) return;
+      const e = new MouseEvent(type, { clientX: ev.clientX, clientY: ev.clientY, bubbles: false });
+      e.__fv = true;
+      el.dispatchEvent(e);
+    };
+    const tip = () => (svg.parentElement && svg.parentElement.querySelector("#tip, .tip")) || document.getElementById("tip");
+    const mark = (pt) => {
+      if (current === pt) return;
+      if (current) current.setAttribute("r", current.__r || "5");
+      current = pt;
+      if (pt) { pt.__r = pt.__r || pt.getAttribute("r"); pt.setAttribute("r", String(+pt.__r + 2)); }
+    };
+    const show = (pt, ev, hint) => {
+      mark(pt);
+      if (!pt) { const t = tip(); if (t) t.style.display = "none"; return; }
+      fire(hitOf(pt), "mousemove", ev); // the report's own tooltip, for the nearest point
+      const t = tip();
+      if (t && hint) t.insertAdjacentHTML("beforeend", `<div class="fv-hint">Ťukni ešte raz – otvorí sa inzerát ↗</div>`);
+    };
+    const open = (pt) => {
+      const d = byId.get(pt.dataset.id);
+      if (d && d.url) {
+        try { window.FerovkaAnalytics?.listingClick(d.url, "chart"); } catch { /* analytics must never block an ad */ }
+        window.open(d.url, "_blank", "noopener");
+      }
+    };
+
+    // the per-circle handlers of the report never see real mouse events – only our synthetic ones
+    for (const type of MOUSE) {
+      svg.addEventListener(type, (ev) => {
+        if (ev.__fv) return;
+        ev.stopImmediatePropagation();
+        if (type === "mousemove" && lastPointer === "mouse") {
+          show(nearest(svg, ev, 18), ev, false);
+          svg.style.cursor = current ? "pointer" : "";
+        } else if (type === "mouseleave" && ev.target === svg && lastPointer === "mouse") {
+          show(null, ev);
+        } else if (type === "click") {
+          const touch = lastPointer !== "mouse";
+          const at = touch && down ? down : ev;
+          const pt = nearest(svg, at, touch ? 26 : 18);
+          if (!pt) { armed = null; show(null, ev); return; }
+          if (!touch || armed === pt) { armed = null; open(pt); }
+          else { armed = pt; show(pt, at, true); }
+        }
+      }, true);
+    }
+  }
+
+  const scan = () => document.querySelectorAll("svg").forEach((s) => s.querySelector("circle.pt[data-id]") && bind(s));
+  scan();
+  new MutationObserver(scan).observe(document.body, { childList: true, subtree: true });
+})();
+</script><script id="ferovka-filters">/* Férovka – filters for the whole report, injected into every model report by sync-reports.mjs.
+ *
+ * The reports render the chart (drawChart) and the full ranking (renderTable) from the global DATA array; their own
+ * filter bar only filters the table. Here the filter bar (kept in its place above the ranking) gets more filters (year, price from/to,
+ * km, fuel, discount, picks only, text search) and every filter applies to the chart and the ranking together: DATA is
+ * refilled in place with the matching ads and both are drawn again. "</script" can't occur inside this file.
+ */
+(() => {
+  let data;
+  try { data = DATA; } catch { return; } // eslint-disable-line no-undef
+  if (!Array.isArray(data) || !data.length || typeof renderTable !== "function") return; // eslint-disable-line no-undef
+  const bar = document.querySelector(".filters");
+  if (!bar || bar.dataset.fv) return;
+  bar.dataset.fv = "1";
+  const ALL = data.slice();
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+  const fmt = (n) => Math.round(n).toLocaleString("sk-SK");
+  const norm = (s) => String(s ?? "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+  let groups = null;
+  try { groups = GROUPS; } catch { /* report without groups */ } // eslint-disable-line no-undef
+
+  const FUEL = { diesel: "Diesel", petrol: "Benzín", hybrid: "Hybrid", "plug-in hybrid": "Plug-in hybrid", electric: "Elektro", lpg: "LPG", cng: "CNG" };
+  const fuelOf = (d) => {
+    const e = norm(d.eg);
+    if (/tdi|crdi|dci|hdi|diesel|\bd\b|cdi|\d+d\b|blue/.test(e)) return "Diesel";
+    if (/plug-in|phev|e-hybrid|recharge|\bgte\b|\bt8\b|\b\d{2}e\b|\b\d{3} ?e\b/.test(e)) return "Plug-in hybrid";
+    if (/elektro|electric|\bev\b/.test(e)) return "Elektro";
+    if (/cng|lpg|g-tec|g-tron|tgi|ecofuel/.test(e)) return "Plyn (CNG/LPG)";
+    if (/mild|mhev/.test(e)) return "Benzín"; // mild-hybrid petrol (the diesel ones say TDI / d above)
+    if (/hybrid|hev/.test(e)) return "Hybrid";
+    if (/tsi|tfsi|mpi|fsi|benzin|gdi|dpi|htp|12v|\bt\d\b|\bb[56]\b|\d+i\b|turbo|tce|\bs4\b|rs ?\d|amg|competition|\bm\d{2,3}i?\b|gti|\bx5 m\b/.test(e)) return "Benzín";
+    return d.fuel ? FUEL[d.fuel] || String(d.fuel) : null;
+  };
+
+  // --- controls ---------------------------------------------------------------------------------------------------
+  const years = ALL.map((d) => d.year).filter(Boolean);
+  const yMin = Math.min(...years), yMax = Math.max(...years);
+  const yearOpts = (label) => `<option value="">${label}</option>` +
+    Array.from({ length: yMax - yMin + 1 }, (_, i) => yMax - i).map((y) => `<option>${y}</option>`).join("");
+  const kms = [30000, 50000, 75000, 100000, 150000, 200000, 250000, 300000];
+  const fuels = [...new Set(ALL.map(fuelOf).filter(Boolean))].sort((a, b) => a.localeCompare(b, "sk"));
+  const showGroups = Array.isArray(groups) && groups.length > 1 && ALL.some((d) => Number.isInteger(d.cg));
+
+  const maxInput = $("fMax");
+  if (maxInput) { maxInput.placeholder = "Cena do €"; maxInput.title = "Najvyššia cena (s DPH)"; }
+  const html =
+    `<select id="fvYearFrom" title="Rok výroby od">${yearOpts("Rok od")}</select>` +
+    `<select id="fvYearTo" title="Rok výroby do">${yearOpts("Rok do")}</select>` +
+    `<input id="fvPriceMin" type="number" placeholder="Cena od €" step="500" min="0" title="Najnižšia cena (s DPH)" style="width:110px">`;
+  if (maxInput) maxInput.insertAdjacentHTML("beforebegin", html);
+  else bar.insertAdjacentHTML("afterbegin", html);
+  const more =
+    `<select id="fvKm" title="Najviac najazdených km"><option value="">Nájazd – všetky</option>${kms.map((k) => `<option value="${k}">do ${fmt(k)} km</option>`).join("")}</select>` +
+    (fuels.length > 1 ? `<select id="fvFuel" title="Palivo"><option value="">Všetky palivá</option>${fuels.map((f) => `<option>${esc(f)}</option>`).join("")}</select>` : "") +
+    (showGroups ? `<select id="fvGroup" title="Skupina motorov (farba v grafe)"><option value="">Všetky skupiny</option>${groups.map((g, i) => `<option value="${i}">${esc(g)}</option>`).join("")}</select>` : "") +
+    `<select id="fvDisc" title="O koľko je auto lacnejšie ako férová cena"><option value="">Cena – všetky</option><option value="0">pod férovou cenou</option><option value="10">aspoň 10 % pod trhom</option><option value="20">aspoň 20 % pod trhom</option></select>` +
+    `<input id="fvText" type="search" placeholder="Hľadať (výbava, mesto…)" title="Hľadá v názve inzerátu, motore a lokalite" style="width:170px">` +
+    `<label class="fv-check"><input id="fvPick" type="checkbox"> len odporúčané</label>` +
+    `<button type="button" id="fvReset" class="fv-reset">Zrušiť filtre</button>`;
+  const count = $("count");
+  if (count) count.insertAdjacentHTML("beforebegin", more);
+  else bar.insertAdjacentHTML("beforeend", more);
+
+  // the bar stays where it was – right above the ranking – and also drives the chart; the chart gets a pointer to it
+  const chart = $("chartWrap");
+  const box = document.createElement("div");
+  box.className = "fv-filters";
+  box.id = "filtre";
+  bar.before(box);
+  box.innerHTML = `<div class="fv-head"><b>Filtre</b><span>platia pre rebríček aj graf vyššie</span></div>`;
+  box.appendChild(bar);
+  const note = document.createElement("div");
+  note.className = "fv-note";
+  chart?.before(note);
+
+  document.head.insertAdjacentHTML("beforeend", `<style id="fv-filters-css">
+.fv-filters{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 14px 4px;margin:24px 0 8px}
+.fv-filters .fv-head{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;margin-bottom:8px}
+.fv-filters .fv-head span{color:var(--muted);font-size:13px}
+.fv-filters .filters{margin-bottom:8px}
+.fv-filters .filters .count{flex-basis:100%;margin-left:0}
+.fv-check{display:inline-flex;gap:6px;align-items:center;font-size:13px;color:var(--text-2,var(--text));white-space:nowrap}
+.fv-reset{background:none;border:1px solid var(--border);color:var(--text);border-radius:8px;padding:6px 10px;font:inherit;font-size:13px;cursor:pointer}
+.fv-reset:hover{background:var(--surface-2,var(--surface))}
+.fv-note{color:var(--muted);font-size:13px;margin:0 0 8px}
+.fv-note a{color:inherit}
+.fv-empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:14px;pointer-events:none}
+@media (max-width:600px){.fv-filters .filters select,.fv-filters .filters input[type=number],.fv-filters .filters input[type=search]{flex:1 1 calc(50% - 8px);min-width:0;width:auto!important}}
+</style>`);
+
+  // --- filtering --------------------------------------------------------------------------------------------------
+  const val = (id) => ($(id) ? $(id).value : "");
+  const num = (id) => { const v = parseFloat(val(id)); return Number.isFinite(v) ? v : null; };
+  function matches(d) {
+    const yf = num("fvYearFrom"), yt = num("fvYearTo"), pmin = num("fvPriceMin"), pmax = num("fMax"), km = num("fvKm"), disc = num("fvDisc");
+    const fuel = val("fvFuel"), grp = val("fvGroup"), q = norm(val("fvText")).trim();
+    if (yf != null && !(d.year >= yf)) return false;
+    if (yt != null && !(d.year <= yt)) return false;
+    if (pmin != null && !(d.price_gross >= pmin)) return false;
+    if (pmax != null && !(d.price_gross <= pmax)) return false;
+    if (km != null && !(d.km <= km)) return false;
+    if (disc != null && !(d.discount_pct > disc || (disc > 0 && d.discount_pct >= disc))) return false;
+    if (fuel && fuelOf(d) !== fuel) return false;
+    if (grp !== "" && String(d.cg) !== grp) return false;
+    if ($("fvPick")?.checked && !d.pick) return false;
+    if (q && !q.split(/\s+/).every((w) => norm(`${d.title} ${d.eg ?? ""} ${d.engine ?? ""} ${d.location ?? ""}`).includes(w))) return false;
+    // the report's own filters (engine, gearbox, seller, portal, body, origin) – same rules as its renderTable
+    const en = val("fEngine"), tr = val("fTrans"), se = val("fSeller"), so = val("fSource"), og = val("fOrigin"), bo = val("fBody");
+    if (en && d.eg !== en) return false;
+    if (tr && d.transmission !== tr) return false;
+    if (se && d.seller_type === "dealer") return false;
+    if (so && !(d.source === so || (d.also_listed || []).some((a) => a.source === so))) return false;
+    if (og && d.origin !== og) return false;
+    if (bo && d.body !== bo) return false;
+    return true;
+  }
+  const active = () => [...box.querySelectorAll("select, input")].filter((el) => (el.type === "checkbox" ? el.checked : el.value !== "")).length;
+
+  let drawing = false;
+  function apply() {
+    if (drawing) return;
+    drawing = true;
+    const rows = ALL.filter(matches);
+    data.length = 0;
+    data.push(...rows);
+    const wrap = $("chartWrap");
+    wrap?.querySelector(".fv-empty")?.remove();
+    const plotted = rows.filter((d) => d.km && d.price_gross).length;
+    try {
+      if (typeof drawChart === "function") { // eslint-disable-line no-undef
+        if (plotted) drawChart(); // eslint-disable-line no-undef
+        else { const svg = $("chart"); if (svg) svg.innerHTML = ""; }
+      }
+    } catch (e) { console.warn("chart", e); }
+    if (wrap && !plotted) {
+      if (getComputedStyle(wrap).position === "static") wrap.style.position = "relative";
+      wrap.insertAdjacentHTML("beforeend", `<div class="fv-empty">Filtrom nezodpovedá žiadny inzerát</div>`);
+    }
+    try { renderTable(); } catch (e) { console.warn("table", e); } // eslint-disable-line no-undef
+    const n = active();
+    if (count) count.textContent = `Zobrazených ${fmt(rows.length)} z ${fmt(ALL.length)} inzerátov` + (n ? ` · aktívne filtre: ${n}` : "");
+    note.innerHTML = n
+      ? `Zobrazených ${fmt(rows.length)} z ${fmt(ALL.length)} inzerátov podľa <a href="#filtre">filtrov pri rebríčku</a>.`
+      : `Filtre (rok, cena, nájazd, palivo…) nájdeš <a href="#filtre">pri kompletnom rebríčku</a> – platia aj pre tento graf.`;
+    drawing = false;
+  }
+  box.querySelectorAll("select, input").forEach((el) => el.addEventListener("input", apply));
+  $("fvPick")?.addEventListener("change", apply);
+  $("fvReset").addEventListener("click", () => {
+    box.querySelectorAll("select, input").forEach((el) => { if (el.type === "checkbox") el.checked = false; else el.value = ""; });
+    apply();
+  });
+  apply();
+})();
+</script><!-- /ferovka-theme -->
+</body>
+</html>

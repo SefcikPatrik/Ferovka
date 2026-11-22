@@ -699,6 +699,19 @@
     }
   },
   {
+    "slug": "chevrolet-cruze",
+    "file": "chevrolet-cruze-analyza.html",
+    "name": "Chevrolet Cruze",
+    "brand": "Chevrolet",
+    "model": "Cruze",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Chevrolet Cruze (2009–2015, sedan, hatchback aj kombi SW) od 1 500 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 76 inzerátov (32 na bazoši, 16 na autobazar.eu, 28 na bazar.sk) – prezreli sme 88 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 54 rôznych áut zo Slovenska.",
+    "ads": 54,
+    "median": "3 550 €",
+    "r2": "80 %"
+  },
+  {
     "slug": "jeep-compass",
     "file": "jeep-compass-analyza.html",
     "name": "Jeep Compass",
@@ -1225,6 +1238,19 @@
     "r2": "86 %"
   },
   {
+    "slug": "opel-vectra",
+    "file": "opel-vectra-analyza.html",
+    "name": "Opel Vectra C",
+    "brand": "Opel",
+    "model": "Vectra C",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Opel Vectra C (Vectra C a Signum 2002–2008, sedan, liftback, kombi Caravan) od 800 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 46 inzerátov (27 na bazoši, 8 na autobazar.eu, 11 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 39 rôznych áut zo Slovenska.",
+    "ads": 39,
+    "median": "2 150 €",
+    "r2": "62 %"
+  },
+  {
     "slug": "peugeot-207",
     "file": "peugeot-207-analyza.html",
     "name": "Peugeot 207",
@@ -1255,6 +1281,19 @@
       "seen_price_count": 115,
       "last_observed_at": "2026-11-22T16:38:30"
     }
+  },
+  {
+    "slug": "peugeot-307",
+    "file": "peugeot-307-analyza.html",
+    "name": "Peugeot 307",
+    "brand": "Peugeot",
+    "model": "307",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Peugeot 307 (2001–2008, hatchback, SW / Break kombi aj CC kabriolet) od 800 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 155 inzerátov (104 na bazoši, 28 na autobazar.eu, 23 na bazar.sk) – prezreli sme 83 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 104 rôznych áut zo Slovenska.",
+    "ads": 104,
+    "median": "1 800 €",
+    "r2": "79 %"
   },
   {
     "slug": "peugeot-rifter",
@@ -1409,6 +1448,64 @@
     "ads": 47,
     "median": "26 900 €",
     "r2": "80 %"
+  },
+  {
+    "slug": "renault-laguna",
+    "file": "renault-laguna-analyza.html",
+    "name": "Renault Laguna",
+    "brand": "Renault",
+    "model": "Laguna",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Renault Laguna (Laguna II 2001–2007 a Laguna III 2007–2015, liftback, Grandtour aj kupé) od 1 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 106 inzerátov (59 na bazoši, 29 na autobazar.eu, 18 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 79 rôznych áut zo Slovenska.",
+    "ads": 79,
+    "median": "2 300 €",
+    "r2": "83 %"
+  },
+  {
+    "slug": "renault-twingo",
+    "file": "renault-twingo-analyza.html",
+    "name": "Renault Twingo",
+    "brand": "Renault",
+    "model": "Twingo",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Renault Twingo (druhá a tretia generácia 2007–2024, vrátane elektrického Twinga E-Tech) od 1 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 83 inzerátov (25 na bazoši, 39 na autobazar.eu, 19 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 38 rôznych áut zo Slovenska.",
+    "ads": 38,
+    "median": "3 700 €",
+    "r2": "99 %"
+  },
+  {
+    "slug": "seat-altea",
+    "file": "seat-altea-analyza.html",
+    "name": "Seat Altea",
+    "brand": "Seat",
+    "model": "Altea",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Seat Altea (Altea a Altea XL / Freetrack, 2004–2015) od 1 500 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 220 inzerátov (121 na bazoši, 73 na autobazar.eu, 26 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 151 rôznych áut zo Slovenska.",
+    "ads": 151,
+    "median": "3 550 €",
+    "r2": "59 %",
+    "history": {
+      "updated_at": "2026-11-22T17:11:45",
+      "as_of": "2026-11-22",
+      "coverage": "partial",
+      "baseline_count": 109,
+      "total_count": 109,
+      "active_count": 109,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 109,
+      "paired_median_change_pct": 0,
+      "historical_median": 3550,
+      "seen_median": 3550,
+      "seen_price_count": 109,
+      "last_observed_at": "2026-11-22T17:00:00"
+    }
   },
   {
     "slug": "subaru-forester",
@@ -1597,6 +1694,19 @@
     }
   },
   {
+    "slug": "toyota-land-cruiser",
+    "file": "toyota-land-cruiser-analyza.html",
+    "name": "Toyota Land Cruiser",
+    "brand": "Toyota",
+    "model": "Land Cruiser",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov Toyota Land Cruiser (Land Cruiser 120 / 150 a 200, 2003–2024) od 5 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 306 inzerátov (160 na bazoši, 79 na autobazar.eu, 67 na bazar.sk) – prezreli sme 93 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 192 rôznych áut zo Slovenska.",
+    "ads": 192,
+    "median": "35 899 €",
+    "r2": "90 %"
+  },
+  {
     "slug": "toyota-yaris-cross",
     "file": "toyota-yaris-cross-analyza.html",
     "name": "Toyota Yaris Cross",
@@ -1723,6 +1833,19 @@
       "seen_price_count": 165,
       "last_observed_at": "2026-11-22T16:00:30"
     }
+  },
+  {
+    "slug": "vw-jetta",
+    "file": "vw-jetta-analyza.html",
+    "name": "Volkswagen Jetta",
+    "brand": "Volkswagen",
+    "model": "Jetta",
+    "kind": "model",
+    "date": "2026-11-22",
+    "summary": "Analýza aktuálnych inzerátov VW Jetta (Jetta V 2005–2010 a Jetta VI 2010–2018) od 2 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 101 inzerátov (56 na bazoši, 23 na autobazar.eu, 22 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 81 rôznych áut zo Slovenska.",
+    "ads": 81,
+    "median": "6 195 €",
+    "r2": "87 %"
   },
   {
     "slug": "vw-transporter",
@@ -3683,7 +3806,7 @@
     "median": "10 500 €",
     "r2": "89 %",
     "history": {
-      "updated_at": "2026-11-22T12:30:00",
+      "updated_at": "2026-11-22T17:11:45",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 198,
@@ -3715,7 +3838,7 @@
     "median": "13 500 €",
     "r2": "92 %",
     "history": {
-      "updated_at": "2026-11-22T12:30:00",
+      "updated_at": "2026-11-22T17:11:45",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 58,
@@ -3747,7 +3870,7 @@
     "median": "3 764 €",
     "r2": "86 %",
     "history": {
-      "updated_at": "2026-11-22T12:30:00",
+      "updated_at": "2026-11-22T17:11:45",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 126,
@@ -3779,7 +3902,7 @@
     "median": "21 545 €",
     "r2": "87 %",
     "history": {
-      "updated_at": "2026-11-22T12:30:00",
+      "updated_at": "2026-11-22T17:11:45",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 172,
@@ -5091,7 +5214,7 @@
     "median": "16 999 €",
     "r2": "89 %",
     "history": {
-      "updated_at": "2026-11-22T12:30:00",
+      "updated_at": "2026-11-22T17:11:45",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 178,
@@ -5123,7 +5246,7 @@
     "median": "9 994 €",
     "r2": "92 %",
     "history": {
-      "updated_at": "2026-11-22T12:30:00",
+      "updated_at": "2026-11-22T17:11:45",
       "as_of": "2026-11-22",
       "coverage": "partial",
       "baseline_count": 463,
