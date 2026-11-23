@@ -1,0 +1,803 @@
+<!doctype html>
+<html lang="sk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BMW 2 – analýza ponúk</title>
+<style>
+:root {
+  color-scheme: light;
+  --bg: #f6f6f4; --surface: #fcfcfb; --surface-2: #f0efec; --border: #e2e1dc;
+  --text: #0b0b0b; --text-2: #52514e; --muted: #7a7974;
+  --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a;
+  --pos: #2a78d6; --neg: #eb6834; --accent: #2a78d6;
+  --good: #1d7f4e; --bad: #b4332f; --grid: #e8e7e3;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #121211; --surface: #1a1a19; --surface-2: #232321; --border: #33332f;
+    --text: #f0efec; --text-2: #c3c2b7; --muted: #8f8e86;
+    --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+    --pos: #3987e5; --neg: #d95926; --accent: #5598e7;
+    --good: #4cc38a; --bad: #f07a76; --grid: #2a2a27;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #121211; --surface: #1a1a19; --surface-2: #232321; --border: #33332f;
+  --text: #f0efec; --text-2: #c3c2b7; --muted: #8f8e86;
+  --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+  --pos: #3987e5; --neg: #d95926; --accent: #5598e7;
+  --good: #4cc38a; --bad: #f07a76; --grid: #2a2a27;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text);
+  font: 15px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+main { max-width: 1120px; margin: 0 auto; padding: 32px 16px 64px; }
+a { color: var(--accent); text-decoration: none; } a:hover { text-decoration: underline; }
+h1 { font-size: 30px; margin: 0 0 4px; letter-spacing: -.01em; }
+h2 { font-size: 21px; margin: 48px 0 6px; }
+h3 { font-size: 15px; margin: 6px 0 4px; line-height: 1.35; }
+.lead { color: var(--text-2); margin: 0 0 20px; max-width: 760px; }
+.section-lead { color: var(--text-2); margin: 0 0 16px; max-width: 800px; }
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
+.kpi { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+.kpi .v { font-size: 26px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.kpi .l { color: var(--text-2); font-size: 13px; }
+.explain { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; margin-top: 12px; }
+.explain p { margin: 6px 0; color: var(--text-2); }
+.explain b { color: var(--text); }
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; }
+.card-head { display: flex; justify-content: space-between; gap: 8px; font-size: 12px; }
+.tag { font-weight: 600; color: var(--accent); }
+.loc { color: var(--muted); }
+.facts { color: var(--text-2); font-size: 13px; }
+.prices { display: grid; grid-template-columns: 1.2fr 1fr .8fr; gap: 8px; margin: 12px 0 8px; }
+.lbl { display: block; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+.big { font-size: 22px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.mid { font-size: 16px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.good { color: var(--good); }
+.meter { height: 6px; background: var(--surface-2); border-radius: 4px; overflow: hidden; }
+.meter span { display: block; height: 100%; background: var(--s1); border-radius: 4px; }
+.news ul { margin: 6px 0 0; padding-left: 20px; } .news li { margin: 4px 0; } .news .down { color: var(--good, #1baf7a); font-weight: 600; }
+.note { font-size: 12.5px; background: var(--surface-2); border-radius: 6px; padding: 6px 8px; margin-top: 8px; color: var(--text-2); }
+.pc { list-style: none; padding: 0; margin: 10px 0 0; font-size: 13.5px; }
+.pc li { padding-left: 20px; position: relative; margin: 3px 0; }
+.pc li.pro::before { content: "+"; position: absolute; left: 4px; color: var(--good); font-weight: 700; }
+.pc li.con::before { content: "–"; position: absolute; left: 4px; color: var(--bad); font-weight: 700; }
+.subhead { font-size: 15px; color: var(--text-2); margin: 22px 0 10px; font-weight: 600; }
+.chart-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 14px 8px; position: relative; }
+.legend { display: flex; flex-wrap: wrap; gap: 16px; font-size: 13px; color: var(--text-2); margin: 0 0 6px 4px; }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; }
+.legend .ring { background: transparent; border: 2px solid var(--text); width: 12px; height: 12px; }
+svg text { fill: var(--muted); font-size: 11px; }
+.tip { position: absolute; pointer-events: none; background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+  padding: 8px 10px; font-size: 12.5px; box-shadow: 0 6px 20px rgba(0,0,0,.15); max-width: 280px; display: none; z-index: 5; }
+.tip b { display: block; margin-bottom: 2px; }
+.tip .row { display: flex; justify-content: space-between; gap: 12px; color: var(--text-2); }
+.tip .row span:last-child { color: var(--text); font-variant-numeric: tabular-nums; }
+table { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; font-size: 13.5px; }
+th, td { padding: 9px 10px; border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; }
+th { font-size: 12px; color: var(--text-2); font-weight: 600; background: var(--surface-2); white-space: nowrap; }
+th.sortable { cursor: pointer; user-select: none; } th.sortable:hover { color: var(--text); }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+.sub { color: var(--text-2); font-size: 12.5px; margin-top: 2px; }
+.stars { color: #c98500; letter-spacing: 1px; white-space: nowrap; } .stars .off { color: var(--border); }
+.cellbar { height: 5px; background: var(--surface-2); border-radius: 3px; margin-bottom: 4px; }
+.cellbar span { display: block; height: 100%; background: var(--s1); border-radius: 3px; }
+.disc { display: inline-flex; align-items: center; gap: 6px; justify-content: flex-end; }
+.dbar { width: 54px; height: 6px; background: var(--surface-2); border-radius: 3px; position: relative; }
+.dbar span { position: absolute; top: 0; height: 100%; border-radius: 3px; }
+.filters { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 10px; align-items: center; }
+.filters select, .filters input { background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 6px 8px; font: inherit; font-size: 13px; }
+.filters .count { color: var(--muted); font-size: 13px; margin-left: auto; }
+.table-scroll { overflow-x: auto; border-radius: 12px; }
+.badge { font-size: 11px; padding: 1px 6px; border-radius: 10px; background: var(--surface-2); color: var(--text-2); white-space: nowrap; }
+.badge.pick { background: var(--s1); color: #fff; }
+.flag { color: var(--bad); font-size: 12px; }
+.warn { background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--neg); border-radius: 10px; padding: 12px 16px; }
+.warn li { margin: 4px 0; }
+.check { columns: 2 300px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px 14px 34px; margin: 0; }
+.check li { margin: 4px 0; break-inside: avoid; }
+footer { color: var(--muted); font-size: 12.5px; margin-top: 48px; border-top: 1px solid var(--border); padding-top: 14px; }
+.theme-btn { float: right; background: var(--surface); color: var(--text-2); border: 1px solid var(--border); border-radius: 8px; padding: 5px 10px; cursor: pointer; font: inherit; font-size: 13px; }
+@media (max-width: 640px) { h1 { font-size: 24px; } .prices { grid-template-columns: 1fr 1fr 1fr; } .big { font-size: 18px; } th, td { padding: 7px 6px; } }
+</style>
+<!-- ferovka-theme --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"><style id="ferovka-theme">/* Férovka look for the generated analyses – injected by sync-reports.mjs after each report's own <style>.
+   Same palette and type as the site; chart colours (--s1..--s3) stay the validated set. */
+:root {
+  --bg: #f5f4ef; --surface: #fdfdfb; --surface-2: #eeede6; --border: #e1dfd6;
+  --text: #0f1513; --text-2: #4f5551; --muted: #6f746f;
+  --accent: #0b8a56; --good: #0b7a4b; --grid: #e6e4dc; --win: #dff3e9;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d110f; --surface: #151a17; --surface-2: #1d2420; --border: #2a322d;
+    --text: #eef1ec; --text-2: #b6bdb6; --muted: #8f978f;
+    --accent: #2fc583; --good: #4cd08f; --grid: #1f2622; --win: #143223;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d110f; --surface: #151a17; --surface-2: #1d2420; --border: #2a322d;
+  --text: #eef1ec; --text-2: #b6bdb6; --muted: #8f978f;
+  --accent: #2fc583; --good: #4cd08f; --grid: #1f2622; --win: #143223;
+}
+
+body { font-family: "Manrope", system-ui, sans-serif; }
+h1, h2 { letter-spacing: -0.02em; font-weight: 800; }
+.tag { color: var(--accent); }
+
+/* photo header (removed by the site's viewer, which shows its own) */
+.fv-hero { position: relative; margin: 0 0 26px; border-radius: 20px; overflow: hidden; aspect-ratio: 21 / 8; background: #0d110f; display: flex; }
+.fv-hero img { flex: 1; min-width: 0; height: 100%; object-fit: cover; animation: fv-zoom 1.4s cubic-bezier(.2,.7,.2,1) both; }
+.fv-collage img + img { border-left: 3px solid #0d110f; }
+.fv-hero::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(180deg, transparent 55%, rgb(13 17 15 / .75)),
+    repeating-linear-gradient(90deg, rgb(47 197 131 / .06) 0 1px, transparent 1px 48px); }
+.fv-hero figcaption { position: absolute; right: 12px; bottom: 8px; z-index: 1; font-size: 11px; color: rgb(255 255 255 / .75); }
+.fv-hero figcaption a { color: inherit; }
+
+/* cards & panels: softer, lift on hover */
+.card, .kpi, .explain, .chart-wrap, .box { border-radius: 16px; }
+.card { transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease; }
+.card:hover { transform: translateY(-3px); border-color: var(--accent); box-shadow: 0 14px 30px -18px rgb(0 0 0 / .45); }
+.badge.pick { background: var(--accent); }
+
+/* entrance animation */
+@keyframes fv-up { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes fv-zoom { from { transform: scale(1.08); filter: brightness(.6); } to { transform: none; filter: none; } }
+h1, .lead, .kpis, .cards .card { animation: fv-up .6s cubic-bezier(.2,.7,.2,1) both; }
+.lead { animation-delay: .08s; }
+.kpis { animation-delay: .16s; }
+.cards .card:nth-child(2) { animation-delay: .06s; }
+.cards .card:nth-child(3) { animation-delay: .12s; }
+.cards .card:nth-child(4) { animation-delay: .18s; }
+.cards .card:nth-child(5) { animation-delay: .24s; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+@media (max-width: 640px) { .fv-hero { aspect-ratio: 16 / 9; border-radius: 14px; } }
+
+/* touch: hint under the chart tooltip (report-chart.js) */
+.fv-hint { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--border, rgba(127,127,127,.3)); font-weight: 700; color: var(--accent, #2fc583); }
+</style><!-- /ferovka-theme -->
+</head>
+<body>
+<main><!-- ferovka-theme --><!-- /ferovka-theme -->
+<button class="theme-btn" id="themeBtn" type="button">Svetlý / tmavý</button>
+<h1>BMW 2 – ktorá ponuka sa oplatí</h1>
+<p class="lead">Analýza aktuálnych inzerátov BMW 2 (Active Tourer, Gran Tourer, kupé, kabriolet a Gran Coupé, 2014–2025, bez M2) od 5 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (23. 11. 2026). Na portáloch je spolu 3 841 inzerátov (3 692 na bazoši, 149 na autobazar.eu, 0 na bazar.sk) – prezreli sme 7 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 166 rôznych áut zo Slovenska. Každé auto sme porovnali
+s <b>férovou cenou</b>: tú vypočítal model naučený na celom trhu podľa veku, nájazdu, motora, prevodovky a typu predajcu.</p>
+
+<div class="kpis">
+  <div class="kpi"><div class="v">166</div><div class="l">inzerátov BMW 2 (nad 5 000 €)</div></div>
+  <div class="kpi"><div class="v">130</div><div class="l">ohodnotených (majú rok aj km)</div></div>
+  <div class="kpi"><div class="v">16 645 €</div><div class="l">medián ceny s DPH</div></div>
+  <div class="kpi"><div class="v">90 %</div><div class="l">rozdielov v cenách vysvetlí model</div></div>
+</div>
+
+
+<h2>Odkiaľ sú dáta: bazoš, autobazar.eu a bazar.sk</h2>
+<div class="kpis">
+  <div class="kpi"><div class="v">69</div><div class="l">ohodnotených z bazoša</div></div>
+  <div class="kpi"><div class="v">61</div><div class="l">ohodnotených z autobazar.eu</div></div><div class="kpi"><div class="v">0</div><div class="l">ohodnotených z bazar.sk</div></div>
+  <div class="kpi"><div class="v">44</div><div class="l">áut bolo na viacerých portáloch – započítané raz</div></div>
+  <div class="kpi"><div class="v">27 / 26</div><div class="l">s uvedeným pôvodom SR / dovoz</div></div>
+</div>
+<div class="explain">
+  <p><b>Tri portály, jeden trh.</b> Bazoš prehľadal 107 inzerátov, autobazar.eu
+  149, bazar.sk 0. Ponuky z Česka (na autobazar.eu ich je veľa) sme vynechali. Autobazáre často dávajú
+  to isté auto na viac portálov. Takéto dvojice (41 v rebríčku) sme spojili podľa VIN alebo zhody roku, km a ceny,
+  aby sa v modeli nerátali dvakrát. Pri aute nájdeš odkaz na všetky ponuky – niekedy sa líšia cenou.</p>
+  <p><b>Rozdiel medzi portálmi:</b> rovnaké auto je na autobazar.eu v priemere +5,5 %
+  oproti bazošu. Na autobazar.eu predávajú hlavne firmy (49 z 61 ohodnotených).</p>
+  <p><b>Kúpené v SR vs. dovoz:</b> autá s uvedeným pôvodom zo SR sú oproti autám bez uvedeného pôvodu
+  -3,9 %, dovezené -3,1 %
+  (pri rovnakom veku, nájazde a motore). Pôvod zo SR je výhoda pri overovaní histórie, trh zaň však nepripláca – väčšina
+  inzerátov pôvod jednoducho neuvádza. V tabulke dole si môžeš nechať zobraziť len autá kúpené v SR.</p>
+</div>
+
+<h2>Čo hýbe cenou BMW 2</h2>
+<p class="section-lead">Toto sa model naučil z trhu. Keď porovnávaš dve autá, tieto čísla ti povedia, koľko má byť
+rozdiel v cene, aby to bolo fér.</p>
+<div class="kpis">
+  <div class="kpi"><div class="v">-3,0 %</div><div class="l">každých ďalších 10 000 km</div></div>
+  <div class="kpi"><div class="v">-5,5 %</div><div class="l">každý rok veku navyše</div></div>
+  <div class="kpi"><div class="v">+24 %</div><div class="l">príplatok za automat (DSG)</div></div>
+  <div class="kpi"><div class="v">+3,3 %</div><div class="l">príplatok u predajcu / firmy</div></div>
+  <div class="kpi"><div class="v">+0,1 %</div><div class="l">BMW 2 novšej generácie (2020+) oproti cene podľa veku</div></div>
+  <div class="kpi"><div class="v">+23,7 %</div><div class="l">príplatok za automat</div></div>
+</div>
+<div class="explain">
+  <p><b>Príklad:</b> dve rovnaké BMW 218d Active Tourer z roku 2018, jedno má 60 tis. km, druhé 120 tis. km. Druhé má byť
+  približne o 18 % lacnejšie (6 × -3,0 %). Ak je lacnejšie len o 5 %, preplácaš kilometre.</p>
+  <p><b>Ako čítať „pod trhom“:</b> +15 % znamená, že auto stojí o 15 % menej, než by malo podľa trhu. Bežný rozptyl
+  cien je asi ±20 %, takže až zľava nad ~10–15 % je naozaj výnimočná. Pri takej zľave vždy zisti, prečo je auto lacné
+  (stav, história, nájazd).</p>
+  <p><b>DPH:</b> ceny uvedené bez DPH (napr. „10 300 € netto“) sme prepočítali na cenu s DPH, ktorú zaplatí súkromná osoba.</p>
+</div>
+
+<h2>Odporúčané ponuky</h2>
+<p class="section-lead">Kandidáti s najlepším pomerom cena / vek / nájazd, ktorých celý inzerát sme prečítali.
+Zoradené podľa toho, ako ich odporúčame.</p>
+<div class="subhead">BMW 2 novšej generácie (2020+) – najlepší pomer cena / vek</div>
+<div class="cards">
+<article class="card">
+  <div class="card-head"><span class="tag">218d Gran Coupé M Sport z 2023</span><span class="loc">Prešov</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/196275850/bmw-218d-gran-coupe-m-sport-at110kwr2023-tazne.php" target="_blank" rel="noopener">BMW 218d Gran Coupé M-Sport - 2023 + ťažné (po servise)</a></h3>
+  <div class="facts">2023 · 88 000 km · 218d / 220d / 225d diesel 85–165 kW · automat · Gran Coupé · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">20 700 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">25 140 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+17.7 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:59%"></span></div>
+  <ul class="pc"><li class="pro">2023, 218d 110 kW, automat, 88 tis. km</li><li class="pro">Fabrické ťažné, virtual cockpit, po výmene oleja a filtrov 10/2026</li><li class="pro">~18 % pod férovou cenou</li><li class="con">Predáva autobazár</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke aspoň 32 dní</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">218i Gran Coupé automat z 2022</span><span class="loc">Kežmarok</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/196974643/bmw-rad-2-gran-coupe-2-218i-at.php" target="_blank" rel="noopener">BMW Rad 2 Gran Coupé 2 218i A/T</a></h3>
+  <div class="facts">2022 · 110 168 km · 216i / 218i / 220i / 223i / 228i / 230i benzín 80–190 kW · automat · Gran Coupé · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazoš</b> · aj na <a href='https://www.autobazar.eu/detail/bmw-rad-2-gran-coupe-2-218i-at/AmvN-Lp_NQS/' target='_blank' rel='noopener'>autobazar.eu</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">18 350 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">21 450 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+14.4 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:48%"></span></div>
+  <ul class="pc"><li class="pro">6/2022, 218i 1.5 100 kW, 7-st. automat, 110 tis. km</li><li class="pro">VIN v inzeráte</li><li class="pro">~14 % pod férovou cenou</li><li class="con">Predáva autobazár</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke aspoň 25 dní</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">218i Gran Coupé z 2024 s 30 tis. km</span><span class="loc">Dunajská Streda</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/bmw-radu-218i-gran-coupe/AmJFizIhdyH/" target="_blank" rel="noopener">BMW radu 218i Gran Coupe</a></h3>
+  <div class="facts">2024 · 30 000 km · 216i / 218i / 220i / 223i / 228i / 230i benzín 80–190 kW · automat · Gran Coupé · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">27 900 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">32 210 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+13.4 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:45%"></span></div>
+  <ul class="pc"><li class="pro">2024, 218i, automat, 30 tis. km</li><li class="pro">Takmer nové auto</li><li class="pro">~13 % pod férovou cenou</li><li class="con">Inzerát bez popisu</li><li class="con">Predáva autobazár</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 215 dní (od 22. 4.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">223i xDrive Active Tourer mild hybrid</span><span class="loc">Kežmarok</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/196218349/predam-bmw-active-tourer-2.php" target="_blank" rel="noopener">Predám BMW active tourer 2</a></h3>
+  <div class="facts">2022 · 60 700 km · 216i / 218i / 220i / 223i / 228i / 230i benzín 80–190 kW · prevodovka ? · Active / Gran Tourer · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">23 900 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">27 080 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+11.7 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:39%"></span></div>
+  <ul class="pc"><li class="pro">2022, 223i 150 kW mild hybrid, xDrive, 61 tis. km</li><li class="pro">Garážované, servisované, sezónne prezutie</li><li class="pro">~12 % pod férovou cenou</li><li class="con">Predajca neistý</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke aspoň 49 dní</p><!-- history-card:end --></article></div>
+<div class="subhead">Lacnejšie BMW 2 do 15 000 €</div>
+<div class="cards">
+<article class="card">
+  <div class="card-head"><span class="tag">220d xDrive Gran Tourer s 86 tis. km</span><span class="loc">Bratislava</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/bmw-rad-2-gran-tourer/Am3vAWo2KB4/" target="_blank" rel="noopener">BMW Rad 2 Gran Tourer 220d  XDrive AT8 Luxury Line 4x4</a></h3>
+  <div class="facts">2018 · 85 876 km · 218d / 220d / 225d diesel 85–165 kW · automat · Active / Gran Tourer · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · kúpené v SR</div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">13 999 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">19 400 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+27.9 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:93%"></span></div>
+  <ul class="pc"><li class="pro">2018, 220d 140 kW, 8-st. automat, xDrive, 86 tis. km</li><li class="pro">Kúpené v SR, výbava Luxury Line</li><li class="pro">~28 % pod férovou cenou</li><li class="con">Inzerát bez popisu</li><li class="con">Predáva autobazár</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 301 dní (od 26. 1.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">220d xDrive Gran Tourer s Head-up</span><span class="loc">Trnava</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197172705/bmw-220-xd-grantourer-f46.php" target="_blank" rel="noopener">BMW 220 XD Grantourer F46</a></h3>
+  <div class="facts">2016 · 140 000 km · 218d / 220d / 225d diesel 85–165 kW · automat · Active / Gran Tourer · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">9 300 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">12 830 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+27.5 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:92%"></span></div>
+  <ul class="pc"><li class="pro">2016, 220d 140 kW, 8-st. automat, xDrive, 140 tis. km</li><li class="pro">Harman Kardon, Head-up displej, adaptívny tempomat</li><li class="pro">~28 % pod férovou cenou</li><li class="con">Predajca neistý</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 19 dní (od 4. 11.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">225xe plug-in hybrid servisovaný v BMW</span><span class="loc">Bratislava</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/bmw-rad-2-active-tourer-100-kw-6-stautomat-2018-plug-in-hybrid/AmidVBVXn6A/" target="_blank" rel="noopener">BMW Rad 2 Active Tourer 100 kW, 6-st.automat, 2018, plug-in-hybrid</a></h3>
+  <div class="facts">2018 · 74 602 km · Plug-in hybrid 225xe / 230e 165–240 kW · automat · Active / Gran Tourer · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">12 990 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">15 770 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+17.6 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:59%"></span></div>
+  <ul class="pc"><li class="pro">2018, 225xe plug-in hybrid, automat, 75 tis. km</li><li class="pro">Servisované len v BMW Bratislava, bez nehody, sezónne prezutie</li><li class="pro">~18 % pod férovou cenou</li><li class="con">Over stav batérie</li><li class="con">Predáva autobazár</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 21 dní (od 2. 11.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">218i Active Tourer automat od súkromníka</span><span class="loc">Stropkov</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/bmw-rad-2-active-tourer-2-active-tourer-218i-advantage-at-100kw136hp-a6/AeuUH3QK53o/" target="_blank" rel="noopener">BMW Rad 2 Active Tourer 2 Active Tourer 218i Advantage AT 100kW136HP A6</a></h3>
+  <div class="facts">2015 · 138 000 km · 216i / 218i / 220i / 223i / 228i / 230i benzín 80–190 kW · automat · Active / Gran Tourer · súkromník</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · dovezené</div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">8 100 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">10 360 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+21.8 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:73%"></span></div>
+  <ul class="pc"><li class="pro">2015, 218i 100 kW, automat, 138 tis. km</li><li class="pro">Druhý majiteľ</li><li class="pro">~22 % pod férovou cenou</li><li class="con">Dovoz</li><li class="con">Krátky popis</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 200 dní (od 7. 5.)</p><!-- history-card:end --></article></div>
+<div class="subhead">Špeciálne prípady</div>
+<div class="cards"></div>
+
+<h2>Cena vs. nájazd: celý trh na jednom grafe</h2>
+<p class="section-lead">Každý bod je jeden inzerát. Čím nižšie bod leží oproti ostatným s podobným nájazdom, tým je auto lacnejšie.
+Krúžkom sú označené odporúčané ponuky. Prejdi myšou na bod a uvidíš detail.</p>
+<div class="chart-wrap" id="chartWrap">
+  <div class="legend" id="legend"></div>
+  <svg id="chart" width="100%" height="420" role="img" aria-label="Bodový graf ceny a nájazdu inzerátov"></svg>
+  <div class="tip" id="tip"></div>
+</div>
+
+<h2>Porovnanie motorov</h2>
+<p class="section-lead">Hodnotenie (hviezdičky) zohľadňuje spoľahlivosť, spoľahlivosť a náklady na prevádzku a pomer cena/výkon.
+Číselné stĺpce sú mediány z ohodnotených inzerátov.</p>
+<div class="table-scroll">
+<table>
+  <thead><tr><th>Motor</th><th>Hodnotenie</th><th class="num">Ponúk</th><th class="num">Medián ceny</th><th class="num">Medián roku</th><th class="num">Medián km</th></tr></thead>
+  <tbody>
+<tr>
+  <td><b>Plug-in hybrid 225xe / 230e 165–240 kW</b><div class="sub">1.5 benzín + elektromotor, xDrive. V meste úsporný pri pravidelnom nabíjaní; over stav batérie.</div></td>
+  <td><span class="stars" aria-label="3 z 5">★★★<span class="off">★★</span></span></td>
+  <td class="num">12</td>
+  <td class="num"><div class="cellbar"><span style="width:41%"></span></div>14 994 €</td>
+  <td class="num">2019</td>
+  <td class="num">120 500 km</td>
+</tr>
+<tr>
+  <td><b>M235i / M240i 225–250 kW</b><div class="sub">Šport: 3.0 R6 (kupé) alebo 2.0 turbo (Gran Coupé, 2023+ kupé M240i). Rýchle, drahšie poistenie.</div></td>
+  <td><span class="stars" aria-label="3 z 5">★★★<span class="off">★★</span></span></td>
+  <td class="num">10</td>
+  <td class="num"><div class="cellbar"><span style="width:100%"></span></div>36 744 €</td>
+  <td class="num">2022</td>
+  <td class="num">41 800 km</td>
+</tr>
+<tr>
+  <td><b>218d / 220d / 225d diesel 85–165 kW</b><div class="sub">2.0 diesel 116–224 k (216d 1.5 trojvalec). Úsporný na veľa km; pri automate over radenie.</div></td>
+  <td><span class="stars" aria-label="4 z 5">★★★★<span class="off">★</span></span></td>
+  <td class="num">52</td>
+  <td class="num"><div class="cellbar"><span style="width:37%"></span></div>13 744 €</td>
+  <td class="num">2018</td>
+  <td class="num">166 000 km</td>
+</tr>
+<tr>
+  <td><b>216i / 218i / 220i / 223i / 228i / 230i benzín 80–190 kW</b><div class="sub">Benzín 1.5 trojvalec (216i / 218i) alebo 2.0 turbo (220i a vyššie).</div></td>
+  <td><span class="stars" aria-label="3 z 5">★★★<span class="off">★★</span></span></td>
+  <td class="num">56</td>
+  <td class="num"><div class="cellbar"><span style="width:54%"></span></div>19 945 €</td>
+  <td class="num">2022</td>
+  <td class="num">96 000 km</td>
+</tr></tbody>
+</table>
+</div>
+<div class="explain">
+  <p><b>BMW 2</b> je rodina rôznych áut: <b>Active Tourer</b> (F45 2014–2021, U06 od 2022) a 7-miestny <b>Gran Tourer</b> (F46) sú
+  priestranné MPV s predným pohonom; <b>kupé a kabriolet</b> (F22 / F23, G42 od 2021) majú zadný pohon; <b>Gran Coupé</b> (F44 od 2020) je 4-dverový sedan.</p>
+  <p><b>Ktorý motor zvoliť?</b> Na veľa km diesel <b>218d</b> (motor B47 bez problémov s reťazou). V meste benzín <b>218i</b> alebo plug-in hybrid <b>225xe</b>.
+  Rýchle <b>M235i / M240i</b> sú zábavné, ale drahšie na údržbu.</p>
+</div>
+
+<h2>Na čo si dať pozor</h2>
+<div class="warn">
+  <p><b>Lacné kvôli extrémnemu nájazdu</b> (viac ako 35 tis. km ročne, typicky flotila alebo taxi):</p>
+  <ul><li><a href='https://auto.bazos.sk/inzerat/196974878/bmw-rad-2-gran-coupe-2-218i-at.php' target='_blank' rel='noopener'>BMW Rad 2 Gran Coupé 2 218i A/T</a>: 2023, 175 986 km → 53 000 km/rok. Lacné je kvôli nájazdu.</li><li><a href='https://auto.bazos.sk/inzerat/196942341/2023-bmw-2-active-218d-110-kw-odpocet-dph.php' target='_blank' rel='noopener'>2023 BMW 2 active 218d 110 KW odpočet DPH</a>: 2023, 169 000 km → 51 000 km/rok. Lacné je kvôli nájazdu.</li><li><a href='https://www.autobazar.eu/detail/bmw-rad-2-gran-coupe-218d-m-sport/Amm6Yrf-tIC/' target='_blank' rel='noopener'>BMW Rad 2 Gran Coupé 218d M Sport</a>: 2023, 143 500 km → 43 000 km/rok. Lacné je kvôli nájazdu.</li><li><a href='https://www.autobazar.eu/detail/bmw-rad-2-gran-tourer-2-218d-xdrive-at/Am3qlm8kguN/' target='_blank' rel='noopener'>BMW Rad 2 Gran Tourer 2   218d xDrive A/T</a>: 2022, 185 517 km → 43 000 km/rok. Lacné je kvôli nájazdu.</li><li><a href='https://auto.bazos.sk/inzerat/197102273/2024-bmw-218i-gran-coupe-100kw-at-m-sport-sk-dph-shadowpack.php' target='_blank' rel='noopener'>2024 BMW 218i GRAN COUPE 100KW AT M-SPORT SK DPH ShadowPack</a>: 2024, 90 000 km → 39 000 km/rok. Lacné je kvôli nájazdu.</li><li><a href='https://www.autobazar.eu/detail/bmw-rad-2-active-tourer-2-218i-at/AmZS5gmV9Jn/' target='_blank' rel='noopener'>BMW Rad 2 Active Tourer 2   218i A/T</a>: 2024, 85 700 km → 37 000 km/rok. Lacné je kvôli nájazdu.</li><li><a href='https://www.autobazar.eu/detail/bmw-rad-2-gran-coupe-20-diesel-140kw-automat-prevodovka-4x4/AeloOhkQSRu/' target='_blank' rel='noopener'>BMW Rad 2 Gran Coupé 2.0 Diesel 140kW AT XDRIVE M-Sport</a>: 2023, 121 976 km → 37 000 km/rok. Lacné je kvôli nájazdu.</li></ul>
+  <p><b>Ďalšie veci, ktoré sme v inzerátoch našli:</b></p><ul><li>Väčšina ponúk sú rodinné Active Tourer a 7-miestne Gran Tourer; kupé, kabriolety a Gran Coupé sú v menšine – porovnávaj radšej v rámci rovnakej karosérie.</li><li>Lacné inzeráty s poškodením alebo poruchou motora a duplicity sme vyradili.</li></ul><p><b>Vyradené z porovnania</b> (poškodené autá alebo nezmyselné údaje – model ich nehodnotí):</p><ul><li><a href='https://www.autobazar.eu/detail/bmw-m240i-xdrive-coupe/AbGLC-1hovq/' target='_blank' rel='noopener'>BMW M240i xDrive Coupe</a> (53 990 €): 76000 km/rok je nereálne – skontroluj rok a km</li><li><a href='https://auto.bazos.sk/inzerat/196835794/bmw-m240i-xdrive-odpocet-dph.php' target='_blank' rel='noopener'>BMW M240i xDrive, odpočet DPH</a> (43 599 €): 204000 km/rok je nereálne – skontroluj rok a km</li><li><a href='https://auto.bazos.sk/inzerat/197174446/bmw-m240i.php' target='_blank' rel='noopener'>BMW M240i Coupé F22 | B58 | 60 000 km</a> (33 500 €): havarované / poškodené – cena nie je porovnateľná s trhom</li><li><a href='https://www.autobazar.eu/detail/bmw-rad-2-gran-coupe-2-218i-at/AmnimkstFXR/' target='_blank' rel='noopener'>BMW Rad 2 Gran Coupé 2   218i A/T</a> (12 400 €): cena je o 56 % pod trhom – havarované, na diely, záloha/splátka namiesto ceny alebo podvod</li></ul><p><b>M2, BMW 1 / 3 / 4, X1 a iné modely z vyhľadávania, nové autá z 2026, inzeráty s chybným nájazdom</b> (8 inzerátov) sme z rebríčka vynechali.</p>
+  <p>Ďalších <b>16</b> inzerátov nemá v texte rok alebo kilometre, takže ich nebolo možné ohodnotiť.
+  Ak ťa niektorý zaujme, predajcu sa na tieto údaje opýtaj.</p>
+</div>
+
+<h2>Kompletný rebríček</h2>
+<p class="section-lead">Všetky ohodnotené inzeráty. Kliknutím na hlavičku stĺpca zoraďuješ, filtrom zužuješ výber.</p>
+<div class="filters">
+  <select id="fEngine"><option value="">Všetky motory</option></select>
+  <select id="fTrans"><option value="">Každá prevodovka</option><option value="automatic">Automat</option><option value="manual">Manuál</option></select>
+  <select id="fSeller"><option value="">Všetci predajcovia</option><option value="nodealer">Bez autobazárov</option></select>
+  <select id="fSource"><option value="">Všetky portály</option><option value="bazos">bazoš</option><option value="autobazar">autobazar.eu</option><option value="bazarsk">bazar.sk</option></select>
+  <select id="fBody"><option value="">Všetky karosérie</option><option value="mpv">Active / gran tourer</option><option value="coupe">Kupé / kabriolet</option><option value="sedan">Gran coupé</option></select>
+  <select id="fOrigin"><option value="">Akýkoľvek pôvod</option><option value="SR">Kúpené v SR</option><option value="dovoz">Dovoz</option></select>
+  <input id="fMax" type="number" placeholder="Max. cena €" step="500" min="0" style="width:120px">
+  <span class="count" id="count"></span>
+</div>
+<div class="table-scroll">
+<table id="tbl">
+  <thead><tr>
+    <th class="sortable" data-k="title">Inzerát</th>
+    <th class="sortable num" data-k="year">Rok</th>
+    <th class="sortable num" data-k="km">Km</th>
+    <th class="sortable num" data-k="price_gross">Cena</th>
+    <th class="sortable num" data-k="fair_price">Férová</th>
+    <th class="sortable num" data-k="discount_pct">Pod trhom ▾</th>
+  </tr></thead>
+  <tbody></tbody>
+</table>
+</div>
+
+<h2>Pred kúpou over</h2>
+<ul class="check">
+  <li>VIN cez Cebia / autoDNA (história km, havárie) – veľa áut je z dovozu z Nemecka</li>
+  <li>Servisná história – BMW dealer ju vie podľa VIN vytiahnuť</li>
+  <li>Automat (Steptronic / DKG): plynulé radenie</li>
+  <li>Plug-in hybrid: kapacita batérie a nabíjací kábel</li>
+  <li>STK/EK protokol a dátum platnosti</li>
+</ul>
+
+<footer>
+  Zdroj: auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (len ponuky zo Slovenska, to isté auto na viacerých portáloch je započítané raz), sťahované cez lokálny MCP server bazos-mcp (nástroj <code>fair_price</code>), 23. 11. 2026.
+  Model: ridge regresia log(ceny s DPH) podľa veku, veku², km, km², prevodovky, typu predajcu, motora, karosérie, pohonu 4x4, pôvodu (SR / dovoz) a portálu. Vzorka 130
+  inzerátov, R² 90 %. Parametre sú vyťažené z textu inzerátov, a preto môžu obsahovať chyby. Odporúčané ponuky sme overili
+  prečítaním celého inzerátu. Hodnotenie motorov je odborný odhad, nie výsledok modelu.
+</footer>
+</main>
+
+<script>
+const DATA = [{"id": "ab-Am3vAWo2KB4", "url": "https://www.autobazar.eu/detail/bmw-rad-2-gran-tourer/Am3vAWo2KB4/", "title": "BMW Rad 2 Gran Tourer 220d  XDrive AT8 Luxury Line 4x4", "price": 13999, "price_gross": 13999, "fair_price": 19400.0, "discount_pct": 27.9, "verdict": "výrazne pod trhom – over prečo", "year": 2018, "km": 85876, "km_per_year": 10300.0, "eg": "218d / 220d / 225d diesel 85–165 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": "budget", "source": "autobazar", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "197172705", "url": "https://auto.bazos.sk/inzerat/197172705/bmw-220-xd-grantourer-f46.php", "title": "BMW 220 XD Grantourer F46", "price": 9300, "price_gross": 9300, "fair_price": 12830.0, "discount_pct": 27.5, "verdict": "výrazne pod trhom – over prečo", "year": 2016, "km": 140000, "km_per_year": 13500.0, "eg": "218d / 220d / 225d diesel 85–165 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Trnava", "flags": [], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AeMZECgqzFA", "url": "https://www.autobazar.eu/detail/bmw-rad-2-gran-tourer-2-gran-tourer-218d-luxury-line-at-110kw149hp-a8/AeMZECgqzFA/", "title": "BMW Rad 2 Gran Tourer 2 Gran Tourer 7miest.218d Luxury Line AT 110kW149HP A8", "price": 7500, "price_gross": 7500, "fair_price": 9820.0, "discount_pct": 23.6, "verdict": "výrazne pod trhom – over prečo", "year": 2016, "km": 186000, "km_per_year": 18000.0, "eg": "218d / 220d / 225d diesel 85–165 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Žilina", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "mpv"}, {"id": "ab-AeuUH3QK53o", "url": "https://www.autobazar.eu/detail/bmw-rad-2-active-tourer-2-active-tourer-218i-advantage-at-100kw136hp-a6/AeuUH3QK53o/", "title": "BMW Rad 2 Active Tourer 2 Active Tourer 218i Advantage AT 100kW136HP A6", "price": 8100, "price_gross": 8100, "fair_price": 10360.0, "discount_pct": 21.8, "verdict": "výrazne pod trhom – over prečo", "year": 2015, "km": 138000, "km_per_year": 12200.0, "eg": "216i / 218i / 220i / 223i / 228i / 230i benzín 80–190 kW", "cg": 0, "transmission": "automatic", "seller_type": "private", "location": "Stropkov", "flags": [], "pick": "budget", "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "mpv"}, {"id": "197471327", "url": "https://auto.bazos.sk/inzerat/197471327/bmw-rad-2-active-tourer-218i-at7-103kw-1majitel.php", "title": "BMW Rad 2 Active Tourer 218i AT/7 103kW", "price": 14990, "price_gross": 14990, "fair_price": 18520.0, "discount_pct": 19.1, "verdict": "výrazne pod trhom – over prečo", "year": 2019, "km": 24400, "km_per_year": 3300.0, "eg": "216i / 218i / 220i / 223i / 228i / 230i benzín 80–190 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Topoľčany", "flags": [], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [{"source": "autobazar", "id": "ab-AmlQ2dzcqyy", "url": "https://www.autobazar.eu/detail/bmw-rad-2-active-tourer-218i-at7-103kw-aj-na-splatky-protiucet/AmlQ2dzcqyy/", "price": 14990}], "body": "mpv"}, {"id": "196275850", "url": "https://auto.bazos.sk/inzerat/196275850/bmw-218d-gran-coupe-m-sport-at110kwr2023-tazne.php", "title": "BMW 218d Gran Coupé M-Sport - 2023 + ťažné (po servise)", "price": 20700, "price_gross": 20700, "fair_price": 25140.0, "discount_pct": 17.7, "verdict": "výrazne pod trhom – over prečo", "year": 2023, "km": 88000, "km_per_year": 26400.0, "eg": "218d / 220d / 225d diesel 85–165 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Prešov", "flags": [], "pick": "top", "source": "bazos", "origin": null, "also_listed": [], "body": "sedan"}, {"id": "ab-AmidVBVXn6A", "url": "https://www.autobazar.eu/detail/bmw-rad-2-active-tourer-100-kw-6-stautomat-2018-plug-in-hybrid/AmidVBVXn6A/", "title": "BMW Rad 2 Active Tourer 100 kW, 6-st.automat, 2018, plug-in-hybrid", "price": 12990, "price_gross": 12990, "fair_price": 15770.0, "discount_pct": 17.6, "verdict": "výrazne pod trhom – over prečo", "year": 2018, "km": 74602, "km_per_year": 9000.0, "eg": "Plug-in hybrid 225xe / 230e 165–240 kW", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": "budget", "source": "autobazar", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AmDmaEgHeSc", "url": "https://www.autobazar.eu/detail/bmw-rad-2-gran-tourer-2-216i/AmDmaEgHeSc/", "title": "BMW Rad 2 Gran Tourer 2   216i", "price": 10880, "price_gross": 10880, "fair_price": 13130.0, "discount_pct": 17.2, "verdict": "výrazne pod trhom – over prečo", "year": 2019, "km": 93750, "km_per_year": 12800.0, "eg": "216i / 218i / 220i / 223i / 228i / 230i benzín 80–190 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Zlaté Moravce", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazos", "id": "197799481", "url": "https://auto.bazos.sk/inzerat/197799481/bmw-rad-2-gran-tourer-216i-2019-len-93-750-km-1-majitel.php", "price": 10999}], "body": "mpv"}, {"id": "197408081", "url": "https://auto.bazos.sk/inzerat/197408081/bmw-rad-2-gran-tourer-220d-xdrive-advantage-at-140kw-a8.php", "title": "BMW Rad 2 Gran Tourer 220d xDrive Advantage A/T, 140kW, A8", "price": 11030, "price_gross": 11030, "fair_price": 13310.0, "discount_pct": 17.2, "verdict": "výrazne pod trhom – over prečo", "year": 2015, "km": 158384, "km_per_year": 14000.0, "eg": "218d / 220d / 225d diesel 85–165 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Dolný Kubín", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmDF8SKE8Uw", "url": "https://www.autobazar.eu/detail/bmw-rad-2-gran-tourer-2-220d-xdrive-advantage-at-140kw-a8-aj-na-splatky-protiucet/AmDF8SKE8Uw/", "price": 11030}], "body": "mpv"}, {"id": "ab-AenPNgIAZVZ", "url": "https://www.autobazar.eu/detail/bmw-rad-2-active-tourer-218i-active-tourer-automat-servkniha-koza/AenPNgIAZVZ/", "title": "BMW rad 2 Active Tourer 218i Active Tourer, Automat, Serv.kniha, Koža", "price": 8500, "price_gross": 8500, "fair_price": 10170.0, "discount_pct": 16.5, "verdict": "výrazne pod trhom – over prečo", "year": 2015, "km": 192229, "km_per_year": 17000.0, "eg": "216i / 218i / 220i / 223i / 228i / 230i benzín 80–190 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Prešovský kraj", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197376481", "url": "https://auto.bazos.sk/inzerat/197376481/bmw-rad-2-gran-tourer-2-216d-at.php", "title": "✅ BMW Rad 2 Gran Tourer 2 216d AT ✅", "price": 7990, "price_gross": 7990, "fair_price": 9530.0, "discount_pct": 16.2, "verdict": "výrazne pod trhom – over prečo", "year": 2019, "km": 234643, "km_per_year": 32000.0, "eg": "218d / 220d / 225d diesel 85–165 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Lučenec", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197636131", "url": "https://auto.bazos.sk/inzerat/197636131/bmw-218d-active-tourer-luxury-line.php", "title": "BMW 218d Active tourer Luxury line", "price": 8800, "price_gross": 8800, "fair_price": 10480.0, "discount_pct": 16.1, "verdict": "výrazne pod trhom – over prečo", "year": 2014, "km": 167500, "km_per_year": 13600.0, "eg": "218d / 220d / 225d diesel 85–165 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Dunajská Streda", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AbK6yXhaVVJ", "url": "https://www.autobazar.eu/detail/bmw-223-xdrive-gran-coupe/AbK6yXhaVVJ/", "title": "BMW 223 xDrive Gran Coupe", "price": 32900, "price_gross": 32900, "fair_price": 38960.0, "discount_pct": 15.5, "verdict": "výrazne pod trhom – over prečo", "year": 2025, "km": 15631, "km_per_year": 11700.0, "eg": "216i / 218i / 220i / 223i / 228i / 230i benzín 80–190 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Žilina", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "sedan"}, {"id": "197304523", "url": "https://auto.bazos.sk/inzerat/197304523/bmw-225xe-active-tourer-plug-in-hybrid-automat-4x4.php", "title": "BMW 225xe Active Tourer | plug-in hybrid | automat | 4x4", "price": 9000, "price_gross": 9000, "fair_price": 10530.0, "discount_pct": 14.6, "verdict": "pod trhom", "year": 2019, "km": 235000, "km_per_year": 32000.0, "eg": "Plug-in hybrid 225xe / 230e 165–240 kW", "cg": 2, "transmission": "automatic", "seller_type": "uncertain", "location": "Galanta", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "196974643", "url": "https://auto.bazos.sk/inzerat/196974643/bmw-rad-2-gran-coupe-2-218i-at.php", "title": "BMW Rad 2 Gran Coupé 2 218i A/T", "price": 18350, "price_gross": 18350, "fair_price": 21450.0, "discount_pct": 14.4, "verdict": "pod trhom", "year": 2022, "km": 110168, "km_per_year": 25400.0, "eg": "216i / 218i / 220i / 223i / 228i / 230i benzín 80–190 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Kežmarok", "flags": [], "pick": "top", "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmvN-Lp_NQS", "url": "https://www.autobazar.eu/detail/bmw-rad-2-gran-coupe-2-218i-at/AmvN-Lp_NQS/", "price": 18350}], "body": "sedan"}, {"id": "196365517", "url": "https://auto.bazos.sk/inzerat/196365517/bmw-218-d-activ-tourer-sport-line.php", "title": "Bmw 218 d active  tourer sport line AT 8 este,bez AD-blue.", "price": 12000, "price_gross": 12000, "fair_price": 13970.0, "discount_pct": 14.1, "verdict": "pod trhom", "year": 2018, "km": 108000, "km_per_year": 13000.0, "eg": "218d / 220d / 225d diesel 85–165 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Komárno", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AecGfKLQFPX", "url": "https://www.autobazar.eu/detail/bmw-rad-2-active-tourer-2-active-tourer-218d-sport-line-at-110kw150hp-a8/AecGfKLQFPX/", "price": 12000}], "body": "mpv"}, {"id": "ab-AmJFizIhdyH", "url": "https://www.autobazar.eu/detail/bmw-radu-218i-gran-coupe/AmJFizIhdyH/", "title": "BMW radu 218i Gran Coupe", "price": 27900, "price_gross": 27900, "fair_price": 32210.0, "discount_pct": 13.4, "verdict": "pod trhom", "year": 2024, "km": 30000, "km_per_year": 12900.0, "eg": "216i / 218i / 220i / 223i / 228i / 230i benzín 80–190 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Dunajská Streda", "flags": [], "pick": "top", "source": "autobazar", "origin": null, "also_listed": [], "body": "sedan"}, {"id": "197057815", "url": "https://auto.bazos.sk/inzerat/197057815/bmw-rad-2-gran-tourer-2-218d-xdrive-at.php", "title": "BMW Rad 2 Gran Tourer 2 218d xDrive A/T", "price": 13290, "price_gross": 13290, "fair_price": 15200.0, "discount_pct": 12.6, "verdict": "pod trhom", "year": 2021, "km": 179645, "km_per_year": 33700.0, "eg": "218d / 220d / 225d diesel 85–165 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bytča", "flags": [], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [{"source": "autobazar", "id": "ab-AmnT2ugOVgz", "url": "https://www.autobazar.eu/detail/bmw-rad-2-gran-tourer-2-218d-xdrive-at/AmnT2ugOVgz/", "price": 13290}], "body": "mpv"}, {"id": "ab-AeMIByJDWd4", "url": "https://www.autobazar.eu/detail/bmw-rad-2-coupe-m240i-xdrive-4x4-automat-servkniha/AeMIByJDWd4/", "title": "BMW rad 2 Coupé M240i xDrive, 4X4, Automat, Serv.kniha", "price": 28800, "price_gross": 28800, "fair_price": 32650.0, "discount_pct": 11.8, "verdict": "pod trhom", "year": 2019, "km": 39205, "km_per_year": 5300.0, "eg": "M235i / M240i 225–250 kW", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "coupe"}, {"id": "196218349", "url": "https://auto.bazos.sk/inzerat/196218349/predam-bmw-active-tourer-2.php", "title": "Predám BMW active tourer 2", "price": 23900, "price_gross": 23900, "fair_price": 27080.0, "discount_pct": 11.7, "verdict": "pod trhom", "year": 2022, "km": 60700, "km_per_year": 14000.0, "eg": "216i / 218i / 220i / 223i / 228i / 230i benzín 80–190 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Kežmarok", "flags": ["prevodovka nezistená"], "pick": "top", "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AmKTZCo5H8X", "url": "https://www.autobazar.eu/detail/bmw-rad-2-coupe-218i-gran-f44-m-sport/AmKTZCo5H8X/", "title": "BMW Rad 2 Coupé 218i Gran  F44 M Sport", "price": 21000, "price_gross": 21000, "fair_price": 23720.0, "discount_pct": 11.5, "verdict": "pod trhom", "year": 2022, "km": 94286, "km_per_year": 21800.0, "eg": "216i / 218i / 220i / 223i / 228i / 230i benzín 80–190 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Štúrovo", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "sedan"}, {"id": "197026431", "url": "https://auto.bazos.sk/inzerat/197026431/bmw-2-218d-active-tourer.php", "title": "BMW 2 218d Active tourer", "price": 9900, "price_gross": 9900, "fair_price": 11180.0, "discount_pct": 11.4, "verdict": "pod trhom", "year": 2017, "km": 187000, "km_per_year": 20000.0, "eg": "218d / 220d / 225d diesel 85–165 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Košice", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "196821394", "url": "https://auto.bazos.sk/inzerat/196821394/predam-bmw-218-i-gran-tourer-rv102020-m-packet.php", "title": "Predam bmw 218 i Gran Tourer rv.10/2020 m packet", "price": 12900, "price_gross": 12900, "fair_price": 14540.0, "discount_pct": 11.3, "verdict": "pod trhom", "year": 2020, "km": 180000, "km_per_year": 28400.0, "eg": "216i / 218i / 220i / 223i / 228i / 230i benzín 80–190 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Trenčín", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AbLMsgRdYO2", "url": "https://www.autobazar.eu/detail/bmw-218i-gran-coupe/AbLMsgRdYO2/", "title": "BMW Rad 2 Gran Coupé", "price": 27490, "price_gross": 27490, "fair_price": 30940.0, "discount_pct": 11.2, "verdict": "pod trhom", "year": 2023, "km": 39052, "km_per_year": 11700.0, "eg": "216i / 218i / 220i / 223i / 228i / 230i benzín 80–190 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Banská Bystrica", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "ab-AeloOhkQSRu", "url": "https://www.autobazar.eu/detail/bmw-rad-2-gran-coupe-20-diesel-140kw-automat-prevodovka-4x4/AeloOhkQSRu/", "title": "BMW Rad 2 Gran Coupé 2.0 Diesel 140kW AT XDRIVE M-Sport", "price": 24990, "price_gross": 24990, "fair_price": 28090.0, "discount_pct": 11.0, "verdict": "pod trhom", "year": 2023, "km": 121976, "km_per_year": 36600.0, "eg": "218d / 220d / 225d diesel 85–165 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Pezinok", "flags": ["vysoký nájazd 37000 km/rok – flotila / taxi?"], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "196710119", "url": "https://auto.bazos.sk/inzerat/196710119/bmw-220d-140kw-gran-coupe-xdrive-m-sport.php", "price": 24990}], "body": "mpv"}, {"id": "ab-AeIOdrAYLwe", "url": "https://www.autobazar.eu/detail/bmw-rad-2-active-tourer-2-active-tourer-216d-at-85kw116hp-a7/AeIOdrAYLwe/", "title": "BMW Rad 2 Active Tourer 2 Active Tourer 216d AT 85kW116HP A7", "price": 9490, "price_gross": 9490, "fair_price": 10650.0, "discount_pct": 10.9, "verdict": "pod trhom", "year": 2020, "km": 196000, "km_per_year": 30900.0, "eg": "218d / 220d / 225d diesel 85–165 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Prešov", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "196974878", "url": "https://auto.bazos.sk/inzerat/196974878/bmw-rad-2-gran-coupe-2-218i-at.php", "title": "BMW Rad 2 Gran Coupé 2 218i A/T", "price": 16500, "price_gross": 16500, "fair_price": 18510.0, "discount_pct": 10.9, "verdict": "pod trhom", "year": 2023, "km": 175986, "km_per_year": 52800.0, "eg": "216i / 218i / 220i / 223i / 228i / 230i benzín 80–190 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Kežmarok", "flags": ["vysoký nájazd 53000 km/rok – flotila / taxi?"], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-Amx1RKSWgpt", "url": "https://www.autobazar.eu/detail/bmw-rad-2-gran-coupe-2-218i-at/Amx1RKSWgpt/", "price": 16500}], "body": "sedan"}, {"id": "197795593", "url": "https://auto.bazos.sk/inzerat/197795593/bmw-218d-gran-tourer-f46-xdrive.php", "title": "BMW 218d Gran Tourer F46 Xdrive", "price": 9200, "price_gross": 9200, "fair_price": 10320.0, "discount_pct": 10.8, "verdict": "pod trhom", "year": 2017, "km": 228000, "km_per_year": 24400.0, "eg": "218d / 220d / 225d diesel 85–165 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Topoľčany", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-Amm6Yrf-tIC", "url": "https://www.autobazar.eu/detail/bmw-rad-2-gran-coupe-218d-m-sport/Amm6Yrf-tIC/", "title": "BMW Rad 2 Gran Coupé 218d M Sport", "price": 19990, "price_gross": 19990, "fair_price": 22400.0, "discount_pct": 10.8, "verdict": "pod trhom", "year": 2023, "km": 143500, "km_per_year": 43100.0, "eg": "218d / 220d / 225d diesel 85–165 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": ["vysoký nájazd 43000 km/rok – flotila / taxi?"], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "sedan"}, {"id": "ab-AmBxsBsPCRk", "url": "https://www.autobazar.eu/detail/bmw-rad-2-active-tourer-2-220i-m-sport-at/AmBxsBsPCRk/", "title": "BMW Rad 2 Active Tourer 2 220i M Sport A/T", "price": 14999, "price_gross": 14999, "fair_price": 16820.0, "discount_pct": 10.8, "verdict": "pod trhom", "year": 2018, "km": 110104, "km_per_year": 13200.0, "eg": "216i / 218i / 220i / 223i / 228i / 230i benzín 80–190 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Svätý Jur", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "mpv"}, {"id": "197099161", "url": "https://auto.bazos.sk/inzerat/197099161/bmw-rad-2-gran-coupe-218i-at-m-sport-sk-spz.php", "title": "BMW Rad 2 Gran Coupé 218i A/T M-Sport SK ŠPZ", "price": 19890, "price_gross": 19890, "fair_price": 22270.0, "discount_pct": 10.7, "verdict": "pod trhom", "year": 2022, "km": 97539, "km_per_year": 22500.0, "eg": "216i / 218i / 220i / 223i / 228i / 230i benzín 80–190 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Rimavská Sobota", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-Am_5By0vTYK", "url": "https://www.autobazar.eu/detail/bmw-rad-2-gran-coupe-218i-at-m-sport-sk-spz/Am_5By0vTYK/", "price": 19890}], "body": "sedan"}, {"id": "ab-Ae6HUH8Td-b", "url": "https://www.autobazar.eu/detail/bmw-rad-2-gran-tourer-2-gran-tourer-216i-advantage-75kw102hp-m6/Ae6HUH8Td-b/", "title": "BMW Rad 2 Gran Tourer 2 Gran Tourer 216i Advantage 75kW102HP M6", "price": 7990, "price_gross": 7990, "fair_price": 8940.0, "discount_pct": 10.7, "verdict": "pod trhom", "year": 2015, "km": 165000, "km_per_year": 14600.0, "eg": "216i / 218i / 220i / 223i / 228i / 230i benzín 80–190 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Limbach", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "mpv"}, {"id": "196402315", "url": "https://auto.bazos.sk/inzerat/196402315/bmw-218i-gran-coupe-sport-line-2024-8-500-km.php", "title": "BMW 218i Gran Coupé Sport Line, 2024, 8 500 km", "price": 27999, "price_gross": 27999, "fair_price": 31200.0, "discount_pct": 10.3, "verdict": "pod trhom", "year": 2024, "km": 8500, "km_per_year": 3600.0, "eg": "216i / 218i / 220i / 223i / 228i / 230i benzín 80–190 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "sedan"}, {"id": "196797441", "url": "https://auto.bazos.sk/inzerat/196797441/bmw-218i-gran-tourer-luxury-line.php", "title": "BMW 218i Gran tourer Luxury Line", "price": 18200, "price_gross": 18200, "fair_price": 20110.0, "discount_pct": 9.5, "verdict": "pod trhom", "year": 2022, "km": 63400, "km_per_year": 14600.0, "eg": "216i / 218i / 220i / 223i / 228i / 230i benzín 80–190 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Trnava", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197102273", "url": "https://auto.bazos.sk/inzerat/197102273/2024-bmw-218i-gran-coupe-100kw-at-m-sport-sk-dph-shadowpack.php", "title": "2024 BMW 218i GRAN COUPE 100KW AT M-SPORT SK DPH ShadowPack", "price": 22600, "price_gross": 22600, "fair_price": 24920.0, "discount_pct": 9.3, "verdict": "pod trhom", "year": 2024, "km": 90000, "km_per_year": 38600.0, "eg": "216i / 218i / 220i / 223i / 228i / 230i benzín 80–190 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Pezinok", "flags": ["vysoký nájazd 39000 km/rok – flotila / taxi?"], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AeGYXCbJyTP", "url": "https://www.autobazar.eu/detail/bmw-rad-2-gran-coupe-m-sport-black-218i-at-100kw-sk-dph/AeGYXCbJyTP/", "price": 22600}], "body": "sedan"}, {"id": "196711972", "url": "https://auto.bazos.sk/inzerat/196711972/bmw-rad-2-gran-tourer-216d-at-2022-dph-72000km.php", "title": "BMW Rad 2 Gran Tourer 216D A/T, 2022, DPH , 72000km", "price": 14228, "price_gross": 17500, "fair_price": 19300.0, "discount_pct": 9.3, "verdict": "pod trhom", "year": 2022, "km": 72000, "km_per_year": 16600.0, "eg": "218d / 220d / 225d diesel 85–165 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Pezinok", "flags": ["inzerovaná cena 14228 € je bez DPH – porovnáva sa cena s DPH 17500 €"], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmQfqTV0cQw", "url": "https://www.autobazar.eu/detail/bmw-rad-2-gran-tourer-216d-grand/AmQfqTV0cQw/", "price": 16500}], "body": "mpv"}, {"id": "ab-Aey1VxVAFFS", "url": "https://www.autobazar.eu/detail/bmw-rad-2-active-tourer-218i-active-tourer-automat-sr1maj/Aey1VxVAFFS/", "title": "BMW rad 2 Active Tourer 218i Active Tourer, Automat, SR,1.maj", "price": 21000, "price_gross": 21000, "fair_price": 23020.0, "discount_pct": 8.8, "verdict": "pod trhom", "year": 2022, "km": 44982, "km_per_year": 10400.0, "eg": "216i / 218i / 220i / 223i / 228i / 230i benzín 80–190 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Nitriansky kraj", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AefGaK1DkAy", "url": "https://www.autobazar.eu/detail/bmw-rad-2-active-tourer-225xe/AefGaK1DkAy/", "title": "BMW Rad 2 Active Tourer 225xe", "price": 14990, "price_gross": 14990, "fair_price": 16230.0, "discount_pct": 7.7, "verdict": "pod trhom", "year": 2019, "km": 59900, "km_per_year": 8200.0, "eg": "Plug-in hybrid 225xe / 230e 165–240 kW", "cg": 2, "transmission": "automatic", "seller_type": "private", "location": "Košice", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "mpv"}, {"id": "196543124", "url": "https://auto.bazos.sk/inzerat/196543124/bmw-rad-2-gran-tourer-2-gran-tourer-218i-at-m-packet-led.php", "title": "BMW Rad 2 Gran Tourer 2 Gran Tourer 218i AT M Packet LED", "price": 12900, "price_gross": 12900, "fair_price": 13980.0, "discount_pct": 7.7, "verdict": "pod trhom", "year": 2020, "km": 182000, "km_per_year": 28700.0, "eg": "216i / 218i / 220i / 223i / 228i / 230i benzín 80–190 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Trenčín", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "196939244", "url": "https://auto.bazos.sk/inzerat/196939244/bmw-m240i-xdrive-dph.php", "title": "BMW M240i xDrive, DPH", "price": 51199, "price_gross": 51199, "fair_price": 55470.0, "discount_pct": 7.7, "verdict": "pod trhom", "year": 2024, "km": 19500, "km_per_year": 8400.0, "eg": "M235i / M240i 225–250 kW", "cg": 2, "transmission": null, "seller_type": "dealer", "location": "Púchov", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "coupe"}, {"id": "196380365", "url": "https://auto.bazos.sk/inzerat/196380365/bmw-active-tourer-2024.php", "title": "BMW 2 active tourer 2024", "price": 26000, "price_gross": 26000, "fair_price": 28090.0, "discount_pct": 7.4, "verdict": "pod trhom", "year": 2024, "km": 32000, "km_per_year": 13700.0, "eg": "216i / 218i / 220i / 223i / 228i / 230i benzín 80–190 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Banská Bystrica", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-Amdi7AP_k1k", "url": "https://www.autobazar.eu/detail/bmw-rad-2-gran-tourer-2-218d-advantage-at-110-kw-a8-5d-aj-na-splatky-protiucet/Amdi7AP_k1k/", "title": "BMW Rad 2 Gran Tourer 2   218d Advantage A/T, 110 kW, A8, 5d. / AJ NA SPLÁTKY / PROTIÚČET /", "price": 10990, "price_gross": 10990, "fair_price": 11850.0, "discount_pct": 7.3, "verdict": "pod trhom", "year": 2017, "km": 171208, "km_per_year": 18300.0, "eg": "218d / 220d / 225d diesel 85–165 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197355859", "url": "https://auto.bazos.sk/inzerat/197355859/bmw-rad-2-gran-tourer-218d-advantage-at-110-kw-a8-2017.php", "price": 10990}], "body": "mpv"}, {"id": "197721496", "url": "https://auto.bazos.sk/inzerat/197721496/bmw-218d-sport-xdrive-110kw-automat-headupnavi.php", "title": "BMW 218d Sport XDrive 110kW Automat HeadUp/Navi", "price": 10500, "price_gross": 10500, "fair_price": 11300.0, "discount_pct": 7.1, "verdict": "pod trhom", "year": 2016, "km": 170000, "km_per_year": 16500.0, "eg": "218d / 220d / 225d diesel 85–165 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Nitra", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-Aeh7-JddWWW", "url": "https://www.autobazar.eu/detail/bmw-rad-2-gran-tourer-218d-xdrive-m-sport-at-110kw149hp-a8/Aeh7-JddWWW/", "price": 10500}], "body": "mpv"}, {"id": "197451346", "url": "https://auto.bazos.sk/inzerat/197451346/bmw-rad-2-gran-tourer-218i-at-m-sport-7m-black-line.php", "title": "BMW Rad 2 Gran Tourer 218i A/T M-Sport 7M Black line", "price": 15990, "price_gross": 15990, "fair_price": 17140.0, "discount_pct": 6.7, "verdict": "férová cena", "year": 2022, "km": 96000, "km_per_year": 22200.0, "eg": "216i / 218i / 220i / 223i / 228i / 230i benzín 80–190 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Rimavská Sobota", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-Am444QAcQPr", "url": "https://www.autobazar.eu/detail/bmw-rad-2-gran-tourer-218i-at-m-sport-7m-black-line/Am444QAcQPr/", "price": 15990}], "body": "mpv"}, {"id": "197809807", "url": "https://auto.bazos.sk/inzerat/197809807/bmw-rad-2-gran-coupe-2-218i-at.php", "title": "BMW Rad 2 Gran Coupé 2 218i A/T", "price": 21990, "price_gross": 21990, "fair_price": 23290.0, "discount_pct": 5.6, "verdict": "férová cena", "year": 2022, "km": 68000, "km_per_year": 15700.0, "eg": "216i / 218i / 220i / 223i / 228i / 230i benzín 80–190 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Vranov nad Topľou", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AmPcgr-32Dh", "url": "https://www.autobazar.eu/detail/bmw-rad-2-gran-coupe-2-218i-at/AmPcgr-32Dh/", "price": 21990}], "body": "sedan"}, {"id": "197101509", "url": "https://auto.bazos.sk/inzerat/197101509/bmw-active-tourer-225i-xdrive-4x4-benzin.php", "title": "BMW Active Tourer 225i xDrive 4x4 benzín", "price": 11999, "price_gross": 11999, "fair_price": 12670.0, "discount_pct": 5.3, "verdict": "férová cena", "year": 2016, "km": 183000, "km_per_year": 17700.0, "eg": "216i / 218i / 220i / 223i / 228i / 230i benzín 80–190 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Košice-okolie", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AmyduWDv22J", "url": "https://www.autobazar.eu/detail/bmw-rad-2-active-tourer-218d-20d-steptronic-luxury-u06/AmyduWDv22J/", "title": "BMW Rad 2 Active Tourer 218d 20d, Steptronic \"Luxury\" (U06)", "price": 23490, "price_gross": 23490, "fair_price": 24720.0, "discount_pct": 5.0, "verdict": "férová cena", "year": 2023, "km": 53400, "km_per_year": 16000.0, "eg": "218d / 220d / 225d diesel 85–165 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "196068399", "url": "https://auto.bazos.sk/inzerat/196068399/bmw-218d-gran-tourer-at.php", "title": "BMW 218d Gran Tourer A/t", "price": 6950, "price_gross": 6950, "fair_price": 7310.0, "discount_pct": 5.0, "verdict": "férová cena", "year": 2016, "km": 252000, "km_per_year": 24400.0, "eg": "218d / 220d / 225d diesel 85–165 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Spišská Nová Ves", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "196921618", "url": "https://auto.bazos.sk/inzerat/196921618/bmw-rad-2-active-tourer-225xe-plug-in-hybrid-4x4.php", "title": "BMW Rad 2 Active Tourer 225xe PLUG IN HYBRID 4X4", "price": 11990, "price_gross": 11990, "fair_price": 12420.0, "discount_pct": 3.5, "verdict": "férová cena", "year": 2018, "km": 175111, "km_per_year": 21000.0, "eg": "Plug-in hybrid 225xe / 230e 165–240 kW", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Nitra", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmaSp12oqAV", "url": "https://www.autobazar.eu/detail/bmw-rad-2-active-tourer-225xe-plug-in-hybrid-4x4/AmaSp12oqAV/", "price": 11990}], "body": "mpv"}, {"id": "196055143", "url": "https://auto.bazos.sk/inzerat/196055143/bmw-rad-2-gran-tourer-2-220d-xdrive-at.php", "title": "BMW Rad 2 Gran Tourer 2 220d xDrive A/T", "price": 15990, "price_gross": 15990, "fair_price": 16570.0, "discount_pct": 3.5, "verdict": "férová cena", "year": 2021, "km": 154300, "km_per_year": 28900.0, "eg": "218d / 220d / 225d diesel 85–165 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Rimavská Sobota", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AbQ6IJH_y7h", "url": "https://www.autobazar.eu/detail/bmw-220-gran-coupe/AbQ6IJH_y7h/", "title": "BMW 220 Gran Coupe", "price": 40900, "price_gross": 40900, "fair_price": 42340.0, "discount_pct": 3.4, "verdict": "férová cena", "year": 2025, "km": 6905, "km_per_year": 5200.0, "eg": "216i / 218i / 220i / 223i / 228i / 230i benzín 80–190 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Trnava", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "sedan"}, {"id": "ab-AmVhJOCYbbl", "url": "https://www.autobazar.eu/detail/bmw-rad-2-gran-tourer-216d-grand-m6-5d-85kw/AmVhJOCYbbl/", "title": "BMW Rad 2 Gran Tourer 216d Grand ,M6, 5d., 85kW", "price": 11590, "price_gross": 11590, "fair_price": 11970.0, "discount_pct": 3.2, "verdict": "férová cena", "year": 2021, "km": 157000, "km_per_year": 29400.0, "eg": "218d / 220d / 225d diesel 85–165 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava-Ružinov", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "196858055", "url": "https://auto.bazos.sk/inzerat/196858055/bmw-220d-gran-tourer-140-kw-automat-7-miest.php", "title": "BMW 220d Gran Tourer 140 kW, automat, 7 miest", "price": 7490, "price_gross": 7490, "fair_price": 7670.0, "discount_pct": 2.3, "verdict": "férová cena", "year": 2015, "km": 272000, "km_per_year": 24000.0, "eg": "218d / 220d / 225d diesel 85–165 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Bratislava", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197214365", "url": "https://auto.bazos.sk/inzerat/197214365/bmw-rad-2-active-tourer-225xe-plug-in-hybrid-4x4-2020.php", "title": "BMW Rad 2 Active Tourer 225xe PLUG IN HYBRID 4X4 2020", "price": 12990, "price_gross": 12990, "fair_price": 13270.0, "discount_pct": 2.1, "verdict": "férová cena", "year": 2020, "km": 187581, "km_per_year": 29600.0, "eg": "Plug-in hybrid 225xe / 230e 165–240 kW", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Nitra", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197632342", "url": "https://auto.bazos.sk/inzerat/197632342/bmw-2-active-tourer-218i-u06-automat-52022-77-990-km.php", "title": "BMW 2 Active Tourer 218i U06, AUTOMAT, 5/2022, 77 990 km", "price": 21500, "price_gross": 21500, "fair_price": 21790.0, "discount_pct": 1.3, "verdict": "férová cena", "year": 2022, "km": 77990, "km_per_year": 18000.0, "eg": "216i / 218i / 220i / 223i / 228i / 230i benzín 80–190 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Bratislava", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AektYqZrARo", "url": "https://www.autobazar.eu/detail/bmw-rad-2-gran-coupe-2-gran-coupe-218i-at-100kw136hp-a7/AektYqZrARo/", "title": "BMW Rad 2 Gran Coupé 2 Gran Coupé 218i AT 100kW136HP A7", "price": 19900, "price_gross": 19900, "fair_price": 20150.0, "discount_pct": 1.3, "verdict": "férová cena", "year": 2022, "km": 135000, "km_per_year": 31200.0, "eg": "216i / 218i / 220i / 223i / 228i / 230i benzín 80–190 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Šaľa", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "sedan"}, {"id": "ab-Am3qlm8kguN", "url": "https://www.autobazar.eu/detail/bmw-rad-2-gran-tourer-2-218d-xdrive-at/Am3qlm8kguN/", "title": "BMW Rad 2 Gran Tourer 2   218d xDrive A/T", "price": 14990, "price_gross": 14990, "fair_price": 15120.0, "discount_pct": 0.9, "verdict": "férová cena", "year": 2022, "km": 185517, "km_per_year": 42800.0, "eg": "218d / 220d / 225d diesel 85–165 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Košice-Košická Nová Ves", "flags": ["vysoký nájazd 43000 km/rok – flotila / taxi?"], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "mpv"}, {"id": "ab-AeIKpEbxiFt", "url": "https://www.autobazar.eu/detail/bmw-rad-2-gran-coupe-bmw-m235i-xdrive-gran-coupe/AeIKpEbxiFt/", "title": "BMW Rad 2 Gran Coupé BMW M235i xDrive Gran Coupé", "price": 28900, "price_gross": 28900, "fair_price": 29090.0, "discount_pct": 0.7, "verdict": "férová cena", "year": 2022, "km": 92000, "km_per_year": 21200.0, "eg": "M235i / M240i 225–250 kW", "cg": 2, "transmission": "automatic", "seller_type": "private", "location": "Bratislava-Ružinov", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "sedan"}, {"id": "ab-AmTSKCNGpCs", "url": "https://www.autobazar.eu/detail/bmw-rad-2-active-tourer-2-225e-xdrive-at/AmTSKCNGpCs/", "title": "BMW Rad 2 Active Tourer 2   225e xDrive A/T", "price": 24999, "price_gross": 24999, "fair_price": 25150.0, "discount_pct": 0.6, "verdict": "férová cena", "year": 2024, "km": 24739, "km_per_year": 10600.0, "eg": "Plug-in hybrid 225xe / 230e 165–240 kW", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Smižany", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "196794679", "url": "https://auto.bazos.sk/inzerat/196794679/bmw-rad-2-active-tourer-2-225e-xdrive-at.php", "price": 24999}], "body": "mpv"}, {"id": "197469337", "url": "https://auto.bazos.sk/inzerat/197469337/bmw-rad-2-gran-tourer-216i-80kw-2019.php", "title": "BMW Rad 2 Gran Tourer 216i, 80kW (2019)", "price": 9990, "price_gross": 9990, "fair_price": 9990.0, "discount_pct": -0.0, "verdict": "férová cena", "year": 2019, "km": 193459, "km_per_year": 26400.0, "eg": "216i / 218i / 220i / 223i / 228i / 230i benzín 80–190 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Žiar nad Hronom", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-Ame_FmfD2wP", "url": "https://www.autobazar.eu/detail/bmw-rad-2-gran-tourer-216i-80kw-2019-aj-na-splatky-protiucet/Ame_FmfD2wP/", "price": 9990}], "body": "mpv"}, {"id": "197192819", "url": "https://auto.bazos.sk/inzerat/197192819/bmw-216i-gran-tourer-sport-line.php", "title": "BMW 216i Gran Tourer SPORT LINE", "price": 11199, "price_gross": 11199, "fair_price": 11160.0, "discount_pct": -0.4, "verdict": "férová cena", "year": 2019, "km": 151000, "km_per_year": 20600.0, "eg": "216i / 218i / 220i / 223i / 228i / 230i benzín 80–190 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Trenčín", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AeVrdqT5GvR", "url": "https://www.autobazar.eu/detail/bmw-rad-2-gran-tourer-20-diesel-110kw-manual-prevodovka/AeVrdqT5GvR/", "title": "BMW Rad 2 Gran Tourer 2.0 Diesel 110kW Manuál. prevodovka", "price": 5990, "price_gross": 5990, "fair_price": 5950.0, "discount_pct": -0.6, "verdict": "férová cena", "year": 2015, "km": 276000, "km_per_year": 24400.0, "eg": "218d / 220d / 225d diesel 85–165 kW", "cg": 1, "transmission": "manual", "seller_type": "private", "location": "Malacky", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "mpv"}, {"id": "197296702", "url": "https://auto.bazos.sk/inzerat/197296702/vymenimpredam-bmw-rad-2-gran-coupe-218i.php", "title": "Vymenim/Predam BMW Rad 2 Gran Coupé 218i", "price": 20000, "price_gross": 20000, "fair_price": 19840.0, "discount_pct": -0.8, "verdict": "férová cena", "year": 2020, "km": 115590, "km_per_year": 18300.0, "eg": "216i / 218i / 220i / 223i / 228i / 230i benzín 80–190 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Trebišov", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "sedan"}, {"id": "ab-Am2OnGaZVRH", "url": "https://www.autobazar.eu/detail/bmw-radu-218i-active-tourer/Am2OnGaZVRH/", "title": "BMW  radu 218i  Active Tourer", "price": 11800, "price_gross": 11800, "fair_price": 11690.0, "discount_pct": -1.0, "verdict": "férová cena", "year": 2017, "km": 178000, "km_per_year": 19100.0, "eg": "216i / 218i / 220i / 223i / 228i / 230i benzín 80–190 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Dunajská Streda", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AeU-wg27KZV", "url": "https://www.autobazar.eu/detail/bmw-rad-2-gran-tourer-2-gran-tourer-216i-80kw109hp-m6/AeU-wg27KZV/", "title": "BMW Rad 2 Gran Tourer 2 Gran Tourer 216i 80kW/109HP M6", "price": 13300, "price_gross": 13300, "fair_price": 13090.0, "discount_pct": -1.6, "verdict": "férová cena", "year": 2019, "km": 83817, "km_per_year": 11400.0, "eg": "216i / 218i / 220i / 223i / 228i / 230i benzín 80–190 kW", "cg": 0, "transmission": "manual", "seller_type": "private", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AmnjCZ96AQP", "url": "https://www.autobazar.eu/detail/bmw-rad-2-gran-coupe-220d-xdrive-at-m-sport/AmnjCZ96AQP/", "title": "BMW Rad 2 Gran Coupé 220d xDrive A/T M-Sport", "price": 27999, "price_gross": 27999, "fair_price": 27470.0, "discount_pct": -1.9, "verdict": "férová cena", "year": 2021, "km": 80836, "km_per_year": 15200.0, "eg": "218d / 220d / 225d diesel 85–165 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Pezinok", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197016118", "url": "https://auto.bazos.sk/inzerat/197016118/bmw-gran-coupe-220d-xdrive-at-m-sport.php", "price": 27999}], "body": "sedan"}, {"id": "197415633", "url": "https://auto.bazos.sk/inzerat/197415633/bmw-rad-2-gran-tourer-2-218i-at.php", "title": "BMW Rad 2 Gran Tourer 2 218i A/T", "price": 12900, "price_gross": 12900, "fair_price": 12650.0, "discount_pct": -2.0, "verdict": "férová cena", "year": 2020, "km": 182216, "km_per_year": 28800.0, "eg": "216i / 218i / 220i / 223i / 228i / 230i benzín 80–190 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Trenčín", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmYrwpb-_fs", "url": "https://www.autobazar.eu/detail/bmw-rad-2-gran-tourer-2-218i-at/AmYrwpb-_fs/", "price": 12900}], "body": "mpv"}, {"id": "ab-AbHWtSSH4Zy", "url": "https://www.autobazar.eu/detail/bmw-rada-2-1-5-2-218i-a7-100kw-i2/AbHWtSSH4Zy/", "title": "BMW Řada 2 1, 5 2 218i A7 100kW I2", "price": 18999, "price_gross": 18999, "fair_price": 18600.0, "discount_pct": -2.1, "verdict": "férová cena", "year": 2022, "km": 119678, "km_per_year": 27600.0, "eg": "216i / 218i / 220i / 223i / 228i / 230i benzín 80–190 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava-Ružinov", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197535698", "url": "https://auto.bazos.sk/inzerat/197535698/bmw-218i-active-tourer-m-sport-100kwautomat12024-sk-spz.php", "title": "BMW 218i ACTIVE TOURER M-SPORT, 100KW,AUTOMAT,1/2024, SK ŠPZ", "price": 24490, "price_gross": 24490, "fair_price": 23880.0, "discount_pct": -2.5, "verdict": "férová cena", "year": 2024, "km": 59673, "km_per_year": 25600.0, "eg": "216i / 218i / 220i / 223i / 228i / 230i benzín 80–190 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Nové Zámky", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-Ae3OG0G4lAE", "url": "https://www.autobazar.eu/detail/bmw-rad-2-active-tourer-218i-m-sport-automat-1majitel-sk-spz/Ae3OG0G4lAE/", "price": 24490}], "body": "mpv"}, {"id": "196749158", "url": "https://auto.bazos.sk/inzerat/196749158/bmw-rad-2-active-tourer-225-xe-i-performance-100kw-phev.php", "title": "BMW Rad 2 Active Tourer 225 xe i Performance 100KW PHeV", "price": 11999, "price_gross": 11999, "fair_price": 11680.0, "discount_pct": -2.7, "verdict": "férová cena", "year": 2018, "km": 155533, "km_per_year": 18700.0, "eg": "Plug-in hybrid 225xe / 230e 165–240 kW", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "196377586", "url": "https://auto.bazos.sk/inzerat/196377586/bmw-m240i-coupe-rwd-zadny-nahon-374-k-2024-28-tis-km.php", "title": "BMW M240i Coupé RWD (zadný náhon), 374 k, 2024, 29 tis. km,", "price": 48800, "price_gross": 48800, "fair_price": 47410.0, "discount_pct": -2.9, "verdict": "férová cena", "year": 2024, "km": 29000, "km_per_year": 12400.0, "eg": "M235i / M240i 225–250 kW", "cg": 2, "transmission": null, "seller_type": "uncertain", "location": "Čadca", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "coupe"}, {"id": "197398842", "url": "https://auto.bazos.sk/inzerat/197398842/bmw-rad-2-active-tourer-225xe-phev-xdrive-automat-hybrid.php", "title": "BMW Rad 2 Active Tourer 225xe PHEV 4x4,Plug in Hybrid❤️", "price": 16000, "price_gross": 16000, "fair_price": 15540.0, "discount_pct": -3.0, "verdict": "férová cena", "year": 2019, "km": 116000, "km_per_year": 15800.0, "eg": "Plug-in hybrid 225xe / 230e 165–240 kW", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Pezinok", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmZJICasE00", "url": "https://www.autobazar.eu/detail/bmw-rad-2-active-tourer-225xe-phev-xdrive-automat-plug-in-hybrid/AmZJICasE00/", "price": 15999}], "body": "mpv"}, {"id": "196198800", "url": "https://auto.bazos.sk/inzerat/196198800/bmw-320-cabrio-114tis-km.php", "title": "BMW 220iCABRIO 114.TIS. KM", "price": 16999, "price_gross": 16999, "fair_price": 16490.0, "discount_pct": -3.1, "verdict": "férová cena", "year": 2017, "km": 114000, "km_per_year": 12200.0, "eg": "216i / 218i / 220i / 223i / 228i / 230i benzín 80–190 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Prievidza", "flags": [], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "coupe"}, {"id": "ab-AmR8ARn8o6i", "url": "https://www.autobazar.eu/detail/bmw-rad-2-active-tourer-2-225xe-iperformance-a-t/AmR8ARn8o6i/", "title": "BMW Rad 2 Active Tourer 2   225xe iPerformance A/T", "price": 14999, "price_gross": 14999, "fair_price": 14530.0, "discount_pct": -3.2, "verdict": "férová cena", "year": 2020, "km": 125000, "km_per_year": 19700.0, "eg": "Plug-in hybrid 225xe / 230e 165–240 kW", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Modra", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-Ams8-GMdG_qb", "url": "https://www.autobazar.eu/detail/bmw-rad-2-active-tourer-2-218d-xdrive-luxury-line/Ams8-GMdG_qb/", "title": "BMW Rad 2 Active Tourer 2   218d xDrive Luxury Line", "price": 12500, "price_gross": 12500, "fair_price": 12080.0, "discount_pct": -3.5, "verdict": "férová cena", "year": 2018, "km": 130000, "km_per_year": 15600.0, "eg": "218d / 220d / 225d diesel 85–165 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Modra", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "196774282", "url": "https://auto.bazos.sk/inzerat/196774282/bmw-2-gran-tourer218d-luxury-line.php", "title": "BMW 2 Gran Tourer 218d Luxury Line", "price": 9300, "price_gross": 9300, "fair_price": 8930.0, "discount_pct": -4.2, "verdict": "férová cena", "year": 2016, "km": 234000, "km_per_year": 22600.0, "eg": "218d / 220d / 225d diesel 85–165 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Senica", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-Am2zYyHSE5x", "url": "https://www.autobazar.eu/detail/bmw-rad-2-gran-tourer-2-218d-luxury-line-at/Am2zYyHSE5x/", "price": 9300}], "body": "mpv"}, {"id": "197744887", "url": "https://auto.bazos.sk/inzerat/197744887/bmw-rad-2-active-tourer-2-active-tourer-218d-at.php", "title": "✅ BMW Rad 2 Active Tourer 2 Active Tourer 218d AT ✅", "price": 19990, "price_gross": 19990, "fair_price": 19170.0, "discount_pct": -4.3, "verdict": "férová cena", "year": 2022, "km": 101907, "km_per_year": 23500.0, "eg": "218d / 220d / 225d diesel 85–165 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Lučenec", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "196252137", "url": "https://auto.bazos.sk/inzerat/196252137/bmw-rad-2-active-tourer-220d-xdrive-luxury-line-140kw190hp.php", "title": "BMW Rad 2 Active Tourer 220d xDrive Luxury Line 140kW190HP", "price": 13990, "price_gross": 13990, "fair_price": 13350.0, "discount_pct": -4.8, "verdict": "férová cena", "year": 2015, "km": 103000, "km_per_year": 9100.0, "eg": "218d / 220d / 225d diesel 85–165 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Žilina", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-Ae6lQ3KBmaf", "url": "https://www.autobazar.eu/detail/bmw-rad-2-active-tourer-220d-xdrive-luxury-line-140kw190hp-a8/Ae6lQ3KBmaf/", "price": 13990}], "body": "mpv"}, {"id": "196484013", "url": "https://auto.bazos.sk/inzerat/196484013/bmw-rad-2-gran-tourer-2-216i-advantage.php", "title": "BMW Rad 2 Gran Tourer 2 216i Advantage", "price": 11990, "price_gross": 11990, "fair_price": 11440.0, "discount_pct": -4.8, "verdict": "férová cena", "year": 2019, "km": 122000, "km_per_year": 16600.0, "eg": "216i / 218i / 220i / 223i / 228i / 230i benzín 80–190 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Partizánske", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmZXQiGoeY-", "url": "https://www.autobazar.eu/detail/bmw-rad-2-gran-tourer-2-216i-advantage/AmZXQiGoeY-/", "price": 11990}], "body": "mpv"}, {"id": "197469443", "url": "https://auto.bazos.sk/inzerat/197469443/bmw-rad-2-active-tourer-216d-advantage-at-85.php", "title": "BMW Rad 2 Active Tourer 216d Advantage AT 85", "price": 8990, "price_gross": 8990, "fair_price": 8500.0, "discount_pct": -5.7, "verdict": "férová cena", "year": 2015, "km": 185640, "km_per_year": 16400.0, "eg": "218d / 220d / 225d diesel 85–165 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Michalovce", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-Aega76r8YZh", "url": "https://www.autobazar.eu/detail/bmw-rad-2-active-tourer-2-active-tourer-216d-advantage-at-85kw116hp-a6/Aega76r8YZh/", "price": 8990}], "body": "mpv"}, {"id": "197348439", "url": "https://auto.bazos.sk/inzerat/197348439/bmw-rad-2-active-tourer-225xe-iperformance-at.php", "title": "BMW Rad 2 Active Tourer 225xe iPerformance A/T", "price": 15990, "price_gross": 15990, "fair_price": 15060.0, "discount_pct": -6.2, "verdict": "férová cena", "year": 2020, "km": 128187, "km_per_year": 20200.0, "eg": "Plug-in hybrid 225xe / 230e 165–240 kW", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmnSTzDaqeS", "url": "https://www.autobazar.eu/detail/bmw-rad-2-active-tourer-225xe-iperformance-at-na-splatky-na-protiucet/AmnSTzDaqeS/", "price": 15990}], "body": "mpv"}, {"id": "ab-AbHSOjr9_kV", "url": "https://www.autobazar.eu/detail/bmw-220-gran-coupe/AbHSOjr9_kV/", "title": "BMW 220 Gran Coupe", "price": 44900, "price_gross": 44900, "fair_price": 42230.0, "discount_pct": -6.3, "verdict": "férová cena", "year": 2025, "km": 7957, "km_per_year": 6000.0, "eg": "216i / 218i / 220i / 223i / 228i / 230i benzín 80–190 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava-Petržalka", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "sedan"}, {"id": "ab-AmYLFXArL-T", "url": "https://www.autobazar.eu/detail/bmw-rad-2-gran-tourer-218d-sport-line-f46-110kw-a8-zaruka-aj-na-splatky-protiucet/AmYLFXArL-T/", "title": "BMW Rad 2 Gran Tourer 218d Sport Line F46 / 110kW / A8 / ZÁRUKA / AJ NA SPLÁTKY / PROTIÚČET", "price": 16790, "price_gross": 16790, "fair_price": 15780.0, "discount_pct": -6.4, "verdict": "férová cena", "year": 2019, "km": 113240, "km_per_year": 15400.0, "eg": "218d / 220d / 225d diesel 85–165 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Trenčín", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "ab-AmU6EqwRs_o", "url": "https://www.autobazar.eu/detail/bmw-rad-2-gran-tourer-2-218d-advantage-at/AmU6EqwRs_o/", "title": "BMW Rad 2 Gran Tourer 2   218d Advantage A/T", "price": 7490, "price_gross": 7490, "fair_price": 7000.0, "discount_pct": -7.0, "verdict": "férová cena", "year": 2015, "km": 274000, "km_per_year": 24200.0, "eg": "218d / 220d / 225d diesel 85–165 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava-Ružinov", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "196644097", "url": "https://auto.bazos.sk/inzerat/196644097/bmw-rad-2-gran-tourer-2-218d-luxury-line-at.php", "title": "BMW Rad 2 Gran Tourer 2 218d Luxury Line A/T", "price": 10490, "price_gross": 10490, "fair_price": 9780.0, "discount_pct": -7.2, "verdict": "nad trhom", "year": 2017, "km": 194000, "km_per_year": 20800.0, "eg": "218d / 220d / 225d diesel 85–165 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Komárno", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmbOsc01qV3", "url": "https://www.autobazar.eu/detail/bmw-rad-2-gran-tourer-2-218d-xdrive-luxury-line-at/AmbOsc01qV3/", "price": 10490}], "body": "mpv"}, {"id": "ab-AercSk4m6y1", "url": "https://www.autobazar.eu/detail/bmw-rad-2-coupe-bmw-rad-2-coupe-bmw-m240i-xdrive-coupe/AercSk4m6y1/", "title": "BMW Rad 2 Coupé M240i xDrive", "price": 43499, "price_gross": 43499, "fair_price": 40410.0, "discount_pct": -7.7, "verdict": "nad trhom", "year": 2023, "km": 39600, "km_per_year": 11900.0, "eg": "M235i / M240i 225–250 kW", "cg": 2, "transmission": "automatic", "seller_type": "private", "location": "Banská Bystrica", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197799421", "url": "https://auto.bazos.sk/inzerat/197799421/bmw-m240i-xdrive-coupe-032023-39-600-km-brooklyn-grey.php", "price": 43400}], "body": "coupe"}, {"id": "ab-AmlWTF0fNOm", "url": "https://www.autobazar.eu/detail/bmw-rad-2-gran-tourer-2-218d-xdrive-sport-line-at/AmlWTF0fNOm/", "title": "BMW Rad 2 Gran Tourer 2   218d xDrive Sport Line A/T", "price": 10990, "price_gross": 10990, "fair_price": 10180.0, "discount_pct": -7.9, "verdict": "nad trhom", "year": 2016, "km": 206383, "km_per_year": 20000.0, "eg": "218d / 220d / 225d diesel 85–165 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Trnava", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "mpv"}, {"id": "197748346", "url": "https://auto.bazos.sk/inzerat/197748346/bmw-218d-coupe-f22-sport-line-110kw-led-mt6.php", "title": "BMW 218d Coupe F22 Sport Line 110kw LED MT6", "price": 10500, "price_gross": 10500, "fair_price": 9710.0, "discount_pct": -8.2, "verdict": "nad trhom", "year": 2015, "km": 186000, "km_per_year": 16400.0, "eg": "218d / 220d / 225d diesel 85–165 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Nové Mesto n.Váhom", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "coupe"}, {"id": "ab-Ae-zkuG_Atk", "url": "https://www.autobazar.eu/detail/bmw-rad-2-gran-tourer-218i/Ae-zkuG_Atk/", "title": "BMW Rad 2 Gran Tourer 218i", "price": 14490, "price_gross": 14490, "fair_price": 13340.0, "discount_pct": -8.6, "verdict": "nad trhom", "year": 2019, "km": 144045, "km_per_year": 19600.0, "eg": "216i / 218i / 220i / 223i / 228i / 230i benzín 80–190 kW", "cg": 0, "transmission": "automatic", "seller_type": "private", "location": "Trnava", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197368771", "url": "https://auto.bazos.sk/inzerat/197368771/bmw-218i-gran-tourer-7-miest-automat-usporny-benzin.php", "price": 14490}], "body": "mpv"}, {"id": "ab-AeZPxy5MHZH", "url": "https://www.autobazar.eu/detail/bmw-rad-2-active-tourer-2-active-tourer-216i-at-90kw122hp-a7/AeZPxy5MHZH/", "title": "BMW Rad 2 Active Tourer 2 Active Tourer 216i AT 90kW122HP A7", "price": 26000, "price_gross": 26000, "fair_price": 23900.0, "discount_pct": -8.8, "verdict": "nad trhom", "year": 2024, "km": 30000, "km_per_year": 12900.0, "eg": "216i / 218i / 220i / 223i / 228i / 230i benzín 80–190 kW", "cg": 0, "transmission": "automatic", "seller_type": "private", "location": "Banská Bystrica", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "196942341", "url": "https://auto.bazos.sk/inzerat/196942341/2023-bmw-2-active-218d-110-kw-odpocet-dph.php", "title": "2023 BMW 2 active 218d 110 KW odpočet DPH", "price": 17990, "price_gross": 17990, "fair_price": 16520.0, "discount_pct": -8.9, "verdict": "nad trhom", "year": 2023, "km": 169000, "km_per_year": 50700.0, "eg": "218d / 220d / 225d diesel 85–165 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Trenčín", "flags": ["vysoký nájazd 51000 km/rok – flotila / taxi?"], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AeFfz07no3R", "url": "https://www.autobazar.eu/detail/bmw-rad-2-active-tourer-2-active-tourer-218d-at-110kw150hp-a7/AeFfz07no3R/", "price": 17990}], "body": "mpv"}, {"id": "196047397", "url": "https://auto.bazos.sk/inzerat/196047397/bmw-rad-2-gran-coupe-2-gran-coupe-218i-at-100kw136hp-a7.php", "title": "BMW Rad 2 Gran Coupé 2 Gran Coupé 218i AT 100kW136HP A7", "price": 22690, "price_gross": 22690, "fair_price": 20830.0, "discount_pct": -8.9, "verdict": "nad trhom", "year": 2022, "km": 96000, "km_per_year": 22200.0, "eg": "216i / 218i / 220i / 223i / 228i / 230i benzín 80–190 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Bratislava", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AeXiWdYty69", "url": "https://www.autobazar.eu/detail/bmw-rad-2-gran-coupe-2-gran-coupe-218i-at-100kw136hp-a7/AeXiWdYty69/", "price": 22690}], "body": "sedan"}, {"id": "196663390", "url": "https://auto.bazos.sk/inzerat/196663390/bmw-218i-cabrio-sport-line-2016-136-k-po-servise.php", "title": "BMW 218i Cabrio Sport Line | 2016 | 136 k | po servise |", "price": 11700, "price_gross": 11700, "fair_price": 10730.0, "discount_pct": -9.0, "verdict": "nad trhom", "year": 2016, "km": 136000, "km_per_year": 13200.0, "eg": "216i / 218i / 220i / 223i / 228i / 230i benzín 80–190 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Banská Bystrica", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "coupe"}, {"id": "ab-AmoI_legHxF", "url": "https://www.autobazar.eu/detail/bmw-rad-2-gran-tourer-2-216d-sport-line-at/AmoI_legHxF/", "title": "BMW Rad 2 Gran Tourer 2   216d Sport Line A/T", "price": 8500, "price_gross": 8500, "fair_price": 7790.0, "discount_pct": -9.1, "verdict": "nad trhom", "year": 2017, "km": 241016, "km_per_year": 25800.0, "eg": "218d / 220d / 225d diesel 85–165 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Štiavnička", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "197098870", "url": "https://auto.bazos.sk/inzerat/197098870/bmw-rad-2-gran-tourer-2-216d-sport-line-at-7-miestne.php", "price": 8500}], "body": "mpv"}, {"id": "197122848", "url": "https://auto.bazos.sk/inzerat/197122848/predam-bmw-2-gran-coupe-220d-xdrive.php", "title": "Predám BMW 2 Gran Coupe 220d Xdrive", "price": 26900, "price_gross": 26900, "fair_price": 24660.0, "discount_pct": -9.1, "verdict": "nad trhom", "year": 2021, "km": 102000, "km_per_year": 19100.0, "eg": "218d / 220d / 225d diesel 85–165 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Čadca", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "sedan"}, {"id": "ab-AmbQTdfUQA2", "url": "https://www.autobazar.eu/detail/bmw-rad-2-active-tourer-2-218d-at/AmbQTdfUQA2/", "title": "BMW Rad 2 Active Tourer 2 218d A/T", "price": 18990, "price_gross": 18990, "fair_price": 17390.0, "discount_pct": -9.2, "verdict": "nad trhom", "year": 2022, "km": 106110, "km_per_year": 24500.0, "eg": "218d / 220d / 225d diesel 85–165 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Nové Mesto nad Váhom", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197013427", "url": "https://auto.bazos.sk/inzerat/197013427/bmw-rad-2-active-tourer-2-218d-at.php", "price": 18990}], "body": "mpv"}, {"id": "195933289", "url": "https://auto.bazos.sk/inzerat/195933289/bmw-218i-grancoupe-m-packet.php", "title": "BMW 218i GranCoupe M-Packet - možná dohoda na cene", "price": 23000, "price_gross": 23000, "fair_price": 21000.0, "discount_pct": -9.5, "verdict": "nad trhom", "year": 2020, "km": 83000, "km_per_year": 13100.0, "eg": "216i / 218i / 220i / 223i / 228i / 230i benzín 80–190 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Stará Ľubovňa", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "sedan"}, {"id": "197408468", "url": "https://auto.bazos.sk/inzerat/197408468/bmw-rad-2-gran-coupe-218d-at-110kw150hp-a8.php", "title": "BMW Rad 2 Gran Coupé 218d AT 110kW150HP A8", "price": 17700, "price_gross": 17700, "fair_price": 16110.0, "discount_pct": -9.9, "verdict": "nad trhom", "year": 2020, "km": 153000, "km_per_year": 24200.0, "eg": "218d / 220d / 225d diesel 85–165 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Trnava", "flags": [], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [{"source": "autobazar", "id": "ab-AesC0aCQbxF", "url": "https://www.autobazar.eu/detail/bmw-rad-2-gran-coupe-2-gran-coupe-218d-at-110kw150hp-a8/AesC0aCQbxF/", "price": 17700}], "body": "sedan"}, {"id": "ab-Am8K9i3Z0wq", "url": "https://www.autobazar.eu/detail/bmw-rad-2-cabrio-228i-m-sport-at-180kw-2016-aj-na-splatky-protiucet/Am8K9i3Z0wq/", "title": "BMW Rad 2 Cabrio 228i M Sport A/T, 180kW (2016) / AJ NA SPLÁTKY / PROTIÚČET /", "price": 18990, "price_gross": 18990, "fair_price": 17280.0, "discount_pct": -9.9, "verdict": "nad trhom", "year": 2016, "km": 65180, "km_per_year": 6300.0, "eg": "216i / 218i / 220i / 223i / 228i / 230i benzín 80–190 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Košice-Pereš", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "197593713", "url": "https://auto.bazos.sk/inzerat/197593713/bmw-228i-m-sport-cabrio-at-180kw-2016.php", "price": 18990}], "body": "coupe"}, {"id": "ab-Am7M5Qn6Vtr", "url": "https://www.autobazar.eu/detail/bmw-rad-2-coupe-220d-at-135kw-2016-aj-na-splatky-protiucet/Am7M5Qn6Vtr/", "title": "BMW Rad 2 Coupé 220d A/T, 135kW (2016) / AJ NA SPLÁTKY / PROTIÚČET /", "price": 14790, "price_gross": 14790, "fair_price": 13400.0, "discount_pct": -10.4, "verdict": "nad trhom", "year": 2016, "km": 182937, "km_per_year": 17700.0, "eg": "218d / 220d / 225d diesel 85–165 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Košice-Pereš", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197376106", "url": "https://auto.bazos.sk/inzerat/197376106/bmw-rad-2-coupe-220d-at-135kw-2016.php", "price": 14790}], "body": "coupe"}, {"id": "ab-Ab3AVQpNsbG", "url": "https://www.autobazar.eu/detail/bmw-218i/Ab3AVQpNsbG/", "title": "BMW 218i", "price": 27999, "price_gross": 27999, "fair_price": 25320.0, "discount_pct": -10.6, "verdict": "nad trhom", "year": 2024, "km": 43100, "km_per_year": 18500.0, "eg": "216i / 218i / 220i / 223i / 228i / 230i benzín 80–190 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava - Vajnory", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "ab-AbhFdOnm2BN", "url": "https://www.autobazar.eu/detail/bmw-218i/AbhFdOnm2BN/", "title": "BMW 218i", "price": 29999, "price_gross": 29999, "fair_price": 27110.0, "discount_pct": -10.7, "verdict": "nad trhom", "year": 2024, "km": 16400, "km_per_year": 7000.0, "eg": "216i / 218i / 220i / 223i / 228i / 230i benzín 80–190 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava - Vajnory", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "197762170", "url": "https://auto.bazos.sk/inzerat/197762170/bmw-218i-gran-coupe-m-sport-100-kw-automat-led-2022.php", "title": "BMW 218i Gran Coupé M Sport | 100 kW | Automat | LED | 2022", "price": 22999, "price_gross": 22999, "fair_price": 20750.0, "discount_pct": -10.8, "verdict": "nad trhom", "year": 2022, "km": 110500, "km_per_year": 25500.0, "eg": "216i / 218i / 220i / 223i / 228i / 230i benzín 80–190 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Košice", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "sedan"}, {"id": "196688464", "url": "https://auto.bazos.sk/inzerat/196688464/bmw-rad-2-active-tourer-2-218d-xdrive.php", "title": "BMW Rad 2 Active Tourer 2 218d xDrive", "price": 11380, "price_gross": 14000, "fair_price": 12640.0, "discount_pct": -10.8, "verdict": "nad trhom", "year": 2018, "km": 130000, "km_per_year": 15600.0, "eg": "218d / 220d / 225d diesel 85–165 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Pezinok", "flags": ["inzerovaná cena 11380 € je bez DPH – porovnáva sa cena s DPH 14000 €"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AbZySUcXdVG", "url": "https://www.autobazar.eu/detail/bmw-220/AbZySUcXdVG/", "title": "BMW 220", "price": 36999, "price_gross": 36999, "fair_price": 33370.0, "discount_pct": -10.9, "verdict": "nad trhom", "year": 2025, "km": 35300, "km_per_year": 26500.0, "eg": "216i / 218i / 220i / 223i / 228i / 230i benzín 80–190 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava - Vajnory", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "ab-AmZS5gmV9Jn", "url": "https://www.autobazar.eu/detail/bmw-rad-2-active-tourer-2-218i-at/AmZS5gmV9Jn/", "title": "BMW Rad 2 Active Tourer 2   218i A/T", "price": 22900, "price_gross": 22900, "fair_price": 20560.0, "discount_pct": -11.4, "verdict": "nad trhom", "year": 2024, "km": 85700, "km_per_year": 36700.0, "eg": "216i / 218i / 220i / 223i / 228i / 230i benzín 80–190 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": ["vysoký nájazd 37000 km/rok – flotila / taxi?"], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "mpv"}, {"id": "ab-AeT7qJ5rxau", "url": "https://www.autobazar.eu/detail/bmw-rad-2-coupe-m240i-xdrive/AeT7qJ5rxau/", "title": "BMW Rad 2 Coupé M240i xDrive", "price": 43599, "price_gross": 43599, "fair_price": 38530.0, "discount_pct": -13.2, "verdict": "nad trhom", "year": 2023, "km": 72000, "km_per_year": 21600.0, "eg": "M235i / M240i 225–250 kW", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "coupe"}, {"id": "196213254", "url": "https://auto.bazos.sk/inzerat/196213254/bmw-rad-2-gran-tourer-220d.php", "title": "BMW Rad 2 Gran Tourer 220d", "price": 16450, "price_gross": 16450, "fair_price": 14500.0, "discount_pct": -13.4, "verdict": "nad trhom", "year": 2021, "km": 152238, "km_per_year": 28500.0, "eg": "218d / 220d / 225d diesel 85–165 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Prievidza", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-Am34xJzv1lt", "url": "https://www.autobazar.eu/detail/bmw-rad-2-gran-tourer-2-220d-xdrive-a-t/Am34xJzv1lt/", "price": 15990}], "body": "mpv"}, {"id": "ab-AmyMHuLfqTJ", "url": "https://www.autobazar.eu/detail/bmw-rad-2-active-tourer-4x4-225xe-iperformance-m-sport-at-hybridgarancia-106tkmoverene/AmyMHuLfqTJ/", "title": "BMW Rad 2 Active Tourer 4x4 225xe iPerformance M-Sport AT PHEV=GARANCIA 106.TKM=OVERENÉ", "price": 15999, "price_gross": 15999, "fair_price": 14050.0, "discount_pct": -13.9, "verdict": "nad trhom", "year": 2018, "km": 106667, "km_per_year": 12800.0, "eg": "Plug-in hybrid 225xe / 230e 165–240 kW", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Martin", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "mpv"}, {"id": "ab-AeFOAvtLYph", "url": "https://www.autobazar.eu/detail/bmw-rad-2-gran-tourer-2-gran-tourer-220i-advantage-at-141kw192hp-a7/AeFOAvtLYph/", "title": "BMW Rad 2 Gran Tourer 2 Gran Tourer 220i Advantage AT 141kW192HP A7", "price": 17290, "price_gross": 17290, "fair_price": 15180.0, "discount_pct": -13.9, "verdict": "nad trhom", "year": 2019, "km": 128169, "km_per_year": 17500.0, "eg": "216i / 218i / 220i / 223i / 228i / 230i benzín 80–190 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Hlohovec", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "mpv"}, {"id": "ab-AmA0m2FwJbk", "url": "https://www.autobazar.eu/detail/bmw-rad-2-gran-coupe-2-218i-at/AmA0m2FwJbk/", "title": "BMW Rad 2 Gran Coupé 2   218i A/T", "price": 19990, "price_gross": 19990, "fair_price": 17290.0, "discount_pct": -15.6, "verdict": "výrazne nad trhom", "year": 2020, "km": 172905, "km_per_year": 27300.0, "eg": "216i / 218i / 220i / 223i / 228i / 230i benzín 80–190 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Košice", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197574178", "url": "https://auto.bazos.sk/inzerat/197574178/bmw-rad-2-grancoupe-2-218i-at.php", "price": 19900}], "body": "sedan"}, {"id": "197031783", "url": "https://auto.bazos.sk/inzerat/197031783/bmw-2-gran-tourer-2-gran-tourer-218d-110kw150hp-m6.php", "title": "BMW 2 Gran Tourer 2 Gran Tourer 218d 110kW150HP M6", "price": 13999, "price_gross": 13999, "fair_price": 11940.0, "discount_pct": -17.3, "verdict": "výrazne nad trhom", "year": 2019, "km": 120000, "km_per_year": 16400.0, "eg": "218d / 220d / 225d diesel 85–165 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Považská Bystrica", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "196587345", "url": "https://auto.bazos.sk/inzerat/196587345/bmw-218i-gran-coupe-m-sport-automat-2022-sr-povod.php", "title": "BMW 218i Gran Coupé M Sport, Automat, 2022, SR pôvod", "price": 21499, "price_gross": 21499, "fair_price": 18320.0, "discount_pct": -17.3, "verdict": "výrazne nad trhom", "year": 2022, "km": 138000, "km_per_year": 31800.0, "eg": "216i / 218i / 220i / 223i / 228i / 230i benzín 80–190 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Nitra", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "sedan"}, {"id": "ab-AmKf8Q91RLd", "url": "https://www.autobazar.eu/detail/bmw-radu-220d-active-tourer/AmKf8Q91RLd/", "title": "BMW  radu 220d Active Tourer", "price": 36900, "price_gross": 36900, "fair_price": 31370.0, "discount_pct": -17.6, "verdict": "výrazne nad trhom", "year": 2024, "km": 2000, "km_per_year": 900.0, "eg": "218d / 220d / 225d diesel 85–165 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Dunajská Streda", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AbVw9iaP89x", "url": "https://www.autobazar.eu/detail/bmw-220d-gran-coupe/AbVw9iaP89x/", "title": "BMW 220d Gran Coupe", "price": 42900, "price_gross": 42900, "fair_price": 36380.0, "discount_pct": -17.9, "verdict": "výrazne nad trhom", "year": 2025, "km": 4978, "km_per_year": 3700.0, "eg": "218d / 220d / 225d diesel 85–165 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Trnava", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "sedan"}, {"id": "ab-AeFblYN0460", "url": "https://www.autobazar.eu/detail/bmw-rad-2-active-tourer-2-active-tourer-220d-xdrive-m-sport-140kw190hp-a8/AeFblYN0460/", "title": "BMW Rad 2 Active Tourer 2 Active Tourer 220d xDrive M Sport 140kW190HP A8", "price": 14500, "price_gross": 14500, "fair_price": 12280.0, "discount_pct": -18.1, "verdict": "výrazne nad trhom", "year": 2015, "km": 147300, "km_per_year": 13000.0, "eg": "218d / 220d / 225d diesel 85–165 kW", "cg": 1, "transmission": "automatic", "seller_type": "private", "location": "Bratislava-Ružinov", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "197780648", "url": "https://auto.bazos.sk/inzerat/197780648/bmw-m240i-cabrio-2017.php", "title": "BMW M240i Cabrio 2017", "price": 26499, "price_gross": 26499, "fair_price": 22220.0, "discount_pct": -19.2, "verdict": "výrazne nad trhom", "year": 2017, "km": 44000, "km_per_year": 4700.0, "eg": "M235i / M240i 225–250 kW", "cg": 2, "transmission": null, "seller_type": "uncertain", "location": "Bratislava", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "coupe"}, {"id": "197614984", "url": "https://auto.bazos.sk/inzerat/197614984/bmw-216d-gran-tourer-7-miestne.php", "title": "BMW 216d Gran Tourer 7-miestne", "price": 11000, "price_gross": 11000, "fair_price": 9130.0, "discount_pct": -20.5, "verdict": "výrazne nad trhom", "year": 2016, "km": 206100, "km_per_year": 19900.0, "eg": "218d / 220d / 225d diesel 85–165 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Pezinok", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AeTwQx4wfix", "url": "https://www.autobazar.eu/detail/bmw-rad-2-coupe-m240i-xdrive/AeTwQx4wfix/", "title": "BMW Rad 2 Coupé M240i xDrive", "price": 54800, "price_gross": 54800, "fair_price": 44750.0, "discount_pct": -22.5, "verdict": "výrazne nad trhom", "year": 2023, "km": 27600, "km_per_year": 8300.0, "eg": "M235i / M240i 225–250 kW", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Rovinka", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "coupe"}, {"id": "ab-AmQAaniDiTi", "url": "https://www.autobazar.eu/detail/bmw-rad-2-active-tourer-2-218i-a-t/AmQAaniDiTi/", "title": "BMW Rad 2 Active Tourer 2   218i A/T", "price": 23900, "price_gross": 23900, "fair_price": 19420.0, "discount_pct": -23.1, "verdict": "výrazne nad trhom", "year": 2022, "km": 71000, "km_per_year": 16400.0, "eg": "216i / 218i / 220i / 223i / 228i / 230i benzín 80–190 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava-Nové Mesto", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AmKAovphZ0e", "url": "https://www.autobazar.eu/detail/bmw-rad-2-active-tourer-2-218i-at/AmKAovphZ0e/", "title": "BMW Rad 2 Active Tourer 2   218i A/T", "price": 21900, "price_gross": 21900, "fair_price": 17590.0, "discount_pct": -24.5, "verdict": "výrazne nad trhom", "year": 2023, "km": 116000, "km_per_year": 34800.0, "eg": "216i / 218i / 220i / 223i / 228i / 230i benzín 80–190 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "mpv"}, {"id": "ab-AeN8Cr7STsn", "url": "https://www.autobazar.eu/detail/bmw-rad-2-cabrio-cabrio-218i-sport-line-100kw136hp-m6/AeN8Cr7STsn/", "title": "BMW Rad 2 Cabrio Cabrio 218i Sport Line 100kW136HP M6", "price": 11700, "price_gross": 11700, "fair_price": 9240.0, "discount_pct": -26.7, "verdict": "výrazne nad trhom", "year": 2016, "km": 152000, "km_per_year": 14700.0, "eg": "216i / 218i / 220i / 223i / 228i / 230i benzín 80–190 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "coupe"}, {"id": "ab-Ae-BAbRHeik", "url": "https://www.autobazar.eu/detail/bmw-rad-2-cabrio-m-sport-kamera-carplay-keyless-85-tis-km/Ae-BAbRHeik/", "title": "BMW Rad 2 Cabrio M Sport Kamera CarPlay Keyless 85 tis km", "price": 21990, "price_gross": 21990, "fair_price": 17330.0, "discount_pct": -26.9, "verdict": "výrazne nad trhom", "year": 2015, "km": 85100, "km_per_year": 7500.0, "eg": "216i / 218i / 220i / 223i / 228i / 230i benzín 80–190 kW", "cg": 0, "transmission": "automatic", "seller_type": "private", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "197343979", "url": "https://auto.bazos.sk/inzerat/197343979/bmw-220i-cabrio-m-sport-184-k-8-st-automat-carplay.php", "price": 21990}], "body": "coupe"}, {"id": "ab-AmAt7w9-iC9i", "url": "https://www.autobazar.eu/detail/bmw-225-20-d-aut-high-executive-2014/AmAt7w9-iC9i/", "title": "BMW 225 2.0 d Aut. High Executive 2014", "price": 13499, "price_gross": 13499, "fair_price": 10130.0, "discount_pct": -33.3, "verdict": "výrazne nad trhom", "year": 2014, "km": 224557, "km_per_year": 18200.0, "eg": "218d / 220d / 225d diesel 85–165 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "196949262", "url": "https://auto.bazos.sk/inzerat/196949262/predam-bmw-230e-xdrive-active-tourer-phev.php", "title": "Predam BMW 230e xDrive Active Tourer PHEV", "price": 32500, "price_gross": 32500, "fair_price": 23890.0, "discount_pct": -36.1, "verdict": "výrazne nad trhom", "year": 2022, "km": 30000, "km_per_year": 6900.0, "eg": "Plug-in hybrid 225xe / 230e 165–240 kW", "cg": 2, "transmission": "automatic", "seller_type": "uncertain", "location": "Malacky", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197521320", "url": "https://auto.bazos.sk/inzerat/197521320/bmw-225d-coupe-m-sport-ac-schnitzer-224-koni.php", "title": "BMW 225d COUPÉ M SPORT | AC SCHNITZER | 224 KONÍ |", "price": 19600, "price_gross": 19600, "fair_price": 13120.0, "discount_pct": -49.3, "verdict": "výrazne nad trhom", "year": 2016, "km": 184725, "km_per_year": 17900.0, "eg": "218d / 220d / 225d diesel 85–165 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Malacky", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "coupe"}, {"id": "196112052", "url": "https://auto.bazos.sk/inzerat/196112052/bmw-m240i-xdrive-cabrio-250-kw.php", "title": "BMW M240i xDrive Cabrio 250 kW", "price": 29990, "price_gross": 29990, "fair_price": 19830.0, "discount_pct": -51.2, "verdict": "výrazne nad trhom", "year": 2018, "km": 129000, "km_per_year": 15500.0, "eg": "M235i / M240i 225–250 kW", "cg": 2, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmmuUCYUcKq", "url": "https://www.autobazar.eu/detail/bmw-rad-2-cabrio-m240i-xdrive-at/AmmuUCYUcKq/", "price": 29990}], "body": "coupe"}, {"id": "197523861", "url": "https://auto.bazos.sk/inzerat/197523861/bmw-218d-gran-tourer-sport-line-7-miest.php", "title": "BMW 218d GRAN TOURER SPORT LINE | 7 MIEST", "price": 19000, "price_gross": 19000, "fair_price": 12400.0, "discount_pct": -53.2, "verdict": "výrazne nad trhom", "year": 2018, "km": 168000, "km_per_year": 20200.0, "eg": "218d / 220d / 225d diesel 85–165 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Malacky", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "196288522", "url": "https://auto.bazos.sk/inzerat/196288522/bmw-220xd-gran-tourer-f46.php", "title": "BMW 220xD Gran Tourer (F46)", "price": 24900, "price_gross": 24900, "fair_price": 14530.0, "discount_pct": -71.4, "verdict": "výrazne nad trhom", "year": 2020, "km": 164500, "km_per_year": 26000.0, "eg": "218d / 220d / 225d diesel 85–165 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Ilava", "flags": [], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "mpv"}, {"id": "196276736", "url": "https://auto.bazos.sk/inzerat/196276736/bmw-m240i-30-benzin.php", "title": "BMW M240i 3.0 Benzín", "price": 29900, "price_gross": 29900, "fair_price": 10400.0, "discount_pct": -187.5, "verdict": "výrazne nad trhom", "year": 2017, "km": 114000, "km_per_year": 12200.0, "eg": "M235i / M240i 225–250 kW", "cg": 2, "transmission": "manual", "seller_type": "uncertain", "location": "Pezinok", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "coupe"}];
+const GROUPS = ["Benzín", "Diesel", "Plug-in hybrid a M235i / M240i"];
+const BODY = {"mpv": "Active / Gran Tourer", "coupe": "kupé / kabriolet", "sedan": "Gran Coupé"};
+const fmt = n => Math.round(n).toLocaleString("sk-SK");
+const eur = n => fmt(n) + " €";
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const TRANS = {automatic: "automat", manual: "manuál"};
+const SRC = {bazos: "bazoš", autobazar: "autobazar.eu", bazarsk: "bazar.sk"};
+
+// --- theme toggle ---------------------------------------------------------
+document.getElementById("themeBtn").onclick = () => {
+  const root = document.documentElement;
+  const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  drawChart();
+};
+
+// --- scatter chart --------------------------------------------------------
+const legend = document.getElementById("legend");
+legend.innerHTML = GROUPS.map((g, i) => `<span><i style="background:var(--s${i+1})"></i>${g}</span>`).join("")
+  + `<span><i class="ring"></i>odporúčaná ponuka</span>`;
+
+function drawChart() {
+  const svg = document.getElementById("chart"), wrap = document.getElementById("chartWrap"), tip = document.getElementById("tip");
+  const W = svg.clientWidth, H = 420, m = {l: 56, r: 16, t: 10, b: 40};
+  const pts = DATA.filter(d => d.km && d.price_gross);
+  const xMax = Math.ceil(Math.max(...pts.map(d => d.km)) / 50000) * 50000;
+  const yMax = Math.ceil(Math.max(...pts.map(d => d.price_gross)) / 5000) * 5000;
+  const x = v => m.l + v / xMax * (W - m.l - m.r), y = v => H - m.b - v / yMax * (H - m.t - m.b);
+  let s = "";
+  for (let v = 0; v <= yMax; v += 5000)
+    s += `<line x1="${m.l}" x2="${W-m.r}" y1="${y(v)}" y2="${y(v)}" stroke="var(--grid)"/><text x="${m.l-8}" y="${y(v)+4}" text-anchor="end">${v/1000} tis. €</text>`;
+  const step = W < 520 ? 100000 : 50000;
+  for (let v = 0; v <= xMax; v += step)
+    s += `<text x="${x(v)}" y="${H-m.b+18}" text-anchor="middle">${v/1000} tis.</text>`;
+  s += `<text x="${(W+m.l)/2}" y="${H-6}" text-anchor="middle">nájazd (km)</text>`;
+  const order = [...pts].sort((a, b) => (a.pick ? 1 : 0) - (b.pick ? 1 : 0));
+  order.forEach(d => {
+    const cx = x(d.km), cy = y(d.price_gross);
+    if (d.pick) s += `<circle cx="${cx}" cy="${cy}" r="9" fill="none" stroke="var(--text)" stroke-width="2"/>`;
+    s += `<circle class="pt" data-id="${d.id}" cx="${cx}" cy="${cy}" r="5" fill="var(--s${d.cg+1})" stroke="var(--surface)" stroke-width="2"/>`;
+  });
+  // invisible bigger hit targets
+  order.forEach(d => s += `<circle class="hit" data-id="${d.id}" cx="${x(d.km)}" cy="${y(d.price_gross)}" r="11" fill="transparent" style="cursor:pointer"/>`);
+  svg.innerHTML = s;
+  const byId = Object.fromEntries(pts.map(d => [d.id, d]));
+  svg.querySelectorAll(".hit").forEach(c => {
+    c.onmouseenter = c.onmousemove = ev => {
+      const d = byId[c.dataset.id];
+      tip.innerHTML = `<b>${esc(d.title)}</b>
+        <div class="row"><span>Cena</span><span>${eur(d.price_gross)}</span></div>
+        <div class="row"><span>Férová cena</span><span>${eur(d.fair_price)}</span></div>
+        <div class="row"><span>Pod trhom</span><span>${d.discount_pct > 0 ? "+" : ""}${d.discount_pct.toLocaleString("sk-SK")} %</span></div>
+        <div class="row"><span>Zdroj</span><span>${SRC[d.source]}${d.also_listed.length ? " + " + d.also_listed.map(a => SRC[a.source]).join(", ") : ""}</span></div>
+        <div class="row"><span>Rok · km</span><span>${d.year} · ${fmt(d.km)}</span></div>
+        <div class="row"><span>Motor</span><span>${esc(d.eg)} ${TRANS[d.transmission] || ""}</span></div>`;
+      tip.style.display = "block";
+      const r = wrap.getBoundingClientRect();
+      let lx = ev.clientX - r.left + 14, ly = ev.clientY - r.top + 14;
+      if (lx + 290 > r.width) lx = ev.clientX - r.left - 290;
+      tip.style.left = lx + "px"; tip.style.top = ly + "px";
+    };
+    c.onmouseleave = () => tip.style.display = "none";
+    c.onclick = () => window.open(byId[c.dataset.id].url, "_blank", "noopener");
+  });
+}
+drawChart();
+addEventListener("resize", drawChart);
+
+// --- full table -----------------------------------------------------------
+const fEngine = document.getElementById("fEngine");
+[...new Set(DATA.map(d => d.eg))].sort().forEach(g => fEngine.insertAdjacentHTML("beforeend", `<option>${esc(g)}</option>`));
+let sortK = "discount_pct", sortDir = -1;
+function discCell(v) {
+  const w = Math.min(Math.abs(v), 30) / 30 * 50;
+  const bar = v >= 0 ? `left:50%;width:${w}%;background:var(--pos)` : `right:50%;width:${w}%;background:var(--neg)`;
+  return `<span class="disc">${v > 0 ? "+" : ""}${v.toLocaleString("sk-SK")} %<span class="dbar"><span style="${bar}"></span></span></span>`;
+}
+function renderTable() {
+  const max = parseFloat(document.getElementById("fMax").value) || Infinity;
+  const tr = document.getElementById("fTrans").value, se = document.getElementById("fSeller").value, en = fEngine.value;
+  const so = document.getElementById("fSource").value, og = document.getElementById("fOrigin").value;
+  const bo = document.getElementById("fBody").value;
+  const rows = DATA.filter(d => (!en || d.eg === en) && (!tr || d.transmission === tr)
+    && (!se || d.seller_type !== "dealer") && d.price_gross <= max
+    && (!so || d.source === so || d.also_listed.some(a => a.source === so)) && (!og || d.origin === og) && (!bo || d.body === bo))
+    .sort((a, b) => { const A = a[sortK], B = b[sortK]; return (typeof A === "string" ? A.localeCompare(B) : A - B) * sortDir; });
+  document.getElementById("count").textContent = `${rows.length} z ${DATA.length} inzerátov`;
+  document.querySelector("#tbl tbody").innerHTML = rows.map(d => `<tr>
+    <td><a href="${d.url}" target="_blank" rel="noopener">${esc(d.title)}</a> ${d.pick ? '<span class="badge pick">odporúčané</span>' : ""}
+      <div class="sub">${BODY[d.body] || "karoséria ?"} · ${esc(d.eg)} · ${TRANS[d.transmission] || "prevodovka ?"} · ${esc(d.location)} · ${d.seller_type === "dealer" ? "predajca/firma" : d.seller_type === "private" ? "súkromník" : "neisté"} · ${SRC[d.source]}${d.origin === "SR" ? " · kúpené v SR" : d.origin === "dovoz" ? " · dovoz" : ""}${d.also_listed.map(a => ` · <a href="${a.url}" target="_blank" rel="noopener">aj na ${SRC[a.source]}</a>`).join("")}</div>
+      ${d.flags.filter(f => !f.startsWith("prevodovka")).map(f => `<div class="flag">⚠ ${esc(f)}</div>`).join("")}</td>
+    <td class="num">${d.year}</td><td class="num">${fmt(d.km)}</td>
+    <td class="num">${eur(d.price_gross)}</td><td class="num">${eur(d.fair_price)}</td>
+    <td class="num">${discCell(d.discount_pct)}</td></tr>`).join("");
+  document.querySelectorAll("#tbl th.sortable").forEach(th => {
+    const base = th.textContent.replace(/ [▾▴]$/, "");
+    th.textContent = base + (th.dataset.k === sortK ? (sortDir < 0 ? " ▾" : " ▴") : "");
+  });
+}
+document.querySelectorAll("#tbl th.sortable").forEach(th => th.onclick = () => {
+  if (sortK === th.dataset.k) sortDir *= -1; else { sortK = th.dataset.k; sortDir = th.dataset.k === "title" ? 1 : -1; }
+  renderTable();
+});
+["fEngine", "fTrans", "fSeller", "fSource", "fBody", "fOrigin", "fMax"].forEach(id => document.getElementById(id).addEventListener("input", renderTable));
+renderTable();
+</script>
+<!-- ferovka-theme --><script defer src="/analytics-config.js"></script><script defer src="/analytics.js"></script><script id="ferovka-chart">/* Férovka – chart → ad links, injected into every report by sync-reports.mjs.
+ *
+ * The reports draw one invisible 11px "hit" circle per ad. In dense charts (and always on a narrow phone) those
+ * circles overlap and the one drawn last wins, so a click/tap often opened a neighbouring ad. Here the pointer is
+ * always resolved to the NEAREST point, the report's own tooltip is shown for that point, and a click opens its ad.
+ * Touch: the first tap shows the tooltip (with a hint), a second tap on the same point opens the ad.
+ */
+(() => {
+  let rows;
+  try { rows = DATA; } catch { return; } // eslint-disable-line no-undef
+  if (!Array.isArray(rows) || !rows.length || !("url" in rows[0])) return;
+  const byId = new Map(rows.map((d) => [String(d.id), d]));
+  const MOUSE = ["mouseover", "mouseout", "mouseenter", "mouseleave", "mousemove", "mousedown", "mouseup", "click"];
+  let lastPointer = "mouse", down = null;
+  // the finger position as it was – Chrome "snaps" the later click of a tap to the centre of a nearby clickable element
+  addEventListener("pointerdown", (e) => { lastPointer = e.pointerType || "mouse"; down = { clientX: e.clientX, clientY: e.clientY }; }, true);
+
+  // the old per-point hit circles must not be targets (they overlap, and touch snapping aims at them)
+  document.head.insertAdjacentHTML("beforeend", "<style>svg circle.hit[data-id],svg circle.pt[data-id]{pointer-events:none}</style>");
+
+  function nearest(svg, ev, radius) {
+    let best = null, bd = Infinity;
+    for (const c of svg.querySelectorAll("circle.pt[data-id]")) {
+      const r = c.getBoundingClientRect();
+      const dx = r.left + r.width / 2 - ev.clientX, dy = r.top + r.height / 2 - ev.clientY;
+      const d = dx * dx + dy * dy;
+      if (d <= bd) { bd = d; best = c; } // ties: the point drawn on top (later) wins – that is the one you see
+    }
+    return best && bd <= radius * radius ? best : null;
+  }
+
+  function bind(svg) {
+    if (svg.__fvLinks) return;
+    svg.__fvLinks = true;
+    let current = null, armed = null;
+    const hitOf = (pt) => pt && svg.querySelector(`circle.hit[data-id="${CSS.escape(pt.dataset.id)}"]`);
+    const fire = (el, type, ev) => {
+      if (!el) return;
+      const e = new MouseEvent(type, { clientX: ev.clientX, clientY: ev.clientY, bubbles: false });
+      e.__fv = true;
+      el.dispatchEvent(e);
+    };
+    const tip = () => (svg.parentElement && svg.parentElement.querySelector("#tip, .tip")) || document.getElementById("tip");
+    const mark = (pt) => {
+      if (current === pt) return;
+      if (current) current.setAttribute("r", current.__r || "5");
+      current = pt;
+      if (pt) { pt.__r = pt.__r || pt.getAttribute("r"); pt.setAttribute("r", String(+pt.__r + 2)); }
+    };
+    const show = (pt, ev, hint) => {
+      mark(pt);
+      if (!pt) { const t = tip(); if (t) t.style.display = "none"; return; }
+      fire(hitOf(pt), "mousemove", ev); // the report's own tooltip, for the nearest point
+      const t = tip();
+      if (t && hint) t.insertAdjacentHTML("beforeend", `<div class="fv-hint">Ťukni ešte raz – otvorí sa inzerát ↗</div>`);
+    };
+    const open = (pt) => {
+      const d = byId.get(pt.dataset.id);
+      if (d && d.url) {
+        try { window.FerovkaAnalytics?.listingClick(d.url, "chart"); } catch { /* analytics must never block an ad */ }
+        window.open(d.url, "_blank", "noopener");
+      }
+    };
+
+    // the per-circle handlers of the report never see real mouse events – only our synthetic ones
+    for (const type of MOUSE) {
+      svg.addEventListener(type, (ev) => {
+        if (ev.__fv) return;
+        ev.stopImmediatePropagation();
+        if (type === "mousemove" && lastPointer === "mouse") {
+          show(nearest(svg, ev, 18), ev, false);
+          svg.style.cursor = current ? "pointer" : "";
+        } else if (type === "mouseleave" && ev.target === svg && lastPointer === "mouse") {
+          show(null, ev);
+        } else if (type === "click") {
+          const touch = lastPointer !== "mouse";
+          const at = touch && down ? down : ev;
+          const pt = nearest(svg, at, touch ? 26 : 18);
+          if (!pt) { armed = null; show(null, ev); return; }
+          if (!touch || armed === pt) { armed = null; open(pt); }
+          else { armed = pt; show(pt, at, true); }
+        }
+      }, true);
+    }
+  }
+
+  const scan = () => document.querySelectorAll("svg").forEach((s) => s.querySelector("circle.pt[data-id]") && bind(s));
+  scan();
+  new MutationObserver(scan).observe(document.body, { childList: true, subtree: true });
+})();
+</script><script id="ferovka-filters">/* Férovka – filters for the whole report, injected into every model report by sync-reports.mjs.
+ *
+ * The reports render the chart (drawChart) and the full ranking (renderTable) from the global DATA array; their own
+ * filter bar only filters the table. Here the filter bar (kept in its place above the ranking) gets more filters (year, price from/to,
+ * km, fuel, discount, picks only, text search) and every filter applies to the chart and the ranking together: DATA is
+ * refilled in place with the matching ads and both are drawn again. "</script" can't occur inside this file.
+ */
+(() => {
+  let data;
+  try { data = DATA; } catch { return; } // eslint-disable-line no-undef
+  if (!Array.isArray(data) || !data.length || typeof renderTable !== "function") return; // eslint-disable-line no-undef
+  const bar = document.querySelector(".filters");
+  if (!bar || bar.dataset.fv) return;
+  bar.dataset.fv = "1";
+  const ALL = data.slice();
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+  const fmt = (n) => Math.round(n).toLocaleString("sk-SK");
+  const norm = (s) => String(s ?? "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+  let groups = null;
+  try { groups = GROUPS; } catch { /* report without groups */ } // eslint-disable-line no-undef
+
+  const FUEL = { diesel: "Diesel", petrol: "Benzín", hybrid: "Hybrid", "plug-in hybrid": "Plug-in hybrid", electric: "Elektro", lpg: "LPG", cng: "CNG" };
+  const fuelOf = (d) => {
+    const e = norm(d.eg);
+    if (/tdi|crdi|dci|hdi|diesel|\bd\b|cdi|\d+d\b|blue/.test(e)) return "Diesel";
+    if (/plug-in|phev|e-hybrid|recharge|\bgte\b|\bt8\b|\b\d{2}e\b|\b\d{3} ?e\b/.test(e)) return "Plug-in hybrid";
+    if (/elektro|electric|\bev\b/.test(e)) return "Elektro";
+    if (/cng|lpg|g-tec|g-tron|tgi|ecofuel/.test(e)) return "Plyn (CNG/LPG)";
+    if (/mild|mhev/.test(e)) return "Benzín"; // mild-hybrid petrol (the diesel ones say TDI / d above)
+    if (/hybrid|hev/.test(e)) return "Hybrid";
+    if (/tsi|tfsi|mpi|fsi|benzin|gdi|dpi|htp|12v|\bt\d\b|\bb[56]\b|\d+i\b|turbo|tce|\bs4\b|rs ?\d|amg|competition|\bm\d{2,3}i?\b|gti|\bx5 m\b/.test(e)) return "Benzín";
+    return d.fuel ? FUEL[d.fuel] || String(d.fuel) : null;
+  };
+
+  // --- controls ---------------------------------------------------------------------------------------------------
+  const years = ALL.map((d) => d.year).filter(Boolean);
+  const yMin = Math.min(...years), yMax = Math.max(...years);
+  const yearOpts = (label) => `<option value="">${label}</option>` +
+    Array.from({ length: yMax - yMin + 1 }, (_, i) => yMax - i).map((y) => `<option>${y}</option>`).join("");
+  const kms = [30000, 50000, 75000, 100000, 150000, 200000, 250000, 300000];
+  const fuels = [...new Set(ALL.map(fuelOf).filter(Boolean))].sort((a, b) => a.localeCompare(b, "sk"));
+  const showGroups = Array.isArray(groups) && groups.length > 1 && ALL.some((d) => Number.isInteger(d.cg));
+
+  const maxInput = $("fMax");
+  if (maxInput) { maxInput.placeholder = "Cena do €"; maxInput.title = "Najvyššia cena (s DPH)"; }
+  const html =
+    `<select id="fvYearFrom" title="Rok výroby od">${yearOpts("Rok od")}</select>` +
+    `<select id="fvYearTo" title="Rok výroby do">${yearOpts("Rok do")}</select>` +
+    `<input id="fvPriceMin" type="number" placeholder="Cena od €" step="500" min="0" title="Najnižšia cena (s DPH)" style="width:110px">`;
+  if (maxInput) maxInput.insertAdjacentHTML("beforebegin", html);
+  else bar.insertAdjacentHTML("afterbegin", html);
+  const more =
+    `<select id="fvKm" title="Najviac najazdených km"><option value="">Nájazd – všetky</option>${kms.map((k) => `<option value="${k}">do ${fmt(k)} km</option>`).join("")}</select>` +
+    (fuels.length > 1 ? `<select id="fvFuel" title="Palivo"><option value="">Všetky palivá</option>${fuels.map((f) => `<option>${esc(f)}</option>`).join("")}</select>` : "") +
+    (showGroups ? `<select id="fvGroup" title="Skupina motorov (farba v grafe)"><option value="">Všetky skupiny</option>${groups.map((g, i) => `<option value="${i}">${esc(g)}</option>`).join("")}</select>` : "") +
+    `<select id="fvDisc" title="O koľko je auto lacnejšie ako férová cena"><option value="">Cena – všetky</option><option value="0">pod férovou cenou</option><option value="10">aspoň 10 % pod trhom</option><option value="20">aspoň 20 % pod trhom</option></select>` +
+    `<input id="fvText" type="search" placeholder="Hľadať (výbava, mesto…)" title="Hľadá v názve inzerátu, motore a lokalite" style="width:170px">` +
+    `<label class="fv-check"><input id="fvPick" type="checkbox"> len odporúčané</label>` +
+    `<button type="button" id="fvReset" class="fv-reset">Zrušiť filtre</button>`;
+  const count = $("count");
+  if (count) count.insertAdjacentHTML("beforebegin", more);
+  else bar.insertAdjacentHTML("beforeend", more);
+
+  // the bar stays where it was – right above the ranking – and also drives the chart; the chart gets a pointer to it
+  const chart = $("chartWrap");
+  const box = document.createElement("div");
+  box.className = "fv-filters";
+  box.id = "filtre";
+  bar.before(box);
+  box.innerHTML = `<div class="fv-head"><b>Filtre</b><span>platia pre rebríček aj graf vyššie</span></div>`;
+  box.appendChild(bar);
+  const note = document.createElement("div");
+  note.className = "fv-note";
+  chart?.before(note);
+
+  document.head.insertAdjacentHTML("beforeend", `<style id="fv-filters-css">
+.fv-filters{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 14px 4px;margin:24px 0 8px}
+.fv-filters .fv-head{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;margin-bottom:8px}
+.fv-filters .fv-head span{color:var(--muted);font-size:13px}
+.fv-filters .filters{margin-bottom:8px}
+.fv-filters .filters .count{flex-basis:100%;margin-left:0}
+.fv-check{display:inline-flex;gap:6px;align-items:center;font-size:13px;color:var(--text-2,var(--text));white-space:nowrap}
+.fv-reset{background:none;border:1px solid var(--border);color:var(--text);border-radius:8px;padding:6px 10px;font:inherit;font-size:13px;cursor:pointer}
+.fv-reset:hover{background:var(--surface-2,var(--surface))}
+.fv-note{color:var(--muted);font-size:13px;margin:0 0 8px}
+.fv-note a{color:inherit}
+.fv-empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:14px;pointer-events:none}
+@media (max-width:600px){.fv-filters .filters select,.fv-filters .filters input[type=number],.fv-filters .filters input[type=search]{flex:1 1 calc(50% - 8px);min-width:0;width:auto!important}}
+</style>`);
+
+  // --- filtering --------------------------------------------------------------------------------------------------
+  const val = (id) => ($(id) ? $(id).value : "");
+  const num = (id) => { const v = parseFloat(val(id)); return Number.isFinite(v) ? v : null; };
+  function matches(d) {
+    const yf = num("fvYearFrom"), yt = num("fvYearTo"), pmin = num("fvPriceMin"), pmax = num("fMax"), km = num("fvKm"), disc = num("fvDisc");
+    const fuel = val("fvFuel"), grp = val("fvGroup"), q = norm(val("fvText")).trim();
+    if (yf != null && !(d.year >= yf)) return false;
+    if (yt != null && !(d.year <= yt)) return false;
+    if (pmin != null && !(d.price_gross >= pmin)) return false;
+    if (pmax != null && !(d.price_gross <= pmax)) return false;
+    if (km != null && !(d.km <= km)) return false;
+    if (disc != null && !(d.discount_pct > disc || (disc > 0 && d.discount_pct >= disc))) return false;
+    if (fuel && fuelOf(d) !== fuel) return false;
+    if (grp !== "" && String(d.cg) !== grp) return false;
+    if ($("fvPick")?.checked && !d.pick) return false;
+    if (q && !q.split(/\s+/).every((w) => norm(`${d.title} ${d.eg ?? ""} ${d.engine ?? ""} ${d.location ?? ""}`).includes(w))) return false;
+    // the report's own filters (engine, gearbox, seller, portal, body, origin) – same rules as its renderTable
+    const en = val("fEngine"), tr = val("fTrans"), se = val("fSeller"), so = val("fSource"), og = val("fOrigin"), bo = val("fBody");
+    if (en && d.eg !== en) return false;
+    if (tr && d.transmission !== tr) return false;
+    if (se && d.seller_type === "dealer") return false;
+    if (so && !(d.source === so || (d.also_listed || []).some((a) => a.source === so))) return false;
+    if (og && d.origin !== og) return false;
+    if (bo && d.body !== bo) return false;
+    return true;
+  }
+  const active = () => [...box.querySelectorAll("select, input")].filter((el) => (el.type === "checkbox" ? el.checked : el.value !== "")).length;
+
+  let drawing = false;
+  function apply() {
+    if (drawing) return;
+    drawing = true;
+    const rows = ALL.filter(matches);
+    data.length = 0;
+    data.push(...rows);
+    const wrap = $("chartWrap");
+    wrap?.querySelector(".fv-empty")?.remove();
+    const plotted = rows.filter((d) => d.km && d.price_gross).length;
+    try {
+      if (typeof drawChart === "function") { // eslint-disable-line no-undef
+        if (plotted) drawChart(); // eslint-disable-line no-undef
+        else { const svg = $("chart"); if (svg) svg.innerHTML = ""; }
+      }
+    } catch (e) { console.warn("chart", e); }
+    if (wrap && !plotted) {
+      if (getComputedStyle(wrap).position === "static") wrap.style.position = "relative";
+      wrap.insertAdjacentHTML("beforeend", `<div class="fv-empty">Filtrom nezodpovedá žiadny inzerát</div>`);
+    }
+    try { renderTable(); } catch (e) { console.warn("table", e); } // eslint-disable-line no-undef
+    const n = active();
+    if (count) count.textContent = `Zobrazených ${fmt(rows.length)} z ${fmt(ALL.length)} inzerátov` + (n ? ` · aktívne filtre: ${n}` : "");
+    note.innerHTML = n
+      ? `Zobrazených ${fmt(rows.length)} z ${fmt(ALL.length)} inzerátov podľa <a href="#filtre">filtrov pri rebríčku</a>.`
+      : `Filtre (rok, cena, nájazd, palivo…) nájdeš <a href="#filtre">pri kompletnom rebríčku</a> – platia aj pre tento graf.`;
+    drawing = false;
+  }
+  box.querySelectorAll("select, input").forEach((el) => el.addEventListener("input", apply));
+  $("fvPick")?.addEventListener("change", apply);
+  $("fvReset").addEventListener("click", () => {
+    box.querySelectorAll("select, input").forEach((el) => { if (el.type === "checkbox") el.checked = false; else el.value = ""; });
+    apply();
+  });
+  apply();
+})();
+</script><!-- /ferovka-theme -->
+</body>
+</html>
