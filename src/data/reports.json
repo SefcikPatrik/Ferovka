@@ -919,6 +919,19 @@
     "r2": "98 %"
   },
   {
+    "slug": "peugeot-408",
+    "file": "peugeot-408-analyza.html",
+    "name": "Peugeot 408",
+    "brand": "Peugeot",
+    "model": "408",
+    "kind": "model",
+    "date": "2026-11-23",
+    "summary": "Analýza aktuálnych inzerátov Peugeot 408 (fastback od 2022, aj plug-in hybrid a E-408) od 12 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (23. 11. 2026). Na portáloch je spolu 107 inzerátov (14 na bazoši, 49 na autobazar.eu, 44 na bazar.sk) – prezreli sme 57 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 50 rôznych áut zo Slovenska.",
+    "ads": 50,
+    "median": "23 390 €",
+    "r2": "86 %"
+  },
+  {
     "slug": "peugeot-traveller",
     "file": "peugeot-traveller-analyza.html",
     "name": "Peugeot Traveller / Expert",
@@ -1075,6 +1088,19 @@
     "r2": "91 %"
   },
   {
+    "slug": "skoda-felicia",
+    "file": "skoda-felicia-analyza.html",
+    "name": "Škoda Felicia",
+    "brand": "Škoda",
+    "model": "Felicia",
+    "kind": "model",
+    "date": "2026-11-23",
+    "summary": "Analýza aktuálnych inzerátov Škoda Felicia (1994–2001, hatchback aj Combi, bez Pick-upu a Fun) od 300 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (23. 11. 2026). Na portáloch je spolu 228 inzerátov (202 na bazoši, 8 na autobazar.eu, 18 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 208 rôznych áut zo Slovenska.",
+    "ads": 208,
+    "median": "1 700 €",
+    "r2": "41 %"
+  },
+  {
     "slug": "tesla-model-y",
     "file": "tesla-model-y-analyza.html",
     "name": "Tesla Model Y",
@@ -1107,6 +1133,38 @@
     }
   },
   {
+    "slug": "vw-golf-plus-sportsvan",
+    "file": "vw-golf-plus-sportsvan-analyza.html",
+    "name": "Volkswagen Golf Plus / Sportsvan",
+    "brand": "Volkswagen",
+    "model": "Golf Plus / Sportsvan",
+    "kind": "model",
+    "date": "2026-11-23",
+    "summary": "Analýza aktuálnych inzerátov VW Golf Plus / Sportsvan (Golf Plus 2005–2014 a Golf Sportsvan 2014–2020) od 2 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (23. 11. 2026). Na portáloch je spolu 10 419 inzerátov (8 176 na bazoši, 1 347 na autobazar.eu, 896 na bazar.sk) – prezreli sme 22 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 1 266 rôznych áut zo Slovenska.",
+    "ads": 1266,
+    "median": "7 490 €",
+    "r2": "94 %",
+    "history": {
+      "updated_at": "2026-11-23T12:33:06",
+      "as_of": "2026-11-23",
+      "coverage": "partial",
+      "baseline_count": 135,
+      "total_count": 135,
+      "active_count": 135,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 135,
+      "paired_median_change_pct": 0,
+      "historical_median": 7490,
+      "seen_median": 7490,
+      "seen_price_count": 135,
+      "last_observed_at": "2026-11-23T11:56:28"
+    }
+  },
+  {
     "slug": "vw-id3",
     "file": "vw-id3-analyza.html",
     "name": "Volkswagen ID.3",
@@ -1119,7 +1177,7 @@
     "median": "20 990 €",
     "r2": "87 %",
     "history": {
-      "updated_at": "2026-11-23T09:53:46",
+      "updated_at": "2026-11-23T12:33:06",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 59,
@@ -1139,6 +1197,38 @@
     }
   },
   {
+    "slug": "vw-id5",
+    "file": "vw-id5-analyza.html",
+    "name": "Volkswagen ID.5",
+    "brand": "Volkswagen",
+    "model": "ID.5",
+    "kind": "model",
+    "date": "2026-11-23",
+    "summary": "Analýza aktuálnych inzerátov VW ID.5 (2021+, SUV kupé vrátane GTX) od 15 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (23. 11. 2026). Na portáloch je spolu 3 193 inzerátov (2 969 na bazoši, 79 na autobazar.eu, 145 na bazar.sk) – prezreli sme 4 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 78 rôznych áut zo Slovenska.",
+    "ads": 78,
+    "median": "28 245 €",
+    "r2": "83 %",
+    "history": {
+      "updated_at": "2026-11-23T12:33:06",
+      "as_of": "2026-11-23",
+      "coverage": "partial",
+      "baseline_count": 64,
+      "total_count": 64,
+      "active_count": 64,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 64,
+      "paired_median_change_pct": 0,
+      "historical_median": 28245,
+      "seen_median": 28245,
+      "seen_price_count": 64,
+      "last_observed_at": "2026-11-23T12:03:12"
+    }
+  },
+  {
     "slug": "vw-taigo",
     "file": "vw-taigo-analyza.html",
     "name": "Volkswagen Taigo",
@@ -1151,7 +1241,7 @@
     "median": "18 200 €",
     "r2": "92 %",
     "history": {
-      "updated_at": "2026-11-23T09:53:46",
+      "updated_at": "2026-11-23T12:33:06",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 47,
@@ -4395,7 +4485,7 @@
     "median": "20 990 €",
     "r2": "95 %",
     "history": {
-      "updated_at": "2026-11-23T09:53:46",
+      "updated_at": "2026-11-23T12:33:06",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 51,
@@ -4427,7 +4517,7 @@
     "median": "6 300 €",
     "r2": "91 %",
     "history": {
-      "updated_at": "2026-11-23T09:53:46",
+      "updated_at": "2026-11-23T12:33:06",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 28,
@@ -4459,23 +4549,23 @@
     "median": "9 990 €",
     "r2": "92 %",
     "history": {
-      "updated_at": "2026-11-23T09:53:46",
+      "updated_at": "2026-11-23T12:33:06",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 1577,
-      "total_count": 3796,
-      "active_count": 0,
+      "total_count": 3812,
+      "active_count": 1712,
       "inactive_count": 0,
-      "unverified_count": 3796,
-      "new_count": 2219,
-      "price_changed_count": 0,
-      "price_lowered_count": 0,
-      "paired_count": 0,
-      "paired_median_change_pct": null,
+      "unverified_count": 2100,
+      "new_count": 2235,
+      "price_changed_count": 109,
+      "price_lowered_count": 104,
+      "paired_count": 440,
+      "paired_median_change_pct": 0,
       "historical_median": 9990,
-      "seen_median": null,
-      "seen_price_count": 0,
-      "last_observed_at": "2026-11-22T02:58:52"
+      "seen_median": 11894,
+      "seen_price_count": 1572,
+      "last_observed_at": "2026-11-23T11:56:30"
     }
   },
   {
@@ -4491,23 +4581,23 @@
     "median": "26 490 €",
     "r2": "81 %",
     "history": {
-      "updated_at": "2026-11-23T09:53:46",
+      "updated_at": "2026-11-23T12:33:06",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 165,
-      "total_count": 165,
-      "active_count": 0,
+      "total_count": 218,
+      "active_count": 92,
       "inactive_count": 0,
-      "unverified_count": 165,
-      "new_count": 0,
-      "price_changed_count": 0,
-      "price_lowered_count": 0,
-      "paired_count": 0,
-      "paired_median_change_pct": null,
-      "historical_median": 26490,
-      "seen_median": null,
-      "seen_price_count": 0,
-      "last_observed_at": "2026-11-22T16:00:30"
+      "unverified_count": 126,
+      "new_count": 53,
+      "price_changed_count": 3,
+      "price_lowered_count": 3,
+      "paired_count": 38,
+      "paired_median_change_pct": 0,
+      "historical_median": 26990,
+      "seen_median": 27990,
+      "seen_price_count": 91,
+      "last_observed_at": "2026-11-23T12:03:12"
     }
   },
   {
@@ -4523,7 +4613,7 @@
     "median": "6 195 €",
     "r2": "87 %",
     "history": {
-      "updated_at": "2026-11-23T09:53:46",
+      "updated_at": "2026-11-23T12:33:06",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 58,
@@ -4555,7 +4645,7 @@
     "median": "24 175 €",
     "r2": "84 %",
     "history": {
-      "updated_at": "2026-11-23T09:53:46",
+      "updated_at": "2026-11-23T12:33:06",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 322,
@@ -4587,7 +4677,7 @@
     "median": "8 200 €",
     "r2": "93 %",
     "history": {
-      "updated_at": "2026-11-23T09:53:46",
+      "updated_at": "2026-11-23T12:33:06",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 23,
@@ -4619,7 +4709,7 @@
     "median": "19 699 €",
     "r2": "92 %",
     "history": {
-      "updated_at": "2026-11-23T09:53:46",
+      "updated_at": "2026-11-23T12:33:06",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 893,
@@ -4651,7 +4741,7 @@
     "median": "26 900 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-23T09:53:46",
+      "updated_at": "2026-11-23T12:33:06",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 529,
@@ -7288,7 +7378,7 @@
     "median": "23 990 €",
     "r2": "84 %",
     "history": {
-      "updated_at": "2026-11-23T09:53:46",
+      "updated_at": "2026-11-23T12:33:06",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 304,
@@ -7320,7 +7410,7 @@
     "median": "9 500 €",
     "r2": "86 %",
     "history": {
-      "updated_at": "2026-11-23T09:53:46",
+      "updated_at": "2026-11-23T12:33:06",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 261,
@@ -7352,7 +7442,7 @@
     "median": "12 500 €",
     "r2": "93 %",
     "history": {
-      "updated_at": "2026-11-23T09:53:46",
+      "updated_at": "2026-11-23T12:33:06",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 1346,
@@ -7384,7 +7474,7 @@
     "median": "5 999 €",
     "r2": "90 %",
     "history": {
-      "updated_at": "2026-11-23T09:53:46",
+      "updated_at": "2026-11-23T12:33:06",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 219,
@@ -7416,7 +7506,7 @@
     "median": "9 950 €",
     "r2": "89 %",
     "history": {
-      "updated_at": "2026-11-23T09:53:46",
+      "updated_at": "2026-11-23T12:33:06",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 241,
@@ -7448,7 +7538,7 @@
     "median": "16 140 €",
     "r2": "96 %",
     "history": {
-      "updated_at": "2026-11-23T09:53:46",
+      "updated_at": "2026-11-23T12:33:06",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 59,
@@ -7480,7 +7570,7 @@
     "median": "18 740 €",
     "r2": "90 %",
     "history": {
-      "updated_at": "2026-11-23T09:53:46",
+      "updated_at": "2026-11-23T12:33:06",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 166,
@@ -7512,7 +7602,7 @@
     "median": "8 500 €",
     "r2": "93 %",
     "history": {
-      "updated_at": "2026-11-23T09:53:46",
+      "updated_at": "2026-11-23T12:33:06",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 463,
@@ -7544,7 +7634,7 @@
     "median": "5 500 €",
     "r2": "89 %",
     "history": {
-      "updated_at": "2026-11-23T09:53:46",
+      "updated_at": "2026-11-23T12:33:06",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 35,
