@@ -1,0 +1,761 @@
+<!doctype html>
+<html lang="sk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Land Rover Discovery – analýza ponúk</title>
+<style>
+:root {
+  color-scheme: light;
+  --bg: #f6f6f4; --surface: #fcfcfb; --surface-2: #f0efec; --border: #e2e1dc;
+  --text: #0b0b0b; --text-2: #52514e; --muted: #7a7974;
+  --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a;
+  --pos: #2a78d6; --neg: #eb6834; --accent: #2a78d6;
+  --good: #1d7f4e; --bad: #b4332f; --grid: #e8e7e3;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #121211; --surface: #1a1a19; --surface-2: #232321; --border: #33332f;
+    --text: #f0efec; --text-2: #c3c2b7; --muted: #8f8e86;
+    --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+    --pos: #3987e5; --neg: #d95926; --accent: #5598e7;
+    --good: #4cc38a; --bad: #f07a76; --grid: #2a2a27;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #121211; --surface: #1a1a19; --surface-2: #232321; --border: #33332f;
+  --text: #f0efec; --text-2: #c3c2b7; --muted: #8f8e86;
+  --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+  --pos: #3987e5; --neg: #d95926; --accent: #5598e7;
+  --good: #4cc38a; --bad: #f07a76; --grid: #2a2a27;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text);
+  font: 15px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+main { max-width: 1120px; margin: 0 auto; padding: 32px 16px 64px; }
+a { color: var(--accent); text-decoration: none; } a:hover { text-decoration: underline; }
+h1 { font-size: 30px; margin: 0 0 4px; letter-spacing: -.01em; }
+h2 { font-size: 21px; margin: 48px 0 6px; }
+h3 { font-size: 15px; margin: 6px 0 4px; line-height: 1.35; }
+.lead { color: var(--text-2); margin: 0 0 20px; max-width: 760px; }
+.section-lead { color: var(--text-2); margin: 0 0 16px; max-width: 800px; }
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
+.kpi { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+.kpi .v { font-size: 26px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.kpi .l { color: var(--text-2); font-size: 13px; }
+.explain { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; margin-top: 12px; }
+.explain p { margin: 6px 0; color: var(--text-2); }
+.explain b { color: var(--text); }
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; }
+.card-head { display: flex; justify-content: space-between; gap: 8px; font-size: 12px; }
+.tag { font-weight: 600; color: var(--accent); }
+.loc { color: var(--muted); }
+.facts { color: var(--text-2); font-size: 13px; }
+.prices { display: grid; grid-template-columns: 1.2fr 1fr .8fr; gap: 8px; margin: 12px 0 8px; }
+.lbl { display: block; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+.big { font-size: 22px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.mid { font-size: 16px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.good { color: var(--good); }
+.meter { height: 6px; background: var(--surface-2); border-radius: 4px; overflow: hidden; }
+.meter span { display: block; height: 100%; background: var(--s1); border-radius: 4px; }
+.news ul { margin: 6px 0 0; padding-left: 20px; } .news li { margin: 4px 0; } .news .down { color: var(--good, #1baf7a); font-weight: 600; }
+.note { font-size: 12.5px; background: var(--surface-2); border-radius: 6px; padding: 6px 8px; margin-top: 8px; color: var(--text-2); }
+.pc { list-style: none; padding: 0; margin: 10px 0 0; font-size: 13.5px; }
+.pc li { padding-left: 20px; position: relative; margin: 3px 0; }
+.pc li.pro::before { content: "+"; position: absolute; left: 4px; color: var(--good); font-weight: 700; }
+.pc li.con::before { content: "–"; position: absolute; left: 4px; color: var(--bad); font-weight: 700; }
+.subhead { font-size: 15px; color: var(--text-2); margin: 22px 0 10px; font-weight: 600; }
+.chart-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 14px 8px; position: relative; }
+.legend { display: flex; flex-wrap: wrap; gap: 16px; font-size: 13px; color: var(--text-2); margin: 0 0 6px 4px; }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; }
+.legend .ring { background: transparent; border: 2px solid var(--text); width: 12px; height: 12px; }
+svg text { fill: var(--muted); font-size: 11px; }
+.tip { position: absolute; pointer-events: none; background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+  padding: 8px 10px; font-size: 12.5px; box-shadow: 0 6px 20px rgba(0,0,0,.15); max-width: 280px; display: none; z-index: 5; }
+.tip b { display: block; margin-bottom: 2px; }
+.tip .row { display: flex; justify-content: space-between; gap: 12px; color: var(--text-2); }
+.tip .row span:last-child { color: var(--text); font-variant-numeric: tabular-nums; }
+table { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; font-size: 13.5px; }
+th, td { padding: 9px 10px; border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; }
+th { font-size: 12px; color: var(--text-2); font-weight: 600; background: var(--surface-2); white-space: nowrap; }
+th.sortable { cursor: pointer; user-select: none; } th.sortable:hover { color: var(--text); }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+.sub { color: var(--text-2); font-size: 12.5px; margin-top: 2px; }
+.stars { color: #c98500; letter-spacing: 1px; white-space: nowrap; } .stars .off { color: var(--border); }
+.cellbar { height: 5px; background: var(--surface-2); border-radius: 3px; margin-bottom: 4px; }
+.cellbar span { display: block; height: 100%; background: var(--s1); border-radius: 3px; }
+.disc { display: inline-flex; align-items: center; gap: 6px; justify-content: flex-end; }
+.dbar { width: 54px; height: 6px; background: var(--surface-2); border-radius: 3px; position: relative; }
+.dbar span { position: absolute; top: 0; height: 100%; border-radius: 3px; }
+.filters { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 10px; align-items: center; }
+.filters select, .filters input { background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 6px 8px; font: inherit; font-size: 13px; }
+.filters .count { color: var(--muted); font-size: 13px; margin-left: auto; }
+.table-scroll { overflow-x: auto; border-radius: 12px; }
+.badge { font-size: 11px; padding: 1px 6px; border-radius: 10px; background: var(--surface-2); color: var(--text-2); white-space: nowrap; }
+.badge.pick { background: var(--s1); color: #fff; }
+.flag { color: var(--bad); font-size: 12px; }
+.warn { background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--neg); border-radius: 10px; padding: 12px 16px; }
+.warn li { margin: 4px 0; }
+.check { columns: 2 300px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px 14px 34px; margin: 0; }
+.check li { margin: 4px 0; break-inside: avoid; }
+footer { color: var(--muted); font-size: 12.5px; margin-top: 48px; border-top: 1px solid var(--border); padding-top: 14px; }
+.theme-btn { float: right; background: var(--surface); color: var(--text-2); border: 1px solid var(--border); border-radius: 8px; padding: 5px 10px; cursor: pointer; font: inherit; font-size: 13px; }
+@media (max-width: 640px) { h1 { font-size: 24px; } .prices { grid-template-columns: 1fr 1fr 1fr; } .big { font-size: 18px; } th, td { padding: 7px 6px; } }
+</style>
+<!-- ferovka-theme --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"><style id="ferovka-theme">/* Férovka look for the generated analyses – injected by sync-reports.mjs after each report's own <style>.
+   Same palette and type as the site; chart colours (--s1..--s3) stay the validated set. */
+:root {
+  --bg: #f5f4ef; --surface: #fdfdfb; --surface-2: #eeede6; --border: #e1dfd6;
+  --text: #0f1513; --text-2: #4f5551; --muted: #6f746f;
+  --accent: #0b8a56; --good: #0b7a4b; --grid: #e6e4dc; --win: #dff3e9;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d110f; --surface: #151a17; --surface-2: #1d2420; --border: #2a322d;
+    --text: #eef1ec; --text-2: #b6bdb6; --muted: #8f978f;
+    --accent: #2fc583; --good: #4cd08f; --grid: #1f2622; --win: #143223;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d110f; --surface: #151a17; --surface-2: #1d2420; --border: #2a322d;
+  --text: #eef1ec; --text-2: #b6bdb6; --muted: #8f978f;
+  --accent: #2fc583; --good: #4cd08f; --grid: #1f2622; --win: #143223;
+}
+
+body { font-family: "Manrope", system-ui, sans-serif; }
+h1, h2 { letter-spacing: -0.02em; font-weight: 800; }
+.tag { color: var(--accent); }
+
+/* photo header (removed by the site's viewer, which shows its own) */
+.fv-hero { position: relative; margin: 0 0 26px; border-radius: 20px; overflow: hidden; aspect-ratio: 21 / 8; background: #0d110f; display: flex; }
+.fv-hero img { flex: 1; min-width: 0; height: 100%; object-fit: cover; animation: fv-zoom 1.4s cubic-bezier(.2,.7,.2,1) both; }
+.fv-collage img + img { border-left: 3px solid #0d110f; }
+.fv-hero::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(180deg, transparent 55%, rgb(13 17 15 / .75)),
+    repeating-linear-gradient(90deg, rgb(47 197 131 / .06) 0 1px, transparent 1px 48px); }
+.fv-hero figcaption { position: absolute; right: 12px; bottom: 8px; z-index: 1; font-size: 11px; color: rgb(255 255 255 / .75); }
+.fv-hero figcaption a { color: inherit; }
+
+/* cards & panels: softer, lift on hover */
+.card, .kpi, .explain, .chart-wrap, .box { border-radius: 16px; }
+.card { transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease; }
+.card:hover { transform: translateY(-3px); border-color: var(--accent); box-shadow: 0 14px 30px -18px rgb(0 0 0 / .45); }
+.badge.pick { background: var(--accent); }
+
+/* entrance animation */
+@keyframes fv-up { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes fv-zoom { from { transform: scale(1.08); filter: brightness(.6); } to { transform: none; filter: none; } }
+h1, .lead, .kpis, .cards .card { animation: fv-up .6s cubic-bezier(.2,.7,.2,1) both; }
+.lead { animation-delay: .08s; }
+.kpis { animation-delay: .16s; }
+.cards .card:nth-child(2) { animation-delay: .06s; }
+.cards .card:nth-child(3) { animation-delay: .12s; }
+.cards .card:nth-child(4) { animation-delay: .18s; }
+.cards .card:nth-child(5) { animation-delay: .24s; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+@media (max-width: 640px) { .fv-hero { aspect-ratio: 16 / 9; border-radius: 14px; } }
+
+/* touch: hint under the chart tooltip (report-chart.js) */
+.fv-hint { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--border, rgba(127,127,127,.3)); font-weight: 700; color: var(--accent, #2fc583); }
+</style><!-- /ferovka-theme -->
+</head>
+<body>
+<main><!-- ferovka-theme --><!-- /ferovka-theme -->
+<button class="theme-btn" id="themeBtn" type="button">Svetlý / tmavý</button>
+<h1>Land Rover Discovery – ktorá ponuka sa oplatí</h1>
+<p class="lead">Analýza aktuálnych inzerátov Land Rover Discovery (Discovery 3, 4 a 5, 2004+, bez Discovery Sport) od 5 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (23. 11. 2026). Na portáloch je spolu 582 inzerátov (211 na bazoši, 243 na autobazar.eu, 128 na bazar.sk) – prezreli sme 96 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 358 rôznych áut zo Slovenska. Každé auto sme porovnali
+s <b>férovou cenou</b>: tú vypočítal model naučený na celom trhu podľa veku, nájazdu, motora, prevodovky a typu predajcu.</p>
+
+<div class="kpis">
+  <div class="kpi"><div class="v">358</div><div class="l">inzerátov Land Rover Discovery (nad 5 000 €)</div></div>
+  <div class="kpi"><div class="v">127</div><div class="l">ohodnotených (majú rok aj km)</div></div>
+  <div class="kpi"><div class="v">21 500 €</div><div class="l">medián ceny s DPH</div></div>
+  <div class="kpi"><div class="v">93 %</div><div class="l">rozdielov v cenách vysvetlí model</div></div>
+</div>
+
+
+<h2>Odkiaľ sú dáta: bazoš, autobazar.eu a bazar.sk</h2>
+<div class="kpis">
+  <div class="kpi"><div class="v">47</div><div class="l">ohodnotených z bazoša</div></div>
+  <div class="kpi"><div class="v">58</div><div class="l">ohodnotených z autobazar.eu</div></div><div class="kpi"><div class="v">22</div><div class="l">ohodnotených z bazar.sk</div></div>
+  <div class="kpi"><div class="v">155</div><div class="l">áut bolo na viacerých portáloch – započítané raz</div></div>
+  <div class="kpi"><div class="v">42 / 15</div><div class="l">s uvedeným pôvodom SR / dovoz</div></div>
+</div>
+<div class="explain">
+  <p><b>Tri portály, jeden trh.</b> Bazoš prehľadal 207 inzerátov, autobazar.eu
+  243, bazar.sk 107. Ponuky z Česka (na autobazar.eu ich je veľa) sme vynechali. Autobazáre často dávajú
+  to isté auto na viac portálov. Takéto dvojice (57 v rebríčku) sme spojili podľa VIN alebo zhody roku, km a ceny,
+  aby sa v modeli nerátali dvakrát. Pri aute nájdeš odkaz na všetky ponuky – niekedy sa líšia cenou.</p>
+  <p><b>Rozdiel medzi portálmi:</b> rovnaké auto je na autobazar.eu v priemere +8,4 %
+  oproti bazošu. Na autobazar.eu predávajú hlavne firmy (41 z 58 ohodnotených). Na bazar.sk je rovnaké auto v priemere +13,4 % oproti bazošu.</p>
+  <p><b>Kúpené v SR vs. dovoz:</b> autá s uvedeným pôvodom zo SR sú oproti autám bez uvedeného pôvodu
+  +2,5 %, dovezené -1,9 %
+  (pri rovnakom veku, nájazde a motore). Pôvod zo SR je výhoda pri overovaní histórie, trh zaň však nepripláca – väčšina
+  inzerátov pôvod jednoducho neuvádza. V tabulke dole si môžeš nechať zobraziť len autá kúpené v SR.</p>
+</div>
+
+<h2>Čo hýbe cenou Land Rover Discovery</h2>
+<p class="section-lead">Toto sa model naučil z trhu. Keď porovnávaš dve autá, tieto čísla ti povedia, koľko má byť
+rozdiel v cene, aby to bolo fér.</p>
+<div class="kpis">
+  <div class="kpi"><div class="v">-2,2 %</div><div class="l">každých ďalších 10 000 km</div></div>
+  <div class="kpi"><div class="v">-8,3 %</div><div class="l">každý rok veku navyše</div></div>
+  <div class="kpi"><div class="v">+2 %</div><div class="l">príplatok za automat (DSG)</div></div>
+  <div class="kpi"><div class="v">+2,9 %</div><div class="l">príplatok u predajcu / firmy</div></div>
+  <div class="kpi"><div class="v">-0,8 %</div><div class="l">Discovery 5 (2017+) oproti cene podľa veku</div></div>
+  <div class="kpi"><div class="v">+1,8 %</div><div class="l">príplatok za automat</div></div>
+</div>
+<div class="explain">
+  <p><b>Príklad:</b> dva rovnaké Discovery 4 3.0 SDV6 z roku 2013, jedno má 60 tis. km, druhé 120 tis. km. Druhé má byť
+  približne o 13 % lacnejšie (6 × -2,2 %). Ak je lacnejšie len o 5 %, preplácaš kilometre.</p>
+  <p><b>Ako čítať „pod trhom“:</b> +15 % znamená, že auto stojí o 15 % menej, než by malo podľa trhu. Bežný rozptyl
+  cien je asi ±22 %, takže až zľava nad ~10–15 % je naozaj výnimočná. Pri takej zľave vždy zisti, prečo je auto lacné
+  (stav, história, nájazd).</p>
+  <p><b>DPH:</b> ceny uvedené bez DPH (napr. „10 300 € netto“) sme prepočítali na cenu s DPH, ktorú zaplatí súkromná osoba.</p>
+</div>
+
+<h2>Odporúčané ponuky</h2>
+<p class="section-lead">Kandidáti s najlepším pomerom cena / vek / nájazd, ktorých celý inzerát sme prečítali.
+Zoradené podľa toho, ako ich odporúčame.</p>
+<div class="subhead">Discovery 5 (2017+) – najlepší pomer cena / vek</div>
+<div class="cards">
+<article class="card">
+  <div class="card-head"><span class="tag">Discovery 3.0D MHEV SE z 2025 so 17 tis. km</span><span class="loc">Banská Bystrica</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/land-rover-discovery-30d-hybrid-nafta-hev-se-awd/Am6IgvXvSx4/" target="_blank" rel="noopener">Land Rover Discovery 3.0D Hybrid ( Nafta + HEV)  SE AWD</a></h3>
+  <div class="facts">2025 · 17 060 km · 2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · kúpené v SR · aj na <a href='https://auto.bazar.sk/39573665-land-rover-discovery-3-0d-hybrid-nafta-hev-se-awd/' target='_blank' rel='noopener'>bazar.sk</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">49 990 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">69 370 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+27.9 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:93%"></span></div>
+  <ul class="pc"><li class="pro">2025, 3.0 diesel mild hybrid, automat, 4x4, 17 tis. km</li><li class="pro">Slovenské ŠPZ, takmer nové auto so zárukou</li><li class="pro">~28 % pod férovou cenou</li><li class="con">Inzerát so stručným popisom – over výbavu</li><li class="con">Predáva autobazár</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 149 dní (od 27. 6.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Discovery 5 SDV6 306 k HSE za 19 990 €</span><span class="loc">Nové Zámky</span></div>
+  <h3><a href="https://auto.bazar.sk/39715860-land-rover-discovery-3-0d-sdv6-306k-hse-awd-a-t/" target="_blank" rel="noopener">Land Rover Discovery 3.0D SDV6 306k HSE AWD A/T</a></h3>
+  <div class="facts">2020 · 192 196 km · 2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazar.sk</b> · aj na <a href='https://auto.bazos.sk/inzerat/197573071/land-rover-discovery-30d-sdv6-306k-hse-awd-full-servis.php' target='_blank' rel='noopener'>bazoš</a> · aj na <a href='https://www.autobazar.eu/detail/land-rover-discovery-30d-sdv6-306k-hse-awd-at/AmYkfBbf3df/' target='_blank' rel='noopener'>autobazar.eu</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">19 990 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">26 030 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+23.2 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:77%"></span></div>
+  <ul class="pc"><li class="pro">2020, 3.0 SDV6 225 kW, automat, 4x4, 7 miest</li><li class="pro">Vysoká výbava HSE, VIN v inzeráte, STK do 6/2028</li><li class="pro">~23 % pod férovou cenou</li><li class="con">Vyšší nájazd 192 tis. km</li><li class="con">Predáva autobazár</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 7 dní (od 16. 11.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Discovery D250 R-Dynamic HSE z operatívneho leasingu</span><span class="loc">Hlohovec</span></div>
+  <h3><a href="https://auto.bazar.sk/39571810-land-rover-discovery-3-0-i6-d250-mhev-r-dynamic-hse-awd-a-t-5-2/" target="_blank" rel="noopener">Land Rover Discovery 3.0 I6 D250 MHEV R-Dynamic HSE AWD A/T 5+2</a></h3>
+  <div class="facts">2022 · 66 850 km · 2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazar.sk</b> · kúpené v SR · aj na <a href='https://www.autobazar.eu/detail/land-rover-discovery-30-i6-d250-mhev-r-dynamic-hse-awd-at-52/AmiPPUDUYuM/' target='_blank' rel='noopener'>autobazar.eu</a> · aj na <a href='https://auto.bazos.sk/inzerat/196204101/land-rover-discovery-30-i6-d250-mhev-r-dynamic-hse-awd-at.php' target='_blank' rel='noopener'>bazoš</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">36 985 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">44 580 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+17.0 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:57%"></span></div>
+  <ul class="pc"><li class="pro">2022, 3.0 I6 D250 mild hybrid, automat, 7 miest, 67 tis. km</li><li class="pro">Pôvod SR, úplná servisná história, garancia km</li><li class="pro">~17 % pod férovou cenou</li><li class="con">Predáva autobazár</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke aspoň 49 dní</p><!-- history-card:end --></article></div>
+<div class="subhead">Lacnejšie Discovery do 20 000 €</div>
+<div class="cards">
+<article class="card">
+  <div class="card-head"><span class="tag">Discovery 3 2.7 TDV6 s manuálom a novým kompresorom</span><span class="loc">Topoľčany</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197777162/land-rover-discovery-3-27-tdi-4x4.php" target="_blank" rel="noopener">Land Rover Discovery 3 2,7 TDi 4X4</a></h3>
+  <div class="facts">2009 · 182 000 km · 2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW · manuál · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">6 500 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">8 390 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+22.5 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:75%"></span></div>
+  <ul class="pc"><li class="pro">2009, 2.7 TDV6 140 kW, manuál, 4x4, 182 tis. km</li><li class="pro">Nový kompresor vzduchového podvozku, 2 kľúče</li><li class="pro">~23 % pod férovou cenou</li><li class="con">Predáva autobazár</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 1 deň (od 22. 11.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Discovery 3 2.7 TDV6 HSE automat</span><span class="loc">Bratislava</span></div>
+  <h3><a href="https://auto.bazar.sk/39734298-land-rover-discovery-2-7-tdv6-hse-a-t/" target="_blank" rel="noopener">Land Rover Discovery 2.7 TDV6 HSE A/T</a></h3>
+  <div class="facts">2009 · 178 500 km · 2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazar.sk</b> · aj na <a href='https://auto.bazos.sk/inzerat/196647350/land-rover-discovery-27dieselautomat4x4vzduch-podvozok.php' target='_blank' rel='noopener'>bazoš</a> · aj na <a href='https://www.autobazar.eu/detail/land-rover-discovery-27-tdv6-hse-at/Amh-_-o35Eo/' target='_blank' rel='noopener'>autobazar.eu</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">7 900 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">10 240 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+22.9 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:76%"></span></div>
+  <ul class="pc"><li class="pro">2009, 2.7 TDV6 140 kW, automat, 179 tis. km</li><li class="pro">Najvyššia výbava HSE, STK do 3/2027</li><li class="pro">~23 % pod férovou cenou</li><li class="con">Over vzduchový podvozok</li><li class="con">Predáva autobazár</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke aspoň 35 dní</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">Discovery 4 SDV6 od súkromníka za 8 600 €</span><span class="loc">Nová Baňa</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/land-rover-discovery-30-sdv6-se-188kw256hp-a8/Ae4QOv-lmwb/" target="_blank" rel="noopener">Land Rover Discovery 3.0 SDV6 SE 188kW256HP A8</a></h3>
+  <div class="facts">2012 · 292 000 km · 2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW · automat · súkromník</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">8 600 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">11 300 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+23.9 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:80%"></span></div>
+  <ul class="pc"><li class="pro">2012, 3.0 SDV6 188 kW, automat A8, 4x4</li><li class="pro">Súkromný predajca, pravidelný servis</li><li class="pro">~24 % pod férovou cenou</li><li class="con">Vysoký nájazd 292 tis. km</li><li class="con">Inzerát so stručným popisom</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 11 dní (od 12. 11.)</p><!-- history-card:end --></article></div>
+<div class="subhead">Špeciálne prípady</div>
+<div class="cards"></div>
+
+<h2>Cena vs. nájazd: celý trh na jednom grafe</h2>
+<p class="section-lead">Každý bod je jeden inzerát. Čím nižšie bod leží oproti ostatným s podobným nájazdom, tým je auto lacnejšie.
+Krúžkom sú označené odporúčané ponuky. Prejdi myšou na bod a uvidíš detail.</p>
+<div class="chart-wrap" id="chartWrap">
+  <div class="legend" id="legend"></div>
+  <svg id="chart" width="100%" height="420" role="img" aria-label="Bodový graf ceny a nájazdu inzerátov"></svg>
+  <div class="tip" id="tip"></div>
+</div>
+
+<h2>Porovnanie motorov</h2>
+<p class="section-lead">Hodnotenie (hviezdičky) zohľadňuje spoľahlivosť, spoľahlivosť a náklady na prevádzku a pomer cena/výkon.
+Číselné stĺpce sú mediány z ohodnotených inzerátov.</p>
+<div class="table-scroll">
+<table>
+  <thead><tr><th>Motor</th><th>Hodnotenie</th><th class="num">Ponúk</th><th class="num">Medián ceny</th><th class="num">Medián roku</th><th class="num">Medián km</th></tr></thead>
+  <tbody>
+<tr>
+  <td><b>3.0 / 5.0 V8 / P300–P360 benzín 221–386 kW</b><div class="sub">Benzín – výkonný, ale veľmi smädný (13–16 l). Zriedkavý.</div></td>
+  <td><span class="stars" aria-label="3 z 5">★★★<span class="off">★★</span></span></td>
+  <td class="num">2</td>
+  <td class="num"><div class="cellbar"><span style="width:100%"></span></div>22 000 €</td>
+  <td class="num">2019</td>
+  <td class="num">141 016 km</td>
+</tr>
+<tr>
+  <td><b>2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW</b><div class="sub">Diesel 190–300 k so 6–8-st. automatom a pohonom 4x4. Over vzduchový podvozok, turbá a rozvody.</div></td>
+  <td><span class="stars" aria-label="3 z 5">★★★<span class="off">★★</span></span></td>
+  <td class="num">125</td>
+  <td class="num"><div class="cellbar"><span style="width:98%"></span></div>21 500 €</td>
+  <td class="num">2018</td>
+  <td class="num">175 000 km</td>
+</tr></tbody>
+</table>
+</div>
+<div class="explain">
+  <p><b>Land Rover Discovery</b> je veľké terénne SUV so 7 miestami: <b>Discovery 3</b> (2004–2009), <b>Discovery 4</b> (2009–2016) s rámovým podvozkom
+  a hliníkové <b>Discovery 5</b> (od 2017). Výborné v teréne aj pri ťahaní, ale drahé na údržbu.</p>
+  <p><b>Ktorý motor zvoliť?</b> Takmer všetky sú diesely – najrozšírenejší <b>3.0 SDV6/TDV6</b>, pri Discovery 5 aj štvorvalec <b>Sd4</b>.
+  Pri každom kontroluj vzduchový podvozok – oprava stojí stovky až tisíce eur.</p>
+</div>
+
+<h2>Na čo si dať pozor</h2>
+<div class="warn">
+  <p><b>Lacné kvôli extrémnemu nájazdu</b> (viac ako 35 tis. km ročne, typicky flotila alebo taxi):</p>
+  <ul><li><a href='https://www.autobazar.eu/detail/land-rover-discovery-hse-luxury-30d-sdv6-306ps/Am9cSQ_yKKF/' target='_blank' rel='noopener'>Land Rover Discovery HSE LUXURY 3.0D SDV6 306PS</a>: 2019, 377 315 km → 52 000 km/rok. Lacné je kvôli nájazdu.</li><li><a href='https://www.autobazar.eu/detail/discovery-s-d-250-mhev-awd/AbNakoofRKQ/' target='_blank' rel='noopener'>Land Rover Discovery 3.0 I6 D250 MHEV S AWD A/T 5+2</a>: 2024, 87 500 km → 38 000 km/rok. Lacné je kvôli nájazdu.</li><li><a href='https://auto.bazar.sk/38788505-land-rover-discovery-d300-hse-r-dynamic-awd-aut-7m/' target='_blank' rel='noopener'>Land Rover Discovery D300 HSE R-DYNAMIC AWD AUT 7m</a>: 2023, 122 471 km → 37 000 km/rok. Lacné je kvôli nájazdu.</li></ul>
+  <p><b>Ďalšie veci, ktoré sme v inzerátoch našli:</b></p><ul><li>Vyhľadávanie „Discovery“ vracia aj menší Discovery Sport – vyradili sme ho, aj keď ho predajca označil len ako „Discovery“ (podľa VIN SALC).</li><li>Jeden predajca vložil to isté auto osemkrát, iné autá sú na viacerých portáloch – duplicity sme vyradili.</li><li>Pri Discovery 3 a 4 rozhoduje stav vzduchového podvozku a motora viac ako nájazd – počítaj s rezervou na opravy.</li></ul><p><b>Vyradené z porovnania</b> (poškodené autá alebo nezmyselné údaje – model ich nehodnotí):</p><ul><li><a href='https://www.autobazar.eu/detail/land-rover-discovery-30l-td6-hse-luxury-awd-at/AmMVvGYb1SC/' target='_blank' rel='noopener'>Land Rover Discovery 3.0L TD6 HSE Luxury AWD A/T</a> (10 490 €): havarované / poškodené – cena nie je porovnateľná s trhom</li><li><a href='https://www.autobazar.eu/detail/land-rover-discovery-30l-td6-hse-luxury-awd-at/AmqHPe__8L5/' target='_blank' rel='noopener'>Land Rover Discovery 3.0L TD6 HSE Luxury AWD A/T</a> (6 900 €): cena je o 58 % pod trhom – havarované, na diely, záloha/splátka namiesto ceny alebo podvod</li><li><a href='https://www.autobazar.eu/detail/land-rover-discovery-30-i6-d300-mhev-r-dynamic-hse-awd-at-52/AmoTTUzwMJf/' target='_blank' rel='noopener'>Land Rover Discovery 3.0 I6 D300 MHEV R-Dynamic HSE AWD A/T 5+2</a> (12 900 €): cena je o 68 % pod trhom – havarované, na diely, záloha/splátka namiesto ceny alebo podvod</li><li><a href='https://www.autobazar.eu/detail/land-rover-discovery-30-i6-d350-mhev-dynamic-se-awd-at-52/Am-ze1he8VN/' target='_blank' rel='noopener'>Land Rover Discovery 3.0 I6 D350 MHEV Dynamic SE AWD A/T 5+2</a> (29 900 €): cena je o 59 % pod trhom – havarované, na diely, záloha/splátka namiesto ceny alebo podvod</li><li><a href='https://auto.bazos.sk/inzerat/196079281/land-rover-discovery-sport-20d-td4-awd-at-180k.php' target='_blank' rel='noopener'>Land Rover Discovery Sport 2.0D TD4 AWD A/T 180k</a> (15 500 €): 540000 km/rok je nereálne – skontroluj rok a km</li><li><a href='https://www.autobazar.eu/detail/land-rover-discovery-suv-250kw-automat/AeDfD74vZqwC/' target='_blank' rel='noopener'>Land Rover Discovery SUV 250kw Automat</a> (6 000 €): cena je o 60 % pod trhom – havarované, na diely, záloha/splátka namiesto ceny alebo podvod</li><li><a href='https://www.autobazar.eu/detail/land-rover-discovery-30-i6-d250-mhev-s-awd-at/AmAWJwGQU0p/' target='_blank' rel='noopener'>Land Rover Discovery 3.0 I6 D250 MHEV S AWD A/T</a> (74 900 €): 88000 km/rok je nereálne – skontroluj rok a km</li><li><a href='https://auto.bazar.sk/39623365-land-rover-discovery-3-0-d250-183kw-r-dynamic-hse-a8/' target='_blank' rel='noopener'>Land Rover Discovery 3, 0 D250 183kw R-DYNAMIC HSE A8</a> (47 999 €): havarované / poškodené – cena nie je porovnateľná s trhom</li><li><a href='https://auto.bazar.sk/34693733-land-rover-discovery-3-0d-i6-mhev-awd-r-dynamic-hse/' target='_blank' rel='noopener'>Land Rover Discovery 3.0D I6 MHEV AWD R-Dynamic HSE</a> (88 790 €): podozrivo nízky nájazd</li></ul><p><b>Discovery Sport, Range Rover, Defender, Freelander a iné modely z vyhľadávania, Discovery 1 a 2, inzeráty s chybným nájazdom</b> (182 inzerátov) sme z rebríčka vynechali.</p>
+  <p>Ďalších <b>27</b> inzerátov nemá v texte rok alebo kilometre, takže ich nebolo možné ohodnotiť.
+  Ak ťa niektorý zaujme, predajcu sa na tieto údaje opýtaj.</p>
+</div>
+
+<h2>Kompletný rebríček</h2>
+<p class="section-lead">Všetky ohodnotené inzeráty. Kliknutím na hlavičku stĺpca zoraďuješ, filtrom zužuješ výber.</p>
+<div class="filters">
+  <select id="fEngine"><option value="">Všetky motory</option></select>
+  <select id="fTrans"><option value="">Každá prevodovka</option><option value="automatic">Automat</option><option value="manual">Manuál</option></select>
+  <select id="fSeller"><option value="">Všetci predajcovia</option><option value="nodealer">Bez autobazárov</option></select>
+  <select id="fSource"><option value="">Všetky portály</option><option value="bazos">bazoš</option><option value="autobazar">autobazar.eu</option><option value="bazarsk">bazar.sk</option></select>
+  <select id="fBody" hidden><option value=""></option></select>
+  <select id="fOrigin"><option value="">Akýkoľvek pôvod</option><option value="SR">Kúpené v SR</option><option value="dovoz">Dovoz</option></select>
+  <input id="fMax" type="number" placeholder="Max. cena €" step="500" min="0" style="width:120px">
+  <span class="count" id="count"></span>
+</div>
+<div class="table-scroll">
+<table id="tbl">
+  <thead><tr>
+    <th class="sortable" data-k="title">Inzerát</th>
+    <th class="sortable num" data-k="year">Rok</th>
+    <th class="sortable num" data-k="km">Km</th>
+    <th class="sortable num" data-k="price_gross">Cena</th>
+    <th class="sortable num" data-k="fair_price">Férová</th>
+    <th class="sortable num" data-k="discount_pct">Pod trhom ▾</th>
+  </tr></thead>
+  <tbody></tbody>
+</table>
+</div>
+
+<h2>Pred kúpou over</h2>
+<ul class="check">
+  <li>VIN cez Cebia / autoDNA (história km, havárie)</li>
+  <li>Vzduchový podvozok: kompresor, mechy, výška po státí</li>
+  <li>Diesel 3.0: turbá, rozvody, kľukový hriadeľ (TDV6 2.7)</li>
+  <li>Automat a rozvodovka 4x4</li>
+  <li>STK/EK protokol a dátum platnosti</li>
+</ul>
+
+<footer>
+  Zdroj: auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (len ponuky zo Slovenska, to isté auto na viacerých portáloch je započítané raz), sťahované cez lokálny MCP server bazos-mcp (nástroj <code>fair_price</code>), 23. 11. 2026.
+  Model: ridge regresia log(ceny s DPH) podľa veku, veku², km, km², prevodovky, typu predajcu, motora, karosérie, pohonu 4x4, pôvodu (SR / dovoz) a portálu. Vzorka 127
+  inzerátov, R² 93 %. Parametre sú vyťažené z textu inzerátov, a preto môžu obsahovať chyby. Odporúčané ponuky sme overili
+  prečítaním celého inzerátu. Hodnotenie motorov je odborný odhad, nie výsledok modelu.
+</footer>
+</main>
+
+<script>
+const DATA = [{"id": "ab-Am6IgvXvSx4", "url": "https://www.autobazar.eu/detail/land-rover-discovery-30d-hybrid-nafta-hev-se-awd/Am6IgvXvSx4/", "title": "Land Rover Discovery 3.0D Hybrid ( Nafta + HEV)  SE AWD", "price": 49990, "price_gross": 49990, "fair_price": 69370.0, "discount_pct": 27.9, "verdict": "výrazne pod trhom – over prečo", "year": 2025, "km": 17060, "km_per_year": 12800.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Banská Bystrica", "flags": [], "pick": "top", "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-39573665", "url": "https://auto.bazar.sk/39573665-land-rover-discovery-3-0d-hybrid-nafta-hev-se-awd/", "price": 49990}], "body": "suv"}, {"id": "ab-AmRIUoXOjCv", "url": "https://www.autobazar.eu/detail/land-rover-discovery-27-tdv6-se/AmRIUoXOjCv/", "title": "Land Rover Discovery 2.7 TDV6 SE", "price": 5500, "price_gross": 5500, "fair_price": 7580.0, "discount_pct": 27.4, "verdict": "výrazne pod trhom – over prečo", "year": 2006, "km": 250752, "km_per_year": 12300.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Vrútky", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazos", "id": "197585058", "url": "https://auto.bazos.sk/inzerat/197585058/land-rover-discovery.php", "price": 5500}, {"source": "bazarsk", "id": "bs-39698592", "url": "https://auto.bazar.sk/39698592-land-rover-discovery-2-7-tdv6-se/", "price": 5500}], "body": "suv"}, {"id": "197656938", "url": "https://auto.bazos.sk/inzerat/197656938/land-rover-discovery-3-27-tdv6.php", "title": "Land Rover Discovery 3 – 2.7 TDV6", "price": 5000, "price_gross": 5000, "fair_price": 6770.0, "discount_pct": 26.1, "verdict": "výrazne pod trhom – over prečo", "year": 2008, "km": 330000, "km_per_year": 18000.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Žilina", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-Ae4QOv-lmwb", "url": "https://www.autobazar.eu/detail/land-rover-discovery-30-sdv6-se-188kw256hp-a8/Ae4QOv-lmwb/", "title": "Land Rover Discovery 3.0 SDV6 SE 188kW256HP A8", "price": 8600, "price_gross": 8600, "fair_price": 11300.0, "discount_pct": 23.9, "verdict": "výrazne pod trhom – over prečo", "year": 2012, "km": 292000, "km_per_year": 20400.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "private", "location": "Nová Baňa", "flags": [], "pick": "budget", "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "bs-39715860", "url": "https://auto.bazar.sk/39715860-land-rover-discovery-3-0d-sdv6-306k-hse-awd-a-t/", "title": "Land Rover Discovery 3.0D SDV6 306k HSE AWD A/T", "price": 19990, "price_gross": 19990, "fair_price": 26030.0, "discount_pct": 23.2, "verdict": "výrazne pod trhom – over prečo", "year": 2020, "km": 192196, "km_per_year": 30300.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Nové Zámky", "flags": [], "pick": "top", "source": "bazarsk", "origin": null, "also_listed": [{"source": "bazos", "id": "197573071", "url": "https://auto.bazos.sk/inzerat/197573071/land-rover-discovery-30d-sdv6-306k-hse-awd-full-servis.php", "price": 19990}, {"source": "autobazar", "id": "ab-AmYkfBbf3df", "url": "https://www.autobazar.eu/detail/land-rover-discovery-30d-sdv6-306k-hse-awd-at/AmYkfBbf3df/", "price": 19990}], "body": "suv"}, {"id": "bs-39734298", "url": "https://auto.bazar.sk/39734298-land-rover-discovery-2-7-tdv6-hse-a-t/", "title": "Land Rover Discovery 2.7 TDV6 HSE A/T", "price": 7900, "price_gross": 7900, "fair_price": 10240.0, "discount_pct": 22.9, "verdict": "výrazne pod trhom – over prečo", "year": 2009, "km": 178500, "km_per_year": 10300.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": "budget", "source": "bazarsk", "origin": null, "also_listed": [{"source": "bazos", "id": "196647350", "url": "https://auto.bazos.sk/inzerat/196647350/land-rover-discovery-27dieselautomat4x4vzduch-podvozok.php", "price": 7900}, {"source": "autobazar", "id": "ab-Amh-_-o35Eo", "url": "https://www.autobazar.eu/detail/land-rover-discovery-27-tdv6-hse-at/Amh-_-o35Eo/", "price": 7900}], "body": "suv"}, {"id": "197777162", "url": "https://auto.bazos.sk/inzerat/197777162/land-rover-discovery-3-27-tdi-4x4.php", "title": "Land Rover Discovery 3 2,7 TDi 4X4", "price": 6500, "price_gross": 6500, "fair_price": 8390.0, "discount_pct": 22.5, "verdict": "výrazne pod trhom – over prečo", "year": 2009, "km": 182000, "km_per_year": 10500.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Topoľčany", "flags": [], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-Am9cSQ_yKKF", "url": "https://www.autobazar.eu/detail/land-rover-discovery-hse-luxury-30d-sdv6-306ps/Am9cSQ_yKKF/", "title": "Land Rover Discovery HSE LUXURY 3.0D SDV6 306PS", "price": 14999, "price_gross": 14999, "fair_price": 19030.0, "discount_pct": 21.2, "verdict": "výrazne pod trhom – over prečo", "year": 2019, "km": 377315, "km_per_year": 51500.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": ["vysoký nájazd 51000 km/rok – flotila / taxi?"], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-39726636", "url": "https://auto.bazar.sk/39726636-land-rover-discovery-hse-luxury-3-0d-sdv6-306ps/", "price": 14999}], "body": "suv"}, {"id": "195851286", "url": "https://auto.bazos.sk/inzerat/195851286/land-rover-discovery-3.php", "title": "Land rover discovery 3", "price": 5300, "price_gross": 5300, "fair_price": 6640.0, "discount_pct": 20.2, "verdict": "výrazne pod trhom – over prečo", "year": 2006, "km": 450000, "km_per_year": 22100.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Brezno", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "bs-39710591", "url": "https://auto.bazar.sk/39710591-land-rover-discovery-4-3-0-tdv6/", "title": "Land Rover Discovery 4 3,0 TDV6", "price": 16999, "price_gross": 16999, "fair_price": 20770.0, "discount_pct": 18.2, "verdict": "výrazne pod trhom – over prečo", "year": 2016, "km": 141723, "km_per_year": 13700.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava III - Nové Mesto", "flags": [], "pick": null, "source": "bazarsk", "origin": "dovoz", "also_listed": [{"source": "autobazar", "id": "ab-Abl-Uyk-QS-", "url": "https://www.autobazar.eu/detail/land-rover-discovery-4-30-tdv6/Abl-Uyk-QS-/", "price": 16999}], "body": "suv"}, {"id": "bs-39571810", "url": "https://auto.bazar.sk/39571810-land-rover-discovery-3-0-i6-d250-mhev-r-dynamic-hse-awd-a-t-5-2/", "title": "Land Rover Discovery 3.0 I6 D250 MHEV R-Dynamic HSE AWD A/T 5+2", "price": 36985, "price_gross": 36985, "fair_price": 44580.0, "discount_pct": 17.0, "verdict": "výrazne pod trhom – over prečo", "year": 2022, "km": 66850, "km_per_year": 15400.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Hlohovec", "flags": [], "pick": "top", "source": "bazarsk", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AmiPPUDUYuM", "url": "https://www.autobazar.eu/detail/land-rover-discovery-30-i6-d250-mhev-r-dynamic-hse-awd-at-52/AmiPPUDUYuM/", "price": 36985}, {"source": "bazos", "id": "196204101", "url": "https://auto.bazos.sk/inzerat/196204101/land-rover-discovery-30-i6-d250-mhev-r-dynamic-hse-awd-at.php", "price": 36985}], "body": "suv"}, {"id": "ab-Ae5JbrGbscC", "url": "https://www.autobazar.eu/detail/land-rover-discovery-30l-td6-hse-awd-at-190kw258hp-a8/Ae5JbrGbscC/", "title": "Land Rover Discovery 3.0L TD6 HSE AWD AT 190kW258HP A8", "price": 16499, "price_gross": 16499, "fair_price": 19670.0, "discount_pct": 16.1, "verdict": "výrazne pod trhom – over prečo", "year": 2018, "km": 269000, "km_per_year": 32300.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "private", "location": "Brezno", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "197447958", "url": "https://auto.bazos.sk/inzerat/197447958/land-rover-discovery-2010.php", "title": "Land Rover Discovery 2010", "price": 7480, "price_gross": 7480, "fair_price": 8850.0, "discount_pct": 15.5, "verdict": "výrazne pod trhom – over prečo", "year": 2010, "km": 275841, "km_per_year": 16900.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Žiar nad Hronom", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AeSIlcxg3xg", "url": "https://www.autobazar.eu/detail/land-rover-discovery-2019/AeSIlcxg3xg/", "title": "Land Rover Discovery 2.0D SD4 HSE AWD AT 177kW240HP A8", "price": 18000, "price_gross": 18000, "fair_price": 21080.0, "discount_pct": 14.6, "verdict": "pod trhom", "year": 2019, "km": 152000, "km_per_year": 20700.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "private", "location": "Nová Dubnica", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "197815154", "url": "https://auto.bazos.sk/inzerat/197815154/land-rover-discovery-20d-sd4-hse-luxury-awd-at.php", "price": 18900}, {"source": "autobazar", "id": "ab-Amczc6-lRJX", "url": "https://www.autobazar.eu/detail/land-rover-discovery-20d-sd4-hse-luxury-awd-at/Amczc6-lRJX/", "price": 18900}, {"source": "bazarsk", "id": "bs-39778949", "url": "https://auto.bazar.sk/39778949-land-rover-discovery-2-0d-sd4-hse-luxury-awd-a-t/", "price": 18900}], "body": "suv"}, {"id": "ab-AbBoiJmcl_w", "url": "https://www.autobazar.eu/detail/land-rover-discovery-dynamic-se-d250-mhev-awd/AbBoiJmcl_w/", "title": "Land Rover Discovery 3.0 I6 D250 MHEV Dynamic SE AWD A/T 5+2", "price": 67990, "price_gross": 67990, "fair_price": 78310.0, "discount_pct": 13.2, "verdict": "pod trhom", "year": 2026, "km": 10000, "km_per_year": 30000.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Nitra", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39285006", "url": "https://auto.bazar.sk/39285006-land-rover-discovery-3-0-i6-d250-mhev-dynamic-se-awd-a-t-5-2/", "price": 67990}], "body": "suv"}, {"id": "ab-Aem6L2rSLUc", "url": "https://www.autobazar.eu/detail/land-rover-discovery-30l-td6-hse-luxury-awd-at-190kw258hp-a8/Aem6L2rSLUc/", "title": "Land Rover Discovery 3.0L TD6 HSE Luxury AWD AT 190kW258HP A8", "price": 19900, "price_gross": 19900, "fair_price": 22890.0, "discount_pct": 13.1, "verdict": "pod trhom", "year": 2017, "km": 155000, "km_per_year": 16600.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Chrenová", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "196432889", "url": "https://auto.bazos.sk/inzerat/196432889/land-rover-discovery-4-30-sd-v6-hse-top-vybava-offroad.php", "title": "Land Rover Discovery 4 3.0 SD V6 HSE – TOP výbava, OFFROAD", "price": 10499, "price_gross": 10499, "fair_price": 12060.0, "discount_pct": 13.0, "verdict": "pod trhom", "year": 2013, "km": 234000, "km_per_year": 17600.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Bratislava", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AmHBkoYBRa8", "url": "https://www.autobazar.eu/detail/land-rover-discovery-30-sdv6-se-a-t/AmHBkoYBRa8/", "title": "Land Rover Discovery 3.0 SDV6 SE A/T", "price": 9990, "price_gross": 9990, "fair_price": 11420.0, "discount_pct": 12.5, "verdict": "pod trhom", "year": 2009, "km": 209774, "km_per_year": 12100.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Michalovce", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "196713358", "url": "https://auto.bazos.sk/inzerat/196713358/land-rover-discovery-30-sdv6-se-at.php", "price": 9990}, {"source": "bazarsk", "id": "bs-37332836", "url": "https://auto.bazar.sk/37332836-land-rover-discovery-3-0-sdv6-se-a-t/", "price": 9990}], "body": "suv"}, {"id": "bs-39232511", "url": "https://auto.bazar.sk/39232511-land-rover-discovery-3-0d-350ps-mhev-dynamic-hse-awd-auto-vypredaj-skladu/", "title": "Land Rover Discovery 3.0D 350PS MHEV Dynamic HSE AWD Auto - VÝPREDAJ SKLADU!", "price": 89690, "price_gross": 89690, "fair_price": 102040.0, "discount_pct": 12.1, "verdict": "pod trhom", "year": 2026, "km": 3702, "km_per_year": 11100.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Trenčianska Turná", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AmBBOq0js-o", "url": "https://www.autobazar.eu/detail/land-rover-discovery-d350-mhev-dynamic-hse-awd-auto/AmBBOq0js-o/", "price": 89690}], "body": "suv"}, {"id": "ab-AeAfKCh0MFy", "url": "https://www.autobazar.eu/detail/land-rover-discovery-30d-sdv6-306k-hse-awd-at/AeAfKCh0MFy/", "title": "Land Rover Discovery 3.0D SDV6 306k HSE AWD A/T", "price": 30500, "price_gross": 30500, "fair_price": 34550.0, "discount_pct": 11.7, "verdict": "pod trhom", "year": 2021, "km": 84250, "km_per_year": 15800.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Lehôtka pod Brehmi", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "suv"}, {"id": "ab-AmST3AOpriA", "url": "https://www.autobazar.eu/detail/land-rover-discovery-30-i6-d250-mhev-s-awd-at/AmST3AOpriA/", "title": "Land Rover Discovery 3.0 I6 D250 MHEV S AWD A/T", "price": 52900, "price_gross": 52900, "fair_price": 59860.0, "discount_pct": 11.6, "verdict": "pod trhom", "year": 2024, "km": 26500, "km_per_year": 11400.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-39698358", "url": "https://auto.bazar.sk/39698358-land-rover-discovery-3-0-i6-d250-mhev-s-awd-a-t/", "price": 52900}], "body": "suv"}, {"id": "195881545", "url": "https://auto.bazos.sk/inzerat/195881545/discovery-4.php", "title": "LAND ROVER Discovery 4 - Dohoda možná", "price": 7000, "price_gross": 7000, "fair_price": 7830.0, "discount_pct": 10.6, "verdict": "pod trhom", "year": 2010, "km": 302000, "km_per_year": 18500.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Prešov", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AmCnClvHH7Y", "url": "https://www.autobazar.eu/detail/land-rover-discovery-30-sdv6-se/AmCnClvHH7Y/", "title": "Land Rover Discovery 3.0 SDV6 SE", "price": 14490, "price_gross": 14490, "fair_price": 16140.0, "discount_pct": 10.2, "verdict": "pod trhom", "year": 2015, "km": 207394, "km_per_year": 18300.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Banská Bystrica", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-38914248", "url": "https://auto.bazar.sk/38914248-land-rover-discovery-3-0-sdv6-se/", "price": 14490}], "body": "suv"}, {"id": "197648612", "url": "https://auto.bazos.sk/inzerat/197648612/land-rover-discovery-4-30-diesel.php", "title": "Land Rover Discovery 4 | 3.0D | 2009", "price": 8790, "price_gross": 8790, "fair_price": 9790.0, "discount_pct": 10.2, "verdict": "pod trhom", "year": 2009, "km": 260000, "km_per_year": 15000.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Bratislava", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AmsqbUHWfxH", "url": "https://www.autobazar.eu/detail/land-rover-discovery-30-i6-d300-mhev-r-dynamic-hse-awd-at-52/AmsqbUHWfxH/", "title": "Land Rover Discovery 3.0 I6 D300 MHEV R-Dynamic HSE AWD A/T 5+2", "price": 39990, "price_gross": 39990, "fair_price": 44370.0, "discount_pct": 9.9, "verdict": "pod trhom", "year": 2022, "km": 91300, "km_per_year": 21100.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Partizánske", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "196236769", "url": "https://auto.bazos.sk/inzerat/196236769/land-rover-discovery-30d-r-dynamic-hse-7-miest.php", "price": 39990}, {"source": "bazarsk", "id": "bs-39726484", "url": "https://auto.bazar.sk/39726484-land-rover-discovery-3-0-i6-d300-mhev-r-dynamic-hse-awd-a-t-5-2/", "price": 39990}], "body": "suv"}, {"id": "196543293", "url": "https://auto.bazos.sk/inzerat/196543293/land-rover-discovery-4.php", "title": "LAND ROVER DISCOVERY 4", "price": 8600, "price_gross": 8600, "fair_price": 9530.0, "discount_pct": 9.8, "verdict": "pod trhom", "year": 2012, "km": 284400, "km_per_year": 19800.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Martin", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "bs-39453031", "url": "https://auto.bazar.sk/39453031-land-rover-discovery-3-0-tdv6-hse-awd-aut-cz/", "title": "Land Rover Discovery 3.0 TDV6 HSE AWD AUT CZ", "price": 26886, "price_gross": 26886, "fair_price": 29620.0, "discount_pct": 9.2, "verdict": "pod trhom", "year": 2018, "km": 80585, "km_per_year": 9700.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Brno", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AbWX_BoWCVr", "url": "https://www.autobazar.eu/detail/land-rover-discovery-30-tdv6-hse-awd-aut-cz/AbWX_BoWCVr/", "price": 26886}], "body": "suv"}, {"id": "ab-AegdLYfJWEm", "url": "https://www.autobazar.eu/detail/land-rover-discovery-30l-td6-hse-luxury-awd-at-190kw258hp-a8/AegdLYfJWEm/", "title": "Land Rover Discovery 3.0L TD6 HSE Luxury AWD AT 190kW258HP A8", "price": 22990, "price_gross": 22990, "fair_price": 25300.0, "discount_pct": 9.1, "verdict": "pod trhom", "year": 2018, "km": 148000, "km_per_year": 17800.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Beloveža", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "196634868", "url": "https://auto.bazos.sk/inzerat/196634868/land-rover-discovery-30l-td6-hse-luxury-awd-at-190kw258hp.php", "title": "Land Rover Discovery 5 3.0L TD6 HSE Luxury AWD AT 190kW258HP", "price": 19990, "price_gross": 19990, "fair_price": 21930.0, "discount_pct": 8.9, "verdict": "pod trhom", "year": 2018, "km": 177000, "km_per_year": 21200.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Veľký Krtíš", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AeECYDsm2Ki", "url": "https://www.autobazar.eu/detail/land-rover-discovery-30l-td6-hse-luxury-awd-at-190kw258hp-a8/AeECYDsm2Ki/", "price": 19990}], "body": "suv"}, {"id": "ab-Am-a72Zoy3G", "url": "https://www.autobazar.eu/detail/land-rover-discovery-d250-hse-4x4-automat-7-miest/Am-a72Zoy3G/", "title": "Land Rover Discovery D250, HSE, 4X4, Automat, 7 Miest", "price": 34000, "price_gross": 34000, "fair_price": 37010.0, "discount_pct": 8.1, "verdict": "pod trhom", "year": 2022, "km": 57569, "km_per_year": 13300.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Betlenovce", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AeEOnkX7GJV", "url": "https://www.autobazar.eu/detail/land-rover-discovery-30-sdv6-hse-188kw256hp-a8/AeEOnkX7GJV/", "title": "Land Rover Discovery 3.0 SDV6 HSE 188kW256HP A8", "price": 15400, "price_gross": 15400, "fair_price": 16640.0, "discount_pct": 7.4, "verdict": "pod trhom", "year": 2016, "km": 230000, "km_per_year": 22300.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "private", "location": "Bratislava-Dúbravka", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "ab-AeRlW8Zy-oI", "url": "https://www.autobazar.eu/detail/land-rover-discovery-2020/AeRlW8Zy-oI/", "title": "Land Rover Discovery 2020", "price": 21000, "price_gross": 21000, "fair_price": 22500.0, "discount_pct": 6.7, "verdict": "férová cena", "year": 2020, "km": 70000, "km_per_year": 11100.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "private", "location": "Bytča", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "197680874", "url": "https://auto.bazos.sk/inzerat/197680874/land-rover-discovery-2021.php", "title": "Land Rover Discovery 2021", "price": 23000, "price_gross": 23000, "fair_price": 24630.0, "discount_pct": 6.6, "verdict": "férová cena", "year": 2021, "km": 120000, "km_per_year": 22500.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Čadca", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AbHvh0FjUIwf", "url": "https://www.autobazar.eu/detail/land-rover-discovery-s-d-250-mhev-automat-awd/AbHvh0FjUIwf/", "title": "Land Rover Discovery 3.0 I6 D250 MHEV S AWD A/T 5+2", "price": 57990, "price_gross": 57990, "fair_price": 61880.0, "discount_pct": 6.3, "verdict": "férová cena", "year": 2025, "km": 47000, "km_per_year": 35300.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Nitra", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-38382841", "url": "https://auto.bazar.sk/38382841-land-rover-discovery-3-0-i6-d250-mhev-s-awd-a-t-5-2/", "price": 57990}], "body": "suv"}, {"id": "bs-39723318", "url": "https://auto.bazar.sk/39723318-land-rover-discovery-3-0-sdv6-hse/", "title": "Land Rover Discovery 3.0 SDV6 HSE", "price": 15999, "price_gross": 15999, "fair_price": 17050.0, "discount_pct": 6.2, "verdict": "férová cena", "year": 2015, "km": 215325, "km_per_year": 19000.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-Am_TW4BeHQG", "url": "https://www.autobazar.eu/detail/land-rover-discovery-30-sdv6-hse/Am_TW4BeHQG/", "price": 15999}], "body": "suv"}, {"id": "ab-AeE1UpWdVAy", "url": "https://www.autobazar.eu/detail/land-rover-discovery-4-iv/AeE1UpWdVAy/", "title": "Land Rover Discovery 4 IV", "price": 8990, "price_gross": 8990, "fair_price": 9560.0, "discount_pct": 6.0, "verdict": "férová cena", "year": 2011, "km": 295000, "km_per_year": 19200.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "private", "location": "Nemšová", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "196704266", "url": "https://auto.bazos.sk/inzerat/196704266/land-rover-discovery-v.php", "title": "Land Rover Discovery 5", "price": 30500, "price_gross": 30500, "fair_price": 32260.0, "discount_pct": 5.5, "verdict": "férová cena", "year": 2021, "km": 85000, "km_per_year": 15900.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Žiar nad Hronom", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "197287315", "url": "https://auto.bazos.sk/inzerat/197287315/land-rover-discovery-30-tdv6-at-155kw-a6-5d-2011.php", "title": "Land Rover Discovery 3.0 TDV6 A/T, 155kW, A6, 5d.", "price": 10000, "price_gross": 10000, "fair_price": 10570.0, "discount_pct": 5.4, "verdict": "férová cena", "year": 2011, "km": 273976, "km_per_year": 17900.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Žiar nad Hronom", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmyqFbdpgju", "url": "https://www.autobazar.eu/detail/land-rover-discovery-30-tdv6-at-155kw-a6-5d-aj-na-splatky-protiucet/AmyqFbdpgju/", "price": 10000}, {"source": "bazarsk", "id": "bs-39759795", "url": "https://auto.bazar.sk/39759795-land-rover-discovery-3-0-tdv6-a-t-155kw-a6-5d-aj-na-splatky-protiucet/", "price": 10000}], "body": "suv"}, {"id": "ab-AbNakoofRKQ", "url": "https://www.autobazar.eu/detail/discovery-s-d-250-mhev-awd/AbNakoofRKQ/", "title": "Land Rover Discovery 3.0 I6 D250 MHEV S AWD A/T 5+2", "price": 46500, "price_gross": 46500, "fair_price": 49130.0, "discount_pct": 5.4, "verdict": "férová cena", "year": 2024, "km": 87500, "km_per_year": 37500.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Nitra", "flags": ["vysoký nájazd 38000 km/rok – flotila / taxi?"], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39599164", "url": "https://auto.bazar.sk/39599164-land-rover-discovery-3-0-i6-d250-mhev-s-awd-a-t-5-2/", "price": 46500}], "body": "suv"}, {"id": "197539070", "url": "https://auto.bazos.sk/inzerat/197539070/land-rover-discovery-4-30-tdvs-limited.php", "title": "LAND ROVER DISCOVERY 4 3,0 tdvs Limited", "price": 12500, "price_gross": 12500, "fair_price": 13160.0, "discount_pct": 5.0, "verdict": "férová cena", "year": 2013, "km": 210000, "km_per_year": 15800.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Nitra", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AeSkOKkX975", "url": "https://www.autobazar.eu/detail/land-rover-discovery-land-rover-discovery/AeSkOKkX975/", "title": "Land Rover Discovery Land Rover Discovery", "price": 14900, "price_gross": 14900, "fair_price": 15470.0, "discount_pct": 3.7, "verdict": "férová cena", "year": 2018, "km": 169000, "km_per_year": 20300.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "private", "location": "Banská Bystrica", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "suv"}, {"id": "ab-Am0MrzB9JKB", "url": "https://www.autobazar.eu/detail/land-rover-discovery-30-i6-d300-mhev-se-awd-at/Am0MrzB9JKB/", "title": "Land Rover Discovery 3.0 I6 D300 MHEV R-Dynamic SE AWD A/T", "price": 37990, "price_gross": 37990, "fair_price": 39330.0, "discount_pct": 3.4, "verdict": "férová cena", "year": 2022, "km": 130000, "km_per_year": 30000.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Nitra", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39240119", "url": "https://auto.bazar.sk/39240119-land-rover-discovery-3-0-i6-d300-mhev-r-dynamic-se-awd-a-t/", "price": 37990}], "body": "suv"}, {"id": "ab-AezrP0f5RIQ", "url": "https://www.autobazar.eu/detail/land-rover-discovery-30l-td6-hse-luxury-awd-at-190kw258hp-a8/AezrP0f5RIQ/", "title": "Land Rover Discovery 3.0L TD6 HSE Luxury AWD AT 190kW258HP A8", "price": 17000, "price_gross": 17000, "fair_price": 17510.0, "discount_pct": 2.9, "verdict": "férová cena", "year": 2017, "km": 261000, "km_per_year": 28000.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "private", "location": "Piešťany", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "suv"}, {"id": "197295178", "url": "https://auto.bazos.sk/inzerat/197295178/land-rover-discovery-4-2011-180kw-4x4-253t-km.php", "title": "Land Rover Discovery 4, 2011, 180kW, 4x4, 253t km", "price": 8900, "price_gross": 8900, "fair_price": 9120.0, "discount_pct": 2.4, "verdict": "férová cena", "year": 2011, "km": 253500, "km_per_year": 16500.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Košice-okolie", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "196962472", "url": "https://auto.bazos.sk/inzerat/196962472/land-rover-discovery-4-30-sdv6.php", "title": "Land Rover Discovery 4 3.0 SDV6 HSE", "price": 11750, "price_gross": 11750, "fair_price": 11950.0, "discount_pct": 1.7, "verdict": "férová cena", "year": 2014, "km": 283500, "km_per_year": 23000.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Šaľa", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AmreqpxeQHw", "url": "https://www.autobazar.eu/detail/land-rover-discovery-30-i6-d250-mhev-dynamic-se-awd-at/AmreqpxeQHw/", "title": "Land Rover Discovery 3.0 I6 D250 MHEV Dynamic SE AWD A/T", "price": 59900, "price_gross": 59900, "fair_price": 60890.0, "discount_pct": 1.6, "verdict": "férová cena", "year": 2024, "km": 20900, "km_per_year": 9000.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-39516232", "url": "https://auto.bazar.sk/39516232-land-rover-discovery-3-0-i6-d250-mhev-dynamic-se-awd-a-t/", "price": 59900}], "body": "suv"}, {"id": "bs-39765708", "url": "https://auto.bazar.sk/39765708-land-rover-discovery-3-0d-i6-tempest-d350-awd-mhev/", "title": "Land Rover Discovery 3.0D I6 Tempest D350 AWD MHEV", "price": 94990, "price_gross": 94990, "fair_price": 96320.0, "discount_pct": 1.4, "verdict": "férová cena", "year": 2026, "km": 14300, "km_per_year": 42900.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Žilina", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmZg4xzUV9g", "url": "https://www.autobazar.eu/detail/land-rover-discovery-30d-i6-tempest-d350-awd-mhev/AmZg4xzUV9g/", "price": 94990}], "body": "suv"}, {"id": "197567842", "url": "https://auto.bazos.sk/inzerat/197567842/land-rover-discovery-30-black-edition.php", "title": "Land Rover Discovery 3.0 Black Edition", "price": 21500, "price_gross": 21500, "fair_price": 21780.0, "discount_pct": 1.3, "verdict": "férová cena", "year": 2018, "km": 183000, "km_per_year": 22000.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "suv"}, {"id": "bs-39651455", "url": "https://auto.bazar.sk/39651455-land-rover-discovery-2-0l-td4-hse-luxury-awd-a-t/", "title": "Land Rover Discovery 2.0L TD4 HSE Luxury AWD A/T", "price": 12999, "price_gross": 12999, "fair_price": 13150.0, "discount_pct": 1.2, "verdict": "férová cena", "year": 2016, "km": 178640, "km_per_year": 17300.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-Ampz9ExihB3", "url": "https://www.autobazar.eu/detail/land-rover-discovery-20l-td4-hse-luxury-awd-at/Ampz9ExihB3/", "price": 12999}], "body": "suv"}, {"id": "ab-Am_HGtAFLc3", "url": "https://www.autobazar.eu/detail/land-rover-discovery-4-30-tdv6-155kw-at8-4x4/Am_HGtAFLc3/", "title": "Land Rover Discovery 4 3,0 TDV6 155kW A/T8 4x4", "price": 10299, "price_gross": 10299, "fair_price": 10360.0, "discount_pct": 0.5, "verdict": "férová cena", "year": 2012, "km": 210035, "km_per_year": 14700.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Horná Streda", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "196928268", "url": "https://auto.bazos.sk/inzerat/196928268/land-rover-discovery-2016-automat.php", "title": "Land Rover Discovery 2016 automat 2.0 liter,180koní", "price": 14000, "price_gross": 14000, "fair_price": 14040.0, "discount_pct": 0.3, "verdict": "férová cena", "year": 2016, "km": 152727, "km_per_year": 14800.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Nové Zámky", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AmsYvrzNYv6", "url": "https://www.autobazar.eu/detail/land-rover-discovery-27-tdv6-s-at/AmsYvrzNYv6/", "title": "Land Rover Discovery 2.7 TDV6 S A/T", "price": 8999, "price_gross": 8999, "fair_price": 9010.0, "discount_pct": 0.1, "verdict": "férová cena", "year": 2010, "km": 266000, "km_per_year": 16300.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Banská Bystrica", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "196314007", "url": "https://auto.bazos.sk/inzerat/196314007/land-rover-discovery-4-27-tdi.php", "price": 8999}], "body": "suv"}, {"id": "ab-AeqAaa1qh5r", "url": "https://www.autobazar.eu/detail/land-rover-discovery-30d-sdv6-306k-hse-luxury-awd-at-225kw306hp-a8/AeqAaa1qh5r/", "title": "Land Rover Discovery 3.0D SDV6 306k HSE Luxury AWD AT 225kW306HP A8", "price": 22500, "price_gross": 22500, "fair_price": 22460.0, "discount_pct": -0.2, "verdict": "férová cena", "year": 2018, "km": 151000, "km_per_year": 18100.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "private", "location": "Smolenice", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "ab-AecSGbm-Rb_", "url": "https://www.autobazar.eu/detail/land-rover-discovery-4-30-tdv6-se-black-edition/AecSGbm-Rb_/", "title": "Land Rover Discovery 4 _ 3.0 TDV6 SE _ Black Edition", "price": 14200, "price_gross": 14200, "fair_price": 14090.0, "discount_pct": -0.8, "verdict": "férová cena", "year": 2014, "km": 238000, "km_per_year": 19300.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "private", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AmVt4NWW7wl", "url": "https://www.autobazar.eu/detail/land-rover-discovery-30-i6-d300-mhev-hse-awd-at-52/AmVt4NWW7wl/", "title": "Land Rover Discovery 3.0 I6 D300 MHEV HSE AWD A/T 5+2", "price": 44990, "price_gross": 44990, "fair_price": 44440.0, "discount_pct": -1.2, "verdict": "férová cena", "year": 2022, "km": 81500, "km_per_year": 18800.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Nitra", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39613490", "url": "https://auto.bazar.sk/39613490-land-rover-discovery-3-0-i6-d300-mhev-hse-awd-a-t-5-2/", "price": 44990}], "body": "suv"}, {"id": "ab-AeyK0oIBOvJ", "url": "https://www.autobazar.eu/detail/land-rover-discovery-25-td5-e-102kw139hp-m5/AeyK0oIBOvJ/", "title": "Land Rover Discovery 2.5 Td5 E 102kW139HP M5", "price": 6300, "price_gross": 6300, "fair_price": 6210.0, "discount_pct": -1.4, "verdict": "férová cena", "year": 2004, "km": 344000, "km_per_year": 15400.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "manual", "seller_type": "private", "location": "Senec", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "suv"}, {"id": "ab-AeDwJEZtQUx", "url": "https://www.autobazar.eu/detail/land-rover-discovery-30l-td6-hse-awd-a-t/AeDwJEZtQUx/", "title": "Land Rover Discovery 3.0L TD6 HSE AWD A/T", "price": 22500, "price_gross": 22500, "fair_price": 22150.0, "discount_pct": -1.6, "verdict": "férová cena", "year": 2018, "km": 190500, "km_per_year": 22900.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Nitra", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "196997400", "url": "https://auto.bazos.sk/inzerat/196997400/land-rover-discovery-5-tdv6-hse-190kw.php", "price": 22500}], "body": "suv"}, {"id": "196852545", "url": "https://auto.bazos.sk/inzerat/196852545/land-rover-discovery-30d-hse-luxury.php", "title": "Land Rover Discovery 3.0D HSE Luxury", "price": 25900, "price_gross": 25900, "fair_price": 25480.0, "discount_pct": -1.7, "verdict": "férová cena", "year": 2020, "km": 165000, "km_per_year": 26100.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Banská Bystrica", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AmeaEguKlij", "url": "https://www.autobazar.eu/detail/land-rover-discovery-20d-sd4-se-awd-at/AmeaEguKlij/", "title": "Land Rover Discovery 2.0D SD4 SE AWD A/T", "price": 22990, "price_gross": 22990, "fair_price": 22590.0, "discount_pct": -1.8, "verdict": "férová cena", "year": 2018, "km": 98000, "km_per_year": 11800.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Trebišov", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "197171306", "url": "https://auto.bazos.sk/inzerat/197171306/land-rover-discovery-20d-sd4-se-awd-at-odpocet-dph.php", "price": 24990}, {"source": "bazos", "id": "196390307", "url": "https://auto.bazos.sk/inzerat/196390307/land-rover-discovery-20d-sd4-se-awd-at-odpocet-dph.php", "price": 22990}, {"source": "bazarsk", "id": "bs-39225514", "url": "https://auto.bazar.sk/39225514-land-rover-discovery-2-0d-sd4-se-awd-a-t/", "price": 22990}], "body": "suv"}, {"id": "197317856", "url": "https://auto.bazos.sk/inzerat/197317856/land-rover-discovery-4-30-sdv6-188-kw-44-na-vzduchu.php", "title": "Land Rover Discovery 4 3.0 SDV6 188 kW | 4×4 | na vzduchu", "price": 13000, "price_gross": 13000, "fair_price": 12780.0, "discount_pct": -1.8, "verdict": "férová cena", "year": 2016, "km": 303316, "km_per_year": 29400.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Banská Štiavnica", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-Ae8Zmc2dUdF", "url": "https://www.autobazar.eu/detail/land-rover-discovery-30d-sdv6-306k-hse-awd-at-225kw306hp-a8/Ae8Zmc2dUdF/", "title": "Land Rover Discovery 3.0D SDV6 306k HSE AWD AT 225kW306HP A8", "price": 26900, "price_gross": 26900, "fair_price": 26390.0, "discount_pct": -1.9, "verdict": "férová cena", "year": 2020, "km": 175000, "km_per_year": 27600.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Prievidza", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "ab-AeoLzF5-HXk", "url": "https://www.autobazar.eu/detail/land-rover-discovery-20-si4-4x4-automat-servkniha/AeoLzF5-HXk/", "title": "Land Rover Discovery 2.0 Si4, 4X4, Automat, Serv.kniha", "price": 18000, "price_gross": 18000, "fair_price": 17640.0, "discount_pct": -2.1, "verdict": "férová cena", "year": 2018, "km": 167658, "km_per_year": 20100.0, "eg": "3.0 / 5.0 V8 / P300–P360 benzín 221–386 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Dunajská Streda", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AeP3SrOvS_m", "url": "https://www.autobazar.eu/detail/land-rover-discovery-2019/AeP3SrOvS_m/", "title": "Land Rover Discovery HSE", "price": 23900, "price_gross": 23900, "fair_price": 23270.0, "discount_pct": -2.7, "verdict": "férová cena", "year": 2019, "km": 185800, "km_per_year": 25300.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "private", "location": "Žilina", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "197477009", "url": "https://auto.bazos.sk/inzerat/197477009/land-rover-discovery-30d-sdv6-hse-awd-225kw-a8-2020.php", "title": "Land Rover Discovery 3.0D SDV6 HSE AWD / 225kW / A8 / 2020", "price": 27890, "price_gross": 27890, "fair_price": 27050.0, "discount_pct": -3.1, "verdict": "férová cena", "year": 2020, "km": 117385, "km_per_year": 18500.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Žilina", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmBPw8UhY7J", "url": "https://www.autobazar.eu/detail/land-rover-discovery-30d-sdv6-hse-awd-225kw-a8-zaruka-aj-na-splatky-protiucet/AmBPw8UhY7J/", "price": 27890}, {"source": "bazarsk", "id": "bs-39759508", "url": "https://auto.bazar.sk/39759508-land-rover-discovery-3-0d-sdv6-hse-awd-225kw-a8-zaruka-aj-na-splatky-protiucet/", "price": 27890}], "body": "suv"}, {"id": "bs-38788505", "url": "https://auto.bazar.sk/38788505-land-rover-discovery-d300-hse-r-dynamic-awd-aut-7m/", "title": "Land Rover Discovery D300 HSE R-DYNAMIC AWD AUT 7m", "price": 41447, "price_gross": 41447, "fair_price": 40170.0, "discount_pct": -3.2, "verdict": "férová cena", "year": 2023, "km": 122471, "km_per_year": 36700.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Čestlice", "flags": ["vysoký nájazd 37000 km/rok – flotila / taxi?"], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-Abvxe96etpB", "url": "https://www.autobazar.eu/detail/jaguar-xf-30-v6d-aut-cz/Abvxe96etpB/", "price": 41447}], "body": "suv"}, {"id": "ab-Aee5tB2aq8C", "url": "https://www.autobazar.eu/detail/land-rover-discovery-30-v6/Aee5tB2aq8C/", "title": "Land Rover Discovery 3.0 v6", "price": 13000, "price_gross": 13000, "fair_price": 12560.0, "discount_pct": -3.5, "verdict": "férová cena", "year": 2011, "km": 221326, "km_per_year": 14400.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Banská Bystrica", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AeJvL7qcZ1S", "url": "https://www.autobazar.eu/detail/land-rover-discovery-30-i6-d250-mhev-r-dynamic-hse-awd-at-52-183kw249hp-a8/AeJvL7qcZ1S/", "title": "Land Rover Discovery 3.0 I6 D250 MHEV R-Dynamic HSE AWD AT 52 183kW249HP A8", "price": 39900, "price_gross": 39900, "fair_price": 38390.0, "discount_pct": -3.9, "verdict": "férová cena", "year": 2022, "km": 95000, "km_per_year": 21900.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "private", "location": "Nitra", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "196619532", "url": "https://auto.bazos.sk/inzerat/196619532/land-rover-discovery-30-sdv6-hse-2014.php", "title": "Land Rover Discovery 3.0 SDV6 HSE 2014", "price": 12999, "price_gross": 12999, "fair_price": 12450.0, "discount_pct": -4.4, "verdict": "férová cena", "year": 2014, "km": 255000, "km_per_year": 20700.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Liptovský Mikuláš", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AmGR7_NNXGA", "url": "https://www.autobazar.eu/detail/land-rover-discovery-30-i6-d300-mhev-dynamic-se-awd-a-t-5-plus2/AmGR7_NNXGA/", "title": "Land Rover Discovery 3.0 I6 D300 MHEV Dynamic SE AWD A/T 5+2", "price": 69990, "price_gross": 69990, "fair_price": 66850.0, "discount_pct": -4.7, "verdict": "férová cena", "year": 2024, "km": 25100, "km_per_year": 10800.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-39040140", "url": "https://auto.bazar.sk/39040140-land-rover-discovery-3-0-i6-d300-mhev-dynamic-se-awd-a-t-5-2/", "price": 69990}], "body": "suv"}, {"id": "197087229", "url": "https://auto.bazos.sk/inzerat/197087229/land-rover-discovery.php", "title": "Land Rover Discovery", "price": 22500, "price_gross": 22500, "fair_price": 21380.0, "discount_pct": -5.2, "verdict": "férová cena", "year": 2020, "km": 151000, "km_per_year": 23800.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Trnava", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-Ae-Xr11jTvW", "url": "https://www.autobazar.eu/detail/land-rover-discovery-30-i6-d350-mhev-dynamic-se-awd-at-52-257kw350hp-a8/Ae-Xr11jTvW/", "title": "Land Rover Discovery 3.0 I6 D350 MHEV Dynamic SE AWD AT 52 257kW350HP A8", "price": 72464, "price_gross": 72464, "fair_price": 68780.0, "discount_pct": -5.4, "verdict": "férová cena", "year": 2024, "km": 29000, "km_per_year": 12400.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "private", "location": "Hlohovec", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "bs-39493701", "url": "https://auto.bazar.sk/39493701-land-rover-discovery/", "title": "Land Rover Discovery", "price": 17490, "price_gross": 17490, "fair_price": 16540.0, "discount_pct": -5.7, "verdict": "férová cena", "year": 2015, "km": 141000, "km_per_year": 12400.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava I - Staré Mesto", "flags": [], "pick": null, "source": "bazarsk", "origin": "dovoz", "also_listed": [], "body": "suv"}, {"id": "bs-34452160", "url": "https://auto.bazar.sk/34452160-land-rover-discovery-2-7-tdv6-hse-a-t/", "title": "Land Rover Discovery 2.7 TDV6 HSE A/T", "price": 8500, "price_gross": 8500, "fair_price": 8040.0, "discount_pct": -5.7, "verdict": "férová cena", "year": 2005, "km": 236700, "km_per_year": 11100.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Vrútky", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AmkVGa-GT1d", "url": "https://www.autobazar.eu/detail/land-rover-discovery-30-i6-d250-mhev-s-awd-a-t/AmkVGa-GT1d/", "title": "Land Rover Discovery 3.0 I6 D250 MHEV S AWD A/T", "price": 64990, "price_gross": 64990, "fair_price": 61430.0, "discount_pct": -5.8, "verdict": "férová cena", "year": 2025, "km": 58000, "km_per_year": 43500.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-38851744", "url": "https://auto.bazar.sk/38851744-land-rover-discovery-3-0-i6-d250-mhev-s-awd-a-t/", "price": 64990}], "body": "suv"}, {"id": "ab-Am7rurWsEqC", "url": "https://www.autobazar.eu/detail/land-rover-discovery-20d-sd4-hse-luxury-awd-a-t/Am7rurWsEqC/", "title": "Land Rover Discovery 2.0D SD4 HSE Luxury AWD A/T", "price": 21500, "price_gross": 21500, "fair_price": 20280.0, "discount_pct": -6.0, "verdict": "férová cena", "year": 2017, "km": 125040, "km_per_year": 13400.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Ľubotice", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197689967", "url": "https://auto.bazos.sk/inzerat/197689967/land-rover-discovery-5-20d-sd4-hse-luxury-awd-at.php", "price": 21500}], "body": "suv"}, {"id": "ab-AmaArN8nxUz", "url": "https://www.autobazar.eu/detail/land-rover-discovery-20-i4-p300-r-dynamic-se-awd-at/AmaArN8nxUz/", "title": "Land Rover Discovery 2.0 I4 P300 R-Dynamic SE AWD A/T", "price": 26000, "price_gross": 26000, "fair_price": 24520.0, "discount_pct": -6.0, "verdict": "férová cena", "year": 2020, "km": 114374, "km_per_year": 18100.0, "eg": "3.0 / 5.0 V8 / P300–P360 benzín 221–386 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava-Nové Mesto", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "197421758", "url": "https://auto.bazos.sk/inzerat/197421758/land-rover-discovery-4-30-sdv6-hse-180kw-webasto-7-miestne.php", "title": "Land Rover Discovery 4 3,0 SDV6 HSE 180kW Webasto 7-Miestne", "price": 12399, "price_gross": 12399, "fair_price": 11670.0, "discount_pct": -6.2, "verdict": "férová cena", "year": 2011, "km": 217000, "km_per_year": 14200.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Kysucké Nové Mesto", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmHi7EPVweL", "url": "https://www.autobazar.eu/detail/land-rover-discovery-4-30-sdv6-hse-180kw-webasto-kamera-7-miestne/AmHi7EPVweL/", "price": 12399}, {"source": "bazarsk", "id": "bs-39765967", "url": "https://auto.bazar.sk/39765967-land-rover-discovery-4-3-0-sdv6-hse-180kw-webasto-kamera-7-miestne/", "price": 12399}], "body": "suv"}, {"id": "196755755", "url": "https://auto.bazos.sk/inzerat/196755755/land-rover-discovery-27-diesel.php", "title": "Land Rover Discovery III 2.7 Diesel", "price": 6750, "price_gross": 6750, "fair_price": 6340.0, "discount_pct": -6.5, "verdict": "férová cena", "year": 2005, "km": 315000, "km_per_year": 14800.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Žilina", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "197367648", "url": "https://auto.bazos.sk/inzerat/197367648/land-rover-discovery-180kw-at6.php", "title": "Land Rover Discovery 180kW AT/6", "price": 8950, "price_gross": 8950, "fair_price": 8390.0, "discount_pct": -6.7, "verdict": "férová cena", "year": 2010, "km": 319304, "km_per_year": 19500.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Senec", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmNKp_t_7NZ", "url": "https://www.autobazar.eu/detail/land-rover-discovery-180kw-at6-aj-na-splatky-protiucet/AmNKp_t_7NZ/", "price": 8950}, {"source": "bazarsk", "id": "bs-39754195", "url": "https://auto.bazar.sk/39754195-land-rover-discovery-180kw-at-6-aj-na-splatky-protiucet/", "price": 8950}], "body": "suv"}, {"id": "ab-AmGpkrB5Z86", "url": "https://www.autobazar.eu/detail/land-rover-discovery-30d-i6-dynamic-hse/AmGpkrB5Z86/", "title": "Land Rover Discovery 3.0D I6 Dynamic HSE", "price": 65990, "price_gross": 65990, "fair_price": 61250.0, "discount_pct": -7.7, "verdict": "nad trhom", "year": 2023, "km": 29800, "km_per_year": 8900.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Žilina", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39463482", "url": "https://auto.bazar.sk/39463482-land-rover-discovery-3-0d-i6-dynamic-hse/", "price": 65990}], "body": "suv"}, {"id": "ab-Amu8MeuJUDGj", "url": "https://www.autobazar.eu/detail/land-rover-discovery-30-i6-d350-mhev-dynamic-se-awd-a-t-5-plus2-258kw-a8-5d/Amu8MeuJUDGj/", "title": "Land Rover Discovery 3.0 I6 D350 MHEV  Dynamic SE AWD  A/T 5+2, 258kW, A8, 5d.", "price": 77990, "price_gross": 77990, "fair_price": 72250.0, "discount_pct": -7.9, "verdict": "nad trhom", "year": 2025, "km": 22000, "km_per_year": 16500.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-39006740", "url": "https://auto.bazar.sk/39006740-land-rover-discovery-3-0-i6-d350-mhev-dynamic-se-awd-a-t-5-2-258kw-a8-5d/", "price": 77990}], "body": "suv"}, {"id": "ab-AmTN3pLdBgb", "url": "https://www.autobazar.eu/detail/land-rover-discovery-30l-td6-hse-awd-at/AmTN3pLdBgb/", "title": "Land Rover Discovery 3.0L TD6 HSE AWD A/T", "price": 21900, "price_gross": 21900, "fair_price": 20100.0, "discount_pct": -9.0, "verdict": "nad trhom", "year": 2017, "km": 220960, "km_per_year": 23700.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-39509073", "url": "https://auto.bazar.sk/39509073-land-rover-discovery-3-0l-td6-hse-awd-a-t/", "price": 21900}], "body": "suv"}, {"id": "196315632", "url": "https://auto.bazos.sk/inzerat/196315632/land-rover-discovery-4-30-sdv6-188kw-8-st-automat-7.php", "title": "Land Rover Discovery 4 – 3.0 SDV6 (188kW), 8-st. automat, 7", "price": 10500, "price_gross": 10500, "fair_price": 9620.0, "discount_pct": -9.1, "verdict": "nad trhom", "year": 2011, "km": 312000, "km_per_year": 20300.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Partizánske", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "bs-39756548", "url": "https://auto.bazar.sk/39756548-land-rover-discovery-2-7-tdv6-hse-a-t/", "title": "Land Rover Discovery 2.7 TDV6 HSE A/T", "price": 8990, "price_gross": 8990, "fair_price": 8230.0, "discount_pct": -9.2, "verdict": "nad trhom", "year": 2007, "km": 275060, "km_per_year": 14200.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Pezinok", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AmRHqc7Ofvh", "url": "https://www.autobazar.eu/detail/land-rover-discovery-27-tdv6-hse-at/AmRHqc7Ofvh/", "price": 8990}, {"source": "bazos", "id": "197147437", "url": "https://auto.bazos.sk/inzerat/197147437/land-rover-discovery-27-tdv6-hse-at.php", "price": 8990}], "body": "suv"}, {"id": "ab-AmW9y45-FJM", "url": "https://www.autobazar.eu/detail/land-rover-discovery-30-i6-d250-mhev-s-awd-at/AmW9y45-FJM/", "title": "Land Rover Discovery 3.0 I6 D250 MHEV S AWD A/T", "price": 59900, "price_gross": 59900, "fair_price": 54730.0, "discount_pct": -9.4, "verdict": "nad trhom", "year": 2024, "km": 48505, "km_per_year": 20800.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39529462", "url": "https://auto.bazar.sk/39529462-land-rover-discovery-3-0-i6-d250-mhev-s-awd-a-t/", "price": 59900}], "body": "suv"}, {"id": "195981841", "url": "https://auto.bazos.sk/inzerat/195981841/land-rover-discovery-4-iv-2011-30tdv6.php", "title": "Land rover discovery 4 IV  2011 3.0tdv6", "price": 8990, "price_gross": 8990, "fair_price": 8170.0, "discount_pct": -10.1, "verdict": "nad trhom", "year": 2011, "km": 300000, "km_per_year": 19600.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Trenčín", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-Ab7UJEJmgUy", "url": "https://www.autobazar.eu/detail/discovery-dynamic-hse-d250-awd-automat/Ab7UJEJmgUy/", "title": "Land Rover Discovery 3.0 I6 D250 MHEV Dynamic HSE AWD A/T 5+2", "price": 59990, "price_gross": 59990, "fair_price": 54490.0, "discount_pct": -10.1, "verdict": "nad trhom", "year": 2024, "km": 50000, "km_per_year": 21400.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Nitra", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39332169", "url": "https://auto.bazar.sk/39332169-land-rover-discovery-3-0-i6-d250-mhev-dynamic-hse-awd-a-t-5-2/", "price": 59990}], "body": "suv"}, {"id": "ab-AevOY52fSM9", "url": "https://www.autobazar.eu/detail/land-rover-discovery-20-diesel-110kw-automat-prevodovka-4x4/AevOY52fSM9/", "title": "Sport", "price": 19200, "price_gross": 19200, "fair_price": 17400.0, "discount_pct": -10.3, "verdict": "nad trhom", "year": 2020, "km": 177078, "km_per_year": 28000.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "private", "location": "Snina", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "ab-AmUfnPptmTo", "url": "https://www.autobazar.eu/detail/land-rover-discovery-30-i6-d250-mhev-s-awd-at/AmUfnPptmTo/", "title": "Land Rover Discovery 3.0 I6 D250 MHEV S AWD A/T", "price": 65000, "price_gross": 65000, "fair_price": 58760.0, "discount_pct": -10.6, "verdict": "nad trhom", "year": 2025, "km": 74000, "km_per_year": 55500.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-39736539", "url": "https://auto.bazar.sk/39736539-land-rover-discovery-3-0-i6-d250-mhev-s-awd-a-t/", "price": 65000}], "body": "suv"}, {"id": "ab-AedAq0HPDRN", "url": "https://www.autobazar.eu/detail/land-rover-discovery-2017/AedAq0HPDRN/", "title": "Land Rover Discovery 2017", "price": 17500, "price_gross": 17500, "fair_price": 15610.0, "discount_pct": -12.1, "verdict": "nad trhom", "year": 2017, "km": 228000, "km_per_year": 24400.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "private", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197361511", "url": "https://auto.bazos.sk/inzerat/197361511/land-rover-discovery.php", "price": 17500}], "body": "suv"}, {"id": "197100491", "url": "https://auto.bazos.sk/inzerat/197100491/land-rover-discovery-5-30-td6-hse-44-2017-nove-rozvody.php", "title": "Land Rover Discovery 5 3.0 TD6 HSE 4×4, 2017 – nové rozvody,", "price": 21900, "price_gross": 21900, "fair_price": 19440.0, "discount_pct": -12.6, "verdict": "nad trhom", "year": 2017, "km": 155000, "km_per_year": 16600.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Nitra", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "bs-38423478", "url": "https://auto.bazar.sk/38423478-land-rover-discovery-d350-dynamic-hse-awd-aut/", "title": "Land Rover Discovery D350 DYNAMIC HSE AWD Aut", "price": 78119, "price_gross": 78119, "fair_price": 68940.0, "discount_pct": -13.3, "verdict": "nad trhom", "year": 2025, "km": 19000, "km_per_year": 14300.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Brno", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AbseHVMKjGpK", "url": "https://www.autobazar.eu/detail/land-rover-discovery-d350-dynamic-hse-awd-aut/AbseHVMKjGpK/", "price": 78119}], "body": "suv"}, {"id": "ab-AeZQw3MfMxV", "url": "https://www.autobazar.eu/detail/land-rover-discovery-20l-td4-se-awd-at-132kw180hp-a8/AeZQw3MfMxV/", "title": "Land Rover Discovery 2.0L TD4 SE AWD AT 132kW180HP A8", "price": 13900, "price_gross": 13900, "fair_price": 11940.0, "discount_pct": -16.4, "verdict": "výrazne nad trhom", "year": 2016, "km": 180000, "km_per_year": 17400.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "private", "location": "Bohdanovce nad Trnavou", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "suv"}, {"id": "ab-AeebZw_Jsa6", "url": "https://www.autobazar.eu/detail/land-rover-discovery-20-diesel-177kw-automat-prevodovka-4x4/AeebZw_Jsa6/", "title": "Land Rover Discovery 2.0 Diesel 177kW Automat. prevodovka 4x4", "price": 27000, "price_gross": 27000, "fair_price": 23030.0, "discount_pct": -17.2, "verdict": "výrazne nad trhom", "year": 2019, "km": 145000, "km_per_year": 19800.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Dolné Orešany", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "197813054", "url": "https://auto.bazos.sk/inzerat/197813054/land-rover-discovery-5-20l-td4-s-awd-at.php", "title": "Land Rover Discovery 5 2.0L TD4 S AWD A/T", "price": 24000, "price_gross": 24000, "fair_price": 20180.0, "discount_pct": -18.9, "verdict": "výrazne nad trhom", "year": 2019, "km": 157300, "km_per_year": 21500.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bánovce nad Bebravou", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AmImQ9GmVob", "url": "https://www.autobazar.eu/detail/land-rover-discovery-30-i6-d250-mhev-r-dynamic-se-awd-a-t/AmImQ9GmVob/", "title": "Land Rover Discovery 3.0 I6 D250 MHEV R-Dynamic SE AWD A/T", "price": 47990, "price_gross": 47990, "fair_price": 40130.0, "discount_pct": -19.6, "verdict": "výrazne nad trhom", "year": 2022, "km": 80000, "km_per_year": 18500.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Nitra", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-37147383", "url": "https://auto.bazar.sk/37147383-land-rover-discovery-3-0-i6-d250-mhev-r-dynamic-se-awd-a-t/", "price": 47990}], "body": "suv"}, {"id": "196432093", "url": "https://auto.bazos.sk/inzerat/196432093/land-rover-discovery-30d-sdv6-306k-landmark-edition-awd.php", "title": "Land Rover Discovery 3.0D SDV6 306k Landmark Edition AWD", "price": 29999, "price_gross": 29999, "fair_price": 25060.0, "discount_pct": -19.7, "verdict": "výrazne nad trhom", "year": 2020, "km": 161305, "km_per_year": 25500.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Pezinok", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AmcaCWylbMu", "url": "https://www.autobazar.eu/detail/land-rover-discovery-30d-sdv6-306k-landmark-edition-awd-at/AmcaCWylbMu/", "price": 29999}, {"source": "bazarsk", "id": "bs-39709511", "url": "https://auto.bazar.sk/39709511-land-rover-discovery-3-0d-sdv6-306k-landmark-edition-awd-a-t/", "price": 29999}], "body": "suv"}, {"id": "ab-AmmFhJj0pGQ", "url": "https://www.autobazar.eu/detail/land-rover-discovery-30-i6-d300-mhev-dynamic-hse-awd-a-t/AmmFhJj0pGQ/", "title": "Land Rover Discovery 3.0 I6 D300 MHEV Dynamic HSE AWD A/T", "price": 77990, "price_gross": 77990, "fair_price": 65070.0, "discount_pct": -19.9, "verdict": "výrazne nad trhom", "year": 2024, "km": 26000, "km_per_year": 11100.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-38526047", "url": "https://auto.bazar.sk/38526047-land-rover-discovery-3-0-i6-d300-mhev-dynamic-hse-awd-a-t/", "price": 77990}], "body": "suv"}, {"id": "197773126", "url": "https://auto.bazos.sk/inzerat/197773126/land-rover-discovery-30d-r-dynamic.php", "title": "LAND ROVER DISCOVERY 3.0D R-DYNAMIC", "price": 54000, "price_gross": 54000, "fair_price": 44710.0, "discount_pct": -20.8, "verdict": "výrazne nad trhom", "year": 2021, "km": 37000, "km_per_year": 6900.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Považská Bystrica", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "196412704", "url": "https://auto.bazos.sk/inzerat/196412704/land-rover-discovery-5-awd-30l-td6-hse-luxury-at-8-odpocet.php", "title": "Land Rover Discovery 5 AWD 3.0L TD6 HSE Luxury AT 8 odpočet", "price": 25000, "price_gross": 25000, "fair_price": 20290.0, "discount_pct": -23.2, "verdict": "výrazne nad trhom", "year": 2017, "km": 153393, "km_per_year": 16400.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Ružomberok", "flags": [], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [{"source": "bazarsk", "id": "bs-37570830", "url": "https://auto.bazar.sk/37570830-land-rover-discovery-3-0l-td6-hse-luxury-awd-a-t/", "price": 25000}, {"source": "autobazar", "id": "ab-AmBjzOizGY0", "url": "https://www.autobazar.eu/detail/land-rover-discovery-30l-td6-hse-luxury-awd-a-t/AmBjzOizGY0/", "price": 25000}], "body": "suv"}, {"id": "ab-AblvEFIfPeT", "url": "https://www.autobazar.eu/detail/discovery-r-dynamic-se-30-i6-d250-mhev/AblvEFIfPeT/", "title": "Land Rover Discovery 3.0 I6 D250 MHEV R-Dynamic SE AWD A/T", "price": 37990, "price_gross": 37990, "fair_price": 30450.0, "discount_pct": -24.8, "verdict": "výrazne nad trhom", "year": 2021, "km": 150000, "km_per_year": 28100.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Nitra", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39210940", "url": "https://auto.bazar.sk/39210940-land-rover-discovery-3-0-i6-d250-mhev-r-dynamic-se-awd-a-t/", "price": 37990}], "body": "suv"}, {"id": "195870412", "url": "https://auto.bazos.sk/inzerat/195870412/land-rover-discovery-20d-sd4-s-awd-at-110kw.php", "title": "Land Rover Discovery 2.0D SD4 S AWD A/T 110KW", "price": 12490, "price_gross": 12490, "fair_price": 9930.0, "discount_pct": -25.8, "verdict": "výrazne nad trhom", "year": 2016, "km": 212478, "km_per_year": 20600.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Košice", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "bs-39572321", "url": "https://auto.bazar.sk/39572321-land-rover-discovery-300-i6-d300-r-dynamic-hse-7-miestne-pano-webasto-plna-vybava-chladnicka-dp/", "title": "Land Rover Discovery 300 I6 D300 R-Dynamic HSE, 7 miestne, pano, webasto, plná výbava, chladnička,DP", "price": 47990, "price_gross": 47990, "fair_price": 37890.0, "discount_pct": -26.7, "verdict": "výrazne nad trhom", "year": 2021, "km": 73904, "km_per_year": 13900.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava I - Staré Mesto", "flags": [], "pick": null, "source": "bazarsk", "origin": "dovoz", "also_listed": [{"source": "autobazar", "id": "ab-AmXUQbIMJid", "url": "https://www.autobazar.eu/detail/land-rover-discovery-300-i6-d300-r-dynamic-hse-7-miestne-pano-webasto-plna-vybava-tz-dph/AmXUQbIMJid/", "price": 47990}, {"source": "bazos", "id": "197712066", "url": "https://auto.bazos.sk/inzerat/197712066/land-rover-discovery-d300-r-dynamic-hse-7-miestne-dph.php", "price": 39016}], "body": "suv"}, {"id": "196244588", "url": "https://auto.bazos.sk/inzerat/196244588/land-rover-discovery-4.php", "title": "Land Rover Discovery 4", "price": 12900, "price_gross": 12900, "fair_price": 10150.0, "discount_pct": -27.1, "verdict": "výrazne nad trhom", "year": 2010, "km": 183500, "km_per_year": 11200.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Brezno", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AeF1gSv7Ohj", "url": "https://www.autobazar.eu/detail/land-rover-discovery-30l-td6-hse-luxury-awd-at-190kw258hp-a8/AeF1gSv7Ohj/", "title": "Land Rover Discovery 3.0L TD6 HSE Luxury AWD AT 190kW258HP A8", "price": 23900, "price_gross": 23900, "fair_price": 18780.0, "discount_pct": -27.3, "verdict": "výrazne nad trhom", "year": 2017, "km": 263000, "km_per_year": 28200.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Spišská Nová Ves", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "196155496", "url": "https://auto.bazos.sk/inzerat/196155496/predam-land-rover-discovery-5-td6-190-kw-hse-luxury.php", "price": 23900}], "body": "suv"}, {"id": "bs-35198665", "url": "https://auto.bazar.sk/35198665-land-rover-discovery-3-0-tdv6-hse/", "title": "Land Rover Discovery 3.0 TDV6 HSE", "price": 16900, "price_gross": 16900, "fair_price": 13230.0, "discount_pct": -27.7, "verdict": "výrazne nad trhom", "year": 2012, "km": 245000, "km_per_year": 17100.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava III - Nové Mesto", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "suv"}, {"id": "196901894", "url": "https://auto.bazos.sk/inzerat/196901894/predam-land-rover-discovery-4-krasny-stav.php", "title": "Predám LAND ROVER DISCOVERY 4  krásny stav.", "price": 11500, "price_gross": 11500, "fair_price": 8980.0, "discount_pct": -28.0, "verdict": "výrazne nad trhom", "year": 2010, "km": 292822, "km_per_year": 17900.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "196073148", "url": "https://auto.bazos.sk/inzerat/196073148/land-rover-discovery-5-30-td6-hse.php", "title": "Land rover Discovery 5 3,0 TD6 HSE", "price": 25000, "price_gross": 25000, "fair_price": 19510.0, "discount_pct": -28.1, "verdict": "výrazne nad trhom", "year": 2018, "km": 238000, "km_per_year": 28600.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Michalovce", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "bs-39503920", "url": "https://auto.bazar.sk/39503920-land-rover-discovery-3-o-sdv6-180kw-at8-na-splatky-na-protiucet/", "title": "Land Rover Discovery 3.O SDV6 180kW AT8 / NA SPLÁTKY / NA PROTIÚČET", "price": 15690, "price_gross": 15690, "fair_price": 12210.0, "discount_pct": -28.5, "verdict": "výrazne nad trhom", "year": 2012, "km": 218998, "km_per_year": 15300.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "suv"}, {"id": "bs-39281121", "url": "https://auto.bazar.sk/39281121-land-rover-discovery-3-0-i6-d250-mhev-hse-awd-a-t-5-2/", "title": "Land Rover Discovery 3.0 I6 D250 MHEV HSE AWD A/T 5+2", "price": 39350, "price_gross": 39350, "fair_price": 30460.0, "discount_pct": -29.2, "verdict": "výrazne nad trhom", "year": 2021, "km": 170753, "km_per_year": 32000.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava I - Staré Mesto", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "suv"}, {"id": "bs-39666877", "url": "https://auto.bazar.sk/39666877-land-rover-discovery-2007-2-7-tdv6-hse-140kw-a-t/", "title": "Land Rover Discovery 2007 2.7 TDV6 HSE 140kW A/T", "price": 12990, "price_gross": 12990, "fair_price": 10050.0, "discount_pct": -29.3, "verdict": "výrazne nad trhom", "year": 2007, "km": 142642, "km_per_year": 7400.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Spišská Nová Ves", "flags": [], "pick": null, "source": "bazarsk", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "196740939", "url": "https://auto.bazos.sk/inzerat/196740939/land-rover-discovery-2007-27-tdv6-hse-140kw-at.php", "price": 12990}, {"source": "autobazar", "id": "ab-AmKG0_NEn37", "url": "https://www.autobazar.eu/detail/land-rover-discovery-2007-27-tdv6-hse-140kw-at/AmKG0_NEn37/", "price": 12990}], "body": "suv"}, {"id": "ab-AewBUMUervl", "url": "https://www.autobazar.eu/detail/land-rover-discovery-30-sdv6-hse-188kw256hp-a8/AewBUMUervl/", "title": "Land Rover Discovery 3.0 SDV6 HSE 188kW256HP A8", "price": 16605, "price_gross": 16605, "fair_price": 12690.0, "discount_pct": -30.8, "verdict": "výrazne nad trhom", "year": 2013, "km": 289800, "km_per_year": 21700.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bardejov", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197387997", "url": "https://auto.bazos.sk/inzerat/197387997/land-rover-discovery-30-sdv6-hse-188kw256hp-a8.php", "price": 16605}], "body": "suv"}, {"id": "196194926", "url": "https://auto.bazos.sk/inzerat/196194926/land-rover-discovery-5-20l-td4-s-awd-at.php", "title": "Land Rover discovery 5 2.0l td4 s awd a/t", "price": 19100, "price_gross": 19100, "fair_price": 14600.0, "discount_pct": -30.8, "verdict": "výrazne nad trhom", "year": 2018, "km": 131349, "km_per_year": 15800.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Žilina", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-34352102", "url": "https://auto.bazar.sk/34352102-land-rover-discovery-2-0-td4/", "price": 36419}], "body": "suv"}, {"id": "197623367", "url": "https://auto.bazos.sk/inzerat/197623367/predam-land-rover-discovery-5.php", "title": "Predám   Land Rover Discovery 5 možná vymena", "price": 30900, "price_gross": 30900, "fair_price": 23340.0, "discount_pct": -32.4, "verdict": "výrazne nad trhom", "year": 2018, "km": 78000, "km_per_year": 9400.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Malacky", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "197119180", "url": "https://auto.bazos.sk/inzerat/197119180/land-rover-discovery-5.php", "title": "Land Rover Discovery 5", "price": 22500, "price_gross": 22500, "fair_price": 16840.0, "discount_pct": -33.6, "verdict": "výrazne nad trhom", "year": 2019, "km": 185000, "km_per_year": 25200.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Pezinok", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "ab-AmJtrVuOC7oA", "url": "https://www.autobazar.eu/detail/land-rover-discovery-30d-sdv6-306k-landmark-edition-awd-a-t/AmJtrVuOC7oA/", "title": "Land Rover Discovery 3.0D SDV6 306k Landmark Edition AWD A/T", "price": 51990, "price_gross": 51990, "fair_price": 38740.0, "discount_pct": -34.2, "verdict": "výrazne nad trhom", "year": 2021, "km": 58500, "km_per_year": 11000.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-35994354", "url": "https://auto.bazar.sk/35994354-land-rover-discovery-3-0d-sdv6-306k-landmark-edition-awd-a-t/", "price": 51990}], "body": "suv"}, {"id": "195870851", "url": "https://auto.bazos.sk/inzerat/195870851/land-rover-discovery-5-20-td-sd4-hse-luxury.php", "title": "Land Rover Discovery 5 2.0 TD Sd4 HSE Luxury", "price": 18500, "price_gross": 18500, "fair_price": 13660.0, "discount_pct": -35.4, "verdict": "výrazne nad trhom", "year": 2017, "km": 167000, "km_per_year": 17900.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": null, "seller_type": "dealer", "location": "Žilina", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "196262196", "url": "https://auto.bazos.sk/inzerat/196262196/land-rover-discovery-30-sdv6-hse.php", "title": "Land Rover Discovery 4 3.0 SDV6 HSE", "price": 20490, "price_gross": 20490, "fair_price": 14590.0, "discount_pct": -40.5, "verdict": "výrazne nad trhom", "year": 2014, "km": 182000, "km_per_year": 14800.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Pezinok", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "197780279", "url": "https://auto.bazos.sk/inzerat/197780279/land-rover-discovery-5-po-velkom-servise-97-000km.php", "title": "Land Rover Discovery 5 po veľkom servise-97 000km", "price": 23500, "price_gross": 23500, "fair_price": 16250.0, "discount_pct": -44.6, "verdict": "výrazne nad trhom", "year": 2017, "km": 97911, "km_per_year": 10500.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Martin", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-Am2dHxR4Xpx", "url": "https://www.autobazar.eu/detail/land-rover-discovery-20l-td4-hse-awd-at/Am2dHxR4Xpx/", "price": 23500}, {"source": "bazarsk", "id": "bs-39612751", "url": "https://auto.bazar.sk/39612751-land-rover-discovery-2-0l-td4-hse-awd-a-t/", "price": 23500}], "body": "suv"}, {"id": "196153156", "url": "https://auto.bazos.sk/inzerat/196153156/predamvymena-land-rover-discovery-4.php", "title": "Predám/výmena LAND Rover Discovery 4", "price": 11000, "price_gross": 11000, "fair_price": 7590.0, "discount_pct": -45.0, "verdict": "výrazne nad trhom", "year": 2010, "km": 330000, "km_per_year": 20200.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Lučenec", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "196667920", "url": "https://auto.bazos.sk/inzerat/196667920/land-rover-discovery-4.php", "title": "Land Rover Discovery 4", "price": 19800, "price_gross": 19800, "fair_price": 13610.0, "discount_pct": -45.5, "verdict": "výrazne nad trhom", "year": 2014, "km": 136600, "km_per_year": 11100.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Senec", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "195891915", "url": "https://auto.bazos.sk/inzerat/195891915/7-miestny-lr-discovery-072020-vo-vyhladavanej-motorizacii.php", "title": "7 miestny LR Discovery 07/2020 vo vyhľadávanej motorizácii", "price": 29250, "price_gross": 29250, "fair_price": 19550.0, "discount_pct": -49.6, "verdict": "výrazne nad trhom", "year": 2020, "km": 191305, "km_per_year": 30200.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Trenčín", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "196019664", "url": "https://auto.bazos.sk/inzerat/196019664/land-rover-discovery-d300-r-dynamic-hse-7-miest-dph-20.php", "title": "Land Rover Discovery D300 R-Dynamic HSE | 7 miest | DPH | 21", "price": 30999, "price_gross": 30999, "fair_price": 20650.0, "discount_pct": -50.1, "verdict": "výrazne nad trhom", "year": 2021, "km": 165000, "km_per_year": 30900.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Nitra", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "bs-39245965", "url": "https://auto.bazar.sk/39245965-land-rover-discovery-se-2-0d-sd4-240-ps-awd/", "title": "Land Rover DISCOVERY SE 2.0D SD4 240 PS AWD", "price": 44500, "price_gross": 44500, "fair_price": 26340.0, "discount_pct": -69.0, "verdict": "výrazne nad trhom", "year": 2018, "km": 73500, "km_per_year": 8800.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Košice", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AbP7Hl22Iap", "url": "https://www.autobazar.eu/detail/land-rover-discovery-se-20d-sd4-240-ps-awd/AbP7Hl22Iap/", "price": 44500}], "body": "suv"}, {"id": "196767299", "url": "https://auto.bazos.sk/inzerat/196767299/land-rover-discovery-4.php", "title": "Land rover discovery 4", "price": 23000, "price_gross": 23000, "fair_price": 13180.0, "discount_pct": -74.5, "verdict": "výrazne nad trhom", "year": 2015, "km": 196000, "km_per_year": 17300.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": null, "seller_type": "dealer", "location": "Bratislava", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "bs-23266063", "url": "https://auto.bazar.sk/23266063-land-rover-discovery-4-3-0-sdv6-hse-255k-a-t-188kw-5d/", "title": "Land Rover Discovery 4 3.0 SDV6 HSE 255k A/T, 188kw 5d.", "price": 28000, "price_gross": 28000, "fair_price": 11910.0, "discount_pct": -135.0, "verdict": "výrazne nad trhom", "year": 2012, "km": 285843, "km_per_year": 19900.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "private", "location": "Košice", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "suv"}, {"id": "bs-23391228", "url": "https://auto.bazar.sk/23391228-land-rover-discovery-4-3-0-tdv6-hse-chrom-paket-250-ks-max/", "title": "Land Rover Discovery 4 3,0 TDV6 HSE CHROM PAKET 250 KS MAX", "price": 29400, "price_gross": 29400, "fair_price": 12250.0, "discount_pct": -140.1, "verdict": "výrazne nad trhom", "year": 2010, "km": 227000, "km_per_year": 13900.0, "eg": "2.0 / 2.7 / 3.0 diesel TDV6 / SDV6 / Sd4 / D250–D300 140–221 kW", "cg": 0, "transmission": "automatic", "seller_type": "private", "location": "Košice", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "suv"}];
+const GROUPS = ["Diesel", "Benzín", "Nezistený"];
+const BODY = {"suv": "SUV"};
+const fmt = n => Math.round(n).toLocaleString("sk-SK");
+const eur = n => fmt(n) + " €";
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const TRANS = {automatic: "automat", manual: "manuál"};
+const SRC = {bazos: "bazoš", autobazar: "autobazar.eu", bazarsk: "bazar.sk"};
+
+// --- theme toggle ---------------------------------------------------------
+document.getElementById("themeBtn").onclick = () => {
+  const root = document.documentElement;
+  const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  drawChart();
+};
+
+// --- scatter chart --------------------------------------------------------
+const legend = document.getElementById("legend");
+legend.innerHTML = GROUPS.map((g, i) => `<span><i style="background:var(--s${i+1})"></i>${g}</span>`).join("")
+  + `<span><i class="ring"></i>odporúčaná ponuka</span>`;
+
+function drawChart() {
+  const svg = document.getElementById("chart"), wrap = document.getElementById("chartWrap"), tip = document.getElementById("tip");
+  const W = svg.clientWidth, H = 420, m = {l: 56, r: 16, t: 10, b: 40};
+  const pts = DATA.filter(d => d.km && d.price_gross);
+  const xMax = Math.ceil(Math.max(...pts.map(d => d.km)) / 50000) * 50000;
+  const yMax = Math.ceil(Math.max(...pts.map(d => d.price_gross)) / 5000) * 5000;
+  const x = v => m.l + v / xMax * (W - m.l - m.r), y = v => H - m.b - v / yMax * (H - m.t - m.b);
+  let s = "";
+  for (let v = 0; v <= yMax; v += 5000)
+    s += `<line x1="${m.l}" x2="${W-m.r}" y1="${y(v)}" y2="${y(v)}" stroke="var(--grid)"/><text x="${m.l-8}" y="${y(v)+4}" text-anchor="end">${v/1000} tis. €</text>`;
+  const step = W < 520 ? 100000 : 50000;
+  for (let v = 0; v <= xMax; v += step)
+    s += `<text x="${x(v)}" y="${H-m.b+18}" text-anchor="middle">${v/1000} tis.</text>`;
+  s += `<text x="${(W+m.l)/2}" y="${H-6}" text-anchor="middle">nájazd (km)</text>`;
+  const order = [...pts].sort((a, b) => (a.pick ? 1 : 0) - (b.pick ? 1 : 0));
+  order.forEach(d => {
+    const cx = x(d.km), cy = y(d.price_gross);
+    if (d.pick) s += `<circle cx="${cx}" cy="${cy}" r="9" fill="none" stroke="var(--text)" stroke-width="2"/>`;
+    s += `<circle class="pt" data-id="${d.id}" cx="${cx}" cy="${cy}" r="5" fill="var(--s${d.cg+1})" stroke="var(--surface)" stroke-width="2"/>`;
+  });
+  // invisible bigger hit targets
+  order.forEach(d => s += `<circle class="hit" data-id="${d.id}" cx="${x(d.km)}" cy="${y(d.price_gross)}" r="11" fill="transparent" style="cursor:pointer"/>`);
+  svg.innerHTML = s;
+  const byId = Object.fromEntries(pts.map(d => [d.id, d]));
+  svg.querySelectorAll(".hit").forEach(c => {
+    c.onmouseenter = c.onmousemove = ev => {
+      const d = byId[c.dataset.id];
+      tip.innerHTML = `<b>${esc(d.title)}</b>
+        <div class="row"><span>Cena</span><span>${eur(d.price_gross)}</span></div>
+        <div class="row"><span>Férová cena</span><span>${eur(d.fair_price)}</span></div>
+        <div class="row"><span>Pod trhom</span><span>${d.discount_pct > 0 ? "+" : ""}${d.discount_pct.toLocaleString("sk-SK")} %</span></div>
+        <div class="row"><span>Zdroj</span><span>${SRC[d.source]}${d.also_listed.length ? " + " + d.also_listed.map(a => SRC[a.source]).join(", ") : ""}</span></div>
+        <div class="row"><span>Rok · km</span><span>${d.year} · ${fmt(d.km)}</span></div>
+        <div class="row"><span>Motor</span><span>${esc(d.eg)} ${TRANS[d.transmission] || ""}</span></div>`;
+      tip.style.display = "block";
+      const r = wrap.getBoundingClientRect();
+      let lx = ev.clientX - r.left + 14, ly = ev.clientY - r.top + 14;
+      if (lx + 290 > r.width) lx = ev.clientX - r.left - 290;
+      tip.style.left = lx + "px"; tip.style.top = ly + "px";
+    };
+    c.onmouseleave = () => tip.style.display = "none";
+    c.onclick = () => window.open(byId[c.dataset.id].url, "_blank", "noopener");
+  });
+}
+drawChart();
+addEventListener("resize", drawChart);
+
+// --- full table -----------------------------------------------------------
+const fEngine = document.getElementById("fEngine");
+[...new Set(DATA.map(d => d.eg))].sort().forEach(g => fEngine.insertAdjacentHTML("beforeend", `<option>${esc(g)}</option>`));
+let sortK = "discount_pct", sortDir = -1;
+function discCell(v) {
+  const w = Math.min(Math.abs(v), 30) / 30 * 50;
+  const bar = v >= 0 ? `left:50%;width:${w}%;background:var(--pos)` : `right:50%;width:${w}%;background:var(--neg)`;
+  return `<span class="disc">${v > 0 ? "+" : ""}${v.toLocaleString("sk-SK")} %<span class="dbar"><span style="${bar}"></span></span></span>`;
+}
+function renderTable() {
+  const max = parseFloat(document.getElementById("fMax").value) || Infinity;
+  const tr = document.getElementById("fTrans").value, se = document.getElementById("fSeller").value, en = fEngine.value;
+  const so = document.getElementById("fSource").value, og = document.getElementById("fOrigin").value;
+  const bo = document.getElementById("fBody").value;
+  const rows = DATA.filter(d => (!en || d.eg === en) && (!tr || d.transmission === tr)
+    && (!se || d.seller_type !== "dealer") && d.price_gross <= max
+    && (!so || d.source === so || d.also_listed.some(a => a.source === so)) && (!og || d.origin === og) && (!bo || d.body === bo))
+    .sort((a, b) => { const A = a[sortK], B = b[sortK]; return (typeof A === "string" ? A.localeCompare(B) : A - B) * sortDir; });
+  document.getElementById("count").textContent = `${rows.length} z ${DATA.length} inzerátov`;
+  document.querySelector("#tbl tbody").innerHTML = rows.map(d => `<tr>
+    <td><a href="${d.url}" target="_blank" rel="noopener">${esc(d.title)}</a> ${d.pick ? '<span class="badge pick">odporúčané</span>' : ""}
+      <div class="sub">${BODY[d.body] || "karoséria ?"} · ${esc(d.eg)} · ${TRANS[d.transmission] || "prevodovka ?"} · ${esc(d.location)} · ${d.seller_type === "dealer" ? "predajca/firma" : d.seller_type === "private" ? "súkromník" : "neisté"} · ${SRC[d.source]}${d.origin === "SR" ? " · kúpené v SR" : d.origin === "dovoz" ? " · dovoz" : ""}${d.also_listed.map(a => ` · <a href="${a.url}" target="_blank" rel="noopener">aj na ${SRC[a.source]}</a>`).join("")}</div>
+      ${d.flags.filter(f => !f.startsWith("prevodovka")).map(f => `<div class="flag">⚠ ${esc(f)}</div>`).join("")}</td>
+    <td class="num">${d.year}</td><td class="num">${fmt(d.km)}</td>
+    <td class="num">${eur(d.price_gross)}</td><td class="num">${eur(d.fair_price)}</td>
+    <td class="num">${discCell(d.discount_pct)}</td></tr>`).join("");
+  document.querySelectorAll("#tbl th.sortable").forEach(th => {
+    const base = th.textContent.replace(/ [▾▴]$/, "");
+    th.textContent = base + (th.dataset.k === sortK ? (sortDir < 0 ? " ▾" : " ▴") : "");
+  });
+}
+document.querySelectorAll("#tbl th.sortable").forEach(th => th.onclick = () => {
+  if (sortK === th.dataset.k) sortDir *= -1; else { sortK = th.dataset.k; sortDir = th.dataset.k === "title" ? 1 : -1; }
+  renderTable();
+});
+["fEngine", "fTrans", "fSeller", "fSource", "fBody", "fOrigin", "fMax"].forEach(id => document.getElementById(id).addEventListener("input", renderTable));
+renderTable();
+</script>
+<!-- ferovka-theme --><script defer src="/analytics-config.js"></script><script defer src="/analytics.js"></script><script id="ferovka-chart">/* Férovka – chart → ad links, injected into every report by sync-reports.mjs.
+ *
+ * The reports draw one invisible 11px "hit" circle per ad. In dense charts (and always on a narrow phone) those
+ * circles overlap and the one drawn last wins, so a click/tap often opened a neighbouring ad. Here the pointer is
+ * always resolved to the NEAREST point, the report's own tooltip is shown for that point, and a click opens its ad.
+ * Touch: the first tap shows the tooltip (with a hint), a second tap on the same point opens the ad.
+ */
+(() => {
+  let rows;
+  try { rows = DATA; } catch { return; } // eslint-disable-line no-undef
+  if (!Array.isArray(rows) || !rows.length || !("url" in rows[0])) return;
+  const byId = new Map(rows.map((d) => [String(d.id), d]));
+  const MOUSE = ["mouseover", "mouseout", "mouseenter", "mouseleave", "mousemove", "mousedown", "mouseup", "click"];
+  let lastPointer = "mouse", down = null;
+  // the finger position as it was – Chrome "snaps" the later click of a tap to the centre of a nearby clickable element
+  addEventListener("pointerdown", (e) => { lastPointer = e.pointerType || "mouse"; down = { clientX: e.clientX, clientY: e.clientY }; }, true);
+
+  // the old per-point hit circles must not be targets (they overlap, and touch snapping aims at them)
+  document.head.insertAdjacentHTML("beforeend", "<style>svg circle.hit[data-id],svg circle.pt[data-id]{pointer-events:none}</style>");
+
+  function nearest(svg, ev, radius) {
+    let best = null, bd = Infinity;
+    for (const c of svg.querySelectorAll("circle.pt[data-id]")) {
+      const r = c.getBoundingClientRect();
+      const dx = r.left + r.width / 2 - ev.clientX, dy = r.top + r.height / 2 - ev.clientY;
+      const d = dx * dx + dy * dy;
+      if (d <= bd) { bd = d; best = c; } // ties: the point drawn on top (later) wins – that is the one you see
+    }
+    return best && bd <= radius * radius ? best : null;
+  }
+
+  function bind(svg) {
+    if (svg.__fvLinks) return;
+    svg.__fvLinks = true;
+    let current = null, armed = null;
+    const hitOf = (pt) => pt && svg.querySelector(`circle.hit[data-id="${CSS.escape(pt.dataset.id)}"]`);
+    const fire = (el, type, ev) => {
+      if (!el) return;
+      const e = new MouseEvent(type, { clientX: ev.clientX, clientY: ev.clientY, bubbles: false });
+      e.__fv = true;
+      el.dispatchEvent(e);
+    };
+    const tip = () => (svg.parentElement && svg.parentElement.querySelector("#tip, .tip")) || document.getElementById("tip");
+    const mark = (pt) => {
+      if (current === pt) return;
+      if (current) current.setAttribute("r", current.__r || "5");
+      current = pt;
+      if (pt) { pt.__r = pt.__r || pt.getAttribute("r"); pt.setAttribute("r", String(+pt.__r + 2)); }
+    };
+    const show = (pt, ev, hint) => {
+      mark(pt);
+      if (!pt) { const t = tip(); if (t) t.style.display = "none"; return; }
+      fire(hitOf(pt), "mousemove", ev); // the report's own tooltip, for the nearest point
+      const t = tip();
+      if (t && hint) t.insertAdjacentHTML("beforeend", `<div class="fv-hint">Ťukni ešte raz – otvorí sa inzerát ↗</div>`);
+    };
+    const open = (pt) => {
+      const d = byId.get(pt.dataset.id);
+      if (d && d.url) {
+        try { window.FerovkaAnalytics?.listingClick(d.url, "chart"); } catch { /* analytics must never block an ad */ }
+        window.open(d.url, "_blank", "noopener");
+      }
+    };
+
+    // the per-circle handlers of the report never see real mouse events – only our synthetic ones
+    for (const type of MOUSE) {
+      svg.addEventListener(type, (ev) => {
+        if (ev.__fv) return;
+        ev.stopImmediatePropagation();
+        if (type === "mousemove" && lastPointer === "mouse") {
+          show(nearest(svg, ev, 18), ev, false);
+          svg.style.cursor = current ? "pointer" : "";
+        } else if (type === "mouseleave" && ev.target === svg && lastPointer === "mouse") {
+          show(null, ev);
+        } else if (type === "click") {
+          const touch = lastPointer !== "mouse";
+          const at = touch && down ? down : ev;
+          const pt = nearest(svg, at, touch ? 26 : 18);
+          if (!pt) { armed = null; show(null, ev); return; }
+          if (!touch || armed === pt) { armed = null; open(pt); }
+          else { armed = pt; show(pt, at, true); }
+        }
+      }, true);
+    }
+  }
+
+  const scan = () => document.querySelectorAll("svg").forEach((s) => s.querySelector("circle.pt[data-id]") && bind(s));
+  scan();
+  new MutationObserver(scan).observe(document.body, { childList: true, subtree: true });
+})();
+</script><script id="ferovka-filters">/* Férovka – filters for the whole report, injected into every model report by sync-reports.mjs.
+ *
+ * The reports render the chart (drawChart) and the full ranking (renderTable) from the global DATA array; their own
+ * filter bar only filters the table. Here the filter bar (kept in its place above the ranking) gets more filters (year, price from/to,
+ * km, fuel, discount, picks only, text search) and every filter applies to the chart and the ranking together: DATA is
+ * refilled in place with the matching ads and both are drawn again. "</script" can't occur inside this file.
+ */
+(() => {
+  let data;
+  try { data = DATA; } catch { return; } // eslint-disable-line no-undef
+  if (!Array.isArray(data) || !data.length || typeof renderTable !== "function") return; // eslint-disable-line no-undef
+  const bar = document.querySelector(".filters");
+  if (!bar || bar.dataset.fv) return;
+  bar.dataset.fv = "1";
+  const ALL = data.slice();
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+  const fmt = (n) => Math.round(n).toLocaleString("sk-SK");
+  const norm = (s) => String(s ?? "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+  let groups = null;
+  try { groups = GROUPS; } catch { /* report without groups */ } // eslint-disable-line no-undef
+
+  const FUEL = { diesel: "Diesel", petrol: "Benzín", hybrid: "Hybrid", "plug-in hybrid": "Plug-in hybrid", electric: "Elektro", lpg: "LPG", cng: "CNG" };
+  const fuelOf = (d) => {
+    const e = norm(d.eg);
+    if (/tdi|crdi|dci|hdi|diesel|\bd\b|cdi|\d+d\b|blue/.test(e)) return "Diesel";
+    if (/plug-in|phev|e-hybrid|recharge|\bgte\b|\bt8\b|\b\d{2}e\b|\b\d{3} ?e\b/.test(e)) return "Plug-in hybrid";
+    if (/elektro|electric|\bev\b/.test(e)) return "Elektro";
+    if (/cng|lpg|g-tec|g-tron|tgi|ecofuel/.test(e)) return "Plyn (CNG/LPG)";
+    if (/mild|mhev/.test(e)) return "Benzín"; // mild-hybrid petrol (the diesel ones say TDI / d above)
+    if (/hybrid|hev/.test(e)) return "Hybrid";
+    if (/tsi|tfsi|mpi|fsi|benzin|gdi|dpi|htp|12v|\bt\d\b|\bb[56]\b|\d+i\b|turbo|tce|\bs4\b|rs ?\d|amg|competition|\bm\d{2,3}i?\b|gti|\bx5 m\b/.test(e)) return "Benzín";
+    return d.fuel ? FUEL[d.fuel] || String(d.fuel) : null;
+  };
+
+  // --- controls ---------------------------------------------------------------------------------------------------
+  const years = ALL.map((d) => d.year).filter(Boolean);
+  const yMin = Math.min(...years), yMax = Math.max(...years);
+  const yearOpts = (label) => `<option value="">${label}</option>` +
+    Array.from({ length: yMax - yMin + 1 }, (_, i) => yMax - i).map((y) => `<option>${y}</option>`).join("");
+  const kms = [30000, 50000, 75000, 100000, 150000, 200000, 250000, 300000];
+  const fuels = [...new Set(ALL.map(fuelOf).filter(Boolean))].sort((a, b) => a.localeCompare(b, "sk"));
+  const showGroups = Array.isArray(groups) && groups.length > 1 && ALL.some((d) => Number.isInteger(d.cg));
+
+  const maxInput = $("fMax");
+  if (maxInput) { maxInput.placeholder = "Cena do €"; maxInput.title = "Najvyššia cena (s DPH)"; }
+  const html =
+    `<select id="fvYearFrom" title="Rok výroby od">${yearOpts("Rok od")}</select>` +
+    `<select id="fvYearTo" title="Rok výroby do">${yearOpts("Rok do")}</select>` +
+    `<input id="fvPriceMin" type="number" placeholder="Cena od €" step="500" min="0" title="Najnižšia cena (s DPH)" style="width:110px">`;
+  if (maxInput) maxInput.insertAdjacentHTML("beforebegin", html);
+  else bar.insertAdjacentHTML("afterbegin", html);
+  const more =
+    `<select id="fvKm" title="Najviac najazdených km"><option value="">Nájazd – všetky</option>${kms.map((k) => `<option value="${k}">do ${fmt(k)} km</option>`).join("")}</select>` +
+    (fuels.length > 1 ? `<select id="fvFuel" title="Palivo"><option value="">Všetky palivá</option>${fuels.map((f) => `<option>${esc(f)}</option>`).join("")}</select>` : "") +
+    (showGroups ? `<select id="fvGroup" title="Skupina motorov (farba v grafe)"><option value="">Všetky skupiny</option>${groups.map((g, i) => `<option value="${i}">${esc(g)}</option>`).join("")}</select>` : "") +
+    `<select id="fvDisc" title="O koľko je auto lacnejšie ako férová cena"><option value="">Cena – všetky</option><option value="0">pod férovou cenou</option><option value="10">aspoň 10 % pod trhom</option><option value="20">aspoň 20 % pod trhom</option></select>` +
+    `<input id="fvText" type="search" placeholder="Hľadať (výbava, mesto…)" title="Hľadá v názve inzerátu, motore a lokalite" style="width:170px">` +
+    `<label class="fv-check"><input id="fvPick" type="checkbox"> len odporúčané</label>` +
+    `<button type="button" id="fvReset" class="fv-reset">Zrušiť filtre</button>`;
+  const count = $("count");
+  if (count) count.insertAdjacentHTML("beforebegin", more);
+  else bar.insertAdjacentHTML("beforeend", more);
+
+  // the bar stays where it was – right above the ranking – and also drives the chart; the chart gets a pointer to it
+  const chart = $("chartWrap");
+  const box = document.createElement("div");
+  box.className = "fv-filters";
+  box.id = "filtre";
+  bar.before(box);
+  box.innerHTML = `<div class="fv-head"><b>Filtre</b><span>platia pre rebríček aj graf vyššie</span></div>`;
+  box.appendChild(bar);
+  const note = document.createElement("div");
+  note.className = "fv-note";
+  chart?.before(note);
+
+  document.head.insertAdjacentHTML("beforeend", `<style id="fv-filters-css">
+.fv-filters{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 14px 4px;margin:24px 0 8px}
+.fv-filters .fv-head{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;margin-bottom:8px}
+.fv-filters .fv-head span{color:var(--muted);font-size:13px}
+.fv-filters .filters{margin-bottom:8px}
+.fv-filters .filters .count{flex-basis:100%;margin-left:0}
+.fv-check{display:inline-flex;gap:6px;align-items:center;font-size:13px;color:var(--text-2,var(--text));white-space:nowrap}
+.fv-reset{background:none;border:1px solid var(--border);color:var(--text);border-radius:8px;padding:6px 10px;font:inherit;font-size:13px;cursor:pointer}
+.fv-reset:hover{background:var(--surface-2,var(--surface))}
+.fv-note{color:var(--muted);font-size:13px;margin:0 0 8px}
+.fv-note a{color:inherit}
+.fv-empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:14px;pointer-events:none}
+@media (max-width:600px){.fv-filters .filters select,.fv-filters .filters input[type=number],.fv-filters .filters input[type=search]{flex:1 1 calc(50% - 8px);min-width:0;width:auto!important}}
+</style>`);
+
+  // --- filtering --------------------------------------------------------------------------------------------------
+  const val = (id) => ($(id) ? $(id).value : "");
+  const num = (id) => { const v = parseFloat(val(id)); return Number.isFinite(v) ? v : null; };
+  function matches(d) {
+    const yf = num("fvYearFrom"), yt = num("fvYearTo"), pmin = num("fvPriceMin"), pmax = num("fMax"), km = num("fvKm"), disc = num("fvDisc");
+    const fuel = val("fvFuel"), grp = val("fvGroup"), q = norm(val("fvText")).trim();
+    if (yf != null && !(d.year >= yf)) return false;
+    if (yt != null && !(d.year <= yt)) return false;
+    if (pmin != null && !(d.price_gross >= pmin)) return false;
+    if (pmax != null && !(d.price_gross <= pmax)) return false;
+    if (km != null && !(d.km <= km)) return false;
+    if (disc != null && !(d.discount_pct > disc || (disc > 0 && d.discount_pct >= disc))) return false;
+    if (fuel && fuelOf(d) !== fuel) return false;
+    if (grp !== "" && String(d.cg) !== grp) return false;
+    if ($("fvPick")?.checked && !d.pick) return false;
+    if (q && !q.split(/\s+/).every((w) => norm(`${d.title} ${d.eg ?? ""} ${d.engine ?? ""} ${d.location ?? ""}`).includes(w))) return false;
+    // the report's own filters (engine, gearbox, seller, portal, body, origin) – same rules as its renderTable
+    const en = val("fEngine"), tr = val("fTrans"), se = val("fSeller"), so = val("fSource"), og = val("fOrigin"), bo = val("fBody");
+    if (en && d.eg !== en) return false;
+    if (tr && d.transmission !== tr) return false;
+    if (se && d.seller_type === "dealer") return false;
+    if (so && !(d.source === so || (d.also_listed || []).some((a) => a.source === so))) return false;
+    if (og && d.origin !== og) return false;
+    if (bo && d.body !== bo) return false;
+    return true;
+  }
+  const active = () => [...box.querySelectorAll("select, input")].filter((el) => (el.type === "checkbox" ? el.checked : el.value !== "")).length;
+
+  let drawing = false;
+  function apply() {
+    if (drawing) return;
+    drawing = true;
+    const rows = ALL.filter(matches);
+    data.length = 0;
+    data.push(...rows);
+    const wrap = $("chartWrap");
+    wrap?.querySelector(".fv-empty")?.remove();
+    const plotted = rows.filter((d) => d.km && d.price_gross).length;
+    try {
+      if (typeof drawChart === "function") { // eslint-disable-line no-undef
+        if (plotted) drawChart(); // eslint-disable-line no-undef
+        else { const svg = $("chart"); if (svg) svg.innerHTML = ""; }
+      }
+    } catch (e) { console.warn("chart", e); }
+    if (wrap && !plotted) {
+      if (getComputedStyle(wrap).position === "static") wrap.style.position = "relative";
+      wrap.insertAdjacentHTML("beforeend", `<div class="fv-empty">Filtrom nezodpovedá žiadny inzerát</div>`);
+    }
+    try { renderTable(); } catch (e) { console.warn("table", e); } // eslint-disable-line no-undef
+    const n = active();
+    if (count) count.textContent = `Zobrazených ${fmt(rows.length)} z ${fmt(ALL.length)} inzerátov` + (n ? ` · aktívne filtre: ${n}` : "");
+    note.innerHTML = n
+      ? `Zobrazených ${fmt(rows.length)} z ${fmt(ALL.length)} inzerátov podľa <a href="#filtre">filtrov pri rebríčku</a>.`
+      : `Filtre (rok, cena, nájazd, palivo…) nájdeš <a href="#filtre">pri kompletnom rebríčku</a> – platia aj pre tento graf.`;
+    drawing = false;
+  }
+  box.querySelectorAll("select, input").forEach((el) => el.addEventListener("input", apply));
+  $("fvPick")?.addEventListener("change", apply);
+  $("fvReset").addEventListener("click", () => {
+    box.querySelectorAll("select, input").forEach((el) => { if (el.type === "checkbox") el.checked = false; else el.value = ""; });
+    apply();
+  });
+  apply();
+})();
+</script><!-- /ferovka-theme -->
+</body>
+</html>

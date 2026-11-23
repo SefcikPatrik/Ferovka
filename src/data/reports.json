@@ -219,6 +219,19 @@
     }
   },
   {
+    "slug": "jeep-cherokee",
+    "file": "jeep-cherokee-analyza.html",
+    "name": "Jeep Cherokee",
+    "brand": "Jeep",
+    "model": "Cherokee",
+    "kind": "model",
+    "date": "2026-11-23",
+    "summary": "Analýza aktuálnych inzerátov Jeep Cherokee (KL 2014–2023, bez Grand Cherokee) od 6 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (23. 11. 2026). Na portáloch je spolu 236 inzerátov (179 na bazoši, 33 na autobazar.eu, 24 na bazar.sk) – prezreli sme 94 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 163 rôznych áut zo Slovenska.",
+    "ads": 163,
+    "median": "12 994 €",
+    "r2": "85 %"
+  },
+  {
     "slug": "jeep-wrangler",
     "file": "jeep-wrangler-analyza.html",
     "name": "Jeep Wrangler",
@@ -262,6 +275,70 @@
     "ads": 34,
     "median": "44 000 €",
     "r2": "97 %"
+  },
+  {
+    "slug": "land-rover-discovery",
+    "file": "land-rover-discovery-analyza.html",
+    "name": "Land Rover Discovery",
+    "brand": "Land",
+    "model": "Rover Discovery",
+    "kind": "model",
+    "date": "2026-11-23",
+    "summary": "Analýza aktuálnych inzerátov Land Rover Discovery (Discovery 3, 4 a 5, 2004+, bez Discovery Sport) od 5 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (23. 11. 2026). Na portáloch je spolu 582 inzerátov (211 na bazoši, 243 na autobazar.eu, 128 na bazar.sk) – prezreli sme 96 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 358 rôznych áut zo Slovenska.",
+    "ads": 358,
+    "median": "21 500 €",
+    "r2": "93 %",
+    "history": {
+      "updated_at": "2026-11-23T10:30:22",
+      "as_of": "2026-11-23",
+      "coverage": "partial",
+      "baseline_count": 127,
+      "total_count": 127,
+      "active_count": 127,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 127,
+      "paired_median_change_pct": 0,
+      "historical_median": 21500,
+      "seen_median": 21500,
+      "seen_price_count": 127,
+      "last_observed_at": "2026-11-23T10:25:35"
+    }
+  },
+  {
+    "slug": "land-rover-freelander",
+    "file": "land-rover-freelander-analyza.html",
+    "name": "Land Rover Freelander 2",
+    "brand": "Land",
+    "model": "Rover Freelander 2",
+    "kind": "model",
+    "date": "2026-11-23",
+    "summary": "Analýza aktuálnych inzerátov Land Rover Freelander 2 (2006–2014, bez prvej generácie) od 4 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (23. 11. 2026). Na portáloch je spolu 55 inzerátov (27 na bazoši, 14 na autobazar.eu, 14 na bazar.sk) – prezreli sme 87 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 36 rôznych áut zo Slovenska.",
+    "ads": 36,
+    "median": "6 990 €",
+    "r2": "93 %",
+    "history": {
+      "updated_at": "2026-11-23T10:30:22",
+      "as_of": "2026-11-23",
+      "coverage": "partial",
+      "baseline_count": 25,
+      "total_count": 25,
+      "active_count": 25,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 25,
+      "paired_median_change_pct": 0,
+      "historical_median": 6990,
+      "seen_median": 6990,
+      "seen_price_count": 25,
+      "last_observed_at": "2026-11-23T10:26:21"
+    }
   },
   {
     "slug": "lexus-nx",
@@ -462,6 +539,19 @@
     "ads": 55,
     "median": "27 950 €",
     "r2": "94 %"
+  },
+  {
+    "slug": "subaru-xv",
+    "file": "subaru-xv-analyza.html",
+    "name": "Subaru XV",
+    "brand": "Subaru",
+    "model": "XV",
+    "kind": "model",
+    "date": "2026-11-23",
+    "summary": "Analýza aktuálnych inzerátov Subaru XV (2012+, vrátane Crosstrek, pohon 4x4) od 5 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (23. 11. 2026). Na portáloch je spolu 87 inzerátov (37 na bazoši, 34 na autobazar.eu, 16 na bazar.sk) – prezreli sme 85 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 46 rôznych áut zo Slovenska.",
+    "ads": 46,
+    "median": "12 999 €",
+    "r2": "92 %"
   },
   {
     "slug": "suzuki-grand-vitara",
@@ -2166,7 +2256,26 @@
     "summary": "Analýza aktuálnych inzerátov Land Rover Discovery Sport (L550, 2015–2025, 5- aj 7-miestne, bez veľkého Discovery a nových áut z 2026) od 6 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 311 inzerátov (120 na bazoši, 101 na autobazar.eu, 90 na bazar.sk) – prezreli sme 68 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 150 rôznych áut zo Slovenska.",
     "ads": 150,
     "median": "15 000 €",
-    "r2": "90 %"
+    "r2": "90 %",
+    "history": {
+      "updated_at": "2026-11-23T10:30:22",
+      "as_of": "2026-11-23",
+      "coverage": "partial",
+      "baseline_count": 127,
+      "total_count": 160,
+      "active_count": 155,
+      "inactive_count": 0,
+      "unverified_count": 5,
+      "new_count": 33,
+      "price_changed_count": 2,
+      "price_lowered_count": 1,
+      "paired_count": 120,
+      "paired_median_change_pct": 0,
+      "historical_median": 14500,
+      "seen_median": 14499,
+      "seen_price_count": 153,
+      "last_observed_at": "2026-11-23T10:25:40"
+    }
   },
   {
     "slug": "mazda-2",
