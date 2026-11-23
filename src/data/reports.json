@@ -239,6 +239,38 @@
     "r2": "92 %"
   },
   {
+    "slug": "jaguar-e-pace",
+    "file": "jaguar-e-pace-analyza.html",
+    "name": "Jaguar E-Pace",
+    "brand": "Jaguar",
+    "model": "E-Pace",
+    "kind": "model",
+    "date": "2026-11-23",
+    "summary": "Analýza aktuálnych inzerátov Jaguar E-Pace (2017+) od 10 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (23. 11. 2026). Na portáloch je spolu 103 inzerátov (24 na bazoši, 35 na autobazar.eu, 44 na bazar.sk) – prezreli sme 63 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 50 rôznych áut zo Slovenska.",
+    "ads": 50,
+    "median": "16 950 €",
+    "r2": "85 %",
+    "history": {
+      "updated_at": "2026-11-23T11:20:28",
+      "as_of": "2026-11-23",
+      "coverage": "partial",
+      "baseline_count": 41,
+      "total_count": 41,
+      "active_count": 41,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 41,
+      "paired_median_change_pct": 0,
+      "historical_median": 16950,
+      "seen_median": 16950,
+      "seen_price_count": 41,
+      "last_observed_at": "2026-11-23T11:18:00"
+    }
+  },
+  {
     "slug": "jaguar-f-pace",
     "file": "jaguar-f-pace-analyza.html",
     "name": "Jaguar F-Pace",
@@ -251,7 +283,7 @@
     "median": "20 400 €",
     "r2": "92 %",
     "history": {
-      "updated_at": "2026-11-23T11:13:30",
+      "updated_at": "2026-11-23T11:20:28",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 76,
@@ -283,7 +315,7 @@
     "median": "12 900 €",
     "r2": "98 %",
     "history": {
-      "updated_at": "2026-11-23T11:13:30",
+      "updated_at": "2026-11-23T11:20:28",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 19,
@@ -315,7 +347,7 @@
     "median": "10 838 €",
     "r2": "83 %",
     "history": {
-      "updated_at": "2026-11-23T11:13:30",
+      "updated_at": "2026-11-23T11:20:28",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 58,
@@ -545,6 +577,19 @@
     "ads": 72,
     "median": "56 435 €",
     "r2": "96 %"
+  },
+  {
+    "slug": "maserati-levante",
+    "file": "maserati-levante-analyza.html",
+    "name": "Maserati Levante",
+    "brand": "Maserati",
+    "model": "Levante",
+    "kind": "model",
+    "date": "2026-11-23",
+    "summary": "Analýza aktuálnych inzerátov Maserati Levante (2016+, bez Trofeo) od 15 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (23. 11. 2026). Na portáloch je spolu 36 inzerátov (10 na bazoši, 14 na autobazar.eu, 12 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 23 rôznych áut zo Slovenska.",
+    "ads": 23,
+    "median": "33 499 €",
+    "r2": "88 %"
   },
   {
     "slug": "mercedes-clk",
@@ -802,6 +847,19 @@
     "ads": 121,
     "median": "91 420 €",
     "r2": "90 %"
+  },
+  {
+    "slug": "porsche-boxster-cayman",
+    "file": "porsche-boxster-cayman-analyza.html",
+    "name": "Porsche Boxster / Cayman",
+    "brand": "Porsche",
+    "model": "Boxster / Cayman",
+    "kind": "model",
+    "date": "2026-11-23",
+    "summary": "Analýza aktuálnych inzerátov Porsche Boxster / Cayman (986, 987, 981 a 718, roadster aj kupé, bez GT4 / Spyder RS) od 8 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (23. 11. 2026). Na portáloch je spolu 74 inzerátov (33 na bazoši, 24 na autobazar.eu, 17 na bazar.sk) – prezreli sme 77 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 35 rôznych áut zo Slovenska.",
+    "ads": 35,
+    "median": "35 745 €",
+    "r2": "98 %"
   },
   {
     "slug": "renault-espace",
