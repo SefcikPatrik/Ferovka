@@ -148,6 +148,32 @@
     }
   },
   {
+    "slug": "lexus-nx",
+    "file": "lexus-nx-analyza.html",
+    "name": "Lexus NX",
+    "brand": "Lexus",
+    "model": "NX",
+    "kind": "model",
+    "date": "2026-11-23",
+    "summary": "Analýza aktuálnych inzerátov Lexus NX (prvá generácia 2014–2021 a druhá 2021+) od 12 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (23. 11. 2026). Na portáloch je spolu 149 inzerátov (14 na bazoši, 71 na autobazar.eu, 64 na bazar.sk) – prezreli sme 97 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 74 rôznych áut zo Slovenska.",
+    "ads": 74,
+    "median": "46 695 €",
+    "r2": "97 %"
+  },
+  {
+    "slug": "lexus-rx",
+    "file": "lexus-rx-analyza.html",
+    "name": "Lexus RX",
+    "brand": "Lexus",
+    "model": "RX",
+    "kind": "model",
+    "date": "2026-11-23",
+    "summary": "Analýza aktuálnych inzerátov Lexus RX (tretia generácia 2009–2015, štvrtá 2015–2022 a piata 2022+) od 10 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (23. 11. 2026). Na portáloch je spolu 186 inzerátov (19 na bazoši, 61 na autobazar.eu, 106 na bazar.sk) – prezreli sme 68 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 72 rôznych áut zo Slovenska.",
+    "ads": 72,
+    "median": "56 435 €",
+    "r2": "96 %"
+  },
+  {
     "slug": "mercedes-vito",
     "file": "mercedes-vito-analyza.html",
     "name": "Mercedes-Benz Vito / trieda V",
@@ -180,6 +206,19 @@
     }
   },
   {
+    "slug": "mitsubishi-eclipse-cross",
+    "file": "mitsubishi-eclipse-cross-analyza.html",
+    "name": "Mitsubishi Eclipse Cross",
+    "brand": "Mitsubishi",
+    "model": "Eclipse Cross",
+    "kind": "model",
+    "date": "2026-11-23",
+    "summary": "Analýza aktuálnych inzerátov Mitsubishi Eclipse Cross (2018+ vrátane plug-in hybridu) od 8 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (23. 11. 2026). Na portáloch je spolu 62 inzerátov (20 na bazoši, 28 na autobazar.eu, 14 na bazar.sk) – prezreli sme 77 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 24 rôznych áut zo Slovenska.",
+    "ads": 24,
+    "median": "16 195 €",
+    "r2": "85 %"
+  },
+  {
     "slug": "peugeot-traveller",
     "file": "peugeot-traveller-analyza.html",
     "name": "Peugeot Traveller / Expert",
@@ -191,6 +230,19 @@
     "ads": 183,
     "median": "21 990 €",
     "r2": "93 %"
+  },
+  {
+    "slug": "ssangyong-korando",
+    "file": "ssangyong-korando-analyza.html",
+    "name": "SsangYong Korando",
+    "brand": "SsangYong",
+    "model": "Korando",
+    "kind": "model",
+    "date": "2026-11-23",
+    "summary": "Analýza aktuálnych inzerátov SsangYong Korando (Korando C 2011–2019 a nové Korando 2019+) od 4 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (23. 11. 2026). Na portáloch je spolu 208 inzerátov (33 na bazoši, 111 na autobazar.eu, 64 na bazar.sk) – prezreli sme 94 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 98 rôznych áut zo Slovenska.",
+    "ads": 98,
+    "median": "17 500 €",
+    "r2": "96 %"
   },
   {
     "slug": "ssangyong-rexton",
@@ -217,6 +269,38 @@
     "ads": 30,
     "median": "10 740 €",
     "r2": "91 %"
+  },
+  {
+    "slug": "tesla-model-y",
+    "file": "tesla-model-y-analyza.html",
+    "name": "Tesla Model Y",
+    "brand": "Tesla",
+    "model": "Model Y",
+    "kind": "model",
+    "date": "2026-11-23",
+    "summary": "Analýza aktuálnych inzerátov Tesla Model Y (2021+, všetky verzie) od 15 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (23. 11. 2026). Na portáloch je spolu 621 inzerátov (309 na bazoši, 216 na autobazar.eu, 96 na bazar.sk) – prezreli sme 72 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 292 rôznych áut zo Slovenska.",
+    "ads": 292,
+    "median": "34 990 €",
+    "r2": "75 %",
+    "history": {
+      "updated_at": "2026-11-23T09:30:23",
+      "as_of": "2026-11-23",
+      "coverage": "partial",
+      "baseline_count": 186,
+      "total_count": 186,
+      "active_count": 186,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 186,
+      "paired_median_change_pct": 0,
+      "historical_median": 34990,
+      "seen_median": 34990,
+      "seen_price_count": 186,
+      "last_observed_at": "2026-11-23T09:22:45"
+    }
   },
   {
     "slug": "alfa-romeo-giulietta",
@@ -6010,8 +6094,8 @@
     "median": "27 890 €",
     "r2": "88 %",
     "history": {
-      "updated_at": "2026-11-22T12:30:00",
-      "as_of": "2026-11-22",
+      "updated_at": "2026-11-23T09:30:23",
+      "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 86,
       "total_count": 86,
