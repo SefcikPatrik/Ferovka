@@ -147,7 +147,7 @@
     "median": "4 450 €",
     "r2": "92 %",
     "history": {
-      "updated_at": "2026-11-23T10:17:40",
+      "updated_at": "2026-11-23T13:05:14",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 34,
@@ -179,7 +179,7 @@
     "median": "10 000 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-23T10:17:40",
+      "updated_at": "2026-11-23T13:05:14",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 57,
@@ -197,6 +197,51 @@
       "seen_price_count": 57,
       "last_observed_at": "2026-11-23T10:11:05"
     }
+  },
+  {
+    "slug": "citroen-spacetourer",
+    "file": "citroen-spacetourer-analyza.html",
+    "name": "Citroën SpaceTourer / Jumpy",
+    "brand": "Citroën",
+    "model": "SpaceTourer / Jumpy",
+    "kind": "model",
+    "date": "2026-11-23",
+    "summary": "Analýza aktuálnych inzerátov Citroën SpaceTourer / Jumpy (SpaceTourer a Jumpy Combi 2016+, osobné verzie 6–9 miest, bez dodávok N1) od 8 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (23. 11. 2026). Na portáloch je spolu 170 inzerátov (77 na bazoši, 60 na autobazar.eu, 33 na bazar.sk) – prezreli sme 96 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 130 rôznych áut zo Slovenska.",
+    "ads": 130,
+    "median": "19 490 €",
+    "r2": "93 %",
+    "history": {
+      "updated_at": "2026-11-23T13:05:14",
+      "as_of": "2026-11-23",
+      "coverage": "partial",
+      "baseline_count": 30,
+      "total_count": 30,
+      "active_count": 30,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 30,
+      "paired_median_change_pct": 0,
+      "historical_median": 19490,
+      "seen_median": 19490,
+      "seen_price_count": 30,
+      "last_observed_at": "2026-11-23T12:49:36"
+    }
+  },
+  {
+    "slug": "cupra-born",
+    "file": "cupra-born-analyza.html",
+    "name": "Cupra Born",
+    "brand": "Cupra",
+    "model": "Born",
+    "kind": "model",
+    "date": "2026-11-23",
+    "summary": "Analýza aktuálnych inzerátov Cupra Born (elektrický hatchback od 2021) od 15 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (23. 11. 2026). Na portáloch je spolu 66 inzerátov (29 na bazoši, 36 na autobazar.eu, 1 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 35 rôznych áut zo Slovenska.",
+    "ads": 35,
+    "median": "24 700 €",
+    "r2": "89 %"
   },
   {
     "slug": "dacia-dokker",
@@ -281,6 +326,19 @@
     "ads": 62,
     "median": "2 000 €",
     "r2": "84 %"
+  },
+  {
+    "slug": "ford-tourneo-connect",
+    "file": "ford-tourneo-connect-analyza.html",
+    "name": "Ford Tourneo Connect",
+    "brand": "Ford",
+    "model": "Tourneo Connect",
+    "kind": "model",
+    "date": "2026-11-23",
+    "summary": "Analýza aktuálnych inzerátov Ford Tourneo Connect (osobné verzie 2013+, aj Grand Tourneo Connect, bez dodávok N1) od 4 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (23. 11. 2026). Na portáloch je spolu 212 inzerátov (54 na bazoši, 73 na autobazar.eu, 85 na bazar.sk) – prezreli sme 58 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 98 rôznych áut zo Slovenska.",
+    "ads": 98,
+    "median": "16 990 €",
+    "r2": "96 %"
   },
   {
     "slug": "ford-tourneo-custom",
@@ -1133,6 +1191,19 @@
     }
   },
   {
+    "slug": "toyota-proace-verso",
+    "file": "toyota-proace-verso-analyza.html",
+    "name": "Toyota Proace Verso",
+    "brand": "Toyota",
+    "model": "Proace Verso",
+    "kind": "model",
+    "date": "2026-11-23",
+    "summary": "Analýza aktuálnych inzerátov Toyota Proace Verso (Proace Verso a Proace Combi 2016+, osobné verzie 6–9 miest, bez dodávok N1) od 8 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (23. 11. 2026). Na portáloch je spolu 335 inzerátov (90 na bazoši, 238 na autobazar.eu, 7 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 302 rôznych áut zo Slovenska.",
+    "ads": 302,
+    "median": "28 950 €",
+    "r2": "90 %"
+  },
+  {
     "slug": "vw-golf-plus-sportsvan",
     "file": "vw-golf-plus-sportsvan-analyza.html",
     "name": "Volkswagen Golf Plus / Sportsvan",
@@ -1227,6 +1298,19 @@
       "seen_price_count": 64,
       "last_observed_at": "2026-11-23T12:03:12"
     }
+  },
+  {
+    "slug": "vw-passat-cc",
+    "file": "vw-passat-cc-analyza.html",
+    "name": "Volkswagen Passat CC / CC",
+    "brand": "Volkswagen",
+    "model": "Passat CC / CC",
+    "kind": "model",
+    "date": "2026-11-23",
+    "summary": "Analýza aktuálnych inzerátov VW Passat CC / CC (štvordverové kupé 2008–2016) od 3 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (23. 11. 2026). Na portáloch je spolu 9 495 inzerátov (7 576 na bazoši, 1 072 na autobazar.eu, 847 na bazar.sk) – prezreli sme 21 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 1 165 rôznych áut zo Slovenska.",
+    "ads": 1165,
+    "median": "7 095 €",
+    "r2": "92 %"
   },
   {
     "slug": "vw-taigo",
@@ -2054,7 +2138,7 @@
     "median": "3 800 €",
     "r2": "95 %",
     "history": {
-      "updated_at": "2026-11-23T10:17:40",
+      "updated_at": "2026-11-23T13:05:14",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 19,
@@ -2086,7 +2170,7 @@
     "median": "4 100 €",
     "r2": "96 %",
     "history": {
-      "updated_at": "2026-11-23T10:17:40",
+      "updated_at": "2026-11-23T13:05:14",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 50,
@@ -2118,23 +2202,23 @@
     "median": "6 200 €",
     "r2": "92 %",
     "history": {
-      "updated_at": "2026-11-23T10:17:40",
+      "updated_at": "2026-11-23T13:05:14",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 110,
-      "total_count": 110,
-      "active_count": 0,
+      "total_count": 112,
+      "active_count": 2,
       "inactive_count": 0,
       "unverified_count": 110,
-      "new_count": 0,
+      "new_count": 2,
       "price_changed_count": 0,
       "price_lowered_count": 0,
       "paired_count": 0,
       "paired_median_change_pct": null,
-      "historical_median": 6200,
-      "seen_median": null,
-      "seen_price_count": 0,
-      "last_observed_at": "2026-11-22T01:40:14"
+      "historical_median": 6250,
+      "seen_median": 10350,
+      "seen_price_count": 2,
+      "last_observed_at": "2026-11-23T12:49:03"
     }
   },
   {
@@ -2150,7 +2234,7 @@
     "median": "6 795 €",
     "r2": "87 %",
     "history": {
-      "updated_at": "2026-11-23T10:17:40",
+      "updated_at": "2026-11-23T13:05:14",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 36,
@@ -2182,7 +2266,7 @@
     "median": "3 345 €",
     "r2": "98 %",
     "history": {
-      "updated_at": "2026-11-23T10:17:40",
+      "updated_at": "2026-11-23T13:05:14",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 52,
@@ -2214,7 +2298,7 @@
     "median": "16 400 €",
     "r2": "97 %",
     "history": {
-      "updated_at": "2026-11-23T10:17:40",
+      "updated_at": "2026-11-23T13:05:14",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 54,
@@ -5010,7 +5094,7 @@
     "median": "9 700 €",
     "r2": "92 %",
     "history": {
-      "updated_at": "2026-11-23T10:17:40",
+      "updated_at": "2026-11-23T13:05:14",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 182,
@@ -5042,7 +5126,7 @@
     "median": "8 195 €",
     "r2": "95 %",
     "history": {
-      "updated_at": "2026-11-23T10:17:40",
+      "updated_at": "2026-11-23T13:05:14",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 188,
@@ -5074,23 +5158,23 @@
     "median": "6 100 €",
     "r2": "80 %",
     "history": {
-      "updated_at": "2026-11-23T10:17:40",
+      "updated_at": "2026-11-23T13:05:14",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 84,
-      "total_count": 138,
-      "active_count": 0,
+      "total_count": 196,
+      "active_count": 78,
       "inactive_count": 0,
-      "unverified_count": 138,
-      "new_count": 54,
+      "unverified_count": 118,
+      "new_count": 112,
       "price_changed_count": 0,
       "price_lowered_count": 0,
-      "paired_count": 0,
-      "paired_median_change_pct": null,
-      "historical_median": 7444,
-      "seen_median": null,
-      "seen_price_count": 0,
-      "last_observed_at": "2026-11-22T01:40:02"
+      "paired_count": 1,
+      "paired_median_change_pct": 0,
+      "historical_median": 9850,
+      "seen_median": 19700,
+      "seen_price_count": 77,
+      "last_observed_at": "2026-11-23T12:49:38"
     }
   },
   {
