@@ -13,6 +13,38 @@
     "r2": "94 %"
   },
   {
+    "slug": "citroen-c-elysee",
+    "file": "citroen-c-elysee-analyza.html",
+    "name": "Citroën C-Elysée",
+    "brand": "Citroën",
+    "model": "C-Elysée",
+    "kind": "model",
+    "date": "2026-11-23",
+    "summary": "Analýza aktuálnych inzerátov Citroën C-Elysée (2012–2022, sedan) od 2 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (23. 11. 2026). Na portáloch je spolu 60 inzerátov (26 na bazoši, 18 na autobazar.eu, 16 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 41 rôznych áut zo Slovenska.",
+    "ads": 41,
+    "median": "4 450 €",
+    "r2": "92 %",
+    "history": {
+      "updated_at": "2026-11-23T10:08:50",
+      "as_of": "2026-11-23",
+      "coverage": "partial",
+      "baseline_count": 34,
+      "total_count": 34,
+      "active_count": 34,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 34,
+      "paired_median_change_pct": 0,
+      "historical_median": 4450,
+      "seen_median": 4450,
+      "seen_price_count": 34,
+      "last_observed_at": "2026-11-23T10:05:48"
+    }
+  },
+  {
     "slug": "fiat-500x",
     "file": "fiat-500x-analyza.html",
     "name": "Fiat 500X",
@@ -307,6 +339,19 @@
     "ads": 24,
     "median": "16 195 €",
     "r2": "85 %"
+  },
+  {
+    "slug": "peugeot-107-108",
+    "file": "peugeot-107-108-analyza.html",
+    "name": "Peugeot 107 / 108",
+    "brand": "Peugeot",
+    "model": "107 / 108",
+    "kind": "model",
+    "date": "2026-11-23",
+    "summary": "Analýza aktuálnych inzerátov Peugeot 107 / 108 (107 2005–2014 a 108 2014–2021) od 1 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (23. 11. 2026). Na portáloch je spolu 104 inzerátov (90 na bazoši, 9 na autobazar.eu, 5 na bazar.sk) – prezreli sme 36 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 30 rôznych áut zo Slovenska.",
+    "ads": 30,
+    "median": "2 795 €",
+    "r2": "98 %"
   },
   {
     "slug": "peugeot-traveller",
@@ -1263,7 +1308,7 @@
     "median": "3 800 €",
     "r2": "95 %",
     "history": {
-      "updated_at": "2026-11-23T08:28:26",
+      "updated_at": "2026-11-23T10:08:50",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 19,
@@ -1295,7 +1340,7 @@
     "median": "4 100 €",
     "r2": "96 %",
     "history": {
-      "updated_at": "2026-11-23T08:28:26",
+      "updated_at": "2026-11-23T10:08:50",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 50,
@@ -1327,7 +1372,7 @@
     "median": "6 200 €",
     "r2": "92 %",
     "history": {
-      "updated_at": "2026-11-23T08:28:26",
+      "updated_at": "2026-11-23T10:08:50",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 110,
@@ -1359,7 +1404,7 @@
     "median": "6 795 €",
     "r2": "87 %",
     "history": {
-      "updated_at": "2026-11-23T08:28:26",
+      "updated_at": "2026-11-23T10:08:50",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 36,
@@ -1391,7 +1436,7 @@
     "median": "3 345 €",
     "r2": "98 %",
     "history": {
-      "updated_at": "2026-11-23T08:28:26",
+      "updated_at": "2026-11-23T10:08:50",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 52,
@@ -1423,7 +1468,7 @@
     "median": "16 400 €",
     "r2": "97 %",
     "history": {
-      "updated_at": "2026-11-23T08:28:26",
+      "updated_at": "2026-11-23T10:08:50",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 54,
@@ -4200,7 +4245,7 @@
     "median": "9 700 €",
     "r2": "92 %",
     "history": {
-      "updated_at": "2026-11-23T08:28:26",
+      "updated_at": "2026-11-23T10:08:50",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 182,
@@ -4232,7 +4277,7 @@
     "median": "8 195 €",
     "r2": "95 %",
     "history": {
-      "updated_at": "2026-11-23T08:28:26",
+      "updated_at": "2026-11-23T10:08:50",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 188,
@@ -4264,7 +4309,7 @@
     "median": "6 100 €",
     "r2": "80 %",
     "history": {
-      "updated_at": "2026-11-23T08:28:26",
+      "updated_at": "2026-11-23T10:08:50",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 84,
