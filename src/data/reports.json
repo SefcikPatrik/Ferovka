@@ -13,6 +13,19 @@
     "r2": "94 %"
   },
   {
+    "slug": "bmw-z4",
+    "file": "bmw-z4-analyza.html",
+    "name": "BMW Z4",
+    "brand": "BMW",
+    "model": "Z4",
+    "kind": "model",
+    "date": "2026-11-23",
+    "summary": "Analýza aktuálnych inzerátov BMW Z4 (E85/E86, E89 a G29, roadster aj kupé, bez Z4 M) od 5 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (23. 11. 2026). Na portáloch je spolu 59 inzerátov (24 na bazoši, 21 na autobazar.eu, 14 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 44 rôznych áut zo Slovenska.",
+    "ads": 44,
+    "median": "19 590 €",
+    "r2": "83 %"
+  },
+  {
     "slug": "citroen-c-elysee",
     "file": "citroen-c-elysee-analyza.html",
     "name": "Citroën C-Elysée",
@@ -422,7 +435,90 @@
     "summary": "Analýza aktuálnych inzerátov Mercedes-Benz CLK (W208 a W209, 1997–2010, kupé aj kabriolet, bez AMG) od 2 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (23. 11. 2026). Na portáloch je spolu 45 inzerátov (31 na bazoši, 7 na autobazar.eu, 7 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 42 rôznych áut zo Slovenska.",
     "ads": 42,
     "median": "5 145 €",
-    "r2": "84 %"
+    "r2": "84 %",
+    "history": {
+      "updated_at": "2026-11-23T10:55:16",
+      "as_of": "2026-11-23",
+      "coverage": "partial",
+      "baseline_count": 28,
+      "total_count": 28,
+      "active_count": 28,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 28,
+      "paired_median_change_pct": 0,
+      "historical_median": 5145,
+      "seen_median": 5145,
+      "seen_price_count": 28,
+      "last_observed_at": "2026-11-23T10:37:40"
+    }
+  },
+  {
+    "slug": "mercedes-slk",
+    "file": "mercedes-slk-analyza.html",
+    "name": "Mercedes-Benz SLK / SLC",
+    "brand": "Mercedes-Benz",
+    "model": "SLK / SLC",
+    "kind": "model",
+    "date": "2026-11-23",
+    "summary": "Analýza aktuálnych inzerátov Mercedes-Benz SLK / SLC (R170, R171 a R172, 1996–2020, bez AMG 55 / 63) od 3 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (23. 11. 2026). Na portáloch je spolu 60 inzerátov (33 na bazoši, 16 na autobazar.eu, 11 na bazar.sk) – prezreli sme 97 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 40 rôznych áut zo Slovenska.",
+    "ads": 40,
+    "median": "7 500 €",
+    "r2": "87 %",
+    "history": {
+      "updated_at": "2026-11-23T10:55:16",
+      "as_of": "2026-11-23",
+      "coverage": "partial",
+      "baseline_count": 25,
+      "total_count": 25,
+      "active_count": 25,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 25,
+      "paired_median_change_pct": 0,
+      "historical_median": 7500,
+      "seen_median": 7500,
+      "seen_price_count": 25,
+      "last_observed_at": "2026-11-23T10:51:47"
+    }
+  },
+  {
+    "slug": "mercedes-g",
+    "file": "mercedes-g-analyza.html",
+    "name": "Mercedes-Benz trieda G",
+    "brand": "Mercedes-Benz",
+    "model": "trieda G",
+    "kind": "model",
+    "date": "2026-11-23",
+    "summary": "Analýza aktuálnych inzerátov Mercedes-Benz trieda G (W463, 1990+, bez AMG G 55 / G 63) od 15 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (23. 11. 2026). Na portáloch je spolu 2 263 inzerátov (2 076 na bazoši, 91 na autobazar.eu, 96 na bazar.sk) – prezreli sme 9 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 112 rôznych áut zo Slovenska.",
+    "ads": 112,
+    "median": "96 935 €",
+    "r2": "96 %",
+    "history": {
+      "updated_at": "2026-11-23T10:55:16",
+      "as_of": "2026-11-23",
+      "coverage": "partial",
+      "baseline_count": 64,
+      "total_count": 64,
+      "active_count": 64,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 64,
+      "paired_median_change_pct": 0,
+      "historical_median": 96935,
+      "seen_median": 96935,
+      "seen_price_count": 64,
+      "last_observed_at": "2026-11-23T10:48:30"
+    }
   },
   {
     "slug": "mercedes-vito",
@@ -437,7 +533,7 @@
     "median": "39 900 €",
     "r2": "89 %",
     "history": {
-      "updated_at": "2026-11-23T08:50:28",
+      "updated_at": "2026-11-23T10:55:16",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 150,
@@ -558,6 +654,19 @@
     "ads": 183,
     "median": "21 990 €",
     "r2": "93 %"
+  },
+  {
+    "slug": "porsche-911",
+    "file": "porsche-911-analyza.html",
+    "name": "Porsche 911",
+    "brand": "Porsche",
+    "model": "911",
+    "kind": "model",
+    "date": "2026-11-23",
+    "summary": "Analýza aktuálnych inzerátov Porsche 911 (996, 997, 991 a 992, kupé aj kabriolet, bez GT3 / GT2 / Turbo S) od 20 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (23. 11. 2026). Na portáloch je spolu 235 inzerátov (67 na bazoši, 91 na autobazar.eu, 77 na bazar.sk) – prezreli sme 87 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 121 rôznych áut zo Slovenska.",
+    "ads": 121,
+    "median": "91 420 €",
+    "r2": "90 %"
   },
   {
     "slug": "renault-espace",
@@ -2496,7 +2605,7 @@
     "median": "18 999 €",
     "r2": "93 %",
     "history": {
-      "updated_at": "2026-11-23T08:50:28",
+      "updated_at": "2026-11-23T10:55:16",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 221,
@@ -2528,7 +2637,7 @@
     "median": "12 999 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-23T08:50:28",
+      "updated_at": "2026-11-23T10:55:16",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 113,
@@ -2560,7 +2669,7 @@
     "median": "17 145 €",
     "r2": "93 %",
     "history": {
-      "updated_at": "2026-11-23T08:50:28",
+      "updated_at": "2026-11-23T10:55:16",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 516,
@@ -2592,7 +2701,7 @@
     "median": "20 500 €",
     "r2": "96 %",
     "history": {
-      "updated_at": "2026-11-23T08:50:28",
+      "updated_at": "2026-11-23T10:55:16",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 205,
@@ -2624,7 +2733,7 @@
     "median": "19 900 €",
     "r2": "88 %",
     "history": {
-      "updated_at": "2026-11-23T08:50:28",
+      "updated_at": "2026-11-23T10:55:16",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 69,
@@ -2656,7 +2765,7 @@
     "median": "23 799 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-23T08:50:28",
+      "updated_at": "2026-11-23T10:55:16",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 489,
@@ -2688,7 +2797,7 @@
     "median": "18 999 €",
     "r2": "96 %",
     "history": {
-      "updated_at": "2026-11-23T08:50:28",
+      "updated_at": "2026-11-23T10:55:16",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 132,
@@ -2720,7 +2829,7 @@
     "median": "32 500 €",
     "r2": "96 %",
     "history": {
-      "updated_at": "2026-11-23T08:50:28",
+      "updated_at": "2026-11-23T10:55:16",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 71,
@@ -2752,7 +2861,7 @@
     "median": "37 990 €",
     "r2": "95 %",
     "history": {
-      "updated_at": "2026-11-23T08:50:28",
+      "updated_at": "2026-11-23T10:55:16",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 368,
@@ -2784,7 +2893,7 @@
     "median": "39 999 €",
     "r2": "96 %",
     "history": {
-      "updated_at": "2026-11-23T08:50:28",
+      "updated_at": "2026-11-23T10:55:16",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 366,
@@ -2816,7 +2925,7 @@
     "median": "9 990 €",
     "r2": "84 %",
     "history": {
-      "updated_at": "2026-11-23T08:50:28",
+      "updated_at": "2026-11-23T10:55:16",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 79,
@@ -2848,7 +2957,7 @@
     "median": "70 000 €",
     "r2": "93 %",
     "history": {
-      "updated_at": "2026-11-23T08:50:28",
+      "updated_at": "2026-11-23T10:55:16",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 134,
@@ -2880,7 +2989,7 @@
     "median": "29 999 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-23T08:50:28",
+      "updated_at": "2026-11-23T10:55:16",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 110,
