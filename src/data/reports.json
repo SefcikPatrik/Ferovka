@@ -378,6 +378,19 @@
     "r2": "89 %"
   },
   {
+    "slug": "dacia-bigster",
+    "file": "dacia-bigster-analyza.html",
+    "name": "Dacia Bigster",
+    "brand": "Dacia",
+    "model": "Bigster",
+    "kind": "model",
+    "date": "2026-11-23",
+    "summary": "Analýza aktuálnych inzerátov Dacia Bigster (SUV od 2025) od 15 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (23. 11. 2026). Na portáloch je spolu 182 inzerátov (10 na bazoši, 99 na autobazar.eu, 73 na bazar.sk) – prezreli sme 60 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 99 rôznych áut zo Slovenska.",
+    "ads": 99,
+    "median": "27 545 €",
+    "r2": "73 %"
+  },
+  {
     "slug": "dacia-dokker",
     "file": "dacia-dokker-analyza.html",
     "name": "Dacia Dokker",
@@ -905,7 +918,7 @@
     "median": "5 145 €",
     "r2": "84 %",
     "history": {
-      "updated_at": "2026-11-23T10:55:16",
+      "updated_at": "2026-11-23T13:29:43",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 28,
@@ -935,7 +948,26 @@
     "summary": "Analýza aktuálnych inzerátov Mercedes-Benz SL (R129, R230 a R231, 1989–2020, bez AMG SL 55 / 63 / 65) od 8 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (23. 11. 2026). Na portáloch je spolu 148 inzerátov (45 na bazoši, 39 na autobazar.eu, 64 na bazar.sk) – prezreli sme 77 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 69 rôznych áut zo Slovenska.",
     "ads": 69,
     "median": "20 990 €",
-    "r2": "83 %"
+    "r2": "83 %",
+    "history": {
+      "updated_at": "2026-11-23T13:29:43",
+      "as_of": "2026-11-23",
+      "coverage": "partial",
+      "baseline_count": 41,
+      "total_count": 41,
+      "active_count": 41,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 41,
+      "paired_median_change_pct": 0,
+      "historical_median": 20990,
+      "seen_median": 20990,
+      "seen_price_count": 41,
+      "last_observed_at": "2026-11-23T11:08:33"
+    }
   },
   {
     "slug": "mercedes-slk",
@@ -950,7 +982,7 @@
     "median": "7 500 €",
     "r2": "87 %",
     "history": {
-      "updated_at": "2026-11-23T10:55:16",
+      "updated_at": "2026-11-23T13:29:43",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 25,
@@ -982,7 +1014,7 @@
     "median": "96 935 €",
     "r2": "96 %",
     "history": {
-      "updated_at": "2026-11-23T10:55:16",
+      "updated_at": "2026-11-23T13:29:43",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 64,
@@ -1002,6 +1034,38 @@
     }
   },
   {
+    "slug": "mercedes-viano",
+    "file": "mercedes-viano-analyza.html",
+    "name": "Mercedes-Benz Viano",
+    "brand": "Mercedes-Benz",
+    "model": "Viano",
+    "kind": "model",
+    "date": "2026-11-23",
+    "summary": "Analýza aktuálnych inzerátov Mercedes-Benz Viano (W639, 2003–2014, osobné 6–8-miestne MPV vrátane Marco Polo) od 4 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (23. 11. 2026). Na portáloch je spolu 67 inzerátov (52 na bazoši, 11 na autobazar.eu, 4 na bazar.sk) – prezreli sme 96 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 49 rôznych áut zo Slovenska.",
+    "ads": 49,
+    "median": "12 900 €",
+    "r2": "84 %",
+    "history": {
+      "updated_at": "2026-11-23T13:29:43",
+      "as_of": "2026-11-23",
+      "coverage": "partial",
+      "baseline_count": 29,
+      "total_count": 29,
+      "active_count": 29,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 29,
+      "paired_median_change_pct": 0,
+      "historical_median": 12900,
+      "seen_median": 12900,
+      "seen_price_count": 29,
+      "last_observed_at": "2026-11-23T13:24:42"
+    }
+  },
+  {
     "slug": "mercedes-vito",
     "file": "mercedes-vito-analyza.html",
     "name": "Mercedes-Benz Vito / trieda V",
@@ -1014,23 +1078,23 @@
     "median": "39 900 €",
     "r2": "89 %",
     "history": {
-      "updated_at": "2026-11-23T10:55:16",
+      "updated_at": "2026-11-23T13:29:43",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 150,
-      "total_count": 150,
-      "active_count": 150,
+      "total_count": 152,
+      "active_count": 152,
       "inactive_count": 0,
       "unverified_count": 0,
-      "new_count": 0,
+      "new_count": 2,
       "price_changed_count": 0,
       "price_lowered_count": 0,
       "paired_count": 150,
       "paired_median_change_pct": 0,
-      "historical_median": 39900,
-      "seen_median": 39900,
-      "seen_price_count": 150,
-      "last_observed_at": "2026-11-23T08:42:14"
+      "historical_median": 39625,
+      "seen_median": 39625,
+      "seen_price_count": 152,
+      "last_observed_at": "2026-11-23T13:24:42"
     }
   },
   {
@@ -1306,6 +1370,19 @@
     "r2": "91 %"
   },
   {
+    "slug": "skoda-elroq",
+    "file": "skoda-elroq-analyza.html",
+    "name": "Škoda Elroq",
+    "brand": "Škoda",
+    "model": "Elroq",
+    "kind": "model",
+    "date": "2026-11-23",
+    "summary": "Analýza aktuálnych inzerátov Škoda Elroq (elektrické SUV od 2024) od 20 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (23. 11. 2026). Na portáloch je spolu 40 inzerátov (4 na bazoši, 21 na autobazar.eu, 15 na bazar.sk) – prezreli sme 62 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 19 rôznych áut zo Slovenska.",
+    "ads": 19,
+    "median": "39 990 €",
+    "r2": "83 %"
+  },
+  {
     "slug": "skoda-felicia",
     "file": "skoda-felicia-analyza.html",
     "name": "Škoda Felicia",
@@ -1349,6 +1426,19 @@
       "seen_price_count": 186,
       "last_observed_at": "2026-11-23T09:22:45"
     }
+  },
+  {
+    "slug": "toyota-camry",
+    "file": "toyota-camry-analyza.html",
+    "name": "Toyota Camry",
+    "brand": "Toyota",
+    "model": "Camry",
+    "kind": "model",
+    "date": "2026-11-23",
+    "summary": "Analýza aktuálnych inzerátov Toyota Camry (XV70 od 2019 a XV80 od 2024, 2.5 Hybrid; aj staršie Camry) od 5 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (23. 11. 2026). Na portáloch je spolu 69 inzerátov (14 na bazoši, 28 na autobazar.eu, 27 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 36 rôznych áut zo Slovenska.",
+    "ads": 36,
+    "median": "35 450 €",
+    "r2": "99 %"
   },
   {
     "slug": "toyota-proace-verso",
@@ -3241,7 +3331,7 @@
     "median": "18 999 €",
     "r2": "93 %",
     "history": {
-      "updated_at": "2026-11-23T10:55:16",
+      "updated_at": "2026-11-23T13:29:43",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 221,
@@ -3273,7 +3363,7 @@
     "median": "12 999 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-23T10:55:16",
+      "updated_at": "2026-11-23T13:29:43",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 113,
@@ -3305,7 +3395,7 @@
     "median": "17 145 €",
     "r2": "93 %",
     "history": {
-      "updated_at": "2026-11-23T10:55:16",
+      "updated_at": "2026-11-23T13:29:43",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 516,
@@ -3337,7 +3427,7 @@
     "median": "20 500 €",
     "r2": "96 %",
     "history": {
-      "updated_at": "2026-11-23T10:55:16",
+      "updated_at": "2026-11-23T13:29:43",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 205,
@@ -3369,7 +3459,7 @@
     "median": "19 900 €",
     "r2": "88 %",
     "history": {
-      "updated_at": "2026-11-23T10:55:16",
+      "updated_at": "2026-11-23T13:29:43",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 69,
@@ -3401,7 +3491,7 @@
     "median": "23 799 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-23T10:55:16",
+      "updated_at": "2026-11-23T13:29:43",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 489,
@@ -3433,7 +3523,7 @@
     "median": "18 999 €",
     "r2": "96 %",
     "history": {
-      "updated_at": "2026-11-23T10:55:16",
+      "updated_at": "2026-11-23T13:29:43",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 132,
@@ -3465,7 +3555,7 @@
     "median": "32 500 €",
     "r2": "96 %",
     "history": {
-      "updated_at": "2026-11-23T10:55:16",
+      "updated_at": "2026-11-23T13:29:43",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 71,
@@ -3497,7 +3587,7 @@
     "median": "37 990 €",
     "r2": "95 %",
     "history": {
-      "updated_at": "2026-11-23T10:55:16",
+      "updated_at": "2026-11-23T13:29:43",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 368,
@@ -3529,7 +3619,7 @@
     "median": "39 999 €",
     "r2": "96 %",
     "history": {
-      "updated_at": "2026-11-23T10:55:16",
+      "updated_at": "2026-11-23T13:29:43",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 366,
@@ -3561,7 +3651,7 @@
     "median": "9 990 €",
     "r2": "84 %",
     "history": {
-      "updated_at": "2026-11-23T10:55:16",
+      "updated_at": "2026-11-23T13:29:43",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 79,
@@ -3593,7 +3683,7 @@
     "median": "70 000 €",
     "r2": "93 %",
     "history": {
-      "updated_at": "2026-11-23T10:55:16",
+      "updated_at": "2026-11-23T13:29:43",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 134,
@@ -3625,7 +3715,7 @@
     "median": "29 999 €",
     "r2": "94 %",
     "history": {
-      "updated_at": "2026-11-23T10:55:16",
+      "updated_at": "2026-11-23T13:29:43",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 110,
