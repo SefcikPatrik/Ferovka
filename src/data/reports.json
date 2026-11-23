@@ -1,5 +1,50 @@
 [
   {
+    "slug": "alfa-romeo-giulia",
+    "file": "alfa-romeo-giulia-analyza.html",
+    "name": "Alfa Romeo Giulia",
+    "brand": "Alfa",
+    "model": "Romeo Giulia",
+    "kind": "model",
+    "date": "2026-11-23",
+    "summary": "Analýza aktuálnych inzerátov Alfa Romeo Giulia (952, 2016+) od 10 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (23. 11. 2026). Na portáloch je spolu 56 inzerátov (19 na bazoši, 21 na autobazar.eu, 16 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 31 rôznych áut zo Slovenska.",
+    "ads": 31,
+    "median": "17 950 €",
+    "r2": "94 %"
+  },
+  {
+    "slug": "fiat-500x",
+    "file": "fiat-500x-analyza.html",
+    "name": "Fiat 500X",
+    "brand": "Fiat",
+    "model": "500X",
+    "kind": "model",
+    "date": "2026-11-23",
+    "summary": "Analýza aktuálnych inzerátov Fiat 500X (2014–2024 vrátane faceliftu 2018) od 4 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (23. 11. 2026). Na portáloch je spolu 46 inzerátov (14 na bazoši, 17 na autobazar.eu, 15 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 32 rôznych áut zo Slovenska.",
+    "ads": 32,
+    "median": "10 490 €",
+    "r2": "96 %",
+    "history": {
+      "updated_at": "2026-11-23T09:03:49",
+      "as_of": "2026-11-23",
+      "coverage": "partial",
+      "baseline_count": 27,
+      "total_count": 27,
+      "active_count": 27,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 27,
+      "paired_median_change_pct": 0,
+      "historical_median": 10490,
+      "seen_median": 10490,
+      "seen_price_count": 27,
+      "last_observed_at": "2026-11-23T08:58:36"
+    }
+  },
+  {
     "slug": "ford-tourneo-custom",
     "file": "ford-tourneo-custom-analyza.html",
     "name": "Ford Tourneo Custom",
@@ -11,6 +56,19 @@
     "ads": 421,
     "median": "23 900 €",
     "r2": "91 %"
+  },
+  {
+    "slug": "jeep-grand-cherokee",
+    "file": "jeep-grand-cherokee-analyza.html",
+    "name": "Jeep Grand Cherokee",
+    "brand": "Jeep",
+    "model": "Grand Cherokee",
+    "kind": "model",
+    "date": "2026-11-23",
+    "summary": "Analýza aktuálnych inzerátov Jeep Grand Cherokee (WK2 2011–2021 a WL 2022+) od 8 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (23. 11. 2026). Na portáloch je spolu 270 inzerátov (110 na bazoši, 65 na autobazar.eu, 95 na bazar.sk) – prezreli sme 87 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 154 rôznych áut zo Slovenska.",
+    "ads": 154,
+    "median": "15 500 €",
+    "r2": "93 %"
   },
   {
     "slug": "mercedes-vito",
@@ -56,6 +114,19 @@
     "ads": 183,
     "median": "21 990 €",
     "r2": "93 %"
+  },
+  {
+    "slug": "suzuki-ignis",
+    "file": "suzuki-ignis-analyza.html",
+    "name": "Suzuki Ignis",
+    "brand": "Suzuki",
+    "model": "Ignis",
+    "kind": "model",
+    "date": "2026-11-23",
+    "summary": "Analýza aktuálnych inzerátov Suzuki Ignis (tretia generácia 2016+) od 4 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (23. 11. 2026). Na portáloch je spolu 49 inzerátov (15 na bazoši, 20 na autobazar.eu, 14 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 30 rôznych áut zo Slovenska.",
+    "ads": 30,
+    "median": "10 740 €",
+    "r2": "91 %"
   },
   {
     "slug": "alfa-romeo-giulietta",
@@ -1094,7 +1165,7 @@
     "median": "7 692 €",
     "r2": "90 %",
     "history": {
-      "updated_at": "2026-11-23T08:28:26",
+      "updated_at": "2026-11-23T09:03:49",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 96,
@@ -1126,7 +1197,7 @@
     "median": "6 222 €",
     "r2": "98 %",
     "history": {
-      "updated_at": "2026-11-23T08:28:26",
+      "updated_at": "2026-11-23T09:03:49",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 11,
@@ -1158,7 +1229,7 @@
     "median": "2 100 €",
     "r2": "74 %",
     "history": {
-      "updated_at": "2026-11-23T08:28:26",
+      "updated_at": "2026-11-23T09:03:49",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 78,
@@ -3961,7 +4032,7 @@
     "median": "7 900 €",
     "r2": "92 %",
     "history": {
-      "updated_at": "2026-11-23T08:28:26",
+      "updated_at": "2026-11-23T09:03:49",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 121,
@@ -3993,7 +4064,7 @@
     "median": "7 895 €",
     "r2": "82 %",
     "history": {
-      "updated_at": "2026-11-23T08:28:26",
+      "updated_at": "2026-11-23T09:03:49",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 62,
