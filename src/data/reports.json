@@ -25,7 +25,7 @@
     "median": "4 450 €",
     "r2": "92 %",
     "history": {
-      "updated_at": "2026-11-23T10:08:50",
+      "updated_at": "2026-11-23T10:17:40",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 34,
@@ -43,6 +43,64 @@
       "seen_price_count": 34,
       "last_observed_at": "2026-11-23T10:05:48"
     }
+  },
+  {
+    "slug": "citroen-c3-aircross",
+    "file": "citroen-c3-aircross-analyza.html",
+    "name": "Citroën C3 Aircross",
+    "brand": "Citroën",
+    "model": "C3 Aircross",
+    "kind": "model",
+    "date": "2026-11-23",
+    "summary": "Analýza aktuálnych inzerátov Citroën C3 Aircross (2017+, malé SUV) od 5 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (23. 11. 2026). Na portáloch je spolu 1 292 inzerátov (695 na bazoši, 305 na autobazar.eu, 292 na bazar.sk) – prezreli sme 49 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 380 rôznych áut zo Slovenska.",
+    "ads": 380,
+    "median": "10 000 €",
+    "r2": "94 %",
+    "history": {
+      "updated_at": "2026-11-23T10:17:40",
+      "as_of": "2026-11-23",
+      "coverage": "partial",
+      "baseline_count": 57,
+      "total_count": 57,
+      "active_count": 57,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 57,
+      "paired_median_change_pct": 0,
+      "historical_median": 10000,
+      "seen_median": 10000,
+      "seen_price_count": 57,
+      "last_observed_at": "2026-11-23T10:11:05"
+    }
+  },
+  {
+    "slug": "dacia-dokker",
+    "file": "dacia-dokker-analyza.html",
+    "name": "Dacia Dokker",
+    "brand": "Dacia",
+    "model": "Dokker",
+    "kind": "model",
+    "date": "2026-11-23",
+    "summary": "Analýza aktuálnych inzerátov Dacia Dokker (2012–2021, osobná verzia) od 2 500 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (23. 11. 2026). Na portáloch je spolu 84 inzerátov (42 na bazoši, 23 na autobazar.eu, 19 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 55 rôznych áut zo Slovenska.",
+    "ads": 55,
+    "median": "6 990 €",
+    "r2": "86 %"
+  },
+  {
+    "slug": "fiat-500l",
+    "file": "fiat-500l-analyza.html",
+    "name": "Fiat 500L",
+    "brand": "Fiat",
+    "model": "500L",
+    "kind": "model",
+    "date": "2026-11-23",
+    "summary": "Analýza aktuálnych inzerátov Fiat 500L (2012–2022, malé MPV) od 2 500 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (23. 11. 2026). Na portáloch je spolu 61 inzerátov (26 na bazoši, 23 na autobazar.eu, 12 na bazar.sk) – prezreli sme 84 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 39 rôznych áut zo Slovenska.",
+    "ads": 39,
+    "median": "6 250 €",
+    "r2": "90 %"
   },
   {
     "slug": "fiat-500x",
@@ -404,6 +462,19 @@
     "ads": 55,
     "median": "27 950 €",
     "r2": "94 %"
+  },
+  {
+    "slug": "suzuki-grand-vitara",
+    "file": "suzuki-grand-vitara-analyza.html",
+    "name": "Suzuki Grand Vitara",
+    "brand": "Suzuki",
+    "model": "Grand Vitara",
+    "kind": "model",
+    "date": "2026-11-23",
+    "summary": "Analýza aktuálnych inzerátov Suzuki Grand Vitara (druhá generácia 2005–2015, terénne SUV) od 2 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (23. 11. 2026). Na portáloch je spolu 201 inzerátov (166 na bazoši, 22 na autobazar.eu, 13 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 176 rôznych áut zo Slovenska.",
+    "ads": 176,
+    "median": "5 674 €",
+    "r2": "54 %"
   },
   {
     "slug": "suzuki-ignis",
@@ -1308,7 +1379,7 @@
     "median": "3 800 €",
     "r2": "95 %",
     "history": {
-      "updated_at": "2026-11-23T10:08:50",
+      "updated_at": "2026-11-23T10:17:40",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 19,
@@ -1340,23 +1411,23 @@
     "median": "4 100 €",
     "r2": "96 %",
     "history": {
-      "updated_at": "2026-11-23T10:08:50",
+      "updated_at": "2026-11-23T10:17:40",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 50,
       "total_count": 50,
-      "active_count": 0,
+      "active_count": 2,
       "inactive_count": 0,
-      "unverified_count": 50,
+      "unverified_count": 48,
       "new_count": 0,
       "price_changed_count": 0,
       "price_lowered_count": 0,
-      "paired_count": 0,
-      "paired_median_change_pct": null,
+      "paired_count": 2,
+      "paired_median_change_pct": 0,
       "historical_median": 4100,
-      "seen_median": null,
-      "seen_price_count": 0,
-      "last_observed_at": "2026-11-22T18:06:19"
+      "seen_median": 6900,
+      "seen_price_count": 2,
+      "last_observed_at": "2026-11-23T10:10:58"
     }
   },
   {
@@ -1372,7 +1443,7 @@
     "median": "6 200 €",
     "r2": "92 %",
     "history": {
-      "updated_at": "2026-11-23T10:08:50",
+      "updated_at": "2026-11-23T10:17:40",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 110,
@@ -1404,7 +1475,7 @@
     "median": "6 795 €",
     "r2": "87 %",
     "history": {
-      "updated_at": "2026-11-23T10:08:50",
+      "updated_at": "2026-11-23T10:17:40",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 36,
@@ -1436,7 +1507,7 @@
     "median": "3 345 €",
     "r2": "98 %",
     "history": {
-      "updated_at": "2026-11-23T10:08:50",
+      "updated_at": "2026-11-23T10:17:40",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 52,
@@ -1468,23 +1539,23 @@
     "median": "16 400 €",
     "r2": "97 %",
     "history": {
-      "updated_at": "2026-11-23T10:08:50",
+      "updated_at": "2026-11-23T10:17:40",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 54,
       "total_count": 54,
-      "active_count": 0,
+      "active_count": 25,
       "inactive_count": 0,
-      "unverified_count": 54,
+      "unverified_count": 29,
       "new_count": 0,
       "price_changed_count": 0,
       "price_lowered_count": 0,
-      "paired_count": 0,
-      "paired_median_change_pct": null,
+      "paired_count": 17,
+      "paired_median_change_pct": 0,
       "historical_median": 16400,
-      "seen_median": null,
-      "seen_price_count": 0,
-      "last_observed_at": "2026-11-22T17:32:50"
+      "seen_median": 13900,
+      "seen_price_count": 17,
+      "last_observed_at": "2026-11-23T10:10:54"
     }
   },
   {
@@ -4245,7 +4316,7 @@
     "median": "9 700 €",
     "r2": "92 %",
     "history": {
-      "updated_at": "2026-11-23T10:08:50",
+      "updated_at": "2026-11-23T10:17:40",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 182,
@@ -4277,23 +4348,23 @@
     "median": "8 195 €",
     "r2": "95 %",
     "history": {
-      "updated_at": "2026-11-23T10:08:50",
+      "updated_at": "2026-11-23T10:17:40",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 188,
-      "total_count": 190,
-      "active_count": 0,
+      "total_count": 192,
+      "active_count": 125,
       "inactive_count": 0,
-      "unverified_count": 190,
-      "new_count": 2,
-      "price_changed_count": 0,
-      "price_lowered_count": 0,
-      "paired_count": 0,
-      "paired_median_change_pct": null,
-      "historical_median": 8145,
-      "seen_median": null,
-      "seen_price_count": 0,
-      "last_observed_at": "2026-11-22T18:06:15"
+      "unverified_count": 67,
+      "new_count": 4,
+      "price_changed_count": 1,
+      "price_lowered_count": 1,
+      "paired_count": 116,
+      "paired_median_change_pct": 0,
+      "historical_median": 8100,
+      "seen_median": 8888,
+      "seen_price_count": 119,
+      "last_observed_at": "2026-11-23T10:11:11"
     }
   },
   {
@@ -4309,7 +4380,7 @@
     "median": "6 100 €",
     "r2": "80 %",
     "history": {
-      "updated_at": "2026-11-23T10:08:50",
+      "updated_at": "2026-11-23T10:17:40",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 84,
