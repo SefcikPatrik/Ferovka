@@ -1,0 +1,735 @@
+<!doctype html>
+<html lang="sk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MG HS – analýza ponúk</title>
+<style>
+:root {
+  color-scheme: light;
+  --bg: #f6f6f4; --surface: #fcfcfb; --surface-2: #f0efec; --border: #e2e1dc;
+  --text: #0b0b0b; --text-2: #52514e; --muted: #7a7974;
+  --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a;
+  --pos: #2a78d6; --neg: #eb6834; --accent: #2a78d6;
+  --good: #1d7f4e; --bad: #b4332f; --grid: #e8e7e3;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #121211; --surface: #1a1a19; --surface-2: #232321; --border: #33332f;
+    --text: #f0efec; --text-2: #c3c2b7; --muted: #8f8e86;
+    --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+    --pos: #3987e5; --neg: #d95926; --accent: #5598e7;
+    --good: #4cc38a; --bad: #f07a76; --grid: #2a2a27;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #121211; --surface: #1a1a19; --surface-2: #232321; --border: #33332f;
+  --text: #f0efec; --text-2: #c3c2b7; --muted: #8f8e86;
+  --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+  --pos: #3987e5; --neg: #d95926; --accent: #5598e7;
+  --good: #4cc38a; --bad: #f07a76; --grid: #2a2a27;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text);
+  font: 15px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+main { max-width: 1120px; margin: 0 auto; padding: 32px 16px 64px; }
+a { color: var(--accent); text-decoration: none; } a:hover { text-decoration: underline; }
+h1 { font-size: 30px; margin: 0 0 4px; letter-spacing: -.01em; }
+h2 { font-size: 21px; margin: 48px 0 6px; }
+h3 { font-size: 15px; margin: 6px 0 4px; line-height: 1.35; }
+.lead { color: var(--text-2); margin: 0 0 20px; max-width: 760px; }
+.section-lead { color: var(--text-2); margin: 0 0 16px; max-width: 800px; }
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
+.kpi { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+.kpi .v { font-size: 26px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.kpi .l { color: var(--text-2); font-size: 13px; }
+.explain { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; margin-top: 12px; }
+.explain p { margin: 6px 0; color: var(--text-2); }
+.explain b { color: var(--text); }
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; }
+.card-head { display: flex; justify-content: space-between; gap: 8px; font-size: 12px; }
+.tag { font-weight: 600; color: var(--accent); }
+.loc { color: var(--muted); }
+.facts { color: var(--text-2); font-size: 13px; }
+.prices { display: grid; grid-template-columns: 1.2fr 1fr .8fr; gap: 8px; margin: 12px 0 8px; }
+.lbl { display: block; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+.big { font-size: 22px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.mid { font-size: 16px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.good { color: var(--good); }
+.meter { height: 6px; background: var(--surface-2); border-radius: 4px; overflow: hidden; }
+.meter span { display: block; height: 100%; background: var(--s1); border-radius: 4px; }
+.news ul { margin: 6px 0 0; padding-left: 20px; } .news li { margin: 4px 0; } .news .down { color: var(--good, #1baf7a); font-weight: 600; }
+.note { font-size: 12.5px; background: var(--surface-2); border-radius: 6px; padding: 6px 8px; margin-top: 8px; color: var(--text-2); }
+.pc { list-style: none; padding: 0; margin: 10px 0 0; font-size: 13.5px; }
+.pc li { padding-left: 20px; position: relative; margin: 3px 0; }
+.pc li.pro::before { content: "+"; position: absolute; left: 4px; color: var(--good); font-weight: 700; }
+.pc li.con::before { content: "–"; position: absolute; left: 4px; color: var(--bad); font-weight: 700; }
+.subhead { font-size: 15px; color: var(--text-2); margin: 22px 0 10px; font-weight: 600; }
+.chart-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 14px 8px; position: relative; }
+.legend { display: flex; flex-wrap: wrap; gap: 16px; font-size: 13px; color: var(--text-2); margin: 0 0 6px 4px; }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; }
+.legend .ring { background: transparent; border: 2px solid var(--text); width: 12px; height: 12px; }
+svg text { fill: var(--muted); font-size: 11px; }
+.tip { position: absolute; pointer-events: none; background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+  padding: 8px 10px; font-size: 12.5px; box-shadow: 0 6px 20px rgba(0,0,0,.15); max-width: 280px; display: none; z-index: 5; }
+.tip b { display: block; margin-bottom: 2px; }
+.tip .row { display: flex; justify-content: space-between; gap: 12px; color: var(--text-2); }
+.tip .row span:last-child { color: var(--text); font-variant-numeric: tabular-nums; }
+table { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; font-size: 13.5px; }
+th, td { padding: 9px 10px; border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; }
+th { font-size: 12px; color: var(--text-2); font-weight: 600; background: var(--surface-2); white-space: nowrap; }
+th.sortable { cursor: pointer; user-select: none; } th.sortable:hover { color: var(--text); }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+.sub { color: var(--text-2); font-size: 12.5px; margin-top: 2px; }
+.stars { color: #c98500; letter-spacing: 1px; white-space: nowrap; } .stars .off { color: var(--border); }
+.cellbar { height: 5px; background: var(--surface-2); border-radius: 3px; margin-bottom: 4px; }
+.cellbar span { display: block; height: 100%; background: var(--s1); border-radius: 3px; }
+.disc { display: inline-flex; align-items: center; gap: 6px; justify-content: flex-end; }
+.dbar { width: 54px; height: 6px; background: var(--surface-2); border-radius: 3px; position: relative; }
+.dbar span { position: absolute; top: 0; height: 100%; border-radius: 3px; }
+.filters { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 10px; align-items: center; }
+.filters select, .filters input { background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 6px 8px; font: inherit; font-size: 13px; }
+.filters .count { color: var(--muted); font-size: 13px; margin-left: auto; }
+.table-scroll { overflow-x: auto; border-radius: 12px; }
+.badge { font-size: 11px; padding: 1px 6px; border-radius: 10px; background: var(--surface-2); color: var(--text-2); white-space: nowrap; }
+.badge.pick { background: var(--s1); color: #fff; }
+.flag { color: var(--bad); font-size: 12px; }
+.warn { background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--neg); border-radius: 10px; padding: 12px 16px; }
+.warn li { margin: 4px 0; }
+.check { columns: 2 300px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px 14px 34px; margin: 0; }
+.check li { margin: 4px 0; break-inside: avoid; }
+footer { color: var(--muted); font-size: 12.5px; margin-top: 48px; border-top: 1px solid var(--border); padding-top: 14px; }
+.theme-btn { float: right; background: var(--surface); color: var(--text-2); border: 1px solid var(--border); border-radius: 8px; padding: 5px 10px; cursor: pointer; font: inherit; font-size: 13px; }
+@media (max-width: 640px) { h1 { font-size: 24px; } .prices { grid-template-columns: 1fr 1fr 1fr; } .big { font-size: 18px; } th, td { padding: 7px 6px; } }
+</style>
+<!-- ferovka-theme --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"><style id="ferovka-theme">/* Férovka look for the generated analyses – injected by sync-reports.mjs after each report's own <style>.
+   Same palette and type as the site; chart colours (--s1..--s3) stay the validated set. */
+:root {
+  --bg: #f5f4ef; --surface: #fdfdfb; --surface-2: #eeede6; --border: #e1dfd6;
+  --text: #0f1513; --text-2: #4f5551; --muted: #6f746f;
+  --accent: #0b8a56; --good: #0b7a4b; --grid: #e6e4dc; --win: #dff3e9;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d110f; --surface: #151a17; --surface-2: #1d2420; --border: #2a322d;
+    --text: #eef1ec; --text-2: #b6bdb6; --muted: #8f978f;
+    --accent: #2fc583; --good: #4cd08f; --grid: #1f2622; --win: #143223;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d110f; --surface: #151a17; --surface-2: #1d2420; --border: #2a322d;
+  --text: #eef1ec; --text-2: #b6bdb6; --muted: #8f978f;
+  --accent: #2fc583; --good: #4cd08f; --grid: #1f2622; --win: #143223;
+}
+
+body { font-family: "Manrope", system-ui, sans-serif; }
+h1, h2 { letter-spacing: -0.02em; font-weight: 800; }
+.tag { color: var(--accent); }
+
+/* photo header (removed by the site's viewer, which shows its own) */
+.fv-hero { position: relative; margin: 0 0 26px; border-radius: 20px; overflow: hidden; aspect-ratio: 21 / 8; background: #0d110f; display: flex; }
+.fv-hero img { flex: 1; min-width: 0; height: 100%; object-fit: cover; animation: fv-zoom 1.4s cubic-bezier(.2,.7,.2,1) both; }
+.fv-collage img + img { border-left: 3px solid #0d110f; }
+.fv-hero::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(180deg, transparent 55%, rgb(13 17 15 / .75)),
+    repeating-linear-gradient(90deg, rgb(47 197 131 / .06) 0 1px, transparent 1px 48px); }
+.fv-hero figcaption { position: absolute; right: 12px; bottom: 8px; z-index: 1; font-size: 11px; color: rgb(255 255 255 / .75); }
+.fv-hero figcaption a { color: inherit; }
+
+/* cards & panels: softer, lift on hover */
+.card, .kpi, .explain, .chart-wrap, .box { border-radius: 16px; }
+.card { transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease; }
+.card:hover { transform: translateY(-3px); border-color: var(--accent); box-shadow: 0 14px 30px -18px rgb(0 0 0 / .45); }
+.badge.pick { background: var(--accent); }
+
+/* entrance animation */
+@keyframes fv-up { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes fv-zoom { from { transform: scale(1.08); filter: brightness(.6); } to { transform: none; filter: none; } }
+h1, .lead, .kpis, .cards .card { animation: fv-up .6s cubic-bezier(.2,.7,.2,1) both; }
+.lead { animation-delay: .08s; }
+.kpis { animation-delay: .16s; }
+.cards .card:nth-child(2) { animation-delay: .06s; }
+.cards .card:nth-child(3) { animation-delay: .12s; }
+.cards .card:nth-child(4) { animation-delay: .18s; }
+.cards .card:nth-child(5) { animation-delay: .24s; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+@media (max-width: 640px) { .fv-hero { aspect-ratio: 16 / 9; border-radius: 14px; } }
+
+/* touch: hint under the chart tooltip (report-chart.js) */
+.fv-hint { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--border, rgba(127,127,127,.3)); font-weight: 700; color: var(--accent, #2fc583); }
+</style><!-- /ferovka-theme -->
+</head>
+<body>
+<main><!-- ferovka-theme --><!-- /ferovka-theme -->
+<button class="theme-btn" id="themeBtn" type="button">Svetlý / tmavý</button>
+<h1>MG HS – ktorá ponuka sa oplatí</h1>
+<p class="lead">Analýza aktuálnych inzerátov MG HS (2019+, benzín aj plug-in hybrid) od 8 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (23. 11. 2026). Na portáloch je spolu 212 inzerátov (32 na bazoši, 180 na autobazar.eu, 0 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 126 rôznych áut zo Slovenska. Každé auto sme porovnali
+s <b>férovou cenou</b>: tú vypočítal model naučený na celom trhu podľa veku, nájazdu, motora, prevodovky a typu predajcu.</p>
+
+<div class="kpis">
+  <div class="kpi"><div class="v">126</div><div class="l">inzerátov MG HS (nad 8 000 €)</div></div>
+  <div class="kpi"><div class="v">38</div><div class="l">ohodnotených (majú rok aj km)</div></div>
+  <div class="kpi"><div class="v">27 000 €</div><div class="l">medián ceny s DPH</div></div>
+  <div class="kpi"><div class="v">89 %</div><div class="l">rozdielov v cenách vysvetlí model</div></div>
+</div>
+
+
+<h2>Odkiaľ sú dáta: bazoš, autobazar.eu a bazar.sk</h2>
+<div class="kpis">
+  <div class="kpi"><div class="v">6</div><div class="l">ohodnotených z bazoša</div></div>
+  <div class="kpi"><div class="v">32</div><div class="l">ohodnotených z autobazar.eu</div></div><div class="kpi"><div class="v">0</div><div class="l">ohodnotených z bazar.sk</div></div>
+  <div class="kpi"><div class="v">9</div><div class="l">áut bolo na viacerých portáloch – započítané raz</div></div>
+  <div class="kpi"><div class="v">12 / 3</div><div class="l">s uvedeným pôvodom SR / dovoz</div></div>
+</div>
+<div class="explain">
+  <p><b>Tri portály, jeden trh.</b> Bazoš prehľadal 32 inzerátov, autobazar.eu
+  179, bazar.sk 0. Ponuky z Česka (na autobazar.eu ich je veľa) sme vynechali. Autobazáre často dávajú
+  to isté auto na viac portálov. Takéto dvojice (5 v rebríčku) sme spojili podľa VIN alebo zhody roku, km a ceny,
+  aby sa v modeli nerátali dvakrát. Pri aute nájdeš odkaz na všetky ponuky – niekedy sa líšia cenou.</p>
+  <p><b>Rozdiel medzi portálmi:</b> rovnaké auto je na autobazar.eu v priemere -4,0 %
+  oproti bazošu. Na autobazar.eu predávajú hlavne firmy (31 z 32 ohodnotených).</p>
+  <p><b>Kúpené v SR vs. dovoz:</b> autá s uvedeným pôvodom zo SR sú oproti autám bez uvedeného pôvodu
+  +1,3 %, dovezené –
+  (pri rovnakom veku, nájazde a motore). Pôvod zo SR je výhoda pri overovaní histórie, trh zaň však nepripláca – väčšina
+  inzerátov pôvod jednoducho neuvádza. V tabulke dole si môžeš nechať zobraziť len autá kúpené v SR.</p>
+</div>
+
+<h2>Čo hýbe cenou MG HS</h2>
+<p class="section-lead">Toto sa model naučil z trhu. Keď porovnávaš dve autá, tieto čísla ti povedia, koľko má byť
+rozdiel v cene, aby to bolo fér.</p>
+<div class="kpis">
+  <div class="kpi"><div class="v">-5,1 %</div><div class="l">každých ďalších 10 000 km</div></div>
+  <div class="kpi"><div class="v">-2,2 %</div><div class="l">každý rok veku navyše</div></div>
+  <div class="kpi"><div class="v">+6 %</div><div class="l">príplatok za automat (DSG)</div></div>
+  <div class="kpi"><div class="v">+5,1 %</div><div class="l">príplatok u predajcu / firmy</div></div>
+  <div class="kpi"><div class="v">+5,8 %</div><div class="l">MG HS druhej generácie (2025+) oproti cene podľa veku</div></div>
+  <div class="kpi"><div class="v">+6,4 %</div><div class="l">príplatok za automat</div></div>
+</div>
+<div class="explain">
+  <p><b>Príklad:</b> dve rovnaké MG HS 1.5 T-GDI z roku 2022, jedno má 60 tis. km, druhé 120 tis. km. Druhé má byť
+  približne o 31 % lacnejšie (6 × -5,1 %). Ak je lacnejšie len o 5 %, preplácaš kilometre.</p>
+  <p><b>Ako čítať „pod trhom“:</b> +15 % znamená, že auto stojí o 15 % menej, než by malo podľa trhu. Bežný rozptyl
+  cien je asi ±8 %, takže až zľava nad ~10–15 % je naozaj výnimočná. Pri takej zľave vždy zisti, prečo je auto lacné
+  (stav, história, nájazd).</p>
+  <p><b>DPH:</b> ceny uvedené bez DPH (napr. „10 300 € netto“) sme prepočítali na cenu s DPH, ktorú zaplatí súkromná osoba.</p>
+</div>
+
+<h2>Odporúčané ponuky</h2>
+<p class="section-lead">Kandidáti s najlepším pomerom cena / vek / nájazd, ktorých celý inzerát sme prečítali.
+Zoradené podľa toho, ako ich odporúčame.</p>
+<div class="subhead">MG HS druhej generácie (2025+) a mladšie autá – najlepší pomer cena / vek</div>
+<div class="cards">
+<article class="card">
+  <div class="card-head"><span class="tag">MG HS 1.5 TGI Exclusive automat s 10 tis. km</span><span class="loc">Trnava</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/mg-hs-15-tgi-exclusive-at/Amf0TdT23o-/" target="_blank" rel="noopener">Mg HS 1.5 TGI Exclusive A/T</a></h3>
+  <div class="facts">2024 · 10 232 km · 1.5 T-GDI benzín 119–125 kW · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · kúpené v SR</div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">21 990 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">25 050 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+12.2 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:41%"></span></div>
+  <ul class="pc"><li class="pro">2024, 1.5 T-GDI, automat, 10 tis. km</li><li class="pro">Pôvod SR, 1. majiteľ, v záruke, predáva autorizovaný predajca</li><li class="pro">~12 % pod férovou cenou</li><li class="con">Vyššia spotreba benzínu</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 133 dní (od 13. 7.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">MG HS HEV hybrid Emotion so zárukou 7 rokov</span><span class="loc">Zlaté Moravce</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/mg-hs-hev-emotion/AmSUB-ahnMH/" target="_blank" rel="noopener">Mg HS HEV Emotion</a></h3>
+  <div class="facts">2026 · 10 234 km · HS PHEV a HEV hybrid 1.5 165–200 kW · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · kúpené v SR</div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">26 990 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">30 610 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+11.8 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:39%"></span></div>
+  <ul class="pc"><li class="pro">2026, plný hybrid HEV, automat, 10 tis. km</li><li class="pro">Pôvod SR, záruka 7 rokov / 150 tis. km</li><li class="pro">~12 % pod férovou cenou</li><li class="con">Predáva autobazár</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 345 dní (od 13. 12.)</p><!-- history-card:end --></article></div>
+<div class="subhead">Lacnejšie MG HS do 18 000 €</div>
+<div class="cards">
+<article class="card">
+  <div class="card-head"><span class="tag">MG HS 1.5T DCT Exclusive za 18 990 €</span><span class="loc">Košice-Dargovských hrdinov</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/mg-hs-15t-dct-exvlusive-at7-119kw/AmSBibTfU7B/" target="_blank" rel="noopener">MG HS 1.5T DCT Exclusive AT7 119kW</a></h3>
+  <div class="facts">2024 · 45 187 km · 1.5 T-GDI benzín 119–125 kW · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · kúpené v SR</div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">18 990 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">20 640 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+8.0 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:27%"></span></div>
+  <ul class="pc"><li class="pro">2024, 1.5 T-GDI 119 kW, automat DCT, 45 tis. km</li><li class="pro">Pôvod SR, najvyššia výbava Exclusive</li><li class="pro">~8 % pod férovou cenou</li><li class="con">Inzerát bez popisu</li><li class="con">Predáva autobazár</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 27 dní (od 27. 10.)</p><!-- history-card:end --></article>
+<article class="card">
+  <div class="card-head"><span class="tag">MG HS 1.5 TGI automat po 1. majiteľovi</span><span class="loc">Dunajská Streda</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/mg-hs-15-tgi-automat-sr1maj/AemzFSyBSVK/" target="_blank" rel="noopener">MG HS 1.5 TGI, Automat, SR,1.maj</a></h3>
+  <div class="facts">2023 · 58 423 km · 1.5 T-GDI benzín 119–125 kW · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">17 200 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">18 260 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+5.8 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:19%"></span></div>
+  <ul class="pc"><li class="pro">2023, 1.5 T-GDI, automat, 58 tis. km</li><li class="pro">1. majiteľ</li><li class="pro">~6 % pod férovou cenou</li><li class="con">Predáva AAA AUTO – cena pri financovaní je iná</li></ul>
+<!-- history-card:start --><p class="note fv-history-card">V ponuke 50 dní (od 4. 10.)</p><!-- history-card:end --></article></div>
+<div class="subhead">Špeciálne prípady</div>
+<div class="cards"></div>
+
+<h2>Cena vs. nájazd: celý trh na jednom grafe</h2>
+<p class="section-lead">Každý bod je jeden inzerát. Čím nižšie bod leží oproti ostatným s podobným nájazdom, tým je auto lacnejšie.
+Krúžkom sú označené odporúčané ponuky. Prejdi myšou na bod a uvidíš detail.</p>
+<div class="chart-wrap" id="chartWrap">
+  <div class="legend" id="legend"></div>
+  <svg id="chart" width="100%" height="420" role="img" aria-label="Bodový graf ceny a nájazdu inzerátov"></svg>
+  <div class="tip" id="tip"></div>
+</div>
+
+<h2>Porovnanie motorov</h2>
+<p class="section-lead">Hodnotenie (hviezdičky) zohľadňuje spoľahlivosť, spoľahlivosť a náklady na prevádzku a pomer cena/výkon.
+Číselné stĺpce sú mediány z ohodnotených inzerátov.</p>
+<div class="table-scroll">
+<table>
+  <thead><tr><th>Motor</th><th>Hodnotenie</th><th class="num">Ponúk</th><th class="num">Medián ceny</th><th class="num">Medián roku</th><th class="num">Medián km</th></tr></thead>
+  <tbody>
+<tr>
+  <td><b>HS PHEV a HEV hybrid 1.5 165–200 kW</b><div class="sub">Plug-in hybrid 258–272 k s dojazdom ~50–100 km na elektrinu alebo plný hybrid HEV (2025+). Pri PHEV over batériu a nabíjanie.</div></td>
+  <td><span class="stars" aria-label="3 z 5">★★★<span class="off">★★</span></span></td>
+  <td class="num">11</td>
+  <td class="num"><div class="cellbar"><span style="width:100%"></span></div>31 990 €</td>
+  <td class="num">2026</td>
+  <td class="num">5 820 km</td>
+</tr>
+<tr>
+  <td><b>1.5 T-GDI benzín 119–125 kW</b><div class="sub">Turbobenzín 162–170 k, manuál alebo 7-st. DCT. Vyššia spotreba (~8 l).</div></td>
+  <td><span class="stars" aria-label="3 z 5">★★★<span class="off">★★</span></span></td>
+  <td class="num">27</td>
+  <td class="num"><div class="cellbar"><span style="width:81%"></span></div>26 000 €</td>
+  <td class="num">2025</td>
+  <td class="num">14 891 km</td>
+</tr></tbody>
+</table>
+</div>
+<div class="explain">
+  <p><b>MG HS</b> je kompaktné SUV čínskej značky SAIC Motor, veľkosťou ako Tiguan či Sportage, za výrazne nižšiu cenu.
+  Prvá generácia od 2019 (aj plug-in hybrid <b>HS PHEV</b>), druhá generácia od 2025. Výhodou je záruka 7 rokov / 150 tis. km.</p>
+  <p><b>Ktorý motor zvoliť?</b> Benzín <b>1.5 T-GDI</b> je jednoduchší, ale smädnejší. <b>PHEV</b> má zmysel s nabíjaním doma.
+  Ojazdené MG strácajú hodnotu rýchlejšie ako konkurencia – pre kupujúceho výhoda.</p>
+</div>
+
+<h2>Na čo si dať pozor</h2>
+<div class="warn">
+  <p><b>Lacné kvôli extrémnemu nájazdu</b> (viac ako 35 tis. km ročne, typicky flotila alebo taxi):</p>
+  <ul><li>Žiadne výrazné prípady.</li></ul>
+  <p><b>Ďalšie veci, ktoré sme v inzerátoch našli:</b></p><ul><li>Takmer všetky MG HS v ponuke sú mladé autá od predajcov (2023–2026), často predvádzacie – staršej prvej generácie je minimum.</li><li>Nové autá zo skladu (do 1 000 km) sme nezarátali, niektoré autá boli vložené dvakrát – duplicity sme vyradili.</li><li>Pri inzerátoch AAA AUTO je uvedená „cena pri financovaní“ – bez úveru môže byť cena vyššia.</li></ul><p><b>Vyradené z porovnania</b> (poškodené autá alebo nezmyselné údaje – model ich nehodnotí):</p><ul><li><a href='https://www.autobazar.eu/detail/mg-hs-phev-15tgi-elektromotor-214kwh/AmZEfKu5JGy/' target='_blank' rel='noopener'>Mg HS PHEV 1,5TGI + elektromotor 21,4kWh</a> (36 500 €): podozrivo nízky nájazd</li><li><a href='https://www.autobazar.eu/detail/mg-hs-hev-15tgi-emotion/AmVpcSM0Rkrf/' target='_blank' rel='noopener'>Mg HS HEV 1,5TGI - EMOTION ,  165kW / 224k</a> (29 140 €): podozrivo nízky nájazd</li><li><a href='https://www.autobazar.eu/detail/mg-hs-hev-15tgi-emotion/AmQ1WkShy5K/' target='_blank' rel='noopener'>Mg HS HEV 1,5TGI EMOTION</a> (29 140 €): podozrivo nízky nájazd</li><li><a href='https://www.autobazar.eu/detail/mg-hs-ice-15tgi-exclusive/AmFV_lSOTTY/' target='_blank' rel='noopener'>Mg HS ICE 1,5TGI EXCLUSIVE</a> (29 680 €): podozrivo nízky nájazd</li><li><a href='https://www.autobazar.eu/detail/mg-hs-hev-15t-exclusive/Am3Prhkp2p_/' target='_blank' rel='noopener'>Mg HS HEV 1,5TGI - EXCLUSIVE , 165kW / 224k</a> (31 564 €): podozrivo nízky nájazd</li><li><a href='https://www.autobazar.eu/detail/mg-hs-ice-exclusive-15-tgi-7at/Aer3yaH175d/' target='_blank' rel='noopener'>Mg HS ICE EXCLUSIVE 1,5 TGI 7AT</a> (29 990 €): podozrivo nízky nájazd</li><li><a href='https://www.autobazar.eu/detail/mg-hs-mg-hs-15t-exlusive-7dct-hampsted-grey/Ae3hMn-TmD0/' target='_blank' rel='noopener'>Mg HS MG HS 1,5T Exlusive 7DCT Hampsted Grey</a> (29 990 €): podozrivo nízky nájazd</li><li><a href='https://www.autobazar.eu/detail/mg-hs-emotion-125kw170-k-6-st-manual/AmCBaS9kbXz/' target='_blank' rel='noopener'>MG HS Exclusive 125kw/170 k 6 st. manuál</a> (27 390 €): havarované / poškodené – cena nie je porovnateľná s trhom</li><li><a href='https://www.autobazar.eu/detail/mg-hs-15t-emotion-at-my26/Amqq0tgkaQL/' target='_blank' rel='noopener'>MG HS 1.5T EMOTION AT MY26</a> (27 890 €): podozrivo nízky nájazd</li><li><a href='https://www.autobazar.eu/detail/mg-hs-15l-emotion-125kw/AmCq82i4jyc/' target='_blank' rel='noopener'>MG HS 1,5l EMOTION 125kw</a> (27 890 €): havarované / poškodené – cena nie je porovnateľná s trhom</li><li><a href='https://www.autobazar.eu/detail/mg-hs-hev-exclusive/Am5UVojci60/' target='_blank' rel='noopener'>MG HS HYBRID+ Exclusive 1,5 turbo 164 KW/226 koní</a> (31 790 €): havarované / poškodené – cena nie je porovnateľná s trhom</li><li><a href='https://www.autobazar.eu/detail/mg-hs-15t-emotion/AmBV8Vwk7eO/' target='_blank' rel='noopener'>MG HS 1.5T EMOTION</a> (29 590 €): podozrivo nízky nájazd</li><li><a href='https://www.autobazar.eu/detail/mg-hs-hybrid-15tgi-elektromotor/AmzYkOxjPka/' target='_blank' rel='noopener'>MG HS Emotion  Hybrid + 1,5TGI + elektromotor</a> (32 090 €): havarované / poškodené – cena nie je porovnateľná s trhom</li><li><a href='https://www.autobazar.eu/detail/mg-hs-15tgi-125kw/AmbztAEIbup/' target='_blank' rel='noopener'>MG HS EMOTION 1,5TGI / 125kw / AT7</a> (28 990 €): havarované / poškodené – cena nie je porovnateľná s trhom</li><li><a href='https://www.autobazar.eu/detail/hg-hs-15tgi-125kw-6mt/AmMcX2Plyov/' target='_blank' rel='noopener'>MG HS EMOTION 1,5TGI / 125kw / 6MT</a> (25 790 €): havarované / poškodené – cena nie je porovnateľná s trhom</li><li><a href='https://www.autobazar.eu/detail/mg-hs-emotion-15-tgi-6mt/AmCAcEnnh1D/' target='_blank' rel='noopener'>MG HS Emotion 1,5 TGI 6MT</a> (24 890 €): havarované / poškodené – cena nie je porovnateľná s trhom</li></ul><p><b>MG ZS, MG4, MG3 a iné modely z vyhľadávania, nové autá zo skladu, inzeráty s chybným nájazdom</b> (30 inzerátov) sme z rebríčka vynechali.</p>
+  <p>Ďalších <b>39</b> inzerátov nemá v texte rok alebo kilometre, takže ich nebolo možné ohodnotiť.
+  Ak ťa niektorý zaujme, predajcu sa na tieto údaje opýtaj.</p>
+</div>
+
+<h2>Kompletný rebríček</h2>
+<p class="section-lead">Všetky ohodnotené inzeráty. Kliknutím na hlavičku stĺpca zoraďuješ, filtrom zužuješ výber.</p>
+<div class="filters">
+  <select id="fEngine"><option value="">Všetky motory</option></select>
+  <select id="fTrans"><option value="">Každá prevodovka</option><option value="automatic">Automat</option><option value="manual">Manuál</option></select>
+  <select id="fSeller"><option value="">Všetci predajcovia</option><option value="nodealer">Bez autobazárov</option></select>
+  <select id="fSource"><option value="">Všetky portály</option><option value="bazos">bazoš</option><option value="autobazar">autobazar.eu</option><option value="bazarsk">bazar.sk</option></select>
+  <select id="fBody" hidden><option value=""></option></select>
+  <select id="fOrigin"><option value="">Akýkoľvek pôvod</option><option value="SR">Kúpené v SR</option><option value="dovoz">Dovoz</option></select>
+  <input id="fMax" type="number" placeholder="Max. cena €" step="500" min="0" style="width:120px">
+  <span class="count" id="count"></span>
+</div>
+<div class="table-scroll">
+<table id="tbl">
+  <thead><tr>
+    <th class="sortable" data-k="title">Inzerát</th>
+    <th class="sortable num" data-k="year">Rok</th>
+    <th class="sortable num" data-k="km">Km</th>
+    <th class="sortable num" data-k="price_gross">Cena</th>
+    <th class="sortable num" data-k="fair_price">Férová</th>
+    <th class="sortable num" data-k="discount_pct">Pod trhom ▾</th>
+  </tr></thead>
+  <tbody></tbody>
+</table>
+</div>
+
+<h2>Pred kúpou over</h2>
+<ul class="check">
+  <li>VIN cez Cebia / autoDNA (história km, havárie)</li>
+  <li>Platnosť záruky MG 7 rokov / 150 tis. km – podmienkou je servis v sieti MG</li>
+  <li>Automat DCT: plynulosť pri pomalej jazde</li>
+  <li>PHEV: stav batérie a nabíjanie</li>
+  <li>STK/EK protokol a dátum platnosti</li>
+</ul>
+
+<footer>
+  Zdroj: auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (len ponuky zo Slovenska, to isté auto na viacerých portáloch je započítané raz), sťahované cez lokálny MCP server bazos-mcp (nástroj <code>fair_price</code>), 23. 11. 2026.
+  Model: ridge regresia log(ceny s DPH) podľa veku, veku², km, km², prevodovky, typu predajcu, motora, karosérie, pohonu 4x4, pôvodu (SR / dovoz) a portálu. Vzorka 38
+  inzerátov, R² 89 %. Parametre sú vyťažené z textu inzerátov, a preto môžu obsahovať chyby. Odporúčané ponuky sme overili
+  prečítaním celého inzerátu. Hodnotenie motorov je odborný odhad, nie výsledok modelu.
+</footer>
+</main>
+
+<script>
+const DATA = [{"id": "ab-Amf0TdT23o-", "url": "https://www.autobazar.eu/detail/mg-hs-15-tgi-exclusive-at/Amf0TdT23o-/", "title": "Mg HS 1.5 TGI Exclusive A/T", "price": 21990, "price_gross": 21990, "fair_price": 25050.0, "discount_pct": 12.2, "verdict": "pod trhom", "year": 2024, "km": 10232, "km_per_year": 4400.0, "eg": "1.5 T-GDI benzín 119–125 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Trnava", "flags": [], "pick": "top", "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "ab-AmSUB-ahnMH", "url": "https://www.autobazar.eu/detail/mg-hs-hev-emotion/AmSUB-ahnMH/", "title": "Mg HS HEV Emotion", "price": 26990, "price_gross": 26990, "fair_price": 30610.0, "discount_pct": 11.8, "verdict": "pod trhom", "year": 2026, "km": 10234, "km_per_year": 30700.0, "eg": "HS PHEV a HEV hybrid 1.5 165–200 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Zlaté Moravce", "flags": [], "pick": "top", "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "ab-AmSBibTfU7B", "url": "https://www.autobazar.eu/detail/mg-hs-15t-dct-exvlusive-at7-119kw/AmSBibTfU7B/", "title": "MG HS 1.5T DCT Exclusive AT7 119kW", "price": 18990, "price_gross": 18990, "fair_price": 20640.0, "discount_pct": 8.0, "verdict": "pod trhom", "year": 2024, "km": 45187, "km_per_year": 19400.0, "eg": "1.5 T-GDI benzín 119–125 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Košice-Dargovských hrdinov", "flags": [], "pick": "budget", "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "ab-AemzFSyBSVK", "url": "https://www.autobazar.eu/detail/mg-hs-15-tgi-automat-sr1maj/AemzFSyBSVK/", "title": "MG HS 1.5 TGI, Automat, SR,1.maj", "price": 17200, "price_gross": 17200, "fair_price": 18260.0, "discount_pct": 5.8, "verdict": "férová cena", "year": 2023, "km": 58423, "km_per_year": 17500.0, "eg": "1.5 T-GDI benzín 119–125 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Dunajská Streda", "flags": [], "pick": "budget", "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "196915972", "url": "https://auto.bazos.sk/inzerat/196915972/mg-hs-15t-exclusive-at7-plna-vybava.php", "title": "MG HS 1.5T EXCLUSIVE AT7, plná výbava", "price": 26990, "price_gross": 26990, "fair_price": 28400.0, "discount_pct": 5.0, "verdict": "férová cena", "year": 2025, "km": 7932, "km_per_year": 5900.0, "eg": "1.5 T-GDI benzín 119–125 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Galanta", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AmekwWIitJZ", "url": "https://www.autobazar.eu/detail/mg-hs-15t-emotion-mt/AmekwWIitJZ/", "title": "MG HS 1.5T EMOTION MT", "price": 25500, "price_gross": 25500, "fair_price": 26700.0, "discount_pct": 4.5, "verdict": "férová cena", "year": 2026, "km": 1788, "km_per_year": 5400.0, "eg": "1.5 T-GDI benzín 119–125 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Zvolen", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AmOVzdRqXQU", "url": "https://www.autobazar.eu/detail/mg-hs-ice-15-tgi-emotion/AmOVzdRqXQU/", "title": "Mg HS ICE 1,5 TGI EMOTION + zimné kompletné kolesá", "price": 25110, "price_gross": 25110, "fair_price": 26150.0, "discount_pct": 4.0, "verdict": "férová cena", "year": 2025, "km": 2000, "km_per_year": 1500.0, "eg": "1.5 T-GDI benzín 119–125 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Trnava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AmymzyWi3J-", "url": "https://www.autobazar.eu/detail/mg-hs-15-tgi-emotion-automat-sr1maj/AmymzyWi3J-/", "title": "MG HS 1.5 TGI, Emotion, Automat, SR,1.maj", "price": 25000, "price_gross": 25000, "fair_price": 25950.0, "discount_pct": 3.7, "verdict": "férová cena", "year": 2026, "km": 16046, "km_per_year": 48100.0, "eg": "1.5 T-GDI benzín 119–125 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Prešovský kraj", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AmsOJYSVG4j", "url": "https://www.autobazar.eu/detail/mg-hs-15t-emotion-at-my24/AmsOJYSVG4j/", "title": "MG HS 1.5T EMOTION AT MY24", "price": 27000, "price_gross": 27000, "fair_price": 27990.0, "discount_pct": 3.5, "verdict": "férová cena", "year": 2026, "km": 4652, "km_per_year": 14000.0, "eg": "1.5 T-GDI benzín 119–125 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Zvolen", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-Ae3mMim9bFa", "url": "https://www.autobazar.eu/detail/mg-hs-15-tgi-exclusive-automat/Ae3mMim9bFa/", "title": "MG HS 1.5 TGI, Exclusive, Automat", "price": 27000, "price_gross": 27000, "fair_price": 27840.0, "discount_pct": 3.0, "verdict": "férová cena", "year": 2025, "km": 7889, "km_per_year": 5900.0, "eg": "1.5 T-GDI benzín 119–125 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Trnava", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "suv"}, {"id": "ab-AmeY23qEl2M", "url": "https://www.autobazar.eu/detail/mg-hs-15-at2-105kw-na-splatky-na-protiucet/AmeY23qEl2M/", "title": "Mg HS 1.5 AT/2 105kW / NA SPLÁTKY / NA PROTIÚČET", "price": 27490, "price_gross": 27490, "fair_price": 28270.0, "discount_pct": 2.8, "verdict": "férová cena", "year": 2025, "km": 40775, "km_per_year": 30600.0, "eg": "HS PHEV a HEV hybrid 1.5 165–200 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Trenčín", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197306332", "url": "https://auto.bazos.sk/inzerat/197306332/mg-hs-15-at2-105kw-1majitel-v-zaruke.php", "price": 27490}], "body": "suv"}, {"id": "ab-AepF8SLyecP", "url": "https://www.autobazar.eu/detail/mg-hs-15-tgi-emotion-automat-sr1maj/AepF8SLyecP/", "title": "MG HS 1.5 TGI, Emotion, Automat, SR,1.maj", "price": 26000, "price_gross": 26000, "fair_price": 26700.0, "discount_pct": 2.6, "verdict": "férová cena", "year": 2026, "km": 11186, "km_per_year": 33600.0, "eg": "1.5 T-GDI benzín 119–125 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "197550079", "url": "https://auto.bazos.sk/inzerat/197550079/mg-hs-15t-exclusive-automat-komfort-a-styl.php", "title": "MG HS 1,5T EXCLUSIVE AUTOMAT - KOMFORT A ŠTÝL", "price": 26990, "price_gross": 26990, "fair_price": 27610.0, "discount_pct": 2.3, "verdict": "férová cena", "year": 2025, "km": 12312, "km_per_year": 9200.0, "eg": "1.5 T-GDI benzín 119–125 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Zlaté Moravce", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AmWnSYTE5G1", "url": "https://www.autobazar.eu/detail/mg-hs-exlusive-phev/AmWnSYTE5G1/", "title": "MG HS Exlusive PHEV", "price": 32490, "price_gross": 32490, "fair_price": 32990.0, "discount_pct": 1.5, "verdict": "férová cena", "year": 2026, "km": 5820, "km_per_year": 17500.0, "eg": "HS PHEV a HEV hybrid 1.5 165–200 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AegNQ9kmtpzs", "url": "https://www.autobazar.eu/detail/mg-hs-15-tgi-exclusive-automat/AegNQ9kmtpzs/", "title": "MG HS 1.5 TGI, Exclusive, Automat", "price": 27000, "price_gross": 27000, "fair_price": 27380.0, "discount_pct": 1.4, "verdict": "férová cena", "year": 2025, "km": 10887, "km_per_year": 8200.0, "eg": "1.5 T-GDI benzín 119–125 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Trnava", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "suv"}, {"id": "ab-AmxkOX_J9bl", "url": "https://www.autobazar.eu/detail/mg-hs-15t-exclusive-at/AmxkOX_J9bl/", "title": "MG HS 1,5T Exclusive AT", "price": 22500, "price_gross": 22500, "fair_price": 22700.0, "discount_pct": 0.9, "verdict": "férová cena", "year": 2024, "km": 33000, "km_per_year": 14100.0, "eg": "1.5 T-GDI benzín 119–125 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Galanta", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "ab-Amc40SmcHMX", "url": "https://www.autobazar.eu/detail/mg-hs-ehev-15t-exclusive-at/Amc40SmcHMX/", "title": "MG HS eHEV 1.5T EXCLUSIVE AT", "price": 29990, "price_gross": 29990, "fair_price": 30220.0, "discount_pct": 0.8, "verdict": "férová cena", "year": 2026, "km": 15347, "km_per_year": 46000.0, "eg": "HS PHEV a HEV hybrid 1.5 165–200 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AmSG-6UFNPO", "url": "https://www.autobazar.eu/detail/mg-hs-exlusive-hev/AmSG-6UFNPO/", "title": "MG HS Exlusive HEV", "price": 31671, "price_gross": 31671, "fair_price": 31730.0, "discount_pct": 0.2, "verdict": "férová cena", "year": 2026, "km": 1017, "km_per_year": 3100.0, "eg": "HS PHEV a HEV hybrid 1.5 165–200 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-Amte6eJ_vXC", "url": "https://www.autobazar.eu/detail/mg-hs-hybrid-15l-tgdi-at-exclusive/Amte6eJ_vXC/", "title": "Mg HS HYBRID 1,5l TGDI AT EXCLUSIVE", "price": 30990, "price_gross": 30990, "fair_price": 31020.0, "discount_pct": 0.1, "verdict": "férová cena", "year": 2025, "km": 1600, "km_per_year": 1200.0, "eg": "HS PHEV a HEV hybrid 1.5 165–200 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bardejov", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AexYMJEP9Cd", "url": "https://www.autobazar.eu/detail/mg-hs-15-tgi-excite-at-119kw162hp-a7/AexYMJEP9Cd/", "title": "Mg HS 1.5 TGI Excite AT 119kW162HP A7", "price": 18900, "price_gross": 18900, "fair_price": 18900.0, "discount_pct": -0.0, "verdict": "férová cena", "year": 2023, "km": 50000, "km_per_year": 15000.0, "eg": "1.5 T-GDI benzín 119–125 kW", "cg": 0, "transmission": "automatic", "seller_type": "private", "location": "Nitra", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "ab-AbgkzTsENat6", "url": "https://www.autobazar.eu/detail/nove-mg-hs-1-5-tgi-7at-exclusive/AbgkzTsENat6/", "title": "Nové MG HS 1,5 TGI 7AT Exclusive", "price": 27990, "price_gross": 27990, "fair_price": 27950.0, "discount_pct": -0.1, "verdict": "férová cena", "year": 2025, "km": 2500, "km_per_year": 1900.0, "eg": "1.5 T-GDI benzín 119–125 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Trenčianska Turná", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AmzZZFIMRdL", "url": "https://www.autobazar.eu/detail/mg-hs-15-tgi-exclusive-automat-sr1maj/AmzZZFIMRdL/", "title": "MG HS 1.5 TGI Exclusive, Automat, SR,1.maj", "price": 27000, "price_gross": 27000, "fair_price": 26960.0, "discount_pct": -0.2, "verdict": "férová cena", "year": 2025, "km": 7940, "km_per_year": 6000.0, "eg": "1.5 T-GDI benzín 119–125 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Trenčiansky kraj", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AmyiC6nuaAs", "url": "https://www.autobazar.eu/detail/mg-hs-hev-15tgi-exclusive/AmyiC6nuaAs/", "title": "Mg HS HEV 1,5TGI EXCLUSIVE + zimné pneumatiky", "price": 32030, "price_gross": 32030, "fair_price": 31930.0, "discount_pct": -0.3, "verdict": "férová cena", "year": 2025, "km": 4000, "km_per_year": 3000.0, "eg": "HS PHEV a HEV hybrid 1.5 165–200 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Trnava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-Aezho8Q02Lq", "url": "https://www.autobazar.eu/detail/mg-hs-15-tgiexclusive-automat-sr1maj/Aezho8Q02Lq/", "title": "MG HS 1.5 TGIExclusive, Automat, SR,1.maj", "price": 27000, "price_gross": 27000, "fair_price": 26880.0, "discount_pct": -0.4, "verdict": "férová cena", "year": 2025, "km": 10439, "km_per_year": 7800.0, "eg": "1.5 T-GDI benzín 119–125 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Nitriansky kraj", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-Amn2mhMIOGA", "url": "https://www.autobazar.eu/detail/mg-hs-hev-exclusive-at-15t/Amn2mhMIOGA/", "title": "Mg HS HEV EXCLUSIVE AT 1,5T", "price": 32750, "price_gross": 32750, "fair_price": 32360.0, "discount_pct": -1.2, "verdict": "férová cena", "year": 2025, "km": 1424, "km_per_year": 1100.0, "eg": "HS PHEV a HEV hybrid 1.5 165–200 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Michalovce", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazos", "id": "196202764", "url": "https://auto.bazos.sk/inzerat/196202764/mg-hs-hev-exclusive-at-15t.php", "price": 32750}], "body": "suv"}, {"id": "197552443", "url": "https://auto.bazos.sk/inzerat/197552443/mg-hs.php", "title": "MG HS", "price": 18999, "price_gross": 18999, "fair_price": 18630.0, "discount_pct": -2.0, "verdict": "férová cena", "year": 2023, "km": 40000, "km_per_year": 12000.0, "eg": "1.5 T-GDI benzín 119–125 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Bratislava", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AmJoRtF3rU3", "url": "https://www.autobazar.eu/detail/mg-hs-15-tgi-exclusive-automat-sr1maj/AmJoRtF3rU3/", "title": "MG HS 1.5 TGI Exclusive, Automat, SR,1.maj", "price": 26000, "price_gross": 26000, "fair_price": 25410.0, "discount_pct": -2.3, "verdict": "férová cena", "year": 2025, "km": 18140, "km_per_year": 13600.0, "eg": "1.5 T-GDI benzín 119–125 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Žilinský kraj", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-Aeq5_uWqekI", "url": "https://www.autobazar.eu/detail/mg-hs-15-tgiexclusive-automat-sr1maj/Aeq5_uWqekI/", "title": "MG HS 1.5 TGIExclusive, Automat, SR,1.maj", "price": 26000, "price_gross": 26000, "fair_price": 25350.0, "discount_pct": -2.6, "verdict": "férová cena", "year": 2025, "km": 20315, "km_per_year": 15200.0, "eg": "1.5 T-GDI benzín 119–125 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Nové Zámky", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "197623783", "url": "https://auto.bazos.sk/inzerat/197623783/predam-suv-mg-typ-hs.php", "title": "Predám  SUV MG typ HS", "price": 16000, "price_gross": 16000, "fair_price": 15380.0, "discount_pct": -4.1, "verdict": "férová cena", "year": 2023, "km": 63000, "km_per_year": 18900.0, "eg": "1.5 T-GDI benzín 119–125 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Pezinok", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "197003037", "url": "https://auto.bazos.sk/inzerat/197003037/mg-hs-15-tgi-phev-exclusive-272-ps-top-vybava-2026.php", "title": "🚘 MG HS 1.5 TGI PHEV EXCLUSIVE | 272 PS | TOP VÝBAVA | 2026", "price": 31990, "price_gross": 31990, "fair_price": 30670.0, "discount_pct": -4.3, "verdict": "férová cena", "year": 2026, "km": 15000, "km_per_year": 45000.0, "eg": "HS PHEV a HEV hybrid 1.5 165–200 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Banská Bystrica", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "ab-AmT94tog10w", "url": "https://www.autobazar.eu/detail/mg-hs-exclusive-15-t-gdi-170-7dct-125kw-a7-zaruka-aj-na-splatky-protiucet/AmT94tog10w/", "title": "Mg HS Exclusive 1.5 T-GDI 170 7DCT / 125kW / A7 / ZÁRUKA / AJ NA SPLÁTKY / PROTIÚČET", "price": 27490, "price_gross": 27490, "fair_price": 26250.0, "discount_pct": -4.7, "verdict": "férová cena", "year": 2025, "km": 14891, "km_per_year": 11200.0, "eg": "1.5 T-GDI benzín 119–125 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Trenčín", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "ab-Ae1Hs5HKnor", "url": "https://www.autobazar.eu/detail/mg-hs-exclusive-hybrid/Ae1Hs5HKnor/", "title": "Mg HS Exclusive Hybrid", "price": 33490, "price_gross": 33490, "fair_price": 31890.0, "discount_pct": -5.0, "verdict": "férová cena", "year": 2026, "km": 2609, "km_per_year": 7800.0, "eg": "HS PHEV a HEV hybrid 1.5 165–200 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Martin", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197440735", "url": "https://auto.bazos.sk/inzerat/197440735/mg-hs-exclusive-hybrid.php", "price": 33490}], "body": "suv"}, {"id": "ab-Amrmt6bROYh", "url": "https://www.autobazar.eu/detail/mg-hs-15-tgi-excite-a-t/Amrmt6bROYh/", "title": "Mg HS 1.5 TGI Excite A/T", "price": 24590, "price_gross": 24590, "fair_price": 23350.0, "discount_pct": -5.3, "verdict": "férová cena", "year": 2024, "km": 21900, "km_per_year": 9400.0, "eg": "1.5 T-GDI benzín 119–125 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Michalovce", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "195956674", "url": "https://auto.bazos.sk/inzerat/195956674/mg-hs-15-tgi-excite-aths.php", "price": 24590}], "body": "suv"}, {"id": "196944017", "url": "https://auto.bazos.sk/inzerat/196944017/mg-hs-15-tgi-exclusive-dct-1majitel-sk-povod.php", "title": "MG HS 1.5 TGI Exclusive DCT, 1.majiteľ, SK pôvod", "price": 19990, "price_gross": 19990, "fair_price": 18980.0, "discount_pct": -5.3, "verdict": "férová cena", "year": 2024, "km": 55063, "km_per_year": 23600.0, "eg": "1.5 T-GDI benzín 119–125 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Galanta", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AmEbR-CEfbF", "url": "https://www.autobazar.eu/detail/mg-hs-15-tgi-exclusive-dct/AmEbR-CEfbF/", "price": 19990}], "body": "suv"}, {"id": "ab-AejwOXOCCNr", "url": "https://www.autobazar.eu/detail/mg-hs-15-tgi-exclusive-automat/AejwOXOCCNr/", "title": "MG HS 1.5 TGI, Exclusive, Automat", "price": 27000, "price_gross": 27000, "fair_price": 25410.0, "discount_pct": -6.3, "verdict": "férová cena", "year": 2025, "km": 23170, "km_per_year": 17400.0, "eg": "1.5 T-GDI benzín 119–125 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "suv"}, {"id": "ab-AmKheVSwib8", "url": "https://www.autobazar.eu/detail/mg-hs-phev-15t-exclusive-at/AmKheVSwib8/", "title": "MG HS PHEV 1.5T EXCLUSIVE AT", "price": 35500, "price_gross": 35500, "fair_price": 33060.0, "discount_pct": -7.4, "verdict": "nad trhom", "year": 2026, "km": 8366, "km_per_year": 25100.0, "eg": "HS PHEV a HEV hybrid 1.5 165–200 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Zvolen", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-Amy1zpGDN9c", "url": "https://www.autobazar.eu/detail/mg-hs-exclusive-automat-r-2026/Amy1zpGDN9c/", "title": "Mg HS EXCLUSIVE AUTOMAT r. 2026", "price": 31590, "price_gross": 31590, "fair_price": 29020.0, "discount_pct": -8.9, "verdict": "nad trhom", "year": 2026, "km": 1496, "km_per_year": 4500.0, "eg": "1.5 T-GDI benzín 119–125 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Zlaté Moravce", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "ab-Ae7_5ZUN1rz", "url": "https://www.autobazar.eu/detail/mg-hs-15t-exclusive/Ae7_5ZUN1rz/", "title": "MG HS 1.5T EXCLUSIVE", "price": 27990, "price_gross": 27990, "fair_price": 24860.0, "discount_pct": -12.6, "verdict": "nad trhom", "year": 2024, "km": 17232, "km_per_year": 7400.0, "eg": "1.5 T-GDI benzín 119–125 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Zvolen", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "suv"}];
+const GROUPS = ["Benzín", "Plug-in hybrid", "LPG a nezistený"];
+const BODY = {"suv": "SUV"};
+const fmt = n => Math.round(n).toLocaleString("sk-SK");
+const eur = n => fmt(n) + " €";
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const TRANS = {automatic: "automat", manual: "manuál"};
+const SRC = {bazos: "bazoš", autobazar: "autobazar.eu", bazarsk: "bazar.sk"};
+
+// --- theme toggle ---------------------------------------------------------
+document.getElementById("themeBtn").onclick = () => {
+  const root = document.documentElement;
+  const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  drawChart();
+};
+
+// --- scatter chart --------------------------------------------------------
+const legend = document.getElementById("legend");
+legend.innerHTML = GROUPS.map((g, i) => `<span><i style="background:var(--s${i+1})"></i>${g}</span>`).join("")
+  + `<span><i class="ring"></i>odporúčaná ponuka</span>`;
+
+function drawChart() {
+  const svg = document.getElementById("chart"), wrap = document.getElementById("chartWrap"), tip = document.getElementById("tip");
+  const W = svg.clientWidth, H = 420, m = {l: 56, r: 16, t: 10, b: 40};
+  const pts = DATA.filter(d => d.km && d.price_gross);
+  const xMax = Math.ceil(Math.max(...pts.map(d => d.km)) / 50000) * 50000;
+  const yMax = Math.ceil(Math.max(...pts.map(d => d.price_gross)) / 5000) * 5000;
+  const x = v => m.l + v / xMax * (W - m.l - m.r), y = v => H - m.b - v / yMax * (H - m.t - m.b);
+  let s = "";
+  for (let v = 0; v <= yMax; v += 5000)
+    s += `<line x1="${m.l}" x2="${W-m.r}" y1="${y(v)}" y2="${y(v)}" stroke="var(--grid)"/><text x="${m.l-8}" y="${y(v)+4}" text-anchor="end">${v/1000} tis. €</text>`;
+  const step = W < 520 ? 100000 : 50000;
+  for (let v = 0; v <= xMax; v += step)
+    s += `<text x="${x(v)}" y="${H-m.b+18}" text-anchor="middle">${v/1000} tis.</text>`;
+  s += `<text x="${(W+m.l)/2}" y="${H-6}" text-anchor="middle">nájazd (km)</text>`;
+  const order = [...pts].sort((a, b) => (a.pick ? 1 : 0) - (b.pick ? 1 : 0));
+  order.forEach(d => {
+    const cx = x(d.km), cy = y(d.price_gross);
+    if (d.pick) s += `<circle cx="${cx}" cy="${cy}" r="9" fill="none" stroke="var(--text)" stroke-width="2"/>`;
+    s += `<circle class="pt" data-id="${d.id}" cx="${cx}" cy="${cy}" r="5" fill="var(--s${d.cg+1})" stroke="var(--surface)" stroke-width="2"/>`;
+  });
+  // invisible bigger hit targets
+  order.forEach(d => s += `<circle class="hit" data-id="${d.id}" cx="${x(d.km)}" cy="${y(d.price_gross)}" r="11" fill="transparent" style="cursor:pointer"/>`);
+  svg.innerHTML = s;
+  const byId = Object.fromEntries(pts.map(d => [d.id, d]));
+  svg.querySelectorAll(".hit").forEach(c => {
+    c.onmouseenter = c.onmousemove = ev => {
+      const d = byId[c.dataset.id];
+      tip.innerHTML = `<b>${esc(d.title)}</b>
+        <div class="row"><span>Cena</span><span>${eur(d.price_gross)}</span></div>
+        <div class="row"><span>Férová cena</span><span>${eur(d.fair_price)}</span></div>
+        <div class="row"><span>Pod trhom</span><span>${d.discount_pct > 0 ? "+" : ""}${d.discount_pct.toLocaleString("sk-SK")} %</span></div>
+        <div class="row"><span>Zdroj</span><span>${SRC[d.source]}${d.also_listed.length ? " + " + d.also_listed.map(a => SRC[a.source]).join(", ") : ""}</span></div>
+        <div class="row"><span>Rok · km</span><span>${d.year} · ${fmt(d.km)}</span></div>
+        <div class="row"><span>Motor</span><span>${esc(d.eg)} ${TRANS[d.transmission] || ""}</span></div>`;
+      tip.style.display = "block";
+      const r = wrap.getBoundingClientRect();
+      let lx = ev.clientX - r.left + 14, ly = ev.clientY - r.top + 14;
+      if (lx + 290 > r.width) lx = ev.clientX - r.left - 290;
+      tip.style.left = lx + "px"; tip.style.top = ly + "px";
+    };
+    c.onmouseleave = () => tip.style.display = "none";
+    c.onclick = () => window.open(byId[c.dataset.id].url, "_blank", "noopener");
+  });
+}
+drawChart();
+addEventListener("resize", drawChart);
+
+// --- full table -----------------------------------------------------------
+const fEngine = document.getElementById("fEngine");
+[...new Set(DATA.map(d => d.eg))].sort().forEach(g => fEngine.insertAdjacentHTML("beforeend", `<option>${esc(g)}</option>`));
+let sortK = "discount_pct", sortDir = -1;
+function discCell(v) {
+  const w = Math.min(Math.abs(v), 30) / 30 * 50;
+  const bar = v >= 0 ? `left:50%;width:${w}%;background:var(--pos)` : `right:50%;width:${w}%;background:var(--neg)`;
+  return `<span class="disc">${v > 0 ? "+" : ""}${v.toLocaleString("sk-SK")} %<span class="dbar"><span style="${bar}"></span></span></span>`;
+}
+function renderTable() {
+  const max = parseFloat(document.getElementById("fMax").value) || Infinity;
+  const tr = document.getElementById("fTrans").value, se = document.getElementById("fSeller").value, en = fEngine.value;
+  const so = document.getElementById("fSource").value, og = document.getElementById("fOrigin").value;
+  const bo = document.getElementById("fBody").value;
+  const rows = DATA.filter(d => (!en || d.eg === en) && (!tr || d.transmission === tr)
+    && (!se || d.seller_type !== "dealer") && d.price_gross <= max
+    && (!so || d.source === so || d.also_listed.some(a => a.source === so)) && (!og || d.origin === og) && (!bo || d.body === bo))
+    .sort((a, b) => { const A = a[sortK], B = b[sortK]; return (typeof A === "string" ? A.localeCompare(B) : A - B) * sortDir; });
+  document.getElementById("count").textContent = `${rows.length} z ${DATA.length} inzerátov`;
+  document.querySelector("#tbl tbody").innerHTML = rows.map(d => `<tr>
+    <td><a href="${d.url}" target="_blank" rel="noopener">${esc(d.title)}</a> ${d.pick ? '<span class="badge pick">odporúčané</span>' : ""}
+      <div class="sub">${BODY[d.body] || "karoséria ?"} · ${esc(d.eg)} · ${TRANS[d.transmission] || "prevodovka ?"} · ${esc(d.location)} · ${d.seller_type === "dealer" ? "predajca/firma" : d.seller_type === "private" ? "súkromník" : "neisté"} · ${SRC[d.source]}${d.origin === "SR" ? " · kúpené v SR" : d.origin === "dovoz" ? " · dovoz" : ""}${d.also_listed.map(a => ` · <a href="${a.url}" target="_blank" rel="noopener">aj na ${SRC[a.source]}</a>`).join("")}</div>
+      ${d.flags.filter(f => !f.startsWith("prevodovka")).map(f => `<div class="flag">⚠ ${esc(f)}</div>`).join("")}</td>
+    <td class="num">${d.year}</td><td class="num">${fmt(d.km)}</td>
+    <td class="num">${eur(d.price_gross)}</td><td class="num">${eur(d.fair_price)}</td>
+    <td class="num">${discCell(d.discount_pct)}</td></tr>`).join("");
+  document.querySelectorAll("#tbl th.sortable").forEach(th => {
+    const base = th.textContent.replace(/ [▾▴]$/, "");
+    th.textContent = base + (th.dataset.k === sortK ? (sortDir < 0 ? " ▾" : " ▴") : "");
+  });
+}
+document.querySelectorAll("#tbl th.sortable").forEach(th => th.onclick = () => {
+  if (sortK === th.dataset.k) sortDir *= -1; else { sortK = th.dataset.k; sortDir = th.dataset.k === "title" ? 1 : -1; }
+  renderTable();
+});
+["fEngine", "fTrans", "fSeller", "fSource", "fBody", "fOrigin", "fMax"].forEach(id => document.getElementById(id).addEventListener("input", renderTable));
+renderTable();
+</script>
+<!-- ferovka-theme --><script defer src="/analytics-config.js"></script><script defer src="/analytics.js"></script><script id="ferovka-chart">/* Férovka – chart → ad links, injected into every report by sync-reports.mjs.
+ *
+ * The reports draw one invisible 11px "hit" circle per ad. In dense charts (and always on a narrow phone) those
+ * circles overlap and the one drawn last wins, so a click/tap often opened a neighbouring ad. Here the pointer is
+ * always resolved to the NEAREST point, the report's own tooltip is shown for that point, and a click opens its ad.
+ * Touch: the first tap shows the tooltip (with a hint), a second tap on the same point opens the ad.
+ */
+(() => {
+  let rows;
+  try { rows = DATA; } catch { return; } // eslint-disable-line no-undef
+  if (!Array.isArray(rows) || !rows.length || !("url" in rows[0])) return;
+  const byId = new Map(rows.map((d) => [String(d.id), d]));
+  const MOUSE = ["mouseover", "mouseout", "mouseenter", "mouseleave", "mousemove", "mousedown", "mouseup", "click"];
+  let lastPointer = "mouse", down = null;
+  // the finger position as it was – Chrome "snaps" the later click of a tap to the centre of a nearby clickable element
+  addEventListener("pointerdown", (e) => { lastPointer = e.pointerType || "mouse"; down = { clientX: e.clientX, clientY: e.clientY }; }, true);
+
+  // the old per-point hit circles must not be targets (they overlap, and touch snapping aims at them)
+  document.head.insertAdjacentHTML("beforeend", "<style>svg circle.hit[data-id],svg circle.pt[data-id]{pointer-events:none}</style>");
+
+  function nearest(svg, ev, radius) {
+    let best = null, bd = Infinity;
+    for (const c of svg.querySelectorAll("circle.pt[data-id]")) {
+      const r = c.getBoundingClientRect();
+      const dx = r.left + r.width / 2 - ev.clientX, dy = r.top + r.height / 2 - ev.clientY;
+      const d = dx * dx + dy * dy;
+      if (d <= bd) { bd = d; best = c; } // ties: the point drawn on top (later) wins – that is the one you see
+    }
+    return best && bd <= radius * radius ? best : null;
+  }
+
+  function bind(svg) {
+    if (svg.__fvLinks) return;
+    svg.__fvLinks = true;
+    let current = null, armed = null;
+    const hitOf = (pt) => pt && svg.querySelector(`circle.hit[data-id="${CSS.escape(pt.dataset.id)}"]`);
+    const fire = (el, type, ev) => {
+      if (!el) return;
+      const e = new MouseEvent(type, { clientX: ev.clientX, clientY: ev.clientY, bubbles: false });
+      e.__fv = true;
+      el.dispatchEvent(e);
+    };
+    const tip = () => (svg.parentElement && svg.parentElement.querySelector("#tip, .tip")) || document.getElementById("tip");
+    const mark = (pt) => {
+      if (current === pt) return;
+      if (current) current.setAttribute("r", current.__r || "5");
+      current = pt;
+      if (pt) { pt.__r = pt.__r || pt.getAttribute("r"); pt.setAttribute("r", String(+pt.__r + 2)); }
+    };
+    const show = (pt, ev, hint) => {
+      mark(pt);
+      if (!pt) { const t = tip(); if (t) t.style.display = "none"; return; }
+      fire(hitOf(pt), "mousemove", ev); // the report's own tooltip, for the nearest point
+      const t = tip();
+      if (t && hint) t.insertAdjacentHTML("beforeend", `<div class="fv-hint">Ťukni ešte raz – otvorí sa inzerát ↗</div>`);
+    };
+    const open = (pt) => {
+      const d = byId.get(pt.dataset.id);
+      if (d && d.url) {
+        try { window.FerovkaAnalytics?.listingClick(d.url, "chart"); } catch { /* analytics must never block an ad */ }
+        window.open(d.url, "_blank", "noopener");
+      }
+    };
+
+    // the per-circle handlers of the report never see real mouse events – only our synthetic ones
+    for (const type of MOUSE) {
+      svg.addEventListener(type, (ev) => {
+        if (ev.__fv) return;
+        ev.stopImmediatePropagation();
+        if (type === "mousemove" && lastPointer === "mouse") {
+          show(nearest(svg, ev, 18), ev, false);
+          svg.style.cursor = current ? "pointer" : "";
+        } else if (type === "mouseleave" && ev.target === svg && lastPointer === "mouse") {
+          show(null, ev);
+        } else if (type === "click") {
+          const touch = lastPointer !== "mouse";
+          const at = touch && down ? down : ev;
+          const pt = nearest(svg, at, touch ? 26 : 18);
+          if (!pt) { armed = null; show(null, ev); return; }
+          if (!touch || armed === pt) { armed = null; open(pt); }
+          else { armed = pt; show(pt, at, true); }
+        }
+      }, true);
+    }
+  }
+
+  const scan = () => document.querySelectorAll("svg").forEach((s) => s.querySelector("circle.pt[data-id]") && bind(s));
+  scan();
+  new MutationObserver(scan).observe(document.body, { childList: true, subtree: true });
+})();
+</script><script id="ferovka-filters">/* Férovka – filters for the whole report, injected into every model report by sync-reports.mjs.
+ *
+ * The reports render the chart (drawChart) and the full ranking (renderTable) from the global DATA array; their own
+ * filter bar only filters the table. Here the filter bar (kept in its place above the ranking) gets more filters (year, price from/to,
+ * km, fuel, discount, picks only, text search) and every filter applies to the chart and the ranking together: DATA is
+ * refilled in place with the matching ads and both are drawn again. "</script" can't occur inside this file.
+ */
+(() => {
+  let data;
+  try { data = DATA; } catch { return; } // eslint-disable-line no-undef
+  if (!Array.isArray(data) || !data.length || typeof renderTable !== "function") return; // eslint-disable-line no-undef
+  const bar = document.querySelector(".filters");
+  if (!bar || bar.dataset.fv) return;
+  bar.dataset.fv = "1";
+  const ALL = data.slice();
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+  const fmt = (n) => Math.round(n).toLocaleString("sk-SK");
+  const norm = (s) => String(s ?? "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+  let groups = null;
+  try { groups = GROUPS; } catch { /* report without groups */ } // eslint-disable-line no-undef
+
+  const FUEL = { diesel: "Diesel", petrol: "Benzín", hybrid: "Hybrid", "plug-in hybrid": "Plug-in hybrid", electric: "Elektro", lpg: "LPG", cng: "CNG" };
+  const fuelOf = (d) => {
+    const e = norm(d.eg);
+    if (/tdi|crdi|dci|hdi|diesel|\bd\b|cdi|\d+d\b|blue/.test(e)) return "Diesel";
+    if (/plug-in|phev|e-hybrid|recharge|\bgte\b|\bt8\b|\b\d{2}e\b|\b\d{3} ?e\b/.test(e)) return "Plug-in hybrid";
+    if (/elektro|electric|\bev\b/.test(e)) return "Elektro";
+    if (/cng|lpg|g-tec|g-tron|tgi|ecofuel/.test(e)) return "Plyn (CNG/LPG)";
+    if (/mild|mhev/.test(e)) return "Benzín"; // mild-hybrid petrol (the diesel ones say TDI / d above)
+    if (/hybrid|hev/.test(e)) return "Hybrid";
+    if (/tsi|tfsi|mpi|fsi|benzin|gdi|dpi|htp|12v|\bt\d\b|\bb[56]\b|\d+i\b|turbo|tce|\bs4\b|rs ?\d|amg|competition|\bm\d{2,3}i?\b|gti|\bx5 m\b/.test(e)) return "Benzín";
+    return d.fuel ? FUEL[d.fuel] || String(d.fuel) : null;
+  };
+
+  // --- controls ---------------------------------------------------------------------------------------------------
+  const years = ALL.map((d) => d.year).filter(Boolean);
+  const yMin = Math.min(...years), yMax = Math.max(...years);
+  const yearOpts = (label) => `<option value="">${label}</option>` +
+    Array.from({ length: yMax - yMin + 1 }, (_, i) => yMax - i).map((y) => `<option>${y}</option>`).join("");
+  const kms = [30000, 50000, 75000, 100000, 150000, 200000, 250000, 300000];
+  const fuels = [...new Set(ALL.map(fuelOf).filter(Boolean))].sort((a, b) => a.localeCompare(b, "sk"));
+  const showGroups = Array.isArray(groups) && groups.length > 1 && ALL.some((d) => Number.isInteger(d.cg));
+
+  const maxInput = $("fMax");
+  if (maxInput) { maxInput.placeholder = "Cena do €"; maxInput.title = "Najvyššia cena (s DPH)"; }
+  const html =
+    `<select id="fvYearFrom" title="Rok výroby od">${yearOpts("Rok od")}</select>` +
+    `<select id="fvYearTo" title="Rok výroby do">${yearOpts("Rok do")}</select>` +
+    `<input id="fvPriceMin" type="number" placeholder="Cena od €" step="500" min="0" title="Najnižšia cena (s DPH)" style="width:110px">`;
+  if (maxInput) maxInput.insertAdjacentHTML("beforebegin", html);
+  else bar.insertAdjacentHTML("afterbegin", html);
+  const more =
+    `<select id="fvKm" title="Najviac najazdených km"><option value="">Nájazd – všetky</option>${kms.map((k) => `<option value="${k}">do ${fmt(k)} km</option>`).join("")}</select>` +
+    (fuels.length > 1 ? `<select id="fvFuel" title="Palivo"><option value="">Všetky palivá</option>${fuels.map((f) => `<option>${esc(f)}</option>`).join("")}</select>` : "") +
+    (showGroups ? `<select id="fvGroup" title="Skupina motorov (farba v grafe)"><option value="">Všetky skupiny</option>${groups.map((g, i) => `<option value="${i}">${esc(g)}</option>`).join("")}</select>` : "") +
+    `<select id="fvDisc" title="O koľko je auto lacnejšie ako férová cena"><option value="">Cena – všetky</option><option value="0">pod férovou cenou</option><option value="10">aspoň 10 % pod trhom</option><option value="20">aspoň 20 % pod trhom</option></select>` +
+    `<input id="fvText" type="search" placeholder="Hľadať (výbava, mesto…)" title="Hľadá v názve inzerátu, motore a lokalite" style="width:170px">` +
+    `<label class="fv-check"><input id="fvPick" type="checkbox"> len odporúčané</label>` +
+    `<button type="button" id="fvReset" class="fv-reset">Zrušiť filtre</button>`;
+  const count = $("count");
+  if (count) count.insertAdjacentHTML("beforebegin", more);
+  else bar.insertAdjacentHTML("beforeend", more);
+
+  // the bar stays where it was – right above the ranking – and also drives the chart; the chart gets a pointer to it
+  const chart = $("chartWrap");
+  const box = document.createElement("div");
+  box.className = "fv-filters";
+  box.id = "filtre";
+  bar.before(box);
+  box.innerHTML = `<div class="fv-head"><b>Filtre</b><span>platia pre rebríček aj graf vyššie</span></div>`;
+  box.appendChild(bar);
+  const note = document.createElement("div");
+  note.className = "fv-note";
+  chart?.before(note);
+
+  document.head.insertAdjacentHTML("beforeend", `<style id="fv-filters-css">
+.fv-filters{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 14px 4px;margin:24px 0 8px}
+.fv-filters .fv-head{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;margin-bottom:8px}
+.fv-filters .fv-head span{color:var(--muted);font-size:13px}
+.fv-filters .filters{margin-bottom:8px}
+.fv-filters .filters .count{flex-basis:100%;margin-left:0}
+.fv-check{display:inline-flex;gap:6px;align-items:center;font-size:13px;color:var(--text-2,var(--text));white-space:nowrap}
+.fv-reset{background:none;border:1px solid var(--border);color:var(--text);border-radius:8px;padding:6px 10px;font:inherit;font-size:13px;cursor:pointer}
+.fv-reset:hover{background:var(--surface-2,var(--surface))}
+.fv-note{color:var(--muted);font-size:13px;margin:0 0 8px}
+.fv-note a{color:inherit}
+.fv-empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:14px;pointer-events:none}
+@media (max-width:600px){.fv-filters .filters select,.fv-filters .filters input[type=number],.fv-filters .filters input[type=search]{flex:1 1 calc(50% - 8px);min-width:0;width:auto!important}}
+</style>`);
+
+  // --- filtering --------------------------------------------------------------------------------------------------
+  const val = (id) => ($(id) ? $(id).value : "");
+  const num = (id) => { const v = parseFloat(val(id)); return Number.isFinite(v) ? v : null; };
+  function matches(d) {
+    const yf = num("fvYearFrom"), yt = num("fvYearTo"), pmin = num("fvPriceMin"), pmax = num("fMax"), km = num("fvKm"), disc = num("fvDisc");
+    const fuel = val("fvFuel"), grp = val("fvGroup"), q = norm(val("fvText")).trim();
+    if (yf != null && !(d.year >= yf)) return false;
+    if (yt != null && !(d.year <= yt)) return false;
+    if (pmin != null && !(d.price_gross >= pmin)) return false;
+    if (pmax != null && !(d.price_gross <= pmax)) return false;
+    if (km != null && !(d.km <= km)) return false;
+    if (disc != null && !(d.discount_pct > disc || (disc > 0 && d.discount_pct >= disc))) return false;
+    if (fuel && fuelOf(d) !== fuel) return false;
+    if (grp !== "" && String(d.cg) !== grp) return false;
+    if ($("fvPick")?.checked && !d.pick) return false;
+    if (q && !q.split(/\s+/).every((w) => norm(`${d.title} ${d.eg ?? ""} ${d.engine ?? ""} ${d.location ?? ""}`).includes(w))) return false;
+    // the report's own filters (engine, gearbox, seller, portal, body, origin) – same rules as its renderTable
+    const en = val("fEngine"), tr = val("fTrans"), se = val("fSeller"), so = val("fSource"), og = val("fOrigin"), bo = val("fBody");
+    if (en && d.eg !== en) return false;
+    if (tr && d.transmission !== tr) return false;
+    if (se && d.seller_type === "dealer") return false;
+    if (so && !(d.source === so || (d.also_listed || []).some((a) => a.source === so))) return false;
+    if (og && d.origin !== og) return false;
+    if (bo && d.body !== bo) return false;
+    return true;
+  }
+  const active = () => [...box.querySelectorAll("select, input")].filter((el) => (el.type === "checkbox" ? el.checked : el.value !== "")).length;
+
+  let drawing = false;
+  function apply() {
+    if (drawing) return;
+    drawing = true;
+    const rows = ALL.filter(matches);
+    data.length = 0;
+    data.push(...rows);
+    const wrap = $("chartWrap");
+    wrap?.querySelector(".fv-empty")?.remove();
+    const plotted = rows.filter((d) => d.km && d.price_gross).length;
+    try {
+      if (typeof drawChart === "function") { // eslint-disable-line no-undef
+        if (plotted) drawChart(); // eslint-disable-line no-undef
+        else { const svg = $("chart"); if (svg) svg.innerHTML = ""; }
+      }
+    } catch (e) { console.warn("chart", e); }
+    if (wrap && !plotted) {
+      if (getComputedStyle(wrap).position === "static") wrap.style.position = "relative";
+      wrap.insertAdjacentHTML("beforeend", `<div class="fv-empty">Filtrom nezodpovedá žiadny inzerát</div>`);
+    }
+    try { renderTable(); } catch (e) { console.warn("table", e); } // eslint-disable-line no-undef
+    const n = active();
+    if (count) count.textContent = `Zobrazených ${fmt(rows.length)} z ${fmt(ALL.length)} inzerátov` + (n ? ` · aktívne filtre: ${n}` : "");
+    note.innerHTML = n
+      ? `Zobrazených ${fmt(rows.length)} z ${fmt(ALL.length)} inzerátov podľa <a href="#filtre">filtrov pri rebríčku</a>.`
+      : `Filtre (rok, cena, nájazd, palivo…) nájdeš <a href="#filtre">pri kompletnom rebríčku</a> – platia aj pre tento graf.`;
+    drawing = false;
+  }
+  box.querySelectorAll("select, input").forEach((el) => el.addEventListener("input", apply));
+  $("fvPick")?.addEventListener("change", apply);
+  $("fvReset").addEventListener("click", () => {
+    box.querySelectorAll("select, input").forEach((el) => { if (el.type === "checkbox") el.checked = false; else el.value = ""; });
+    apply();
+  });
+  apply();
+})();
+</script><!-- /ferovka-theme -->
+</body>
+</html>

@@ -148,6 +148,19 @@
     }
   },
   {
+    "slug": "kia-ev6",
+    "file": "kia-ev6-analyza.html",
+    "name": "Kia EV6",
+    "brand": "Kia",
+    "model": "EV6",
+    "kind": "model",
+    "date": "2026-11-23",
+    "summary": "Analýza aktuálnych inzerátov Kia EV6 (2021+, elektromobil) od 15 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (23. 11. 2026). Na portáloch je spolu 66 inzerátov (12 na bazoši, 31 na autobazar.eu, 23 na bazar.sk) – prezreli sme 64 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 34 rôznych áut zo Slovenska.",
+    "ads": 34,
+    "median": "44 000 €",
+    "r2": "97 %"
+  },
+  {
     "slug": "lexus-nx",
     "file": "lexus-nx-analyza.html",
     "name": "Lexus NX",
@@ -203,6 +216,70 @@
       "seen_median": 39900,
       "seen_price_count": 150,
       "last_observed_at": "2026-11-23T08:42:14"
+    }
+  },
+  {
+    "slug": "mg-hs",
+    "file": "mg-hs-analyza.html",
+    "name": "MG HS",
+    "brand": "MG",
+    "model": "HS",
+    "kind": "model",
+    "date": "2026-11-23",
+    "summary": "Analýza aktuálnych inzerátov MG HS (2019+, benzín aj plug-in hybrid) od 8 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (23. 11. 2026). Na portáloch je spolu 212 inzerátov (32 na bazoši, 180 na autobazar.eu, 0 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 126 rôznych áut zo Slovenska.",
+    "ads": 126,
+    "median": "27 000 €",
+    "r2": "89 %",
+    "history": {
+      "updated_at": "2026-11-23T09:42:12",
+      "as_of": "2026-11-23",
+      "coverage": "partial",
+      "baseline_count": 38,
+      "total_count": 38,
+      "active_count": 38,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 38,
+      "paired_median_change_pct": 0,
+      "historical_median": 27000,
+      "seen_median": 27000,
+      "seen_price_count": 38,
+      "last_observed_at": "2026-11-23T09:36:59"
+    }
+  },
+  {
+    "slug": "mg-zs",
+    "file": "mg-zs-analyza.html",
+    "name": "MG ZS",
+    "brand": "MG",
+    "model": "ZS",
+    "kind": "model",
+    "date": "2026-11-23",
+    "summary": "Analýza aktuálnych inzerátov MG ZS (2018+, benzín, hybrid aj elektrický ZS EV) od 6 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (23. 11. 2026). Na portáloch je spolu 253 inzerátov (37 na bazoši, 216 na autobazar.eu, 0 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 152 rôznych áut zo Slovenska.",
+    "ads": 152,
+    "median": "16 700 €",
+    "r2": "88 %",
+    "history": {
+      "updated_at": "2026-11-23T09:42:12",
+      "as_of": "2026-11-23",
+      "coverage": "partial",
+      "baseline_count": 56,
+      "total_count": 56,
+      "active_count": 56,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 56,
+      "paired_median_change_pct": 0,
+      "historical_median": 16700,
+      "seen_median": 16700,
+      "seen_price_count": 56,
+      "last_observed_at": "2026-11-23T09:35:30"
     }
   },
   {
@@ -301,6 +378,19 @@
       "seen_price_count": 186,
       "last_observed_at": "2026-11-23T09:22:45"
     }
+  },
+  {
+    "slug": "vw-id3",
+    "file": "vw-id3-analyza.html",
+    "name": "Volkswagen ID.3",
+    "brand": "Volkswagen",
+    "model": "ID.3",
+    "kind": "model",
+    "date": "2026-11-23",
+    "summary": "Analýza aktuálnych inzerátov Volkswagen ID.3 (2020+, elektromobil) od 10 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (23. 11. 2026). Na portáloch je spolu 361 inzerátov (54 na bazoši, 71 na autobazar.eu, 236 na bazar.sk) – prezreli sme 35 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 73 rôznych áut zo Slovenska.",
+    "ads": 73,
+    "median": "20 990 €",
+    "r2": "87 %"
   },
   {
     "slug": "alfa-romeo-giulietta",
