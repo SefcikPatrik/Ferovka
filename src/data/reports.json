@@ -135,6 +135,19 @@
     }
   },
   {
+    "slug": "ford-edge",
+    "file": "ford-edge-analyza.html",
+    "name": "Ford Edge",
+    "brand": "Ford",
+    "model": "Edge",
+    "kind": "model",
+    "date": "2026-11-23",
+    "summary": "Analýza aktuálnych inzerátov Ford Edge (európsky Edge 2016–2020) od 8 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (23. 11. 2026). Na portáloch je spolu 47 inzerátov (16 na bazoši, 21 na autobazar.eu, 10 na bazar.sk) – prezreli sme 79 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 25 rôznych áut zo Slovenska.",
+    "ads": 25,
+    "median": "17 000 €",
+    "r2": "90 %"
+  },
+  {
     "slug": "ford-tourneo-custom",
     "file": "ford-tourneo-custom-analyza.html",
     "name": "Ford Tourneo Custom",
@@ -277,6 +290,38 @@
     "r2": "97 %"
   },
   {
+    "slug": "land-rover-defender",
+    "file": "land-rover-defender-analyza.html",
+    "name": "Land Rover Defender",
+    "brand": "Land",
+    "model": "Rover Defender",
+    "kind": "model",
+    "date": "2026-11-23",
+    "summary": "Analýza aktuálnych inzerátov Land Rover Defender (klasický Defender do 2016 aj nový Defender 2020+, osobné verzie) od 8 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (23. 11. 2026). Na portáloch je spolu 444 inzerátov (55 na bazoši, 197 na autobazar.eu, 192 na bazar.sk) – prezreli sme 90 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 197 rôznych áut zo Slovenska.",
+    "ads": 197,
+    "median": "56 500 €",
+    "r2": "93 %",
+    "history": {
+      "updated_at": "2026-11-23T10:42:36",
+      "as_of": "2026-11-23",
+      "coverage": "partial",
+      "baseline_count": 99,
+      "total_count": 99,
+      "active_count": 99,
+      "inactive_count": 0,
+      "unverified_count": 0,
+      "new_count": 0,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 99,
+      "paired_median_change_pct": 0,
+      "historical_median": 56500,
+      "seen_median": 56500,
+      "seen_price_count": 99,
+      "last_observed_at": "2026-11-23T10:34:41"
+    }
+  },
+  {
     "slug": "land-rover-discovery",
     "file": "land-rover-discovery-analyza.html",
     "name": "Land Rover Discovery",
@@ -289,7 +334,7 @@
     "median": "21 500 €",
     "r2": "93 %",
     "history": {
-      "updated_at": "2026-11-23T10:30:22",
+      "updated_at": "2026-11-23T10:42:36",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 127,
@@ -321,7 +366,7 @@
     "median": "6 990 €",
     "r2": "93 %",
     "history": {
-      "updated_at": "2026-11-23T10:30:22",
+      "updated_at": "2026-11-23T10:42:36",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 25,
@@ -365,6 +410,19 @@
     "ads": 72,
     "median": "56 435 €",
     "r2": "96 %"
+  },
+  {
+    "slug": "mercedes-clk",
+    "file": "mercedes-clk-analyza.html",
+    "name": "Mercedes-Benz CLK",
+    "brand": "Mercedes-Benz",
+    "model": "CLK",
+    "kind": "model",
+    "date": "2026-11-23",
+    "summary": "Analýza aktuálnych inzerátov Mercedes-Benz CLK (W208 a W209, 1997–2010, kupé aj kabriolet, bez AMG) od 2 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (23. 11. 2026). Na portáloch je spolu 45 inzerátov (31 na bazoši, 7 na autobazar.eu, 7 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 42 rôznych áut zo Slovenska.",
+    "ads": 42,
+    "median": "5 145 €",
+    "r2": "84 %"
   },
   {
     "slug": "mercedes-vito",
@@ -513,6 +571,32 @@
     "ads": 67,
     "median": "11 994 €",
     "r2": "80 %"
+  },
+  {
+    "slug": "renault-fluence",
+    "file": "renault-fluence-analyza.html",
+    "name": "Renault Fluence",
+    "brand": "Renault",
+    "model": "Fluence",
+    "kind": "model",
+    "date": "2026-11-23",
+    "summary": "Analýza aktuálnych inzerátov Renault Fluence (2010–2016, sedan) od 1 500 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (23. 11. 2026). Na portáloch je spolu 81 inzerátov (30 na bazoši, 21 na autobazar.eu, 30 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 64 rôznych áut zo Slovenska.",
+    "ads": 64,
+    "median": "3 700 €",
+    "r2": "79 %"
+  },
+  {
+    "slug": "renault-koleos",
+    "file": "renault-koleos-analyza.html",
+    "name": "Renault Koleos",
+    "brand": "Renault",
+    "model": "Koleos",
+    "kind": "model",
+    "date": "2026-11-23",
+    "summary": "Analýza aktuálnych inzerátov Renault Koleos (Koleos I 2008–2015 a Koleos II 2017+) od 3 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (23. 11. 2026). Na portáloch je spolu 90 inzerátov (37 na bazoši, 33 na autobazar.eu, 20 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 60 rôznych áut zo Slovenska.",
+    "ads": 60,
+    "median": "12 600 €",
+    "r2": "97 %"
   },
   {
     "slug": "ssangyong-korando",
@@ -2258,7 +2342,7 @@
     "median": "15 000 €",
     "r2": "90 %",
     "history": {
-      "updated_at": "2026-11-23T10:30:22",
+      "updated_at": "2026-11-23T10:42:36",
       "as_of": "2026-11-23",
       "coverage": "partial",
       "baseline_count": 127,
