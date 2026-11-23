@@ -1,0 +1,757 @@
+<!doctype html>
+<html lang="sk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Peugeot Traveller / Expert – analýza ponúk</title>
+<style>
+:root {
+  color-scheme: light;
+  --bg: #f6f6f4; --surface: #fcfcfb; --surface-2: #f0efec; --border: #e2e1dc;
+  --text: #0b0b0b; --text-2: #52514e; --muted: #7a7974;
+  --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a;
+  --pos: #2a78d6; --neg: #eb6834; --accent: #2a78d6;
+  --good: #1d7f4e; --bad: #b4332f; --grid: #e8e7e3;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #121211; --surface: #1a1a19; --surface-2: #232321; --border: #33332f;
+    --text: #f0efec; --text-2: #c3c2b7; --muted: #8f8e86;
+    --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+    --pos: #3987e5; --neg: #d95926; --accent: #5598e7;
+    --good: #4cc38a; --bad: #f07a76; --grid: #2a2a27;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #121211; --surface: #1a1a19; --surface-2: #232321; --border: #33332f;
+  --text: #f0efec; --text-2: #c3c2b7; --muted: #8f8e86;
+  --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+  --pos: #3987e5; --neg: #d95926; --accent: #5598e7;
+  --good: #4cc38a; --bad: #f07a76; --grid: #2a2a27;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text);
+  font: 15px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+main { max-width: 1120px; margin: 0 auto; padding: 32px 16px 64px; }
+a { color: var(--accent); text-decoration: none; } a:hover { text-decoration: underline; }
+h1 { font-size: 30px; margin: 0 0 4px; letter-spacing: -.01em; }
+h2 { font-size: 21px; margin: 48px 0 6px; }
+h3 { font-size: 15px; margin: 6px 0 4px; line-height: 1.35; }
+.lead { color: var(--text-2); margin: 0 0 20px; max-width: 760px; }
+.section-lead { color: var(--text-2); margin: 0 0 16px; max-width: 800px; }
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
+.kpi { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+.kpi .v { font-size: 26px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.kpi .l { color: var(--text-2); font-size: 13px; }
+.explain { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; margin-top: 12px; }
+.explain p { margin: 6px 0; color: var(--text-2); }
+.explain b { color: var(--text); }
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; }
+.card-head { display: flex; justify-content: space-between; gap: 8px; font-size: 12px; }
+.tag { font-weight: 600; color: var(--accent); }
+.loc { color: var(--muted); }
+.facts { color: var(--text-2); font-size: 13px; }
+.prices { display: grid; grid-template-columns: 1.2fr 1fr .8fr; gap: 8px; margin: 12px 0 8px; }
+.lbl { display: block; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+.big { font-size: 22px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.mid { font-size: 16px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.good { color: var(--good); }
+.meter { height: 6px; background: var(--surface-2); border-radius: 4px; overflow: hidden; }
+.meter span { display: block; height: 100%; background: var(--s1); border-radius: 4px; }
+.news ul { margin: 6px 0 0; padding-left: 20px; } .news li { margin: 4px 0; } .news .down { color: var(--good, #1baf7a); font-weight: 600; }
+.note { font-size: 12.5px; background: var(--surface-2); border-radius: 6px; padding: 6px 8px; margin-top: 8px; color: var(--text-2); }
+.pc { list-style: none; padding: 0; margin: 10px 0 0; font-size: 13.5px; }
+.pc li { padding-left: 20px; position: relative; margin: 3px 0; }
+.pc li.pro::before { content: "+"; position: absolute; left: 4px; color: var(--good); font-weight: 700; }
+.pc li.con::before { content: "–"; position: absolute; left: 4px; color: var(--bad); font-weight: 700; }
+.subhead { font-size: 15px; color: var(--text-2); margin: 22px 0 10px; font-weight: 600; }
+.chart-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 14px 8px; position: relative; }
+.legend { display: flex; flex-wrap: wrap; gap: 16px; font-size: 13px; color: var(--text-2); margin: 0 0 6px 4px; }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; }
+.legend .ring { background: transparent; border: 2px solid var(--text); width: 12px; height: 12px; }
+svg text { fill: var(--muted); font-size: 11px; }
+.tip { position: absolute; pointer-events: none; background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+  padding: 8px 10px; font-size: 12.5px; box-shadow: 0 6px 20px rgba(0,0,0,.15); max-width: 280px; display: none; z-index: 5; }
+.tip b { display: block; margin-bottom: 2px; }
+.tip .row { display: flex; justify-content: space-between; gap: 12px; color: var(--text-2); }
+.tip .row span:last-child { color: var(--text); font-variant-numeric: tabular-nums; }
+table { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; font-size: 13.5px; }
+th, td { padding: 9px 10px; border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; }
+th { font-size: 12px; color: var(--text-2); font-weight: 600; background: var(--surface-2); white-space: nowrap; }
+th.sortable { cursor: pointer; user-select: none; } th.sortable:hover { color: var(--text); }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+.sub { color: var(--text-2); font-size: 12.5px; margin-top: 2px; }
+.stars { color: #c98500; letter-spacing: 1px; white-space: nowrap; } .stars .off { color: var(--border); }
+.cellbar { height: 5px; background: var(--surface-2); border-radius: 3px; margin-bottom: 4px; }
+.cellbar span { display: block; height: 100%; background: var(--s1); border-radius: 3px; }
+.disc { display: inline-flex; align-items: center; gap: 6px; justify-content: flex-end; }
+.dbar { width: 54px; height: 6px; background: var(--surface-2); border-radius: 3px; position: relative; }
+.dbar span { position: absolute; top: 0; height: 100%; border-radius: 3px; }
+.filters { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 10px; align-items: center; }
+.filters select, .filters input { background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 6px 8px; font: inherit; font-size: 13px; }
+.filters .count { color: var(--muted); font-size: 13px; margin-left: auto; }
+.table-scroll { overflow-x: auto; border-radius: 12px; }
+.badge { font-size: 11px; padding: 1px 6px; border-radius: 10px; background: var(--surface-2); color: var(--text-2); white-space: nowrap; }
+.badge.pick { background: var(--s1); color: #fff; }
+.flag { color: var(--bad); font-size: 12px; }
+.warn { background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--neg); border-radius: 10px; padding: 12px 16px; }
+.warn li { margin: 4px 0; }
+.check { columns: 2 300px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px 14px 34px; margin: 0; }
+.check li { margin: 4px 0; break-inside: avoid; }
+footer { color: var(--muted); font-size: 12.5px; margin-top: 48px; border-top: 1px solid var(--border); padding-top: 14px; }
+.theme-btn { float: right; background: var(--surface); color: var(--text-2); border: 1px solid var(--border); border-radius: 8px; padding: 5px 10px; cursor: pointer; font: inherit; font-size: 13px; }
+@media (max-width: 640px) { h1 { font-size: 24px; } .prices { grid-template-columns: 1fr 1fr 1fr; } .big { font-size: 18px; } th, td { padding: 7px 6px; } }
+</style>
+<!-- ferovka-theme --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"><style id="ferovka-theme">/* Férovka look for the generated analyses – injected by sync-reports.mjs after each report's own <style>.
+   Same palette and type as the site; chart colours (--s1..--s3) stay the validated set. */
+:root {
+  --bg: #f5f4ef; --surface: #fdfdfb; --surface-2: #eeede6; --border: #e1dfd6;
+  --text: #0f1513; --text-2: #4f5551; --muted: #6f746f;
+  --accent: #0b8a56; --good: #0b7a4b; --grid: #e6e4dc; --win: #dff3e9;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d110f; --surface: #151a17; --surface-2: #1d2420; --border: #2a322d;
+    --text: #eef1ec; --text-2: #b6bdb6; --muted: #8f978f;
+    --accent: #2fc583; --good: #4cd08f; --grid: #1f2622; --win: #143223;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d110f; --surface: #151a17; --surface-2: #1d2420; --border: #2a322d;
+  --text: #eef1ec; --text-2: #b6bdb6; --muted: #8f978f;
+  --accent: #2fc583; --good: #4cd08f; --grid: #1f2622; --win: #143223;
+}
+
+body { font-family: "Manrope", system-ui, sans-serif; }
+h1, h2 { letter-spacing: -0.02em; font-weight: 800; }
+.tag { color: var(--accent); }
+
+/* photo header (removed by the site's viewer, which shows its own) */
+.fv-hero { position: relative; margin: 0 0 26px; border-radius: 20px; overflow: hidden; aspect-ratio: 21 / 8; background: #0d110f; display: flex; }
+.fv-hero img { flex: 1; min-width: 0; height: 100%; object-fit: cover; animation: fv-zoom 1.4s cubic-bezier(.2,.7,.2,1) both; }
+.fv-collage img + img { border-left: 3px solid #0d110f; }
+.fv-hero::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(180deg, transparent 55%, rgb(13 17 15 / .75)),
+    repeating-linear-gradient(90deg, rgb(47 197 131 / .06) 0 1px, transparent 1px 48px); }
+.fv-hero figcaption { position: absolute; right: 12px; bottom: 8px; z-index: 1; font-size: 11px; color: rgb(255 255 255 / .75); }
+.fv-hero figcaption a { color: inherit; }
+
+/* cards & panels: softer, lift on hover */
+.card, .kpi, .explain, .chart-wrap, .box { border-radius: 16px; }
+.card { transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease; }
+.card:hover { transform: translateY(-3px); border-color: var(--accent); box-shadow: 0 14px 30px -18px rgb(0 0 0 / .45); }
+.badge.pick { background: var(--accent); }
+
+/* entrance animation */
+@keyframes fv-up { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes fv-zoom { from { transform: scale(1.08); filter: brightness(.6); } to { transform: none; filter: none; } }
+h1, .lead, .kpis, .cards .card { animation: fv-up .6s cubic-bezier(.2,.7,.2,1) both; }
+.lead { animation-delay: .08s; }
+.kpis { animation-delay: .16s; }
+.cards .card:nth-child(2) { animation-delay: .06s; }
+.cards .card:nth-child(3) { animation-delay: .12s; }
+.cards .card:nth-child(4) { animation-delay: .18s; }
+.cards .card:nth-child(5) { animation-delay: .24s; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+@media (max-width: 640px) { .fv-hero { aspect-ratio: 16 / 9; border-radius: 14px; } }
+
+/* touch: hint under the chart tooltip (report-chart.js) */
+.fv-hint { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--border, rgba(127,127,127,.3)); font-weight: 700; color: var(--accent, #2fc583); }
+</style><!-- /ferovka-theme -->
+</head>
+<body>
+<main><!-- ferovka-theme --><!-- /ferovka-theme -->
+<button class="theme-btn" id="themeBtn" type="button">Svetlý / tmavý</button>
+<h1>Peugeot Traveller / Expert – ktorá ponuka sa oplatí</h1>
+<p class="lead">Analýza aktuálnych inzerátov Peugeot Traveller / Expert (Traveller a Expert Combi 2016+, osobné verzie 6–9 miest, bez dodávok N1) od 8 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (23. 11. 2026). Na portáloch je spolu 332 inzerátov (66 na bazoši, 89 na autobazar.eu, 177 na bazar.sk) – prezreli sme 75 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 183 rôznych áut zo Slovenska. Každé auto sme porovnali
+s <b>férovou cenou</b>: tú vypočítal model naučený na celom trhu podľa veku, nájazdu, motora, prevodovky a typu predajcu.</p>
+
+<div class="kpis">
+  <div class="kpi"><div class="v">183</div><div class="l">inzerátov osobného Traveller / Expert (nad 8 000 €)</div></div>
+  <div class="kpi"><div class="v">39</div><div class="l">ohodnotených (majú rok aj km)</div></div>
+  <div class="kpi"><div class="v">21 990 €</div><div class="l">medián ceny s DPH</div></div>
+  <div class="kpi"><div class="v">93 %</div><div class="l">rozdielov v cenách vysvetlí model</div></div>
+</div>
+
+
+<h2>Odkiaľ sú dáta: bazoš, autobazar.eu a bazar.sk</h2>
+<div class="kpis">
+  <div class="kpi"><div class="v">17</div><div class="l">ohodnotených z bazoša</div></div>
+  <div class="kpi"><div class="v">18</div><div class="l">ohodnotených z autobazar.eu</div></div><div class="kpi"><div class="v">4</div><div class="l">ohodnotených z bazar.sk</div></div>
+  <div class="kpi"><div class="v">57</div><div class="l">áut bolo na viacerých portáloch – započítané raz</div></div>
+  <div class="kpi"><div class="v">14 / 2</div><div class="l">s uvedeným pôvodom SR / dovoz</div></div>
+</div>
+<div class="explain">
+  <p><b>Tri portály, jeden trh.</b> Bazoš prehľadal 65 inzerátov, autobazar.eu
+  89, bazar.sk 94. Ponuky z Česka (na autobazar.eu ich je veľa) sme vynechali. Autobazáre často dávajú
+  to isté auto na viac portálov. Takéto dvojice (8 v rebríčku) sme spojili podľa VIN alebo zhody roku, km a ceny,
+  aby sa v modeli nerátali dvakrát. Pri aute nájdeš odkaz na všetky ponuky – niekedy sa líšia cenou.</p>
+  <p><b>Rozdiel medzi portálmi:</b> rovnaké auto je na autobazar.eu v priemere -2,9 %
+  oproti bazošu. Na autobazar.eu predávajú hlavne firmy (15 z 18 ohodnotených). Na bazar.sk je rovnaké auto v priemere -5,3 % oproti bazošu.</p>
+  <p><b>Kúpené v SR vs. dovoz:</b> autá s uvedeným pôvodom zo SR sú oproti autám bez uvedeného pôvodu
+  -0,4 %, dovezené –
+  (pri rovnakom veku, nájazde a motore). Pôvod zo SR je výhoda pri overovaní histórie, trh zaň však nepripláca – väčšina
+  inzerátov pôvod jednoducho neuvádza. V tabulke dole si môžeš nechať zobraziť len autá kúpené v SR.</p>
+</div>
+
+<h2>Čo hýbe cenou Peugeotu Traveller a Expert</h2>
+<p class="section-lead">Toto sa model naučil z trhu. Keď porovnávaš dve autá, tieto čísla ti povedia, koľko má byť
+rozdiel v cene, aby to bolo fér.</p>
+<div class="kpis">
+  <div class="kpi"><div class="v">-2,7 %</div><div class="l">každých ďalších 10 000 km</div></div>
+  <div class="kpi"><div class="v">-3,6 %</div><div class="l">každý rok veku navyše</div></div>
+  <div class="kpi"><div class="v">+24 %</div><div class="l">príplatok za automat (DSG)</div></div>
+  <div class="kpi"><div class="v">+2,1 %</div><div class="l">príplatok u predajcu / firmy</div></div>
+  <div class="kpi"><div class="v">+2,1 %</div><div class="l">Autá od 2020 oproti cene podľa veku</div></div>
+  <div class="kpi"><div class="v">+24,4 %</div><div class="l">príplatok za automat</div></div>
+</div>
+<div class="explain">
+  <p><b>Príklad:</b> dva rovnaké Peugeoty Traveller 2.0 BlueHDi z roku 2019, jedno má 60 tis. km, druhé 120 tis. km. Druhé má byť
+  približne o 16 % lacnejšie (6 × -2,7 %). Ak je lacnejšie len o 5 %, preplácaš kilometre.</p>
+  <p><b>Ako čítať „pod trhom“:</b> +15 % znamená, že auto stojí o 15 % menej, než by malo podľa trhu. Bežný rozptyl
+  cien je asi ±16 %, takže až zľava nad ~10–15 % je naozaj výnimočná. Pri takej zľave vždy zisti, prečo je auto lacné
+  (stav, história, nájazd).</p>
+  <p><b>DPH:</b> ceny uvedené bez DPH (napr. „10 300 € netto“) sme prepočítali na cenu s DPH, ktorú zaplatí súkromná osoba.</p>
+</div>
+
+<h2>Odporúčané ponuky</h2>
+<p class="section-lead">Kandidáti s najlepším pomerom cena / vek / nájazd, ktorých celý inzerát sme prečítali.
+Zoradené podľa toho, ako ich odporúčame.</p>
+<div class="subhead">Autá od 2020 – najlepší pomer cena / vek</div>
+<div class="cards">
+<article class="card">
+  <div class="card-head"><span class="tag">Traveller Business 180 EAT8 z 2025</span><span class="loc">Bratislava</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/peugeot-traveller-20-bluehdi-business-180-sands-eat8/AbPprv87QSW/" target="_blank" rel="noopener">Peugeot Traveller 2.0 BlueHDi Business 180 S&amp;S EAT8</a></h3>
+  <div class="facts">2025 · 79 400 km · 2.0 / 2.2 BlueHDi 110–132 kW · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · kúpené v SR</div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">31 999 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">32 720 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+2.2 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:7%"></span></div>
+  <ul class="pc"><li class="pro">2025, 2.0 BlueHDi 130 kW, automat EAT8, 79 tis. km</li><li class="pro">Pôvod SR, servis v autorizovanom servise</li><li class="pro">~2 % pod férovou cenou</li><li class="con">Predáva autobazár</li><li class="con">Vyšší nájazd na vek</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">Traveller 2.0 BlueHDi automat z 2023</span><span class="loc">Bratislava V - Petržalka</span></div>
+  <h3><a href="https://auto.bazar.sk/39665640-peugeot-traveller-2-0-bluehdi/" target="_blank" rel="noopener">Peugeot Traveller 2.0 BlueHDi</a></h3>
+  <div class="facts">2023 · 56 648 km · 2.0 / 2.2 BlueHDi 110–132 kW · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazar.sk</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">28 000 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">30 480 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+8.1 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:27%"></span></div>
+  <ul class="pc"><li class="pro">2023, 2.0 BlueHDi 130 kW, automat, 57 tis. km</li><li class="pro">Nízky nájazd, kamera</li><li class="pro">~8 % pod férovou cenou</li><li class="con">Predáva autobazár, pôvod neuvedený</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">Expert Traveller 2.0 HDi, 8 miest</span><span class="loc">Šaľa</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197358793/peugeot-expert-traveller-20-hdi-110kw-138000km-8.php" target="_blank" rel="noopener">PEUGEOT EXPERT TRAVELLER 2.0 HDI 110KW 138000KM 8</a></h3>
+  <div class="facts">2020 · 138 000 km · 2.0 / 2.2 BlueHDi 110–132 kW · manuál · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">17 590 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">19 550 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+10.0 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:33%"></span></div>
+  <ul class="pc"><li class="pro">2020, 2.0 BlueHDi 110 kW, manuál, 8 miest, 138 tis. km</li><li class="pro">CarPlay / Android Auto, navigácia, VIN v inzeráte</li><li class="pro">~10 % pod férovou cenou</li><li class="con">Predáva autobazár, pôvod neuvedený</li></ul>
+</article></div>
+<div class="subhead">Lacnejšie autá do 20 000 €</div>
+<div class="cards">
+<article class="card">
+  <div class="card-head"><span class="tag">Traveller Allure od súkromníka z SR</span><span class="loc">Trebišov</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/peugeot-traveller-20-bluehdi-allure-standard-110kw150hp-m6/AesmmRgLeEL/" target="_blank" rel="noopener">Peugeot Traveller 2.0 BlueHDi Allure Standard 110kW150HP M6</a></h3>
+  <div class="facts">2020 · 135 000 km · 2.0 / 2.2 BlueHDi 110–132 kW · manuál · súkromník</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · kúpené v SR</div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">15 500 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">18 700 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+17.1 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:57%"></span></div>
+  <ul class="pc"><li class="pro">2020, 2.0 BlueHDi 110 kW, manuál, 135 tis. km</li><li class="pro">Pôvod SR, súkromný predaj, výbava Allure</li><li class="pro">~17 % pod férovou cenou</li><li class="con">Inzerát bez popisu – over servisnú históriu</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">Traveller Allure 177 k automat za 10 000 €</span><span class="loc">Košice</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197582170/predaj-peugeot-traveller-2018.php" target="_blank" rel="noopener">Predaj Peugeot Traveller 2018</a></h3>
+  <div class="facts">2018 · 240 000 km · 2.0 / 2.2 BlueHDi 110–132 kW · automat · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">10 000 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">14 250 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+29.8 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:99%"></span></div>
+  <ul class="pc"><li class="pro">2018, 2.0 BlueHDi 130 kW, automat, 7 miest, 240 tis. km</li><li class="pro">Plná výbava Allure</li><li class="pro">~30 % pod férovou cenou</li><li class="con">Mierne poškodený nárazník</li><li class="con">Vysoký nájazd</li><li class="con">Predajca neistý</li></ul>
+</article></div>
+<div class="subhead">Špeciálne prípady</div>
+<div class="cards"></div>
+
+<h2>Cena vs. nájazd: celý trh na jednom grafe</h2>
+<p class="section-lead">Každý bod je jeden inzerát. Čím nižšie bod leží oproti ostatným s podobným nájazdom, tým je auto lacnejšie.
+Krúžkom sú označené odporúčané ponuky. Prejdi myšou na bod a uvidíš detail.</p>
+<div class="chart-wrap" id="chartWrap">
+  <div class="legend" id="legend"></div>
+  <svg id="chart" width="100%" height="420" role="img" aria-label="Bodový graf ceny a nájazdu inzerátov"></svg>
+  <div class="tip" id="tip"></div>
+</div>
+
+<h2>Porovnanie motorov</h2>
+<p class="section-lead">Hodnotenie (hviezdičky) zohľadňuje spoľahlivosť, spoľahlivosť a náklady na prevádzku a pomer cena/výkon.
+Číselné stĺpce sú mediány z ohodnotených inzerátov.</p>
+<div class="table-scroll">
+<table>
+  <thead><tr><th>Motor</th><th>Hodnotenie</th><th class="num">Ponúk</th><th class="num">Medián ceny</th><th class="num">Medián roku</th><th class="num">Medián km</th></tr></thead>
+  <tbody>
+<tr>
+  <td><b>2.0 / 2.2 BlueHDi 110–132 kW</b><div class="sub">Diesel 150–180 k, často s automatom EAT8. Ťahavý aj pri plnom obsadení; over AdBlue a DPF.</div></td>
+  <td><span class="stars" aria-label="4 z 5">★★★★<span class="off">★</span></span></td>
+  <td class="num">36</td>
+  <td class="num"><div class="cellbar"><span style="width:100%"></span></div>23 170 €</td>
+  <td class="num">2020</td>
+  <td class="num">135 000 km</td>
+</tr>
+<tr>
+  <td><b>1.5 / 1.6 / 2.0 BlueHDi 70–90 kW</b><div class="sub">Slabší diesel 95–120 k. Úsporný, ale pri plnom obsadení pomalší.</div></td>
+  <td><span class="stars" aria-label="3 z 5">★★★<span class="off">★★</span></span></td>
+  <td class="num">2</td>
+  <td class="num"><div class="cellbar"><span style="width:62%"></span></div>14 400 €</td>
+  <td class="num">2019</td>
+  <td class="num">149 626 km</td>
+</tr>
+<tr>
+  <td><b>Benzín</b><div class="sub">Zriedkavý benzín – vyššia spotreba.</div></td>
+  <td><span class="stars" aria-label="3 z 5">★★★<span class="off">★★</span></span></td>
+  <td class="num">1</td>
+  <td class="num"><div class="cellbar"><span style="width:47%"></span></div>10 900 €</td>
+  <td class="num">2017</td>
+  <td class="num">266 000 km</td>
+</tr></tbody>
+</table>
+</div>
+<div class="explain">
+  <p><b>Peugeot Traveller</b> (od 2016) je veľké MPV na technike PSA, sesterské s Citroënom SpaceTourer, Oplom Vivaro C a Toyotou Proace.
+  Jednoduchšia osobná verzia sa volá <b>Expert Combi</b>. Dĺžky XS, M a L, 5–9 miest.</p>
+  <p><b>Ktorý motor zvoliť?</b> Najlepší je <b>2.0 BlueHDi</b> so 150–180 k a automatom EAT8. Slabšie verzie pri plnom obsadení nestačia.
+  Analýza zahŕňa len osobné verzie – dodávky N1 sú vyradené.</p>
+</div>
+
+<h2>Na čo si dať pozor</h2>
+<div class="warn">
+  <p><b>Lacné kvôli extrémnemu nájazdu</b> (viac ako 35 tis. km ročne, typicky flotila alebo taxi):</p>
+  <ul><li><a href='https://auto.bazos.sk/inzerat/197414133/peugeot-traveller-2018-8-miest-20-diesel-dph.php' target='_blank' rel='noopener'>Peugeot Traveller 2018 - 8 miest, 2.0 diesel, DPH</a>: 2018, 300 436 km → 36 000 km/rok. Lacné je kvôli nájazdu.</li></ul>
+  <p><b>Ďalšie veci, ktoré sme v inzerátoch našli:</b></p><ul><li>Väčšina inzerátov „Expert“ sú dodávky – do analýzy sme zaradili len Traveller a osobné verzie Expert Combi s aspoň 5 miestami.</li><li>Nové autá zo skladu predajcov (aj s pár tisíc km na predvádzanie) sme nezarátali.</li><li>Pri niektorých inzerátoch AAA AUTO je uvedená „cena pri financovaní“ – bez úveru môže byť cena vyššia.</li></ul><p><b>Vyradené z porovnania</b> (poškodené autá alebo nezmyselné údaje – model ich nehodnotí):</p><ul><li><a href='https://auto.bazos.sk/inzerat/197744149/expert-traveller-20-hdi-110kw-6st-manual-r2020.php' target='_blank' rel='noopener'>Expert Traveller 2,0 Hdi 110kW 6st. manual r2020</a> (15 000 €): havarované / poškodené – cena nie je porovnateľná s trhom</li><li><a href='https://auto.bazos.sk/inzerat/197414268/peugeot-traveller-20-bluehdi-130-kw-2024-8-miestny.php' target='_blank' rel='noopener'>Peugeot Traveller 2.0 BlueHDi 130 kW (2024) – 8-miestny</a> (27 990 €): 102000 km/rok je nereálne – skontroluj rok a km</li><li><a href='https://www.autobazar.eu/detail/peugeot-traveller-20-bluehdi-177-sands-business-long-eat8/AmXvI5WkOaw/' target='_blank' rel='noopener'>Peugeot Traveller  2.0 BlueHDi 177 S&amp;S Business Long EAT8</a> (16 900 €): havarované / poškodené – cena nie je porovnateľná s trhom</li><li><a href='https://www.autobazar.eu/detail/peugeot-expert/AmnVxdcs0Zb/' target='_blank' rel='noopener'>Peugeot Expert</a> (12 990 €): 80000 km/rok je nereálne – skontroluj rok a km</li><li><a href='https://www.autobazar.eu/detail/peugeot-expert-tepee-2-0-bluehdi-expert-combi/Amzglkxzqtu/' target='_blank' rel='noopener'>Peugeot Expert Tepee 2,0 BlueHDi EXPERT COMBI L3</a> (37 990 €): podozrivo nízky nájazd</li><li><a href='https://auto.bazos.sk/inzerat/196966828/peugeot-expert-16-70-kw-nizka-cena-vyborny-stav.php' target='_blank' rel='noopener'>Nízka Cena Peugeot Expert, Možný ODPOČET DPH, 1.6 / 70 kW</a> (10 499 €): 125000 km/rok je nereálne – skontroluj rok a km</li><li><a href='https://auto.bazar.sk/39011536-peugeot-expert-2-0-bluehdi-flexi-pro-l3-2-0-bluehdi-145k/' target='_blank' rel='noopener'>Peugeot Expert 2,0 BlueHDi FLEXI PRO L3 2,0 BlueHDi 145k</a> (35 490 €): podozrivo nízky nájazd</li><li><a href='https://auto.bazar.sk/34356057-peugeot-expert-fg-premium-l2h1-2-0-bluehdi-120-ss-bvm6/' target='_blank' rel='noopener'>Peugeot Expert FG PREMIUM L2H1 2.0 BlueHDi 120 S&amp;S BVM6</a> (22 986 €): podozrivo nízky nájazd</li></ul><p><b>Dodávky (skriňa, N1, 3 miesta), starý Expert do 2016, Citroën SpaceTourer / Jumpy, elektrické verzie a iné modely z vyhľadávania, nové autá zo skladu, inzeráty s chybným nájazdom</b> (89 inzerátov) sme z rebríčka vynechali.</p>
+  <p>Ďalších <b>14</b> inzerátov nemá v texte rok alebo kilometre, takže ich nebolo možné ohodnotiť.
+  Ak ťa niektorý zaujme, predajcu sa na tieto údaje opýtaj.</p>
+</div>
+
+<h2>Kompletný rebríček</h2>
+<p class="section-lead">Všetky ohodnotené inzeráty. Kliknutím na hlavičku stĺpca zoraďuješ, filtrom zužuješ výber.</p>
+<div class="filters">
+  <select id="fEngine"><option value="">Všetky motory</option></select>
+  <select id="fTrans"><option value="">Každá prevodovka</option><option value="automatic">Automat</option><option value="manual">Manuál</option></select>
+  <select id="fSeller"><option value="">Všetci predajcovia</option><option value="nodealer">Bez autobazárov</option></select>
+  <select id="fSource"><option value="">Všetky portály</option><option value="bazos">bazoš</option><option value="autobazar">autobazar.eu</option><option value="bazarsk">bazar.sk</option></select>
+  <select id="fBody" hidden><option value=""></option></select>
+  <select id="fOrigin"><option value="">Akýkoľvek pôvod</option><option value="SR">Kúpené v SR</option><option value="dovoz">Dovoz</option></select>
+  <input id="fMax" type="number" placeholder="Max. cena €" step="500" min="0" style="width:120px">
+  <span class="count" id="count"></span>
+</div>
+<div class="table-scroll">
+<table id="tbl">
+  <thead><tr>
+    <th class="sortable" data-k="title">Inzerát</th>
+    <th class="sortable num" data-k="year">Rok</th>
+    <th class="sortable num" data-k="km">Km</th>
+    <th class="sortable num" data-k="price_gross">Cena</th>
+    <th class="sortable num" data-k="fair_price">Férová</th>
+    <th class="sortable num" data-k="discount_pct">Pod trhom ▾</th>
+  </tr></thead>
+  <tbody></tbody>
+</table>
+</div>
+
+<h2>Pred kúpou over</h2>
+<ul class="check">
+  <li>VIN cez Cebia / autoDNA (história km, havárie) – veľa áut je z firiem a taxi</li>
+  <li>Over v TP, že ide o osobné auto (M1), nie dodávku (N1)</li>
+  <li>Diesel: DPF, AdBlue (pri BlueHDi známe poruchy nádrže AdBlue)</li>
+  <li>Elektrické posuvné dvere, sedadlá a koľajnice</li>
+  <li>Hrdza na prahoch a podlahe</li>
+  <li>STK/EK protokol a dátum platnosti; cena s DPH alebo bez DPH, ak predáva firma</li>
+</ul>
+
+<footer>
+  Zdroj: auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (len ponuky zo Slovenska, to isté auto na viacerých portáloch je započítané raz), sťahované cez lokálny MCP server bazos-mcp (nástroj <code>fair_price</code>), 23. 11. 2026.
+  Model: ridge regresia log(ceny s DPH) podľa veku, veku², km, km², prevodovky, typu predajcu, motora, karosérie, pohonu 4x4, pôvodu (SR / dovoz) a portálu. Vzorka 39
+  inzerátov, R² 93 %. Parametre sú vyťažené z textu inzerátov, a preto môžu obsahovať chyby. Odporúčané ponuky sme overili
+  prečítaním celého inzerátu. Hodnotenie motorov je odborný odhad, nie výsledok modelu.
+</footer>
+</main>
+
+<script>
+const DATA = [{"id": "197582170", "url": "https://auto.bazos.sk/inzerat/197582170/predaj-peugeot-traveller-2018.php", "title": "Predaj Peugeot Traveller 2018", "price": 10000, "price_gross": 10000, "fair_price": 14250.0, "discount_pct": 29.8, "verdict": "výrazne pod trhom – over prečo", "year": 2018, "km": 240000, "km_per_year": 28800.0, "eg": "2.0 / 2.2 BlueHDi 110–132 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Košice", "flags": [], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AeS7WA5IXBM", "url": "https://www.autobazar.eu/detail/peugeot-traveller-bluehdi-20-9miest-sr/AeS7WA5IXBM/", "title": "Peugeot Traveller BlueHDI 2.0, 9Miest, SR,", "price": 17600, "price_gross": 17600, "fair_price": 24140.0, "discount_pct": 27.1, "verdict": "výrazne pod trhom – over prečo", "year": 2021, "km": 117556, "km_per_year": 22000.0, "eg": "2.0 / 2.2 BlueHDi 110–132 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-Ae3Y1WxLRAK", "url": "https://www.autobazar.eu/detail/peugeot-traveller-20-bluehdi-177-ss-active-long-eat8-130kw177hp-a8/Ae3Y1WxLRAK/", "title": "Peugeot Traveller 2.0 BlueHDi 177 SS Active Long EAT8 130kW177HP A8", "price": 12900, "price_gross": 12900, "fair_price": 15960.0, "discount_pct": 19.2, "verdict": "výrazne pod trhom – over prečo", "year": 2019, "km": 219500, "km_per_year": 29900.0, "eg": "2.0 / 2.2 BlueHDi 110–132 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava-Ružinov", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AesmmRgLeEL", "url": "https://www.autobazar.eu/detail/peugeot-traveller-20-bluehdi-allure-standard-110kw150hp-m6/AesmmRgLeEL/", "title": "Peugeot Traveller 2.0 BlueHDi Allure Standard 110kW150HP M6", "price": 15500, "price_gross": 15500, "fair_price": 18700.0, "discount_pct": 17.1, "verdict": "výrazne pod trhom – over prečo", "year": 2020, "km": 135000, "km_per_year": 21300.0, "eg": "2.0 / 2.2 BlueHDi 110–132 kW", "cg": 1, "transmission": "manual", "seller_type": "private", "location": "Trebišov", "flags": [], "pick": "budget", "source": "autobazar", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "197358793", "url": "https://auto.bazos.sk/inzerat/197358793/peugeot-expert-traveller-20-hdi-110kw-138000km-8.php", "title": "PEUGEOT EXPERT TRAVELLER 2.0 HDI 110KW 138000KM 8", "price": 17590, "price_gross": 17590, "fair_price": 19550.0, "discount_pct": 10.0, "verdict": "pod trhom", "year": 2020, "km": 138000, "km_per_year": 21800.0, "eg": "2.0 / 2.2 BlueHDi 110–132 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Šaľa", "flags": [], "pick": "top", "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "bs-39665640", "url": "https://auto.bazar.sk/39665640-peugeot-traveller-2-0-bluehdi/", "title": "Peugeot Traveller 2.0 BlueHDi", "price": 28000, "price_gross": 28000, "fair_price": 30480.0, "discount_pct": 8.1, "verdict": "pod trhom", "year": 2023, "km": 56648, "km_per_year": 17000.0, "eg": "2.0 / 2.2 BlueHDi 110–132 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava V - Petržalka", "flags": [], "pick": "top", "source": "bazarsk", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AeHgLF6lcYm", "url": "https://www.autobazar.eu/detail/peugeot-traveller-20-bluehdi-business-standard-110kw150hp-m6/AeHgLF6lcYm/", "title": "Peugeot Traveller 2.0 BlueHDi Business Standard 110kW/150HP M6", "price": 14700, "price_gross": 14700, "fair_price": 15980.0, "discount_pct": 8.0, "verdict": "pod trhom", "year": 2018, "km": 160000, "km_per_year": 19200.0, "eg": "2.0 / 2.2 BlueHDi 110–132 kW", "cg": 1, "transmission": "manual", "seller_type": "private", "location": "Baška", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "ab-AmfjNUW8Svb", "url": "https://www.autobazar.eu/detail/peugeot-traveller-22-bluehdi-180-business-l2-eat8/AmfjNUW8Svb/", "title": "Peugeot Traveller  2.2 BlueHDi 180 Business L2 EAT8", "price": 37790, "price_gross": 37790, "fair_price": 40100.0, "discount_pct": 5.8, "verdict": "férová cena", "year": 2026, "km": 7913, "km_per_year": 23700.0, "eg": "2.0 / 2.2 BlueHDi 110–132 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Nové Zámky", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "196334561", "url": "https://auto.bazos.sk/inzerat/196334561/peugeot-traveller-business-l2-22-bluehdi-180-eat8.php", "price": 37790}], "body": "mpv"}, {"id": "ab-AbPprv87QSW", "url": "https://www.autobazar.eu/detail/peugeot-traveller-20-bluehdi-business-180-sands-eat8/AbPprv87QSW/", "title": "Peugeot Traveller 2.0 BlueHDi Business 180 S&S EAT8", "price": 31999, "price_gross": 31999, "fair_price": 32720.0, "discount_pct": 2.2, "verdict": "férová cena", "year": 2025, "km": 79400, "km_per_year": 59600.0, "eg": "2.0 / 2.2 BlueHDi 110–132 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": "top", "source": "autobazar", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "ab-Ae33HRZGnMf", "url": "https://www.autobazar.eu/detail/peugeot-traveller-16-bluehdi-5miest-sr/Ae33HRZGnMf/", "title": "Peugeot Traveller 1.6 BlueHDi, 5Miest, SR,", "price": 10500, "price_gross": 10500, "fair_price": 10620.0, "discount_pct": 1.1, "verdict": "férová cena", "year": 2018, "km": 185251, "km_per_year": 22200.0, "eg": "1.5 / 1.6 / 2.0 BlueHDi 70–90 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "196618755", "url": "https://auto.bazos.sk/inzerat/196618755/peugeot-expert-traveler-20-hdi-9-mist.php", "title": "Peugeot Expert Traveler 2.0 hdi 9 miest", "price": 15990, "price_gross": 15990, "fair_price": 15930.0, "discount_pct": -0.4, "verdict": "férová cena", "year": 2019, "km": 155400, "km_per_year": 21200.0, "eg": "2.0 / 2.2 BlueHDi 110–132 kW", "cg": 1, "transmission": null, "seller_type": "dealer", "location": "Levice", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AeMt9napsQo", "url": "https://www.autobazar.eu/detail/peugeot-traveller-allure-l2-20-bluehdi-180-eat8/AeMt9napsQo/", "title": "Peugeot Traveller Allure L2 2,0 BlueHDi 180 EAT8", "price": 24499, "price_gross": 24499, "fair_price": 24280.0, "discount_pct": -0.9, "verdict": "férová cena", "year": 2019, "km": 79200, "km_per_year": 10800.0, "eg": "2.0 / 2.2 BlueHDi 110–132 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava-Ružinov", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "ab-AeRsfhPApqp", "url": "https://www.autobazar.eu/detail/peugeot-traveller-20-bluehdi-177-ss-active-standard-at-130kw177hp-a6/AeRsfhPApqp/", "title": "Peugeot Traveller 2.0 BlueHDi 177 SS Active Standard AT 130kW177HP A6", "price": 21499, "price_gross": 21499, "fair_price": 21290.0, "discount_pct": -1.0, "verdict": "férová cena", "year": 2018, "km": 142321, "km_per_year": 17100.0, "eg": "2.0 / 2.2 BlueHDi 110–132 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Plavecký Štvrtok", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "mpv"}, {"id": "ab-AeQMdA371IL", "url": "https://www.autobazar.eu/detail/peugeot-traveller-20-bluehdi-active-standard-110kw150hp-m6/AeQMdA371IL/", "title": "Peugeot Traveller 2.0 BlueHDi Active Standard 110kW/150HP M6", "price": 17000, "price_gross": 17000, "fair_price": 16590.0, "discount_pct": -2.5, "verdict": "férová cena", "year": 2020, "km": 174300, "km_per_year": 27500.0, "eg": "2.0 / 2.2 BlueHDi 110–132 kW", "cg": 1, "transmission": "manual", "seller_type": "private", "location": "Liptovský Mikuláš", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197662688", "url": "https://auto.bazos.sk/inzerat/197662688/peugeot-traveller.php", "price": 17000}], "body": "mpv"}, {"id": "ab-Amt2mCbG4b7", "url": "https://www.autobazar.eu/detail/peugeot-traveller-20-bluehdi-177-sands-business-vip-long-at/Amt2mCbG4b7/", "title": "Peugeot Traveller  2.0 BlueHDi 177 S&S Business VIP Long AT", "price": 19900, "price_gross": 19900, "fair_price": 19420.0, "discount_pct": -2.5, "verdict": "férová cena", "year": 2017, "km": 165463, "km_per_year": 17700.0, "eg": "2.0 / 2.2 BlueHDi 110–132 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Trnava", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "196163541", "url": "https://auto.bazos.sk/inzerat/196163541/traveler-l3-h1-20-bluehdi-180.php", "price": 19900}], "body": "mpv"}, {"id": "197279888", "url": "https://auto.bazos.sk/inzerat/197279888/peugeot-traveller-20.php", "title": "Peugeot traveller 2.0", "price": 14800, "price_gross": 14800, "fair_price": 14410.0, "discount_pct": -2.7, "verdict": "férová cena", "year": 2016, "km": 160000, "km_per_year": 15500.0, "eg": "2.0 / 2.2 BlueHDi 110–132 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Bratislava", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "bs-39698731", "url": "https://auto.bazar.sk/39698731-peugeot-traveller-2-0-bluehdi/", "title": "Peugeot Traveller 2.0 BlueHDi", "price": 26000, "price_gross": 26000, "fair_price": 24740.0, "discount_pct": -5.1, "verdict": "férová cena", "year": 2021, "km": 99752, "km_per_year": 18700.0, "eg": "2.0 / 2.2 BlueHDi 110–132 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava V - Petržalka", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "bs-39658018", "url": "https://auto.bazar.sk/39658018-peugeot-traveller-2-0-bluehdi/", "title": "Peugeot Traveller 2.0 BlueHDi", "price": 26400, "price_gross": 26400, "fair_price": 25120.0, "discount_pct": -5.1, "verdict": "férová cena", "year": 2022, "km": 110919, "km_per_year": 25600.0, "eg": "2.0 / 2.2 BlueHDi 110–132 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava V - Petržalka", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AmEgMPgDty_", "url": "https://www.autobazar.eu/detail/peugeot-traveller/AmEgMPgDty_/", "title": "Peugeot Traveller", "price": 35990, "price_gross": 35990, "fair_price": 34180.0, "discount_pct": -5.3, "verdict": "férová cena", "year": 2024, "km": 33832, "km_per_year": 14500.0, "eg": "2.0 / 2.2 BlueHDi 110–132 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Trnava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "196382401", "url": "https://auto.bazos.sk/inzerat/196382401/peugeot-traveller-20-business-l3-4x4-long-9-miestny.php", "title": "Peugeot Traveller 2.0 Business L3 4x4 Long 9-miestny", "price": 23990, "price_gross": 23990, "fair_price": 22690.0, "discount_pct": -5.7, "verdict": "férová cena", "year": 2020, "km": 125000, "km_per_year": 19700.0, "eg": "2.0 / 2.2 BlueHDi 110–132 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Partizánske", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-Amzui_zH8gt", "url": "https://www.autobazar.eu/detail/peugeot-traveller-20-business-l3-4x4-long-9-miestny/Amzui_zH8gt/", "price": 23990}], "body": "mpv"}, {"id": "197617743", "url": "https://auto.bazos.sk/inzerat/197617743/peugeot-traveller-l3-20-bluehdi-180-k-eat8-2021.php", "title": "Peugeot Traveller L3 · 2.0 BlueHDi 180 k · EAT8 · 2021", "price": 22350, "price_gross": 22350, "fair_price": 21060.0, "discount_pct": -6.1, "verdict": "férová cena", "year": 2021, "km": 165464, "km_per_year": 31000.0, "eg": "2.0 / 2.2 BlueHDi 110–132 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Bratislava", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "195997342", "url": "https://auto.bazos.sk/inzerat/195997342/peugeot-expert-traveller-110-kw.php", "title": "Peugeot Expert Traveller 110 kW", "price": 20000, "price_gross": 20000, "fair_price": 18290.0, "discount_pct": -9.4, "verdict": "nad trhom", "year": 2020, "km": 140400, "km_per_year": 22200.0, "eg": "2.0 / 2.2 BlueHDi 110–132 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Námestovo", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AezfnziOgM1", "url": "https://www.autobazar.eu/detail/peugeot-traveller-20-bluehdi-active-standard-110kw150hp-m6/AezfnziOgM1/", "title": "Peugeot Traveller 2.0 BlueHDi Active Standard 110kW150HP M6", "price": 19000, "price_gross": 19000, "fair_price": 17290.0, "discount_pct": -9.9, "verdict": "nad trhom", "year": 2019, "km": 150000, "km_per_year": 20500.0, "eg": "2.0 / 2.2 BlueHDi 110–132 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Trebišov", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197369082", "url": "https://auto.bazos.sk/inzerat/197369082/peugeot-traveller-20-bluehdi-active.php", "price": 19000}], "body": "mpv"}, {"id": "197573638", "url": "https://auto.bazos.sk/inzerat/197573638/peugeot-expert-traveller-130kw-at6-2019-8-miest-dph.php", "title": "Peugeot Expert Traveller 130kW AT/6 2019 - 8 Miest / DPH", "price": 24999, "price_gross": 24999, "fair_price": 22570.0, "discount_pct": -10.8, "verdict": "nad trhom", "year": 2019, "km": 109203, "km_per_year": 14900.0, "eg": "2.0 / 2.2 BlueHDi 110–132 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Senica", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AmGGP_MuMNP", "url": "https://www.autobazar.eu/detail/peugeot-traveller-expert-130kw-at6-2019-8miest-aj-na-splatky-protiucet/AmGGP_MuMNP/", "price": 24999}], "body": "mpv"}, {"id": "196277929", "url": "https://auto.bazos.sk/inzerat/196277929/predam-9-miestny-peugeot-traveller.php", "title": "PREDAM 9 miestny Peugeot Traveller", "price": 18300, "price_gross": 18300, "fair_price": 16490.0, "discount_pct": -11.0, "verdict": "nad trhom", "year": 2020, "km": 114000, "km_per_year": 18000.0, "eg": "1.5 / 1.6 / 2.0 BlueHDi 70–90 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Bratislava", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "196237470", "url": "https://auto.bazos.sk/inzerat/196237470/peugeot-traveller-20-bluehdi-active-standard.php", "title": "Peugeot Traveller 2.0 BlueHDi Active Standard", "price": 21990, "price_gross": 21990, "fair_price": 19620.0, "discount_pct": -12.1, "verdict": "nad trhom", "year": 2016, "km": 94247, "km_per_year": 9100.0, "eg": "2.0 / 2.2 BlueHDi 110–132 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Nové Zámky", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-Am84w4o2Vr5", "url": "https://www.autobazar.eu/detail/peugeot-traveller-20-bluehdi-active-standard/Am84w4o2Vr5/", "price": 21990}], "body": "mpv"}, {"id": "ab-AmIuWQk72nV", "url": "https://www.autobazar.eu/detail/peugeot-traveller-20-bluehdi-180-sands-business-vip-l3-eat8/AmIuWQk72nV/", "title": "Peugeot Traveller  2.0 BlueHDi S&S EAT8 L3 Business VIP, v Záruke, Pôvodný lak,SR", "price": 42990, "price_gross": 42990, "fair_price": 38020.0, "discount_pct": -13.1, "verdict": "nad trhom", "year": 2025, "km": 23390, "km_per_year": 17500.0, "eg": "2.0 / 2.2 BlueHDi 110–132 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Kapušany", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197241958", "url": "https://auto.bazos.sk/inzerat/197241958/peugeot-traveller-20-bluehdi-ss-eat8-l3-business-vip-v-za.php", "price": 42990}], "body": "mpv"}, {"id": "197414133", "url": "https://auto.bazos.sk/inzerat/197414133/peugeot-traveller-2018-8-miest-20-diesel-dph.php", "title": "Peugeot Traveller 2018 - 8 miest, 2.0 diesel, DPH", "price": 11685, "price_gross": 11685, "fair_price": 10290.0, "discount_pct": -13.6, "verdict": "nad trhom", "year": 2018, "km": 300436, "km_per_year": 36100.0, "eg": "2.0 / 2.2 BlueHDi 110–132 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Bardejov", "flags": ["vysoký nájazd 36000 km/rok – flotila / taxi?"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "196660375", "url": "https://auto.bazos.sk/inzerat/196660375/peugeot-traveller-long-20-diesel-110-kw-8-miest.php", "title": "Peugeot Traveller Long 2.0 diesel, 110 kW, 8 miest", "price": 17500, "price_gross": 17500, "fair_price": 15230.0, "discount_pct": -14.9, "verdict": "nad trhom", "year": 2019, "km": 194000, "km_per_year": 26500.0, "eg": "2.0 / 2.2 BlueHDi 110–132 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Nitra", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "bs-39729674", "url": "https://auto.bazar.sk/39729674-peugeot-traveller-2-0-bluehdi/", "title": "Peugeot Traveller 2.0 BlueHDi", "price": 26800, "price_gross": 26800, "fair_price": 23330.0, "discount_pct": -14.9, "verdict": "nad trhom", "year": 2021, "km": 120858, "km_per_year": 22700.0, "eg": "2.0 / 2.2 BlueHDi 110–132 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava V - Petržalka", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-Ae9i_nW3lEX", "url": "https://www.autobazar.eu/detail/peugeot-traveller-20-bluehdi-177-ss-business-vip-long-eat8-130kw177hp-a8/Ae9i_nW3lEX/", "title": "Peugeot Traveller 2.0 BlueHDi Business VIP 177kw 7 miesty", "price": 26500, "price_gross": 26500, "fair_price": 22880.0, "discount_pct": -15.8, "verdict": "výrazne nad trhom", "year": 2021, "km": 135000, "km_per_year": 25300.0, "eg": "2.0 / 2.2 BlueHDi 110–132 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Námestovo", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "197386993", "url": "https://auto.bazos.sk/inzerat/197386993/peugeot-traveller-20-bluehdi-130kw.php", "title": "Peugeot Traveller 2.0 blue hdi 130kw", "price": 26500, "price_gross": 26500, "fair_price": 22700.0, "discount_pct": -16.7, "verdict": "výrazne nad trhom", "year": 2019, "km": 109000, "km_per_year": 14900.0, "eg": "2.0 / 2.2 BlueHDi 110–132 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Zvolen", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197164189", "url": "https://auto.bazos.sk/inzerat/197164189/peugeot-traveller-20-bluehdi-110-kw-long-8-mist.php", "title": "🚘 Peugeot Traveller 2.0 BlueHDi 110 kW | LONG | 8 míst |", "price": 17500, "price_gross": 17500, "fair_price": 14820.0, "discount_pct": -18.1, "verdict": "výrazne nad trhom", "year": 2018, "km": 194000, "km_per_year": 23300.0, "eg": "2.0 / 2.2 BlueHDi 110–132 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Čadca", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197287521", "url": "https://auto.bazos.sk/inzerat/197287521/peugeot-traveller-20-hdi-130kw-eat8-busines-vip-long-7miest.php", "title": "Peugeot Traveller 2.0 HDi 130kw EAT8 BUSINES VIP LONG 7miest", "price": 28500, "price_gross": 28500, "fair_price": 24100.0, "discount_pct": -18.2, "verdict": "výrazne nad trhom", "year": 2022, "km": 136000, "km_per_year": 31400.0, "eg": "2.0 / 2.2 BlueHDi 110–132 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Trnava", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "ab-Am3hsnpu1ZO", "url": "https://www.autobazar.eu/detail/peugeot-traveller-20-bluehdi-177-sands-business-standard-at/Am3hsnpu1ZO/", "title": "Peugeot Traveller  2.0 BlueHDi 177 S&S Business Standard AT", "price": 26490, "price_gross": 26490, "fair_price": 22250.0, "discount_pct": -19.1, "verdict": "výrazne nad trhom", "year": 2017, "km": 95000, "km_per_year": 10200.0, "eg": "2.0 / 2.2 BlueHDi 110–132 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Trnava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AmbTE8wgpBF", "url": "https://www.autobazar.eu/detail/peugeot-traveller-20-bluehdi-allure-standard-eat8-130kw-aj-na-splatky-protiucet/AmbTE8wgpBF/", "title": "Peugeot Traveller  2.0 BlueHDi Allure Standard EAT8, 130kW / AJ NA SPLÁTKY / PROTIÚČET /", "price": 25000, "price_gross": 25000, "fair_price": 20300.0, "discount_pct": -23.1, "verdict": "výrazne nad trhom", "year": 2018, "km": 134157, "km_per_year": 16100.0, "eg": "2.0 / 2.2 BlueHDi 110–132 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "197552099", "url": "https://auto.bazos.sk/inzerat/197552099/peugeot-traveller-130kw-automat-full-2019.php", "title": "Peugeot Traveller, 130kw, Automat, FULL, 2019", "price": 25999, "price_gross": 25999, "fair_price": 20310.0, "discount_pct": -28.0, "verdict": "výrazne nad trhom", "year": 2019, "km": 147000, "km_per_year": 20000.0, "eg": "2.0 / 2.2 BlueHDi 110–132 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Prievidza", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197180630", "url": "https://auto.bazos.sk/inzerat/197180630/peugeot-expert-traveller.php", "title": "Peugeot Expert Traveller", "price": 10900, "price_gross": 10900, "fair_price": 8500.0, "discount_pct": -28.2, "verdict": "výrazne nad trhom", "year": 2017, "km": 266000, "km_per_year": 28500.0, "eg": "Benzín", "cg": 0, "transmission": null, "seller_type": "dealer", "location": "Bratislava", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AesTlffaODF", "url": "https://www.autobazar.eu/detail/peugeot-traveller-20-bluehdi-177-ss-business-vip-long-eat8-130kw177hp-a8/AesTlffaODF/", "title": "Peugeot Traveller 2.0 BlueHDi 177 SS Business VIP Long EAT8 130kW177HP A8", "price": 31299, "price_gross": 31299, "fair_price": 23890.0, "discount_pct": -31.0, "verdict": "výrazne nad trhom", "year": 2021, "km": 120000, "km_per_year": 22500.0, "eg": "2.0 / 2.2 BlueHDi 110–132 kW", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Košice", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "mpv"}];
+const GROUPS = ["Benzín", "Diesel BlueHDi", "LPG a nezistený"];
+const BODY = {"mpv": "osobná verzia (Traveller / Expert Combi)"};
+const fmt = n => Math.round(n).toLocaleString("sk-SK");
+const eur = n => fmt(n) + " €";
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const TRANS = {automatic: "automat", manual: "manuál"};
+const SRC = {bazos: "bazoš", autobazar: "autobazar.eu", bazarsk: "bazar.sk"};
+
+// --- theme toggle ---------------------------------------------------------
+document.getElementById("themeBtn").onclick = () => {
+  const root = document.documentElement;
+  const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  drawChart();
+};
+
+// --- scatter chart --------------------------------------------------------
+const legend = document.getElementById("legend");
+legend.innerHTML = GROUPS.map((g, i) => `<span><i style="background:var(--s${i+1})"></i>${g}</span>`).join("")
+  + `<span><i class="ring"></i>odporúčaná ponuka</span>`;
+
+function drawChart() {
+  const svg = document.getElementById("chart"), wrap = document.getElementById("chartWrap"), tip = document.getElementById("tip");
+  const W = svg.clientWidth, H = 420, m = {l: 56, r: 16, t: 10, b: 40};
+  const pts = DATA.filter(d => d.km && d.price_gross);
+  const xMax = Math.ceil(Math.max(...pts.map(d => d.km)) / 50000) * 50000;
+  const yMax = Math.ceil(Math.max(...pts.map(d => d.price_gross)) / 5000) * 5000;
+  const x = v => m.l + v / xMax * (W - m.l - m.r), y = v => H - m.b - v / yMax * (H - m.t - m.b);
+  let s = "";
+  for (let v = 0; v <= yMax; v += 5000)
+    s += `<line x1="${m.l}" x2="${W-m.r}" y1="${y(v)}" y2="${y(v)}" stroke="var(--grid)"/><text x="${m.l-8}" y="${y(v)+4}" text-anchor="end">${v/1000} tis. €</text>`;
+  const step = W < 520 ? 100000 : 50000;
+  for (let v = 0; v <= xMax; v += step)
+    s += `<text x="${x(v)}" y="${H-m.b+18}" text-anchor="middle">${v/1000} tis.</text>`;
+  s += `<text x="${(W+m.l)/2}" y="${H-6}" text-anchor="middle">nájazd (km)</text>`;
+  const order = [...pts].sort((a, b) => (a.pick ? 1 : 0) - (b.pick ? 1 : 0));
+  order.forEach(d => {
+    const cx = x(d.km), cy = y(d.price_gross);
+    if (d.pick) s += `<circle cx="${cx}" cy="${cy}" r="9" fill="none" stroke="var(--text)" stroke-width="2"/>`;
+    s += `<circle class="pt" data-id="${d.id}" cx="${cx}" cy="${cy}" r="5" fill="var(--s${d.cg+1})" stroke="var(--surface)" stroke-width="2"/>`;
+  });
+  // invisible bigger hit targets
+  order.forEach(d => s += `<circle class="hit" data-id="${d.id}" cx="${x(d.km)}" cy="${y(d.price_gross)}" r="11" fill="transparent" style="cursor:pointer"/>`);
+  svg.innerHTML = s;
+  const byId = Object.fromEntries(pts.map(d => [d.id, d]));
+  svg.querySelectorAll(".hit").forEach(c => {
+    c.onmouseenter = c.onmousemove = ev => {
+      const d = byId[c.dataset.id];
+      tip.innerHTML = `<b>${esc(d.title)}</b>
+        <div class="row"><span>Cena</span><span>${eur(d.price_gross)}</span></div>
+        <div class="row"><span>Férová cena</span><span>${eur(d.fair_price)}</span></div>
+        <div class="row"><span>Pod trhom</span><span>${d.discount_pct > 0 ? "+" : ""}${d.discount_pct.toLocaleString("sk-SK")} %</span></div>
+        <div class="row"><span>Zdroj</span><span>${SRC[d.source]}${d.also_listed.length ? " + " + d.also_listed.map(a => SRC[a.source]).join(", ") : ""}</span></div>
+        <div class="row"><span>Rok · km</span><span>${d.year} · ${fmt(d.km)}</span></div>
+        <div class="row"><span>Motor</span><span>${esc(d.eg)} ${TRANS[d.transmission] || ""}</span></div>`;
+      tip.style.display = "block";
+      const r = wrap.getBoundingClientRect();
+      let lx = ev.clientX - r.left + 14, ly = ev.clientY - r.top + 14;
+      if (lx + 290 > r.width) lx = ev.clientX - r.left - 290;
+      tip.style.left = lx + "px"; tip.style.top = ly + "px";
+    };
+    c.onmouseleave = () => tip.style.display = "none";
+    c.onclick = () => window.open(byId[c.dataset.id].url, "_blank", "noopener");
+  });
+}
+drawChart();
+addEventListener("resize", drawChart);
+
+// --- full table -----------------------------------------------------------
+const fEngine = document.getElementById("fEngine");
+[...new Set(DATA.map(d => d.eg))].sort().forEach(g => fEngine.insertAdjacentHTML("beforeend", `<option>${esc(g)}</option>`));
+let sortK = "discount_pct", sortDir = -1;
+function discCell(v) {
+  const w = Math.min(Math.abs(v), 30) / 30 * 50;
+  const bar = v >= 0 ? `left:50%;width:${w}%;background:var(--pos)` : `right:50%;width:${w}%;background:var(--neg)`;
+  return `<span class="disc">${v > 0 ? "+" : ""}${v.toLocaleString("sk-SK")} %<span class="dbar"><span style="${bar}"></span></span></span>`;
+}
+function renderTable() {
+  const max = parseFloat(document.getElementById("fMax").value) || Infinity;
+  const tr = document.getElementById("fTrans").value, se = document.getElementById("fSeller").value, en = fEngine.value;
+  const so = document.getElementById("fSource").value, og = document.getElementById("fOrigin").value;
+  const bo = document.getElementById("fBody").value;
+  const rows = DATA.filter(d => (!en || d.eg === en) && (!tr || d.transmission === tr)
+    && (!se || d.seller_type !== "dealer") && d.price_gross <= max
+    && (!so || d.source === so || d.also_listed.some(a => a.source === so)) && (!og || d.origin === og) && (!bo || d.body === bo))
+    .sort((a, b) => { const A = a[sortK], B = b[sortK]; return (typeof A === "string" ? A.localeCompare(B) : A - B) * sortDir; });
+  document.getElementById("count").textContent = `${rows.length} z ${DATA.length} inzerátov`;
+  document.querySelector("#tbl tbody").innerHTML = rows.map(d => `<tr>
+    <td><a href="${d.url}" target="_blank" rel="noopener">${esc(d.title)}</a> ${d.pick ? '<span class="badge pick">odporúčané</span>' : ""}
+      <div class="sub">${BODY[d.body] || "karoséria ?"} · ${esc(d.eg)} · ${TRANS[d.transmission] || "prevodovka ?"} · ${esc(d.location)} · ${d.seller_type === "dealer" ? "predajca/firma" : d.seller_type === "private" ? "súkromník" : "neisté"} · ${SRC[d.source]}${d.origin === "SR" ? " · kúpené v SR" : d.origin === "dovoz" ? " · dovoz" : ""}${d.also_listed.map(a => ` · <a href="${a.url}" target="_blank" rel="noopener">aj na ${SRC[a.source]}</a>`).join("")}</div>
+      ${d.flags.filter(f => !f.startsWith("prevodovka")).map(f => `<div class="flag">⚠ ${esc(f)}</div>`).join("")}</td>
+    <td class="num">${d.year}</td><td class="num">${fmt(d.km)}</td>
+    <td class="num">${eur(d.price_gross)}</td><td class="num">${eur(d.fair_price)}</td>
+    <td class="num">${discCell(d.discount_pct)}</td></tr>`).join("");
+  document.querySelectorAll("#tbl th.sortable").forEach(th => {
+    const base = th.textContent.replace(/ [▾▴]$/, "");
+    th.textContent = base + (th.dataset.k === sortK ? (sortDir < 0 ? " ▾" : " ▴") : "");
+  });
+}
+document.querySelectorAll("#tbl th.sortable").forEach(th => th.onclick = () => {
+  if (sortK === th.dataset.k) sortDir *= -1; else { sortK = th.dataset.k; sortDir = th.dataset.k === "title" ? 1 : -1; }
+  renderTable();
+});
+["fEngine", "fTrans", "fSeller", "fSource", "fBody", "fOrigin", "fMax"].forEach(id => document.getElementById(id).addEventListener("input", renderTable));
+renderTable();
+</script>
+<!-- ferovka-theme --><script defer src="/analytics-config.js"></script><script defer src="/analytics.js"></script><script id="ferovka-chart">/* Férovka – chart → ad links, injected into every report by sync-reports.mjs.
+ *
+ * The reports draw one invisible 11px "hit" circle per ad. In dense charts (and always on a narrow phone) those
+ * circles overlap and the one drawn last wins, so a click/tap often opened a neighbouring ad. Here the pointer is
+ * always resolved to the NEAREST point, the report's own tooltip is shown for that point, and a click opens its ad.
+ * Touch: the first tap shows the tooltip (with a hint), a second tap on the same point opens the ad.
+ */
+(() => {
+  let rows;
+  try { rows = DATA; } catch { return; } // eslint-disable-line no-undef
+  if (!Array.isArray(rows) || !rows.length || !("url" in rows[0])) return;
+  const byId = new Map(rows.map((d) => [String(d.id), d]));
+  const MOUSE = ["mouseover", "mouseout", "mouseenter", "mouseleave", "mousemove", "mousedown", "mouseup", "click"];
+  let lastPointer = "mouse", down = null;
+  // the finger position as it was – Chrome "snaps" the later click of a tap to the centre of a nearby clickable element
+  addEventListener("pointerdown", (e) => { lastPointer = e.pointerType || "mouse"; down = { clientX: e.clientX, clientY: e.clientY }; }, true);
+
+  // the old per-point hit circles must not be targets (they overlap, and touch snapping aims at them)
+  document.head.insertAdjacentHTML("beforeend", "<style>svg circle.hit[data-id],svg circle.pt[data-id]{pointer-events:none}</style>");
+
+  function nearest(svg, ev, radius) {
+    let best = null, bd = Infinity;
+    for (const c of svg.querySelectorAll("circle.pt[data-id]")) {
+      const r = c.getBoundingClientRect();
+      const dx = r.left + r.width / 2 - ev.clientX, dy = r.top + r.height / 2 - ev.clientY;
+      const d = dx * dx + dy * dy;
+      if (d <= bd) { bd = d; best = c; } // ties: the point drawn on top (later) wins – that is the one you see
+    }
+    return best && bd <= radius * radius ? best : null;
+  }
+
+  function bind(svg) {
+    if (svg.__fvLinks) return;
+    svg.__fvLinks = true;
+    let current = null, armed = null;
+    const hitOf = (pt) => pt && svg.querySelector(`circle.hit[data-id="${CSS.escape(pt.dataset.id)}"]`);
+    const fire = (el, type, ev) => {
+      if (!el) return;
+      const e = new MouseEvent(type, { clientX: ev.clientX, clientY: ev.clientY, bubbles: false });
+      e.__fv = true;
+      el.dispatchEvent(e);
+    };
+    const tip = () => (svg.parentElement && svg.parentElement.querySelector("#tip, .tip")) || document.getElementById("tip");
+    const mark = (pt) => {
+      if (current === pt) return;
+      if (current) current.setAttribute("r", current.__r || "5");
+      current = pt;
+      if (pt) { pt.__r = pt.__r || pt.getAttribute("r"); pt.setAttribute("r", String(+pt.__r + 2)); }
+    };
+    const show = (pt, ev, hint) => {
+      mark(pt);
+      if (!pt) { const t = tip(); if (t) t.style.display = "none"; return; }
+      fire(hitOf(pt), "mousemove", ev); // the report's own tooltip, for the nearest point
+      const t = tip();
+      if (t && hint) t.insertAdjacentHTML("beforeend", `<div class="fv-hint">Ťukni ešte raz – otvorí sa inzerát ↗</div>`);
+    };
+    const open = (pt) => {
+      const d = byId.get(pt.dataset.id);
+      if (d && d.url) {
+        try { window.FerovkaAnalytics?.listingClick(d.url, "chart"); } catch { /* analytics must never block an ad */ }
+        window.open(d.url, "_blank", "noopener");
+      }
+    };
+
+    // the per-circle handlers of the report never see real mouse events – only our synthetic ones
+    for (const type of MOUSE) {
+      svg.addEventListener(type, (ev) => {
+        if (ev.__fv) return;
+        ev.stopImmediatePropagation();
+        if (type === "mousemove" && lastPointer === "mouse") {
+          show(nearest(svg, ev, 18), ev, false);
+          svg.style.cursor = current ? "pointer" : "";
+        } else if (type === "mouseleave" && ev.target === svg && lastPointer === "mouse") {
+          show(null, ev);
+        } else if (type === "click") {
+          const touch = lastPointer !== "mouse";
+          const at = touch && down ? down : ev;
+          const pt = nearest(svg, at, touch ? 26 : 18);
+          if (!pt) { armed = null; show(null, ev); return; }
+          if (!touch || armed === pt) { armed = null; open(pt); }
+          else { armed = pt; show(pt, at, true); }
+        }
+      }, true);
+    }
+  }
+
+  const scan = () => document.querySelectorAll("svg").forEach((s) => s.querySelector("circle.pt[data-id]") && bind(s));
+  scan();
+  new MutationObserver(scan).observe(document.body, { childList: true, subtree: true });
+})();
+</script><script id="ferovka-filters">/* Férovka – filters for the whole report, injected into every model report by sync-reports.mjs.
+ *
+ * The reports render the chart (drawChart) and the full ranking (renderTable) from the global DATA array; their own
+ * filter bar only filters the table. Here the filter bar (kept in its place above the ranking) gets more filters (year, price from/to,
+ * km, fuel, discount, picks only, text search) and every filter applies to the chart and the ranking together: DATA is
+ * refilled in place with the matching ads and both are drawn again. "</script" can't occur inside this file.
+ */
+(() => {
+  let data;
+  try { data = DATA; } catch { return; } // eslint-disable-line no-undef
+  if (!Array.isArray(data) || !data.length || typeof renderTable !== "function") return; // eslint-disable-line no-undef
+  const bar = document.querySelector(".filters");
+  if (!bar || bar.dataset.fv) return;
+  bar.dataset.fv = "1";
+  const ALL = data.slice();
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+  const fmt = (n) => Math.round(n).toLocaleString("sk-SK");
+  const norm = (s) => String(s ?? "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+  let groups = null;
+  try { groups = GROUPS; } catch { /* report without groups */ } // eslint-disable-line no-undef
+
+  const FUEL = { diesel: "Diesel", petrol: "Benzín", hybrid: "Hybrid", "plug-in hybrid": "Plug-in hybrid", electric: "Elektro", lpg: "LPG", cng: "CNG" };
+  const fuelOf = (d) => {
+    const e = norm(d.eg);
+    if (/tdi|crdi|dci|hdi|diesel|\bd\b|cdi|\d+d\b|blue/.test(e)) return "Diesel";
+    if (/plug-in|phev|e-hybrid|recharge|\bgte\b|\bt8\b|\b\d{2}e\b|\b\d{3} ?e\b/.test(e)) return "Plug-in hybrid";
+    if (/elektro|electric|\bev\b/.test(e)) return "Elektro";
+    if (/cng|lpg|g-tec|g-tron|tgi|ecofuel/.test(e)) return "Plyn (CNG/LPG)";
+    if (/mild|mhev/.test(e)) return "Benzín"; // mild-hybrid petrol (the diesel ones say TDI / d above)
+    if (/hybrid|hev/.test(e)) return "Hybrid";
+    if (/tsi|tfsi|mpi|fsi|benzin|gdi|dpi|htp|12v|\bt\d\b|\bb[56]\b|\d+i\b|turbo|tce|\bs4\b|rs ?\d|amg|competition|\bm\d{2,3}i?\b|gti|\bx5 m\b/.test(e)) return "Benzín";
+    return d.fuel ? FUEL[d.fuel] || String(d.fuel) : null;
+  };
+
+  // --- controls ---------------------------------------------------------------------------------------------------
+  const years = ALL.map((d) => d.year).filter(Boolean);
+  const yMin = Math.min(...years), yMax = Math.max(...years);
+  const yearOpts = (label) => `<option value="">${label}</option>` +
+    Array.from({ length: yMax - yMin + 1 }, (_, i) => yMax - i).map((y) => `<option>${y}</option>`).join("");
+  const kms = [30000, 50000, 75000, 100000, 150000, 200000, 250000, 300000];
+  const fuels = [...new Set(ALL.map(fuelOf).filter(Boolean))].sort((a, b) => a.localeCompare(b, "sk"));
+  const showGroups = Array.isArray(groups) && groups.length > 1 && ALL.some((d) => Number.isInteger(d.cg));
+
+  const maxInput = $("fMax");
+  if (maxInput) { maxInput.placeholder = "Cena do €"; maxInput.title = "Najvyššia cena (s DPH)"; }
+  const html =
+    `<select id="fvYearFrom" title="Rok výroby od">${yearOpts("Rok od")}</select>` +
+    `<select id="fvYearTo" title="Rok výroby do">${yearOpts("Rok do")}</select>` +
+    `<input id="fvPriceMin" type="number" placeholder="Cena od €" step="500" min="0" title="Najnižšia cena (s DPH)" style="width:110px">`;
+  if (maxInput) maxInput.insertAdjacentHTML("beforebegin", html);
+  else bar.insertAdjacentHTML("afterbegin", html);
+  const more =
+    `<select id="fvKm" title="Najviac najazdených km"><option value="">Nájazd – všetky</option>${kms.map((k) => `<option value="${k}">do ${fmt(k)} km</option>`).join("")}</select>` +
+    (fuels.length > 1 ? `<select id="fvFuel" title="Palivo"><option value="">Všetky palivá</option>${fuels.map((f) => `<option>${esc(f)}</option>`).join("")}</select>` : "") +
+    (showGroups ? `<select id="fvGroup" title="Skupina motorov (farba v grafe)"><option value="">Všetky skupiny</option>${groups.map((g, i) => `<option value="${i}">${esc(g)}</option>`).join("")}</select>` : "") +
+    `<select id="fvDisc" title="O koľko je auto lacnejšie ako férová cena"><option value="">Cena – všetky</option><option value="0">pod férovou cenou</option><option value="10">aspoň 10 % pod trhom</option><option value="20">aspoň 20 % pod trhom</option></select>` +
+    `<input id="fvText" type="search" placeholder="Hľadať (výbava, mesto…)" title="Hľadá v názve inzerátu, motore a lokalite" style="width:170px">` +
+    `<label class="fv-check"><input id="fvPick" type="checkbox"> len odporúčané</label>` +
+    `<button type="button" id="fvReset" class="fv-reset">Zrušiť filtre</button>`;
+  const count = $("count");
+  if (count) count.insertAdjacentHTML("beforebegin", more);
+  else bar.insertAdjacentHTML("beforeend", more);
+
+  // the bar stays where it was – right above the ranking – and also drives the chart; the chart gets a pointer to it
+  const chart = $("chartWrap");
+  const box = document.createElement("div");
+  box.className = "fv-filters";
+  box.id = "filtre";
+  bar.before(box);
+  box.innerHTML = `<div class="fv-head"><b>Filtre</b><span>platia pre rebríček aj graf vyššie</span></div>`;
+  box.appendChild(bar);
+  const note = document.createElement("div");
+  note.className = "fv-note";
+  chart?.before(note);
+
+  document.head.insertAdjacentHTML("beforeend", `<style id="fv-filters-css">
+.fv-filters{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 14px 4px;margin:24px 0 8px}
+.fv-filters .fv-head{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;margin-bottom:8px}
+.fv-filters .fv-head span{color:var(--muted);font-size:13px}
+.fv-filters .filters{margin-bottom:8px}
+.fv-filters .filters .count{flex-basis:100%;margin-left:0}
+.fv-check{display:inline-flex;gap:6px;align-items:center;font-size:13px;color:var(--text-2,var(--text));white-space:nowrap}
+.fv-reset{background:none;border:1px solid var(--border);color:var(--text);border-radius:8px;padding:6px 10px;font:inherit;font-size:13px;cursor:pointer}
+.fv-reset:hover{background:var(--surface-2,var(--surface))}
+.fv-note{color:var(--muted);font-size:13px;margin:0 0 8px}
+.fv-note a{color:inherit}
+.fv-empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:14px;pointer-events:none}
+@media (max-width:600px){.fv-filters .filters select,.fv-filters .filters input[type=number],.fv-filters .filters input[type=search]{flex:1 1 calc(50% - 8px);min-width:0;width:auto!important}}
+</style>`);
+
+  // --- filtering --------------------------------------------------------------------------------------------------
+  const val = (id) => ($(id) ? $(id).value : "");
+  const num = (id) => { const v = parseFloat(val(id)); return Number.isFinite(v) ? v : null; };
+  function matches(d) {
+    const yf = num("fvYearFrom"), yt = num("fvYearTo"), pmin = num("fvPriceMin"), pmax = num("fMax"), km = num("fvKm"), disc = num("fvDisc");
+    const fuel = val("fvFuel"), grp = val("fvGroup"), q = norm(val("fvText")).trim();
+    if (yf != null && !(d.year >= yf)) return false;
+    if (yt != null && !(d.year <= yt)) return false;
+    if (pmin != null && !(d.price_gross >= pmin)) return false;
+    if (pmax != null && !(d.price_gross <= pmax)) return false;
+    if (km != null && !(d.km <= km)) return false;
+    if (disc != null && !(d.discount_pct > disc || (disc > 0 && d.discount_pct >= disc))) return false;
+    if (fuel && fuelOf(d) !== fuel) return false;
+    if (grp !== "" && String(d.cg) !== grp) return false;
+    if ($("fvPick")?.checked && !d.pick) return false;
+    if (q && !q.split(/\s+/).every((w) => norm(`${d.title} ${d.eg ?? ""} ${d.engine ?? ""} ${d.location ?? ""}`).includes(w))) return false;
+    // the report's own filters (engine, gearbox, seller, portal, body, origin) – same rules as its renderTable
+    const en = val("fEngine"), tr = val("fTrans"), se = val("fSeller"), so = val("fSource"), og = val("fOrigin"), bo = val("fBody");
+    if (en && d.eg !== en) return false;
+    if (tr && d.transmission !== tr) return false;
+    if (se && d.seller_type === "dealer") return false;
+    if (so && !(d.source === so || (d.also_listed || []).some((a) => a.source === so))) return false;
+    if (og && d.origin !== og) return false;
+    if (bo && d.body !== bo) return false;
+    return true;
+  }
+  const active = () => [...box.querySelectorAll("select, input")].filter((el) => (el.type === "checkbox" ? el.checked : el.value !== "")).length;
+
+  let drawing = false;
+  function apply() {
+    if (drawing) return;
+    drawing = true;
+    const rows = ALL.filter(matches);
+    data.length = 0;
+    data.push(...rows);
+    const wrap = $("chartWrap");
+    wrap?.querySelector(".fv-empty")?.remove();
+    const plotted = rows.filter((d) => d.km && d.price_gross).length;
+    try {
+      if (typeof drawChart === "function") { // eslint-disable-line no-undef
+        if (plotted) drawChart(); // eslint-disable-line no-undef
+        else { const svg = $("chart"); if (svg) svg.innerHTML = ""; }
+      }
+    } catch (e) { console.warn("chart", e); }
+    if (wrap && !plotted) {
+      if (getComputedStyle(wrap).position === "static") wrap.style.position = "relative";
+      wrap.insertAdjacentHTML("beforeend", `<div class="fv-empty">Filtrom nezodpovedá žiadny inzerát</div>`);
+    }
+    try { renderTable(); } catch (e) { console.warn("table", e); } // eslint-disable-line no-undef
+    const n = active();
+    if (count) count.textContent = `Zobrazených ${fmt(rows.length)} z ${fmt(ALL.length)} inzerátov` + (n ? ` · aktívne filtre: ${n}` : "");
+    note.innerHTML = n
+      ? `Zobrazených ${fmt(rows.length)} z ${fmt(ALL.length)} inzerátov podľa <a href="#filtre">filtrov pri rebríčku</a>.`
+      : `Filtre (rok, cena, nájazd, palivo…) nájdeš <a href="#filtre">pri kompletnom rebríčku</a> – platia aj pre tento graf.`;
+    drawing = false;
+  }
+  box.querySelectorAll("select, input").forEach((el) => el.addEventListener("input", apply));
+  $("fvPick")?.addEventListener("change", apply);
+  $("fvReset").addEventListener("click", () => {
+    box.querySelectorAll("select, input").forEach((el) => { if (el.type === "checkbox") el.checked = false; else el.value = ""; });
+    apply();
+  });
+  apply();
+})();
+</script><!-- /ferovka-theme -->
+</body>
+</html>

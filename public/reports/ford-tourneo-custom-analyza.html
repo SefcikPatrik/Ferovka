@@ -1,0 +1,757 @@
+<!doctype html>
+<html lang="sk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ford Tourneo Custom – analýza ponúk</title>
+<style>
+:root {
+  color-scheme: light;
+  --bg: #f6f6f4; --surface: #fcfcfb; --surface-2: #f0efec; --border: #e2e1dc;
+  --text: #0b0b0b; --text-2: #52514e; --muted: #7a7974;
+  --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a;
+  --pos: #2a78d6; --neg: #eb6834; --accent: #2a78d6;
+  --good: #1d7f4e; --bad: #b4332f; --grid: #e8e7e3;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #121211; --surface: #1a1a19; --surface-2: #232321; --border: #33332f;
+    --text: #f0efec; --text-2: #c3c2b7; --muted: #8f8e86;
+    --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+    --pos: #3987e5; --neg: #d95926; --accent: #5598e7;
+    --good: #4cc38a; --bad: #f07a76; --grid: #2a2a27;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #121211; --surface: #1a1a19; --surface-2: #232321; --border: #33332f;
+  --text: #f0efec; --text-2: #c3c2b7; --muted: #8f8e86;
+  --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+  --pos: #3987e5; --neg: #d95926; --accent: #5598e7;
+  --good: #4cc38a; --bad: #f07a76; --grid: #2a2a27;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text);
+  font: 15px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+main { max-width: 1120px; margin: 0 auto; padding: 32px 16px 64px; }
+a { color: var(--accent); text-decoration: none; } a:hover { text-decoration: underline; }
+h1 { font-size: 30px; margin: 0 0 4px; letter-spacing: -.01em; }
+h2 { font-size: 21px; margin: 48px 0 6px; }
+h3 { font-size: 15px; margin: 6px 0 4px; line-height: 1.35; }
+.lead { color: var(--text-2); margin: 0 0 20px; max-width: 760px; }
+.section-lead { color: var(--text-2); margin: 0 0 16px; max-width: 800px; }
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
+.kpi { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+.kpi .v { font-size: 26px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.kpi .l { color: var(--text-2); font-size: 13px; }
+.explain { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; margin-top: 12px; }
+.explain p { margin: 6px 0; color: var(--text-2); }
+.explain b { color: var(--text); }
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; }
+.card-head { display: flex; justify-content: space-between; gap: 8px; font-size: 12px; }
+.tag { font-weight: 600; color: var(--accent); }
+.loc { color: var(--muted); }
+.facts { color: var(--text-2); font-size: 13px; }
+.prices { display: grid; grid-template-columns: 1.2fr 1fr .8fr; gap: 8px; margin: 12px 0 8px; }
+.lbl { display: block; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+.big { font-size: 22px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.mid { font-size: 16px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.good { color: var(--good); }
+.meter { height: 6px; background: var(--surface-2); border-radius: 4px; overflow: hidden; }
+.meter span { display: block; height: 100%; background: var(--s1); border-radius: 4px; }
+.news ul { margin: 6px 0 0; padding-left: 20px; } .news li { margin: 4px 0; } .news .down { color: var(--good, #1baf7a); font-weight: 600; }
+.note { font-size: 12.5px; background: var(--surface-2); border-radius: 6px; padding: 6px 8px; margin-top: 8px; color: var(--text-2); }
+.pc { list-style: none; padding: 0; margin: 10px 0 0; font-size: 13.5px; }
+.pc li { padding-left: 20px; position: relative; margin: 3px 0; }
+.pc li.pro::before { content: "+"; position: absolute; left: 4px; color: var(--good); font-weight: 700; }
+.pc li.con::before { content: "–"; position: absolute; left: 4px; color: var(--bad); font-weight: 700; }
+.subhead { font-size: 15px; color: var(--text-2); margin: 22px 0 10px; font-weight: 600; }
+.chart-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 14px 8px; position: relative; }
+.legend { display: flex; flex-wrap: wrap; gap: 16px; font-size: 13px; color: var(--text-2); margin: 0 0 6px 4px; }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; }
+.legend .ring { background: transparent; border: 2px solid var(--text); width: 12px; height: 12px; }
+svg text { fill: var(--muted); font-size: 11px; }
+.tip { position: absolute; pointer-events: none; background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+  padding: 8px 10px; font-size: 12.5px; box-shadow: 0 6px 20px rgba(0,0,0,.15); max-width: 280px; display: none; z-index: 5; }
+.tip b { display: block; margin-bottom: 2px; }
+.tip .row { display: flex; justify-content: space-between; gap: 12px; color: var(--text-2); }
+.tip .row span:last-child { color: var(--text); font-variant-numeric: tabular-nums; }
+table { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; font-size: 13.5px; }
+th, td { padding: 9px 10px; border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; }
+th { font-size: 12px; color: var(--text-2); font-weight: 600; background: var(--surface-2); white-space: nowrap; }
+th.sortable { cursor: pointer; user-select: none; } th.sortable:hover { color: var(--text); }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+.sub { color: var(--text-2); font-size: 12.5px; margin-top: 2px; }
+.stars { color: #c98500; letter-spacing: 1px; white-space: nowrap; } .stars .off { color: var(--border); }
+.cellbar { height: 5px; background: var(--surface-2); border-radius: 3px; margin-bottom: 4px; }
+.cellbar span { display: block; height: 100%; background: var(--s1); border-radius: 3px; }
+.disc { display: inline-flex; align-items: center; gap: 6px; justify-content: flex-end; }
+.dbar { width: 54px; height: 6px; background: var(--surface-2); border-radius: 3px; position: relative; }
+.dbar span { position: absolute; top: 0; height: 100%; border-radius: 3px; }
+.filters { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 10px; align-items: center; }
+.filters select, .filters input { background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 6px 8px; font: inherit; font-size: 13px; }
+.filters .count { color: var(--muted); font-size: 13px; margin-left: auto; }
+.table-scroll { overflow-x: auto; border-radius: 12px; }
+.badge { font-size: 11px; padding: 1px 6px; border-radius: 10px; background: var(--surface-2); color: var(--text-2); white-space: nowrap; }
+.badge.pick { background: var(--s1); color: #fff; }
+.flag { color: var(--bad); font-size: 12px; }
+.warn { background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--neg); border-radius: 10px; padding: 12px 16px; }
+.warn li { margin: 4px 0; }
+.check { columns: 2 300px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px 14px 34px; margin: 0; }
+.check li { margin: 4px 0; break-inside: avoid; }
+footer { color: var(--muted); font-size: 12.5px; margin-top: 48px; border-top: 1px solid var(--border); padding-top: 14px; }
+.theme-btn { float: right; background: var(--surface); color: var(--text-2); border: 1px solid var(--border); border-radius: 8px; padding: 5px 10px; cursor: pointer; font: inherit; font-size: 13px; }
+@media (max-width: 640px) { h1 { font-size: 24px; } .prices { grid-template-columns: 1fr 1fr 1fr; } .big { font-size: 18px; } th, td { padding: 7px 6px; } }
+</style>
+<!-- ferovka-theme --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"><style id="ferovka-theme">/* Férovka look for the generated analyses – injected by sync-reports.mjs after each report's own <style>.
+   Same palette and type as the site; chart colours (--s1..--s3) stay the validated set. */
+:root {
+  --bg: #f5f4ef; --surface: #fdfdfb; --surface-2: #eeede6; --border: #e1dfd6;
+  --text: #0f1513; --text-2: #4f5551; --muted: #6f746f;
+  --accent: #0b8a56; --good: #0b7a4b; --grid: #e6e4dc; --win: #dff3e9;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d110f; --surface: #151a17; --surface-2: #1d2420; --border: #2a322d;
+    --text: #eef1ec; --text-2: #b6bdb6; --muted: #8f978f;
+    --accent: #2fc583; --good: #4cd08f; --grid: #1f2622; --win: #143223;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d110f; --surface: #151a17; --surface-2: #1d2420; --border: #2a322d;
+  --text: #eef1ec; --text-2: #b6bdb6; --muted: #8f978f;
+  --accent: #2fc583; --good: #4cd08f; --grid: #1f2622; --win: #143223;
+}
+
+body { font-family: "Manrope", system-ui, sans-serif; }
+h1, h2 { letter-spacing: -0.02em; font-weight: 800; }
+.tag { color: var(--accent); }
+
+/* photo header (removed by the site's viewer, which shows its own) */
+.fv-hero { position: relative; margin: 0 0 26px; border-radius: 20px; overflow: hidden; aspect-ratio: 21 / 8; background: #0d110f; display: flex; }
+.fv-hero img { flex: 1; min-width: 0; height: 100%; object-fit: cover; animation: fv-zoom 1.4s cubic-bezier(.2,.7,.2,1) both; }
+.fv-collage img + img { border-left: 3px solid #0d110f; }
+.fv-hero::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(180deg, transparent 55%, rgb(13 17 15 / .75)),
+    repeating-linear-gradient(90deg, rgb(47 197 131 / .06) 0 1px, transparent 1px 48px); }
+.fv-hero figcaption { position: absolute; right: 12px; bottom: 8px; z-index: 1; font-size: 11px; color: rgb(255 255 255 / .75); }
+.fv-hero figcaption a { color: inherit; }
+
+/* cards & panels: softer, lift on hover */
+.card, .kpi, .explain, .chart-wrap, .box { border-radius: 16px; }
+.card { transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease; }
+.card:hover { transform: translateY(-3px); border-color: var(--accent); box-shadow: 0 14px 30px -18px rgb(0 0 0 / .45); }
+.badge.pick { background: var(--accent); }
+
+/* entrance animation */
+@keyframes fv-up { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes fv-zoom { from { transform: scale(1.08); filter: brightness(.6); } to { transform: none; filter: none; } }
+h1, .lead, .kpis, .cards .card { animation: fv-up .6s cubic-bezier(.2,.7,.2,1) both; }
+.lead { animation-delay: .08s; }
+.kpis { animation-delay: .16s; }
+.cards .card:nth-child(2) { animation-delay: .06s; }
+.cards .card:nth-child(3) { animation-delay: .12s; }
+.cards .card:nth-child(4) { animation-delay: .18s; }
+.cards .card:nth-child(5) { animation-delay: .24s; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+@media (max-width: 640px) { .fv-hero { aspect-ratio: 16 / 9; border-radius: 14px; } }
+
+/* touch: hint under the chart tooltip (report-chart.js) */
+.fv-hint { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--border, rgba(127,127,127,.3)); font-weight: 700; color: var(--accent, #2fc583); }
+</style><!-- /ferovka-theme -->
+</head>
+<body>
+<main><!-- ferovka-theme --><!-- /ferovka-theme -->
+<button class="theme-btn" id="themeBtn" type="button">Svetlý / tmavý</button>
+<h1>Ford Tourneo Custom – ktorá ponuka sa oplatí</h1>
+<p class="lead">Analýza aktuálnych inzerátov Ford Tourneo Custom (Tourneo Custom a osobný Transit Custom Kombi 2012+, 6–9 miest, bez dodávok N1) od 6 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (23. 11. 2026). Na portáloch je spolu 748 inzerátov (180 na bazoši, 280 na autobazar.eu, 288 na bazar.sk) – prezreli sme 95 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 421 rôznych áut zo Slovenska. Každé auto sme porovnali
+s <b>férovou cenou</b>: tú vypočítal model naučený na celom trhu podľa veku, nájazdu, motora, prevodovky a typu predajcu.</p>
+
+<div class="kpis">
+  <div class="kpi"><div class="v">421</div><div class="l">inzerátov osobného Tourneo / Transit Custom (nad 6 000 €)</div></div>
+  <div class="kpi"><div class="v">111</div><div class="l">ohodnotených (majú rok aj km)</div></div>
+  <div class="kpi"><div class="v">23 900 €</div><div class="l">medián ceny s DPH</div></div>
+  <div class="kpi"><div class="v">91 %</div><div class="l">rozdielov v cenách vysvetlí model</div></div>
+</div>
+
+
+<h2>Odkiaľ sú dáta: bazoš, autobazar.eu a bazar.sk</h2>
+<div class="kpis">
+  <div class="kpi"><div class="v">45</div><div class="l">ohodnotených z bazoša</div></div>
+  <div class="kpi"><div class="v">41</div><div class="l">ohodnotených z autobazar.eu</div></div><div class="kpi"><div class="v">25</div><div class="l">ohodnotených z bazar.sk</div></div>
+  <div class="kpi"><div class="v">218</div><div class="l">áut bolo na viacerých portáloch – započítané raz</div></div>
+  <div class="kpi"><div class="v">50 / 15</div><div class="l">s uvedeným pôvodom SR / dovoz</div></div>
+</div>
+<div class="explain">
+  <p><b>Tri portály, jeden trh.</b> Bazoš prehľadal 160 inzerátov, autobazar.eu
+  280, bazar.sk 267. Ponuky z Česka (na autobazar.eu ich je veľa) sme vynechali. Autobazáre často dávajú
+  to isté auto na viac portálov. Takéto dvojice (43 v rebríčku) sme spojili podľa VIN alebo zhody roku, km a ceny,
+  aby sa v modeli nerátali dvakrát. Pri aute nájdeš odkaz na všetky ponuky – niekedy sa líšia cenou.</p>
+  <p><b>Rozdiel medzi portálmi:</b> rovnaké auto je na autobazar.eu v priemere +3,7 %
+  oproti bazošu. Na autobazar.eu predávajú hlavne firmy (35 z 41 ohodnotených). Na bazar.sk je rovnaké auto v priemere +2,1 % oproti bazošu.</p>
+  <p><b>Kúpené v SR vs. dovoz:</b> autá s uvedeným pôvodom zo SR sú oproti autám bez uvedeného pôvodu
+  -1,7 %, dovezené +6,5 %
+  (pri rovnakom veku, nájazde a motore). Pôvod zo SR je výhoda pri overovaní histórie, trh zaň však nepripláca – väčšina
+  inzerátov pôvod jednoducho neuvádza. V tabulke dole si môžeš nechať zobraziť len autá kúpené v SR.</p>
+</div>
+
+<h2>Čo hýbe cenou Fordu Tourneo Custom</h2>
+<p class="section-lead">Toto sa model naučil z trhu. Keď porovnávaš dve autá, tieto čísla ti povedia, koľko má byť
+rozdiel v cene, aby to bolo fér.</p>
+<div class="kpis">
+  <div class="kpi"><div class="v">-2,6 %</div><div class="l">každých ďalších 10 000 km</div></div>
+  <div class="kpi"><div class="v">-5,4 %</div><div class="l">každý rok veku navyše</div></div>
+  <div class="kpi"><div class="v">+19 %</div><div class="l">príplatok za automat (DSG)</div></div>
+  <div class="kpi"><div class="v">-5,4 %</div><div class="l">príplatok u predajcu / firmy</div></div>
+  <div class="kpi"><div class="v">+17,5 %</div><div class="l">Tourneo Custom od 2018 oproti cene podľa veku</div></div>
+  <div class="kpi"><div class="v">+18,6 %</div><div class="l">príplatok za automat</div></div>
+</div>
+<div class="explain">
+  <p><b>Príklad:</b> dva rovnaké Tourneo Custom 2.0 EcoBlue z roku 2019, jedno má 60 tis. km, druhé 120 tis. km. Druhé má byť
+  približne o 16 % lacnejšie (6 × -2,6 %). Ak je lacnejšie len o 5 %, preplácaš kilometre.</p>
+  <p><b>Ako čítať „pod trhom“:</b> +15 % znamená, že auto stojí o 15 % menej, než by malo podľa trhu. Bežný rozptyl
+  cien je asi ±21 %, takže až zľava nad ~10–15 % je naozaj výnimočná. Pri takej zľave vždy zisti, prečo je auto lacné
+  (stav, história, nájazd).</p>
+  <p><b>DPH:</b> ceny uvedené bez DPH (napr. „10 300 € netto“) sme prepočítali na cenu s DPH, ktorú zaplatí súkromná osoba.</p>
+</div>
+
+<h2>Odporúčané ponuky</h2>
+<p class="section-lead">Kandidáti s najlepším pomerom cena / vek / nájazd, ktorých celý inzerát sme prečítali.
+Zoradené podľa toho, ako ich odporúčame.</p>
+<div class="subhead">Tourneo Custom od 2018 – najlepší pomer cena / vek</div>
+<div class="cards">
+<article class="card">
+  <div class="card-head"><span class="tag">Tourneo Custom Titanium L2 automat s 33 tis. km</span><span class="loc">Trnava</span></div>
+  <h3><a href="https://auto.bazar.sk/37476961-ford-tourneo-custom-2-0-tdci-l2-titanium-at/" target="_blank" rel="noopener">Ford Tourneo Custom 2.0 TDCi L2 Titanium AT</a></h3>
+  <div class="facts">2023 · 33 329 km · 2.0 EcoBlue diesel 77–136 kW (2016+) · automat · neisté</div>
+  <div class="facts src">zdroj: <b>bazar.sk</b> · kúpené v SR</div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">33 000 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">38 890 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+15.2 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:51%"></span></div>
+  <ul class="pc"><li class="pro">2023, 2.0 EcoBlue, automat, dlhá verzia L2, 33 tis. km</li><li class="pro">Pôvod SR, najvyššia výbava Titanium</li><li class="pro">~15 % pod férovou cenou</li><li class="con">Predajca neistý</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">Tourneo Custom Titanium automat z 2023</span><span class="loc">Bratislava</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/ford-custom-v362-mca-tourneo-titanium/AmSXYsbfGBi/" target="_blank" rel="noopener">FORD Custom V362 MCA Tourneo Titanium</a></h3>
+  <div class="facts">2023 · 58 632 km · 2.0 EcoBlue diesel 77–136 kW (2016+) · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · kúpené v SR</div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">29 199 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">34 070 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+14.3 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:48%"></span></div>
+  <ul class="pc"><li class="pro">2023, 2.0 EcoBlue, automat, 59 tis. km</li><li class="pro">Pôvod SR, adaptívny tempomat, kamera</li><li class="pro">~14 % pod férovou cenou</li><li class="con">Predáva autobazár</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">Transit Custom Kombi 150 L2 automat</span><span class="loc">Trnava</span></div>
+  <h3><a href="https://www.autobazar.eu/detail/ford-transit-custom-transit-kombi-20-tdci-ecoblue-150-trend-l2-t340-at-110kw150hp-a6/AebPXkk98b6/" target="_blank" rel="noopener">Ford Transit Custom Transit Kombi 2.0 TDCi EcoBlue 150 Trend L2 T340 A/T 110kW/150HP A6</a></h3>
+  <div class="facts">2023 · 92 480 km · 2.0 EcoBlue diesel 77–136 kW (2016+) · automat · predajca/firma</div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · kúpené v SR</div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">27 200 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">32 530 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+16.4 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:55%"></span></div>
+  <ul class="pc"><li class="pro">2023, 2.0 EcoBlue 110 kW, automat, dlhá verzia L2, 92 tis. km</li><li class="pro">Pôvod SR, osobná verzia Kombi</li><li class="pro">~16 % pod férovou cenou</li><li class="con">Jednoduchšia výbava ako Tourneo</li><li class="con">Predáva autobazár</li></ul>
+</article></div>
+<div class="subhead">Lacnejšie autá do 18 000 €</div>
+<div class="cards">
+<article class="card">
+  <div class="card-head"><span class="tag">Transit Custom 9 miest z SR, STK do 2028</span><span class="loc">Banská Bystrica</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/196976081/ford-transit-custom.php" target="_blank" rel="noopener">Ford transit custom</a></h3>
+  <div class="facts">2020 · 217 500 km · 2.0 EcoBlue diesel 77–136 kW (2016+) · manuál · neisté</div>
+  <div class="facts src">zdroj: <b>bazoš</b> · aj na <a href='https://www.autobazar.eu/detail/ford-transit-custom-20-diesel-79kw-manual-prevodovka/AecdQi02RFF/' target='_blank' rel='noopener'>autobazar.eu</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">12 000 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">15 320 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+21.7 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:72%"></span></div>
+  <ul class="pc"><li class="pro">2020, 2.0 EcoBlue 79 kW, manuál, 9 miest, 218 tis. km</li><li class="pro">Kúpené nové v SR, STK a EK do 5/2028</li><li class="pro">~22 % pod férovou cenou</li><li class="con">Slabší motor pri plnom obsadení</li><li class="con">Vyšší nájazd</li><li class="con">Predajca neistý</li></ul>
+</article>
+<article class="card">
+  <div class="card-head"><span class="tag">Tourneo Custom 2.2 TDCi s vymenenými rozvodmi</span><span class="loc">Námestovo</span></div>
+  <h3><a href="https://auto.bazos.sk/inzerat/197217386/ford-tourneo-custom-22-tdci-114kw-mt6-2015.php" target="_blank" rel="noopener">Ford Tourneo Custom 2.2 TDCi 114kW MT/6 2015</a></h3>
+  <div class="facts">2015 · 347 972 km · 2.2 TDCi diesel 74–114 kW (do 2016) · manuál · predajca/firma</div>
+  <div class="facts src">zdroj: <b>bazoš</b> · aj na <a href='https://www.autobazar.eu/detail/ford-tourneo-custom-22-tdci-114kw-mt6-2015-aj-na-splatky-protiucet/AmyUrIRcb4L/' target='_blank' rel='noopener'>autobazar.eu</a> · aj na <a href='https://auto.bazar.sk/39759476-ford-tourneo-custom-2-2-tdci-114kw-mt-6-2015-aj-na-splatky-protiucet/' target='_blank' rel='noopener'>bazar.sk</a></div>
+  <div class="prices">
+    <div><span class="lbl">Cena</span><span class="big">8 599 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">9 980 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+13.9 %</span></div>
+  </div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:46%"></span></div>
+  <ul class="pc"><li class="pro">2015, 2.2 TDCi 114 kW, manuál, 348 tis. km</li><li class="pro">Pri 303 tis. km vymenené rozvody, nové brzdy</li><li class="pro">~14 % pod férovou cenou</li><li class="con">Veľmi vysoký nájazd</li><li class="con">Predáva autobazár</li></ul>
+</article></div>
+<div class="subhead">Špeciálne prípady</div>
+<div class="cards"></div>
+
+<h2>Cena vs. nájazd: celý trh na jednom grafe</h2>
+<p class="section-lead">Každý bod je jeden inzerát. Čím nižšie bod leží oproti ostatným s podobným nájazdom, tým je auto lacnejšie.
+Krúžkom sú označené odporúčané ponuky. Prejdi myšou na bod a uvidíš detail.</p>
+<div class="chart-wrap" id="chartWrap">
+  <div class="legend" id="legend"></div>
+  <svg id="chart" width="100%" height="420" role="img" aria-label="Bodový graf ceny a nájazdu inzerátov"></svg>
+  <div class="tip" id="tip"></div>
+</div>
+
+<h2>Porovnanie motorov</h2>
+<p class="section-lead">Hodnotenie (hviezdičky) zohľadňuje spoľahlivosť, spoľahlivosť a náklady na prevádzku a pomer cena/výkon.
+Číselné stĺpce sú mediány z ohodnotených inzerátov.</p>
+<div class="table-scroll">
+<table>
+  <thead><tr><th>Motor</th><th>Hodnotenie</th><th class="num">Ponúk</th><th class="num">Medián ceny</th><th class="num">Medián roku</th><th class="num">Medián km</th></tr></thead>
+  <tbody>
+<tr>
+  <td><b>Plug-in hybrid 1.0 EcoBoost / 2.5 PHEV</b><div class="sub">Plug-in hybrid (2019–2023 s 1.0 EcoBoost ako generátorom, od 2024 2.5 Duratec). Tichý v meste; over batériu.</div></td>
+  <td><span class="stars" aria-label="3 z 5">★★★<span class="off">★★</span></span></td>
+  <td class="num">5</td>
+  <td class="num"><div class="cellbar"><span style="width:100%"></span></div>51 990 €</td>
+  <td class="num">2026</td>
+  <td class="num">12 400 km</td>
+</tr>
+<tr>
+  <td><b>2.0 EcoBlue diesel 77–136 kW (2016+)</b><div class="sub">Diesel 105–185 k, aj s automatom, od 2019 aj mild hybrid. Úsporný a ťahavý; over AdBlue a vlhký rozvodový remeň.</div></td>
+  <td><span class="stars" aria-label="4 z 5">★★★★<span class="off">★</span></span></td>
+  <td class="num">85</td>
+  <td class="num"><div class="cellbar"><span style="width:49%"></span></div>25 490 €</td>
+  <td class="num">2021</td>
+  <td class="num">102 800 km</td>
+</tr>
+<tr>
+  <td><b>2.2 TDCi diesel 74–114 kW (do 2016)</b><div class="sub">Diesel 100–155 k. Odolný, ale citlivý na vstrekovače a dvojhmotu.</div></td>
+  <td><span class="stars" aria-label="3 z 5">★★★<span class="off">★★</span></span></td>
+  <td class="num">21</td>
+  <td class="num"><div class="cellbar"><span style="width:24%"></span></div>12 650 €</td>
+  <td class="num">2015</td>
+  <td class="num">246 000 km</td>
+</tr></tbody>
+</table>
+</div>
+<div class="explain">
+  <p><b>Ford Tourneo Custom</b> (od 2012, facelift 2018, nová generácia 2023) je osobná verzia dodávky <b>Transit Custom</b> s 8–9 miestami.
+  Osobný <b>Transit Custom Kombi</b> je jednoduchšia verzia. Menší <b>Tourneo Connect</b> sem nepatrí.</p>
+  <p><b>Ktorý motor zvoliť?</b> Najlepší je <b>2.0 EcoBlue</b> (od 2016) so 130–170 k. Starší <b>2.2 TDCi</b> je jednoduchší, ale pri vysokom nájazde rizikový.
+  Analýza zahŕňa len osobné verzie – dodávky N1 sú vyradené.</p>
+</div>
+
+<h2>Na čo si dať pozor</h2>
+<div class="warn">
+  <p><b>Lacné kvôli extrémnemu nájazdu</b> (viac ako 35 tis. km ročne, typicky flotila alebo taxi):</p>
+  <ul><li><a href='https://auto.bazos.sk/inzerat/195873541/ford-transit-custom-kombi-20-tdci-2023.php' target='_blank' rel='noopener'>Ford Transit Custom Kombi 2.0 TDCi 2023</a>: 2023, 181 852 km → 55 000 km/rok. Lacné je kvôli nájazdu.</li><li><a href='https://www.autobazar.eu/detail/ford-tourneo-custom-20-tdci-96kw-at6-8-miest-2023/AmMNui_Y9kj/' target='_blank' rel='noopener'>FORD Tourneo Custom 2.0 TDCi 96KW AT6 8 MIEST 2023</a>: 2023, 172 868 km → 52 000 km/rok. Lacné je kvôli nájazdu.</li><li><a href='https://www.autobazar.eu/detail/ford-transit-custom-transit-kombi-20-tdci-ecoblue-130-trend-l2-t340-at-96kw130hp-a6/AejasuuMjE4/' target='_blank' rel='noopener'>Ford Transit Custom Transit Kombi 2.0 TDCi EcoBlue 130 Trend L2 T340 A/T 96kW/130HP A6</a>: 2022, 214 500 km → 50 000 km/rok. Lacné je kvôli nájazdu.</li><li><a href='https://auto.bazar.sk/39768900-ford-tourneo-custom-family-swb-2-0-tdci-eb-96kw-mt6-96kw-8-miest/' target='_blank' rel='noopener'>Ford Tourneo Custom FAMILY SWB 2.0 TDCi EB 96kW MT6 96kw 8 Miest</a>: 2022, 203 375 km → 47 000 km/rok. Lacné je kvôli nájazdu.</li><li><a href='https://auto.bazos.sk/inzerat/197575303/ford-tourneo-custom-l2-titanium-22-tdci.php' target='_blank' rel='noopener'>Ford Tourneo Custom L2 TITANIUM  2.2 TDCi</a>: 2015, 501 200 km → 44 000 km/rok. Lacné je kvôli nájazdu.</li><li><a href='https://www.autobazar.eu/detail/ford-tourneo-custom-20-tdci-185-titanium-l2-t320-a-t/Amn7FigVZV-/' target='_blank' rel='noopener'>Ford Tourneo Custom 2.0 TDCi 185 Titanium L2 T320 A/T</a>: 2021, 229 500 km → 43 000 km/rok. Lacné je kvôli nájazdu.</li><li><a href='https://auto.bazos.sk/inzerat/197656982/ford-tourneo-custom-1-majitel-2021.php' target='_blank' rel='noopener'>Ford Tourneo Custom 1. Majitel 2021</a>: 2021, 208 000 km → 39 000 km/rok. Lacné je kvôli nájazdu.</li><li><a href='https://auto.bazos.sk/inzerat/197221500/ford-transit-custom-20.php' target='_blank' rel='noopener'>Ford Transit Custom 2.0</a>: 2018, 312 000 km → 37 000 km/rok. Lacné je kvôli nájazdu.</li><li><a href='https://www.autobazar.eu/detail/ford-tourneo-custom-ford-tourneo-custom/Ae9z1xVSlIV/' target='_blank' rel='noopener'>Ford Tourneo Custom 2.0 TDCi 136kW</a>: 2020, 227 500 km → 36 000 km/rok. Lacné je kvôli nájazdu.</li><li><a href='https://auto.bazos.sk/inzerat/196766395/ford-tourneo-custom-20.php' target='_blank' rel='noopener'>Ford Tourneo Custom 2.0</a>: 2022, 155 000 km → 36 000 km/rok. Lacné je kvôli nájazdu.</li></ul>
+  <p><b>Podozrivo nízky nájazd na vek</b> – preklep alebo stočené km, over cez Cebiu:</p><ul><li><a href='https://auto.bazos.sk/inzerat/196930341/tourneo-custom.php' target='_blank' rel='noopener'>Tourneo custom</a> (12 600 €): rok 2014 a len 9 000 km</li></ul><p><b>Ďalšie veci, ktoré sme v inzerátoch našli:</b></p><ul><li>Väčšina inzerátov „Transit Custom“ sú dodávky – do analýzy sme zaradili len Tourneo Custom a osobné verzie Kombi / Bus s aspoň 5 miestami.</li><li>Mild hybrid (mHEV) je diesel 2.0 EcoBlue s malým elektromotorom – zaradili sme ho medzi diesely. Elektrický E-Tourneo Custom sme nezarátali.</li><li>Jeden predajca z Nitry inzeruje tie isté autá na rôznych portáloch s rozdielom ceny až 6 000 € – lacnejšie inzeráty sme vyradili.</li><li>Pred kúpou over v technickom preukaze kategóriu <b>M1</b> – dodávka N1 má iné poistenie a obmedzenia.</li></ul><p><b>Vyradené z porovnania</b> (poškodené autá alebo nezmyselné údaje – model ich nehodnotí):</p><ul><li><a href='https://www.autobazar.eu/detail/ford-tourneo-custom-nugget-titanium-l1h1-20-tdci-a8-170k/AmSu1KdKxci/' target='_blank' rel='noopener'>Ford Tourneo Custom Nugget Titanium L1H1 2.0 TDCi A8 170k</a> (68 990 €): podozrivo nízky nájazd</li><li><a href='https://www.autobazar.eu/detail/ford-tourneo-custom-20-tdci-ecoblue-titanium-x-l2-a-t/AmskZa397ez/' target='_blank' rel='noopener'>Ford Tourneo Custom 2.0 TDCi EcoBlue Titanium X L2 A/T</a> (43 950 €): podozrivo nízky nájazd</li><li><a href='https://www.autobazar.eu/detail/ford-tourneo-custom-20-tdci-ecoblue-titanium-l2/AmEfBwii03z/' target='_blank' rel='noopener'>Ford Tourneo Custom 2.0 TDCi EcoBlue Titanium L2</a> (37 950 €): podozrivo nízky nájazd</li><li><a href='https://www.autobazar.eu/detail/ford-tourneo-custom-20-tdci-ecoblue-awd-titanium-l2-a-t/AmigpI1Lv7C/' target='_blank' rel='noopener'>Ford Tourneo Custom 2.0 TDCi EcoBlue Titanium L2 A/T AWD</a> (55 900 €): podozrivo nízky nájazd</li><li><a href='https://www.autobazar.eu/detail/ford-tourneo-custom-20-tdci-eb-170k-a8-fwd-125kw-active-l1/AmW6GMhFtNO/' target='_blank' rel='noopener'>Ford Tourneo Custom 2.0 TDCi EB 170k A8 - FWD (125kW)  Active L1</a> (44 990 €): 105000 km/rok je nereálne – skontroluj rok a km</li><li><a href='https://www.autobazar.eu/detail/ford-tourneo-custom/AmQI93CLt1H/' target='_blank' rel='noopener'>Ford Tourneo Custom L1 Nugget Titanium 2.0 TDCi EB 170k A8 - FWD (125kW)</a> (68 539 €): podozrivo nízky nájazd</li><li><a href='https://www.autobazar.eu/detail/ford-tourneo-custom/AmDZVDYg0TE/' target='_blank' rel='noopener'>Ford Tourneo Custom 2. 5 Duratec PHEV 232k eCVT - FWD (171kW)  Titanium</a> (56 000 €): podozrivo nízky nájazd</li><li><a href='https://www.autobazar.eu/detail/ford-tourneo-custom-nugget-l1h1-20-tdci-170k-a8/AmOhC4YdwpN/' target='_blank' rel='noopener'>Ford Tourneo Custom Nugget L1H1 2.0 TDCi 170k A8</a> (68 990 €): podozrivo nízky nájazd</li><li><a href='https://auto.bazar.sk/39025768-ford-tourneo-custom-2-0-tdci-ecoblue-titanium-l2/' target='_blank' rel='noopener'>Ford Tourneo Custom 2.0 TDCi EcoBlue Titanium L2</a> (46 678 €): podozrivo nízky nájazd</li><li><a href='https://auto.bazos.sk/inzerat/197798089/ford-transit-custom-20ecoblue-2023.php' target='_blank' rel='noopener'>Ford Transit Custom 2.0EcoBlue 2023</a> (11 990 €): cena je o 53 % pod trhom – havarované, na diely, záloha/splátka namiesto ceny alebo podvod</li><li><a href='https://www.autobazar.eu/detail/ford-transit-custom-v710-20-tdci-eb-136k-m6-fwd-100kw-van-trend/AmxnbgMol2u-/' target='_blank' rel='noopener'>Ford Transit Custom V710 2.0 TDCi EB 136k M6 - FWD (100kW) Van Trend</a> (36 200 €): podozrivo nízky nájazd</li><li><a href='https://www.autobazar.eu/detail/ford-transit-custom-transit-kombi-20-tdci-ecoblue-170-trend-l2-t340-125kw170hp-m6/AecdWousw9k/' target='_blank' rel='noopener'>Ford Transit Custom Transit Kombi 2.0 TDCi EcoBlue 170 Trend L2 T340 125kW170HP M6</a> (15 000 €): podozrivo nízky nájazd</li><li><a href='https://auto.bazos.sk/inzerat/197704490/ford-transit-custom-20tdci-96kw-8miest-1majitel-odpocet.php' target='_blank' rel='noopener'>Ford Transit Custom 2.0TDCi 96kW 8miest 1.majiteľ ODPOČET</a> (19 590 €): 94000 km/rok je nereálne – skontroluj rok a km</li><li><a href='https://auto.bazos.sk/inzerat/197563759/ford-transit-custom-2018-cena-najnisia-na-trhu.php' target='_blank' rel='noopener'>Ford transit custom 2018 a 2020 vw T5 a T6 caravelle</a> (11 000 €): 72000 km/rok je nereálne – skontroluj rok a km</li><li><a href='https://auto.bazos.sk/inzerat/196169885/ford-transit-custom-2024-6-miest-prevzatie-leasingu.php' target='_blank' rel='noopener'>Ford Transit Custom 2024 – 6 miest, prevzatie leasingu</a> (10 500 €): cena je o 60 % pod trhom – havarované, na diely, záloha/splátka namiesto ceny alebo podvod</li><li><a href='https://www.autobazar.eu/detail/ford-transit-custom-20-tdci-eb-170k-a8-awd-125kw-l2-h1-trail/AmF4vOSL0HI/' target='_blank' rel='noopener'>Ford Transit Custom 2.0 TDCi EB 170k A8 - AWD (125kW) L2 H1, Trail</a> (48 650 €): podozrivo nízky nájazd</li><li><a href='https://auto.bazar.sk/39768905-ford-transit-custom-2-0-tdci-trend-l1-t310/' target='_blank' rel='noopener'>Ford Transit Custom 2.0 TDCi Trend L1 T310</a> (6 990 €): cena je o 46 % pod trhom – havarované, na diely, záloha/splátka namiesto ceny alebo podvod</li><li><a href='https://auto.bazar.sk/39688109-ford-transit-custom-van-trend-300-l2h1-2-0-tdci-eb-130hp-mt6/' target='_blank' rel='noopener'>Ford Transit Custom VAN Trend 300 L2H1 2,0 TDCi EB 130HP MT6</a> (18 990 €): 61000 km/rok je nereálne – skontroluj rok a km</li><li><a href='https://auto.bazar.sk/39659892-ford-transit-custom-2-0-tdci-ecoblue-130-trend-l2-t340/' target='_blank' rel='noopener'>Ford Transit Custom 2.0 TDCi EcoBlue 130 Trend L2 T340</a> (8 990 €): havarované / poškodené – cena nie je porovnateľná s trhom</li><li><a href='https://auto.bazar.sk/39418523-ford-transit-custom-280-trend-l1-2-0-ecoblue-77kw/' target='_blank' rel='noopener'>Ford Transit Custom 280 Trend L1 2.0 EcoBlue 77kW</a> (11 900 €): 62000 km/rok je nereálne – skontroluj rok a km</li></ul><p><b>Dodávky (skriňa, N1, 3 miesta), Tourneo Connect / Courier, veľký Transit a iné modely z vyhľadávania, nové autá zo skladu, inzeráty s chybným nájazdom</b> (235 inzerátov) sme z rebríčka vynechali.</p>
+  <p>Ďalších <b>35</b> inzerátov nemá v texte rok alebo kilometre, takže ich nebolo možné ohodnotiť.
+  Ak ťa niektorý zaujme, predajcu sa na tieto údaje opýtaj.</p>
+</div>
+
+<h2>Kompletný rebríček</h2>
+<p class="section-lead">Všetky ohodnotené inzeráty. Kliknutím na hlavičku stĺpca zoraďuješ, filtrom zužuješ výber.</p>
+<div class="filters">
+  <select id="fEngine"><option value="">Všetky motory</option></select>
+  <select id="fTrans"><option value="">Každá prevodovka</option><option value="automatic">Automat</option><option value="manual">Manuál</option></select>
+  <select id="fSeller"><option value="">Všetci predajcovia</option><option value="nodealer">Bez autobazárov</option></select>
+  <select id="fSource"><option value="">Všetky portály</option><option value="bazos">bazoš</option><option value="autobazar">autobazar.eu</option><option value="bazarsk">bazar.sk</option></select>
+  <select id="fBody" hidden><option value=""></option></select>
+  <select id="fOrigin"><option value="">Akýkoľvek pôvod</option><option value="SR">Kúpené v SR</option><option value="dovoz">Dovoz</option></select>
+  <input id="fMax" type="number" placeholder="Max. cena €" step="500" min="0" style="width:120px">
+  <span class="count" id="count"></span>
+</div>
+<div class="table-scroll">
+<table id="tbl">
+  <thead><tr>
+    <th class="sortable" data-k="title">Inzerát</th>
+    <th class="sortable num" data-k="year">Rok</th>
+    <th class="sortable num" data-k="km">Km</th>
+    <th class="sortable num" data-k="price_gross">Cena</th>
+    <th class="sortable num" data-k="fair_price">Férová</th>
+    <th class="sortable num" data-k="discount_pct">Pod trhom ▾</th>
+  </tr></thead>
+  <tbody></tbody>
+</table>
+</div>
+
+<h2>Pred kúpou over</h2>
+<ul class="check">
+  <li>VIN cez Cebia / autoDNA (história km, havárie) – veľa áut je z firiem a taxi</li>
+  <li>Over v TP, že ide o osobné auto (M1), nie dodávku (N1)</li>
+  <li>2.0 EcoBlue: stav rozvodového remeňa v oleji a olejového čerpadla</li>
+  <li>Diesel: DPF, AdBlue, dvojhmota</li>
+  <li>Hrdza na prahoch, podlahe a posuvných dverách</li>
+  <li>STK/EK protokol a dátum platnosti; cena s DPH alebo bez DPH, ak predáva firma</li>
+</ul>
+
+<footer>
+  Zdroj: auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (len ponuky zo Slovenska, to isté auto na viacerých portáloch je započítané raz), sťahované cez lokálny MCP server bazos-mcp (nástroj <code>fair_price</code>), 23. 11. 2026.
+  Model: ridge regresia log(ceny s DPH) podľa veku, veku², km, km², prevodovky, typu predajcu, motora, karosérie, pohonu 4x4, pôvodu (SR / dovoz) a portálu. Vzorka 111
+  inzerátov, R² 91 %. Parametre sú vyťažené z textu inzerátov, a preto môžu obsahovať chyby. Odporúčané ponuky sme overili
+  prečítaním celého inzerátu. Hodnotenie motorov je odborný odhad, nie výsledok modelu.
+</footer>
+</main>
+
+<script>
+const DATA = [{"id": "bs-39596264", "url": "https://auto.bazar.sk/39596264-ford-transit-custom-2-0-tdci-ambiente-l1-t310/", "title": "Ford Transit Custom 2.0 TDCi Ambiente L1 T310", "price": 6790, "price_gross": 6790, "fair_price": 10340.0, "discount_pct": 34.3, "verdict": "výrazne pod trhom – over prečo", "year": 2018, "km": 267373, "km_per_year": 32100.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Lučenec", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "196930341", "url": "https://auto.bazos.sk/inzerat/196930341/tourneo-custom.php", "title": "Tourneo custom", "price": 12600, "price_gross": 12600, "fair_price": 18600.0, "discount_pct": 32.3, "verdict": "výrazne pod trhom – over prečo", "year": 2014, "km": 9000, "km_per_year": 700.0, "eg": "2.2 TDCi diesel 74–114 kW (do 2016)", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Prešov", "flags": ["nezvyčajne nízky nájazd na vek (9 000 km) – over  či nejde o preklep", "prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197642750", "url": "https://auto.bazos.sk/inzerat/197642750/ford-transit-custom-bus.php", "title": "FORD TRANSIT CUSTOM BUS", "price": 9990, "price_gross": 9990, "fair_price": 14760.0, "discount_pct": 32.3, "verdict": "výrazne pod trhom – over prečo", "year": 2018, "km": 198000, "km_per_year": 23800.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Nitra", "flags": [], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "mpv"}, {"id": "196956840", "url": "https://auto.bazos.sk/inzerat/196956840/ford-tourneo-custom-20-tdci-125-kw-r-2016-manual-6.php", "title": "Ford Tourneo Custom 2.0 TDCi 125 kW – r. 2016 – manual 6", "price": 7500, "price_gross": 7500, "fair_price": 10990.0, "discount_pct": 31.7, "verdict": "výrazne pod trhom – over prečo", "year": 2016, "km": 311000, "km_per_year": 30100.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Vranov nad Topľou", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197553213", "url": "https://auto.bazos.sk/inzerat/197553213/ford-transit-custom.php", "title": "Ford Transit Custom", "price": 6000, "price_gross": 6000, "fair_price": 7660.0, "discount_pct": 21.7, "verdict": "výrazne pod trhom – over prečo", "year": 2015, "km": 256000, "km_per_year": 22600.0, "eg": "2.2 TDCi diesel 74–114 kW (do 2016)", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Banská Bystrica", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "196976081", "url": "https://auto.bazos.sk/inzerat/196976081/ford-transit-custom.php", "title": "Ford transit custom", "price": 12000, "price_gross": 12000, "fair_price": 15320.0, "discount_pct": 21.7, "verdict": "výrazne pod trhom – over prečo", "year": 2020, "km": 217500, "km_per_year": 34300.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Banská Bystrica", "flags": [], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AecdQi02RFF", "url": "https://www.autobazar.eu/detail/ford-transit-custom-20-diesel-79kw-manual-prevodovka/AecdQi02RFF/", "price": 12000}], "body": "mpv"}, {"id": "ab-AebPXkk98b6", "url": "https://www.autobazar.eu/detail/ford-transit-custom-transit-kombi-20-tdci-ecoblue-150-trend-l2-t340-at-110kw150hp-a6/AebPXkk98b6/", "title": "Ford Transit Custom Transit Kombi 2.0 TDCi EcoBlue 150 Trend L2 T340 A/T 110kW/150HP A6", "price": 27200, "price_gross": 27200, "fair_price": 32530.0, "discount_pct": 16.4, "verdict": "výrazne pod trhom – over prečo", "year": 2023, "km": 92480, "km_per_year": 27700.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Trnava", "flags": [], "pick": "top", "source": "autobazar", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "bs-37476961", "url": "https://auto.bazar.sk/37476961-ford-tourneo-custom-2-0-tdci-l2-titanium-at/", "title": "Ford Tourneo Custom 2.0 TDCi L2 Titanium AT", "price": 33000, "price_gross": 33000, "fair_price": 38890.0, "discount_pct": 15.2, "verdict": "výrazne pod trhom – over prečo", "year": 2023, "km": 33329, "km_per_year": 10000.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Trnava", "flags": [], "pick": "top", "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "ab-AmHteAHGKSu", "url": "https://www.autobazar.eu/detail/ford-tourneo-custom-20-tdci-ecoblue-titanium-l2-at/AmHteAHGKSu/", "title": "Ford Tourneo Custom 2.0 TDCi EcoBlue Titanium L2 A/T", "price": 43500, "price_gross": 43500, "fair_price": 51200.0, "discount_pct": 15.0, "verdict": "výrazne pod trhom – over prečo", "year": 2026, "km": 10000, "km_per_year": 30000.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava-Petržalka", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "ab-AmSXYsbfGBi", "url": "https://www.autobazar.eu/detail/ford-custom-v362-mca-tourneo-titanium/AmSXYsbfGBi/", "title": "FORD Custom V362 MCA Tourneo Titanium", "price": 29199, "price_gross": 29199, "fair_price": 34070.0, "discount_pct": 14.3, "verdict": "pod trhom", "year": 2023, "km": 58632, "km_per_year": 17600.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": "top", "source": "autobazar", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "197217386", "url": "https://auto.bazos.sk/inzerat/197217386/ford-tourneo-custom-22-tdci-114kw-mt6-2015.php", "title": "Ford Tourneo Custom 2.2 TDCi 114kW MT/6 2015", "price": 8599, "price_gross": 8599, "fair_price": 9980.0, "discount_pct": 13.9, "verdict": "pod trhom", "year": 2015, "km": 347972, "km_per_year": 30700.0, "eg": "2.2 TDCi diesel 74–114 kW (do 2016)", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Námestovo", "flags": [], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmyUrIRcb4L", "url": "https://www.autobazar.eu/detail/ford-tourneo-custom-22-tdci-114kw-mt6-2015-aj-na-splatky-protiucet/AmyUrIRcb4L/", "price": 8599}, {"source": "bazarsk", "id": "bs-39759476", "url": "https://auto.bazar.sk/39759476-ford-tourneo-custom-2-2-tdci-114kw-mt-6-2015-aj-na-splatky-protiucet/", "price": 8599}], "body": "mpv"}, {"id": "ab-AmrwDfpZfey", "url": "https://www.autobazar.eu/detail/ford-tourneo-custom-20-tdci-170-family-l2-at/AmrwDfpZfey/", "title": "Ford Tourneo Custom 2.0 TDCi 170 Family L2 A/T", "price": 27999, "price_gross": 27999, "fair_price": 32200.0, "discount_pct": 13.0, "verdict": "pod trhom", "year": 2023, "km": 83859, "km_per_year": 25200.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Leopoldov", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-39701532", "url": "https://auto.bazar.sk/39701532-ford-tourneo-custom-2-0-tdci-170-family-l2-a-t/", "price": 27999}], "body": "mpv"}, {"id": "197103825", "url": "https://auto.bazos.sk/inzerat/197103825/ford-tourneo-custom-r20224-136kw-hybrid.php", "title": "Hybrid - Ford Tourneo Custom r2022/4 136kw Camper", "price": 28300, "price_gross": 28300, "fair_price": 32370.0, "discount_pct": 12.6, "verdict": "pod trhom", "year": 2022, "km": 73000, "km_per_year": 16800.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "automatic", "seller_type": "private", "location": "Bratislava", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "196766395", "url": "https://auto.bazos.sk/inzerat/196766395/ford-tourneo-custom-20.php", "title": "Ford Tourneo Custom 2.0", "price": 23000, "price_gross": 23000, "fair_price": 26320.0, "discount_pct": 12.6, "verdict": "pod trhom", "year": 2022, "km": 155000, "km_per_year": 35800.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Levice", "flags": ["vysoký nájazd 36000 km/rok – flotila / taxi?"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197221500", "url": "https://auto.bazos.sk/inzerat/197221500/ford-transit-custom-20.php", "title": "Ford Transit Custom 2.0", "price": 8800, "price_gross": 8800, "fair_price": 9940.0, "discount_pct": 11.5, "verdict": "pod trhom", "year": 2018, "km": 312000, "km_per_year": 37400.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Nitra", "flags": ["vysoký nájazd 37000 km/rok – flotila / taxi?", "prevodovka nezistená"], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "197691179", "url": "https://auto.bazos.sk/inzerat/197691179/ford-tourneo-custom-22-tdci-114-kw-2015-cierna.php", "title": "Ford Tourneo Custom 2.2 TDCi 114 kW, 2015, čierna", "price": 10000, "price_gross": 10000, "fair_price": 11130.0, "discount_pct": 10.2, "verdict": "pod trhom", "year": 2015, "km": 256311, "km_per_year": 22600.0, "eg": "2.2 TDCi diesel 74–114 kW (do 2016)", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Liptovský Mikuláš", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "197665202", "url": "https://auto.bazos.sk/inzerat/197665202/predam-ford-transit-custom.php", "title": "Ford Transit Custom 2.2 TDCi 114kW, 8-miestny, L1H1, Webasto", "price": 12650, "price_gross": 12650, "fair_price": 14000.0, "discount_pct": 9.6, "verdict": "pod trhom", "year": 2015, "km": 178500, "km_per_year": 15800.0, "eg": "2.2 TDCi diesel 74–114 kW (do 2016)", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Prievidza", "flags": [], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "mpv"}, {"id": "ab-AegP6j2P2x5", "url": "https://www.autobazar.eu/detail/ford-transit-custom-transit-kombi-20-tdci-ecoblue-130-trend-l2-t340-96kw130hp-m6/AegP6j2P2x5/", "title": "Ford Transit Custom Transit Kombi 2.0 TDCi EcoBlue 130 Trend L2 T340 96kW130HP M6", "price": 22300, "price_gross": 22300, "fair_price": 24480.0, "discount_pct": 8.9, "verdict": "pod trhom", "year": 2023, "km": 60000, "km_per_year": 18000.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava-Podunajské Biskupice", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "bs-39726709", "url": "https://auto.bazar.sk/39726709-ford-tourneo-custom-2-0-tdci-170-titanium-l2-t320-a-t/", "title": "Ford Tourneo Custom 2.0 TDCi 170 Titanium L2 T320 A/T", "price": 31500, "price_gross": 31500, "fair_price": 34370.0, "discount_pct": 8.4, "verdict": "pod trhom", "year": 2023, "km": 55718, "km_per_year": 16700.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Kremnica", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-Amjd0VjXK4S", "url": "https://www.autobazar.eu/detail/ford-tourneo-custom-20-tdci-170-titanium-l2-t320-at/Amjd0VjXK4S/", "price": 31500}], "body": "mpv"}, {"id": "196981426", "url": "https://auto.bazos.sk/inzerat/196981426/ford-transit-custom-20-tdci-96kw-130hp-9-miesty-bus.php", "title": "FORD | TRANSIT CUSTOM | 2.0TDCi | 96kW | 2020 | 103048km", "price": 17500, "price_gross": 17500, "fair_price": 18580.0, "discount_pct": 5.8, "verdict": "férová cena", "year": 2020, "km": 103048, "km_per_year": 16300.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Bratislava", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AmHSaWYbiOG", "url": "https://www.autobazar.eu/detail/ford-tourneo-custom-20-tdci-150-family-l2/AmHSaWYbiOG/", "title": "Ford Tourneo Custom 2.0 TDCi 150 Family L2", "price": 25999, "price_gross": 25999, "fair_price": 27380.0, "discount_pct": 5.0, "verdict": "férová cena", "year": 2023, "km": 87762, "km_per_year": 26300.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Leopoldov", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-39700182", "url": "https://auto.bazar.sk/39700182-ford-tourneo-custom-2-0-tdci-150-family-l2/", "price": 25999}], "body": "mpv"}, {"id": "bs-39722652", "url": "https://auto.bazar.sk/39722652-ford-tourneo-custom-2-0-tdci-8-miestne-family-automat/", "title": "Ford Tourneo Custom 2.0 TDCI 8 - Miestne Family Automat", "price": 29999, "price_gross": 29999, "fair_price": 31130.0, "discount_pct": 3.6, "verdict": "férová cena", "year": 2022, "km": 86700, "km_per_year": 20000.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Dunajská Lužná", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AmbhzNohy7T", "url": "https://www.autobazar.eu/detail/ford-tourneo-custom-20-tdci-8-miestne-family-automat/AmbhzNohy7T/", "price": 29999}, {"source": "bazos", "id": "196090053", "url": "https://auto.bazos.sk/inzerat/196090053/ford-tourneo-custom-20-tdci-8-miestne-family-automat.php", "price": 29999}], "body": "mpv"}, {"id": "195860802", "url": "https://auto.bazos.sk/inzerat/195860802/ford-transit-custom-turneo-20tdci-96kw-at-automat-vybava.php", "title": "Ford Transit Custom Turneo 2,0TDci 96kw, AT-Automat, vybava", "price": 19500, "price_gross": 19500, "fair_price": 20040.0, "discount_pct": 2.7, "verdict": "férová cena", "year": 2021, "km": 139000, "km_per_year": 26100.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Banská Bystrica", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-Amii6wKhzJ1", "url": "https://www.autobazar.eu/detail/ford-tourneo-custom-20-tdci-130-trend-l1-t320/Amii6wKhzJ1/", "price": 19500}], "body": "mpv"}, {"id": "195899232", "url": "https://auto.bazos.sk/inzerat/195899232/ford-transit-custom-22-tdci-9-miest-nezavisle-kurenie.php", "title": "Ford Transit Custom 2.2 TDCi – 9 miest nezávislé kúrenie", "price": 8490, "price_gross": 8490, "fair_price": 8690.0, "discount_pct": 2.3, "verdict": "férová cena", "year": 2013, "km": 290000, "km_per_year": 21800.0, "eg": "2.2 TDCi diesel 74–114 kW (do 2016)", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Kežmarok", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AeP3bcS0bSE", "url": "https://www.autobazar.eu/detail/ford-tourneo-custom-20-tdci-a6-125kw-l2-active/AeP3bcS0bSE/", "title": "Ford Tourneo Custom 2.0 TDCi A6 125kW L2 Active", "price": 31690, "price_gross": 31690, "fair_price": 32410.0, "discount_pct": 2.2, "verdict": "férová cena", "year": 2023, "km": 81498, "km_per_year": 24400.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Košice", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-39771528", "url": "https://auto.bazar.sk/39771528-ford-tourneo-custom-2-0-tdci-a6-125kw-l2-active/", "price": 31690}], "body": "mpv"}, {"id": "197444661", "url": "https://auto.bazos.sk/inzerat/197444661/ford-tourneo-custom-20-110kw-financovanie-8-miest.php", "title": "Ford Tourneo Custom 2.0 110kW | FINANCOVANIE | 8 MIEST", "price": 32500, "price_gross": 32500, "fair_price": 33170.0, "discount_pct": 2.0, "verdict": "férová cena", "year": 2023, "km": 11866, "km_per_year": 3600.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AmR4ni9_7I6", "url": "https://www.autobazar.eu/detail/ford-tourneo-custom-20-tdci-ecoblue-titanium-l2/AmR4ni9_7I6/", "price": 33500}, {"source": "bazarsk", "id": "bs-39755135", "url": "https://auto.bazar.sk/39755135-ford-tourneo-custom-2-0-tdci-ecoblue-titanium-l2/", "price": 33500}], "body": "mpv"}, {"id": "197305040", "url": "https://auto.bazos.sk/inzerat/197305040/ford-tourneo-custom-family-20tdci-l2-110kw-78000km-zaruka.php", "title": "Ford Tourneo Custom FAMILY 2.0TDCi L2 110kW 78000km ZÁRUKA", "price": 25490, "price_gross": 25490, "fair_price": 25840.0, "discount_pct": 1.3, "verdict": "férová cena", "year": 2022, "km": 78000, "km_per_year": 18000.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Skalica", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-Am7wQdcaSx0", "url": "https://www.autobazar.eu/detail/ford-tourneo-custom-125kw-at6-8-miest-aj-na-splatky-protiucet/Am7wQdcaSx0/", "title": "Ford Tourneo Custom 125kW AT/6 - 8 Miest / AJ NA SPLÁTKY / PROTIÚČET", "price": 34990, "price_gross": 34990, "fair_price": 35440.0, "discount_pct": 1.3, "verdict": "férová cena", "year": 2023, "km": 45398, "km_per_year": 13600.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Košice-Pereš", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197767623", "url": "https://auto.bazos.sk/inzerat/197767623/ford-tourneo-custom-125kw-at6-8-miest.php", "price": 34990}, {"source": "bazarsk", "id": "bs-39757571", "url": "https://auto.bazar.sk/39757571-ford-tourneo-custom-125kw-at-6-8-miest-aj-na-splatky-protiucet/", "price": 34990}], "body": "mpv"}, {"id": "197304522", "url": "https://auto.bazos.sk/inzerat/197304522/ford-transit-custom-kombi-l2-20-tdci-trend-96kw-6-miest.php", "title": "Ford Transit Custom Kombi L2 2.0 TDCi Trend 96kW, 6 MIEST", "price": 19490, "price_gross": 19490, "fair_price": 19610.0, "discount_pct": 0.6, "verdict": "férová cena", "year": 2022, "km": 102800, "km_per_year": 23700.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Skalica", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "bs-39344242", "url": "https://auto.bazar.sk/39344242-ford-tourneo-custom-family-l2h1/", "title": "Ford Tourneo Custom Family L2H1", "price": 38500, "price_gross": 38500, "fair_price": 38520.0, "discount_pct": 0.1, "verdict": "férová cena", "year": 2025, "km": 8000, "km_per_year": 6000.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Bratislava V - Petržalka", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-Amw4XTDzTkD", "url": "https://www.autobazar.eu/detail/ford-tourneo-custom-family-l2h1/Amw4XTDzTkD/", "price": 38500}], "body": "mpv"}, {"id": "ab-Amn7FigVZV-", "url": "https://www.autobazar.eu/detail/ford-tourneo-custom-20-tdci-185-titanium-l2-t320-a-t/Amn7FigVZV-/", "title": "Ford Tourneo Custom 2.0 TDCi 185 Titanium L2 T320 A/T", "price": 20900, "price_gross": 20900, "fair_price": 20830.0, "discount_pct": -0.3, "verdict": "férová cena", "year": 2021, "km": 229500, "km_per_year": 43000.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Štúrovo", "flags": ["vysoký nájazd 43000 km/rok – flotila / taxi?"], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-38647312", "url": "https://auto.bazar.sk/38647312-ford-tourneo-custom-2-0-tdci-185-titanium-l2-t320-a-t/", "price": 20900}], "body": "mpv"}, {"id": "195856859", "url": "https://auto.bazos.sk/inzerat/195856859/ford-transit-custom-20ecoblue-9-miestne.php", "title": "Ford transit custom 2,0ecoblue 9 miestne", "price": 17500, "price_gross": 17500, "fair_price": 17350.0, "discount_pct": -0.8, "verdict": "férová cena", "year": 2019, "km": 112000, "km_per_year": 15300.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Trnava", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AejasuuMjE4", "url": "https://www.autobazar.eu/detail/ford-transit-custom-transit-kombi-20-tdci-ecoblue-130-trend-l2-t340-at-96kw130hp-a6/AejasuuMjE4/", "title": "Ford Transit Custom Transit Kombi 2.0 TDCi EcoBlue 130 Trend L2 T340 A/T 96kW/130HP A6", "price": 19900, "price_gross": 19900, "fair_price": 19720.0, "discount_pct": -0.9, "verdict": "férová cena", "year": 2022, "km": 214500, "km_per_year": 49500.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Bratislava-Petržalka", "flags": ["vysoký nájazd 50000 km/rok – flotila / taxi?"], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "197520569", "url": "https://auto.bazos.sk/inzerat/197520569/ford-transit-custom-20-tdci.php", "title": "Ford Transit Custom 2.0 TDCi", "price": 12900, "price_gross": 12900, "fair_price": 12760.0, "discount_pct": -1.1, "verdict": "férová cena", "year": 2016, "km": 218491, "km_per_year": 21100.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Zvolen", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AmkmilcMslT", "url": "https://www.autobazar.eu/detail/ford-tourneo-custom-20-tdci-185-family-l2/AmkmilcMslT/", "title": "Ford Tourneo Custom 2.0 TDCi 185 Family L2", "price": 18990, "price_gross": 18990, "fair_price": 18760.0, "discount_pct": -1.2, "verdict": "férová cena", "year": 2020, "km": 163834, "km_per_year": 25900.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Nové Mesto nad Váhom", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-39765326", "url": "https://auto.bazar.sk/39765326-ford-tourneo-custom-2-0-tdci-185-family-l2/", "price": 18990}, {"source": "bazos", "id": "197378233", "url": "https://auto.bazos.sk/inzerat/197378233/ford-tourneo-custom-20-tdci-136kw-family-l2-8-miestne.php", "price": 18990}], "body": "mpv"}, {"id": "ab-AmeU7jpbCpS", "url": "https://www.autobazar.eu/detail/ford-tourneo-custom-20-tdci-130-mildhybrid-trend-l1-t320/AmeU7jpbCpS/", "title": "Ford Tourneo Custom 2.0 TDCi 130 mildHybrid Trend L1 T320", "price": 24999, "price_gross": 24999, "fair_price": 24630.0, "discount_pct": -1.5, "verdict": "férová cena", "year": 2020, "km": 43882, "km_per_year": 6900.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava-Lamač", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazarsk", "id": "bs-39722617", "url": "https://auto.bazar.sk/39722617-ford-tourneo-custom-2-0-tdci-130-mildhybrid-trend-l1-t320/", "price": 24999}], "body": "mpv"}, {"id": "196099250", "url": "https://auto.bazos.sk/inzerat/196099250/ord-tourneo-custom-20-tdci-125-kw-r-2016-manual-6.php", "title": "Ford Tourneo Custom 2.0 TDCi 125 kW – r. 2016 – manual 6", "price": 13900, "price_gross": 13900, "fair_price": 13630.0, "discount_pct": -2.0, "verdict": "férová cena", "year": 2016, "km": 185659, "km_per_year": 18000.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Michalovce", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-Am2LQ2XvxyI", "url": "https://www.autobazar.eu/detail/ford-tourneo-custom-20-tdci-170-active-l2-t320-at/Am2LQ2XvxyI/", "title": "Ford Tourneo Custom 2.0 TDCi 170 Active L2 T320 A/T", "price": 32990, "price_gross": 32990, "fair_price": 32330.0, "discount_pct": -2.1, "verdict": "férová cena", "year": 2023, "km": 82422, "km_per_year": 24700.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Košice", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-39722197", "url": "https://auto.bazar.sk/39722197-ford-tourneo-custom-2-0-tdci-170-active-l2-t320-a-t/", "price": 32990}], "body": "mpv"}, {"id": "197575303", "url": "https://auto.bazos.sk/inzerat/197575303/ford-tourneo-custom-l2-titanium-22-tdci.php", "title": "Ford Tourneo Custom L2 TITANIUM  2.2 TDCi", "price": 9700, "price_gross": 9700, "fair_price": 9490.0, "discount_pct": -2.2, "verdict": "férová cena", "year": 2015, "km": 501200, "km_per_year": 44200.0, "eg": "2.2 TDCi diesel 74–114 kW (do 2016)", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Bratislava", "flags": ["vysoký nájazd 44000 km/rok – flotila / taxi?"], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "197691105", "url": "https://auto.bazos.sk/inzerat/197691105/ford-tourneo-custom-22-tdci-114-kw-2015-cierna.php", "title": "Ford Tourneo Custom 2.2 TDCi 114 kW, 2015, čierna", "price": 12000, "price_gross": 12000, "fair_price": 11590.0, "discount_pct": -3.5, "verdict": "férová cena", "year": 2015, "km": 265723, "km_per_year": 23400.0, "eg": "2.2 TDCi diesel 74–114 kW (do 2016)", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Liptovský Mikuláš", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "197184761", "url": "https://auto.bazos.sk/inzerat/197184761/ford-tourneo-custom-22-tdci-155k-titanium-l2h1-t300-114kw15.php", "title": "Ford Tourneo Custom 2.2 TDCi 155k Titanium L2H1 T300 114kW", "price": 12900, "price_gross": 12900, "fair_price": 12400.0, "discount_pct": -4.1, "verdict": "férová cena", "year": 2015, "km": 226880, "km_per_year": 20000.0, "eg": "2.2 TDCi diesel 74–114 kW (do 2016)", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Snina", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "ab-AbF5xyHBcUAg", "url": "https://www.autobazar.eu/detail/ford-tourneo-custom-family/AbF5xyHBcUAg/", "title": "Ford Tourneo Custom Family (AA187GR) 2.0 TDCi", "price": 31900, "price_gross": 31900, "fair_price": 30440.0, "discount_pct": -4.8, "verdict": "férová cena", "year": 2022, "km": 80300, "km_per_year": 18500.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Košice", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-38034251", "url": "https://auto.bazar.sk/38034251-ford-tourneo-custom-family-aa187gr-2-0-tdci/", "price": 31900}], "body": "mpv"}, {"id": "bs-39760006", "url": "https://auto.bazar.sk/39760006-ford-transit-custom-2-0-9-miest-1-m-financovanie-protiucet/", "title": "Ford Transit Custom 2.0 9 MIEST / 1.M / FINANCOVANIE / PROTIÚČET /", "price": 27990, "price_gross": 27990, "fair_price": 26710.0, "discount_pct": -4.8, "verdict": "férová cena", "year": 2024, "km": 50130, "km_per_year": 21500.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Stará Turá", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "ab-Ae-Z3aAiakq", "url": "https://www.autobazar.eu/detail/ford-tourneo-custom-ford-tourneo-custom/Ae-Z3aAiakq/", "title": "Ford Tourneo Custom 2018", "price": 25990, "price_gross": 25990, "fair_price": 24720.0, "discount_pct": -5.1, "verdict": "férová cena", "year": 2018, "km": 100000, "km_per_year": 12000.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "automatic", "seller_type": "private", "location": "Bratislava-Ružinov", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "ab-Ae-unVCUVuB", "url": "https://www.autobazar.eu/detail/ford-tourneo-custom-family-l2/Ae-unVCUVuB/", "title": "Ford Tourneo Custom Family L2", "price": 38500, "price_gross": 38500, "fair_price": 36420.0, "discount_pct": -5.7, "verdict": "férová cena", "year": 2025, "km": 25000, "km_per_year": 18800.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "manual", "seller_type": "private", "location": "Valča", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "ab-Amkd8RBxE0b", "url": "https://www.autobazar.eu/detail/ford-tourneo-custom-20-tdci-185-trend-l1-t320-at/Amkd8RBxE0b/", "title": "Ford Tourneo Custom TITANIUM X 2.0 TDCi L2 AUTOMAT", "price": 31500, "price_gross": 31500, "fair_price": 29740.0, "discount_pct": -5.9, "verdict": "férová cena", "year": 2021, "km": 71000, "km_per_year": 13300.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Nitra", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-39751383", "url": "https://auto.bazar.sk/39751383-ford-tourneo-custom-titanium-x-2-0-tdci-l2-automat/", "price": 31500}], "body": "mpv"}, {"id": "196251997", "url": "https://auto.bazos.sk/inzerat/196251997/ford-transit-custom.php", "title": "Ford Transit  Custom 2.2 TDCI", "price": 7900, "price_gross": 7900, "fair_price": 7450.0, "discount_pct": -6.0, "verdict": "férová cena", "year": 2015, "km": 368000, "km_per_year": 32500.0, "eg": "2.2 TDCi diesel 74–114 kW (do 2016)", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Nitra", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "197678629", "url": "https://auto.bazos.sk/inzerat/197678629/ford-tourneo-custom-20-ecoblue-110-kw-l2-family-8-miest.php", "title": "FORD TOURNEO CUSTOM 2.0 EcoBlue 110 kW – L2 FAMILY – 8 MIEST", "price": 24990, "price_gross": 24990, "fair_price": 23560.0, "discount_pct": -6.1, "verdict": "férová cena", "year": 2022, "km": 105574, "km_per_year": 24400.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Žilina", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "bs-39117732", "url": "https://auto.bazar.sk/39117732-ford-tourneo-custom-2-0-tdci-130-titanium-l2-t310-a-t/", "title": "Ford Tourneo Custom 2.0 TDCi 130 Titanium L2 T310 A/T", "price": 15999, "price_gross": 15999, "fair_price": 15070.0, "discount_pct": -6.1, "verdict": "férová cena", "year": 2018, "km": 252075, "km_per_year": 30200.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "bazarsk", "origin": "dovoz", "also_listed": [], "body": "mpv"}, {"id": "ab-AmwZZkuW8kV", "url": "https://www.autobazar.eu/detail/ford-tourneo-custom-l2-2-5-duratec-phev-232k-ecvt-fwd-171kw-titanium/AmwZZkuW8kV/", "title": "Ford Tourneo Custom L2 2. 5 Duratec PHEV 232k eCVT - FWD (171kW), Titanium", "price": 51990, "price_gross": 51990, "fair_price": 48900.0, "discount_pct": -6.3, "verdict": "férová cena", "year": 2026, "km": 12400, "km_per_year": 37200.0, "eg": "Plug-in hybrid 1.0 EcoBoost / 2.5 PHEV", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39368631", "url": "https://auto.bazar.sk/39368631-ford-tourneo-custom-l2-2-5-duratec-phev-232k-ecvt-fwd-171kw-titanium/", "price": 51990}], "body": "mpv"}, {"id": "195873541", "url": "https://auto.bazos.sk/inzerat/195873541/ford-transit-custom-kombi-20-tdci-2023.php", "title": "Ford Transit Custom Kombi 2.0 TDCi 2023", "price": 21500, "price_gross": 21500, "fair_price": 20190.0, "discount_pct": -6.5, "verdict": "férová cena", "year": 2023, "km": 181852, "km_per_year": 54600.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Michalovce", "flags": ["vysoký nájazd 55000 km/rok – flotila / taxi?"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "bs-39763998", "url": "https://auto.bazar.sk/39763998-ford-tourneo-custom-2-0-tdci-170-titanium-l1-t310/", "title": "Ford Tourneo Custom 2.0 TDCi 170 Titanium L1 T310", "price": 15500, "price_gross": 15500, "fair_price": 14550.0, "discount_pct": -6.6, "verdict": "férová cena", "year": 2017, "km": 179366, "km_per_year": 19200.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Sučany", "flags": [], "pick": null, "source": "bazarsk", "origin": "dovoz", "also_listed": [{"source": "autobazar", "id": "ab-Ame9hi9xJVP", "url": "https://www.autobazar.eu/detail/ford-tourneo-custom-20-tdci-170-titanium-l1-t310/Ame9hi9xJVP/", "price": 15500}, {"source": "bazos", "id": "197661500", "url": "https://auto.bazos.sk/inzerat/197661500/ford-transit-20-tdci-310-l1-tourneo-custom-titanium.php", "price": 15500}], "body": "mpv"}, {"id": "196103274", "url": "https://auto.bazos.sk/inzerat/196103274/ford-tourneo-custom-titanium-awd-4x4-a8-125-kw.php", "title": "FORD Tourneo /Transit Custom Titanium AWD, 4x4, A8, 125 kW", "price": 49990, "price_gross": 49990, "fair_price": 46910.0, "discount_pct": -6.6, "verdict": "férová cena", "year": 2025, "km": 62000, "km_per_year": 46500.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Martin", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "ab-Am6D5tFUxbW", "url": "https://www.autobazar.eu/detail/ford-tourneo-custom-20-tdci-ecoblue-family-l1-at/Am6D5tFUxbW/", "title": "Ford Tourneo Custom 2.0 TDCi EcoBlue Family L1 A/T", "price": 39990, "price_gross": 39990, "fair_price": 37420.0, "discount_pct": -6.9, "verdict": "férová cena", "year": 2025, "km": 27000, "km_per_year": 20300.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Galanta", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-39240440", "url": "https://auto.bazar.sk/39240440-ford-tourneo-custom-2-0-tdci-ecoblue-family-l1-a-t/", "price": 39990}], "body": "mpv"}, {"id": "ab-AmY0jFKsLx9", "url": "https://www.autobazar.eu/detail/ford-tourneo-custom-20tdci-170ps-zaruka-vyhrev-s-2majitel/AmY0jFKsLx9/", "title": "Ford Tourneo Custom 2.0TDCi 170PS, Záruka, Výhrev s., 2.majiteľ", "price": 33900, "price_gross": 33900, "fair_price": 31490.0, "discount_pct": -7.7, "verdict": "nad trhom", "year": 2023, "km": 91900, "km_per_year": 27600.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Komárno", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "196064467", "url": "https://auto.bazos.sk/inzerat/196064467/ford-custom-20-tdci-136-kw-l1-h1.php", "title": "Ford Tourneo Custom 2,0 EcoBlue 136 kw L1 / H1", "price": 28290, "price_gross": 28290, "fair_price": 26190.0, "discount_pct": -8.0, "verdict": "nad trhom", "year": 2021, "km": 60000, "km_per_year": 11300.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Košice", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AmB-4C5IwS7", "url": "https://www.autobazar.eu/detail/ford-tourneo-custom-20-tdci-ecoblue-titanium-x-l1-at/AmB-4C5IwS7/", "title": "Ford Tourneo Custom 2.0 TDCi EcoBlue Titanium X L1 A/T", "price": 56990, "price_gross": 56990, "fair_price": 52670.0, "discount_pct": -8.2, "verdict": "nad trhom", "year": 2026, "km": 6500, "km_per_year": 19500.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39461605", "url": "https://auto.bazar.sk/39461605-ford-tourneo-custom-2-0-tdci-ecoblue-titanium-x-l1-a-t/", "price": 56990}], "body": "mpv"}, {"id": "ab-AmJHf6YdCxw", "url": "https://www.autobazar.eu/detail/ford-tourneo-custom-20-tdci-150-family-l2/AmJHf6YdCxw/", "title": "Ford Tourneo Custom 2.0 TDCi 150 Family L2", "price": 29900, "price_gross": 29900, "fair_price": 27370.0, "discount_pct": -9.2, "verdict": "nad trhom", "year": 2023, "km": 94000, "km_per_year": 28200.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Martin", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39322164", "url": "https://auto.bazar.sk/39322164-ford-tourneo-custom-2-0-tdci-150-family-l2/", "price": 29900}], "body": "mpv"}, {"id": "ab-AmEAxw_hszp", "url": "https://www.autobazar.eu/detail/ford-tourneo-custom-l2h1-20-tdci-trend/AmEAxw_hszp/", "title": "Ford Tourneo Custom L2H1 2.0 TDCI Trend", "price": 26990, "price_gross": 26990, "fair_price": 24690.0, "discount_pct": -9.3, "verdict": "nad trhom", "year": 2023, "km": 79620, "km_per_year": 23900.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava-Lamač", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazarsk", "id": "bs-39420925", "url": "https://auto.bazar.sk/39420925-ford-tourneo-custom-l2h1-2-0-tdci-trend/", "price": 26990}], "body": "mpv"}, {"id": "197487959", "url": "https://auto.bazos.sk/inzerat/197487959/ford-transit-custom-9-miestny.php", "title": "FORD TRANSIT CUSTOM / 9 MIESTNY", "price": 12800, "price_gross": 12800, "fair_price": 11700.0, "discount_pct": -9.4, "verdict": "nad trhom", "year": 2015, "km": 194500, "km_per_year": 17200.0, "eg": "2.2 TDCi diesel 74–114 kW (do 2016)", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Žilina", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AmocM7T5XGg", "url": "https://www.autobazar.eu/detail/ford-transit-custom-20tdci-ecoblue-130-l2-96kw-8miestne-1majitel-odpocet-dph/AmocM7T5XGg/", "title": "Ford Transit Custom 2.0TDCi EcoBlue 130 L2 96kW 8miestne 1.majiteľ (ODPOČET DPH)", "price": 19590, "price_gross": 19590, "fair_price": 17810.0, "discount_pct": -10.0, "verdict": "nad trhom", "year": 2021, "km": 125352, "km_per_year": 23500.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Nové Mesto nad Váhom", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-39772084", "url": "https://auto.bazar.sk/39772084-ford-transit-custom-2-0tdci-ecoblue-130-l2-96kw-8miestne-1-majitel-odpocet-dph/", "price": 19590}], "body": "mpv"}, {"id": "ab-AmMNui_Y9kj", "url": "https://www.autobazar.eu/detail/ford-tourneo-custom-20-tdci-96kw-at6-8-miest-2023/AmMNui_Y9kj/", "title": "FORD Tourneo Custom 2.0 TDCi 96KW AT6 8 MIEST 2023", "price": 23999, "price_gross": 23999, "fair_price": 21760.0, "discount_pct": -10.3, "verdict": "nad trhom", "year": 2023, "km": 172868, "km_per_year": 51900.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": ["vysoký nájazd 52000 km/rok – flotila / taxi?"], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39676475", "url": "https://auto.bazar.sk/39676475-ford-tourneo-custom-2-0-tdci-96kw-at6-8-miest-2023/", "price": 23999}], "body": "mpv"}, {"id": "bs-39287153", "url": "https://auto.bazar.sk/39287153-ford-tourneo-custom-2-0-tdci-170-trend-l2-t310/", "title": "Ford Tourneo Custom 2.0 TDCi 170 Trend L2 T310", "price": 17999, "price_gross": 17999, "fair_price": 16320.0, "discount_pct": -10.3, "verdict": "nad trhom", "year": 2018, "km": 177927, "km_per_year": 21400.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava I - Staré Mesto", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "bs-39317774", "url": "https://auto.bazar.sk/39317774-ford-tourneo-custom-2-5-titanium-phev-l2/", "title": "Ford Tourneo Custom 2,5 Titanium PHEV L2", "price": 54990, "price_gross": 54990, "fair_price": 49200.0, "discount_pct": -11.8, "verdict": "nad trhom", "year": 2026, "km": 1200, "km_per_year": 3600.0, "eg": "Plug-in hybrid 1.0 EcoBoost / 2.5 PHEV", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Žilina-Staré mesto", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmOp_0awrcl", "url": "https://www.autobazar.eu/detail/ford-tourneo-custom-25-titanium-l2-phev/AmOp_0awrcl/", "price": 54990}], "body": "mpv"}, {"id": "197722625", "url": "https://auto.bazos.sk/inzerat/197722625/ford-transit-custom-22-tdci-l2h2-karavan.php", "title": "Ford Transit Custom 2.2 TDCi L2H2 karavan", "price": 12590, "price_gross": 12590, "fair_price": 11250.0, "discount_pct": -11.9, "verdict": "nad trhom", "year": 2014, "km": 244550, "km_per_year": 19800.0, "eg": "2.2 TDCi diesel 74–114 kW (do 2016)", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Prievidza", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-39278919", "url": "https://auto.bazar.sk/39278919-ford-transit-custom-2-2-tdci-155-trend-l2h2-t310/", "price": 17900}], "body": "mpv"}, {"id": "197656982", "url": "https://auto.bazos.sk/inzerat/197656982/ford-tourneo-custom-1-majitel-2021.php", "title": "Ford Tourneo Custom 1. Majitel 2021", "price": 17990, "price_gross": 17990, "fair_price": 15890.0, "discount_pct": -13.2, "verdict": "nad trhom", "year": 2021, "km": 208000, "km_per_year": 39000.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": null, "seller_type": "dealer", "location": "Námestovo", "flags": ["vysoký nájazd 39000 km/rok – flotila / taxi?", "prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "bs-39672377", "url": "https://auto.bazar.sk/39672377-ford-tourneo-custom-2-0-tdci-185k-active/", "title": "Ford Tourneo Custom 2.0 TDCi 185k ACTIVE", "price": 31999, "price_gross": 31999, "fair_price": 28220.0, "discount_pct": -13.4, "verdict": "nad trhom", "year": 2019, "km": 18846, "km_per_year": 2600.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Kežmarok", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-Amt4i4OslKD", "url": "https://www.autobazar.eu/detail/ford-tourneo-custom-active/Amt4i4OslKD/", "price": 31999}, {"source": "bazos", "id": "196864281", "url": "https://auto.bazos.sk/inzerat/196864281/ford-tourneo-custom-20-tdci-185k-active.php", "price": 31999}], "body": "mpv"}, {"id": "ab-AeEUuhZGUfb", "url": "https://www.autobazar.eu/detail/ford-tourneo-custom-20-tdci-96kw-8-miest/AeEUuhZGUfb/", "title": "Ford Tourneo Custom 2.0 TDCi 96KW 8 MIEST", "price": 26900, "price_gross": 26900, "fair_price": 23700.0, "discount_pct": -13.5, "verdict": "nad trhom", "year": 2022, "km": 94951, "km_per_year": 21900.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Trnava", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "bs-39762371", "url": "https://auto.bazar.sk/39762371-ford-tourneo-custom-2-0-tdci-170-titanium-l1-t310/", "title": "Ford Tourneo Custom 2.0 TDCi 170 Titanium L1 T310", "price": 17499, "price_gross": 17499, "fair_price": 15200.0, "discount_pct": -15.1, "verdict": "výrazne nad trhom", "year": 2017, "km": 156460, "km_per_year": 16800.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Radoľa", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmyatYFF09v", "url": "https://www.autobazar.eu/detail/ford-tourneo-custom-20-tdci-170-titanium-l1-t310/AmyatYFF09v/", "price": 17499}, {"source": "bazos", "id": "197283526", "url": "https://auto.bazos.sk/inzerat/197283526/ford-tourneo-custom-20tdci-125kw-titanium-8-miestne-kamera.php", "price": 17499}], "body": "mpv"}, {"id": "ab-Amruy9v3S98", "url": "https://www.autobazar.eu/detail/ford-tourneo-custom-20-tdci-titanium-125kw-a6-zaruka-aj-na-splatky-protiucet/Amruy9v3S98/", "title": "Ford Tourneo Custom 2.0 TDCi Titanium / 125kW / A6 / ZÁRUKA / AJ NA SPLÁTKY / PROTIÚČET", "price": 42299, "price_gross": 42299, "fair_price": 36500.0, "discount_pct": -15.9, "verdict": "výrazne nad trhom", "year": 2023, "km": 40863, "km_per_year": 12300.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Košice-Pereš", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197767861", "url": "https://auto.bazos.sk/inzerat/197767861/ford-tourneo-custom-20-tdci-titanium-125kw-a6.php", "price": 42299}, {"source": "bazarsk", "id": "bs-39757630", "url": "https://auto.bazar.sk/39757630-ford-tourneo-custom-2-0-tdci-titanium-125kw-a6-zaruka-aj-na-splatky-protiucet/", "price": 42299}], "body": "mpv"}, {"id": "196334560", "url": "https://auto.bazos.sk/inzerat/196334560/ford-tourneo-custom-20-tdci-96-kw-automat-9-miest-l2.php", "title": "FORD TOURNEO CUSTOM 2.0 TDCi 96 kW | AUTOMAT | 9 MIEST | L2", "price": 15888, "price_gross": 15888, "fair_price": 13680.0, "discount_pct": -16.1, "verdict": "výrazne nad trhom", "year": 2018, "km": 260000, "km_per_year": 31200.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197044235", "url": "https://auto.bazos.sk/inzerat/197044235/ford-tourneo-custom.php", "title": "Ford Tourneo Custom", "price": 14990, "price_gross": 14990, "fair_price": 12840.0, "discount_pct": -16.7, "verdict": "výrazne nad trhom", "year": 2015, "km": 238200, "km_per_year": 21000.0, "eg": "2.2 TDCi diesel 74–114 kW (do 2016)", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Nové Mesto n.Váhom", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AmMSI2d_Wzi", "url": "https://www.autobazar.eu/detail/ford-tourneo-custom-20-tdci-ecoblue-active-l2-at/AmMSI2d_Wzi/", "title": "Ford Tourneo Custom 2.0 TDCi EcoBlue Active L2 A/T", "price": 55330, "price_gross": 55330, "fair_price": 47280.0, "discount_pct": -17.0, "verdict": "výrazne nad trhom", "year": 2025, "km": 17500, "km_per_year": 13100.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Košice", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39281669", "url": "https://auto.bazar.sk/39281669-ford-tourneo-custom-2-0-tdci-ecoblue-active-l2-a-t/", "price": 55330}], "body": "mpv"}, {"id": "197307622", "url": "https://auto.bazos.sk/inzerat/197307622/ford-tourneo-custom-titanium-22-tdci-l2.php", "title": "Ford Tourneo Custom TITANIUM 2.2 TDCi L2", "price": 12990, "price_gross": 12990, "fair_price": 11080.0, "discount_pct": -17.2, "verdict": "výrazne nad trhom", "year": 2013, "km": 286766, "km_per_year": 21500.0, "eg": "2.2 TDCi diesel 74–114 kW (do 2016)", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Žilina", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "ab-Aeq4xjyT3TT", "url": "https://www.autobazar.eu/detail/ford-tourneo-custom-20-ecoblue-110kw-2022/Aeq4xjyT3TT/", "title": "Ford Tourneo Custom 8-miest, 2.0 EcoBlue 110kW 2022", "price": 28900, "price_gross": 28900, "fair_price": 24650.0, "discount_pct": -17.2, "verdict": "výrazne nad trhom", "year": 2022, "km": 123500, "km_per_year": 28500.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "manual", "seller_type": "private", "location": "Martin", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "196300675", "url": "https://auto.bazos.sk/inzerat/196300675/prakticky-ford-tourneo-custom-8-miest-20ecoblue-110kw-2022.php", "price": 29500}], "body": "mpv"}, {"id": "bs-39473605", "url": "https://auto.bazar.sk/39473605-ford-tourneo-custom-2-0-tdci-170-titanium-l2-t310-a-t/", "title": "Ford Tourneo Custom 2.0 TDCi 170 Titanium L2 T310 A/T", "price": 29750, "price_gross": 29750, "fair_price": 25300.0, "discount_pct": -17.6, "verdict": "výrazne nad trhom", "year": 2018, "km": 100460, "km_per_year": 12100.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava I - Staré Mesto", "flags": [], "pick": null, "source": "bazarsk", "origin": "dovoz", "also_listed": [], "body": "mpv"}, {"id": "ab-AeRBm_Y2-C7", "url": "https://www.autobazar.eu/detail/ford-transit-custom-transit-kombi-20-tdci-ecoblue-130-trend-l2-t320-96kw130hp-m6/AeRBm_Y2-C7/", "title": "Ford Transit Custom Transit Kombi 2.0 TDCi EcoBlue 130 Trend L2 T320 96kW130HP M6", "price": 18990, "price_gross": 18990, "fair_price": 16120.0, "discount_pct": -17.8, "verdict": "výrazne nad trhom", "year": 2020, "km": 151000, "km_per_year": 23800.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Trenčín", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197556228", "url": "https://auto.bazos.sk/inzerat/197556228/ford-transit-custom-20-ecoblue-130-moznost-kupy-na-splatky.php", "price": 18990}], "body": "mpv"}, {"id": "ab-Amuo_IWB_kE", "url": "https://www.autobazar.eu/detail/ford-tourneo-custom-20-tdci-130-titanium-l1-t320-at/Amuo_IWB_kE/", "title": "Ford Tourneo Custom 2.0 TDCi 130 Titanium L1 T320 A/T", "price": 29990, "price_gross": 29990, "fair_price": 25380.0, "discount_pct": -18.2, "verdict": "výrazne nad trhom", "year": 2021, "km": 86000, "km_per_year": 16100.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Žilina", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "mpv"}, {"id": "ab-AmrkXCIkCrZ", "url": "https://www.autobazar.eu/detail/ford-tourneo-custom-2-5-duratec-phev-232k-ecvt-fwd-171kw-titanium/AmrkXCIkCrZ/", "title": "Ford Tourneo Custom 2. 5 Duratec PHEV 232k eCVT - FWD (171kW  Titanium)", "price": 50990, "price_gross": 50990, "fair_price": 42990.0, "discount_pct": -18.6, "verdict": "výrazne nad trhom", "year": 2025, "km": 20000, "km_per_year": 15000.0, "eg": "Plug-in hybrid 1.0 EcoBoost / 2.5 PHEV", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "ab-AecuT4zL8MI", "url": "https://www.autobazar.eu/detail/ford-tourneo-custom-active-mild-hybrid/AecuT4zL8MI/", "title": "Ford Tourneo Custom ACTIVE Mild HYBRID", "price": 32900, "price_gross": 32900, "fair_price": 27730.0, "discount_pct": -18.7, "verdict": "výrazne nad trhom", "year": 2022, "km": 55000, "km_per_year": 12700.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Petrova Ves", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "ab-AmXrKlY_dbY", "url": "https://www.autobazar.eu/detail/ford-tourneo-custom-2-0-tdci-100kw-m6/AmXrKlY_dbY/", "title": "Ford Tourneo Custom 2,0 TDCi 100kW M6 8-miest", "price": 35799, "price_gross": 35799, "fair_price": 29980.0, "discount_pct": -19.4, "verdict": "výrazne nad trhom", "year": 2024, "km": 23163, "km_per_year": 9900.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39016270", "url": "https://auto.bazar.sk/39016270-ford-tourneo-custom-2-0-tdci-100kw-m6-8-miest/", "price": 35799}], "body": "mpv"}, {"id": "ab-Ae9z1xVSlIV", "url": "https://www.autobazar.eu/detail/ford-tourneo-custom-ford-tourneo-custom/Ae9z1xVSlIV/", "title": "Ford Tourneo Custom 2.0 TDCi 136kW", "price": 25000, "price_gross": 25000, "fair_price": 20630.0, "discount_pct": -21.2, "verdict": "výrazne nad trhom", "year": 2020, "km": 227500, "km_per_year": 35900.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "automatic", "seller_type": "private", "location": "Pezinok", "flags": ["vysoký nájazd 36000 km/rok – flotila / taxi?"], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "bs-39617287", "url": "https://auto.bazar.sk/39617287-ford-tourneo-custom-2-0-tdci-170-titanium-l2-t310/", "title": "Ford Tourneo Custom 2.0 TDCi 170 Titanium L2 T310", "price": 15990, "price_gross": 15990, "fair_price": 13180.0, "discount_pct": -21.3, "verdict": "výrazne nad trhom", "year": 2016, "km": 211998, "km_per_year": 20500.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Banská Bystrica", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-Amu23uEG_ZD", "url": "https://www.autobazar.eu/detail/ford-tourneo-custom-20-tdci-170-titanium-l2-t310/Amu23uEG_ZD/", "price": 15990}], "body": "mpv"}, {"id": "196502084", "url": "https://auto.bazos.sk/inzerat/196502084/ford-tourneo-custom-8-miestne.php", "title": "FORD TOURNEO CUSTOM 8 miestne", "price": 25000, "price_gross": 30750, "fair_price": 25320.0, "discount_pct": -21.4, "verdict": "výrazne nad trhom", "year": 2023, "km": 57369, "km_per_year": 17200.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": null, "seller_type": "dealer", "location": "Žilina", "flags": ["inzerovaná cena 25000 € je bez DPH – porovnáva sa cena s DPH 30750 €", "prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197252237", "url": "https://auto.bazos.sk/inzerat/197252237/predam-ford-tourneo-custom-8-miestny.php", "title": "Predám Ford Tourneo Custom 8-miestny", "price": 14900, "price_gross": 14900, "fair_price": 12190.0, "discount_pct": -22.3, "verdict": "výrazne nad trhom", "year": 2015, "km": 227186, "km_per_year": 20000.0, "eg": "2.2 TDCi diesel 74–114 kW (do 2016)", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Prešov", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "ab-Am463xY63Ti", "url": "https://www.autobazar.eu/detail/ford-tourneo-custom-20-tdci-170-titanium-l2-t310-a-t/Am463xY63Ti/", "title": "Ford Tourneo Custom 2.0 TDCi 170 Titanium L2 T310 A/T", "price": 32490, "price_gross": 32490, "fair_price": 26460.0, "discount_pct": -22.8, "verdict": "výrazne nad trhom", "year": 2019, "km": 80600, "km_per_year": 11000.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197384220", "url": "https://auto.bazos.sk/inzerat/197384220/ford-transit-custom.php", "title": "FORD TRANSIT CUSTOM", "price": 14990, "price_gross": 14990, "fair_price": 12150.0, "discount_pct": -23.4, "verdict": "výrazne nad trhom", "year": 2017, "km": 268577, "km_per_year": 28800.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Žiar nad Hronom", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AmSrNGzadM8", "url": "https://www.autobazar.eu/detail/ford-tourneo-custom-titanium-x-l2-25-duratec-phev-232k-ecvt-171kw-el-dvere/AmSrNGzadM8/", "title": "Ford Tourneo Custom Titanium X L2 2.5 Duratec PHEV 232k eCVT (171kW) - el. dvere", "price": 59990, "price_gross": 59990, "fair_price": 48510.0, "discount_pct": -23.7, "verdict": "výrazne nad trhom", "year": 2026, "km": 5000, "km_per_year": 15000.0, "eg": "Plug-in hybrid 1.0 EcoBoost / 2.5 PHEV", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Trnava", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazarsk", "id": "bs-39588117", "url": "https://auto.bazar.sk/39588117-ford-tourneo-custom-titanium-x-l2-2-5-duratec-phev-232k-ecvt-171kw-el-dvere/", "price": 59990}], "body": "mpv"}, {"id": "196437203", "url": "https://auto.bazos.sk/inzerat/196437203/ford-transit-custom-20tdci-9-miestny.php", "title": "Ford Transit Custom 2.0TDCi 9 - miestny", "price": 27500, "price_gross": 33825, "fair_price": 27350.0, "discount_pct": -23.7, "verdict": "výrazne nad trhom", "year": 2024, "km": 6100, "km_per_year": 2600.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": null, "seller_type": "dealer", "location": "Košice", "flags": ["inzerovaná cena 27500 € je bez DPH – porovnáva sa cena s DPH 33825 €", "prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "196125235", "url": "https://auto.bazos.sk/inzerat/196125235/ford-tranzit-custom-20tdci-96kw-118000km-tazne-9miest.php", "title": "FORD | TRANSIT CUSTOM | 2.0TDCi | 2021 | 118.000km | 9.miest", "price": 23900, "price_gross": 23900, "fair_price": 19070.0, "discount_pct": -25.3, "verdict": "výrazne nad trhom", "year": 2021, "km": 118739, "km_per_year": 22300.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Zvolen", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-Ae6mZfy5LnN", "url": "https://www.autobazar.eu/detail/ford-transit-custom-transit-kombi-20-tdci-ecoblue-130-trend-l2-t340-96kw130hp-m6/Ae6mZfy5LnN/", "price": 23900}], "body": "mpv"}, {"id": "bs-39738078", "url": "https://auto.bazar.sk/39738078-ford-tourneo-custom-2-0-ecoblue/", "title": "Ford Tourneo Custom 2.0 EcoBlue", "price": 31000, "price_gross": 31000, "fair_price": 24710.0, "discount_pct": -25.5, "verdict": "výrazne nad trhom", "year": 2019, "km": 81391, "km_per_year": 11100.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava V - Petržalka", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AegqJWWh7DO", "url": "https://www.autobazar.eu/detail/ford-transit-custom-22-diesel-92kw-manual-prevodovka/AegqJWWh7DO/", "title": "Ford Transit Custom 9 miestne L2", "price": 10500, "price_gross": 10500, "fair_price": 8310.0, "discount_pct": -26.3, "verdict": "výrazne nad trhom", "year": 2014, "km": 246000, "km_per_year": 19900.0, "eg": "2.2 TDCi diesel 74–114 kW (do 2016)", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Nemšová", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "197240960", "url": "https://auto.bazos.sk/inzerat/197240960/ford-tourneo-custom-phev-93kw-2022-mozny-odpocet-dph.php", "title": "FORD TOURNEO Custom PHEV 93kW 2022 Možný odpočet DPH", "price": 28990, "price_gross": 28990, "fair_price": 22910.0, "discount_pct": -26.5, "verdict": "výrazne nad trhom", "year": 2022, "km": 44500, "km_per_year": 10300.0, "eg": "Plug-in hybrid 1.0 EcoBoost / 2.5 PHEV", "cg": 0, "transmission": null, "seller_type": "dealer", "location": "Senica", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "bs-39721220", "url": "https://auto.bazar.sk/39721220-ford-tourneo-custom-2-0-ecoblue-77kw-l1h1-9-miest-fabricka-zaruka/", "title": "Ford Tourneo Custom 2.0 EcoBlue 77kW L1H1 9 miest - Fabrická záruka", "price": 23990, "price_gross": 23990, "fair_price": 18940.0, "discount_pct": -26.7, "verdict": "výrazne nad trhom", "year": 2022, "km": 109948, "km_per_year": 25400.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Prešov", "flags": [], "pick": null, "source": "bazarsk", "origin": "dovoz", "also_listed": [], "body": "mpv"}, {"id": "ab-Am57Daun0dp", "url": "https://www.autobazar.eu/detail/ford-tourneo-custom-20-tdci-170-titanium-l2-t310-a-t/Am57Daun0dp/", "title": "Ford Tourneo Custom 2.0 TDCi 170 Titanium L2 T310 A/T", "price": 28990, "price_gross": 28990, "fair_price": 22760.0, "discount_pct": -27.4, "verdict": "výrazne nad trhom", "year": 2018, "km": 122900, "km_per_year": 14700.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "bs-39412785", "url": "https://auto.bazar.sk/39412785-ford-transit-custom-300-l1h1-2-0-tdci-trend-96-kw-m6-4d-6-miestny/", "title": "Ford Transit Custom 300 L1H1 2,0 TDCi Trend 96 kW M6 4d. 6 miestny", "price": 22990, "price_gross": 22990, "fair_price": 17980.0, "discount_pct": -27.9, "verdict": "výrazne nad trhom", "year": 2021, "km": 147882, "km_per_year": 27700.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Nové Zámky", "flags": [], "pick": null, "source": "bazarsk", "origin": "dovoz", "also_listed": [], "body": "mpv"}, {"id": "bs-39323358", "url": "https://auto.bazar.sk/39323358-ford-tourneo-custom-2-2-tdci-155k-titanium-l2h1-t300/", "title": "Ford Tourneo Custom 2.2 TDCi 155k Titanium L2H1 T300", "price": 18990, "price_gross": 18990, "fair_price": 14830.0, "discount_pct": -28.0, "verdict": "výrazne nad trhom", "year": 2014, "km": 157406, "km_per_year": 12800.0, "eg": "2.2 TDCi diesel 74–114 kW (do 2016)", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava I - Staré Mesto", "flags": [], "pick": null, "source": "bazarsk", "origin": "dovoz", "also_listed": [], "body": "mpv"}, {"id": "ab-AmaYtDtBGEc", "url": "https://www.autobazar.eu/detail/ford-transit-custom-20-tdci-ecoblue-trend-9-miestny/AmaYtDtBGEc/", "title": "Ford Transit Custom 2.0 TDCi EcoBlue Trend 9-miestny", "price": 21899, "price_gross": 21899, "fair_price": 17110.0, "discount_pct": -28.0, "verdict": "výrazne nad trhom", "year": 2020, "km": 112237, "km_per_year": 17700.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Svätý Jur", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazarsk", "id": "bs-39709570", "url": "https://auto.bazar.sk/39709570-ford-transit-custom-2-0-tdci-ecoblue-trend-9-miestny/", "price": 21899}], "body": "mpv"}, {"id": "bs-39528107", "url": "https://auto.bazar.sk/39528107-ford-tourneo-custom-2-0-tdci-ecoblue-titanium-x-l2-a-t/", "title": "Ford Tourneo Custom 2.0 TDCi EcoBlue Titanium X L2 A/T", "price": 45900, "price_gross": 45900, "fair_price": 35470.0, "discount_pct": -29.4, "verdict": "výrazne nad trhom", "year": 2024, "km": 70000, "km_per_year": 30000.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava V - Petržalka", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "bs-39735270", "url": "https://auto.bazar.sk/39735270-ford-transit-custom-2-2-tdci-92-kw-l2h1-trend-android-auto-a-kamera-mozny-uver/", "title": "Ford Transit Custom 2.2 TDCi 92 kW L2H1 | Trend | Android Auto a Kamera | Možný úver", "price": 14000, "price_gross": 14000, "fair_price": 10790.0, "discount_pct": -29.7, "verdict": "výrazne nad trhom", "year": 2014, "km": 220852, "km_per_year": 17900.0, "eg": "2.2 TDCi diesel 74–114 kW (do 2016)", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava I - Staré Mesto", "flags": [], "pick": null, "source": "bazarsk", "origin": "dovoz", "also_listed": [{"source": "autobazar", "id": "ab-AmqJzhhXEEk", "url": "https://www.autobazar.eu/detail/ford-transit-custom-22-tdci-ambiente-l1h1-t310-125k/AmqJzhhXEEk/", "price": 14000}, {"source": "bazos", "id": "196509220", "url": "https://auto.bazos.sk/inzerat/196509220/ford-transit-custom-kombi-22-tdci-92-kw-l2h1-mozny-uver.php", "price": 14000}], "body": "mpv"}, {"id": "197773946", "url": "https://auto.bazos.sk/inzerat/197773946/predam-ford-transit-custom-20-tdci-96kw-9-miestne.php", "title": "Predám Ford Transit Custom 2.0 TDCi 96kW 9-miestne", "price": 11900, "price_gross": 11900, "fair_price": 9090.0, "discount_pct": -30.9, "verdict": "výrazne nad trhom", "year": 2017, "km": 290073, "km_per_year": 31100.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Bánovce nad Bebravou", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197413046", "url": "https://auto.bazos.sk/inzerat/197413046/ford-transit-custom-20-tdci-77-kw-l2-9-miest-2016.php", "title": "Ford Transit Custom 2.0 TDCi 77 kW, L2, 9 miest, 2016", "price": 16390, "price_gross": 16390, "fair_price": 12390.0, "discount_pct": -32.3, "verdict": "výrazne nad trhom", "year": 2016, "km": 104857, "km_per_year": 10100.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Prievidza", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197257074", "url": "https://auto.bazos.sk/inzerat/197257074/ford-transit-custom-20-tdci.php", "title": "Ford Transit Custom 2,0 TDCi", "price": 24500, "price_gross": 24500, "fair_price": 18490.0, "discount_pct": -32.5, "verdict": "výrazne nad trhom", "year": 2018, "km": 139500, "km_per_year": 16700.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Kežmarok", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "bs-39768900", "url": "https://auto.bazar.sk/39768900-ford-tourneo-custom-family-swb-2-0-tdci-eb-96kw-mt6-96kw-8-miest/", "title": "Ford Tourneo Custom FAMILY SWB 2.0 TDCi EB 96kW MT6 96kw 8 Miest", "price": 20999, "price_gross": 20999, "fair_price": 15590.0, "discount_pct": -34.7, "verdict": "výrazne nad trhom", "year": 2022, "km": 203375, "km_per_year": 46900.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Žilina", "flags": ["vysoký nájazd 47000 km/rok – flotila / taxi?"], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AmZicGBdK9E", "url": "https://www.autobazar.eu/detail/ford-tourneo-custom-family-swb-20-tdci-eb-96kw-mt6-96kw-8-miest/AmZicGBdK9E/", "price": 20999}], "body": "mpv"}, {"id": "ab-AeF_W-o4KU6", "url": "https://www.autobazar.eu/detail/ford-tourneo-custom-titanium/AeF_W-o4KU6/", "title": "Ford Tourneo Custom Titanium", "price": 24950, "price_gross": 24950, "fair_price": 18500.0, "discount_pct": -34.9, "verdict": "výrazne nad trhom", "year": 2020, "km": 139300, "km_per_year": 22000.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "manual", "seller_type": "private", "location": "Zvolen", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197263595", "url": "https://auto.bazos.sk/inzerat/197263595/ford-tourneo-custom-titanium-tdci.php", "price": 24950}], "body": "mpv"}, {"id": "bs-39759533", "url": "https://auto.bazar.sk/39759533-ford-transit-custom-2-2-tdci-trend-l2h2-t310-92-kw-m6-aj-na-splatky-protiucet/", "title": "Ford Transit Custom 2.2 TDCi Trend L2H2 T310, 92 kW, M6. / AJ NA SPLÁTKY / PROTIÚČET /", "price": 12990, "price_gross": 12990, "fair_price": 9570.0, "discount_pct": -35.8, "verdict": "výrazne nad trhom", "year": 2015, "km": 299920, "km_per_year": 26500.0, "eg": "2.2 TDCi diesel 74–114 kW (do 2016)", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Stará Turá", "flags": [], "pick": null, "source": "bazarsk", "origin": "dovoz", "also_listed": [], "body": "mpv"}, {"id": "197054930", "url": "https://auto.bazos.sk/inzerat/197054930/ford-transit-custom-20tdci-2019-125-xxx-km.php", "title": "Ford Transit Custom 2.0TDCi 2019, 125 xxx km", "price": 20990, "price_gross": 20990, "fair_price": 15390.0, "discount_pct": -36.4, "verdict": "výrazne nad trhom", "year": 2019, "km": 125000, "km_per_year": 17000.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Malacky", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "bs-39510392", "url": "https://auto.bazar.sk/39510392-ford-transit-custom-2-2-tdci-125-ambiente-l2h1-t310/", "title": "Ford Transit Custom 2.2 TDCi 125 Ambiente L2H1 T310", "price": 13990, "price_gross": 13990, "fair_price": 9940.0, "discount_pct": -40.7, "verdict": "výrazne nad trhom", "year": 2014, "km": 214000, "km_per_year": 17400.0, "eg": "2.2 TDCi diesel 74–114 kW (do 2016)", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava I - Staré Mesto", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "197171929", "url": "https://auto.bazos.sk/inzerat/197171929/ford-transit-custom-20-tdci-130-l2-96kw-mt6-2017.php", "title": "Ford Transit Custom 2.0 TDCi 130 L2 96kW MT/6 2017", "price": 15250, "price_gross": 15250, "fair_price": 10190.0, "discount_pct": -49.7, "verdict": "výrazne nad trhom", "year": 2017, "km": 221901, "km_per_year": 23800.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Žilina", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "bazarsk", "id": "bs-39759445", "url": "https://auto.bazar.sk/39759445-ford-transit-custom-2-0-tdci-130-l2-96kw-mt-6-2017-aj-na-splatky-protiucet/", "price": 15250}], "body": "mpv"}, {"id": "bs-37941252", "url": "https://auto.bazar.sk/37941252-ford-transit-custom-2-0ecoblue-96kw-320l-9-miest-automatgarancia-kmoverene-vozidlo/", "title": "Ford Transit Custom 2,0EcoBlue 96KW 320L 9-MIEST AUTOMAT=GARANCIA KM=OVERENÉ VOZIDLO", "price": 27999, "price_gross": 27999, "fair_price": 18610.0, "discount_pct": -50.5, "verdict": "výrazne nad trhom", "year": 2019, "km": 171461, "km_per_year": 23400.0, "eg": "2.0 EcoBlue diesel 77–136 kW (2016+)", "cg": 1, "transmission": "automatic", "seller_type": "dealer", "location": "Martin", "flags": [], "pick": null, "source": "bazarsk", "origin": "dovoz", "also_listed": [{"source": "autobazar", "id": "ab-AmdF55D7zOU", "url": "https://www.autobazar.eu/detail/ford-transit-custom-2-0ecoblue-96kw-320l-9-miest-automatgarancia-kmoverene-vozidlo/AmdF55D7zOU/", "price": 27999}], "body": "mpv"}, {"id": "bs-39329212", "url": "https://auto.bazar.sk/39329212-ford-tourneo-custom-2-2-tdci-125k-titanium-l2h1-t300/", "title": "Ford Tourneo Custom 2.2 TDCi 125k Titanium L2H1 T300", "price": 19300, "price_gross": 19300, "fair_price": 9460.0, "discount_pct": -104.0, "verdict": "výrazne nad trhom", "year": 2013, "km": 249000, "km_per_year": 18700.0, "eg": "2.2 TDCi diesel 74–114 kW (do 2016)", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava I - Staré Mesto", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "mpv"}];
+const GROUPS = ["Plug-in hybrid", "Diesel", "LPG a nezistený"];
+const BODY = {"mpv": "osobná verzia (Tourneo / Kombi)"};
+const fmt = n => Math.round(n).toLocaleString("sk-SK");
+const eur = n => fmt(n) + " €";
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const TRANS = {automatic: "automat", manual: "manuál"};
+const SRC = {bazos: "bazoš", autobazar: "autobazar.eu", bazarsk: "bazar.sk"};
+
+// --- theme toggle ---------------------------------------------------------
+document.getElementById("themeBtn").onclick = () => {
+  const root = document.documentElement;
+  const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  drawChart();
+};
+
+// --- scatter chart --------------------------------------------------------
+const legend = document.getElementById("legend");
+legend.innerHTML = GROUPS.map((g, i) => `<span><i style="background:var(--s${i+1})"></i>${g}</span>`).join("")
+  + `<span><i class="ring"></i>odporúčaná ponuka</span>`;
+
+function drawChart() {
+  const svg = document.getElementById("chart"), wrap = document.getElementById("chartWrap"), tip = document.getElementById("tip");
+  const W = svg.clientWidth, H = 420, m = {l: 56, r: 16, t: 10, b: 40};
+  const pts = DATA.filter(d => d.km && d.price_gross);
+  const xMax = Math.ceil(Math.max(...pts.map(d => d.km)) / 50000) * 50000;
+  const yMax = Math.ceil(Math.max(...pts.map(d => d.price_gross)) / 5000) * 5000;
+  const x = v => m.l + v / xMax * (W - m.l - m.r), y = v => H - m.b - v / yMax * (H - m.t - m.b);
+  let s = "";
+  for (let v = 0; v <= yMax; v += 5000)
+    s += `<line x1="${m.l}" x2="${W-m.r}" y1="${y(v)}" y2="${y(v)}" stroke="var(--grid)"/><text x="${m.l-8}" y="${y(v)+4}" text-anchor="end">${v/1000} tis. €</text>`;
+  const step = W < 520 ? 100000 : 50000;
+  for (let v = 0; v <= xMax; v += step)
+    s += `<text x="${x(v)}" y="${H-m.b+18}" text-anchor="middle">${v/1000} tis.</text>`;
+  s += `<text x="${(W+m.l)/2}" y="${H-6}" text-anchor="middle">nájazd (km)</text>`;
+  const order = [...pts].sort((a, b) => (a.pick ? 1 : 0) - (b.pick ? 1 : 0));
+  order.forEach(d => {
+    const cx = x(d.km), cy = y(d.price_gross);
+    if (d.pick) s += `<circle cx="${cx}" cy="${cy}" r="9" fill="none" stroke="var(--text)" stroke-width="2"/>`;
+    s += `<circle class="pt" data-id="${d.id}" cx="${cx}" cy="${cy}" r="5" fill="var(--s${d.cg+1})" stroke="var(--surface)" stroke-width="2"/>`;
+  });
+  // invisible bigger hit targets
+  order.forEach(d => s += `<circle class="hit" data-id="${d.id}" cx="${x(d.km)}" cy="${y(d.price_gross)}" r="11" fill="transparent" style="cursor:pointer"/>`);
+  svg.innerHTML = s;
+  const byId = Object.fromEntries(pts.map(d => [d.id, d]));
+  svg.querySelectorAll(".hit").forEach(c => {
+    c.onmouseenter = c.onmousemove = ev => {
+      const d = byId[c.dataset.id];
+      tip.innerHTML = `<b>${esc(d.title)}</b>
+        <div class="row"><span>Cena</span><span>${eur(d.price_gross)}</span></div>
+        <div class="row"><span>Férová cena</span><span>${eur(d.fair_price)}</span></div>
+        <div class="row"><span>Pod trhom</span><span>${d.discount_pct > 0 ? "+" : ""}${d.discount_pct.toLocaleString("sk-SK")} %</span></div>
+        <div class="row"><span>Zdroj</span><span>${SRC[d.source]}${d.also_listed.length ? " + " + d.also_listed.map(a => SRC[a.source]).join(", ") : ""}</span></div>
+        <div class="row"><span>Rok · km</span><span>${d.year} · ${fmt(d.km)}</span></div>
+        <div class="row"><span>Motor</span><span>${esc(d.eg)} ${TRANS[d.transmission] || ""}</span></div>`;
+      tip.style.display = "block";
+      const r = wrap.getBoundingClientRect();
+      let lx = ev.clientX - r.left + 14, ly = ev.clientY - r.top + 14;
+      if (lx + 290 > r.width) lx = ev.clientX - r.left - 290;
+      tip.style.left = lx + "px"; tip.style.top = ly + "px";
+    };
+    c.onmouseleave = () => tip.style.display = "none";
+    c.onclick = () => window.open(byId[c.dataset.id].url, "_blank", "noopener");
+  });
+}
+drawChart();
+addEventListener("resize", drawChart);
+
+// --- full table -----------------------------------------------------------
+const fEngine = document.getElementById("fEngine");
+[...new Set(DATA.map(d => d.eg))].sort().forEach(g => fEngine.insertAdjacentHTML("beforeend", `<option>${esc(g)}</option>`));
+let sortK = "discount_pct", sortDir = -1;
+function discCell(v) {
+  const w = Math.min(Math.abs(v), 30) / 30 * 50;
+  const bar = v >= 0 ? `left:50%;width:${w}%;background:var(--pos)` : `right:50%;width:${w}%;background:var(--neg)`;
+  return `<span class="disc">${v > 0 ? "+" : ""}${v.toLocaleString("sk-SK")} %<span class="dbar"><span style="${bar}"></span></span></span>`;
+}
+function renderTable() {
+  const max = parseFloat(document.getElementById("fMax").value) || Infinity;
+  const tr = document.getElementById("fTrans").value, se = document.getElementById("fSeller").value, en = fEngine.value;
+  const so = document.getElementById("fSource").value, og = document.getElementById("fOrigin").value;
+  const bo = document.getElementById("fBody").value;
+  const rows = DATA.filter(d => (!en || d.eg === en) && (!tr || d.transmission === tr)
+    && (!se || d.seller_type !== "dealer") && d.price_gross <= max
+    && (!so || d.source === so || d.also_listed.some(a => a.source === so)) && (!og || d.origin === og) && (!bo || d.body === bo))
+    .sort((a, b) => { const A = a[sortK], B = b[sortK]; return (typeof A === "string" ? A.localeCompare(B) : A - B) * sortDir; });
+  document.getElementById("count").textContent = `${rows.length} z ${DATA.length} inzerátov`;
+  document.querySelector("#tbl tbody").innerHTML = rows.map(d => `<tr>
+    <td><a href="${d.url}" target="_blank" rel="noopener">${esc(d.title)}</a> ${d.pick ? '<span class="badge pick">odporúčané</span>' : ""}
+      <div class="sub">${BODY[d.body] || "karoséria ?"} · ${esc(d.eg)} · ${TRANS[d.transmission] || "prevodovka ?"} · ${esc(d.location)} · ${d.seller_type === "dealer" ? "predajca/firma" : d.seller_type === "private" ? "súkromník" : "neisté"} · ${SRC[d.source]}${d.origin === "SR" ? " · kúpené v SR" : d.origin === "dovoz" ? " · dovoz" : ""}${d.also_listed.map(a => ` · <a href="${a.url}" target="_blank" rel="noopener">aj na ${SRC[a.source]}</a>`).join("")}</div>
+      ${d.flags.filter(f => !f.startsWith("prevodovka")).map(f => `<div class="flag">⚠ ${esc(f)}</div>`).join("")}</td>
+    <td class="num">${d.year}</td><td class="num">${fmt(d.km)}</td>
+    <td class="num">${eur(d.price_gross)}</td><td class="num">${eur(d.fair_price)}</td>
+    <td class="num">${discCell(d.discount_pct)}</td></tr>`).join("");
+  document.querySelectorAll("#tbl th.sortable").forEach(th => {
+    const base = th.textContent.replace(/ [▾▴]$/, "");
+    th.textContent = base + (th.dataset.k === sortK ? (sortDir < 0 ? " ▾" : " ▴") : "");
+  });
+}
+document.querySelectorAll("#tbl th.sortable").forEach(th => th.onclick = () => {
+  if (sortK === th.dataset.k) sortDir *= -1; else { sortK = th.dataset.k; sortDir = th.dataset.k === "title" ? 1 : -1; }
+  renderTable();
+});
+["fEngine", "fTrans", "fSeller", "fSource", "fBody", "fOrigin", "fMax"].forEach(id => document.getElementById(id).addEventListener("input", renderTable));
+renderTable();
+</script>
+<!-- ferovka-theme --><script defer src="/analytics-config.js"></script><script defer src="/analytics.js"></script><script id="ferovka-chart">/* Férovka – chart → ad links, injected into every report by sync-reports.mjs.
+ *
+ * The reports draw one invisible 11px "hit" circle per ad. In dense charts (and always on a narrow phone) those
+ * circles overlap and the one drawn last wins, so a click/tap often opened a neighbouring ad. Here the pointer is
+ * always resolved to the NEAREST point, the report's own tooltip is shown for that point, and a click opens its ad.
+ * Touch: the first tap shows the tooltip (with a hint), a second tap on the same point opens the ad.
+ */
+(() => {
+  let rows;
+  try { rows = DATA; } catch { return; } // eslint-disable-line no-undef
+  if (!Array.isArray(rows) || !rows.length || !("url" in rows[0])) return;
+  const byId = new Map(rows.map((d) => [String(d.id), d]));
+  const MOUSE = ["mouseover", "mouseout", "mouseenter", "mouseleave", "mousemove", "mousedown", "mouseup", "click"];
+  let lastPointer = "mouse", down = null;
+  // the finger position as it was – Chrome "snaps" the later click of a tap to the centre of a nearby clickable element
+  addEventListener("pointerdown", (e) => { lastPointer = e.pointerType || "mouse"; down = { clientX: e.clientX, clientY: e.clientY }; }, true);
+
+  // the old per-point hit circles must not be targets (they overlap, and touch snapping aims at them)
+  document.head.insertAdjacentHTML("beforeend", "<style>svg circle.hit[data-id],svg circle.pt[data-id]{pointer-events:none}</style>");
+
+  function nearest(svg, ev, radius) {
+    let best = null, bd = Infinity;
+    for (const c of svg.querySelectorAll("circle.pt[data-id]")) {
+      const r = c.getBoundingClientRect();
+      const dx = r.left + r.width / 2 - ev.clientX, dy = r.top + r.height / 2 - ev.clientY;
+      const d = dx * dx + dy * dy;
+      if (d <= bd) { bd = d; best = c; } // ties: the point drawn on top (later) wins – that is the one you see
+    }
+    return best && bd <= radius * radius ? best : null;
+  }
+
+  function bind(svg) {
+    if (svg.__fvLinks) return;
+    svg.__fvLinks = true;
+    let current = null, armed = null;
+    const hitOf = (pt) => pt && svg.querySelector(`circle.hit[data-id="${CSS.escape(pt.dataset.id)}"]`);
+    const fire = (el, type, ev) => {
+      if (!el) return;
+      const e = new MouseEvent(type, { clientX: ev.clientX, clientY: ev.clientY, bubbles: false });
+      e.__fv = true;
+      el.dispatchEvent(e);
+    };
+    const tip = () => (svg.parentElement && svg.parentElement.querySelector("#tip, .tip")) || document.getElementById("tip");
+    const mark = (pt) => {
+      if (current === pt) return;
+      if (current) current.setAttribute("r", current.__r || "5");
+      current = pt;
+      if (pt) { pt.__r = pt.__r || pt.getAttribute("r"); pt.setAttribute("r", String(+pt.__r + 2)); }
+    };
+    const show = (pt, ev, hint) => {
+      mark(pt);
+      if (!pt) { const t = tip(); if (t) t.style.display = "none"; return; }
+      fire(hitOf(pt), "mousemove", ev); // the report's own tooltip, for the nearest point
+      const t = tip();
+      if (t && hint) t.insertAdjacentHTML("beforeend", `<div class="fv-hint">Ťukni ešte raz – otvorí sa inzerát ↗</div>`);
+    };
+    const open = (pt) => {
+      const d = byId.get(pt.dataset.id);
+      if (d && d.url) {
+        try { window.FerovkaAnalytics?.listingClick(d.url, "chart"); } catch { /* analytics must never block an ad */ }
+        window.open(d.url, "_blank", "noopener");
+      }
+    };
+
+    // the per-circle handlers of the report never see real mouse events – only our synthetic ones
+    for (const type of MOUSE) {
+      svg.addEventListener(type, (ev) => {
+        if (ev.__fv) return;
+        ev.stopImmediatePropagation();
+        if (type === "mousemove" && lastPointer === "mouse") {
+          show(nearest(svg, ev, 18), ev, false);
+          svg.style.cursor = current ? "pointer" : "";
+        } else if (type === "mouseleave" && ev.target === svg && lastPointer === "mouse") {
+          show(null, ev);
+        } else if (type === "click") {
+          const touch = lastPointer !== "mouse";
+          const at = touch && down ? down : ev;
+          const pt = nearest(svg, at, touch ? 26 : 18);
+          if (!pt) { armed = null; show(null, ev); return; }
+          if (!touch || armed === pt) { armed = null; open(pt); }
+          else { armed = pt; show(pt, at, true); }
+        }
+      }, true);
+    }
+  }
+
+  const scan = () => document.querySelectorAll("svg").forEach((s) => s.querySelector("circle.pt[data-id]") && bind(s));
+  scan();
+  new MutationObserver(scan).observe(document.body, { childList: true, subtree: true });
+})();
+</script><script id="ferovka-filters">/* Férovka – filters for the whole report, injected into every model report by sync-reports.mjs.
+ *
+ * The reports render the chart (drawChart) and the full ranking (renderTable) from the global DATA array; their own
+ * filter bar only filters the table. Here the filter bar (kept in its place above the ranking) gets more filters (year, price from/to,
+ * km, fuel, discount, picks only, text search) and every filter applies to the chart and the ranking together: DATA is
+ * refilled in place with the matching ads and both are drawn again. "</script" can't occur inside this file.
+ */
+(() => {
+  let data;
+  try { data = DATA; } catch { return; } // eslint-disable-line no-undef
+  if (!Array.isArray(data) || !data.length || typeof renderTable !== "function") return; // eslint-disable-line no-undef
+  const bar = document.querySelector(".filters");
+  if (!bar || bar.dataset.fv) return;
+  bar.dataset.fv = "1";
+  const ALL = data.slice();
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+  const fmt = (n) => Math.round(n).toLocaleString("sk-SK");
+  const norm = (s) => String(s ?? "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+  let groups = null;
+  try { groups = GROUPS; } catch { /* report without groups */ } // eslint-disable-line no-undef
+
+  const FUEL = { diesel: "Diesel", petrol: "Benzín", hybrid: "Hybrid", "plug-in hybrid": "Plug-in hybrid", electric: "Elektro", lpg: "LPG", cng: "CNG" };
+  const fuelOf = (d) => {
+    const e = norm(d.eg);
+    if (/tdi|crdi|dci|hdi|diesel|\bd\b|cdi|\d+d\b|blue/.test(e)) return "Diesel";
+    if (/plug-in|phev|e-hybrid|recharge|\bgte\b|\bt8\b|\b\d{2}e\b|\b\d{3} ?e\b/.test(e)) return "Plug-in hybrid";
+    if (/elektro|electric|\bev\b/.test(e)) return "Elektro";
+    if (/cng|lpg|g-tec|g-tron|tgi|ecofuel/.test(e)) return "Plyn (CNG/LPG)";
+    if (/mild|mhev/.test(e)) return "Benzín"; // mild-hybrid petrol (the diesel ones say TDI / d above)
+    if (/hybrid|hev/.test(e)) return "Hybrid";
+    if (/tsi|tfsi|mpi|fsi|benzin|gdi|dpi|htp|12v|\bt\d\b|\bb[56]\b|\d+i\b|turbo|tce|\bs4\b|rs ?\d|amg|competition|\bm\d{2,3}i?\b|gti|\bx5 m\b/.test(e)) return "Benzín";
+    return d.fuel ? FUEL[d.fuel] || String(d.fuel) : null;
+  };
+
+  // --- controls ---------------------------------------------------------------------------------------------------
+  const years = ALL.map((d) => d.year).filter(Boolean);
+  const yMin = Math.min(...years), yMax = Math.max(...years);
+  const yearOpts = (label) => `<option value="">${label}</option>` +
+    Array.from({ length: yMax - yMin + 1 }, (_, i) => yMax - i).map((y) => `<option>${y}</option>`).join("");
+  const kms = [30000, 50000, 75000, 100000, 150000, 200000, 250000, 300000];
+  const fuels = [...new Set(ALL.map(fuelOf).filter(Boolean))].sort((a, b) => a.localeCompare(b, "sk"));
+  const showGroups = Array.isArray(groups) && groups.length > 1 && ALL.some((d) => Number.isInteger(d.cg));
+
+  const maxInput = $("fMax");
+  if (maxInput) { maxInput.placeholder = "Cena do €"; maxInput.title = "Najvyššia cena (s DPH)"; }
+  const html =
+    `<select id="fvYearFrom" title="Rok výroby od">${yearOpts("Rok od")}</select>` +
+    `<select id="fvYearTo" title="Rok výroby do">${yearOpts("Rok do")}</select>` +
+    `<input id="fvPriceMin" type="number" placeholder="Cena od €" step="500" min="0" title="Najnižšia cena (s DPH)" style="width:110px">`;
+  if (maxInput) maxInput.insertAdjacentHTML("beforebegin", html);
+  else bar.insertAdjacentHTML("afterbegin", html);
+  const more =
+    `<select id="fvKm" title="Najviac najazdených km"><option value="">Nájazd – všetky</option>${kms.map((k) => `<option value="${k}">do ${fmt(k)} km</option>`).join("")}</select>` +
+    (fuels.length > 1 ? `<select id="fvFuel" title="Palivo"><option value="">Všetky palivá</option>${fuels.map((f) => `<option>${esc(f)}</option>`).join("")}</select>` : "") +
+    (showGroups ? `<select id="fvGroup" title="Skupina motorov (farba v grafe)"><option value="">Všetky skupiny</option>${groups.map((g, i) => `<option value="${i}">${esc(g)}</option>`).join("")}</select>` : "") +
+    `<select id="fvDisc" title="O koľko je auto lacnejšie ako férová cena"><option value="">Cena – všetky</option><option value="0">pod férovou cenou</option><option value="10">aspoň 10 % pod trhom</option><option value="20">aspoň 20 % pod trhom</option></select>` +
+    `<input id="fvText" type="search" placeholder="Hľadať (výbava, mesto…)" title="Hľadá v názve inzerátu, motore a lokalite" style="width:170px">` +
+    `<label class="fv-check"><input id="fvPick" type="checkbox"> len odporúčané</label>` +
+    `<button type="button" id="fvReset" class="fv-reset">Zrušiť filtre</button>`;
+  const count = $("count");
+  if (count) count.insertAdjacentHTML("beforebegin", more);
+  else bar.insertAdjacentHTML("beforeend", more);
+
+  // the bar stays where it was – right above the ranking – and also drives the chart; the chart gets a pointer to it
+  const chart = $("chartWrap");
+  const box = document.createElement("div");
+  box.className = "fv-filters";
+  box.id = "filtre";
+  bar.before(box);
+  box.innerHTML = `<div class="fv-head"><b>Filtre</b><span>platia pre rebríček aj graf vyššie</span></div>`;
+  box.appendChild(bar);
+  const note = document.createElement("div");
+  note.className = "fv-note";
+  chart?.before(note);
+
+  document.head.insertAdjacentHTML("beforeend", `<style id="fv-filters-css">
+.fv-filters{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 14px 4px;margin:24px 0 8px}
+.fv-filters .fv-head{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;margin-bottom:8px}
+.fv-filters .fv-head span{color:var(--muted);font-size:13px}
+.fv-filters .filters{margin-bottom:8px}
+.fv-filters .filters .count{flex-basis:100%;margin-left:0}
+.fv-check{display:inline-flex;gap:6px;align-items:center;font-size:13px;color:var(--text-2,var(--text));white-space:nowrap}
+.fv-reset{background:none;border:1px solid var(--border);color:var(--text);border-radius:8px;padding:6px 10px;font:inherit;font-size:13px;cursor:pointer}
+.fv-reset:hover{background:var(--surface-2,var(--surface))}
+.fv-note{color:var(--muted);font-size:13px;margin:0 0 8px}
+.fv-note a{color:inherit}
+.fv-empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:14px;pointer-events:none}
+@media (max-width:600px){.fv-filters .filters select,.fv-filters .filters input[type=number],.fv-filters .filters input[type=search]{flex:1 1 calc(50% - 8px);min-width:0;width:auto!important}}
+</style>`);
+
+  // --- filtering --------------------------------------------------------------------------------------------------
+  const val = (id) => ($(id) ? $(id).value : "");
+  const num = (id) => { const v = parseFloat(val(id)); return Number.isFinite(v) ? v : null; };
+  function matches(d) {
+    const yf = num("fvYearFrom"), yt = num("fvYearTo"), pmin = num("fvPriceMin"), pmax = num("fMax"), km = num("fvKm"), disc = num("fvDisc");
+    const fuel = val("fvFuel"), grp = val("fvGroup"), q = norm(val("fvText")).trim();
+    if (yf != null && !(d.year >= yf)) return false;
+    if (yt != null && !(d.year <= yt)) return false;
+    if (pmin != null && !(d.price_gross >= pmin)) return false;
+    if (pmax != null && !(d.price_gross <= pmax)) return false;
+    if (km != null && !(d.km <= km)) return false;
+    if (disc != null && !(d.discount_pct > disc || (disc > 0 && d.discount_pct >= disc))) return false;
+    if (fuel && fuelOf(d) !== fuel) return false;
+    if (grp !== "" && String(d.cg) !== grp) return false;
+    if ($("fvPick")?.checked && !d.pick) return false;
+    if (q && !q.split(/\s+/).every((w) => norm(`${d.title} ${d.eg ?? ""} ${d.engine ?? ""} ${d.location ?? ""}`).includes(w))) return false;
+    // the report's own filters (engine, gearbox, seller, portal, body, origin) – same rules as its renderTable
+    const en = val("fEngine"), tr = val("fTrans"), se = val("fSeller"), so = val("fSource"), og = val("fOrigin"), bo = val("fBody");
+    if (en && d.eg !== en) return false;
+    if (tr && d.transmission !== tr) return false;
+    if (se && d.seller_type === "dealer") return false;
+    if (so && !(d.source === so || (d.also_listed || []).some((a) => a.source === so))) return false;
+    if (og && d.origin !== og) return false;
+    if (bo && d.body !== bo) return false;
+    return true;
+  }
+  const active = () => [...box.querySelectorAll("select, input")].filter((el) => (el.type === "checkbox" ? el.checked : el.value !== "")).length;
+
+  let drawing = false;
+  function apply() {
+    if (drawing) return;
+    drawing = true;
+    const rows = ALL.filter(matches);
+    data.length = 0;
+    data.push(...rows);
+    const wrap = $("chartWrap");
+    wrap?.querySelector(".fv-empty")?.remove();
+    const plotted = rows.filter((d) => d.km && d.price_gross).length;
+    try {
+      if (typeof drawChart === "function") { // eslint-disable-line no-undef
+        if (plotted) drawChart(); // eslint-disable-line no-undef
+        else { const svg = $("chart"); if (svg) svg.innerHTML = ""; }
+      }
+    } catch (e) { console.warn("chart", e); }
+    if (wrap && !plotted) {
+      if (getComputedStyle(wrap).position === "static") wrap.style.position = "relative";
+      wrap.insertAdjacentHTML("beforeend", `<div class="fv-empty">Filtrom nezodpovedá žiadny inzerát</div>`);
+    }
+    try { renderTable(); } catch (e) { console.warn("table", e); } // eslint-disable-line no-undef
+    const n = active();
+    if (count) count.textContent = `Zobrazených ${fmt(rows.length)} z ${fmt(ALL.length)} inzerátov` + (n ? ` · aktívne filtre: ${n}` : "");
+    note.innerHTML = n
+      ? `Zobrazených ${fmt(rows.length)} z ${fmt(ALL.length)} inzerátov podľa <a href="#filtre">filtrov pri rebríčku</a>.`
+      : `Filtre (rok, cena, nájazd, palivo…) nájdeš <a href="#filtre">pri kompletnom rebríčku</a> – platia aj pre tento graf.`;
+    drawing = false;
+  }
+  box.querySelectorAll("select, input").forEach((el) => el.addEventListener("input", apply));
+  $("fvPick")?.addEventListener("change", apply);
+  $("fvReset").addEventListener("click", () => {
+    box.querySelectorAll("select, input").forEach((el) => { if (el.type === "checkbox") el.checked = false; else el.value = ""; });
+    apply();
+  });
+  apply();
+})();
+</script><!-- /ferovka-theme -->
+</body>
+</html>
