@@ -37,12 +37,15 @@ function Freshness({ date, now }: { date: string; now: number | null }) {
   );
 }
 
-export default function ReportGrid({ reports }: { reports: Report[] }) {
+/** Without paid access only the free analyses are listed; a paying customer sees the whole catalogue. */
+export default function ReportGrid({ reports: all }: { reports: Report[] }) {
   // "now" only on the client, so the static HTML does not freeze the age at build time
   const [now, setNow] = useState<number | null>(null);
   const user = useUser();
   const unlocked = hasAccess(user);
   useEffect(() => setNow(Date.now()), []);
+  const reports = useMemo(() => (unlocked ? all : all.filter((r) => isFree(r.slug))), [all, unlocked]);
+  const lockedCount = all.length - all.filter((r) => isFree(r.slug)).length;
 
   const [period, setPeriod] = useState<Period>("");
   const [brand, setBrand] = useState("");
@@ -88,10 +91,10 @@ export default function ReportGrid({ reports }: { reports: Report[] }) {
         <div>
           <h2>Férové ceny podľa modelu</h2>
           <p>Každá analýza obsahuje odporúčané ponuky, porovnanie motorov a kompletný rebríček inzerátov.</p>
-          {user !== undefined && !unlocked && (
+          {!unlocked && (
             <p className="access-note">
-              <b>10 analýz najväčších trhov je zadarmo.</b> Všetky ostatné analýzy odomkneš na 30 dní za 5 € –{" "}
-              <Link href="/ucet/">{user ? "odomknúť" : "prihlásiť sa"}</Link>.
+              <b>Zadarmo vidíš {reports.length} analýz najväčších trhov.</b> Ďalších {lockedCount} modelov odomkneš na 30 dní
+              za 5 € – <Link href="/ucet/">{user ? "odomknúť" : "prihlásiť sa a odomknúť"}</Link>.
             </p>
           )}
         </div>
@@ -239,6 +242,23 @@ export default function ReportGrid({ reports }: { reports: Report[] }) {
               </Link>
             );
           })}
+          {!unlocked && !active && (
+            <Link href="/ucet/" className="rcard unlock-card">
+              <div className="rbody">
+                <span className="lock-pill">
+                  <LockIcon /> Ďalších {lockedCount} modelov
+                </span>
+                <h3>Audi, BMW, Mercedes, Toyota, Kia, Hyundai a ďalšie</h3>
+                <p>
+                  Zaregistruj sa, zaplať 5 € a na 30 dní uvidíš analýzy všetkých {all.length} modelov – odporúčané ponuky,
+                  porovnanie motorov a kompletný rebríček inzerátov.
+                </p>
+                <span className="go">
+                  Odomknúť všetky modely za 5 € <span className="arrow">→</span>
+                </span>
+              </div>
+            </Link>
+          )}
         </div>
       )}
     </>

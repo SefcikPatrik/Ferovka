@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { hasAccess, useUser } from "@/lib/account";
 
 type Option = { slug: string; name: string; free: boolean };
 
@@ -9,8 +10,11 @@ type Option = { slug: string; name: string; free: boolean };
 export default function ModelPicker({ options }: { options: Option[] }) {
   const router = useRouter();
   const [slug, setSlug] = useState("");
+  const unlocked = hasAccess(useUser());
   const free = options.filter((o) => o.free);
-  const rest = options.filter((o) => !o.free);
+  // without paid access only the free models are offered
+  const rest = unlocked ? options.filter((o) => !o.free) : [];
+  const lockedCount = options.length - free.length;
   return (
     <form
       id="start"
@@ -31,13 +35,17 @@ export default function ModelPicker({ options }: { options: Option[] }) {
               </option>
             ))}
           </optgroup>
-          <optgroup label="Za 5 € (prístup na 30 dní)">
-            {rest.map((o) => (
-              <option key={o.slug} value={o.slug}>
-                {o.name}
-              </option>
-            ))}
-          </optgroup>
+          {unlocked ? (
+            <optgroup label="Prémiové (máš odomknuté)">
+              {rest.map((o) => (
+                <option key={o.slug} value={o.slug}>
+                  {o.name}
+                </option>
+              ))}
+            </optgroup>
+          ) : (
+            <option disabled>+ ďalších {lockedCount} modelov po zaplatení 5 €</option>
+          )}
         </select>
         <button type="submit" data-analytics-action="model_pick">
           Zobraziť analýzu
