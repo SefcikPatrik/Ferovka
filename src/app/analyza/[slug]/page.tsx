@@ -6,6 +6,9 @@ import ReportFrame from "@/components/ReportFrame";
 import ThemeToggle from "@/components/ThemeToggle";
 import { formatDate, formatNum, getReport, photosFor, reports } from "@/lib/reports";
 import FeedbackForm from "@/components/FeedbackForm";
+import LockedReport, { LockIcon } from "@/components/LockedReport";
+import AccountLink from "@/components/AccountLink";
+import { isFree } from "@/lib/access";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -31,6 +34,7 @@ export default async function ReportPage({ params }: Props) {
   if (!r) notFound();
   const src = `/reports/${r.file}`;
   const photos = photosFor(r);
+  const free = isFree(r.slug);
   return (
     <>
       <header className="topbar viewer-bar">
@@ -53,6 +57,7 @@ export default async function ReportPage({ params }: Props) {
             <a className="btn ghost hide-sm" href={src} target="_blank" rel="noopener">
               Na celú obrazovku ↗
             </a>
+            <AccountLink />
             <ThemeToggle />
           </div>
         </div>
@@ -73,6 +78,13 @@ export default async function ReportPage({ params }: Props) {
           <h1>{r.name}</h1>
           <div className="chips">
             <span className="chip-stat">Analýza z {formatDate(r.date)}</span>
+            {free ? (
+              <span className="chip-stat">Zadarmo</span>
+            ) : (
+              <span className="chip-stat">
+                <LockIcon /> Po prihlásení
+              </span>
+            )}
             {r.ads && <span className="chip-stat">{formatNum(r.ads)} inzerátov</span>}
             {r.median && <span className="chip-stat">medián {r.median}</span>}
             {r.r2 && <span className="chip-stat">presnosť modelu {r.r2}</span>}
@@ -95,7 +107,11 @@ export default async function ReportPage({ params }: Props) {
         )}
       </section>
 
-      <ReportFrame src={src} title={`Analýza ${r.name}`} />
+      {free ? (
+        <ReportFrame src={src} title={`Analýza ${r.name}`} />
+      ) : (
+        <LockedReport src={src} title={`Analýza ${r.name}`} name={r.name} />
+      )}
       <FeedbackForm context={`/analyza/${r.slug}/`} />
     </>
   );

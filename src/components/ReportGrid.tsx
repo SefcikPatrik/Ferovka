@@ -3,6 +3,9 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { formatDate, formatNum, photosFor, type Report } from "@/lib/reports";
+import { isFree } from "@/lib/access";
+import { useUser } from "@/lib/account";
+import { LockIcon } from "@/components/LockedReport";
 
 const DAY = 86_400_000;
 const FRESH_DAYS = 7; // "Nová"
@@ -37,6 +40,7 @@ function Freshness({ date, now }: { date: string; now: number | null }) {
 export default function ReportGrid({ reports }: { reports: Report[] }) {
   // "now" only on the client, so the static HTML does not freeze the age at build time
   const [now, setNow] = useState<number | null>(null);
+  const user = useUser();
   useEffect(() => setNow(Date.now()), []);
 
   const [period, setPeriod] = useState<Period>("");
@@ -62,9 +66,11 @@ export default function ReportGrid({ reports }: { reports: Report[] }) {
       return period === "old" ? d > STALE_DAYS : d <= Number(period);
     })
     .sort((a, b) =>
-      sort === "name"
+      // logged-out visitors see the free analyses first in the default order
+      (sort === "new" && user === null ? Number(isFree(b.slug)) - Number(isFree(a.slug)) : 0) ||
+      (sort === "name"
         ? `${a.brand} ${a.model}`.localeCompare(`${b.brand} ${b.model}`, "sk")
-        : (sort === "new" ? b.date.localeCompare(a.date) : a.date.localeCompare(b.date)) || a.name.localeCompare(b.name, "sk"),
+        : (sort === "new" ? b.date.localeCompare(a.date) : a.date.localeCompare(b.date)) || a.name.localeCompare(b.name, "sk")),
     );
 
   const active = Boolean(period || brand || model || sort !== "new");
@@ -81,6 +87,12 @@ export default function ReportGrid({ reports }: { reports: Report[] }) {
         <div>
           <h2>Analýzy trhu</h2>
           <p>Každá analýza obsahuje odporúčané ponuky, porovnanie motorov a kompletný rebríček inzerátov.</p>
+          {!user && (
+            <p className="access-note">
+              <b>5 najpredávanejších modelov je zadarmo.</b> Ostatné analýzy odomkneš{" "}
+              <Link href="/ucet/">bezplatnou registráciou</Link>.
+            </p>
+          )}
         </div>
       </div>
 
@@ -173,6 +185,15 @@ export default function ReportGrid({ reports }: { reports: Report[] }) {
                     <img key={p.src} src={p.src} alt="" loading="lazy" />
                   ))}
                   <span className="rimg-brand">{r.kind === "comparison" ? "Porovnanie modelov" : r.brand}</span>
+                  {isFree(r.slug) ? (
+                    <span className="access-tag free">Zadarmo</span>
+                  ) : (
+                    user === null && (
+                      <span className="access-tag locked">
+                        <LockIcon /> Po prihlásení
+                      </span>
+                    )
+                  )}
                 </div>
                 <div className="rbody">
                   <Freshness date={r.date} now={now} />

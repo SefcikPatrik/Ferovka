@@ -3,6 +3,7 @@ import Logo from "@/components/Logo";
 import { CountUp } from "@/components/Motion";
 import ReportGrid from "@/components/ReportGrid";
 import ThemeToggle from "@/components/ThemeToggle";
+import AccountLink from "@/components/AccountLink";
 import { allPhotos, formatDate, photosFor, reports, totals } from "@/lib/reports";
 import FeedbackForm from "@/components/FeedbackForm";
 
@@ -43,6 +44,7 @@ export default function Home() {
             <a href="#ako-to-funguje" className="hide-sm">
               Ako to funguje
             </a>
+            <AccountLink />
             <ThemeToggle />
           </nav>
         </div>

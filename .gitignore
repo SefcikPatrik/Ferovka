@@ -8,3 +8,4 @@ token-vercel*
 
 .vercel
 *.env
+private/

@@ -106,3 +106,18 @@ node scripts/poziadavky.mjs --env ../poziadavky.env --delete poziadavky/<súbor>
 ```
 
 Formulár volá `/api/poziadavka/` s lomkou na konci (web má `trailingSlash`, bez lomky by prišlo presmerovanie).
+
+## Analýzy zadarmo a po prihlásení
+
+Bez prihlásenia sú otvorené len analýzy v `src/data/access.json` (`free`, dnes Octavia, Golf, Fabia, Passat a Superb).
+Ostatné vidí návštevník po bezplatnej registrácii (e-mail + heslo).
+
+- **Build na Verceli** (`scripts/lock-reports.mjs`, len pri `VERCEL=1` alebo `LOCK_REPORTS=1`) skopíruje reporty do
+  `private/reports/` a zo statického výstupu odstráni zamknuté reporty aj ich `public/history/*.json`. Lokálny build
+  a publikovanie (`npm run sync`) nechávajú `public/` bez zmeny.
+- `/reports/<x>.html`, ktorý nie je statický súbor, prepíše `vercel.json` na `api/report.js`; ten pustí report len
+  s platnou session cookie.
+- Účty: `api/ucet.js` → súkromný Vercel Blob store, `ucty/<sha256(e-mail)>.json` (e-mail, scrypt hash hesla, dátum).
+  Session je HMAC-podpísaná cookie `fv_session` (HttpOnly, Secure, 90 dní); kľúč je env premenná `AUTH_SECRET`
+  (Vercel, Production). Bez nej sa nikto neprihlási.
+- Zmena zoznamu voľných modelov = upraviť `access.json` a nasadiť. Testy: `npm run test:auth`.
