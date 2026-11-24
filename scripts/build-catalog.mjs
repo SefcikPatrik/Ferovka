@@ -23,7 +23,7 @@ const reports = all.map((r) =>
     : { slug: r.slug, file: r.file, name: r.name, brand: r.brand, model: r.model, kind: r.kind, date: r.date, summary: "", ads: null, median: null, r2: null },
 );
 // Home page sample: the first recommended offers ("cards") of a free analysis, straight from its current report.
-const SAMPLE = "skoda-octavia";
+const SAMPLE = read("src/data/access.json").sample ?? [...free][0];
 const text = (h) => h.replace(/<[^>]*>/g, "").replace(/&nbsp;/g, " ").replace(/\s+/g, " ").trim();
 function picksOf(slug, n = 3) {
   const file = path.join(root, "public/reports", `${slug}-analyza.html`);
@@ -35,7 +35,7 @@ function picksOf(slug, n = 3) {
   const out = [];
   for (const m of block.matchAll(/<article class="card">([\s\S]*?)<\/article>/g)) {
     const a = m[1];
-    const link = /<h3><a href="([^"]+)"[^>]*>([\s\S]*?)<\/a><\/h3>/.exec(a);
+    const link = /<h3><a href=["']([^"']+)["'][^>]*>([\s\S]*?)<\/a><\/h3>/.exec(a); // both quote styles occur
     const facts = /<div class="facts">([\s\S]*?)<\/div>/.exec(a);
     const val = (label) => {
       const r = new RegExp(`<span class="lbl">${label}</span><span[^>]*>([\\s\\S]*?)</span>`).exec(a);

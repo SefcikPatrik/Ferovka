@@ -36,7 +36,7 @@ export default function handler(req, res) {
       .send(
         page(
           "Prémiová analýza",
-          `<h1>Táto analýza je prémiová</h1><p>Zadarmo je 5 základných analýz: Octavia, Golf, Fabia, Passat a Superb. Všetky ostatné analýzy odomkneš na 30 dní za 5 €.</p>
+          `<h1>Táto analýza je prémiová</h1><p>Zadarmo je 10 analýz rôznych značiek. Všetky ostatné analýzy odomkneš na 30 dní za 5 €.</p>
 <p><a href="/analyza/${slug}/">Odomknúť analýzu →</a></p>`,
         ),
       );

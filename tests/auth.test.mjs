@@ -59,7 +59,8 @@ test("same-site check", () => {
   assert.equal(auth.sameSite({ headers: { host: "ferovka.sk", origin: "https://evil.example" } }), false);
 });
 
-const locked = fs.readdirSync("public/reports").find((f) => f.endsWith("-analyza.html") && !f.startsWith("skoda-octavia"));
+const FREE = JSON.parse(fs.readFileSync("src/data/access.json", "utf8")).free;
+const locked = fs.readdirSync("public/reports").find((f) => f.endsWith("-analyza.html") && !FREE.includes(f.replace(/-analyza.html$/, "")));
 
 test("locked report needs active paid access", () => {
   const anon = fakeRes();
@@ -82,7 +83,7 @@ test("locked report needs active paid access", () => {
 
 test("free report without a session, bad names are 404", () => {
   const free = fakeRes();
-  report({ query: { file: "skoda-octavia-analyza.html" }, headers: {} }, free);
+  report({ query: { file: `${FREE[0]}-analyza.html` }, headers: {} }, free);
   assert.equal(free.statusCode, 200);
   for (const file of ["../package.json", "..%2Fpackage.json", "x.html", "", "a/b.html"]) {
     const r = fakeRes();

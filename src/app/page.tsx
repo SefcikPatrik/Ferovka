@@ -27,7 +27,7 @@ export default function Home() {
     .map((r) => ({ slug: r.slug, name: r.name, free: isFree(r.slug) }))
     .sort((a, b) => a.name.localeCompare(b.name, "sk"));
   // the hero card shows a real free analysis (numbers of premium models are not in the public catalogue)
-  const sample = getReport("skoda-octavia");
+  const sample = getReport(homeSample.slug);
   return (
     <>
       <header className="oa-header">
@@ -63,7 +63,7 @@ export default function Home() {
                 <span className="pill">Zadarmo</span>
               </div>
               <div>
-                <p className="car">{sample?.name ?? "Škoda Octavia"}</p>
+                <p className="car">{sample?.name}</p>
                 <p className="facts">
                   {sample?.ads
                     ? `${sample.ads.toLocaleString("sk-SK")} áut z bazoša, autobazar.eu a bazar.sk`
@@ -104,7 +104,7 @@ export default function Home() {
                 </div>
               )}
               <p className="small">
-                <Link href="/analyza/skoda-octavia/">Otvoriť celú analýzu Octavie →</Link>
+                <Link href={`/analyza/${homeSample.slug}/`}>Otvoriť celú analýzu {sample?.name} →</Link>
               </p>
             </article>
           </div>
@@ -177,7 +177,7 @@ export default function Home() {
               <span className="name">Zadarmo</span>
               <span className="amount">0 €</span>
               <span className="d">
-                {FREE_SLUGS.length} základných modelov: Octavia, Golf, Fabia, Passat a Superb.
+                {FREE_SLUGS.length} modelov rôznych značiek – od Dacie a Toyoty po BMW a Mercedes.
                 Bez registrácie.
               </span>
               <a className="go" href="#analyzy">
@@ -216,7 +216,7 @@ export default function Home() {
         <section className="oa-dark">
           <div className="wrap oa-final">
             <h2>Neprepláť ojazdenca.</h2>
-            <p>{FREE_SLUGS.length} základných modelov máš zadarmo, bez registrácie.</p>
+            <p>{FREE_SLUGS.length} analýz rôznych značiek máš zadarmo, bez registrácie.</p>
             <a href="#analyzy">Pozrieť analýzy</a>
           </div>
         </section>

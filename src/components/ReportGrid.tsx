@@ -93,7 +93,7 @@ export default function ReportGrid({ reports: all }: { reports: Report[] }) {
           <p>Každá analýza obsahuje odporúčané ponuky, porovnanie motorov a kompletný rebríček inzerátov.</p>
           {!unlocked && (
             <p className="access-note">
-              <b>Zadarmo vidíš {reports.length} základných analýz.</b> Ďalších {lockedCount} modelov odomkneš na 30 dní
+              <b>Zadarmo vidíš {reports.length} analýz rôznych značiek.</b> Ďalších {lockedCount} modelov odomkneš na 30 dní
               za 5 € – <Link href="/ucet/">{user ? "odomknúť" : "prihlásiť sa a odomknúť"}</Link>.
             </p>
           )}
@@ -248,7 +248,7 @@ export default function ReportGrid({ reports: all }: { reports: Report[] }) {
                 <span className="lock-pill">
                   <LockIcon /> Ďalších {lockedCount} modelov
                 </span>
-                <h3>Audi, BMW, Mercedes, Toyota, Kia, Hyundai a ďalšie</h3>
+                <h3>Škoda, Volkswagen, Audi, Ford, Renault a ďalšie</h3>
                 <p>
                   Zaregistruj sa, zaplať 5 € a na 30 dní uvidíš analýzy všetkých {all.length} modelov – odporúčané ponuky,
                   porovnanie motorov a kompletný rebríček inzerátov.

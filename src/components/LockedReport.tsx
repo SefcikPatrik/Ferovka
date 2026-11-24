@@ -23,7 +23,7 @@ export default function LockedReport({ src, title, name }: { src: string; title:
               Odomkni analýzu {name} a všetky ostatné na {PERIOD} za {PRICE}
             </h2>
             <p>
-              Zadarmo je 5 základných analýz: Octavia, Golf, Fabia, Passat a Superb.
+              Zadarmo je 10 analýz rôznych značiek: Kia Ceed SW, Toyota Yaris, Peugeot 3008, Hyundai Tucson, Mercedes-Benz GLC, Nissan Qashqai, Dacia Duster, Seat Leon, VW Tiguan a BMW 3.
               Ostatné analýzy – odporúčané ponuky, porovnanie motorov a kompletný rebríček inzerátov – sú prémiové.
             </p>
             <ul className="gate-list">
