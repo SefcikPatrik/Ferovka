@@ -106,3 +106,23 @@ node scripts/poziadavky.mjs --env ../poziadavky.env --delete poziadavky/<súbor>
 ```
 
 Formulár volá `/api/poziadavka/` s lomkou na konci (web má `trailingSlash`, bez lomky by prišlo presmerovanie).
+
+## Analýzy zadarmo a prémiové (5 € / 30 dní)
+
+Bez platby sú otvorené len analýzy v `src/data/access.json` (`free`, dnes Octavia, Golf, Fabia, Passat a Superb).
+Ostatné otvorí len účet s aktívnym prístupom (`platene_do` v budúcnosti). Samotná registrácia nič neodomkne.
+
+- **Build na Verceli** (`scripts/lock-reports.mjs`, len pri `VERCEL=1` alebo `LOCK_REPORTS=1`) skopíruje reporty do
+  `private/reports/` a zo statického výstupu odstráni prémiové reporty aj ich `public/history/*.json`. Lokálny build
+  a publikovanie (`npm run sync`) nechávajú `public/` bez zmeny.
+- `/reports/<x>.html`, ktorý nie je statický súbor, prepíše `vercel.json` na `api/report.js`; ten pustí report len
+  so session, ktorá má aktívny prístup.
+- Účty: `api/ucet.js` → súkromný Vercel Blob store, `ucty/<sha256(e-mail)>.json` (e-mail, scrypt hash hesla, dátum
+  registrácie, `platene_do`). Session je HMAC-podpísaná cookie `fv_session` (HttpOnly, Secure, 90 dní) s dátumom
+  prístupu; `GET /api/ucet/` ju pri každom načítaní stránky obnoví podľa účtu. Kľúč je env `AUTH_SECRET` (Production).
+- **Ručné pridelenie prístupu** (kým nie je napojená platobná brána, pre známych, na test):
+  `vercel env pull <súbor mimo repa>` a potom `node scripts/pristup.mjs --env <súbor> --email a@b.sk --dni 30`
+  (`--zrusit`, `--zoznam`, bez prepínača len vypíše stav). Účet musí existovať – človek sa najprv zaregistruje.
+- Platobná brána zatiaľ nie je napojená: tlačidlo „Zaplatiť 5 €“ je vypnuté. Po napojení webhook brány nastaví
+  `platene_do` (+30 dní) rovnako ako `pristup.mjs`.
+- Zmena zoznamu voľných modelov = upraviť `access.json` a nasadiť. Testy: `npm run test:auth`.

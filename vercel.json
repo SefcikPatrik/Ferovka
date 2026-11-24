@@ -1,8 +1,8 @@
 {
   "rewrites": [
     {
-      "source": "/reports/:name.html",
-      "destination": "/reports/:name/"
+      "source": "/reports/:file.html",
+      "destination": "/api/report?file=:file.html"
     }
   ],
   "redirects": [
@@ -36,5 +36,10 @@
       "destination": "/reports/skoda-octavia-analyza.html",
       "permanent": true
     }
-  ]
+  ],
+  "functions": {
+    "api/report.js": {
+      "includeFiles": "{private/reports/**,public/reports/**,src/data/access.json}"
+    }
+  }
 }

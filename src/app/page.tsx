@@ -2,6 +2,7 @@ import Link from "next/link";
 import Logo from "@/components/Logo";
 import LinkForm from "@/components/LinkForm";
 import ReportGrid from "@/components/ReportGrid";
+import AccountLink from "@/components/AccountLink";
 import FeedbackForm from "@/components/FeedbackForm";
 import { allPhotos, reports } from "@/lib/reports";
 
@@ -33,6 +34,7 @@ export default function Home() {
             <a href="#start" className="nav-cta">
               Analyzovať inzerát
             </a>
+            <AccountLink />
           </nav>
         </div>
       </header>
