@@ -93,7 +93,7 @@ export default function ReportGrid({ reports: all }: { reports: Report[] }) {
           <p>Každá analýza obsahuje odporúčané ponuky, porovnanie motorov a kompletný rebríček inzerátov.</p>
           {!unlocked && (
             <p className="access-note">
-              <b>Zadarmo vidíš {reports.length} analýz najväčších trhov.</b> Ďalších {lockedCount} modelov odomkneš na 30 dní
+              <b>Zadarmo vidíš {reports.length} základných analýz.</b> Ďalších {lockedCount} modelov odomkneš na 30 dní
               za 5 € – <Link href="/ucet/">{user ? "odomknúť" : "prihlásiť sa a odomknúť"}</Link>.
             </p>
           )}

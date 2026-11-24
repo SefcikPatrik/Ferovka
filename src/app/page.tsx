@@ -177,7 +177,7 @@ export default function Home() {
               <span className="name">Zadarmo</span>
               <span className="amount">0 €</span>
               <span className="d">
-                {FREE_SLUGS.length} najpredávanejších modelov: Octavia, Superb, Golf, Passat, Fabia, Tiguan, Kodiaq a ďalšie.
+                {FREE_SLUGS.length} základných modelov: Octavia, Golf, Fabia, Passat a Superb.
                 Bez registrácie.
               </span>
               <a className="go" href="#analyzy">
@@ -216,7 +216,7 @@ export default function Home() {
         <section className="oa-dark">
           <div className="wrap oa-final">
             <h2>Neprepláť ojazdenca.</h2>
-            <p>{FREE_SLUGS.length} najpredávanejších modelov máš zadarmo, bez registrácie.</p>
+            <p>{FREE_SLUGS.length} základných modelov máš zadarmo, bez registrácie.</p>
             <a href="#analyzy">Pozrieť analýzy</a>
           </div>
         </section>

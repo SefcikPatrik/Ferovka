@@ -52,7 +52,7 @@ export default function ModelPicker({ options }: { options: Option[] }) {
         </button>
       </div>
       <p className="hint">
-        {free.length} najpredávanejších modelov je zadarmo a bez registrácie. Porovnávame inzeráty z bazos.sk, autobazar.eu a
+        {free.length} základných modelov je zadarmo a bez registrácie. Porovnávame inzeráty z bazos.sk, autobazar.eu a
         bazar.sk.
       </p>
     </form>

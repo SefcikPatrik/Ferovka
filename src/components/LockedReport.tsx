@@ -23,7 +23,7 @@ export default function LockedReport({ src, title, name }: { src: string; title:
               Odomkni analýzu {name} a všetky ostatné na {PERIOD} za {PRICE}
             </h2>
             <p>
-              Zadarmo je 10 analýz najväčších trhov (Octavia, Superb, Golf, Passat, Fabia, Tiguan, Kodiaq a ďalšie).
+              Zadarmo je 5 základných analýz: Octavia, Golf, Fabia, Passat a Superb.
               Ostatné analýzy – odporúčané ponuky, porovnanie motorov a kompletný rebríček inzerátov – sú prémiové.
             </p>
             <ul className="gate-list">

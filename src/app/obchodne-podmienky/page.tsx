@@ -27,7 +27,7 @@ export default function Terms() {
 
         <h2>3. Cena a platba</h2>
         <ul>
-          <li>Analýzy 10 najpredávanejších modelov: zadarmo.</li>
+          <li>Analýzy 5 základných modelov (Octavia, Golf, Fabia, Passat a Superb): zadarmo.</li>
           <li>Prístup ku všetkým analýzam modelov na 30 dní: 5 € (jednorazovo, automaticky sa neobnovuje).</li>
         </ul>
         <p>Platby spracúva [platobná brána]. [Podmienky vrátenia peňazí a odstúpenia od zmluvy pri digitálnom obsahu.]</p>
