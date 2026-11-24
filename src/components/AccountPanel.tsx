@@ -27,7 +27,7 @@ export default function AccountPanel() {
       <div className="account-card">
         <h1>Prihlásenie</h1>
         <p className="lead">
-          10 analýz rôznych značiek je otvorených pre každého. Všetky ostatné analýzy odomkneš na {PERIOD} za{" "}
+          15 analýz (Octavia, Golf, Fabia, Passat, Superb a 10 ďalších značiek) je otvorených pre každého. Všetky ostatné analýzy odomkneš na {PERIOD} za{" "}
           {PRICE} – najprv sa prihlás alebo si vytvor účet.
         </p>
         <AuthForm onDone={() => next && location.assign(next)} />

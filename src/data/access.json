@@ -1,6 +1,11 @@
 {
-  "_info": "Analýzy dostupné bez platby (slug) – 10 modelov z 10 rôznych značiek (náhodný výber 24. 11. 2026 spomedzi modelov s 300+ inzerátmi a fotkou). sample = voľný model, ktorého odporúčané ponuky ukazuje úvodná stránka. Ostatné vidí len prihlásený účet so zaplateným prístupom; bez neho sa v katalógu nezobrazia – pozri src/lib/reports.ts, src/components/ReportGrid.tsx, scripts/lock-reports.mjs a api/report.js.",
+  "_info": "Analýzy dostupné bez platby (slug): 5 známych modelov (Octavia, Golf, Fabia, Passat, Superb) + 10 modelov z 10 ďalších značiek (náhodný výber 24. 11. 2026 spomedzi modelov s 300+ inzerátmi a fotkou). sample = voľný model, ktorého odporúčané ponuky ukazuje úvodná stránka. Ostatné vidí len prihlásený účet so zaplateným prístupom; bez neho sa v katalógu nezobrazia.",
   "free": [
+    "skoda-octavia",
+    "vw-golf",
+    "skoda-fabia",
+    "vw-passat",
+    "skoda-superb",
     "kia-ceed-sw",
     "toyota-yaris",
     "peugeot-3008",
@@ -12,5 +17,5 @@
     "vw-tiguan",
     "bmw-3"
   ],
-  "sample": "vw-tiguan"
+  "sample": "skoda-octavia"
 }

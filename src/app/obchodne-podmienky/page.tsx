@@ -27,7 +27,7 @@ export default function Terms() {
 
         <h2>3. Cena a platba</h2>
         <ul>
-          <li>Analýzy 10 modelov rôznych značiek (Kia Ceed SW, Toyota Yaris, Peugeot 3008, Hyundai Tucson, Mercedes-Benz GLC, Nissan Qashqai, Dacia Duster, Seat Leon, VW Tiguan a BMW 3): zadarmo.</li>
+          <li>Analýzy 15 modelov (Octavia, Golf, Fabia, Passat, Superb a k tomu Kia Ceed SW, Toyota Yaris, Peugeot 3008, Hyundai Tucson, Mercedes-Benz GLC, Nissan Qashqai, Dacia Duster, Seat Leon, VW Tiguan a BMW 3): zadarmo.</li>
           <li>Prístup ku všetkým analýzam modelov na 30 dní: 5 € (jednorazovo, automaticky sa neobnovuje).</li>
         </ul>
         <p>Platby spracúva [platobná brána]. [Podmienky vrátenia peňazí a odstúpenia od zmluvy pri digitálnom obsahu.]</p>

@@ -177,7 +177,7 @@ export default function Home() {
               <span className="name">Zadarmo</span>
               <span className="amount">0 €</span>
               <span className="d">
-                {FREE_SLUGS.length} modelov rôznych značiek – od Dacie a Toyoty po BMW a Mercedes.
+                {FREE_SLUGS.length} modelov: Octavia, Golf, Fabia, Passat, Superb a ďalšie od Dacie a Toyoty po BMW a Mercedes.
                 Bez registrácie.
               </span>
               <a className="go" href="#analyzy">
@@ -216,7 +216,7 @@ export default function Home() {
         <section className="oa-dark">
           <div className="wrap oa-final">
             <h2>Neprepláť ojazdenca.</h2>
-            <p>{FREE_SLUGS.length} analýz rôznych značiek máš zadarmo, bez registrácie.</p>
+            <p>{FREE_SLUGS.length} analýz máš zadarmo, bez registrácie.</p>
             <a href="#analyzy">Pozrieť analýzy</a>
           </div>
         </section>
