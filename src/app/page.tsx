@@ -86,7 +86,7 @@ export default function Home() {
                       <span className="pick-row">
                         <strong>{p.price}</strong>
                         <span className="pick-fair">férová {p.fair}</span>
-                        {p.discount && <span className="pick-disc">{p.discount.replace(/^\+/, "−").replace(".", ",")}</span>}
+                        {p.discount && <span className="pick-disc">{p.discount.replace(/^\+/, "").replace(".", ",")} pod trhom</span>}
                       </span>
                     </a>
                   ))}
