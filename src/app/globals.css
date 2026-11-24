@@ -411,3 +411,4 @@ footer.site .credits a { text-decoration: underline; text-underline-offset: 2px;
 .pay-price span { color: var(--text-2); font-size: 14px; }
 .pay-soon { margin: 0; font-size: 13px; color: var(--text-2); }
 .account-card .pay-box { width: 100%; }
+.premium-note { color: var(--text-2); font-size: 14px; margin: 0 0 16px; flex: 1; }

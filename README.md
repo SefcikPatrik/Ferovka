@@ -109,7 +109,7 @@ Formulár volá `/api/poziadavka/` s lomkou na konci (web má `trailingSlash`, b
 
 ## Analýzy zadarmo a prémiové (5 € / 30 dní)
 
-Bez platby sú otvorené len analýzy v `src/data/access.json` (`free`, dnes Octavia, Golf, Fabia, Passat a Superb).
+Bez platby sú otvorené len analýzy v `src/data/access.json` (`free`, 10 najväčších trhov). Pri ostatných web verejne ukáže len názov, fotku a zámok: `scripts/build-catalog.mjs` pred každým buildom vytvorí `src/data/catalog.json` bez súhrnu a čísel prémiových modelov a web importuje len ten (dostane sa do JS v prehliadači).
 Ostatné otvorí len účet s aktívnym prístupom (`platene_do` v budúcnosti). Samotná registrácia nič neodomkne.
 
 - **Build na Verceli** (`scripts/lock-reports.mjs`, len pri `VERCEL=1` alebo `LOCK_REPORTS=1`) skopíruje reporty do

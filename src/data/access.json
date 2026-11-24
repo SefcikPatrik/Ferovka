@@ -1,4 +1,15 @@
 {
-  "_info": "Analýzy dostupné bez prihlásenia (slug). Ostatné vidí len prihlásený používateľ – pozri scripts/lock-reports.mjs a api/report.js.",
-  "free": ["skoda-octavia", "vw-golf", "skoda-fabia", "vw-passat", "skoda-superb"]
+  "_info": "Analýzy dostupné bez platby (slug) – 10 najväčších trhov podľa počtu inzerátov. Pri ostatných sa verejne zobrazí len názov, fotka a zámok; obsah vidí len účet s aktívnym prístupom – pozri src/lib/reports.ts, scripts/lock-reports.mjs a api/report.js.",
+  "free": [
+    "skoda-octavia",
+    "skoda-superb",
+    "vw-golf",
+    "vw-passat",
+    "skoda-fabia",
+    "vw-tiguan",
+    "skoda-kodiaq",
+    "vw-golf-plus-sportsvan",
+    "vw-passat-cc",
+    "hyundai-i30"
+  ]
 }
