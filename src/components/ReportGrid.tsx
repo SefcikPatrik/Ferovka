@@ -90,7 +90,7 @@ export default function ReportGrid({ reports }: { reports: Report[] }) {
           <p>Každá analýza obsahuje odporúčané ponuky, porovnanie motorov a kompletný rebríček inzerátov.</p>
           {user !== undefined && !unlocked && (
             <p className="access-note">
-              <b>5 najpredávanejších modelov je zadarmo.</b> Všetky ostatné analýzy odomkneš na 30 dní za 5 € –{" "}
+              <b>10 analýz najväčších trhov je zadarmo.</b> Všetky ostatné analýzy odomkneš na 30 dní za 5 € –{" "}
               <Link href="/ucet/">{user ? "odomknúť" : "prihlásiť sa"}</Link>.
             </p>
           )}
@@ -207,23 +207,33 @@ export default function ReportGrid({ reports }: { reports: Report[] }) {
                     </div>
                   )}
                   <h3>{r.name}</h3>
-                  <p>{r.summary}</p>
-                  <div className="meta">
-                    <div>
-                      <div className="v">{r.ads ? formatNum(r.ads) : "–"}</div>
-                      <div className="l">inzerátov</div>
-                    </div>
-                    <div>
-                      <div className="v">{r.median ?? "3 modely"}</div>
-                      <div className="l">{r.median ? "medián ceny" : "v porovnaní"}</div>
-                    </div>
-                    <div>
-                      <div className="v">{r.r2 ?? "✓"}</div>
-                      <div className="l">{r.r2 ? "presnosť modelu" : "odporúčanie"}</div>
-                    </div>
-                  </div>
+                  {isFree(r.slug) ? (
+                    <>
+                      <p>{r.summary}</p>
+                      <div className="meta">
+                        <div>
+                          <div className="v">{r.ads ? formatNum(r.ads) : "–"}</div>
+                          <div className="l">inzerátov</div>
+                        </div>
+                        <div>
+                          <div className="v">{r.median ?? "3 modely"}</div>
+                          <div className="l">{r.median ? "medián ceny" : "v porovnaní"}</div>
+                        </div>
+                        <div>
+                          <div className="v">{r.r2 ?? "✓"}</div>
+                          <div className="l">{r.r2 ? "presnosť modelu" : "odporúčanie"}</div>
+                        </div>
+                      </div>
+                    </>
+                  ) : (
+                    <p className="premium-note">
+                      {unlocked
+                        ? "Prémiová analýza – máš ju odomknutú."
+                        : "Prémiová analýza: odporúčané ponuky, porovnanie motorov a kompletný rebríček inzerátov. Odomkneš ju spolu so všetkými ostatnými na 30 dní za 5 €."}
+                    </p>
+                  )}
                   <span className="go">
-                    Otvoriť analýzu <span className="arrow">→</span>
+                    {isFree(r.slug) || unlocked ? "Otvoriť analýzu" : "Odomknúť analýzu"} <span className="arrow">→</span>
                   </span>
                 </div>
               </Link>

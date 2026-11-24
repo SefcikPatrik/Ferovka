@@ -23,8 +23,8 @@ export default function LockedReport({ src, title, name }: { src: string; title:
               Odomkni analýzu {name} a všetky ostatné na {PERIOD} za {PRICE}
             </h2>
             <p>
-              Zadarmo sú päť najpredávanejších modelov: Octavia, Golf, Fabia, Passat a Superb. Ostatné analýzy –
-              odporúčané ponuky, porovnanie motorov a kompletný rebríček inzerátov – sú prémiové.
+              Zadarmo je 10 analýz najväčších trhov (Octavia, Superb, Golf, Passat, Fabia, Tiguan, Kodiaq a ďalšie).
+              Ostatné analýzy – odporúčané ponuky, porovnanie motorov a kompletný rebríček inzerátov – sú prémiové.
             </p>
             <ul className="gate-list">
               <li>Jednorazová platba {PRICE}, žiadne predplatné – nič sa samo neobnovuje</li>

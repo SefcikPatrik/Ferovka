@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const photo = photosFor(r)[0];
   return {
     title: `${r.name} – férové ceny`,
-    description: r.summary,
+    description: r.summary || `Prémiová analýza trhu ${r.name}: férové ceny, odporúčané ponuky a rebríček inzerátov.`,
     openGraph: photo ? { images: [photo.src] } : undefined,
   };
 }

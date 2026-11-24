@@ -27,7 +27,7 @@ export default function AccountPanel() {
       <div className="account-card">
         <h1>Prihlásenie</h1>
         <p className="lead">
-          Päť najpredávanejších modelov je otvorených pre každého. Všetky ostatné analýzy odomkneš na {PERIOD} za{" "}
+          10 analýz najväčších trhov je otvorených pre každého. Všetky ostatné analýzy odomkneš na {PERIOD} za{" "}
           {PRICE} – najprv sa prihlás alebo si vytvor účet.
         </p>
         <AuthForm onDone={() => next && location.assign(next)} />

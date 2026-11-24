@@ -9,3 +9,4 @@ token-vercel*
 .vercel
 *.env
 private/
+src/data/catalog.json
