@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 // Visitors' requests (another model, a sold / outdated ad, wrong data) → api/poziadavka.js → private Vercel Blob store.
 const TYPES = [
+  { value: "spustenie", label: "Chcem vedieť o spustení AI analýzy (nechaj e-mail)" },
   { value: "model", label: "Pridajte analýzu ďalšieho modelu" },
   { value: "neaktualne", label: "Inzerát je predaný alebo neaktuálny" },
   { value: "chyba", label: "Chyba v údajoch (rok, km, cena…)" },
@@ -14,6 +15,16 @@ type State = { kind: "idle" | "sending" | "ok" } | { kind: "error"; message: str
 
 export default function FeedbackForm({ context }: { context?: string }) {
   const [state, setState] = useState<State>({ kind: "idle" });
+  const [typ, setTyp] = useState("model");
+  // the price cards link to #spustenie: preselect "let me know at launch"
+  useEffect(() => {
+    const sync = () => {
+      if (window.location.hash === "#spustenie") setTyp("spustenie");
+    };
+    sync();
+    window.addEventListener("hashchange", sync);
+    return () => window.removeEventListener("hashchange", sync);
+  }, []);
 
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -43,13 +54,14 @@ export default function FeedbackForm({ context }: { context?: string }) {
 
   return (
     <section className="feedback" id="poziadavka" aria-labelledby="feedback-title">
+      <span id="spustenie" />
       <div className="wrap">
         <div className="feedback-card">
           <div className="feedback-intro">
-            <h2 id="feedback-title">Chýba ti model alebo niečo nesedí?</h2>
+            <h2 id="feedback-title">Napíš nám</h2>
             <p>
-              Napíš nám, ktorú analýzu máme pridať alebo obnoviť, prípadne ktorý inzerát je už predaný či má zlé údaje.
-              Ak pridáš odkaz na inzerát, opravíme to rýchlejšie.
+              Chceš vedieť, keď spustíme plnú AI analýzu? Nechaj nám e-mail. Môžeš nám napísať aj to, ktorý model máme pridať
+              alebo ktorý inzerát je už predaný či má zlé údaje.
             </p>
           </div>
           {state.kind === "ok" ? (
@@ -63,7 +75,7 @@ export default function FeedbackForm({ context }: { context?: string }) {
             <form className="feedback-form" onSubmit={submit}>
               <label className="field">
                 <span>O čo ide</span>
-                <select name="typ" defaultValue="model">
+                <select name="typ" value={typ} onChange={(e) => setTyp(e.target.value)}>
                   {TYPES.map((t) => (
                     <option key={t.value} value={t.value}>
                       {t.label}

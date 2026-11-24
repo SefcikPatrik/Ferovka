@@ -4,7 +4,7 @@
 import { randomUUID } from "node:crypto";
 import { put } from "@vercel/blob";
 
-const TYPES = { model: "Analýza ďalšieho modelu", neaktualne: "Neaktuálny / predaný inzerát", chyba: "Chyba v údajoch", ine: "Iné" };
+const TYPES = { spustenie: "Chce vedieť o spustení AI analýzy", model: "Analýza ďalšieho modelu", neaktualne: "Neaktuálny / predaný inzerát", chyba: "Chyba v údajoch", ine: "Iné" };
 const EMAIL = /^[^\s@]{1,64}@[^\s@]{1,190}\.[^\s@]{2,}$/;
 
 function sameSite(req) {
@@ -12,7 +12,7 @@ function sameSite(req) {
   if (!origin) return true; // same-origin form posts from older browsers
   try {
     const host = new URL(origin).host;
-    return host === req.headers.host || host === "ferovka-nine.vercel.app" || host.startsWith("localhost:");
+    return host === req.headers.host || host === "ferovka-nine.vercel.app" || host === "overauto.eu" || host === "www.overauto.eu" || host.startsWith("localhost:");
   } catch {
     return false;
   }

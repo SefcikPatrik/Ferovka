@@ -79,7 +79,7 @@ export default function ReportGrid({ reports }: { reports: Report[] }) {
     <>
       <div className="section-head" data-reveal>
         <div>
-          <h2>Analýzy trhu</h2>
+          <h2>Férové ceny podľa modelu</h2>
           <p>Každá analýza obsahuje odporúčané ponuky, porovnanie motorov a kompletný rebríček inzerátov.</p>
         </div>
       </div>

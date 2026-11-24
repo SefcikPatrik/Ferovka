@@ -1,33 +1,40 @@
 import type { Metadata, Viewport } from "next";
-import { Manrope } from "next/font/google";
+import { Inter, Space_Grotesk } from "next/font/google";
 import { RevealOnScroll } from "@/components/Motion";
 import AnalyticsNavigation from "@/components/AnalyticsNavigation";
 import "./globals.css";
 
-const sans = Manrope({ subsets: ["latin", "latin-ext"], variable: "--font-sans", display: "swap" });
+const sans = Inter({ subsets: ["latin", "latin-ext"], weight: ["400", "500", "600"], variable: "--font-sans", display: "swap" });
+const display = Space_Grotesk({ subsets: ["latin", "latin-ext"], weight: ["500", "700"], variable: "--font-display", display: "swap" });
 
 export const metadata: Metadata = {
-  title: { default: "Férovka – férová cena každej ojazdenky", template: "%s · Férovka" },
+  metadataBase: new URL("https://overauto.eu"),
+  title: { default: "OverAuto – neprepláť ojazdenca", template: "%s · OverAuto" },
   description:
-    "Férovka porovná každý inzerát ojazdeného auta s celým slovenským trhom a ukáže, ktoré ponuky sú pod cenou – a ktoré sú podozrivo lacné.",
+    "Vlož odkaz na inzerát ojazdeného auta a zisti, či je cena férová, čo v inzeráte chýba a koľko zjednať. Férové ceny podľa celého slovenského trhu.",
   icons: { icon: "/icon.svg" },
+  openGraph: {
+    type: "website",
+    locale: "sk_SK",
+    siteName: "OverAuto",
+    url: "https://overauto.eu/",
+    title: "OverAuto – neprepláť ojazdenca",
+    description: "Vlož odkaz na inzerát a zisti, či je cena férová, čo v inzeráte chýba a koľko zjednať.",
+    images: [{ url: "/og.png", width: 1200, height: 630, alt: "OverAuto – férová cena ojazdeného auta" }],
+  },
+  twitter: { card: "summary_large_image", images: ["/og.png"] },
 };
 
-export const viewport: Viewport = {
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f5f4ef" },
-    { media: "(prefers-color-scheme: dark)", color: "#0d110f" },
-  ],
-};
+export const viewport: Viewport = { themeColor: "#F7F6F2" };
 
-// applied before paint so a remembered theme does not flash
-const themeScript = `document.documentElement.classList.add("js");try{var t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}`;
+// marks that JS runs (scroll-reveal hides elements only then); the site is light only
+const jsScript = `document.documentElement.classList.add("js")`;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="sk" className={sans.variable} suppressHydrationWarning>
+    <html lang="sk" className={`${sans.variable} ${display.variable}`} suppressHydrationWarning>
       <head>
-        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+        <script dangerouslySetInnerHTML={{ __html: jsScript }} />
         <script defer src="/analytics-config.js" />
         <script defer src="/analytics.js" />
       </head>

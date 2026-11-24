@@ -16,8 +16,8 @@ export default function ReportFrame({ src, title }: { src: string; title: string
 
     const applyTheme = () => {
       const doc = frame.contentDocument;
-      const theme = document.documentElement.dataset.theme;
-      if (doc && theme) doc.documentElement.dataset.theme = theme;
+      // the site is light only (OverAuto design), so the report is too
+      if (doc) doc.documentElement.dataset.theme = "light";
     };
     const fit = () => {
       const doc = frame.contentDocument;

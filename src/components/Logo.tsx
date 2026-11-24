@@ -1,24 +1,21 @@
 import Link from "next/link";
 
-/** Wordmark: a price gauge whose needle points into the green "fair" zone. */
-export function Mark({ size = 28 }: { size?: number }) {
+/** OverAuto mark: a dark rounded square with an orange check (design/znacka.html). */
+export function Mark({ size = 36 }: { size?: number }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 32 32" aria-hidden="true">
-      <rect width="32" height="32" rx="9" fill="var(--text)" />
-      <path d="M7 21a9 9 0 0 1 18 0" fill="none" stroke="var(--bg)" strokeOpacity=".35" strokeWidth="3" strokeLinecap="round" />
-      <path d="M11.2 13.4A9 9 0 0 1 20.8 13.4" fill="none" stroke="var(--brand)" strokeWidth="3" strokeLinecap="round" />
-      <path d="M16 21 19.5 12.5" stroke="var(--bg)" strokeWidth="2.4" strokeLinecap="round" />
-      <circle cx="16" cy="21" r="2.4" fill="var(--bg)" />
+    <svg width={size} height={size} viewBox="0 0 36 36" aria-hidden="true">
+      <rect x="1" y="1" width="34" height="34" rx="9" fill="#14161A" />
+      <path d="M10 18.5l5 5 11-12" fill="none" stroke="#F26A1B" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }
 
-export default function Logo() {
+export default function Logo({ href = "/" }: { href?: string }) {
   return (
-    <Link href="/" className="logo" aria-label="Férovka – domov">
+    <Link href={href} className="logo" aria-label="OverAuto – domov">
       <Mark />
-      <span>
-        Férovka<span className="dot">.</span>
+      <span className="word">
+        Over<span>Auto</span>
       </span>
     </Link>
   );

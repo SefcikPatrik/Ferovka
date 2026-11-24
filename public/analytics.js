@@ -158,7 +158,7 @@
   panel = document.createElement("aside");
   panel.className = "fv-consent";
   panel.setAttribute("aria-label", "Meranie návštevnosti");
-  panel.innerHTML = '<div><b>Pomôžeš nám zlepšiť Férovku?</b><p>S tvojím súhlasom použijeme analytické cookies Google Analytics na meranie návštev a kliknutí. Výber môžeš kedykoľvek zmeniť.</p></div><div class="fv-consent-actions"><button type="button" data-choice="denied">Odmietnuť</button><button type="button" data-choice="granted">Povoliť meranie</button></div>';
+  panel.innerHTML = '<div><b>Pomôžeš nám zlepšiť OverAuto?</b><p>S tvojím súhlasom použijeme analytické cookies Google Analytics na meranie návštev a kliknutí. Výber môžeš kedykoľvek zmeniť.</p></div><div class="fv-consent-actions"><button type="button" data-choice="denied">Odmietnuť</button><button type="button" data-choice="granted">Povoliť meranie</button></div>';
   panel.hidden = saved === "granted" || saved === "denied";
   panel.addEventListener("click", (event) => {
     const choice = event.target?.closest?.("button[data-choice]")?.dataset.choice;

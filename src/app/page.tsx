@@ -1,188 +1,219 @@
 import Link from "next/link";
 import Logo from "@/components/Logo";
-import { CountUp } from "@/components/Motion";
+import LinkForm from "@/components/LinkForm";
 import ReportGrid from "@/components/ReportGrid";
-import ThemeToggle from "@/components/ThemeToggle";
-import { allPhotos, formatDate, photosFor, reports, totals } from "@/lib/reports";
 import FeedbackForm from "@/components/FeedbackForm";
+import { allPhotos, reports } from "@/lib/reports";
 
-function Gauge() {
-  // −20 % … +20 % against the fair price; the needle sweeps to +11 % (cheaper than the market)
-  const arc = (from: number, to: number) => {
-    const p = (a: number) => {
-      const r = ((a - 90) * Math.PI) / 180;
-      return `${150 + Math.cos(r) * 110} ${120 + Math.sin(r) * 110}`;
-    };
-    return `M ${p(from)} A 110 110 0 0 1 ${p(to)}`;
-  };
-  return (
-    <svg className="gauge" viewBox="0 0 300 135" width="100%" role="img" aria-label="Cena je 11 % pod férovou cenou">
-      <path d={arc(-90, -31)} stroke="var(--hot)" strokeWidth="14" fill="none" strokeLinecap="round" opacity=".85" />
-      <path d={arc(-27, 27)} stroke="var(--surface-2)" strokeWidth="14" fill="none" />
-      <path className="gauge-good" d={arc(31, 90)} stroke="var(--brand)" strokeWidth="14" fill="none" strokeLinecap="round" />
-      <g className="needle" style={{ transformOrigin: "150px 120px" }}>
-        <line x1="150" y1="120" x2="150" y2="28" stroke="var(--text)" strokeWidth="4" strokeLinecap="round" />
-      </g>
-      <circle cx="150" cy="120" r="8" fill="var(--text)" />
-    </svg>
-  );
-}
+const Warn = () => (
+  <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true">
+    <path d="M10 2l8.5 15h-17z" fill="none" stroke="#C2410C" strokeWidth="1.8" strokeLinejoin="round" />
+    <path d="M10 8v4M10 14.5v.5" stroke="#C2410C" strokeWidth="1.8" strokeLinecap="round" />
+  </svg>
+);
+const Ok = () => (
+  <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true">
+    <circle cx="10" cy="10" r="8" fill="none" stroke="#1E4ED8" strokeWidth="1.8" />
+    <path d="M6.5 10.2l2.4 2.4 4.6-5" fill="none" stroke="#1E4ED8" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
 
 export default function Home() {
-  const t = totals();
-  const heroReport = reports.find((r) => r.slug === "cupra-formentor") ?? reports.find((r) => r.kind === "model");
-  const heroPhoto = heroReport ? photosFor(heroReport)[0] : undefined;
   const photos = allPhotos();
+  const items = reports.filter((r) => r.kind !== "comparison").map(({ slug, name, brand, model }) => ({ slug, name, brand, model }));
   return (
     <>
-      <header className="topbar">
+      <header className="oa-header">
         <div className="wrap">
-          <Logo />
-          <nav className="nav">
-            <a href="#analyzy">Analýzy</a>
-            <a href="#ako-to-funguje" className="hide-sm">
-              Ako to funguje
+          <Logo href="#top" />
+          <nav className="oa-nav" aria-label="Hlavná navigácia">
+            <a href="#ako">Ako to funguje</a>
+            <a href="#co">Čo dostaneš</a>
+            <a href="#cennik">Cenník</a>
+            <a href="#start" className="nav-cta">
+              Analyzovať inzerát
             </a>
-            <ThemeToggle />
           </nav>
         </div>
       </header>
 
-      <section className="hero-photo">
-        {heroPhoto && <img className="hero-bg" src={heroPhoto.src} alt="" />}
-        <div className="hero-fx" aria-hidden="true">
-          <span className="hero-grid" />
-          <span className="hero-sweep" />
-        </div>
-        <div className="wrap hero">
-          <div className="hero-text">
-            <span className="eyebrow">● Aktualizované {formatDate(t.updated)}</span>
-            <h1>
-              Vieš, koľko má to auto <em>naozaj</em> stáť?
-            </h1>
-            <p className="sub">
-              Férovka porovná každý inzerát s celým slovenským trhom a ukáže, ktoré ojazdenky sú pod cenou – a ktoré sú
-              podozrivo lacné.
-            </p>
-            <div className="cta">
-              <a className="btn primary" href="#analyzy">
-                Pozrieť analýzy →
-              </a>
-              <a className="btn ghost" href="#ako-to-funguje">
-                Ako počítame férovú cenu
-              </a>
-            </div>
-            <div className="stats">
-              <div className="stat">
-                <div className="v">
-                  <CountUp value={t.ads} />
-                </div>
-                <div className="l">preverených inzerátov</div>
-              </div>
-              <div className="stat">
-                <div className="v">
-                  <CountUp value={t.analyses} duration={900} />
-                </div>
-                <div className="l">modelov áut</div>
-              </div>
-              <div className="stat">
-                <div className="v">2</div>
-                <div className="l">portály: bazoš + autobazar.eu</div>
-              </div>
-            </div>
+      <main>
+        <section id="top" className="wrap oa-hero">
+          <div className="oa-hero-text">
+            <p className="eyebrow-plain">AI analýza inzerátov ojazdených áut</p>
+            <h1>Než zavoláš predajcovi, ukáž inzerát nám.</h1>
+            <p className="lede">Vlož odkaz na inzerát a do minúty zistíš, či je cena férová, čo v inzeráte chýba a koľko zjednať.</p>
+            <LinkForm items={items} />
           </div>
 
-          <aside className="sample glass" aria-label="Príklad ohodnotenia inzerátu">
-            <span className="tag">Príklad z analýzy</span>
-            <h3>Cupra Formentor 1.5 TSI DSG</h3>
-            <div className="facts">2024 · 24 000 km · záruka do 6/2029</div>
-            <Gauge />
-            <div className="scale">
-              <span>predražené</span>
-              <span>férová cena</span>
-              <span>pod trhom</span>
-            </div>
-            <div className="row">
-              <div>
-                <div className="l">Cena</div>
-                <div className="v">24 690 €</div>
+          <div className="oa-hero-card">
+            <article className="verdict" aria-label="Ukážka verdiktu">
+              <div className="top">
+                <span className="label">Ukážka verdiktu</span>
+                <span className="pill">Hotové za 42 s</span>
               </div>
               <div>
-                <div className="l">Férová</div>
-                <div className="v">27 730 €</div>
+                <p className="car">Škoda Octavia Combi 2.0 TDI</p>
+                <p className="facts">2018 · 168 000 km · inzerovaná cena 14 900 €</p>
               </div>
-              <div>
-                <div className="l">Pod trhom</div>
-                <div className="v good">+11 %</div>
+              <div className="box">
+                <span className="k">Verdikt</span>
+                <span className="v">Cena ~9 % nad trhom</span>
+                <span className="f">
+                  Férová cena: <strong>13 500 – 13 900 €</strong>
+                </span>
               </div>
-            </div>
-            <div className="note">Inzerát sme aj prečítali: dovoz, bez popisu výbavy → pred kúpou over históriu cez VIN.</div>
-          </aside>
-        </div>
-      </section>
+              <div className="signals">
+                <div>
+                  <Warn />
+                  <span>V inzeráte chýba servisná história.</span>
+                </div>
+                <div>
+                  <Warn />
+                  <span>Fotky neukazujú stav interiéru.</span>
+                </div>
+                <div>
+                  <Ok />
+                  <span>Výbava zodpovedá verzii Style.</span>
+                </div>
+              </div>
+              <p className="small">Ilustračný príklad, nie skutočný inzerát.</p>
+            </article>
+          </div>
+        </section>
 
-      <main className="wrap">
-        <section id="analyzy">
+        <section aria-label="Čoho sa kupujúci boja" className="oa-dark">
+          <div className="wrap oa-fears">
+            <div>
+              <span className="t">Preplatíš?</span>
+              <span className="d">Porovnáme cenu s podobnými autami na trhu a povieme ti, koľko je férových.</span>
+            </div>
+            <div>
+              <span className="t">Niečo ti unikne?</span>
+              <span className="d">AI si všimne, čo v inzeráte chýba alebo nesedí, a upozorní ťa na to.</span>
+            </div>
+            <div>
+              <span className="t">Nevieš, koľko zjednať?</span>
+              <span className="d">Dostaneš konkrétnu sumu a argumenty, s ktorými ideš za predajcom.</span>
+            </div>
+          </div>
+        </section>
+
+        <section id="ako" className="wrap oa-section">
+          <h2>Ako to funguje</h2>
+          <ol className="oa-steps">
+            <li>
+              <span className="n">1</span>
+              <span className="t">Vlož odkaz</span>
+              <span className="d">Skopíruj adresu inzerátu, ktorý ťa zaujal.</span>
+            </li>
+            <li>
+              <span className="n">2</span>
+              <span className="t">AI ho rozoberie</span>
+              <span className="d">Cenu, popis, výbavu aj fotky porovná s trhom.</span>
+            </li>
+            <li>
+              <span className="n">3</span>
+              <span className="t">Dostaneš verdikt</span>
+              <span className="d">Férovú cenu, varovné signály a čo sa pýtať predajcu.</span>
+            </li>
+          </ol>
+        </section>
+
+        <section id="co" className="wrap oa-section oa-what">
+          <div className="intro">
+            <h2>Čo dostaneš v plnej analýze</h2>
+            <p>Všetko, čo potrebuješ pred prvým telefonátom, na jednej stránke.</p>
+          </div>
+          <ul>
+            {[
+              ["Porovnanie s trhom", "Kde sa cena nachádza oproti podobným autám."],
+              ["Varovné signály", "Čo v inzeráte chýba, nesedí alebo je podozrivé."],
+              ["Otázky pre predajcu", "Presne to, čo sa opýtať pri telefonáte."],
+              ["Plán vyjednávania", "Odporúčaná suma a argumenty na zľavu."],
+              ["Na čo pri obhliadke", "Typické slabiny daného modelu a motora."],
+              ["PDF na stiahnutie", "Vezmeš si ho so sebou na obhliadku."],
+            ].map(([t, d]) => (
+              <li key={t}>
+                <strong>{t}</strong>
+                <span>{d}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <section id="cennik" className="wrap oa-section">
+          <h2>Cenník</h2>
+          <div className="oa-prices">
+            <div className="price-card">
+              <span className="name">Rýchle skóre</span>
+              <span className="amount">0 €</span>
+              <span className="d">Verdikt k cene a počet varovných signálov.</span>
+              <a className="go" href="#start">
+                Vyskúšať zadarmo
+              </a>
+            </div>
+            <div className="price-card dark">
+              <div className="head">
+                <span className="name">Plná analýza</span>
+                <span className="pill signal">Spúšťame čoskoro</span>
+              </div>
+              <span className="amount">3,90 €</span>
+              <span className="d">Férová cena, varovné signály, otázky pre predajcu a plán vyjednávania.</span>
+              <a className="go" href="#spustenie" data-analytics-action="waitlist_full">
+                Chcem vedieť o spustení
+              </a>
+            </div>
+            <div className="price-card">
+              <div className="head">
+                <span className="name">Balík 3 analýz</span>
+                <span className="pill">Spúšťame čoskoro</span>
+              </div>
+              <span className="amount">8,90 €</span>
+              <span className="d">Na porovnanie viacerých áut, ktoré zvažuješ.</span>
+              <a className="go" href="#spustenie" data-analytics-action="waitlist_pack">
+                Chcem vedieť o spustení
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <section aria-label="Čo AI nevie" className="wrap oa-honest">
+          <div className="in">
+            <h2>Úprimne: čo AI nevie</h2>
+            <p>
+              Hodnotíme inzerát, nie samotné auto. Stočené kilometre ani skryté vady s istotou neodhalíme. Pred kúpou preto vždy
+              odporúčame obhliadku v servise a kontrolu histórie podľa VIN.
+            </p>
+          </div>
+        </section>
+
+        <section id="analyzy" className="wrap">
           <ReportGrid reports={reports} />
         </section>
 
-        <section id="ako-to-funguje">
-          <div className="section-head" data-reveal>
-            <div>
-              <h2>Ako to funguje</h2>
-              <p>Žiadne odhady od oka. Férovú cenu počíta model naučený na stovkách skutočných inzerátov.</p>
-            </div>
-          </div>
-          <div className="steps">
-            <div className="step" data-reveal>
-              <div className="n">1</div>
-              <h3>Zozbierame celý trh</h3>
-              <p>Prejdeme inzeráty na bazoši aj autobazar.eu. To isté auto ponúkané na oboch portáloch započítame len raz.</p>
-            </div>
-            <div className="step" data-reveal style={{ transitionDelay: ".08s" }}>
-              <div className="n">2</div>
-              <h3>Vypočítame férovú cenu</h3>
-              <p>
-                Model zohľadní vek, nájazd, motor, prevodovku, pohon, pôvod auta aj typ predajcu – a povie, koľko by auto malo
-                stáť.
-              </p>
-            </div>
-            <div className="step" data-reveal style={{ transitionDelay: ".16s" }}>
-              <div className="n">3</div>
-              <h3>Prečítame najlepšie ponuky</h3>
-              <p>Najvýhodnejšie inzeráty prejdeme celé a odporučíme len tie, ktoré obstoja. Zvyšok nájdeš v rebríčku s filtrami.</p>
-            </div>
-          </div>
-          <div className="flags">
-            {[
-              ["Podvody", "Predajca s viacerými podozrivo lacnými autami bez popisu."],
-              ["Havarované autá", "„Pojazdné, motor OK“ a autá na diely vyradíme z porovnania."],
-              ["Stočené km", "Nájazd, ktorý nesedí s vekom auta – nahor aj nadol."],
-              ["Čipované autá", "Lacné takmer nové auto so Stage 1 a stratenou zárukou."],
-            ].map(([b, t], i) => (
-              <div className="flag" key={b} data-reveal style={{ transitionDelay: `${i * 0.06}s` }}>
-                <b>{b}</b>
-                {t}
-              </div>
-            ))}
+        <section className="oa-dark">
+          <div className="wrap oa-final">
+            <h2>Neprepláť ojazdenca.</h2>
+            <p>Prvý verdikt máš zadarmo za menej ako minútu.</p>
+            <a href="#start">Analyzovať inzerát</a>
           </div>
         </section>
       </main>
 
       <FeedbackForm />
 
-      <footer className="site">
-        <div className="wrap">
-          <p>
-            Férovka je nezávislý prehľad. Údaje pochádzajú z verejných inzerátov a sú vyťažené automaticky, preto môžu obsahovať
-            chyby. Pred kúpou si auto vždy over osobne a podľa VIN.
-          </p>
-          <p>
-            <Link href="#analyzy">Analýzy</Link> · © {t.updated.slice(0, 4)} Férovka
-          </p>
+      <footer>
+        <div className="wrap oa-footer">
+          <span>© 2026 OverAuto · overauto.eu</span>
+          <nav aria-label="Právne informácie">
+            <Link href="/obchodne-podmienky/">Obchodné podmienky</Link>
+            <Link href="/ochrana-osobnych-udajov/">Ochrana osobných údajov</Link>
+            <a href="#poziadavka">Kontakt</a>
+          </nav>
         </div>
         {photos.length > 0 && (
-          <div className="wrap credits">
+          <div className="wrap oa-credits">
             Fotografie z Wikimedia Commons:{" "}
             {photos.map((p, i) => (
               <span key={p.src}>

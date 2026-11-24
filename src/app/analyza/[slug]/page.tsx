@@ -3,7 +3,6 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Mark } from "@/components/Logo";
 import ReportFrame from "@/components/ReportFrame";
-import ThemeToggle from "@/components/ThemeToggle";
 import { formatDate, formatNum, getReport, photosFor, reports } from "@/lib/reports";
 import FeedbackForm from "@/components/FeedbackForm";
 
@@ -36,7 +35,7 @@ export default async function ReportPage({ params }: Props) {
       <header className="topbar viewer-bar">
         <div className="wrap">
           <Link href="/#analyzy" className="logo" aria-label="Späť na všetky analýzy">
-            <Mark />
+            <Mark size={32} />
           </Link>
           <span className="sep" />
           <div className="viewer-title">
@@ -53,7 +52,6 @@ export default async function ReportPage({ params }: Props) {
             <a className="btn ghost hide-sm" href={src} target="_blank" rel="noopener">
               Na celú obrazovku ↗
             </a>
-            <ThemeToggle />
           </div>
         </div>
       </header>
