@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://overauto.eu"),
   title: { default: "OverAuto – neprepláť ojazdenca", template: "%s · OverAuto" },
   description:
-    "Vlož odkaz na inzerát ojazdeného auta a zisti, či je cena férová, čo v inzeráte chýba a koľko zjednať. Férové ceny podľa celého slovenského trhu.",
+    "Analýzy trhu ojazdených áut: férová cena, najvýhodnejšie ponuky a podozrivo lacné autá podľa celého slovenského trhu.",
   icons: { icon: "/icon.svg" },
   openGraph: {
     type: "website",
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     siteName: "OverAuto",
     url: "https://overauto.eu/",
     title: "OverAuto – neprepláť ojazdenca",
-    description: "Vlož odkaz na inzerát a zisti, či je cena férová, čo v inzeráte chýba a koľko zjednať.",
+    description: "Férová cena, najvýhodnejšie ponuky a podozrivo lacné autá pre každý model ojazdeného auta.",
     images: [{ url: "/og.png", width: 1200, height: 630, alt: "OverAuto – férová cena ojazdeného auta" }],
   },
   twitter: { card: "summary_large_image", images: ["/og.png"] },

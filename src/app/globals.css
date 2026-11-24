@@ -518,3 +518,8 @@ section#analyzy { padding: 72px 24px 40px; }
 .pay-soon { margin: 0; font-size: 13px; color: var(--text-2); }
 .account-card .pay-box { width: 100%; }
 .premium-note { color: var(--text-2); font-size: 14px; margin: 0 0 16px; flex: 1; }
+
+.oa-start select { flex: 1 1 280px; min-width: 0; min-height: 56px; padding: 0 40px 0 16px; font: inherit; font-size: 16px;
+  border: 1.5px solid #14161A; border-radius: 12px; background-color: #fff; color: #14161A; appearance: none; cursor: pointer;
+  background-image: linear-gradient(45deg, transparent 50%, #14161A 50%), linear-gradient(135deg, #14161A 50%, transparent 50%);
+  background-position: calc(100% - 22px) 25px, calc(100% - 16px) 25px; background-size: 6px 6px; background-repeat: no-repeat; }

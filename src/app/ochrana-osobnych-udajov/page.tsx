@@ -34,7 +34,7 @@ export default function Privacy() {
         <p>[Lehoty uchovávania.]</p>
 
         <h2>5. Príjemcovia</h2>
-        <p>Hosting Vercel (EÚ), Google Analytics (so súhlasom), [poskytovateľ AI analýzy], [platobná brána].</p>
+        <p>Hosting Vercel (EÚ), Google Analytics (so súhlasom), [platobná brána].</p>
 
         <h2>6. Tvoje práva</h2>
         <p>

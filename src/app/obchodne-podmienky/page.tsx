@@ -27,9 +27,8 @@ export default function Terms() {
 
         <h2>3. Cena a platba</h2>
         <ul>
-          <li>Rýchle skóre: zadarmo.</li>
-          <li>Plná analýza: 3,90 € s DPH.</li>
-          <li>Balík 3 analýz: 8,90 € s DPH, platnosť [•].</li>
+          <li>Analýzy 10 najpredávanejších modelov: zadarmo.</li>
+          <li>Prístup ku všetkým analýzam modelov na 30 dní: 5 € (jednorazovo, automaticky sa neobnovuje).</li>
         </ul>
         <p>Platby spracúva [platobná brána]. [Podmienky vrátenia peňazí a odstúpenia od zmluvy pri digitálnom obsahu.]</p>
 

@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 
 // Visitors' requests (another model, a sold / outdated ad, wrong data) → api/poziadavka.js → private Vercel Blob store.
 const TYPES = [
-  { value: "spustenie", label: "Chcem vedieť o spustení AI analýzy (nechaj e-mail)" },
   { value: "model", label: "Pridajte analýzu ďalšieho modelu" },
   { value: "neaktualne", label: "Inzerát je predaný alebo neaktuálny" },
   { value: "chyba", label: "Chyba v údajoch (rok, km, cena…)" },
@@ -60,8 +59,8 @@ export default function FeedbackForm({ context }: { context?: string }) {
           <div className="feedback-intro">
             <h2 id="feedback-title">Napíš nám</h2>
             <p>
-              Chceš vedieť, keď spustíme plnú AI analýzu? Nechaj nám e-mail. Môžeš nám napísať aj to, ktorý model máme pridať
-              alebo ktorý inzerát je už predaný či má zlé údaje.
+              Napíš nám, ktorý model máme pridať, alebo ktorý inzerát je už predaný či má zlé údaje. Ak chceš odpoveď, nechaj
+              nám e-mail.
             </p>
           </div>
           {state.kind === "ok" ? (
