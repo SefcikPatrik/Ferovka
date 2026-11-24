@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { formatDate, formatNum, photosFor, type Report } from "@/lib/reports";
 import { isFree } from "@/lib/access";
-import { useUser } from "@/lib/account";
+import { hasAccess, useUser } from "@/lib/account";
 import { LockIcon } from "@/components/LockedReport";
 
 const DAY = 86_400_000;
@@ -41,6 +41,7 @@ export default function ReportGrid({ reports }: { reports: Report[] }) {
   // "now" only on the client, so the static HTML does not freeze the age at build time
   const [now, setNow] = useState<number | null>(null);
   const user = useUser();
+  const unlocked = hasAccess(user);
   useEffect(() => setNow(Date.now()), []);
 
   const [period, setPeriod] = useState<Period>("");
@@ -67,7 +68,7 @@ export default function ReportGrid({ reports }: { reports: Report[] }) {
     })
     .sort((a, b) =>
       // logged-out visitors see the free analyses first in the default order
-      (sort === "new" && user === null ? Number(isFree(b.slug)) - Number(isFree(a.slug)) : 0) ||
+      (sort === "new" && user !== undefined && !unlocked ? Number(isFree(b.slug)) - Number(isFree(a.slug)) : 0) ||
       (sort === "name"
         ? `${a.brand} ${a.model}`.localeCompare(`${b.brand} ${b.model}`, "sk")
         : (sort === "new" ? b.date.localeCompare(a.date) : a.date.localeCompare(b.date)) || a.name.localeCompare(b.name, "sk")),
@@ -87,10 +88,10 @@ export default function ReportGrid({ reports }: { reports: Report[] }) {
         <div>
           <h2>Analýzy trhu</h2>
           <p>Každá analýza obsahuje odporúčané ponuky, porovnanie motorov a kompletný rebríček inzerátov.</p>
-          {!user && (
+          {user !== undefined && !unlocked && (
             <p className="access-note">
-              <b>5 najpredávanejších modelov je zadarmo.</b> Ostatné analýzy odomkneš{" "}
-              <Link href="/ucet/">bezplatnou registráciou</Link>.
+              <b>5 najpredávanejších modelov je zadarmo.</b> Všetky ostatné analýzy odomkneš na 30 dní za 5 € –{" "}
+              <Link href="/ucet/">{user ? "odomknúť" : "prihlásiť sa"}</Link>.
             </p>
           )}
         </div>
@@ -188,9 +189,10 @@ export default function ReportGrid({ reports }: { reports: Report[] }) {
                   {isFree(r.slug) ? (
                     <span className="access-tag free">Zadarmo</span>
                   ) : (
-                    user === null && (
+                    user !== undefined &&
+                    !unlocked && (
                       <span className="access-tag locked">
-                        <LockIcon /> Po prihlásení
+                        <LockIcon /> Prémiová
                       </span>
                     )
                   )}

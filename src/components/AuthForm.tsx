@@ -58,7 +58,7 @@ export default function AuthForm({ initial = "registracia", onDone }: { initial?
       </label>
       <input className="feedback-hp" type="text" name="web" tabIndex={-1} autoComplete="off" aria-hidden="true" />
       <button type="submit" className="btn primary" disabled={busy}>
-        {busy ? "Chvíľku…" : mode === "registracia" ? "Zaregistrovať sa zadarmo" : "Prihlásiť sa"}
+        {busy ? "Chvíľku…" : mode === "registracia" ? "Vytvoriť účet" : "Prihlásiť sa"}
       </button>
       {error && (
         <p className="feedback-error" role="alert">

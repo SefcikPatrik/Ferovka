@@ -404,3 +404,10 @@ footer.site .credits a { text-decoration: underline; text-underline-offset: 2px;
 .btn.danger { color: var(--hot); border-color: var(--hot); }
 @media (max-width: 760px) { .gate-card { grid-template-columns: 1fr; padding: 18px; gap: 18px; } }
 @media (max-width: 560px) { .acct-link { padding: 6px 10px; font-size: 13px; } }
+.gate-steps { display: flex; flex-direction: column; gap: 10px; }
+.gate-step { margin: 0; font-size: 14px; color: var(--text-2); }
+.pay-price { display: flex; align-items: baseline; gap: 8px; }
+.pay-price b { font-size: 36px; letter-spacing: -0.03em; }
+.pay-price span { color: var(--text-2); font-size: 14px; }
+.pay-soon { margin: 0; font-size: 13px; color: var(--text-2); }
+.account-card .pay-box { width: 100%; }

@@ -19,18 +19,24 @@ function fakeRes() {
   res.json = (b) => ((res.body = b), res);
   return res;
 }
-const cookieFor = (email) => `other=1; ${auth.COOKIE}=${encodeURIComponent(auth.signSession(email))}`;
+const cookieFor = (email, paidUntil = null) => `other=1; ${auth.COOKIE}=${encodeURIComponent(auth.signSession(email, paidUntil))}`;
+const inDays = (d) => new Date(Date.now() + d * 86_400_000).toISOString();
 
 test("session round-trip, tampering and expiry", () => {
   const t = auth.signSession("a@b.sk");
-  assert.equal(auth.verifySession(t), "a@b.sk");
+  assert.deepEqual(auth.verifySession(t), { email: "a@b.sk", paidUntil: null });
+  assert.equal(auth.verifySession(auth.signSession("a@b.sk", "2030-01-01T00:00:00.000Z")).paidUntil, "2030-01-01T00:00:00.000Z");
   const [p, s] = t.split(".");
   const forged = Buffer.from(JSON.stringify({ e: "x@y.sk", x: 9e9 })).toString("base64url");
   assert.equal(auth.verifySession(`${forged}.${s}`), null);
   assert.equal(auth.verifySession(`${p}.${s.slice(0, -2)}AA`), null);
   assert.equal(auth.verifySession("garbage"), null);
   assert.equal(auth.verifySession(t, Date.now() + (auth.MAX_AGE + 10) * 1000), null);
-  assert.equal(auth.currentUser({ headers: { cookie: cookieFor("a@b.sk") } }), "a@b.sk");
+  assert.equal(auth.currentUser({ headers: { cookie: cookieFor("a@b.sk") } }).email, "a@b.sk");
+  assert.equal(auth.hasAccess(auth.currentUser({ headers: { cookie: cookieFor("a@b.sk") } })), false);
+  assert.equal(auth.hasAccess({ email: "a", paidUntil: inDays(30) }), true);
+  assert.equal(auth.hasAccess({ email: "a", paidUntil: inDays(-1) }), false);
+  assert.equal(auth.hasAccess(null), false);
   assert.equal(auth.currentUser({ headers: {} }), null);
 });
 
@@ -55,15 +61,21 @@ test("same-site check", () => {
 
 const locked = fs.readdirSync("public/reports").find((f) => f.endsWith("-analyza.html") && !f.startsWith("skoda-octavia"));
 
-test("locked report needs a session", () => {
+test("locked report needs active paid access", () => {
   const anon = fakeRes();
   report({ query: { file: locked }, headers: {} }, anon);
   assert.equal(anon.statusCode, 401);
-  assert.match(anon.body, /po prihlásení/);
+  assert.match(anon.body, /prémiová/);
   assert.equal(anon.headers["cache-control"], "private, no-store");
 
+  for (const paid of [null, inDays(-1)]) {
+    const noAccess = fakeRes();
+    report({ query: { file: locked }, headers: { cookie: cookieFor("a@b.sk", paid) } }, noAccess);
+    assert.equal(noAccess.statusCode, 401, String(paid));
+  }
+
   const ok = fakeRes();
-  report({ query: { file: locked }, headers: { cookie: cookieFor("a@b.sk") } }, ok);
+  report({ query: { file: locked }, headers: { cookie: cookieFor("a@b.sk", inDays(30)) } }, ok);
   assert.equal(ok.statusCode, 200);
   assert.ok(ok.body.length > 1000);
 });

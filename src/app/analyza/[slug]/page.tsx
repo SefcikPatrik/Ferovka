@@ -82,7 +82,7 @@ export default async function ReportPage({ params }: Props) {
               <span className="chip-stat">Zadarmo</span>
             ) : (
               <span className="chip-stat">
-                <LockIcon /> Po prihlásení
+                <LockIcon /> Prémiová
               </span>
             )}
             {r.ads && <span className="chip-stat">{formatNum(r.ads)} inzerátov</span>}

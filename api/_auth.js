@@ -1,5 +1,6 @@
 // Shared helpers for the account functions (files starting with "_" are not deployed as their own function).
-// Session = signed cookie "fv_session": base64url({e: email, x: expiry}) + "." + HMAC-SHA256(AUTH_SECRET).
+// Session = signed cookie "fv_session": base64url({e: email, p: paid access until (ISO) | null, x: expiry})
+// + "." + HMAC-SHA256(AUTH_SECRET). GET /api/ucet/ re-reads the account and refreshes "p" (e.g. after a payment).
 // Passwords are stored only as scrypt hashes (random salt per account) in the private Vercel Blob store.
 import crypto from "node:crypto";
 
@@ -15,12 +16,13 @@ function secret() {
 
 const mac = (payload) => crypto.createHmac("sha256", secret()).update(payload).digest();
 
-export function signSession(email, now = Date.now()) {
-  const payload = Buffer.from(JSON.stringify({ e: email, x: Math.floor(now / 1000) + MAX_AGE })).toString("base64url");
+export function signSession(email, paidUntil = null, now = Date.now()) {
+  const data = { e: email, p: paidUntil ?? null, x: Math.floor(now / 1000) + MAX_AGE };
+  const payload = Buffer.from(JSON.stringify(data)).toString("base64url");
   return `${payload}.${mac(payload).toString("base64url")}`;
 }
 
-/** The e-mail from a valid, unexpired session token, otherwise null. */
+/** {email, paidUntil} from a valid, unexpired session token, otherwise null. */
 export function verifySession(token, now = Date.now()) {
   if (typeof token !== "string") return null;
   const [payload, sig] = token.split(".");
@@ -35,8 +37,12 @@ export function verifySession(token, now = Date.now()) {
     return null;
   }
   if (!data || typeof data.e !== "string" || !(data.x > now / 1000)) return null;
-  return data.e;
+  return { email: data.e, paidUntil: typeof data.p === "string" ? data.p : null };
 }
+
+/** Paid access (all analyses) is active. */
+export const hasAccess = (session, now = Date.now()) =>
+  Boolean(session?.paidUntil && Date.parse(session.paidUntil) > now);
 
 export function readCookie(req, name = COOKIE) {
   for (const part of String(req.headers.cookie ?? "").split(";")) {
@@ -60,8 +66,8 @@ export function currentUser(req) {
   }
 }
 
-export function setSession(res, email) {
-  res.setHeader("Set-Cookie", `${COOKIE}=${signSession(email)}; Path=/; Max-Age=${MAX_AGE}; HttpOnly; Secure; SameSite=Lax`);
+export function setSession(res, email, paidUntil = null) {
+  res.setHeader("Set-Cookie", `${COOKIE}=${signSession(email, paidUntil)}; Path=/; Max-Age=${MAX_AGE}; HttpOnly; Secure; SameSite=Lax`);
 }
 
 export function clearSession(res) {

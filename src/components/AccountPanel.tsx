@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import AuthForm from "@/components/AuthForm";
-import { accountAction, useUser } from "@/lib/account";
+import { PayBox, PERIOD, PRICE } from "@/components/LockedReport";
+import { accountAction, formatDay, hasAccess, useUser } from "@/lib/account";
 
 /** Where to go after login: ?dalej=/analyza/<slug>/ (same-site paths only). */
 function nextPath() {
@@ -24,9 +25,10 @@ export default function AccountPanel() {
   if (!user)
     return (
       <div className="account-card">
-        <h1>Prihlás sa a uvidíš všetky analýzy</h1>
+        <h1>Prihlásenie</h1>
         <p className="lead">
-          Päť najpredávanejších modelov je otvorených pre každého. Ostatné analýzy sú po bezplatnej registrácii.
+          Päť najpredávanejších modelov je otvorených pre každého. Všetky ostatné analýzy odomkneš na {PERIOD} za{" "}
+          {PRICE} – najprv sa prihlás alebo si vytvor účet.
         </p>
         <AuthForm onDone={() => next && location.assign(next)} />
       </div>
@@ -46,10 +48,20 @@ export default function AccountPanel() {
 
   return (
     <div className="account-card">
-      <h1>Si prihlásený</h1>
+      <h1>Môj účet</h1>
       <p className="lead">
-        Ako <b>{user}</b>. Všetky analýzy máš odomknuté.
+        Prihlásený ako <b>{user.email}</b>.{" "}
+        {hasAccess(user) && user.paidUntil ? (
+          <>
+            Všetky analýzy máš odomknuté do <b>{formatDay(user.paidUntil)}</b>.
+          </>
+        ) : user.paidUntil ? (
+          <>Prístup ti skončil {formatDay(user.paidUntil)}.</>
+        ) : (
+          <>Zatiaľ máš len analýzy zadarmo.</>
+        )}
       </p>
+      {!hasAccess(user) && <PayBox email={user.email} />}
       <div className="account-actions">
         <Link className="btn primary" href={next || "/#analyzy"}>
           {next ? "Pokračovať na analýzu →" : "Prejsť na analýzy →"}

@@ -8,7 +8,7 @@ export default function AccountLink() {
   const user = useUser();
   if (user === undefined) return <span className="acct-link placeholder" aria-hidden="true" />;
   return user ? (
-    <Link href="/ucet/" className="acct-link" title={user}>
+    <Link href="/ucet/" className="acct-link" title={user.email}>
       <span className="acct-dot" aria-hidden="true" />
       Môj účet
     </Link>

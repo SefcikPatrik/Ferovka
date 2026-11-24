@@ -1,10 +1,11 @@
-// Vercel Function: visitor accounts (registration / login / logout / delete) for the locked analyses.
-//   GET  /api/ucet/                                   → { user: "<e-mail>" | null }
+// Vercel Function: visitor accounts for the paid analyses (5 € = 30 days of access to all of them).
+//   GET  /api/ucet/                                   → { user: { email, platene_do } | null }
 //   POST /api/ucet/ { akcia: "registracia" | "prihlasenie", email, heslo }
 //   POST /api/ucet/ { akcia: "odhlasenie" }
 //   POST /api/ucet/ { akcia: "zmazanie", heslo }       (logged in; deletes the account)
-// Accounts live in the private Vercel Blob store as ucty/<sha256(e-mail)>.json – only the e-mail, a scrypt hash of
-// the password and the registration time. Nothing else about the visitor is kept.
+// Accounts live in the private Vercel Blob store as ucty/<sha256(e-mail)>.json – the e-mail, a scrypt hash of the
+// password, the registration time and "platene_do" (ISO date until which the paid access runs; set by the payment
+// webhook or by hand with scripts/pristup.mjs). An account alone unlocks nothing.
 import { del, get, put } from "@vercel/blob";
 import {
   EMAIL,
@@ -32,22 +33,36 @@ async function loadUser(email) {
   }
 }
 
+const paidUntil = (record) => (typeof record?.platene_do === "string" ? record.platene_do : null);
+const view = (email, until) => ({ email, platene_do: until });
 const fail = (res, status, error) => res.status(status).json({ ok: false, error });
 
 export default async function handler(req, res) {
   res.setHeader("Cache-Control", "no-store");
-  if (req.method === "GET") return res.status(200).json({ ok: true, user: currentUser(req) });
-  if (req.method !== "POST") {
-    res.setHeader("Allow", "GET, POST");
-    return fail(res, 405, "Nepodporovaná požiadavka.");
-  }
-  if (!sameSite(req)) return fail(res, 403, "Požiadavka z inej stránky.");
-  const body = jsonBody(req);
-  if (!body) return fail(res, 400, "Neplatná požiadavka.");
-  if (body.web) return res.status(200).json({ ok: true }); // honeypot
-
-  const akcia = body.akcia;
   try {
+    if (req.method === "GET") {
+      const session = currentUser(req);
+      if (!session) return res.status(200).json({ ok: true, user: null });
+      // re-read the account, so a payment (or a deleted account) shows up without logging in again
+      const record = await loadUser(session.email);
+      if (!record) {
+        clearSession(res);
+        return res.status(200).json({ ok: true, user: null });
+      }
+      const until = paidUntil(record);
+      if (until !== session.paidUntil) setSession(res, session.email, until);
+      return res.status(200).json({ ok: true, user: view(session.email, until) });
+    }
+    if (req.method !== "POST") {
+      res.setHeader("Allow", "GET, POST");
+      return fail(res, 405, "Nepodporovaná požiadavka.");
+    }
+    if (!sameSite(req)) return fail(res, 403, "Požiadavka z inej stránky.");
+    const body = jsonBody(req);
+    if (!body) return fail(res, 400, "Neplatná požiadavka.");
+    if (body.web) return res.status(200).json({ ok: true, user: null }); // honeypot
+
+    const akcia = body.akcia;
     if (akcia === "odhlasenie") {
       clearSession(res);
       return res.status(200).json({ ok: true, user: null });
@@ -56,11 +71,11 @@ export default async function handler(req, res) {
     const heslo = String(body.heslo ?? "");
 
     if (akcia === "zmazanie") {
-      const email = currentUser(req);
-      if (!email) return fail(res, 401, "Nie si prihlásený.");
-      const user = await loadUser(email);
+      const session = currentUser(req);
+      if (!session) return fail(res, 401, "Nie si prihlásený.");
+      const user = await loadUser(session.email);
       if (user && !(await checkPassword(heslo, user.heslo))) return fail(res, 400, "Nesprávne heslo.");
-      if (user) await del(userPath(email));
+      if (user) await del(userPath(session.email));
       clearSession(res);
       return res.status(200).json({ ok: true, user: null });
     }
@@ -72,7 +87,7 @@ export default async function handler(req, res) {
       if (heslo.length < 8) return fail(res, 400, "Heslo musí mať aspoň 8 znakov.");
       if (heslo.length > 200) return fail(res, 400, "Heslo je príliš dlhé.");
       if (await loadUser(email)) return fail(res, 409, "Tento e-mail je už zaregistrovaný – prihlás sa.");
-      const record = { email, heslo: await hashPassword(heslo), registrovany: new Date().toISOString() };
+      const record = { email, heslo: await hashPassword(heslo), registrovany: new Date().toISOString(), platene_do: null };
       try {
         await put(userPath(email), JSON.stringify(record), {
           access: "private",
@@ -84,8 +99,8 @@ export default async function handler(req, res) {
         if (/already exists/i.test(e?.message ?? "")) return fail(res, 409, "Tento e-mail je už zaregistrovaný – prihlás sa.");
         throw e;
       }
-      setSession(res, email);
-      return res.status(200).json({ ok: true, user: email });
+      setSession(res, email, null);
+      return res.status(200).json({ ok: true, user: view(email, null) });
     }
 
     if (akcia === "prihlasenie") {
@@ -93,13 +108,13 @@ export default async function handler(req, res) {
       // the hash runs even for an unknown e-mail, so the response time does not reveal which e-mails exist
       const valid = await checkPassword(heslo, user?.heslo ?? "scrypt$AAAAAAAAAAAAAAAAAAAAAA$AAAA");
       if (!user || !valid) return fail(res, 401, WRONG);
-      setSession(res, email);
-      return res.status(200).json({ ok: true, user: email });
+      setSession(res, email, paidUntil(user));
+      return res.status(200).json({ ok: true, user: view(email, paidUntil(user)) });
     }
 
     return fail(res, 400, "Neznáma akcia.");
   } catch (e) {
-    console.error("ucet failed", akcia, e?.message);
+    console.error("ucet failed", e?.message);
     return fail(res, 500, "Niečo sa pokazilo, skús to prosím neskôr.");
   }
 }

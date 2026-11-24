@@ -2,35 +2,70 @@
 
 import AuthForm from "@/components/AuthForm";
 import ReportFrame from "@/components/ReportFrame";
-import { useUser } from "@/lib/account";
+import { hasAccess, useUser } from "@/lib/account";
 
-/** A locked analysis: the report for a logged-in visitor, otherwise the free registration / login form. */
+export const PRICE = "5 €";
+export const PERIOD = "30 dní";
+
+/** A premium analysis: the report with active paid access, otherwise login / registration and the unlock offer. */
 export default function LockedReport({ src, title, name }: { src: string; title: string; name: string }) {
   const user = useUser();
-  if (user) return <ReportFrame src={src} title={title} />;
+  if (hasAccess(user)) return <ReportFrame src={src} title={title} />;
   return (
     <section className="gate" aria-labelledby="gate-title">
       <div className="wrap">
         <div className="gate-card">
           <div className="gate-intro">
             <span className="lock-pill">
-              <LockIcon /> Po prihlásení
+              <LockIcon /> Prémiová analýza
             </span>
-            <h2 id="gate-title">Celá analýza {name} je po bezplatnej registrácii</h2>
+            <h2 id="gate-title">
+              Odomkni analýzu {name} a všetky ostatné na {PERIOD} za {PRICE}
+            </h2>
             <p>
-              Päť najpredávanejších modelov (Octavia, Golf, Fabia, Passat, Superb) je otvorených pre každého. Ostatné
-              analýzy – odporúčané ponuky, porovnanie motorov a kompletný rebríček inzerátov – uvidíš po prihlásení.
+              Zadarmo sú päť najpredávanejších modelov: Octavia, Golf, Fabia, Passat a Superb. Ostatné analýzy –
+              odporúčané ponuky, porovnanie motorov a kompletný rebríček inzerátov – sú prémiové.
             </p>
             <ul className="gate-list">
-              <li>Registrácia je zadarmo, stačí e-mail a heslo</li>
-              <li>Prístup ku všetkým analýzam naraz</li>
-              <li>Žiadne newslettre ani reklamy</li>
+              <li>Jednorazová platba {PRICE}, žiadne predplatné – nič sa samo neobnovuje</li>
+              <li>Prístup ku všetkým analýzam na {PERIOD}</li>
+              <li>Analýzy priebežne obnovujeme s aktuálnymi inzerátmi</li>
             </ul>
           </div>
-          {user === undefined ? <div className="auth-form loading" aria-busy="true" /> : <AuthForm />}
+          {user === undefined ? (
+            <div className="auth-form loading" aria-busy="true" />
+          ) : user === null ? (
+            <div className="gate-steps">
+              <p className="gate-step">
+                <b>1.</b> Prihlás sa alebo si vytvor účet, <b>2.</b> zaplať {PRICE}.
+              </p>
+              <AuthForm />
+            </div>
+          ) : (
+            <PayBox email={user.email} />
+          )}
         </div>
       </div>
     </section>
+  );
+}
+
+/** Shown to a logged-in visitor without active access. The payment gateway is not connected yet. */
+export function PayBox({ email }: { email: string }) {
+  return (
+    <div className="auth-form pay-box">
+      <div className="pay-price">
+        <b>{PRICE}</b>
+        <span>/ {PERIOD} · všetky analýzy</span>
+      </div>
+      <button type="button" className="btn primary" disabled>
+        Zaplatiť {PRICE}
+      </button>
+      <p className="pay-soon" role="status">
+        Online platbu práve spúšťame. Ak chceš prístup hneď, napíš nám cez formulár nižšie (typ „Iné“) a uveď e-mail{" "}
+        <b>{email}</b>.
+      </p>
+    </div>
   );
 }
 
