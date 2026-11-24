@@ -22,5 +22,39 @@ const reports = all.map((r) =>
     ? r
     : { slug: r.slug, file: r.file, name: r.name, brand: r.brand, model: r.model, kind: r.kind, date: r.date, summary: "", ads: null, median: null, r2: null },
 );
-fs.writeFileSync(path.join(root, "src/data/catalog.json"), JSON.stringify({ totals, reports }, null, 1) + "\n");
+// Home page sample: the first recommended offers ("cards") of a free analysis, straight from its current report.
+const SAMPLE = "skoda-octavia";
+const text = (h) => h.replace(/<[^>]*>/g, "").replace(/&nbsp;/g, " ").replace(/\s+/g, " ").trim();
+function picksOf(slug, n = 3) {
+  const file = path.join(root, "public/reports", `${slug}-analyza.html`);
+  if (!free.has(slug) || !fs.existsSync(file)) return [];
+  const html = fs.readFileSync(file, "utf8");
+  const start = html.indexOf('<div class="cards">');
+  if (start < 0) return [];
+  const block = html.slice(start, html.indexOf("</div>\n</section>", start) > 0 ? undefined : undefined);
+  const out = [];
+  for (const m of block.matchAll(/<article class="card">([\s\S]*?)<\/article>/g)) {
+    const a = m[1];
+    const link = /<h3><a href="([^"]+)"[^>]*>([\s\S]*?)<\/a><\/h3>/.exec(a);
+    const facts = /<div class="facts">([\s\S]*?)<\/div>/.exec(a);
+    const val = (label) => {
+      const r = new RegExp(`<span class="lbl">${label}</span><span[^>]*>([\\s\\S]*?)</span>`).exec(a);
+      return r ? text(r[1]) : null;
+    };
+    const pick = {
+      title: link ? text(link[2]) : null,
+      url: link ? link[1] : null,
+      facts: facts ? text(facts[1]).split(" · ").slice(0, 3).join(" · ") : null,
+      price: val("Cena"),
+      fair: val("Férová cena"),
+      discount: val("Pod trhom"),
+    };
+    if (pick.url && /^https:\/\//.test(pick.url) && pick.price && pick.fair) out.push(pick);
+    if (out.length >= n) break;
+  }
+  return out;
+}
+const sample = { slug: SAMPLE, picks: picksOf(SAMPLE) };
+fs.writeFileSync(path.join(root, "src/data/catalog.json"), JSON.stringify({ totals, reports, sample }, null, 1) + "\n");
+console.log(`catalog: home sample ${SAMPLE} with ${sample.picks.length} offers`);
 console.log(`catalog: ${reports.length} analyses, ${free.size} free with details`);

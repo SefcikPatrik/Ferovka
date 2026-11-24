@@ -5,7 +5,7 @@ import ReportGrid from "@/components/ReportGrid";
 import AccountLink from "@/components/AccountLink";
 import FeedbackForm from "@/components/FeedbackForm";
 import { FREE_SLUGS, isFree } from "@/lib/access";
-import { allPhotos, getReport, reports } from "@/lib/reports";
+import { allPhotos, getReport, reports, sample as homeSample } from "@/lib/reports";
 
 const Warn = () => (
   <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true">
@@ -77,22 +77,34 @@ export default function Home() {
                   Férovú cenu počíta model, ktorý vysvetlí <strong>{sample?.r2 ?? "–"}</strong> rozdielov v cenách.
                 </span>
               </div>
-              <div className="signals">
-                <div>
-                  <Ok />
-                  <span>Odporúčané ponuky, ktoré sme prečítali celé.</span>
+              {homeSample.picks.length > 0 ? (
+                <div className="picks">
+                  <span className="picks-h">Odporúčané ponuky</span>
+                  {homeSample.picks.map((p) => (
+                    <a key={p.url} className="pick" href={p.url} target="_blank" rel="noopener" data-analytics-action="sample_pick">
+                      <span className="pick-facts">{p.facts}</span>
+                      <span className="pick-row">
+                        <strong>{p.price}</strong>
+                        <span className="pick-fair">férová {p.fair}</span>
+                        {p.discount && <span className="pick-disc">{p.discount.replace(/^\+/, "−").replace(".", ",")}</span>}
+                      </span>
+                    </a>
+                  ))}
                 </div>
-                <div>
-                  <Warn />
-                  <span>Podozrivo lacné autá a nesediace kilometre.</span>
+              ) : (
+                <div className="signals">
+                  <div>
+                    <Ok />
+                    <span>Odporúčané ponuky, ktoré sme prečítali celé.</span>
+                  </div>
+                  <div>
+                    <Warn />
+                    <span>Podozrivo lacné autá a nesediace kilometre.</span>
+                  </div>
                 </div>
-                <div>
-                  <Ok />
-                  <span>Rebríček všetkých inzerátov s filtrami.</span>
-                </div>
-              </div>
+              )}
               <p className="small">
-                <Link href="/analyza/skoda-octavia/">Otvoriť analýzu Octavie →</Link>
+                <Link href="/analyza/skoda-octavia/">Otvoriť celú analýzu Octavie →</Link>
               </p>
             </article>
           </div>

@@ -531,3 +531,15 @@ section#analyzy { padding: 72px 24px 40px; }
 .rcard.unlock-card p { color: #C9CDD3; }
 .rcard.unlock-card .lock-pill { align-self: flex-start; background: #F26A1B; color: #14161A; border-color: #F26A1B; }
 .rcard.unlock-card .go { color: #F26A1B; }
+
+/* home sample card: real recommended offers of the Octavia analysis */
+.verdict .picks { display: flex; flex-direction: column; gap: 8px; }
+.verdict .picks-h { font-size: 13px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-2); }
+.verdict .pick { display: flex; flex-direction: column; gap: 2px; padding: 10px 12px; border: 1px solid var(--border); border-radius: 12px;
+  color: #14161A; text-decoration: none; transition: border-color .15s; }
+.verdict .pick:hover { border-color: #14161A; color: #14161A; }
+.verdict .pick-facts { font-size: 13px; color: var(--text-2); }
+.verdict .pick-row { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.verdict .pick-row strong { font-family: var(--font-display), var(--font-sans), sans-serif; font-size: 18px; }
+.verdict .pick-fair { font-size: 13px; color: var(--text-2); }
+.verdict .pick-disc { margin-left: auto; font-size: 13px; font-weight: 700; color: #1E4ED8; background: #EEF2FD; padding: 2px 8px; border-radius: 999px; }

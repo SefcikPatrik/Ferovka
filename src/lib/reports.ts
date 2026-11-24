@@ -56,3 +56,7 @@ export const formatDate = (iso: string) => {
 export const formatNum = (n: number) => n.toLocaleString("sk-SK").replace(/ /g, " ");
 
 export const totals = () => catalog.totals;
+
+export type SamplePick = { title: string; url: string; facts: string; price: string; fair: string; discount: string | null };
+/** Real recommended offers of the free sample analysis on the home page (scripts/build-catalog.mjs). */
+export const sample = catalog.sample as { slug: string; picks: SamplePick[] };
