@@ -106,45 +106,44 @@ footer { color: var(--muted); font-size: 12.5px; margin-top: 48px; border-top: 1
 .theme-btn { float: right; background: var(--surface); color: var(--text-2); border: 1px solid var(--border); border-radius: 8px; padding: 5px 10px; cursor: pointer; font: inherit; font-size: 13px; }
 @media (max-width: 640px) { h1 { font-size: 24px; } .prices { grid-template-columns: 1fr 1fr 1fr; } .big { font-size: 18px; } th, td { padding: 7px 6px; } }
 </style>
-<!-- ferovka-theme --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"><style id="ferovka-theme">/* Férovka look for the generated analyses – injected by sync-reports.mjs after each report's own <style>.
-   Same palette and type as the site; chart colours (--s1..--s3) stay the validated set. */
-:root {
-  --bg: #f5f4ef; --surface: #fdfdfb; --surface-2: #eeede6; --border: #e1dfd6;
-  --text: #0f1513; --text-2: #4f5551; --muted: #6f746f;
-  --accent: #0b8a56; --good: #0b7a4b; --grid: #e6e4dc; --win: #dff3e9;
+<!-- ferovka-theme --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap"><style id="ferovka-theme">/* OverAuto look for the generated analyses – injected by sync-reports.mjs after each report's own <style>.
+   Same palette and type as the site (design/znacka.html). The site is light only, so the dark blocks repeat the light tokens.
+   Chart colours (--s1..--s3) stay the report's validated set. */
+:root, :root[data-theme="dark"] {
+  color-scheme: light;
+  --bg: #F7F6F2; --surface: #FFFFFF; --surface-2: #EFEDE7; --border: #DEDBD3;
+  --text: #14161A; --text-2: #4A4F57; --muted: #4A4F57;
+  --accent: #1E4ED8; --good: #1E4ED8; --grid: #E7E4DC; --win: #EEF2FD;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0d110f; --surface: #151a17; --surface-2: #1d2420; --border: #2a322d;
-    --text: #eef1ec; --text-2: #b6bdb6; --muted: #8f978f;
-    --accent: #2fc583; --good: #4cd08f; --grid: #1f2622; --win: #143223;
+    color-scheme: light;
+    --bg: #F7F6F2; --surface: #FFFFFF; --surface-2: #EFEDE7; --border: #DEDBD3;
+    --text: #14161A; --text-2: #4A4F57; --muted: #4A4F57;
+    --accent: #1E4ED8; --good: #1E4ED8; --grid: #E7E4DC; --win: #EEF2FD;
   }
 }
-:root[data-theme="dark"] {
-  --bg: #0d110f; --surface: #151a17; --surface-2: #1d2420; --border: #2a322d;
-  --text: #eef1ec; --text-2: #b6bdb6; --muted: #8f978f;
-  --accent: #2fc583; --good: #4cd08f; --grid: #1f2622; --win: #143223;
-}
 
-body { font-family: "Manrope", system-ui, sans-serif; }
-h1, h2 { letter-spacing: -0.02em; font-weight: 800; }
+body { font-family: "Inter", system-ui, sans-serif; background: var(--bg); color: var(--text); }
+h1, h2, h3, .kpi .v, .price { font-family: "Space Grotesk", "Inter", sans-serif; }
+h1, h2 { letter-spacing: -0.02em; font-weight: 700; }
+a { color: var(--accent); }
 .tag { color: var(--accent); }
 
 /* photo header (removed by the site's viewer, which shows its own) */
-.fv-hero { position: relative; margin: 0 0 26px; border-radius: 20px; overflow: hidden; aspect-ratio: 21 / 8; background: #0d110f; display: flex; }
+.fv-hero { position: relative; margin: 0 0 26px; border-radius: 20px; overflow: hidden; aspect-ratio: 21 / 8; background: #14161A; display: flex; }
 .fv-hero img { flex: 1; min-width: 0; height: 100%; object-fit: cover; animation: fv-zoom 1.4s cubic-bezier(.2,.7,.2,1) both; }
-.fv-collage img + img { border-left: 3px solid #0d110f; }
+.fv-collage img + img { border-left: 3px solid #14161A; }
 .fv-hero::after { content: ""; position: absolute; inset: 0; pointer-events: none;
-  background: linear-gradient(180deg, transparent 55%, rgb(13 17 15 / .75)),
-    repeating-linear-gradient(90deg, rgb(47 197 131 / .06) 0 1px, transparent 1px 48px); }
+  background: linear-gradient(180deg, transparent 55%, rgb(20 22 26 / .75)); }
 .fv-hero figcaption { position: absolute; right: 12px; bottom: 8px; z-index: 1; font-size: 11px; color: rgb(255 255 255 / .75); }
 .fv-hero figcaption a { color: inherit; }
 
-/* cards & panels: softer, lift on hover */
+/* cards & panels: white on paper, 16px corners, lift on hover */
 .card, .kpi, .explain, .chart-wrap, .box { border-radius: 16px; }
 .card { transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease; }
-.card:hover { transform: translateY(-3px); border-color: var(--accent); box-shadow: 0 14px 30px -18px rgb(0 0 0 / .45); }
-.badge.pick { background: var(--accent); }
+.card:hover { transform: translateY(-3px); border-color: #14161A; box-shadow: 0 24px 48px -28px rgb(20 22 26 / .35); }
+.badge.pick { background: #F26A1B; color: #14161A; }
 
 /* entrance animation */
 @keyframes fv-up { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
@@ -163,40 +162,40 @@ h1, .lead, .kpis, .cards .card { animation: fv-up .6s cubic-bezier(.2,.7,.2,1) b
 @media (max-width: 640px) { .fv-hero { aspect-ratio: 16 / 9; border-radius: 14px; } }
 
 /* touch: hint under the chart tooltip (report-chart.js) */
-.fv-hint { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--border, rgba(127,127,127,.3)); font-weight: 700; color: var(--accent, #2fc583); }
+.fv-hint { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--border, rgba(127,127,127,.3)); font-weight: 700; color: var(--accent, #1E4ED8); }
 </style><!-- /ferovka-theme -->
 </head>
 <body>
 <main><!-- ferovka-theme --><!-- /ferovka-theme -->
 <button class="theme-btn" id="themeBtn" type="button">Svetlý / tmavý</button>
 <h1>Kia Venga – ktorá ponuka sa oplatí</h1>
-<p class="lead">Analýza aktuálnych inzerátov Kia Venga (2010–2019) od 2 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 79 inzerátov (30 na bazoši, 27 na autobazar.eu, 22 na bazar.sk) – prezreli sme 75 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 37 rôznych áut zo Slovenska. Každé auto sme porovnali
+<p class="lead">Analýza aktuálnych inzerátov Kia Venga (2010–2019) od 2 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (24. 11. 2026). Na portáloch je spolu 76 inzerátov (26 na bazoši, 30 na autobazar.eu, 20 na bazar.sk) – prezreli sme 76 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 32 rôznych áut zo Slovenska. Každé auto sme porovnali
 s <b>férovou cenou</b>: tú vypočítal model naučený na celom trhu podľa veku, nájazdu, motora, prevodovky a typu predajcu.</p>
 
 <div class="kpis">
-  <div class="kpi"><div class="v">37</div><div class="l">inzerátov Vengy (nad 2 000 €)</div></div>
-  <div class="kpi"><div class="v">31</div><div class="l">ohodnotených (majú rok aj km)</div></div>
-  <div class="kpi"><div class="v">4 600 €</div><div class="l">medián ceny s DPH</div></div>
+  <div class="kpi"><div class="v">32</div><div class="l">inzerátov Vengy (nad 2 000 €)</div></div>
+  <div class="kpi"><div class="v">27</div><div class="l">ohodnotených (majú rok aj km)</div></div>
+  <div class="kpi"><div class="v">4 990 €</div><div class="l">medián ceny s DPH</div></div>
   <div class="kpi"><div class="v">95 %</div><div class="l">rozdielov v cenách vysvetlí model</div></div>
 </div>
 
 
 <h2>Odkiaľ sú dáta: bazoš, autobazar.eu a bazar.sk</h2>
 <div class="kpis">
-  <div class="kpi"><div class="v">20</div><div class="l">ohodnotených z bazoša</div></div>
-  <div class="kpi"><div class="v">8</div><div class="l">ohodnotených z autobazar.eu</div></div><div class="kpi"><div class="v">3</div><div class="l">ohodnotených z bazar.sk</div></div>
+  <div class="kpi"><div class="v">17</div><div class="l">ohodnotených z bazoša</div></div>
+  <div class="kpi"><div class="v">7</div><div class="l">ohodnotených z autobazar.eu</div></div><div class="kpi"><div class="v">3</div><div class="l">ohodnotených z bazar.sk</div></div>
   <div class="kpi"><div class="v">7</div><div class="l">áut bolo na viacerých portáloch – započítané raz</div></div>
-  <div class="kpi"><div class="v">8 / 0</div><div class="l">s uvedeným pôvodom SR / dovoz</div></div>
+  <div class="kpi"><div class="v">7 / 0</div><div class="l">s uvedeným pôvodom SR / dovoz</div></div>
 </div>
 <div class="explain">
-  <p><b>Tri portály, jeden trh.</b> Bazoš prehľadal 28 inzerátov, autobazar.eu
-  27, bazar.sk 4. Ponuky z Česka (na autobazar.eu ich je veľa) sme vynechali. Autobazáre často dávajú
+  <p><b>Tri portály, jeden trh.</b> Bazoš prehľadal 24 inzerátov, autobazar.eu
+  30, bazar.sk 4. Ponuky z Česka (na autobazar.eu ich je veľa) sme vynechali. Autobazáre často dávajú
   to isté auto na viac portálov. Takéto dvojice (7 v rebríčku) sme spojili podľa VIN alebo zhody roku, km a ceny,
   aby sa v modeli nerátali dvakrát. Pri aute nájdeš odkaz na všetky ponuky – niekedy sa líšia cenou.</p>
-  <p><b>Rozdiel medzi portálmi:</b> rovnaké auto je na autobazar.eu v priemere -1,0 %
-  oproti bazošu. Na autobazar.eu predávajú hlavne firmy (8 z 8 ohodnotených).</p>
+  <p><b>Rozdiel medzi portálmi:</b> rovnaké auto je na autobazar.eu v priemere +1,9 %
+  oproti bazošu. Na autobazar.eu predávajú hlavne firmy (7 z 7 ohodnotených).</p>
   <p><b>Kúpené v SR vs. dovoz:</b> autá s uvedeným pôvodom zo SR sú oproti autám bez uvedeného pôvodu
-  +8,1 %, dovezené –
+  +9,0 %, dovezené –
   (pri rovnakom veku, nájazde a motore). Pôvod zo SR je výhoda pri overovaní histórie, trh zaň však nepripláca – väčšina
   inzerátov pôvod jednoducho neuvádza. V tabulke dole si môžeš nechať zobraziť len autá kúpené v SR.</p>
 </div>
@@ -205,18 +204,18 @@ s <b>férovou cenou</b>: tú vypočítal model naučený na celom trhu podľa ve
 <p class="section-lead">Toto sa model naučil z trhu. Keď porovnávaš dve autá, tieto čísla ti povedia, koľko má byť
 rozdiel v cene, aby to bolo fér.</p>
 <div class="kpis">
-  <div class="kpi"><div class="v">-1,7 %</div><div class="l">každých ďalších 10 000 km</div></div>
-  <div class="kpi"><div class="v">-13,4 %</div><div class="l">každý rok veku navyše</div></div>
-  <div class="kpi"><div class="v">+42 %</div><div class="l">príplatok za automat (DSG)</div></div>
-  <div class="kpi"><div class="v">-12,4 %</div><div class="l">príplatok u predajcu / firmy</div></div>
-  <div class="kpi"><div class="v">-35,9 %</div><div class="l">Venga po facelifte (2015+) oproti cene podľa veku</div></div>
-  <div class="kpi"><div class="v">+42,1 %</div><div class="l">príplatok za automat</div></div>
+  <div class="kpi"><div class="v">-1,4 %</div><div class="l">každých ďalších 10 000 km</div></div>
+  <div class="kpi"><div class="v">-12,4 %</div><div class="l">každý rok veku navyše</div></div>
+  <div class="kpi"><div class="v">+46 %</div><div class="l">príplatok za automat (DSG)</div></div>
+  <div class="kpi"><div class="v">-12,2 %</div><div class="l">príplatok u predajcu / firmy</div></div>
+  <div class="kpi"><div class="v">-31,0 %</div><div class="l">Venga po facelifte (2015+) oproti cene podľa veku</div></div>
+  <div class="kpi"><div class="v">+45,5 %</div><div class="l">príplatok za automat</div></div>
 </div>
 <div class="explain">
   <p><b>Príklad:</b> dve rovnaké Vengy 1.4 CVVT z roku 2015, jedno má 60 tis. km, druhé 120 tis. km. Druhé má byť
-  približne o 10 % lacnejšie (6 × -1,7 %). Ak je lacnejšie len o 5 %, preplácaš kilometre.</p>
+  približne o 8 % lacnejšie (6 × -1,4 %). Ak je lacnejšie len o 5 %, preplácaš kilometre.</p>
   <p><b>Ako čítať „pod trhom“:</b> +15 % znamená, že auto stojí o 15 % menej, než by malo podľa trhu. Bežný rozptyl
-  cien je asi ±27 %, takže až zľava nad ~10–15 % je naozaj výnimočná. Pri takej zľave vždy zisti, prečo je auto lacné
+  cien je asi ±28 %, takže až zľava nad ~10–15 % je naozaj výnimočná. Pri takej zľave vždy zisti, prečo je auto lacné
   (stav, história, nájazd).</p>
   <p><b>DPH:</b> ceny uvedené bez DPH (napr. „10 300 € netto“) sme prepočítali na cenu s DPH, ktorú zaplatí súkromná osoba.</p>
 </div>
@@ -233,12 +232,12 @@ Zoradené podľa toho, ako ich odporúčame.</p>
   <div class="facts src">zdroj: <b>bazoš</b> · kúpené v SR</div>
   <div class="prices">
     <div><span class="lbl">Cena</span><span class="big">8 490 €</span></div>
-    <div><span class="lbl">Férová cena</span><span class="mid">8 830 €</span></div>
-    <div><span class="lbl">Pod trhom</span><span class="mid good">+3.8 %</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">8 630 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+1.6 %</span></div>
   </div>
-  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:13%"></span></div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:5%"></span></div>
   <ul class="pc"><li class="pro">12/2017, 1.4 benzín 66 kW, 5-st. manuál, 40 tis. km</li><li class="pro">Nízky nájazd, STK do 11/2027</li><li class="pro">~4 % pod férovou cenou</li><li class="con">Predajca neistý</li></ul>
-<!-- history-card:start --><p class="note fv-history-card">V ponuke 12 dní (od 12. 11.)</p><!-- history-card:end --></article>
+</article>
 <article class="card">
   <div class="card-head"><span class="tag">Venga 1.4 CVVT Silver so 43 tis. km</span><span class="loc">Partizánske</span></div>
   <h3><a href="https://auto.bazos.sk/inzerat/196629725/kia-venga-14cvt-benzin-2018-43000km.php" target="_blank" rel="noopener">KIA Venga  1,4cvt benzín 2018 43,000km</a></h3>
@@ -246,25 +245,12 @@ Zoradené podľa toho, ako ich odporúčame.</p>
   <div class="facts src">zdroj: <b>bazoš</b></div>
   <div class="prices">
     <div><span class="lbl">Cena</span><span class="big">7 999 €</span></div>
-    <div><span class="lbl">Férová cena</span><span class="mid">8 270 €</span></div>
-    <div><span class="lbl">Pod trhom</span><span class="mid good">+3.3 %</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">8 200 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+2.5 %</span></div>
   </div>
-  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:11%"></span></div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:8%"></span></div>
   <ul class="pc"><li class="pro">9/2017, 1.4 benzín 66 kW, manuál, 43 tis. km</li><li class="pro">Nízky nájazd</li><li class="pro">~3 % pod férovou cenou</li><li class="con">Predajca neistý</li></ul>
-<!-- history-card:start --><p class="note fv-history-card">V ponuke aspoň 37 dní</p><!-- history-card:end --></article>
-<article class="card">
-  <div class="card-head"><span class="tag">Venga 1.6 z 2018 od 1. majiteľa</span><span class="loc">Lučenec</span></div>
-  <h3><a href="https://auto.bazos.sk/inzerat/197271628/kia-venga-2018.php" target="_blank" rel="noopener">Kia Venga 2018</a></h3>
-  <div class="facts">2018 · 31 526 km · 1.6 CVVT benzín 92 kW · manuál · neisté</div>
-  <div class="facts src">zdroj: <b>bazoš</b></div>
-  <div class="prices">
-    <div><span class="lbl">Cena</span><span class="big">9 200 €</span></div>
-    <div><span class="lbl">Férová cena</span><span class="mid">9 260 €</span></div>
-    <div><span class="lbl">Pod trhom</span><span class="mid good">+0.7 %</span></div>
-  </div>
-  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:2%"></span></div>
-  <ul class="pc"><li class="pro">2018, 1.6 benzín 92 kW, manuál, 32 tis. km</li><li class="pro">1. majiteľ, málo jazdené</li><li class="pro">~1 % pod férovou cenou</li><li class="con">Over nájazd (veľmi nízky)</li></ul>
-<!-- history-card:start --><p class="note fv-history-card">V ponuke 17 dní (od 7. 11.)</p><!-- history-card:end --></article>
+</article>
 <article class="card">
   <div class="card-head"><span class="tag">Venga 1.4 z 2016 s pôvodom v SR</span><span class="loc">Bratislava</span></div>
   <h3><a href="https://auto.bazos.sk/inzerat/197681224/kia-venga-2016-140-1-majitel-sr-voz.php" target="_blank" rel="noopener">KIA Venga 2016 1.40 1 majiteľ, SR voz</a></h3>
@@ -272,12 +258,12 @@ Zoradené podľa toho, ako ich odporúčame.</p>
   <div class="facts src">zdroj: <b>bazoš</b> · kúpené v SR · aj na <a href='https://www.autobazar.eu/detail/kia-venga-140-1-majitel-sr-voz/AmhuXnl4NvV/' target='_blank' rel='noopener'>autobazar.eu</a></div>
   <div class="prices">
     <div><span class="lbl">Cena</span><span class="big">6 199 €</span></div>
-    <div><span class="lbl">Férová cena</span><span class="mid">6 090 €</span></div>
-    <div><span class="lbl">Pod trhom</span><span class="mid ">-1.8 %</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">6 420 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+3.4 %</span></div>
   </div>
-  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:0%"></span></div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:11%"></span></div>
   <ul class="pc"><li class="pro">2016, 1.4 benzín, manuál, 104 tis. km</li><li class="pro">Slovenský pôvod, 1 majiteľ, STK do 11/2027</li><li class="pro">férová cena</li><li class="con">Predáva autobazár</li></ul>
-<!-- history-card:start --><p class="note fv-history-card">V ponuke 5 dní (od 19. 11.)</p><!-- history-card:end --></article></div>
+</article></div>
 <div class="subhead">Lacnejšie Vengy do 6 000 €</div>
 <div class="cards">
 <article class="card">
@@ -287,25 +273,12 @@ Zoradené podľa toho, ako ich odporúčame.</p>
   <div class="facts src">zdroj: <b>bazoš</b></div>
   <div class="prices">
     <div><span class="lbl">Cena</span><span class="big">3 390 €</span></div>
-    <div><span class="lbl">Férová cena</span><span class="mid">4 240 €</span></div>
-    <div><span class="lbl">Pod trhom</span><span class="mid good">+20.1 %</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">4 290 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+20.9 %</span></div>
   </div>
-  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:67%"></span></div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:70%"></span></div>
   <ul class="pc"><li class="pro">2010, 1.4 CRDi 66 kW, 6-st. manuál, 138 tis. km</li><li class="pro">Slovenské auto, 2 kľúče, zimné pneu</li><li class="pro">~20 % pod férovou cenou</li><li class="con">Predajca neistý</li></ul>
-<!-- history-card:start --><p class="note fv-history-card">V ponuke 8 dní (od 16. 11.)</p><!-- history-card:end --></article>
-<article class="card">
-  <div class="card-head"><span class="tag">Venga 1.4 CVVT za 2 990 €</span><span class="loc">Košice-Košická Nová Ves</span></div>
-  <h3><a href="https://www.autobazar.eu/detail/kia-venga-14-cvvt-base/AmmfR6uPjf3/" target="_blank" rel="noopener">Kia Venga 1.4 CVVT Base</a></h3>
-  <div class="facts">2010 · 184 701 km · 1.4 CVVT benzín 66–73 kW · manuál · predajca/firma</div>
-  <div class="facts src">zdroj: <b>autobazar.eu</b> · kúpené v SR</div>
-  <div class="prices">
-    <div><span class="lbl">Cena</span><span class="big">2 990 €</span></div>
-    <div><span class="lbl">Férová cena</span><span class="mid">3 600 €</span></div>
-    <div><span class="lbl">Pod trhom</span><span class="mid good">+16.9 %</span></div>
-  </div>
-  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:56%"></span></div>
-  <ul class="pc"><li class="pro">2010, 1.4 benzín, manuál, 185 tis. km</li><li class="pro">~17 % pod férovou cenou</li><li class="con">Predáva autobazár</li><li class="con">Inzerát bez popisu</li></ul>
-<!-- history-card:start --><p class="note fv-history-card">V ponuke 19 dní (od 5. 11.)</p><!-- history-card:end --></article>
+</article>
 <article class="card">
   <div class="card-head"><span class="tag">Venga 1.4 CRDi Silver z 2013</span><span class="loc">Lučenec</span></div>
   <h3><a href="https://auto.bazos.sk/inzerat/197715037/kia-venga-14-crdi-silver-m6.php" target="_blank" rel="noopener">✅ Kia Venga 1.4 CRDi Silver M6 ✅</a></h3>
@@ -313,12 +286,12 @@ Zoradené podľa toho, ako ich odporúčame.</p>
   <div class="facts src">zdroj: <b>bazoš</b></div>
   <div class="prices">
     <div><span class="lbl">Cena</span><span class="big">3 990 €</span></div>
-    <div><span class="lbl">Férová cena</span><span class="mid">4 720 €</span></div>
-    <div><span class="lbl">Pod trhom</span><span class="mid good">+15.5 %</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">4 740 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+15.9 %</span></div>
   </div>
-  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:52%"></span></div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:53%"></span></div>
   <ul class="pc"><li class="pro">10/2013, 1.4 CRDi 66 kW, 6-st. manuál, 124 tis. km</li><li class="pro">~16 % pod férovou cenou</li><li class="con">Predáva autobazár</li><li class="con">Prihlásenie za príplatok 490 €</li></ul>
-<!-- history-card:start --><p class="note fv-history-card">V ponuke 4 dni (od 20. 11.)</p><!-- history-card:end --></article>
+</article>
 <article class="card">
   <div class="card-head"><span class="tag">Venga 1.4 CRDi so 132 tis. km</span><span class="loc">Bratislava V - Petržalka</span></div>
   <h3><a href="https://auto.bazar.sk/39634635-kia-venga-1-4-crdi/" target="_blank" rel="noopener">Kia Venga 1.4 CRDi</a></h3>
@@ -331,20 +304,20 @@ Zoradené podľa toho, ako ich odporúčame.</p>
   </div>
   <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:37%"></span></div>
   <ul class="pc"><li class="pro">2011, 1.4 CRDi 55 kW, manuál, 132 tis. km</li><li class="pro">Multifunkčný volant, klimatizácia</li><li class="pro">~11 % pod férovou cenou</li><li class="con">Predáva autobazár</li></ul>
-<!-- history-card:start --><p class="note fv-history-card">V ponuke 2 dni (od 22. 11.)</p><!-- history-card:end --></article>
+</article>
 <article class="card">
   <div class="card-head"><span class="tag">Venga 1.4 benzín s novou spojkou</span><span class="loc">Brezno</span></div>
   <h3><a href="https://auto.bazos.sk/inzerat/195987812/kia-venga.php" target="_blank" rel="noopener">kia venga</a></h3>
-  <div class="facts">2011 · 283 000 km · 1.4 CVVT benzín 66–73 kW · prevodovka ? · neisté</div>
+  <div class="facts">2011 · 283 000 km · 1.4 CVVT benzín 66–73 kW · prevodovka ? · predajca/firma</div>
   <div class="facts src">zdroj: <b>bazoš</b></div>
   <div class="prices">
     <div><span class="lbl">Cena</span><span class="big">2 600 €</span></div>
-    <div><span class="lbl">Férová cena</span><span class="mid">2 960 €</span></div>
-    <div><span class="lbl">Pod trhom</span><span class="mid good">+12.2 %</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">2 730 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+4.8 %</span></div>
   </div>
-  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:41%"></span></div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:16%"></span></div>
   <ul class="pc"><li class="pro">10/2011, 1.4 benzín 66 kW, 283 tis. km</li><li class="pro">Nová spojka, STK do 10/2027</li><li class="pro">~12 % pod férovou cenou</li><li class="con">Vysoký nájazd</li></ul>
-<!-- history-card:start --><p class="note fv-history-card">V ponuke aspoň 57 dní</p><!-- history-card:end --></article>
+</article>
 <article class="card">
   <div class="card-head"><span class="tag">Venga 1.4 CRDi s novými rozvodmi</span><span class="loc">Vranov nad Topľou</span></div>
   <h3><a href="https://auto.bazos.sk/inzerat/195978302/predam-kia-venga-14crsi-2010.php" target="_blank" rel="noopener">Predam kia venga 1.4crsi 2010</a></h3>
@@ -352,12 +325,12 @@ Zoradené podľa toho, ako ich odporúčame.</p>
   <div class="facts src">zdroj: <b>bazoš</b></div>
   <div class="prices">
     <div><span class="lbl">Cena</span><span class="big">2 800 €</span></div>
-    <div><span class="lbl">Férová cena</span><span class="mid">2 980 €</span></div>
-    <div><span class="lbl">Pod trhom</span><span class="mid good">+6.1 %</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">3 020 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+7.3 %</span></div>
   </div>
-  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:20%"></span></div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:24%"></span></div>
   <ul class="pc"><li class="pro">2010, 1.4 CRDi, 6-st. manuál, 211 tis. km</li><li class="pro">Nová STK/EK, nové rozvody, olej a filtre, 2 sady kolies</li><li class="pro">~6 % pod férovou cenou</li></ul>
-<!-- history-card:start --><p class="note fv-history-card">V ponuke aspoň 57 dní</p><!-- history-card:end --></article></div>
+</article></div>
 <div class="subhead">Špeciálne prípady</div>
 <div class="cards"></div>
 
@@ -381,33 +354,33 @@ Krúžkom sú označené odporúčané ponuky. Prejdi myšou na bod a uvidíš d
   <td><b>LPG</b><div class="sub">Dodatočne montované LPG – over revíziu a zápis plynu v TP.</div></td>
   <td><span class="stars" aria-label="3 z 5">★★★<span class="off">★★</span></span></td>
   <td class="num">1</td>
-  <td class="num"><div class="cellbar"><span style="width:56%"></span></div>4 489 €</td>
+  <td class="num"><div class="cellbar"><span style="width:65%"></span></div>4 489 €</td>
   <td class="num">2010</td>
   <td class="num">226 524 km</td>
 </tr>
 <tr>
   <td><b>1.4 / 1.6 CRDi 57–94 kW</b><div class="sub">Úsporný diesel 77–128 k. Over DPF, vstrekovače a dvojhmotu.</div></td>
   <td><span class="stars" aria-label="3 z 5">★★★<span class="off">★★</span></span></td>
-  <td class="num">12</td>
-  <td class="num"><div class="cellbar"><span style="width:42%"></span></div>3 395 €</td>
+  <td class="num">10</td>
+  <td class="num"><div class="cellbar"><span style="width:49%"></span></div>3 395 €</td>
   <td class="num">2010</td>
-  <td class="num">179 179 km</td>
+  <td class="num">158 179 km</td>
 </tr>
 <tr>
   <td><b>1.6 CVVT benzín 92 kW</b><div class="sub">Atmosférický benzín 125 k (aj s automatom). Jednoduchý a svižný.</div></td>
   <td><span class="stars" aria-label="4 z 5">★★★★<span class="off">★</span></span></td>
-  <td class="num">5</td>
-  <td class="num"><div class="cellbar"><span style="width:100%"></span></div>7 990 €</td>
+  <td class="num">4</td>
+  <td class="num"><div class="cellbar"><span style="width:100%"></span></div>6 945 €</td>
   <td class="num">2012</td>
-  <td class="num">73 424 km</td>
+  <td class="num">102 852 km</td>
 </tr>
 <tr>
   <td><b>1.4 CVVT benzín 66–73 kW</b><div class="sub">Atmosférický benzín 90–100 k. Jednoduchý a lacný na servis, vhodný na LPG.</div></td>
   <td><span class="stars" aria-label="4 z 5">★★★★<span class="off">★</span></span></td>
-  <td class="num">13</td>
-  <td class="num"><div class="cellbar"><span style="width:78%"></span></div>6 199 €</td>
+  <td class="num">12</td>
+  <td class="num"><div class="cellbar"><span style="width:94%"></span></div>6 494 €</td>
   <td class="num">2013</td>
-  <td class="num">97 269 km</td>
+  <td class="num">72 634 km</td>
 </tr></tbody>
 </table>
 </div>
@@ -422,8 +395,8 @@ Krúžkom sú označené odporúčané ponuky. Prejdi myšou na bod a uvidíš d
 <div class="warn">
   <p><b>Lacné kvôli extrémnemu nájazdu</b> (viac ako 35 tis. km ročne, typicky flotila alebo taxi):</p>
   <ul><li>Žiadne výrazné prípady.</li></ul>
-  <p><b>Podozrivo nízky nájazd na vek</b> – preklep alebo stočené km, over cez Cebiu:</p><ul><li><a href='https://auto.bazos.sk/inzerat/197271628/kia-venga-2018.php' target='_blank' rel='noopener'>Kia Venga 2018</a> (9 200 €): rok 2018 a len 31 526 km</li><li><a href='https://www.autobazar.eu/detail/kia-venga-14-cvvt-lx/AmpcirTP9U8/' target='_blank' rel='noopener'>Kia Venga 1.4 CVVT LX</a> (6 790 €): rok 2013 a len 39 660 km</li><li><a href='https://auto.bazos.sk/inzerat/197475562/kia-venga-14-cvvt-66kw-35-000km.php' target='_blank' rel='noopener'>Kia Venga 1.4 CVVT, 66kW (2013)</a> (6 990 €): rok 2013 a len 35 602 km</li><li><a href='https://auto.bazos.sk/inzerat/197678505/kia-venga-1-4-cvvt-benzin-48000-km-stk-2028.php' target='_blank' rel='noopener'>Kia Venga 1, 4 CVVT benzín 48.000 km STK 2028</a> (4 600 €): rok 2010 a len 48 000 km</li></ul><p><b>Ďalšie veci, ktoré sme v inzerátoch našli:</b></p><ul><li>Novšie Vengy (2016+) sa predávajú blízko férovej ceny – veľké zľavy sú len pri starších kusoch.</li><li>Pri inzerátoch AAA AUTO je uvedená <b>cena pri financovaní</b> – pri platbe v hotovosti môže byť iná.</li></ul><p><b>Carens, Rio, Soul a iné modely z vyhľadávania, inzeráty s chybným nájazdom</b> (1 inzerátov) sme z rebríčka vynechali.</p>
-  <p>Ďalších <b>4</b> inzerátov nemá v texte rok alebo kilometre, takže ich nebolo možné ohodnotiť.
+  <p><b>Podozrivo nízky nájazd na vek</b> – preklep alebo stočené km, over cez Cebiu:</p><ul><li><a href='https://www.autobazar.eu/detail/kia-venga-14-cvvt-lx/AmpcirTP9U8/' target='_blank' rel='noopener'>Kia Venga 1.4 CVVT LX</a> (6 790 €): rok 2013 a len 39 660 km</li><li><a href='https://auto.bazos.sk/inzerat/197678505/kia-venga-1-4-cvvt-benzin-48000-km-stk-2028.php' target='_blank' rel='noopener'>Kia Venga 1, 4 CVVT benzín 48.000 km STK 2028</a> (4 600 €): rok 2010 a len 48 000 km</li><li><a href='https://auto.bazos.sk/inzerat/197475562/kia-venga-14-cvvt-66kw-35-000km.php' target='_blank' rel='noopener'>Kia Venga 1.4 CVVT, 66kW (2013)</a> (6 990 €): rok 2013 a len 35 602 km</li></ul><p><b>Ďalšie veci, ktoré sme v inzerátoch našli:</b></p><ul><li>Novšie Vengy (2016+) sa predávajú blízko férovej ceny – veľké zľavy sú len pri starších kusoch.</li><li>Pri inzerátoch AAA AUTO je uvedená <b>cena pri financovaní</b> – pri platbe v hotovosti môže byť iná.</li></ul><p><b>Carens, Rio, Soul a iné modely z vyhľadávania, inzeráty s chybným nájazdom</b> (1 inzerátov) sme z rebríčka vynechali.</p>
+  <p>Ďalších <b>3</b> inzerátov nemá v texte rok alebo kilometre, takže ich nebolo možné ohodnotiť.
   Ak ťa niektorý zaujme, predajcu sa na tieto údaje opýtaj.</p>
 </div>
 
@@ -464,15 +437,15 @@ Krúžkom sú označené odporúčané ponuky. Prejdi myšou na bod a uvidíš d
 </ul>
 
 <footer>
-  Zdroj: auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (len ponuky zo Slovenska, to isté auto na viacerých portáloch je započítané raz), sťahované cez lokálny MCP server bazos-mcp (nástroj <code>fair_price</code>), 22. 11. 2026.
-  Model: ridge regresia log(ceny s DPH) podľa veku, veku², km, km², prevodovky, typu predajcu, motora, karosérie, pohonu 4x4, pôvodu (SR / dovoz) a portálu. Vzorka 31
+  Zdroj: auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (len ponuky zo Slovenska, to isté auto na viacerých portáloch je započítané raz), sťahované cez lokálny MCP server bazos-mcp (nástroj <code>fair_price</code>), 24. 11. 2026.
+  Model: ridge regresia log(ceny s DPH) podľa veku, veku², km, km², prevodovky, typu predajcu, motora, karosérie, pohonu 4x4, pôvodu (SR / dovoz) a portálu. Vzorka 27
   inzerátov, R² 95 %. Parametre sú vyťažené z textu inzerátov, a preto môžu obsahovať chyby. Odporúčané ponuky sme overili
   prečítaním celého inzerátu. Hodnotenie motorov je odborný odhad, nie výsledok modelu.
 </footer>
 </main>
 
 <script>
-const DATA = [{"id": "196447908", "url": "https://auto.bazos.sk/inzerat/196447908/kia-venga.php", "title": "Kia Venga", "price": 3390, "price_gross": 3390, "fair_price": 4240.0, "discount_pct": 20.1, "verdict": "výrazne pod trhom – over prečo", "year": 2010, "km": 138000, "km_per_year": 8400.0, "eg": "1.4 / 1.6 CRDi 57–94 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Nové Zámky", "flags": [], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AmmfR6uPjf3", "url": "https://www.autobazar.eu/detail/kia-venga-14-cvvt-base/AmmfR6uPjf3/", "title": "Kia Venga 1.4 CVVT Base", "price": 2990, "price_gross": 2990, "fair_price": 3600.0, "discount_pct": 16.9, "verdict": "výrazne pod trhom – over prečo", "year": 2010, "km": 184701, "km_per_year": 11300.0, "eg": "1.4 CVVT benzín 66–73 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Košice-Košická Nová Ves", "flags": [], "pick": "budget", "source": "autobazar", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "197715037", "url": "https://auto.bazos.sk/inzerat/197715037/kia-venga-14-crdi-silver-m6.php", "title": "✅ Kia Venga 1.4 CRDi Silver M6 ✅", "price": 3990, "price_gross": 3990, "fair_price": 4720.0, "discount_pct": 15.5, "verdict": "výrazne pod trhom – over prečo", "year": 2013, "km": 124242, "km_per_year": 9300.0, "eg": "1.4 / 1.6 CRDi 57–94 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Lučenec", "flags": [], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197655156", "url": "https://auto.bazos.sk/inzerat/197655156/kia-venga-exclusive-14-crdi.php", "title": "✅ Kia Venga Exclusive 1.4 CRDi ✅", "price": 2150, "price_gross": 2150, "fair_price": 2500.0, "discount_pct": 13.9, "verdict": "pod trhom", "year": 2010, "km": 209710, "km_per_year": 12800.0, "eg": "1.4 / 1.6 CRDi 57–94 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Lučenec", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "195987812", "url": "https://auto.bazos.sk/inzerat/195987812/kia-venga.php", "title": "kia venga", "price": 2600, "price_gross": 2600, "fair_price": 2960.0, "discount_pct": 12.2, "verdict": "pod trhom", "year": 2011, "km": 283000, "km_per_year": 18500.0, "eg": "1.4 CVVT benzín 66–73 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Brezno", "flags": ["prevodovka nezistená"], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "bs-39634635", "url": "https://auto.bazar.sk/39634635-kia-venga-1-4-crdi/", "title": "Kia Venga 1.4 CRDi", "price": 3400, "price_gross": 3400, "fair_price": 3830.0, "discount_pct": 11.2, "verdict": "pod trhom", "year": 2011, "km": 132295, "km_per_year": 8600.0, "eg": "1.4 / 1.6 CRDi 57–94 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava V - Petržalka", "flags": [], "pick": "budget", "source": "bazarsk", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "195978302", "url": "https://auto.bazos.sk/inzerat/195978302/predam-kia-venga-14crsi-2010.php", "title": "Predam kia venga 1.4crsi 2010", "price": 2800, "price_gross": 2800, "fair_price": 2980.0, "discount_pct": 6.1, "verdict": "férová cena", "year": 2010, "km": 210575, "km_per_year": 12900.0, "eg": "1.4 / 1.6 CRDi 57–94 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Vranov nad Topľou", "flags": [], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AeS31obEIHo", "url": "https://www.autobazar.eu/detail/kia-venga-16-cvvt-automat-sr2maj/AeS31obEIHo/", "title": "Kia Venga 1.6 CVVT, Automat, SR,2.maj", "price": 5900, "price_gross": 5900, "fair_price": 6210.0, "discount_pct": 4.9, "verdict": "férová cena", "year": 2010, "km": 73424, "km_per_year": 4500.0, "eg": "1.6 CVVT benzín 92 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Banská Bystrica", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197450870", "url": "https://auto.bazos.sk/inzerat/197450870/kia-venga-14-5mt-2017-40327-km.php", "title": "Kia Venga 1,4 5MT 12/2017  40.327 km", "price": 8490, "price_gross": 8490, "fair_price": 8830.0, "discount_pct": 3.8, "verdict": "férová cena", "year": 2017, "km": 40327, "km_per_year": 4300.0, "eg": "1.4 CVVT benzín 66–73 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Trenčín", "flags": [], "pick": "top", "source": "bazos", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "196629725", "url": "https://auto.bazos.sk/inzerat/196629725/kia-venga-14cvt-benzin-2018-43000km.php", "title": "KIA Venga  1,4cvt benzín 2018 43,000km", "price": 7999, "price_gross": 7999, "fair_price": 8270.0, "discount_pct": 3.3, "verdict": "férová cena", "year": 2017, "km": 43000, "km_per_year": 4600.0, "eg": "1.4 CVVT benzín 66–73 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Partizánske", "flags": [], "pick": "top", "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "196923254", "url": "https://auto.bazos.sk/inzerat/196923254/kia-venga-16-crdi-94kw.php", "title": "Kia Venga 1.6 CRDI 94kw", "price": 2690, "price_gross": 2690, "fair_price": 2730.0, "discount_pct": 1.6, "verdict": "férová cena", "year": 2010, "km": 300000, "km_per_year": 18400.0, "eg": "1.4 / 1.6 CRDi 57–94 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Levoča", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197271628", "url": "https://auto.bazos.sk/inzerat/197271628/kia-venga-2018.php", "title": "Kia Venga 2018", "price": 9200, "price_gross": 9200, "fair_price": 9260.0, "discount_pct": 0.7, "verdict": "férová cena", "year": 2018, "km": 31526, "km_per_year": 3800.0, "eg": "1.6 CVVT benzín 92 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Lučenec", "flags": ["nezvyčajne nízky nájazd na vek (31 526 km) – over  či nejde o preklep"], "pick": "top", "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-Am6f9tnSA4B", "url": "https://www.autobazar.eu/detail/kia-venga-14-cvvt-66kw-2019-aj-na-splatky-protiucet/Am6f9tnSA4B/", "title": "Kia Venga 1.4 CVVT, 66kW (2019) / AJ NA SPLÁTKY / PROTIÚČET /", "price": 10100, "price_gross": 10100, "fair_price": 10150.0, "discount_pct": 0.5, "verdict": "férová cena", "year": 2019, "km": 97269, "km_per_year": 13300.0, "eg": "1.4 CVVT benzín 66–73 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Trenčín", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197640482", "url": "https://auto.bazos.sk/inzerat/197640482/kia-venga-14-cvvt-66kw-2019.php", "price": 10100}], "body": "mpv"}, {"id": "197286061", "url": "https://auto.bazos.sk/inzerat/197286061/kia-venga-14.php", "title": "Kia Venga 1.4", "price": 3500, "price_gross": 3500, "fair_price": 3490.0, "discount_pct": -0.4, "verdict": "férová cena", "year": 2011, "km": 220000, "km_per_year": 14300.0, "eg": "1.4 CVVT benzín 66–73 kW", "cg": 0, "transmission": null, "seller_type": "dealer", "location": "Zlaté Moravce", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AmpcirTP9U8", "url": "https://www.autobazar.eu/detail/kia-venga-14-cvvt-lx/AmpcirTP9U8/", "title": "Kia Venga 1.4 CVVT LX", "price": 6790, "price_gross": 6790, "fair_price": 6710.0, "discount_pct": -1.2, "verdict": "férová cena", "year": 2013, "km": 39660, "km_per_year": 3000.0, "eg": "1.4 CVVT benzín 66–73 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Žilina", "flags": ["nezvyčajne nízky nájazd na vek (39 660 km) – over  či nejde o preklep"], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197184397", "url": "https://auto.bazos.sk/inzerat/197184397/kia-venga-14-cvvt-lx.php", "price": 6790}], "body": "mpv"}, {"id": "ab-Am3d5kxyMfI", "url": "https://www.autobazar.eu/detail/kia-venga-14-cvvt-base/Am3d5kxyMfI/", "title": "Kia Venga 1.4 CVVT Base", "price": 2990, "price_gross": 2990, "fair_price": 2950.0, "discount_pct": -1.3, "verdict": "férová cena", "year": 2012, "km": 313034, "km_per_year": 21800.0, "eg": "1.4 CVVT benzín 66–73 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Nové Mesto nad Váhom", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197045107", "url": "https://auto.bazos.sk/inzerat/197045107/kia-venga-14-cvvt-base.php", "price": 2990}], "body": "mpv"}, {"id": "197681224", "url": "https://auto.bazos.sk/inzerat/197681224/kia-venga-2016-140-1-majitel-sr-voz.php", "title": "KIA Venga 2016 1.40 1 majiteľ, SR voz", "price": 6199, "price_gross": 6199, "fair_price": 6090.0, "discount_pct": -1.8, "verdict": "férová cena", "year": 2016, "km": 103878, "km_per_year": 10100.0, "eg": "1.4 CVVT benzín 66–73 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": "top", "source": "bazos", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AmhuXnl4NvV", "url": "https://www.autobazar.eu/detail/kia-venga-140-1-majitel-sr-voz/AmhuXnl4NvV/", "price": 6199}], "body": "mpv"}, {"id": "197333189", "url": "https://auto.bazos.sk/inzerat/197333189/kia-venga-16-spirit.php", "title": "Kia Venga 1.6 Spirit", "price": 7990, "price_gross": 7990, "fair_price": 7830.0, "discount_pct": -2.0, "verdict": "férová cena", "year": 2012, "km": 132279, "km_per_year": 9200.0, "eg": "1.6 CVVT benzín 92 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Komárno", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmNmQlWre2W", "url": "https://www.autobazar.eu/detail/kia-venga-16-spirit/AmNmQlWre2W/", "price": 7990}], "body": "mpv"}, {"id": "197475562", "url": "https://auto.bazos.sk/inzerat/197475562/kia-venga-14-cvvt-66kw-35-000km.php", "title": "Kia Venga 1.4 CVVT, 66kW (2013)", "price": 6990, "price_gross": 6990, "fair_price": 6780.0, "discount_pct": -3.1, "verdict": "férová cena", "year": 2013, "km": 35602, "km_per_year": 2700.0, "eg": "1.4 CVVT benzín 66–73 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Trnava", "flags": ["nezvyčajne nízky nájazd na vek (35 602 km) – over  či nejde o preklep"], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AmR7ACU8ESw", "url": "https://www.autobazar.eu/detail/kia-venga-14-cvvt-66kw-2013-aj-na-splatky-protiucet/AmR7ACU8ESw/", "price": 6990}], "body": "mpv"}, {"id": "196657769", "url": "https://auto.bazos.sk/inzerat/196657769/kia-venga-16-cvvt-gold-at.php", "title": "Kia Venga 1.6 CVVT Gold AT/6", "price": 9990, "price_gross": 9990, "fair_price": 9690.0, "discount_pct": -3.1, "verdict": "férová cena", "year": 2016, "km": 62225, "km_per_year": 6000.0, "eg": "1.6 CVVT benzín 92 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Komárno", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmgfvgTONDX", "url": "https://www.autobazar.eu/detail/kia-venga-16-cvvt-gold-at/AmgfvgTONDX/", "price": 9990}], "body": "mpv"}, {"id": "ab-AeYFEPtuS1k", "url": "https://www.autobazar.eu/detail/kia-venga-16-cvvt-koza-navigacia-klima/AeYFEPtuS1k/", "title": "Kia Venga 1.6 CVVT, Koža, Navigácia, Klíma", "price": 5000, "price_gross": 5000, "fair_price": 4830.0, "discount_pct": -3.4, "verdict": "férová cena", "year": 2012, "km": 187728, "km_per_year": 13100.0, "eg": "1.6 CVVT benzín 92 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Trenčiansky kraj", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197398721", "url": "https://auto.bazos.sk/inzerat/197398721/kia-venga-zlata-edicia-rv-2018-41000-km.php", "title": "Kia Venga zlatá edícia r.v. 2018, 41.000 km", "price": 9700, "price_gross": 9700, "fair_price": 9350.0, "discount_pct": -3.7, "verdict": "férová cena", "year": 2018, "km": 41000, "km_per_year": 4900.0, "eg": "1.4 CVVT benzín 66–73 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Levice", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "bs-39634888", "url": "https://auto.bazar.sk/39634888-kia-venga-1-4-crdi/", "title": "Kia Venga 1.4 CRDi", "price": 2600, "price_gross": 2600, "fair_price": 2500.0, "discount_pct": -4.1, "verdict": "férová cena", "year": 2010, "km": 239496, "km_per_year": 14700.0, "eg": "1.4 / 1.6 CRDi 57–94 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava V - Petržalka", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197678505", "url": "https://auto.bazos.sk/inzerat/197678505/kia-venga-1-4-cvvt-benzin-48000-km-stk-2028.php", "title": "Kia Venga 1, 4 CVVT benzín 48.000 km STK 2028", "price": 4600, "price_gross": 4600, "fair_price": 4380.0, "discount_pct": -5.1, "verdict": "férová cena", "year": 2010, "km": 48000, "km_per_year": 2900.0, "eg": "1.4 CVVT benzín 66–73 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Levice", "flags": ["nezvyčajne nízky nájazd na vek (48 000 km) – over  či nejde o preklep", "prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197293823", "url": "https://auto.bazos.sk/inzerat/197293823/kia-venga-14-crdi-55kw.php", "title": "Kia Venga 1.4 crdi 55kw", "price": 2650, "price_gross": 2650, "fair_price": 2510.0, "discount_pct": -5.8, "verdict": "férová cena", "year": 2010, "km": 250000, "km_per_year": 15300.0, "eg": "1.4 / 1.6 CRDi 57–94 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Partizánske", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "bs-39685562", "url": "https://auto.bazar.sk/39685562-kia-venga-1-4-crdi/", "title": "Kia Venga 1.4 CRDi", "price": 5400, "price_gross": 5400, "fair_price": 5090.0, "discount_pct": -6.0, "verdict": "férová cena", "year": 2013, "km": 135037, "km_per_year": 10100.0, "eg": "1.4 / 1.6 CRDi 57–94 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava V - Petržalka", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-Ae5kD_b8qm-", "url": "https://www.autobazar.eu/detail/kia-venga-14-crdi-servkniha-klima/Ae5kD_b8qm-/", "title": "Kia Venga 1.4 CRDi, Serv.kniha, Klíma", "price": 5200, "price_gross": 5200, "fair_price": 4780.0, "discount_pct": -8.7, "verdict": "nad trhom", "year": 2013, "km": 135051, "km_per_year": 10100.0, "eg": "1.4 / 1.6 CRDi 57–94 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197085159", "url": "https://auto.bazos.sk/inzerat/197085159/predam-kia-venga-14-crdi66kw.php", "title": "Predám KIA Venga 1.4 CRDi,66kw", "price": 3400, "price_gross": 3400, "fair_price": 3120.0, "discount_pct": -9.0, "verdict": "nad trhom", "year": 2010, "km": 180000, "km_per_year": 11000.0, "eg": "1.4 / 1.6 CRDi 57–94 kW", "cg": 1, "transmission": "manual", "seller_type": "private", "location": "Prešov", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AeloJ7M8P68", "url": "https://www.autobazar.eu/detail/kia-venga-16-crdi-sr1maj-klima-po-stk/AeloJ7M8P68/", "title": "Kia Venga 1.6 CRDi, SR,1.maj, Klíma, po STK", "price": 4000, "price_gross": 4000, "fair_price": 3640.0, "discount_pct": -9.8, "verdict": "nad trhom", "year": 2010, "km": 178358, "km_per_year": 10900.0, "eg": "1.4 / 1.6 CRDi 57–94 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Trnava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "196627614", "url": "https://auto.bazos.sk/inzerat/196627614/seat-leon-fr-14-tsi-2013-full-led-nova-stkek.php", "title": "Kia Venga • 1.4 CVVT • 126 tisíc KM • SK auto • Nová STK/EK", "price": 4990, "price_gross": 4990, "fair_price": 4110.0, "discount_pct": -21.4, "verdict": "výrazne nad trhom", "year": 2010, "km": 126000, "km_per_year": 7700.0, "eg": "1.4 CVVT benzín 66–73 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Levice", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "196048294", "url": "https://auto.bazos.sk/inzerat/196048294/kia-venga-16-16v-benzinlpg-rv-2010-1-majitel-nova.php", "title": "KIA Venga 1.6 16V, benzín/LPG, 2010, STK 27.5.28, garážované", "price": 4489, "price_gross": 4489, "fair_price": 3380.0, "discount_pct": -32.9, "verdict": "výrazne nad trhom", "year": 2010, "km": 226524, "km_per_year": 13900.0, "eg": "LPG", "cg": 2, "transmission": "manual", "seller_type": "uncertain", "location": "Poprad", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}];
+const DATA = [{"id": "196447908", "url": "https://auto.bazos.sk/inzerat/196447908/kia-venga.php", "title": "Kia Venga", "price": 3390, "price_gross": 3390, "fair_price": 4290.0, "discount_pct": 20.9, "verdict": "výrazne pod trhom – over prečo", "year": 2010, "km": 138000, "km_per_year": 8400.0, "eg": "1.4 / 1.6 CRDi 57–94 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Nové Zámky", "flags": [], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197715037", "url": "https://auto.bazos.sk/inzerat/197715037/kia-venga-14-crdi-silver-m6.php", "title": "✅ Kia Venga 1.4 CRDi Silver M6 ✅", "price": 3990, "price_gross": 3990, "fair_price": 4740.0, "discount_pct": 15.9, "verdict": "výrazne pod trhom – over prečo", "year": 2013, "km": 124242, "km_per_year": 9300.0, "eg": "1.4 / 1.6 CRDi 57–94 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Lučenec", "flags": [], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "bs-39634635", "url": "https://auto.bazar.sk/39634635-kia-venga-1-4-crdi/", "title": "Kia Venga 1.4 CRDi", "price": 3400, "price_gross": 3400, "fair_price": 3830.0, "discount_pct": 11.2, "verdict": "pod trhom", "year": 2011, "km": 132295, "km_per_year": 8600.0, "eg": "1.4 / 1.6 CRDi 57–94 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava V - Petržalka", "flags": [], "pick": "budget", "source": "bazarsk", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "195978302", "url": "https://auto.bazos.sk/inzerat/195978302/predam-kia-venga-14crsi-2010.php", "title": "Predam kia venga 1.4crsi 2010", "price": 2800, "price_gross": 2800, "fair_price": 3020.0, "discount_pct": 7.3, "verdict": "pod trhom", "year": 2010, "km": 210575, "km_per_year": 12900.0, "eg": "1.4 / 1.6 CRDi 57–94 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Vranov nad Topľou", "flags": [], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AeS31obEIHo", "url": "https://www.autobazar.eu/detail/kia-venga-16-cvvt-automat-sr2maj/AeS31obEIHo/", "title": "Kia Venga 1.6 CVVT, Automat, SR,2.maj", "price": 5900, "price_gross": 5900, "fair_price": 6350.0, "discount_pct": 7.1, "verdict": "pod trhom", "year": 2010, "km": 73424, "km_per_year": 4500.0, "eg": "1.6 CVVT benzín 92 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Banská Bystrica", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-Am3d5kxyMfI", "url": "https://www.autobazar.eu/detail/kia-venga-14-cvvt-base/Am3d5kxyMfI/", "title": "Kia Venga 1.4 CVVT Base", "price": 2990, "price_gross": 2990, "fair_price": 3140.0, "discount_pct": 4.9, "verdict": "férová cena", "year": 2012, "km": 313034, "km_per_year": 21800.0, "eg": "1.4 CVVT benzín 66–73 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Nové Mesto nad Váhom", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197045107", "url": "https://auto.bazos.sk/inzerat/197045107/kia-venga-14-cvvt-base.php", "price": 2990}], "body": "mpv"}, {"id": "195987812", "url": "https://auto.bazos.sk/inzerat/195987812/kia-venga.php", "title": "kia venga", "price": 2600, "price_gross": 2600, "fair_price": 2730.0, "discount_pct": 4.8, "verdict": "férová cena", "year": 2011, "km": 283000, "km_per_year": 18500.0, "eg": "1.4 CVVT benzín 66–73 kW", "cg": 0, "transmission": null, "seller_type": "dealer", "location": "Brezno", "flags": ["prevodovka nezistená"], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197286061", "url": "https://auto.bazos.sk/inzerat/197286061/kia-venga-14.php", "title": "Kia Venga 1.4", "price": 3500, "price_gross": 3500, "fair_price": 3630.0, "discount_pct": 3.6, "verdict": "férová cena", "year": 2011, "km": 220000, "km_per_year": 14300.0, "eg": "1.4 CVVT benzín 66–73 kW", "cg": 0, "transmission": null, "seller_type": "dealer", "location": "Zlaté Moravce", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-Am6f9tnSA4B", "url": "https://www.autobazar.eu/detail/kia-venga-14-cvvt-66kw-2019-aj-na-splatky-protiucet/Am6f9tnSA4B/", "title": "Kia Venga 1.4 CVVT, 66kW (2019) / AJ NA SPLÁTKY / PROTIÚČET /", "price": 10100, "price_gross": 10100, "fair_price": 10470.0, "discount_pct": 3.5, "verdict": "férová cena", "year": 2019, "km": 97269, "km_per_year": 13300.0, "eg": "1.4 CVVT benzín 66–73 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Trenčín", "flags": [], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197640482", "url": "https://auto.bazos.sk/inzerat/197640482/kia-venga-14-cvvt-66kw-2019.php", "price": 10100}], "body": "mpv"}, {"id": "197681224", "url": "https://auto.bazos.sk/inzerat/197681224/kia-venga-2016-140-1-majitel-sr-voz.php", "title": "KIA Venga 2016 1.40 1 majiteľ, SR voz", "price": 6199, "price_gross": 6199, "fair_price": 6420.0, "discount_pct": 3.4, "verdict": "férová cena", "year": 2016, "km": 103878, "km_per_year": 10100.0, "eg": "1.4 CVVT benzín 66–73 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": "top", "source": "bazos", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AmhuXnl4NvV", "url": "https://www.autobazar.eu/detail/kia-venga-140-1-majitel-sr-voz/AmhuXnl4NvV/", "price": 6199}], "body": "mpv"}, {"id": "196629725", "url": "https://auto.bazos.sk/inzerat/196629725/kia-venga-14cvt-benzin-2018-43000km.php", "title": "KIA Venga  1,4cvt benzín 2018 43,000km", "price": 7999, "price_gross": 7999, "fair_price": 8200.0, "discount_pct": 2.5, "verdict": "férová cena", "year": 2017, "km": 43000, "km_per_year": 4600.0, "eg": "1.4 CVVT benzín 66–73 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Partizánske", "flags": [], "pick": "top", "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197450870", "url": "https://auto.bazos.sk/inzerat/197450870/kia-venga-14-5mt-2017-40327-km.php", "title": "Kia Venga 1,4 5MT 12/2017  40.327 km", "price": 8490, "price_gross": 8490, "fair_price": 8630.0, "discount_pct": 1.6, "verdict": "férová cena", "year": 2017, "km": 40327, "km_per_year": 4300.0, "eg": "1.4 CVVT benzín 66–73 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Trenčín", "flags": [], "pick": "top", "source": "bazos", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "197293823", "url": "https://auto.bazos.sk/inzerat/197293823/kia-venga-14-crdi-55kw.php", "title": "Kia Venga 1.4 crdi 55kw", "price": 2650, "price_gross": 2650, "fair_price": 2660.0, "discount_pct": 0.4, "verdict": "férová cena", "year": 2010, "km": 250000, "km_per_year": 15300.0, "eg": "1.4 / 1.6 CRDi 57–94 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Partizánske", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "196923254", "url": "https://auto.bazos.sk/inzerat/196923254/kia-venga-16-crdi-94kw.php", "title": "Kia Venga 1.6 CRDI 94kw", "price": 2690, "price_gross": 2690, "fair_price": 2700.0, "discount_pct": 0.4, "verdict": "férová cena", "year": 2010, "km": 300000, "km_per_year": 18400.0, "eg": "1.4 / 1.6 CRDi 57–94 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Levoča", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AmpcirTP9U8", "url": "https://www.autobazar.eu/detail/kia-venga-14-cvvt-lx/AmpcirTP9U8/", "title": "Kia Venga 1.4 CVVT LX", "price": 6790, "price_gross": 6790, "fair_price": 6790.0, "discount_pct": 0.1, "verdict": "férová cena", "year": 2013, "km": 39660, "km_per_year": 3000.0, "eg": "1.4 CVVT benzín 66–73 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Žilina", "flags": ["nezvyčajne nízky nájazd na vek (39 660 km) – over  či nejde o preklep"], "pick": null, "source": "autobazar", "origin": "SR", "also_listed": [{"source": "bazos", "id": "197184397", "url": "https://auto.bazos.sk/inzerat/197184397/kia-venga-14-cvvt-lx.php", "price": 6790}], "body": "mpv"}, {"id": "bs-39634888", "url": "https://auto.bazar.sk/39634888-kia-venga-1-4-crdi/", "title": "Kia Venga 1.4 CRDi", "price": 2600, "price_gross": 2600, "fair_price": 2550.0, "discount_pct": -1.9, "verdict": "férová cena", "year": 2010, "km": 239496, "km_per_year": 14700.0, "eg": "1.4 / 1.6 CRDi 57–94 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava V - Petržalka", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-AeYFEPtuS1k", "url": "https://www.autobazar.eu/detail/kia-venga-16-cvvt-koza-navigacia-klima/AeYFEPtuS1k/", "title": "Kia Venga 1.6 CVVT, Koža, Navigácia, Klíma", "price": 5000, "price_gross": 5000, "fair_price": 4890.0, "discount_pct": -2.1, "verdict": "férová cena", "year": 2012, "km": 187728, "km_per_year": 13100.0, "eg": "1.6 CVVT benzín 92 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Trenčiansky kraj", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197333189", "url": "https://auto.bazos.sk/inzerat/197333189/kia-venga-16-spirit.php", "title": "Kia Venga 1.6 Spirit", "price": 7990, "price_gross": 7990, "fair_price": 7790.0, "discount_pct": -2.6, "verdict": "férová cena", "year": 2012, "km": 132279, "km_per_year": 9200.0, "eg": "1.6 CVVT benzín 92 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Komárno", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmNmQlWre2W", "url": "https://www.autobazar.eu/detail/kia-venga-16-spirit/AmNmQlWre2W/", "price": 7990}], "body": "mpv"}, {"id": "197678505", "url": "https://auto.bazos.sk/inzerat/197678505/kia-venga-1-4-cvvt-benzin-48000-km-stk-2028.php", "title": "Kia Venga 1, 4 CVVT benzín 48.000 km STK 2028", "price": 4600, "price_gross": 4600, "fair_price": 4460.0, "discount_pct": -3.2, "verdict": "férová cena", "year": 2010, "km": 48000, "km_per_year": 2900.0, "eg": "1.4 CVVT benzín 66–73 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Levice", "flags": ["nezvyčajne nízky nájazd na vek (48 000 km) – over  či nejde o preklep", "prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "196657769", "url": "https://auto.bazos.sk/inzerat/196657769/kia-venga-16-cvvt-gold-at.php", "title": "Kia Venga 1.6 CVVT Gold AT/6", "price": 9990, "price_gross": 9990, "fair_price": 9520.0, "discount_pct": -4.9, "verdict": "férová cena", "year": 2016, "km": 62225, "km_per_year": 6000.0, "eg": "1.6 CVVT benzín 92 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Komárno", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmgfvgTONDX", "url": "https://www.autobazar.eu/detail/kia-venga-16-cvvt-gold-at/AmgfvgTONDX/", "price": 9990}], "body": "mpv"}, {"id": "197475562", "url": "https://auto.bazos.sk/inzerat/197475562/kia-venga-14-cvvt-66kw-35-000km.php", "title": "Kia Venga 1.4 CVVT, 66kW (2013)", "price": 6990, "price_gross": 6990, "fair_price": 6640.0, "discount_pct": -5.2, "verdict": "férová cena", "year": 2013, "km": 35602, "km_per_year": 2700.0, "eg": "1.4 CVVT benzín 66–73 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Trnava", "flags": ["nezvyčajne nízky nájazd na vek (35 602 km) – over  či nejde o preklep"], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [{"source": "autobazar", "id": "ab-AmR7ACU8ESw", "url": "https://www.autobazar.eu/detail/kia-venga-14-cvvt-66kw-2013-aj-na-splatky-protiucet/AmR7ACU8ESw/", "price": 6990}], "body": "mpv"}, {"id": "ab-AeloJ7M8P68", "url": "https://www.autobazar.eu/detail/kia-venga-16-crdi-sr1maj-klima-po-stk/AeloJ7M8P68/", "title": "Kia Venga 1.6 CRDi, SR,1.maj, Klíma, po STK", "price": 4000, "price_gross": 4000, "fair_price": 3760.0, "discount_pct": -6.4, "verdict": "férová cena", "year": 2010, "km": 178358, "km_per_year": 10900.0, "eg": "1.4 / 1.6 CRDi 57–94 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Trnava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "197398721", "url": "https://auto.bazos.sk/inzerat/197398721/kia-venga-zlata-edicia-rv-2018-41000-km.php", "title": "Kia Venga zlatá edícia r.v. 2018, 41.000 km", "price": 9700, "price_gross": 9700, "fair_price": 9110.0, "discount_pct": -6.5, "verdict": "férová cena", "year": 2018, "km": 41000, "km_per_year": 4900.0, "eg": "1.4 CVVT benzín 66–73 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Levice", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "bs-39685562", "url": "https://auto.bazar.sk/39685562-kia-venga-1-4-crdi/", "title": "Kia Venga 1.4 CRDi", "price": 5400, "price_gross": 5400, "fair_price": 4970.0, "discount_pct": -8.6, "verdict": "nad trhom", "year": 2013, "km": 135037, "km_per_year": 10100.0, "eg": "1.4 / 1.6 CRDi 57–94 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava V - Petržalka", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "ab-Ae5kD_b8qm-", "url": "https://www.autobazar.eu/detail/kia-venga-14-crdi-servkniha-klima/Ae5kD_b8qm-/", "title": "Kia Venga 1.4 CRDi, Serv.kniha, Klíma", "price": 5200, "price_gross": 5200, "fair_price": 4770.0, "discount_pct": -9.0, "verdict": "nad trhom", "year": 2013, "km": 135051, "km_per_year": 10100.0, "eg": "1.4 / 1.6 CRDi 57–94 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "mpv"}, {"id": "196627614", "url": "https://auto.bazos.sk/inzerat/196627614/seat-leon-fr-14-tsi-2013-full-led-nova-stkek.php", "title": "Kia Venga • 1.4 CVVT • 126 tisíc KM • SK auto • Nová STK/EK", "price": 4990, "price_gross": 4990, "fair_price": 4380.0, "discount_pct": -13.8, "verdict": "nad trhom", "year": 2010, "km": 126000, "km_per_year": 7700.0, "eg": "1.4 CVVT benzín 66–73 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Levice", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "mpv"}, {"id": "196048294", "url": "https://auto.bazos.sk/inzerat/196048294/kia-venga-16-16v-benzinlpg-rv-2010-1-majitel-nova.php", "title": "KIA Venga 1.6 16V, benzín/LPG, 2010, STK 27.5.28, garážované", "price": 4489, "price_gross": 4489, "fair_price": 3450.0, "discount_pct": -30.3, "verdict": "výrazne nad trhom", "year": 2010, "km": 226524, "km_per_year": 13900.0, "eg": "LPG", "cg": 2, "transmission": "manual", "seller_type": "uncertain", "location": "Poprad", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "mpv"}];
 const GROUPS = ["Benzín", "Diesel CRDi", "LPG a nezistený"];
 const BODY = {"mpv": "malé MPV"};
 const fmt = n => Math.round(n).toLocaleString("sk-SK");

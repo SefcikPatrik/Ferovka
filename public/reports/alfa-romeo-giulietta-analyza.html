@@ -106,45 +106,44 @@ footer { color: var(--muted); font-size: 12.5px; margin-top: 48px; border-top: 1
 .theme-btn { float: right; background: var(--surface); color: var(--text-2); border: 1px solid var(--border); border-radius: 8px; padding: 5px 10px; cursor: pointer; font: inherit; font-size: 13px; }
 @media (max-width: 640px) { h1 { font-size: 24px; } .prices { grid-template-columns: 1fr 1fr 1fr; } .big { font-size: 18px; } th, td { padding: 7px 6px; } }
 </style>
-<!-- ferovka-theme --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"><style id="ferovka-theme">/* Férovka look for the generated analyses – injected by sync-reports.mjs after each report's own <style>.
-   Same palette and type as the site; chart colours (--s1..--s3) stay the validated set. */
-:root {
-  --bg: #f5f4ef; --surface: #fdfdfb; --surface-2: #eeede6; --border: #e1dfd6;
-  --text: #0f1513; --text-2: #4f5551; --muted: #6f746f;
-  --accent: #0b8a56; --good: #0b7a4b; --grid: #e6e4dc; --win: #dff3e9;
+<!-- ferovka-theme --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap"><style id="ferovka-theme">/* OverAuto look for the generated analyses – injected by sync-reports.mjs after each report's own <style>.
+   Same palette and type as the site (design/znacka.html). The site is light only, so the dark blocks repeat the light tokens.
+   Chart colours (--s1..--s3) stay the report's validated set. */
+:root, :root[data-theme="dark"] {
+  color-scheme: light;
+  --bg: #F7F6F2; --surface: #FFFFFF; --surface-2: #EFEDE7; --border: #DEDBD3;
+  --text: #14161A; --text-2: #4A4F57; --muted: #4A4F57;
+  --accent: #1E4ED8; --good: #1E4ED8; --grid: #E7E4DC; --win: #EEF2FD;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0d110f; --surface: #151a17; --surface-2: #1d2420; --border: #2a322d;
-    --text: #eef1ec; --text-2: #b6bdb6; --muted: #8f978f;
-    --accent: #2fc583; --good: #4cd08f; --grid: #1f2622; --win: #143223;
+    color-scheme: light;
+    --bg: #F7F6F2; --surface: #FFFFFF; --surface-2: #EFEDE7; --border: #DEDBD3;
+    --text: #14161A; --text-2: #4A4F57; --muted: #4A4F57;
+    --accent: #1E4ED8; --good: #1E4ED8; --grid: #E7E4DC; --win: #EEF2FD;
   }
 }
-:root[data-theme="dark"] {
-  --bg: #0d110f; --surface: #151a17; --surface-2: #1d2420; --border: #2a322d;
-  --text: #eef1ec; --text-2: #b6bdb6; --muted: #8f978f;
-  --accent: #2fc583; --good: #4cd08f; --grid: #1f2622; --win: #143223;
-}
 
-body { font-family: "Manrope", system-ui, sans-serif; }
-h1, h2 { letter-spacing: -0.02em; font-weight: 800; }
+body { font-family: "Inter", system-ui, sans-serif; background: var(--bg); color: var(--text); }
+h1, h2, h3, .kpi .v, .price { font-family: "Space Grotesk", "Inter", sans-serif; }
+h1, h2 { letter-spacing: -0.02em; font-weight: 700; }
+a { color: var(--accent); }
 .tag { color: var(--accent); }
 
 /* photo header (removed by the site's viewer, which shows its own) */
-.fv-hero { position: relative; margin: 0 0 26px; border-radius: 20px; overflow: hidden; aspect-ratio: 21 / 8; background: #0d110f; display: flex; }
+.fv-hero { position: relative; margin: 0 0 26px; border-radius: 20px; overflow: hidden; aspect-ratio: 21 / 8; background: #14161A; display: flex; }
 .fv-hero img { flex: 1; min-width: 0; height: 100%; object-fit: cover; animation: fv-zoom 1.4s cubic-bezier(.2,.7,.2,1) both; }
-.fv-collage img + img { border-left: 3px solid #0d110f; }
+.fv-collage img + img { border-left: 3px solid #14161A; }
 .fv-hero::after { content: ""; position: absolute; inset: 0; pointer-events: none;
-  background: linear-gradient(180deg, transparent 55%, rgb(13 17 15 / .75)),
-    repeating-linear-gradient(90deg, rgb(47 197 131 / .06) 0 1px, transparent 1px 48px); }
+  background: linear-gradient(180deg, transparent 55%, rgb(20 22 26 / .75)); }
 .fv-hero figcaption { position: absolute; right: 12px; bottom: 8px; z-index: 1; font-size: 11px; color: rgb(255 255 255 / .75); }
 .fv-hero figcaption a { color: inherit; }
 
-/* cards & panels: softer, lift on hover */
+/* cards & panels: white on paper, 16px corners, lift on hover */
 .card, .kpi, .explain, .chart-wrap, .box { border-radius: 16px; }
 .card { transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease; }
-.card:hover { transform: translateY(-3px); border-color: var(--accent); box-shadow: 0 14px 30px -18px rgb(0 0 0 / .45); }
-.badge.pick { background: var(--accent); }
+.card:hover { transform: translateY(-3px); border-color: #14161A; box-shadow: 0 24px 48px -28px rgb(20 22 26 / .35); }
+.badge.pick { background: #F26A1B; color: #14161A; }
 
 /* entrance animation */
 @keyframes fv-up { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
@@ -163,40 +162,40 @@ h1, .lead, .kpis, .cards .card { animation: fv-up .6s cubic-bezier(.2,.7,.2,1) b
 @media (max-width: 640px) { .fv-hero { aspect-ratio: 16 / 9; border-radius: 14px; } }
 
 /* touch: hint under the chart tooltip (report-chart.js) */
-.fv-hint { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--border, rgba(127,127,127,.3)); font-weight: 700; color: var(--accent, #2fc583); }
+.fv-hint { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--border, rgba(127,127,127,.3)); font-weight: 700; color: var(--accent, #1E4ED8); }
 </style><!-- /ferovka-theme -->
 </head>
 <body>
 <main><!-- ferovka-theme --><!-- /ferovka-theme -->
 <button class="theme-btn" id="themeBtn" type="button">Svetlý / tmavý</button>
 <h1>Alfa Romeo Giulietta – ktorá ponuka sa oplatí</h1>
-<p class="lead">Analýza aktuálnych inzerátov Alfa Romeo Giulietta (2010–2020) od 2 500 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 59 inzerátov (30 na bazoši, 16 na autobazar.eu, 13 na bazar.sk) – prezreli sme 81 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 37 rôznych áut zo Slovenska. Každé auto sme porovnali
+<p class="lead">Analýza aktuálnych inzerátov Alfa Romeo Giulietta (2010–2020) od 2 500 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (24. 11. 2026). Na portáloch je spolu 56 inzerátov (27 na bazoši, 16 na autobazar.eu, 13 na bazar.sk) – prezreli sme 80 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 33 rôznych áut zo Slovenska. Každé auto sme porovnali
 s <b>férovou cenou</b>: tú vypočítal model naučený na celom trhu podľa veku, nájazdu, motora, prevodovky a typu predajcu.</p>
 
 <div class="kpis">
-  <div class="kpi"><div class="v">37</div><div class="l">inzerátov Giulietty (nad 2 500 €)</div></div>
-  <div class="kpi"><div class="v">26</div><div class="l">ohodnotených (majú rok aj km)</div></div>
-  <div class="kpi"><div class="v">5 995 €</div><div class="l">medián ceny s DPH</div></div>
-  <div class="kpi"><div class="v">78 %</div><div class="l">rozdielov v cenách vysvetlí model</div></div>
+  <div class="kpi"><div class="v">33</div><div class="l">inzerátov Giulietty (nad 2 500 €)</div></div>
+  <div class="kpi"><div class="v">24</div><div class="l">ohodnotených (majú rok aj km)</div></div>
+  <div class="kpi"><div class="v">6 100 €</div><div class="l">medián ceny s DPH</div></div>
+  <div class="kpi"><div class="v">76 %</div><div class="l">rozdielov v cenách vysvetlí model</div></div>
 </div>
 
 
 <h2>Odkiaľ sú dáta: bazoš, autobazar.eu a bazar.sk</h2>
 <div class="kpis">
-  <div class="kpi"><div class="v">16</div><div class="l">ohodnotených z bazoša</div></div>
+  <div class="kpi"><div class="v">14</div><div class="l">ohodnotených z bazoša</div></div>
   <div class="kpi"><div class="v">9</div><div class="l">ohodnotených z autobazar.eu</div></div><div class="kpi"><div class="v">1</div><div class="l">ohodnotených z bazar.sk</div></div>
-  <div class="kpi"><div class="v">6</div><div class="l">áut bolo na viacerých portáloch – započítané raz</div></div>
+  <div class="kpi"><div class="v">7</div><div class="l">áut bolo na viacerých portáloch – započítané raz</div></div>
   <div class="kpi"><div class="v">2 / 5</div><div class="l">s uvedeným pôvodom SR / dovoz</div></div>
 </div>
 <div class="explain">
-  <p><b>Tri portály, jeden trh.</b> Bazoš prehľadal 28 inzerátov, autobazar.eu
+  <p><b>Tri portály, jeden trh.</b> Bazoš prehľadal 25 inzerátov, autobazar.eu
   16, bazar.sk 4. Ponuky z Česka (na autobazar.eu ich je veľa) sme vynechali. Autobazáre často dávajú
-  to isté auto na viac portálov. Takéto dvojice (5 v rebríčku) sme spojili podľa VIN alebo zhody roku, km a ceny,
+  to isté auto na viac portálov. Takéto dvojice (6 v rebríčku) sme spojili podľa VIN alebo zhody roku, km a ceny,
   aby sa v modeli nerátali dvakrát. Pri aute nájdeš odkaz na všetky ponuky – niekedy sa líšia cenou.</p>
-  <p><b>Rozdiel medzi portálmi:</b> rovnaké auto je na autobazar.eu v priemere +7,2 %
+  <p><b>Rozdiel medzi portálmi:</b> rovnaké auto je na autobazar.eu v priemere +5,1 %
   oproti bazošu. Na autobazar.eu predávajú hlavne firmy (6 z 9 ohodnotených).</p>
   <p><b>Kúpené v SR vs. dovoz:</b> autá s uvedeným pôvodom zo SR sú oproti autám bez uvedeného pôvodu
-  –, dovezené -8,7 %
+  –, dovezené -9,7 %
   (pri rovnakom veku, nájazde a motore). Pôvod zo SR je výhoda pri overovaní histórie, trh zaň však nepripláca – väčšina
   inzerátov pôvod jednoducho neuvádza. V tabulke dole si môžeš nechať zobraziť len autá kúpené v SR.</p>
 </div>
@@ -205,18 +204,18 @@ s <b>férovou cenou</b>: tú vypočítal model naučený na celom trhu podľa ve
 <p class="section-lead">Toto sa model naučil z trhu. Keď porovnávaš dve autá, tieto čísla ti povedia, koľko má byť
 rozdiel v cene, aby to bolo fér.</p>
 <div class="kpis">
-  <div class="kpi"><div class="v">-2,3 %</div><div class="l">každých ďalších 10 000 km</div></div>
-  <div class="kpi"><div class="v">-2,0 %</div><div class="l">každý rok veku navyše</div></div>
-  <div class="kpi"><div class="v">+26 %</div><div class="l">príplatok za automat (DSG)</div></div>
-  <div class="kpi"><div class="v">+0,7 %</div><div class="l">príplatok u predajcu / firmy</div></div>
-  <div class="kpi"><div class="v">+13,2 %</div><div class="l">Giulietta po facelifte (2016+) oproti cene podľa veku</div></div>
-  <div class="kpi"><div class="v">+25,6 %</div><div class="l">príplatok za automat</div></div>
+  <div class="kpi"><div class="v">-2,1 %</div><div class="l">každých ďalších 10 000 km</div></div>
+  <div class="kpi"><div class="v">-1,1 %</div><div class="l">každý rok veku navyše</div></div>
+  <div class="kpi"><div class="v">+27 %</div><div class="l">príplatok za automat (DSG)</div></div>
+  <div class="kpi"><div class="v">+5,3 %</div><div class="l">príplatok u predajcu / firmy</div></div>
+  <div class="kpi"><div class="v">+19,9 %</div><div class="l">Giulietta po facelifte (2016+) oproti cene podľa veku</div></div>
+  <div class="kpi"><div class="v">+26,9 %</div><div class="l">príplatok za automat</div></div>
 </div>
 <div class="explain">
   <p><b>Príklad:</b> dve rovnaké Giulietty 2.0 JTDm z roku 2014, jedno má 60 tis. km, druhé 120 tis. km. Druhé má byť
-  približne o 14 % lacnejšie (6 × -2,3 %). Ak je lacnejšie len o 5 %, preplácaš kilometre.</p>
+  približne o 13 % lacnejšie (6 × -2,1 %). Ak je lacnejšie len o 5 %, preplácaš kilometre.</p>
   <p><b>Ako čítať „pod trhom“:</b> +15 % znamená, že auto stojí o 15 % menej, než by malo podľa trhu. Bežný rozptyl
-  cien je asi ±64 %, takže až zľava nad ~10–15 % je naozaj výnimočná. Pri takej zľave vždy zisti, prečo je auto lacné
+  cien je asi ±81 %, takže až zľava nad ~10–15 % je naozaj výnimočná. Pri takej zľave vždy zisti, prečo je auto lacné
   (stav, história, nájazd).</p>
   <p><b>DPH:</b> ceny uvedené bez DPH (napr. „10 300 € netto“) sme prepočítali na cenu s DPH, ktorú zaplatí súkromná osoba.</p>
 </div>
@@ -233,25 +232,25 @@ Zoradené podľa toho, ako ich odporúčame.</p>
   <div class="facts src">zdroj: <b>autobazar.eu</b></div>
   <div class="prices">
     <div><span class="lbl">Cena</span><span class="big">8 949 €</span></div>
-    <div><span class="lbl">Férová cena</span><span class="mid">10 510 €</span></div>
-    <div><span class="lbl">Pod trhom</span><span class="mid good">+14.9 %</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">10 250 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+12.7 %</span></div>
   </div>
-  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:50%"></span></div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:42%"></span></div>
   <ul class="pc"><li class="pro">2012, 2.0 JTDm, automat TCT, 80 tis. km</li><li class="pro">Nízky nájazd, garážované, nová vodná pumpa a ramená</li><li class="pro">~15 % pod férovou cenou</li><li class="con">Over stav prevodovky TCT</li></ul>
-<!-- history-card:start --><p class="note fv-history-card">V ponuke 16 dní (od 8. 11.)</p><!-- history-card:end --></article>
+</article>
 <article class="card">
   <div class="card-head"><span class="tag">Súkromník: Giulietta 2.0 JTDm 170 k automat</span><span class="loc">Púchov</span></div>
   <h3><a href="https://auto.bazos.sk/inzerat/196173104/alfa-romeo-giulietta-20-jtdm-170-k-automat.php" target="_blank" rel="noopener">Alfa Romeo Giulietta 2.0 JTDm 170 k Automat</a></h3>
-  <div class="facts">2012 · 236 982 km · 2.0 JTDm 103–129 kW · automat · súkromník</div>
+  <div class="facts">2012 · 236 982 km · 2.0 JTDm 103–129 kW · automat · neisté</div>
   <div class="facts src">zdroj: <b>bazoš</b></div>
   <div class="prices">
     <div><span class="lbl">Cena</span><span class="big">5 700 €</span></div>
-    <div><span class="lbl">Férová cena</span><span class="mid">6 150 €</span></div>
-    <div><span class="lbl">Pod trhom</span><span class="mid good">+7.4 %</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">6 290 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+9.4 %</span></div>
   </div>
-  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:25%"></span></div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:31%"></span></div>
   <ul class="pc"><li class="pro">1/2012, 2.0 JTDm 125 kW, 6-st. automat, 237 tis. km</li><li class="pro">Pravidelne servisovaná, veľmi dobrý technický stav</li><li class="pro">~7 % pod férovou cenou</li><li class="con">Vyšší nájazd</li></ul>
-<!-- history-card:start --><p class="note fv-history-card">V ponuke aspoň 51 dní</p><!-- history-card:end --></article>
+</article>
 <article class="card">
   <div class="card-head"><span class="tag">Giulietta 1.4 T z SR po STK</span><span class="loc">Žilinský kraj</span></div>
   <h3><a href="https://www.autobazar.eu/detail/alfa-romeo-giulietta-14-t-klima-tempomat-po-stk/AeHdxXHh-B5/" target="_blank" rel="noopener">Alfa Romeo Giulietta 1.4 T, Klíma, Tempomat, po STK</a></h3>
@@ -259,12 +258,12 @@ Zoradené podľa toho, ako ich odporúčame.</p>
   <div class="facts src">zdroj: <b>autobazar.eu</b></div>
   <div class="prices">
     <div><span class="lbl">Cena</span><span class="big">5 300 €</span></div>
-    <div><span class="lbl">Férová cena</span><span class="mid">5 740 €</span></div>
-    <div><span class="lbl">Pod trhom</span><span class="mid good">+7.7 %</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">5 730 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+7.5 %</span></div>
   </div>
-  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:26%"></span></div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:25%"></span></div>
   <ul class="pc"><li class="pro">2012, 1.4 T benzín, manuál, 131 tis. km</li><li class="pro">Kúpené u autorizovaného predajcu v SR, klimatizácia, tempomat</li><li class="pro">~8 % pod férovou cenou</li><li class="con">AAA AUTO – pri financovaní 4 900 €</li></ul>
-<!-- history-card:start --><p class="note fv-history-card">V ponuke 16 dní (od 8. 11.)</p><!-- history-card:end --></article>
+</article>
 <article class="card">
   <div class="card-head"><span class="tag">Giulietta 1.4 Turbo s úplnou servisnou históriou</span><span class="loc">Martin</span></div>
   <h3><a href="https://auto.bazos.sk/inzerat/197008104/alfa-romeo-giulietta-14-turbo-88-kw.php" target="_blank" rel="noopener">Alfa Romeo Giulietta 1,4 TURBO 88 kW</a></h3>
@@ -272,12 +271,12 @@ Zoradené podľa toho, ako ich odporúčame.</p>
   <div class="facts src">zdroj: <b>bazoš</b> · dovezené</div>
   <div class="prices">
     <div><span class="lbl">Cena</span><span class="big">5 900 €</span></div>
-    <div><span class="lbl">Férová cena</span><span class="mid">6 330 €</span></div>
-    <div><span class="lbl">Pod trhom</span><span class="mid good">+6.8 %</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">6 460 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+8.7 %</span></div>
   </div>
-  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:23%"></span></div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:29%"></span></div>
   <ul class="pc"><li class="pro">7/2010, 1.4 Turbo 88 kW, 6-st. manuál, 119 tis. km</li><li class="pro">Nižší nájazd, servisná knižka</li><li class="pro">~7 % pod férovou cenou</li><li class="con">Predáva autobazár</li><li class="con">Dovoz</li></ul>
-<!-- history-card:start --><p class="note fv-history-card">V ponuke aspoň 25 dní</p><!-- history-card:end --></article></div>
+</article></div>
 <div class="subhead">Lacnejšie Giulietty do 5 000 €</div>
 <div class="cards">
 <article class="card">
@@ -287,12 +286,12 @@ Zoradené podľa toho, ako ich odporúčame.</p>
   <div class="facts src">zdroj: <b>autobazar.eu</b></div>
   <div class="prices">
     <div><span class="lbl">Cena</span><span class="big">3 300 €</span></div>
-    <div><span class="lbl">Férová cena</span><span class="mid">4 750 €</span></div>
-    <div><span class="lbl">Pod trhom</span><span class="mid good">+30.5 %</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">4 830 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+31.7 %</span></div>
   </div>
   <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:100%"></span></div>
   <ul class="pc"><li class="pro">2011, 1.4 T benzín 88 kW, manuál, 189 tis. km</li><li class="pro">Koža, panoramatická strecha</li><li class="pro">~31 % pod férovou cenou</li><li class="con">AAA AUTO – pri financovaní 3 000 €</li></ul>
-<!-- history-card:start --><p class="note fv-history-card">V ponuke 13 dní (od 11. 11.)</p><!-- history-card:end --></article>
+</article>
 <article class="card">
   <div class="card-head"><span class="tag">Giulietta 1.6 JTD za 3 500 €</span><span class="loc">Nitra</span></div>
   <h3><a href="https://auto.bazos.sk/inzerat/197687726/alfa-romeo-giulietta-16-jtd.php" target="_blank" rel="noopener">Alfa Romeo Giulietta 1.6 JTD</a></h3>
@@ -300,12 +299,12 @@ Zoradené podľa toho, ako ich odporúčame.</p>
   <div class="facts src">zdroj: <b>bazoš</b> · dovezené</div>
   <div class="prices">
     <div><span class="lbl">Cena</span><span class="big">3 500 €</span></div>
-    <div><span class="lbl">Férová cena</span><span class="mid">4 990 €</span></div>
-    <div><span class="lbl">Pod trhom</span><span class="mid good">+29.9 %</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">4 890 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+28.5 %</span></div>
   </div>
-  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:100%"></span></div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:95%"></span></div>
   <ul class="pc"><li class="pro">2013, 1.6 JTDm 77 kW, 6-st. manuál, 167 tis. km</li><li class="pro">Automatická klimatizácia</li><li class="pro">~30 % pod férovou cenou</li><li class="con">Predáva autobazár</li><li class="con">Dovoz</li></ul>
-<!-- history-card:start --><p class="note fv-history-card">V ponuke 5 dní (od 19. 11.)</p><!-- history-card:end --></article>
+</article>
 <article class="card">
   <div class="card-head"><span class="tag">Giulietta 2.0 JTDm 170 k s novými rozvodmi</span><span class="loc">Rimavská Sobota</span></div>
   <h3><a href="https://auto.bazos.sk/inzerat/197029596/alfa-romeo-giulietta-20jtdm.php" target="_blank" rel="noopener">Alfa  Romeo Giulietta 2.0JTDm</a></h3>
@@ -313,25 +312,12 @@ Zoradené podľa toho, ako ich odporúčame.</p>
   <div class="facts src">zdroj: <b>bazoš</b></div>
   <div class="prices">
     <div><span class="lbl">Cena</span><span class="big">4 000 €</span></div>
-    <div><span class="lbl">Férová cena</span><span class="mid">4 830 €</span></div>
-    <div><span class="lbl">Pod trhom</span><span class="mid good">+17.2 %</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">5 040 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+20.6 %</span></div>
   </div>
-  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:57%"></span></div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:69%"></span></div>
   <ul class="pc"><li class="pro">2013, 2.0 JTDm 125 kW, manuál, 286 tis. km</li><li class="pro">Rozvody minulý rok, menené poloosi, tempomat</li><li class="pro">~17 % pod férovou cenou</li><li class="con">Vysoký nájazd</li></ul>
-<!-- history-card:start --><p class="note fv-history-card">V ponuke aspoň 24 dní</p><!-- history-card:end --></article>
-<article class="card">
-  <div class="card-head"><span class="tag">Giulietta 1.4 TB 125 kW so servisnou knižkou</span><span class="loc">Zlaté Moravce</span></div>
-  <h3><a href="https://auto.bazos.sk/inzerat/197748290/alfa-romeo-giulietta-14-benzin-znizena-cena.php" target="_blank" rel="noopener">Alfa Romeo GIULIETTA 1.4 benzín ..... ZNÍŽENÁ CENA.....</a></h3>
-  <div class="facts">2011 · 200 000 km · 1.4 TB / MultiAir benzín 77–125 kW · manuál · predajca/firma</div>
-  <div class="facts src">zdroj: <b>bazoš</b></div>
-  <div class="prices">
-    <div><span class="lbl">Cena</span><span class="big">3 500 €</span></div>
-    <div><span class="lbl">Férová cena</span><span class="mid">4 010 €</span></div>
-    <div><span class="lbl">Pod trhom</span><span class="mid good">+12.7 %</span></div>
-  </div>
-  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:42%"></span></div>
-  <ul class="pc"><li class="pro">4/2011, 1.4 benzín 125 kW, 6-st. manuál, 200 tis. km</li><li class="pro">Dvojzónová klíma, tempomat, servisná knižka</li><li class="pro">~13 % pod férovou cenou</li><li class="con">Predáva autobazár</li></ul>
-<!-- history-card:start --><p class="note fv-history-card">V ponuke 3 dni (od 21. 11.)</p><!-- history-card:end --></article></div>
+</article></div>
 <div class="subhead">Špeciálne prípady</div>
 <div class="cards"></div>
 
@@ -378,10 +364,10 @@ Krúžkom sú označené odporúčané ponuky. Prejdi myšou na bod a uvidíš d
 <tr>
   <td><b>1.4 TB / MultiAir benzín 77–125 kW</b><div class="sub">Turbobenzín 105–170 k. Pri MultiAir over hydraulickú jednotku ventilov a výmeny oleja.</div></td>
   <td><span class="stars" aria-label="3 z 5">★★★<span class="off">★★</span></span></td>
-  <td class="num">14</td>
-  <td class="num"><div class="cellbar"><span style="width:62%"></span></div>6 200 €</td>
+  <td class="num">12</td>
+  <td class="num"><div class="cellbar"><span style="width:66%"></span></div>6 600 €</td>
   <td class="num">2012</td>
-  <td class="num">139 882 km</td>
+  <td class="num">127 308 km</td>
 </tr></tbody>
 </table>
 </div>
@@ -396,8 +382,8 @@ Krúžkom sú označené odporúčané ponuky. Prejdi myšou na bod a uvidíš d
 <div class="warn">
   <p><b>Lacné kvôli extrémnemu nájazdu</b> (viac ako 35 tis. km ročne, typicky flotila alebo taxi):</p>
   <ul><li>Žiadne výrazné prípady.</li></ul>
-  <p><b>Ďalšie veci, ktoré sme v inzerátoch našli:</b></p><ul><li>Ponuka Giuliett po facelifte (2016+) je veľmi malá – väčšina áut je z rokov 2010–2014.</li><li>AAA AUTO inzeruje tie isté autá aj na bazar.sk – duplicity sme vyradili. Pri ich inzerátoch je uvedená <b>cena pri financovaní</b>.</li></ul><p><b>Giulia, MiTo, 159, Stelvio a iné modely z vyhľadávania, inzeráty s chybným nájazdom</b> (5 inzerátov) sme z rebríčka vynechali.</p>
-  <p>Ďalších <b>5</b> inzerátov nemá v texte rok alebo kilometre, takže ich nebolo možné ohodnotiť.
+  <p><b>Ďalšie veci, ktoré sme v inzerátoch našli:</b></p><ul><li>Ponuka Giuliett po facelifte (2016+) je veľmi malá – väčšina áut je z rokov 2010–2014.</li><li>AAA AUTO inzeruje tie isté autá aj na bazar.sk – duplicity sme vyradili. Pri ich inzerátoch je uvedená <b>cena pri financovaní</b>.</li></ul><p><b>Giulia, MiTo, 159, Stelvio a iné modely z vyhľadávania, inzeráty s chybným nájazdom</b> (4 inzerátov) sme z rebríčka vynechali.</p>
+  <p>Ďalších <b>4</b> inzerátov nemá v texte rok alebo kilometre, takže ich nebolo možné ohodnotiť.
   Ak ťa niektorý zaujme, predajcu sa na tieto údaje opýtaj.</p>
 </div>
 
@@ -438,15 +424,15 @@ Krúžkom sú označené odporúčané ponuky. Prejdi myšou na bod a uvidíš d
 </ul>
 
 <footer>
-  Zdroj: auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (len ponuky zo Slovenska, to isté auto na viacerých portáloch je započítané raz), sťahované cez lokálny MCP server bazos-mcp (nástroj <code>fair_price</code>), 22. 11. 2026.
-  Model: ridge regresia log(ceny s DPH) podľa veku, veku², km, km², prevodovky, typu predajcu, motora, karosérie, pohonu 4x4, pôvodu (SR / dovoz) a portálu. Vzorka 26
-  inzerátov, R² 78 %. Parametre sú vyťažené z textu inzerátov, a preto môžu obsahovať chyby. Odporúčané ponuky sme overili
+  Zdroj: auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (len ponuky zo Slovenska, to isté auto na viacerých portáloch je započítané raz), sťahované cez lokálny MCP server bazos-mcp (nástroj <code>fair_price</code>), 24. 11. 2026.
+  Model: ridge regresia log(ceny s DPH) podľa veku, veku², km, km², prevodovky, typu predajcu, motora, karosérie, pohonu 4x4, pôvodu (SR / dovoz) a portálu. Vzorka 24
+  inzerátov, R² 76 %. Parametre sú vyťažené z textu inzerátov, a preto môžu obsahovať chyby. Odporúčané ponuky sme overili
   prečítaním celého inzerátu. Hodnotenie motorov je odborný odhad, nie výsledok modelu.
 </footer>
 </main>
 
 <script>
-const DATA = [{"id": "ab-AegwuEfn3j0", "url": "https://www.autobazar.eu/detail/alfa-romeo-giulietta-14-t-koza-panoram-strecha/AegwuEfn3j0/", "title": "Alfa Romeo Giulietta 1.4 T, Koža, panoram. strecha", "price": 3300, "price_gross": 3300, "fair_price": 4750.0, "discount_pct": 30.5, "verdict": "výrazne pod trhom – over prečo", "year": 2011, "km": 188955, "km_per_year": 12300.0, "eg": "1.4 TB / MultiAir benzín 77–125 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Košice", "flags": [], "pick": "budget", "source": "autobazar", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "197687726", "url": "https://auto.bazos.sk/inzerat/197687726/alfa-romeo-giulietta-16-jtd.php", "title": "Alfa Romeo Giulietta 1.6 JTD", "price": 3500, "price_gross": 3500, "fair_price": 4990.0, "discount_pct": 29.9, "verdict": "výrazne pod trhom – over prečo", "year": 2013, "km": 167000, "km_per_year": 12500.0, "eg": "1.6 JTDm 77–88 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Nitra", "flags": [], "pick": "budget", "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "hatch"}, {"id": "197029596", "url": "https://auto.bazos.sk/inzerat/197029596/alfa-romeo-giulietta-20jtdm.php", "title": "Alfa  Romeo Giulietta 2.0JTDm", "price": 4000, "price_gross": 4000, "fair_price": 4830.0, "discount_pct": 17.2, "verdict": "výrazne pod trhom – over prečo", "year": 2013, "km": 286000, "km_per_year": 21500.0, "eg": "2.0 JTDm 103–129 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Rimavská Sobota", "flags": [], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "ab-AeipEcTWeoJ", "url": "https://www.autobazar.eu/detail/alfa-romeo-giulietta-alfa-romeo-giulietta-20-jtd-79-888-km/AeipEcTWeoJ/", "title": "Alfa Romeo Giulietta Alfa Romeo Giulietta 2.0 JTD 79 888 km", "price": 8949, "price_gross": 8949, "fair_price": 10510.0, "discount_pct": 14.9, "verdict": "pod trhom", "year": 2012, "km": 79888, "km_per_year": 5600.0, "eg": "2.0 JTDm 103–129 kW", "cg": 1, "transmission": "automatic", "seller_type": "private", "location": "Šamorín", "flags": [], "pick": "top", "source": "autobazar", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "197748290", "url": "https://auto.bazos.sk/inzerat/197748290/alfa-romeo-giulietta-14-benzin-znizena-cena.php", "title": "Alfa Romeo GIULIETTA 1.4 benzín ..... ZNÍŽENÁ CENA.....", "price": 3500, "price_gross": 3500, "fair_price": 4010.0, "discount_pct": 12.7, "verdict": "pod trhom", "year": 2011, "km": 200000, "km_per_year": 13000.0, "eg": "1.4 TB / MultiAir benzín 77–125 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Zlaté Moravce", "flags": [], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "ab-AeHdxXHh-B5", "url": "https://www.autobazar.eu/detail/alfa-romeo-giulietta-14-t-klima-tempomat-po-stk/AeHdxXHh-B5/", "title": "Alfa Romeo Giulietta 1.4 T, Klíma, Tempomat, po STK", "price": 5300, "price_gross": 5300, "fair_price": 5740.0, "discount_pct": 7.7, "verdict": "pod trhom", "year": 2012, "km": 131163, "km_per_year": 9200.0, "eg": "1.4 TB / MultiAir benzín 77–125 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Žilinský kraj", "flags": [], "pick": "top", "source": "autobazar", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "196173104", "url": "https://auto.bazos.sk/inzerat/196173104/alfa-romeo-giulietta-20-jtdm-170-k-automat.php", "title": "Alfa Romeo Giulietta 2.0 JTDm 170 k Automat", "price": 5700, "price_gross": 5700, "fair_price": 6150.0, "discount_pct": 7.4, "verdict": "pod trhom", "year": 2012, "km": 236982, "km_per_year": 16500.0, "eg": "2.0 JTDm 103–129 kW", "cg": 1, "transmission": "automatic", "seller_type": "private", "location": "Púchov", "flags": [], "pick": "top", "source": "bazos", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "197008104", "url": "https://auto.bazos.sk/inzerat/197008104/alfa-romeo-giulietta-14-turbo-88-kw.php", "title": "Alfa Romeo Giulietta 1,4 TURBO 88 kW", "price": 5900, "price_gross": 5900, "fair_price": 6330.0, "discount_pct": 6.8, "verdict": "férová cena", "year": 2010, "km": 118929, "km_per_year": 7300.0, "eg": "1.4 TB / MultiAir benzín 77–125 kW", "cg": 0, "transmission": null, "seller_type": "dealer", "location": "Martin", "flags": ["prevodovka nezistená"], "pick": "top", "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "hatch"}, {"id": "196728380", "url": "https://auto.bazos.sk/inzerat/196728380/predam-alfa-romeo-giulietta-14-tb-125-kw-automat.php", "title": "Predám Alfa Romeo Giulietta 1.4 TB 125 kW automat", "price": 4800, "price_gross": 4800, "fair_price": 4870.0, "discount_pct": 1.4, "verdict": "férová cena", "year": 2013, "km": 255000, "km_per_year": 19100.0, "eg": "1.4 TB / MultiAir benzín 77–125 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Myjava", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "197676790", "url": "https://auto.bazos.sk/inzerat/197676790/alfa-romeo-giulietta-14-multiair-automat.php", "title": "Alfa Romeo Giulietta 1.4 Multiair Automat", "price": 7900, "price_gross": 7900, "fair_price": 7950.0, "discount_pct": 0.7, "verdict": "férová cena", "year": 2014, "km": 148600, "km_per_year": 12000.0, "eg": "1.4 TB / MultiAir benzín 77–125 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Trenčín", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "ab-AehodB22HCc", "url": "https://www.autobazar.eu/detail/alfa-romeo-giulietta-20-jtdmservkniha-navigacia-klima/AehodB22HCc/", "title": "Alfa Romeo Giulietta 2.0 JTDMServ.kniha, Navigácia, Klíma", "price": 6000, "price_gross": 6000, "fair_price": 6040.0, "discount_pct": 0.7, "verdict": "férová cena", "year": 2014, "km": 173822, "km_per_year": 14100.0, "eg": "2.0 JTDm 103–129 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Trnava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "196967446", "url": "https://auto.bazos.sk/inzerat/196967446/giulietta-14-tb-2018-kupene-v-sr-51-262-km-neburana.php", "title": "Giulietta 1.4 TB, 2018, Kúpené v SR, 51 262 km, Nebúraná", "price": 13999, "price_gross": 13999, "fair_price": 14090.0, "discount_pct": 0.6, "verdict": "férová cena", "year": 2018, "km": 51262, "km_per_year": 6200.0, "eg": "1.4 TB / MultiAir benzín 77–125 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Žilina", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "hatch"}, {"id": "ab-AeSIkHko3k2", "url": "https://www.autobazar.eu/detail/alfa-romeo-giulietta-qv-line/AeSIkHko3k2/", "title": "Alfa Romeo Giulietta QV LINE", "price": 7290, "price_gross": 7290, "fair_price": 7320.0, "discount_pct": 0.4, "verdict": "férová cena", "year": 2015, "km": 187225, "km_per_year": 16500.0, "eg": "2.0 JTDm 103–129 kW", "cg": 1, "transmission": "automatic", "seller_type": "private", "location": "Michalovce", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "bs-39712620", "url": "https://auto.bazar.sk/39712620-alfa-romeo-giulietta-1-4-t/", "title": "Alfa Romeo Giulietta 1.4 T", "price": 9600, "price_gross": 9600, "fair_price": 9540.0, "discount_pct": -0.6, "verdict": "férová cena", "year": 2019, "km": 65458, "km_per_year": 8900.0, "eg": "1.4 TB / MultiAir benzín 77–125 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava V - Petržalka", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "196969195", "url": "https://auto.bazos.sk/inzerat/196969195/alfa-romeo-giulietta-14-multiair.php", "title": "Alfa Romeo giulietta 1.4 multiair", "price": 6200, "price_gross": 6200, "fair_price": 6050.0, "discount_pct": -2.5, "verdict": "férová cena", "year": 2011, "km": 192000, "km_per_year": 12500.0, "eg": "1.4 TB / MultiAir benzín 77–125 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Žilina", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "197307632", "url": "https://auto.bazos.sk/inzerat/197307632/alfa-romeo-giulietta-14-turbo-88-kw.php", "title": "Alfa Romeo Giulietta 1,4 TURBO 88 kW, 1 MAJITEĽ, KUP. V  SR", "price": 7990, "price_gross": 7990, "fair_price": 7750.0, "discount_pct": -3.1, "verdict": "férová cena", "year": 2014, "km": 123452, "km_per_year": 10000.0, "eg": "1.4 TB / MultiAir benzín 77–125 kW", "cg": 0, "transmission": null, "seller_type": "dealer", "location": "Martin", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "hatch"}, {"id": "ab-AeX1D13w_mN", "url": "https://www.autobazar.eu/detail/alfa-romeo-giulietta-16-mtj-77kw/AeX1D13w_mN/", "title": "Alfa Romeo Giulietta 1.6 MULTIJET 77kW", "price": 4990, "price_gross": 4990, "fair_price": 4840.0, "discount_pct": -3.2, "verdict": "férová cena", "year": 2010, "km": 182782, "km_per_year": 11200.0, "eg": "1.6 JTDm 77–88 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Nitra", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "197346101", "url": "https://auto.bazos.sk/inzerat/197346101/alfa-romeo-giulietta-16-multijet-77kw.php", "price": 4990}], "body": "hatch"}, {"id": "197305397", "url": "https://auto.bazos.sk/inzerat/197305397/alfa-romeo-giulietta-20jdtm-129kw-tct.php", "title": "Alfa Romeo Giulietta 2.0JTDm 129kw TCT", "price": 6890, "price_gross": 6890, "fair_price": 6510.0, "discount_pct": -5.8, "verdict": "férová cena", "year": 2014, "km": 210000, "km_per_year": 17000.0, "eg": "2.0 JTDm 103–129 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Komárno", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "197198519", "url": "https://auto.bazos.sk/inzerat/197198519/alfa-romeo-giulietta-sport-16-jtd.php", "title": "Alfa Romeo Giulietta Sport 1.6 JTD", "price": 5490, "price_gross": 5490, "fair_price": 5080.0, "discount_pct": -8.0, "verdict": "nad trhom", "year": 2013, "km": 219849, "km_per_year": 16500.0, "eg": "1.6 JTDm 77–88 kW", "cg": 1, "transmission": null, "seller_type": "dealer", "location": "Bánovce nad Bebravou", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "hatch"}, {"id": "196863103", "url": "https://auto.bazos.sk/inzerat/196863103/alfa-romeo-giulietta-14-t.php", "title": "Alfa Romeo Giulietta 1.4 T", "price": 6200, "price_gross": 6200, "fair_price": 5600.0, "discount_pct": -10.7, "verdict": "nad trhom", "year": 2012, "km": 119367, "km_per_year": 8300.0, "eg": "1.4 TB / MultiAir benzín 77–125 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Dunajská Streda", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-Am9geiXVFdn", "url": "https://www.autobazar.eu/detail/alfa-romeo-giulietta-14-t-distinctive/Am9geiXVFdn/", "price": 6200}], "body": "hatch"}, {"id": "ab-AeHWG4XrDw6", "url": "https://www.autobazar.eu/detail/alfa-romeo-giulietta-14-t-impression-klima/AeHWG4XrDw6/", "title": "Alfa Romeo Giulietta 1.4 T, Impression, Xenóny, Klíma", "price": 7000, "price_gross": 7000, "fair_price": 6320.0, "discount_pct": -10.8, "verdict": "nad trhom", "year": 2011, "km": 102291, "km_per_year": 6700.0, "eg": "1.4 TB / MultiAir benzín 77–125 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Prešovský kraj", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "196256622", "url": "https://auto.bazos.sk/inzerat/196256622/predam.php", "title": "Predám", "price": 6999, "price_gross": 6999, "fair_price": 5990.0, "discount_pct": -16.8, "verdict": "výrazne nad trhom", "year": 2010, "km": 191464, "km_per_year": 11700.0, "eg": "1.4 TB / MultiAir benzín 77–125 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Kežmarok", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "197721012", "url": "https://auto.bazos.sk/inzerat/197721012/alfa-romeo-giulietta-16-jtdm-distinctive.php", "title": "ALFA ROMEO GIULIETTA 1.6 JTDM DISTINCTIVE", "price": 5699, "price_gross": 5699, "fair_price": 4660.0, "discount_pct": -22.2, "verdict": "výrazne nad trhom", "year": 2012, "km": 248712, "km_per_year": 17400.0, "eg": "1.6 JTDm 77–88 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Senec", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmkVpaogcjP", "url": "https://www.autobazar.eu/detail/alfa-romeo-giulietta-16-jtd-distinctive/AmkVpaogcjP/", "price": 5699}], "body": "hatch"}, {"id": "196269052", "url": "https://auto.bazos.sk/inzerat/196269052/alfa-romeo-giulietta-18-tbi-quadrifoglio-mesacne-262e.php", "title": "Alfa Romeo Giulietta 1.8 TBi Quadrifoglio, Mesačne: 196€", "price": 9990, "price_gross": 9990, "fair_price": 8130.0, "discount_pct": -22.8, "verdict": "výrazne nad trhom", "year": 2014, "km": 140517, "km_per_year": 11400.0, "eg": "1.75 TBi benzín 173–177 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Dunajská Streda", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-Amr60xhcnBT", "url": "https://www.autobazar.eu/detail/alfa-romeo-giulietta-18-tbi-quadrifoglio-verde-177kw-a6-5d/Amr60xhcnBT/", "price": 9990}], "body": "hatch"}, {"id": "ab-AmZuBJ_NIJX", "url": "https://www.autobazar.eu/detail/alfa-romeo-giulietta-14-t-progression/AmZuBJ_NIJX/", "title": "Alfa Romeo Giulietta 1.4 T Progression", "price": 5790, "price_gross": 5790, "fair_price": 4530.0, "discount_pct": -27.9, "verdict": "výrazne nad trhom", "year": 2012, "km": 229521, "km_per_year": 16000.0, "eg": "1.4 TB / MultiAir benzín 77–125 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Nové Zámky", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "ab-AeV2851wPnz", "url": "https://www.autobazar.eu/detail/alfa-romeo-giulietta-20-jtdm-125-kw-distinctive-sport-pack/AeV2851wPnz/", "title": "Alfa Romeo Giulietta 2.0 JTDm (125 kW) Distinctive + Sport Pack", "price": 5990, "price_gross": 5990, "fair_price": 4570.0, "discount_pct": -31.2, "verdict": "výrazne nad trhom", "year": 2010, "km": 245000, "km_per_year": 15000.0, "eg": "2.0 JTDm 103–129 kW", "cg": 1, "transmission": "manual", "seller_type": "private", "location": "Zlaté Moravce", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "197661326", "url": "https://auto.bazos.sk/inzerat/197661326/alfa-romeo-giulietta-20-jtdm-125-kw-sport-packnero-etna.php", "price": 5990}], "body": "hatch"}];
+const DATA = [{"id": "ab-AegwuEfn3j0", "url": "https://www.autobazar.eu/detail/alfa-romeo-giulietta-14-t-koza-panoram-strecha/AegwuEfn3j0/", "title": "Alfa Romeo Giulietta 1.4 T, Koža, panoram. strecha", "price": 3300, "price_gross": 3300, "fair_price": 4830.0, "discount_pct": 31.7, "verdict": "výrazne pod trhom – over prečo", "year": 2011, "km": 188955, "km_per_year": 12300.0, "eg": "1.4 TB / MultiAir benzín 77–125 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Košice", "flags": [], "pick": "budget", "source": "autobazar", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "197687726", "url": "https://auto.bazos.sk/inzerat/197687726/alfa-romeo-giulietta-16-jtd.php", "title": "Alfa Romeo Giulietta 1.6 JTD", "price": 3500, "price_gross": 3500, "fair_price": 4890.0, "discount_pct": 28.5, "verdict": "výrazne pod trhom – over prečo", "year": 2013, "km": 167000, "km_per_year": 12500.0, "eg": "1.6 JTDm 77–88 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Nitra", "flags": [], "pick": "budget", "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "hatch"}, {"id": "197029596", "url": "https://auto.bazos.sk/inzerat/197029596/alfa-romeo-giulietta-20jtdm.php", "title": "Alfa  Romeo Giulietta 2.0JTDm", "price": 4000, "price_gross": 4000, "fair_price": 5040.0, "discount_pct": 20.6, "verdict": "výrazne pod trhom – over prečo", "year": 2013, "km": 286000, "km_per_year": 21500.0, "eg": "2.0 JTDm 103–129 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Rimavská Sobota", "flags": [], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "ab-AeipEcTWeoJ", "url": "https://www.autobazar.eu/detail/alfa-romeo-giulietta-alfa-romeo-giulietta-20-jtd-79-888-km/AeipEcTWeoJ/", "title": "Alfa Romeo Giulietta Alfa Romeo Giulietta 2.0 JTD 79 888 km", "price": 8949, "price_gross": 8949, "fair_price": 10250.0, "discount_pct": 12.7, "verdict": "pod trhom", "year": 2012, "km": 79888, "km_per_year": 5600.0, "eg": "2.0 JTDm 103–129 kW", "cg": 1, "transmission": "automatic", "seller_type": "private", "location": "Šamorín", "flags": [], "pick": "top", "source": "autobazar", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "196173104", "url": "https://auto.bazos.sk/inzerat/196173104/alfa-romeo-giulietta-20-jtdm-170-k-automat.php", "title": "Alfa Romeo Giulietta 2.0 JTDm 170 k Automat", "price": 5700, "price_gross": 5700, "fair_price": 6290.0, "discount_pct": 9.4, "verdict": "pod trhom", "year": 2012, "km": 236982, "km_per_year": 16500.0, "eg": "2.0 JTDm 103–129 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Púchov", "flags": [], "pick": "top", "source": "bazos", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "197008104", "url": "https://auto.bazos.sk/inzerat/197008104/alfa-romeo-giulietta-14-turbo-88-kw.php", "title": "Alfa Romeo Giulietta 1,4 TURBO 88 kW", "price": 5900, "price_gross": 5900, "fair_price": 6460.0, "discount_pct": 8.7, "verdict": "pod trhom", "year": 2010, "km": 118929, "km_per_year": 7300.0, "eg": "1.4 TB / MultiAir benzín 77–125 kW", "cg": 0, "transmission": null, "seller_type": "dealer", "location": "Martin", "flags": ["prevodovka nezistená"], "pick": "top", "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "hatch"}, {"id": "ab-AeHdxXHh-B5", "url": "https://www.autobazar.eu/detail/alfa-romeo-giulietta-14-t-klima-tempomat-po-stk/AeHdxXHh-B5/", "title": "Alfa Romeo Giulietta 1.4 T, Klíma, Tempomat, po STK", "price": 5300, "price_gross": 5300, "fair_price": 5730.0, "discount_pct": 7.5, "verdict": "pod trhom", "year": 2012, "km": 131163, "km_per_year": 9200.0, "eg": "1.4 TB / MultiAir benzín 77–125 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Žilinský kraj", "flags": [], "pick": "top", "source": "autobazar", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "ab-AeSIkHko3k2", "url": "https://www.autobazar.eu/detail/alfa-romeo-giulietta-qv-line/AeSIkHko3k2/", "title": "Alfa Romeo Giulietta QV LINE", "price": 7290, "price_gross": 7290, "fair_price": 7360.0, "discount_pct": 0.9, "verdict": "férová cena", "year": 2015, "km": 188000, "km_per_year": 16600.0, "eg": "2.0 JTDm 103–129 kW", "cg": 1, "transmission": "automatic", "seller_type": "private", "location": "Prešov", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazos", "id": "197839536", "url": "https://auto.bazos.sk/inzerat/197839536/giulietta-qv-line-2015-188-000-km.php", "price": 7290}], "body": "hatch"}, {"id": "196967446", "url": "https://auto.bazos.sk/inzerat/196967446/giulietta-14-tb-2018-kupene-v-sr-51-262-km-neburana.php", "title": "Giulietta 1.4 TB, 2018, Kúpené v SR, 51 262 km, Nebúraná", "price": 13999, "price_gross": 13999, "fair_price": 14130.0, "discount_pct": 0.9, "verdict": "férová cena", "year": 2018, "km": 51262, "km_per_year": 6200.0, "eg": "1.4 TB / MultiAir benzín 77–125 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Žilina", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "hatch"}, {"id": "ab-AehodB22HCc", "url": "https://www.autobazar.eu/detail/alfa-romeo-giulietta-20-jtdmservkniha-navigacia-klima/AehodB22HCc/", "title": "Alfa Romeo Giulietta 2.0 JTDMServ.kniha, Navigácia, Klíma", "price": 6000, "price_gross": 6000, "fair_price": 5960.0, "discount_pct": -0.7, "verdict": "férová cena", "year": 2014, "km": 173822, "km_per_year": 14100.0, "eg": "2.0 JTDm 103–129 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Trnava", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "196969195", "url": "https://auto.bazos.sk/inzerat/196969195/alfa-romeo-giulietta-14-multiair.php", "title": "Alfa Romeo giulietta 1.4 multiair", "price": 6200, "price_gross": 6200, "fair_price": 6160.0, "discount_pct": -0.7, "verdict": "férová cena", "year": 2011, "km": 192000, "km_per_year": 12500.0, "eg": "1.4 TB / MultiAir benzín 77–125 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Žilina", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "bs-39712620", "url": "https://auto.bazar.sk/39712620-alfa-romeo-giulietta-1-4-t/", "title": "Alfa Romeo Giulietta 1.4 T", "price": 9600, "price_gross": 9600, "fair_price": 9510.0, "discount_pct": -0.9, "verdict": "férová cena", "year": 2019, "km": 65458, "km_per_year": 8900.0, "eg": "1.4 TB / MultiAir benzín 77–125 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava V - Petržalka", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "197676790", "url": "https://auto.bazos.sk/inzerat/197676790/alfa-romeo-giulietta-14-multiair-automat.php", "title": "Alfa Romeo Giulietta 1.4 Multiair Automat", "price": 7900, "price_gross": 7900, "fair_price": 7780.0, "discount_pct": -1.6, "verdict": "férová cena", "year": 2014, "km": 148600, "km_per_year": 12000.0, "eg": "1.4 TB / MultiAir benzín 77–125 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Trenčín", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "197307632", "url": "https://auto.bazos.sk/inzerat/197307632/alfa-romeo-giulietta-14-turbo-88-kw.php", "title": "Alfa Romeo Giulietta 1,4 TURBO 88 kW, 1 MAJITEĽ, KUP. V  SR", "price": 7990, "price_gross": 7990, "fair_price": 7720.0, "discount_pct": -3.5, "verdict": "férová cena", "year": 2014, "km": 123452, "km_per_year": 10000.0, "eg": "1.4 TB / MultiAir benzín 77–125 kW", "cg": 0, "transmission": null, "seller_type": "dealer", "location": "Martin", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "hatch"}, {"id": "ab-AeX1D13w_mN", "url": "https://www.autobazar.eu/detail/alfa-romeo-giulietta-16-mtj-77kw/AeX1D13w_mN/", "title": "Alfa Romeo Giulietta 1.6 MULTIJET 77kW", "price": 4990, "price_gross": 4990, "fair_price": 4780.0, "discount_pct": -4.3, "verdict": "férová cena", "year": 2010, "km": 182782, "km_per_year": 11200.0, "eg": "1.6 JTDm 77–88 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Nitra", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "197346101", "url": "https://auto.bazos.sk/inzerat/197346101/alfa-romeo-giulietta-16-multijet-77kw.php", "price": 4990}], "body": "hatch"}, {"id": "197305397", "url": "https://auto.bazos.sk/inzerat/197305397/alfa-romeo-giulietta-20jdtm-129kw-tct.php", "title": "Alfa Romeo Giulietta 2.0JTDm 129kw TCT", "price": 6700, "price_gross": 6700, "fair_price": 6420.0, "discount_pct": -4.3, "verdict": "férová cena", "year": 2014, "km": 210000, "km_per_year": 17000.0, "eg": "2.0 JTDm 103–129 kW", "cg": 1, "transmission": "automatic", "seller_type": "uncertain", "location": "Komárno", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "197198519", "url": "https://auto.bazos.sk/inzerat/197198519/alfa-romeo-giulietta-sport-16-jtd.php", "title": "Alfa Romeo Giulietta Sport 1.6 JTD", "price": 5490, "price_gross": 5490, "fair_price": 5150.0, "discount_pct": -6.6, "verdict": "férová cena", "year": 2013, "km": 219849, "km_per_year": 16500.0, "eg": "1.6 JTDm 77–88 kW", "cg": 1, "transmission": null, "seller_type": "dealer", "location": "Bánovce nad Bebravou", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "hatch"}, {"id": "196863103", "url": "https://auto.bazos.sk/inzerat/196863103/alfa-romeo-giulietta-14-t.php", "title": "Alfa Romeo Giulietta 1.4 T", "price": 6200, "price_gross": 6200, "fair_price": 5710.0, "discount_pct": -8.7, "verdict": "nad trhom", "year": 2012, "km": 119367, "km_per_year": 8300.0, "eg": "1.4 TB / MultiAir benzín 77–125 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Dunajská Streda", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-Am9geiXVFdn", "url": "https://www.autobazar.eu/detail/alfa-romeo-giulietta-14-t-distinctive/Am9geiXVFdn/", "price": 6200}], "body": "hatch"}, {"id": "ab-AeHWG4XrDw6", "url": "https://www.autobazar.eu/detail/alfa-romeo-giulietta-14-t-impression-klima/AeHWG4XrDw6/", "title": "Alfa Romeo Giulietta 1.4 T, Impression, Xenóny, Klíma", "price": 7000, "price_gross": 7000, "fair_price": 6370.0, "discount_pct": -9.8, "verdict": "nad trhom", "year": 2011, "km": 102291, "km_per_year": 6700.0, "eg": "1.4 TB / MultiAir benzín 77–125 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Prešovský kraj", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "196256622", "url": "https://auto.bazos.sk/inzerat/196256622/predam.php", "title": "Predám", "price": 6999, "price_gross": 6999, "fair_price": 6030.0, "discount_pct": -16.2, "verdict": "výrazne nad trhom", "year": 2010, "km": 191464, "km_per_year": 11700.0, "eg": "1.4 TB / MultiAir benzín 77–125 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Kežmarok", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "197721012", "url": "https://auto.bazos.sk/inzerat/197721012/alfa-romeo-giulietta-16-jtdm-distinctive.php", "title": "ALFA ROMEO GIULIETTA 1.6 JTDM DISTINCTIVE", "price": 5699, "price_gross": 5699, "fair_price": 4850.0, "discount_pct": -17.5, "verdict": "výrazne nad trhom", "year": 2012, "km": 248712, "km_per_year": 17400.0, "eg": "1.6 JTDm 77–88 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Senec", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AmkVpaogcjP", "url": "https://www.autobazar.eu/detail/alfa-romeo-giulietta-16-jtd-distinctive/AmkVpaogcjP/", "price": 5699}], "body": "hatch"}, {"id": "196269052", "url": "https://auto.bazos.sk/inzerat/196269052/alfa-romeo-giulietta-18-tbi-quadrifoglio-mesacne-262e.php", "title": "Alfa Romeo Giulietta 1.8 TBi Quadrifoglio, Mesačne: 196€", "price": 9990, "price_gross": 9990, "fair_price": 8300.0, "discount_pct": -20.4, "verdict": "výrazne nad trhom", "year": 2014, "km": 140517, "km_per_year": 11400.0, "eg": "1.75 TBi benzín 173–177 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Dunajská Streda", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-Amr60xhcnBT", "url": "https://www.autobazar.eu/detail/alfa-romeo-giulietta-18-tbi-quadrifoglio-verde-177kw-a6-5d/Amr60xhcnBT/", "price": 9990}], "body": "hatch"}, {"id": "ab-AmZuBJ_NIJX", "url": "https://www.autobazar.eu/detail/alfa-romeo-giulietta-14-t-progression/AmZuBJ_NIJX/", "title": "Alfa Romeo Giulietta 1.4 T Progression", "price": 5790, "price_gross": 5790, "fair_price": 4660.0, "discount_pct": -24.2, "verdict": "výrazne nad trhom", "year": 2012, "km": 229521, "km_per_year": 16000.0, "eg": "1.4 TB / MultiAir benzín 77–125 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Nové Zámky", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "hatch"}, {"id": "ab-AeV2851wPnz", "url": "https://www.autobazar.eu/detail/alfa-romeo-giulietta-20-jtdm-125-kw-distinctive-sport-pack/AeV2851wPnz/", "title": "Alfa Romeo Giulietta 2.0 JTDm (125 kW) Distinctive + Sport Pack", "price": 5990, "price_gross": 5990, "fair_price": 4580.0, "discount_pct": -30.9, "verdict": "výrazne nad trhom", "year": 2010, "km": 245000, "km_per_year": 15000.0, "eg": "2.0 JTDm 103–129 kW", "cg": 1, "transmission": "manual", "seller_type": "private", "location": "Zlaté Moravce", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "197661326", "url": "https://auto.bazos.sk/inzerat/197661326/alfa-romeo-giulietta-20-jtdm-125-kw-sport-packnero-etna.php", "price": 5990}], "body": "hatch"}];
 const GROUPS = ["Benzín", "Diesel JTDm", "LPG a nezistený"];
 const BODY = {"hatch": "hatchback"};
 const fmt = n => Math.round(n).toLocaleString("sk-SK");

@@ -2528,6 +2528,38 @@
     }
   },
   {
+    "slug": "skoda-fabia",
+    "file": "skoda-fabia-analyza.html",
+    "name": "Škoda Fabia",
+    "brand": "Škoda",
+    "model": "Fabia",
+    "kind": "model",
+    "date": "2026-11-24",
+    "summary": "Analýza aktuálnych inzerátov Škoda Fabia (hatchback aj combi, všetky generácie) od 1 500 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (24. 11. 2026). Na portáloch je spolu 3 092 inzerátov (948 na bazoši, 1 312 na autobazar.eu, 832 na bazar.sk) – prezreli sme 97 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 1 704 rôznych áut zo Slovenska.",
+    "ads": 1704,
+    "median": "5 890 €",
+    "r2": "93 %",
+    "history": {
+      "updated_at": "2026-11-24T11:28:07",
+      "as_of": "2026-11-24",
+      "coverage": "partial",
+      "baseline_count": 1030,
+      "total_count": 2683,
+      "active_count": 1,
+      "inactive_count": 0,
+      "unverified_count": 2682,
+      "new_count": 1653,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 0,
+      "paired_median_change_pct": null,
+      "historical_median": 5900,
+      "seen_median": 15400,
+      "seen_price_count": 1,
+      "last_observed_at": "2026-11-24T11:05:27"
+    }
+  },
+  {
     "slug": "skoda-karoq",
     "file": "skoda-karoq-analyza.html",
     "name": "Škoda Karoq",
@@ -2557,6 +2589,38 @@
       "seen_median": 19499,
       "seen_price_count": 968,
       "last_observed_at": "2026-11-24T11:07:08"
+    }
+  },
+  {
+    "slug": "skoda-octavia",
+    "file": "skoda-octavia-analyza.html",
+    "name": "Škoda Octavia",
+    "brand": "Škoda",
+    "model": "Octavia",
+    "kind": "model",
+    "date": "2026-11-24",
+    "summary": "Analýza aktuálnych inzerátov Škoda Octavia (liftback aj combi, všetky generácie vrátane RS a Scout) od 1 500 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (24. 11. 2026). Na portáloch je spolu 9 665 inzerátov (3 509 na bazoši, 3 725 na autobazar.eu, 2 431 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 5 531 rôznych áut zo Slovenska.",
+    "ads": 5531,
+    "median": "10 900 €",
+    "r2": "94 %",
+    "history": {
+      "updated_at": "2026-11-24T11:28:07",
+      "as_of": "2026-11-24",
+      "coverage": "partial",
+      "baseline_count": 3448,
+      "total_count": 9000,
+      "active_count": 4,
+      "inactive_count": 1,
+      "unverified_count": 8995,
+      "new_count": 5552,
+      "price_changed_count": 0,
+      "price_lowered_count": 0,
+      "paired_count": 0,
+      "paired_median_change_pct": null,
+      "historical_median": 11240,
+      "seen_median": 15290,
+      "seen_price_count": 3,
+      "last_observed_at": "2026-11-24T11:18:34"
     }
   },
   {
@@ -2717,6 +2781,38 @@
       "seen_median": null,
       "seen_price_count": 0,
       "last_observed_at": "2026-11-22T14:33:46"
+    }
+  },
+  {
+    "slug": "vw-golf",
+    "file": "vw-golf-analyza.html",
+    "name": "Volkswagen Golf",
+    "brand": "Volkswagen",
+    "model": "Golf",
+    "kind": "model",
+    "date": "2026-11-24",
+    "summary": "Analýza aktuálnych inzerátov Volkswagen Golf (hatchback aj Variant, generácie IV až VIII vrátane GTI, GTD a R) od 2 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (24. 11. 2026). Na portáloch je spolu 4 185 inzerátov (1 899 na bazoši, 1 358 na autobazar.eu, 928 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 2 611 rôznych áut zo Slovenska.",
+    "ads": 2611,
+    "median": "9 990 €",
+    "r2": "92 %",
+    "history": {
+      "updated_at": "2026-11-24T11:28:07",
+      "as_of": "2026-11-24",
+      "coverage": "partial",
+      "baseline_count": 1577,
+      "total_count": 3931,
+      "active_count": 2,
+      "inactive_count": 0,
+      "unverified_count": 3929,
+      "new_count": 2354,
+      "price_changed_count": 2,
+      "price_lowered_count": 2,
+      "paired_count": 2,
+      "paired_median_change_pct": -3,
+      "historical_median": 9990,
+      "seen_median": 9075,
+      "seen_price_count": 2,
+      "last_observed_at": "2026-11-24T11:18:39"
     }
   },
   {
@@ -7616,38 +7712,6 @@
     }
   },
   {
-    "slug": "skoda-fabia",
-    "file": "skoda-fabia-analyza.html",
-    "name": "Škoda Fabia",
-    "brand": "Škoda",
-    "model": "Fabia",
-    "kind": "model",
-    "date": "2026-11-23",
-    "summary": "Analýza aktuálnych inzerátov Škoda Fabia (hatchback aj combi, všetky generácie) od 1 500 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (23. 11. 2026). Na portáloch je spolu 3 105 inzerátov (953 na bazoši, 1 320 na autobazar.eu, 832 na bazar.sk) – prezreli sme 96 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 1 679 rôznych áut zo Slovenska.",
-    "ads": 1679,
-    "median": "5 900 €",
-    "r2": "93 %",
-    "history": {
-      "updated_at": "2026-11-24T11:28:07",
-      "as_of": "2026-11-24",
-      "coverage": "partial",
-      "baseline_count": 1030,
-      "total_count": 2683,
-      "active_count": 1,
-      "inactive_count": 0,
-      "unverified_count": 2682,
-      "new_count": 1653,
-      "price_changed_count": 0,
-      "price_lowered_count": 0,
-      "paired_count": 0,
-      "paired_median_change_pct": null,
-      "historical_median": 5900,
-      "seen_median": 15400,
-      "seen_price_count": 1,
-      "last_observed_at": "2026-11-24T11:05:27"
-    }
-  },
-  {
     "slug": "skoda-felicia",
     "file": "skoda-felicia-analyza.html",
     "name": "Škoda Felicia",
@@ -7741,38 +7805,6 @@
       "seen_median": 19790,
       "seen_price_count": 1,
       "last_observed_at": "2026-11-24T11:02:11"
-    }
-  },
-  {
-    "slug": "skoda-octavia",
-    "file": "skoda-octavia-analyza.html",
-    "name": "Škoda Octavia",
-    "brand": "Škoda",
-    "model": "Octavia",
-    "kind": "model",
-    "date": "2026-11-23",
-    "summary": "Analýza aktuálnych inzerátov Škoda Octavia (liftback aj combi, všetky generácie vrátane RS a Scout) od 1 500 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (23. 11. 2026). Na portáloch je spolu 9 708 inzerátov (3 516 na bazoši, 3 761 na autobazar.eu, 2 431 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 5 526 rôznych áut zo Slovenska.",
-    "ads": 5526,
-    "median": "10 990 €",
-    "r2": "94 %",
-    "history": {
-      "updated_at": "2026-11-24T11:28:07",
-      "as_of": "2026-11-24",
-      "coverage": "partial",
-      "baseline_count": 3448,
-      "total_count": 9000,
-      "active_count": 4,
-      "inactive_count": 1,
-      "unverified_count": 8995,
-      "new_count": 5552,
-      "price_changed_count": 0,
-      "price_lowered_count": 0,
-      "paired_count": 0,
-      "paired_median_change_pct": null,
-      "historical_median": 11240,
-      "seen_median": 15290,
-      "seen_price_count": 3,
-      "last_observed_at": "2026-11-24T11:18:34"
     }
   },
   {
@@ -8317,38 +8349,6 @@
       "seen_median": null,
       "seen_price_count": 0,
       "last_observed_at": "2026-11-23T19:47:44"
-    }
-  },
-  {
-    "slug": "vw-golf",
-    "file": "vw-golf-analyza.html",
-    "name": "Volkswagen Golf",
-    "brand": "Volkswagen",
-    "model": "Golf",
-    "kind": "model",
-    "date": "2026-11-23",
-    "summary": "Analýza aktuálnych inzerátov Volkswagen Golf (hatchback aj Variant, generácie IV až VIII vrátane GTI, GTD a R) od 2 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (23. 11. 2026). Na portáloch je spolu 4 192 inzerátov (1 895 na bazoši, 1 369 na autobazar.eu, 928 na bazar.sk) – prezreli sme všetky. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 2 650 rôznych áut zo Slovenska.",
-    "ads": 2650,
-    "median": "9 990 €",
-    "r2": "92 %",
-    "history": {
-      "updated_at": "2026-11-24T11:28:07",
-      "as_of": "2026-11-24",
-      "coverage": "partial",
-      "baseline_count": 1577,
-      "total_count": 3931,
-      "active_count": 2,
-      "inactive_count": 0,
-      "unverified_count": 3929,
-      "new_count": 2354,
-      "price_changed_count": 2,
-      "price_lowered_count": 2,
-      "paired_count": 2,
-      "paired_median_change_pct": -3,
-      "historical_median": 9990,
-      "seen_median": 9075,
-      "seen_price_count": 2,
-      "last_observed_at": "2026-11-24T11:18:39"
     }
   },
   {

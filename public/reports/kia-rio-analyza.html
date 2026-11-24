@@ -106,45 +106,44 @@ footer { color: var(--muted); font-size: 12.5px; margin-top: 48px; border-top: 1
 .theme-btn { float: right; background: var(--surface); color: var(--text-2); border: 1px solid var(--border); border-radius: 8px; padding: 5px 10px; cursor: pointer; font: inherit; font-size: 13px; }
 @media (max-width: 640px) { h1 { font-size: 24px; } .prices { grid-template-columns: 1fr 1fr 1fr; } .big { font-size: 18px; } th, td { padding: 7px 6px; } }
 </style>
-<!-- ferovka-theme --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"><style id="ferovka-theme">/* Férovka look for the generated analyses – injected by sync-reports.mjs after each report's own <style>.
-   Same palette and type as the site; chart colours (--s1..--s3) stay the validated set. */
-:root {
-  --bg: #f5f4ef; --surface: #fdfdfb; --surface-2: #eeede6; --border: #e1dfd6;
-  --text: #0f1513; --text-2: #4f5551; --muted: #6f746f;
-  --accent: #0b8a56; --good: #0b7a4b; --grid: #e6e4dc; --win: #dff3e9;
+<!-- ferovka-theme --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap"><style id="ferovka-theme">/* OverAuto look for the generated analyses – injected by sync-reports.mjs after each report's own <style>.
+   Same palette and type as the site (design/znacka.html). The site is light only, so the dark blocks repeat the light tokens.
+   Chart colours (--s1..--s3) stay the report's validated set. */
+:root, :root[data-theme="dark"] {
+  color-scheme: light;
+  --bg: #F7F6F2; --surface: #FFFFFF; --surface-2: #EFEDE7; --border: #DEDBD3;
+  --text: #14161A; --text-2: #4A4F57; --muted: #4A4F57;
+  --accent: #1E4ED8; --good: #1E4ED8; --grid: #E7E4DC; --win: #EEF2FD;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0d110f; --surface: #151a17; --surface-2: #1d2420; --border: #2a322d;
-    --text: #eef1ec; --text-2: #b6bdb6; --muted: #8f978f;
-    --accent: #2fc583; --good: #4cd08f; --grid: #1f2622; --win: #143223;
+    color-scheme: light;
+    --bg: #F7F6F2; --surface: #FFFFFF; --surface-2: #EFEDE7; --border: #DEDBD3;
+    --text: #14161A; --text-2: #4A4F57; --muted: #4A4F57;
+    --accent: #1E4ED8; --good: #1E4ED8; --grid: #E7E4DC; --win: #EEF2FD;
   }
 }
-:root[data-theme="dark"] {
-  --bg: #0d110f; --surface: #151a17; --surface-2: #1d2420; --border: #2a322d;
-  --text: #eef1ec; --text-2: #b6bdb6; --muted: #8f978f;
-  --accent: #2fc583; --good: #4cd08f; --grid: #1f2622; --win: #143223;
-}
 
-body { font-family: "Manrope", system-ui, sans-serif; }
-h1, h2 { letter-spacing: -0.02em; font-weight: 800; }
+body { font-family: "Inter", system-ui, sans-serif; background: var(--bg); color: var(--text); }
+h1, h2, h3, .kpi .v, .price { font-family: "Space Grotesk", "Inter", sans-serif; }
+h1, h2 { letter-spacing: -0.02em; font-weight: 700; }
+a { color: var(--accent); }
 .tag { color: var(--accent); }
 
 /* photo header (removed by the site's viewer, which shows its own) */
-.fv-hero { position: relative; margin: 0 0 26px; border-radius: 20px; overflow: hidden; aspect-ratio: 21 / 8; background: #0d110f; display: flex; }
+.fv-hero { position: relative; margin: 0 0 26px; border-radius: 20px; overflow: hidden; aspect-ratio: 21 / 8; background: #14161A; display: flex; }
 .fv-hero img { flex: 1; min-width: 0; height: 100%; object-fit: cover; animation: fv-zoom 1.4s cubic-bezier(.2,.7,.2,1) both; }
-.fv-collage img + img { border-left: 3px solid #0d110f; }
+.fv-collage img + img { border-left: 3px solid #14161A; }
 .fv-hero::after { content: ""; position: absolute; inset: 0; pointer-events: none;
-  background: linear-gradient(180deg, transparent 55%, rgb(13 17 15 / .75)),
-    repeating-linear-gradient(90deg, rgb(47 197 131 / .06) 0 1px, transparent 1px 48px); }
+  background: linear-gradient(180deg, transparent 55%, rgb(20 22 26 / .75)); }
 .fv-hero figcaption { position: absolute; right: 12px; bottom: 8px; z-index: 1; font-size: 11px; color: rgb(255 255 255 / .75); }
 .fv-hero figcaption a { color: inherit; }
 
-/* cards & panels: softer, lift on hover */
+/* cards & panels: white on paper, 16px corners, lift on hover */
 .card, .kpi, .explain, .chart-wrap, .box { border-radius: 16px; }
 .card { transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease; }
-.card:hover { transform: translateY(-3px); border-color: var(--accent); box-shadow: 0 14px 30px -18px rgb(0 0 0 / .45); }
-.badge.pick { background: var(--accent); }
+.card:hover { transform: translateY(-3px); border-color: #14161A; box-shadow: 0 24px 48px -28px rgb(20 22 26 / .35); }
+.badge.pick { background: #F26A1B; color: #14161A; }
 
 /* entrance animation */
 @keyframes fv-up { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
@@ -163,7 +162,7 @@ h1, .lead, .kpis, .cards .card { animation: fv-up .6s cubic-bezier(.2,.7,.2,1) b
 @media (max-width: 640px) { .fv-hero { aspect-ratio: 16 / 9; border-radius: 14px; } }
 
 /* touch: hint under the chart tooltip (report-chart.js) */
-.fv-hint { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--border, rgba(127,127,127,.3)); font-weight: 700; color: var(--accent, #2fc583); }
+.fv-hint { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--border, rgba(127,127,127,.3)); font-weight: 700; color: var(--accent, #1E4ED8); }
 </style><!-- /ferovka-theme -->
 </head>
 <body>

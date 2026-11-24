@@ -106,45 +106,44 @@ footer { color: var(--muted); font-size: 12.5px; margin-top: 48px; border-top: 1
 .theme-btn { float: right; background: var(--surface); color: var(--text-2); border: 1px solid var(--border); border-radius: 8px; padding: 5px 10px; cursor: pointer; font: inherit; font-size: 13px; }
 @media (max-width: 640px) { h1 { font-size: 24px; } .prices { grid-template-columns: 1fr 1fr 1fr; } .big { font-size: 18px; } th, td { padding: 7px 6px; } }
 </style>
-<!-- ferovka-theme --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"><style id="ferovka-theme">/* Férovka look for the generated analyses – injected by sync-reports.mjs after each report's own <style>.
-   Same palette and type as the site; chart colours (--s1..--s3) stay the validated set. */
-:root {
-  --bg: #f5f4ef; --surface: #fdfdfb; --surface-2: #eeede6; --border: #e1dfd6;
-  --text: #0f1513; --text-2: #4f5551; --muted: #6f746f;
-  --accent: #0b8a56; --good: #0b7a4b; --grid: #e6e4dc; --win: #dff3e9;
+<!-- ferovka-theme --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap"><style id="ferovka-theme">/* OverAuto look for the generated analyses – injected by sync-reports.mjs after each report's own <style>.
+   Same palette and type as the site (design/znacka.html). The site is light only, so the dark blocks repeat the light tokens.
+   Chart colours (--s1..--s3) stay the report's validated set. */
+:root, :root[data-theme="dark"] {
+  color-scheme: light;
+  --bg: #F7F6F2; --surface: #FFFFFF; --surface-2: #EFEDE7; --border: #DEDBD3;
+  --text: #14161A; --text-2: #4A4F57; --muted: #4A4F57;
+  --accent: #1E4ED8; --good: #1E4ED8; --grid: #E7E4DC; --win: #EEF2FD;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0d110f; --surface: #151a17; --surface-2: #1d2420; --border: #2a322d;
-    --text: #eef1ec; --text-2: #b6bdb6; --muted: #8f978f;
-    --accent: #2fc583; --good: #4cd08f; --grid: #1f2622; --win: #143223;
+    color-scheme: light;
+    --bg: #F7F6F2; --surface: #FFFFFF; --surface-2: #EFEDE7; --border: #DEDBD3;
+    --text: #14161A; --text-2: #4A4F57; --muted: #4A4F57;
+    --accent: #1E4ED8; --good: #1E4ED8; --grid: #E7E4DC; --win: #EEF2FD;
   }
 }
-:root[data-theme="dark"] {
-  --bg: #0d110f; --surface: #151a17; --surface-2: #1d2420; --border: #2a322d;
-  --text: #eef1ec; --text-2: #b6bdb6; --muted: #8f978f;
-  --accent: #2fc583; --good: #4cd08f; --grid: #1f2622; --win: #143223;
-}
 
-body { font-family: "Manrope", system-ui, sans-serif; }
-h1, h2 { letter-spacing: -0.02em; font-weight: 800; }
+body { font-family: "Inter", system-ui, sans-serif; background: var(--bg); color: var(--text); }
+h1, h2, h3, .kpi .v, .price { font-family: "Space Grotesk", "Inter", sans-serif; }
+h1, h2 { letter-spacing: -0.02em; font-weight: 700; }
+a { color: var(--accent); }
 .tag { color: var(--accent); }
 
 /* photo header (removed by the site's viewer, which shows its own) */
-.fv-hero { position: relative; margin: 0 0 26px; border-radius: 20px; overflow: hidden; aspect-ratio: 21 / 8; background: #0d110f; display: flex; }
+.fv-hero { position: relative; margin: 0 0 26px; border-radius: 20px; overflow: hidden; aspect-ratio: 21 / 8; background: #14161A; display: flex; }
 .fv-hero img { flex: 1; min-width: 0; height: 100%; object-fit: cover; animation: fv-zoom 1.4s cubic-bezier(.2,.7,.2,1) both; }
-.fv-collage img + img { border-left: 3px solid #0d110f; }
+.fv-collage img + img { border-left: 3px solid #14161A; }
 .fv-hero::after { content: ""; position: absolute; inset: 0; pointer-events: none;
-  background: linear-gradient(180deg, transparent 55%, rgb(13 17 15 / .75)),
-    repeating-linear-gradient(90deg, rgb(47 197 131 / .06) 0 1px, transparent 1px 48px); }
+  background: linear-gradient(180deg, transparent 55%, rgb(20 22 26 / .75)); }
 .fv-hero figcaption { position: absolute; right: 12px; bottom: 8px; z-index: 1; font-size: 11px; color: rgb(255 255 255 / .75); }
 .fv-hero figcaption a { color: inherit; }
 
-/* cards & panels: softer, lift on hover */
+/* cards & panels: white on paper, 16px corners, lift on hover */
 .card, .kpi, .explain, .chart-wrap, .box { border-radius: 16px; }
 .card { transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease; }
-.card:hover { transform: translateY(-3px); border-color: var(--accent); box-shadow: 0 14px 30px -18px rgb(0 0 0 / .45); }
-.badge.pick { background: var(--accent); }
+.card:hover { transform: translateY(-3px); border-color: #14161A; box-shadow: 0 24px 48px -28px rgb(20 22 26 / .35); }
+.badge.pick { background: #F26A1B; color: #14161A; }
 
 /* entrance animation */
 @keyframes fv-up { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
@@ -163,21 +162,21 @@ h1, .lead, .kpis, .cards .card { animation: fv-up .6s cubic-bezier(.2,.7,.2,1) b
 @media (max-width: 640px) { .fv-hero { aspect-ratio: 16 / 9; border-radius: 14px; } }
 
 /* touch: hint under the chart tooltip (report-chart.js) */
-.fv-hint { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--border, rgba(127,127,127,.3)); font-weight: 700; color: var(--accent, #2fc583); }
+.fv-hint { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--border, rgba(127,127,127,.3)); font-weight: 700; color: var(--accent, #1E4ED8); }
 </style><!-- /ferovka-theme -->
 </head>
 <body>
 <main><!-- ferovka-theme --><!-- /ferovka-theme -->
 <button class="theme-btn" id="themeBtn" type="button">Svetlý / tmavý</button>
 <h1>Nissan Pathfinder – ktorá ponuka sa oplatí</h1>
-<p class="lead">Analýza aktuálnych inzerátov Nissan Pathfinder (R51 2005–2014 a R52 2013–2021, 7 miest) od 3 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 59 inzerátov (38 na bazoši, 16 na autobazar.eu, 5 na bazar.sk) – prezreli sme 95 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 39 rôznych áut zo Slovenska. Každé auto sme porovnali
+<p class="lead">Analýza aktuálnych inzerátov Nissan Pathfinder (R51 2005–2014 a R52 2013–2021, 7 miest) od 3 000 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (24. 11. 2026). Na portáloch je spolu 59 inzerátov (39 na bazoši, 15 na autobazar.eu, 5 na bazar.sk) – prezreli sme 95 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 40 rôznych áut zo Slovenska. Každé auto sme porovnali
 s <b>férovou cenou</b>: tú vypočítal model naučený na celom trhu podľa veku, nájazdu, motora, prevodovky a typu predajcu.</p>
 
 <div class="kpis">
-  <div class="kpi"><div class="v">39</div><div class="l">inzerátov Pathfindera (nad 3 000 €)</div></div>
+  <div class="kpi"><div class="v">40</div><div class="l">inzerátov Pathfindera (nad 3 000 €)</div></div>
   <div class="kpi"><div class="v">26</div><div class="l">ohodnotených (majú rok aj km)</div></div>
-  <div class="kpi"><div class="v">8 100 €</div><div class="l">medián ceny s DPH</div></div>
-  <div class="kpi"><div class="v">80 %</div><div class="l">rozdielov v cenách vysvetlí model</div></div>
+  <div class="kpi"><div class="v">8 000 €</div><div class="l">medián ceny s DPH</div></div>
+  <div class="kpi"><div class="v">72 %</div><div class="l">rozdielov v cenách vysvetlí model</div></div>
 </div>
 
 
@@ -189,14 +188,14 @@ s <b>férovou cenou</b>: tú vypočítal model naučený na celom trhu podľa ve
   <div class="kpi"><div class="v">4 / 7</div><div class="l">s uvedeným pôvodom SR / dovoz</div></div>
 </div>
 <div class="explain">
-  <p><b>Tri portály, jeden trh.</b> Bazoš prehľadal 36 inzerátov, autobazar.eu
-  16, bazar.sk 4. Ponuky z Česka (na autobazar.eu ich je veľa) sme vynechali. Autobazáre často dávajú
+  <p><b>Tri portály, jeden trh.</b> Bazoš prehľadal 37 inzerátov, autobazar.eu
+  15, bazar.sk 4. Ponuky z Česka (na autobazar.eu ich je veľa) sme vynechali. Autobazáre často dávajú
   to isté auto na viac portálov. Takéto dvojice (5 v rebríčku) sme spojili podľa VIN alebo zhody roku, km a ceny,
   aby sa v modeli nerátali dvakrát. Pri aute nájdeš odkaz na všetky ponuky – niekedy sa líšia cenou.</p>
   <p><b>Rozdiel medzi portálmi:</b> rovnaké auto je na autobazar.eu v priemere –
   oproti bazošu. Na autobazar.eu predávajú hlavne firmy (2 z 4 ohodnotených).</p>
   <p><b>Kúpené v SR vs. dovoz:</b> autá s uvedeným pôvodom zo SR sú oproti autám bez uvedeného pôvodu
-  –, dovezené -20,6 %
+  –, dovezené -21,1 %
   (pri rovnakom veku, nájazde a motore). Pôvod zo SR je výhoda pri overovaní histórie, trh zaň však nepripláca – väčšina
   inzerátov pôvod jednoducho neuvádza. V tabulke dole si môžeš nechať zobraziť len autá kúpené v SR.</p>
 </div>
@@ -205,18 +204,18 @@ s <b>férovou cenou</b>: tú vypočítal model naučený na celom trhu podľa ve
 <p class="section-lead">Toto sa model naučil z trhu. Keď porovnávaš dve autá, tieto čísla ti povedia, koľko má byť
 rozdiel v cene, aby to bolo fér.</p>
 <div class="kpis">
-  <div class="kpi"><div class="v">-2,6 %</div><div class="l">každých ďalších 10 000 km</div></div>
-  <div class="kpi"><div class="v">8,4 %</div><div class="l">každý rok veku navyše</div></div>
-  <div class="kpi"><div class="v">+-9 %</div><div class="l">príplatok za automat (DSG)</div></div>
-  <div class="kpi"><div class="v">+25,7 %</div><div class="l">príplatok u predajcu / firmy</div></div>
-  <div class="kpi"><div class="v">+53,7 %</div><div class="l">Pathfinder po facelifte (2010+) oproti cene podľa veku</div></div>
-  <div class="kpi"><div class="v">-9,1 %</div><div class="l">príplatok za automat</div></div>
+  <div class="kpi"><div class="v">-1,9 %</div><div class="l">každých ďalších 10 000 km</div></div>
+  <div class="kpi"><div class="v">9,9 %</div><div class="l">každý rok veku navyše</div></div>
+  <div class="kpi"><div class="v">+-10 %</div><div class="l">príplatok za automat (DSG)</div></div>
+  <div class="kpi"><div class="v">+23,0 %</div><div class="l">príplatok u predajcu / firmy</div></div>
+  <div class="kpi"><div class="v">+59,3 %</div><div class="l">Pathfinder po facelifte (2010+) oproti cene podľa veku</div></div>
+  <div class="kpi"><div class="v">-10,2 %</div><div class="l">príplatok za automat</div></div>
 </div>
 <div class="explain">
   <p><b>Príklad:</b> dva rovnaké Pathfindery 2.5 dCi z roku 2011, jedno má 60 tis. km, druhé 120 tis. km. Druhé má byť
-  približne o 16 % lacnejšie (6 × -2,6 %). Ak je lacnejšie len o 5 %, preplácaš kilometre.</p>
+  približne o 11 % lacnejšie (6 × -1,9 %). Ak je lacnejšie len o 5 %, preplácaš kilometre.</p>
   <p><b>Ako čítať „pod trhom“:</b> +15 % znamená, že auto stojí o 15 % menej, než by malo podľa trhu. Bežný rozptyl
-  cien je asi ±89 %, takže až zľava nad ~10–15 % je naozaj výnimočná. Pri takej zľave vždy zisti, prečo je auto lacné
+  cien je asi ±87 %, takže až zľava nad ~10–15 % je naozaj výnimočná. Pri takej zľave vždy zisti, prečo je auto lacné
   (stav, história, nájazd).</p>
   <p><b>DPH:</b> ceny uvedené bez DPH (napr. „10 300 € netto“) sme prepočítali na cenu s DPH, ktorú zaplatí súkromná osoba.</p>
 </div>
@@ -230,15 +229,15 @@ Zoradené podľa toho, ako ich odporúčame.</p>
   <div class="card-head"><span class="tag">Pathfinder 3.0 V6 dCi automat, 7 miest</span><span class="loc">Bratislava-Dúbravka</span></div>
   <h3><a href="https://www.autobazar.eu/detail/nissan-pathfinder-30-dci-v6-le/AmhMA_JsMfb/" target="_blank" rel="noopener">Nissan Pathfinder 3.0 dCi V6 LE</a></h3>
   <div class="facts">2013 · 282 000 km · 3.0 V6 dCi 170 kW · automat · predajca/firma</div>
-  <div class="facts src">zdroj: <b>autobazar.eu</b> · dovezené · aj na <a href='https://auto.bazos.sk/inzerat/197710107/nissan-pathfinder-30-diesel-v6-at7-4x4-top-stav.php' target='_blank' rel='noopener'>bazoš</a></div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · dovezené · aj na <a href='https://auto.bazos.sk/inzerat/197818326/nissan-pathfinder-30-diesel-v6-at7-4x4.php' target='_blank' rel='noopener'>bazoš</a></div>
   <div class="prices">
-    <div><span class="lbl">Cena</span><span class="big">9 299 €</span></div>
-    <div><span class="lbl">Férová cena</span><span class="mid">10 230 €</span></div>
-    <div><span class="lbl">Pod trhom</span><span class="mid good">+9.1 %</span></div>
+    <div><span class="lbl">Cena</span><span class="big">8 999 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">10 380 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+13.3 %</span></div>
   </div>
-  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:30%"></span></div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:44%"></span></div>
   <ul class="pc"><li class="pro">2013, 3.0 V6 dCi 170 kW, 7-st. automat, 282 tis. km</li><li class="pro">Plná výbava, BOSE, strešné okno</li><li class="pro">~9 % pod férovou cenou</li><li class="con">Predáva autobazár</li><li class="con">Vysoký nájazd</li></ul>
-<!-- history-card:start --><p class="note fv-history-card">V ponuke 53 dní (od 2. 10.)</p><!-- history-card:end --></article>
+</article>
 <article class="card">
   <div class="card-head"><span class="tag">Pathfinder 2.5 dCi 140 kW 4x4, 7 miest</span><span class="loc">Tvrdošín</span></div>
   <h3><a href="https://auto.bazos.sk/inzerat/196087399/nissan-pathfinder.php" target="_blank" rel="noopener">Nissan Pathfinder</a></h3>
@@ -246,38 +245,38 @@ Zoradené podľa toho, ako ich odporúčame.</p>
   <div class="facts src">zdroj: <b>bazoš</b></div>
   <div class="prices">
     <div><span class="lbl">Cena</span><span class="big">8 200 €</span></div>
-    <div><span class="lbl">Férová cena</span><span class="mid">9 010 €</span></div>
-    <div><span class="lbl">Pod trhom</span><span class="mid good">+9.0 %</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">9 520 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+13.9 %</span></div>
   </div>
-  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:30%"></span></div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:46%"></span></div>
   <ul class="pc"><li class="pro">2012, 2.5 dCi 140 kW, 4x4, 275 tis. km</li><li class="pro">7 miest, poctivý pohon 4x4</li><li class="pro">~9 % pod férovou cenou</li><li class="con">Predáva autobazár</li><li class="con">Prevodovka neuvedená</li></ul>
-<!-- history-card:start --><p class="note fv-history-card">V ponuke aspoň 54 dní</p><!-- history-card:end --></article>
+</article>
 <article class="card">
   <div class="card-head"><span class="tag">Pathfinder 3.0 V6 dCi LE automat s 203 tis. km</span><span class="loc">Bratislava-Dúbravka</span></div>
   <h3><a href="https://www.autobazar.eu/detail/nissan-pathfinder-30-dci-v6-le/AmZtIL5PECD/" target="_blank" rel="noopener">Nissan Pathfinder 3.0 dCi V6 LE</a></h3>
   <div class="facts">2012 · 203 000 km · 3.0 V6 dCi 170 kW · automat · predajca/firma</div>
-  <div class="facts src">zdroj: <b>autobazar.eu</b> · aj na <a href='https://auto.bazos.sk/inzerat/197710148/nissan-pathfinder-30-diesel-v6-at7-4x4.php' target='_blank' rel='noopener'>bazoš</a></div>
+  <div class="facts src">zdroj: <b>autobazar.eu</b> · aj na <a href='https://auto.bazos.sk/inzerat/197818242/nissan-pathfinder-30-diesel-v6-at7-4x4.php' target='_blank' rel='noopener'>bazoš</a></div>
   <div class="prices">
     <div><span class="lbl">Cena</span><span class="big">14 499 €</span></div>
-    <div><span class="lbl">Férová cena</span><span class="mid">15 470 €</span></div>
-    <div><span class="lbl">Pod trhom</span><span class="mid good">+6.3 %</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">15 200 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+4.6 %</span></div>
   </div>
-  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:21%"></span></div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:15%"></span></div>
   <ul class="pc"><li class="pro">2012, 3.0 V6 dCi 170 kW, 7-st. automat, 203 tis. km</li><li class="pro">Veľmi zachovalý, plná výbava, ťažné</li><li class="pro">~6 % pod férovou cenou</li><li class="con">Predáva autobazár</li></ul>
-<!-- history-card:start --><p class="note fv-history-card">V ponuke 27 dní (od 28. 10.)</p><!-- history-card:end --></article>
+</article>
 <article class="card">
   <div class="card-head"><span class="tag">Pathfinder 2.5 dCi 140 kW, 7 miest</span><span class="loc">Liptovský Mikuláš</span></div>
   <h3><a href="https://auto.bazos.sk/inzerat/197716293/nissan-pathfinder.php" target="_blank" rel="noopener">Nissan Pathfinder</a></h3>
   <div class="facts">2009 · 240 000 km · 2.5 dCi 128–140 kW · prevodovka ? · neisté</div>
   <div class="facts src">zdroj: <b>bazoš</b></div>
   <div class="prices">
-    <div><span class="lbl">Cena</span><span class="big">4 300 €</span></div>
-    <div><span class="lbl">Férová cena</span><span class="mid">5 740 €</span></div>
-    <div><span class="lbl">Pod trhom</span><span class="mid good">+25.1 %</span></div>
+    <div><span class="lbl">Cena</span><span class="big">3 800 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">5 970 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+36.4 %</span></div>
   </div>
-  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:84%"></span></div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:100%"></span></div>
   <ul class="pc"><li class="pro">2009, 2.5 dCi 140 kW, 240 tis. km</li><li class="pro">Po facelifte, bezkľúčové štartovanie, nové celoročné pneu</li><li class="pro">~25 % pod férovou cenou</li><li class="con">Prevodovka neuvedená</li></ul>
-<!-- history-card:start --><p class="note fv-history-card">V ponuke 2 dni (od 22. 11.)</p><!-- history-card:end --></article></div>
+</article></div>
 <div class="subhead">Lacnejšie Pathfindery do 9 000 €</div>
 <div class="cards">
 <article class="card">
@@ -287,25 +286,25 @@ Zoradené podľa toho, ako ich odporúčame.</p>
   <div class="facts src">zdroj: <b>bazoš</b> · dovezené</div>
   <div class="prices">
     <div><span class="lbl">Cena</span><span class="big">3 950 €</span></div>
-    <div><span class="lbl">Férová cena</span><span class="mid">5 920 €</span></div>
-    <div><span class="lbl">Pod trhom</span><span class="mid good">+33.3 %</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">5 770 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+31.5 %</span></div>
   </div>
   <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:100%"></span></div>
   <ul class="pc"><li class="pro">2008, 2.5 dCi 126 kW, 4x4, automat, 238 tis. km</li><li class="pro">Záruka na km a pôvod, koža, xenóny, strešné okno</li><li class="pro">~33 % pod férovou cenou</li><li class="con">Predáva autobazár</li></ul>
-<!-- history-card:start --><p class="note fv-history-card">V ponuke 2 dni (od 22. 11.)</p><!-- history-card:end --></article>
+</article>
 <article class="card">
   <div class="card-head"><span class="tag">Súkromník: Pathfinder R51 2.5 dCi s redukciou</span><span class="loc">Žilina</span></div>
   <h3><a href="https://auto.bazos.sk/inzerat/197510075/513490048205181378.php" target="_blank" rel="noopener">Nissan Pathfinder R51</a></h3>
-  <div class="facts">2006 · 263 000 km · 2.5 dCi 128–140 kW · manuál · súkromník</div>
+  <div class="facts">2006 · 263 000 km · 2.5 dCi 128–140 kW · manuál · neisté</div>
   <div class="facts src">zdroj: <b>bazoš</b></div>
   <div class="prices">
     <div><span class="lbl">Cena</span><span class="big">4 200 €</span></div>
-    <div><span class="lbl">Férová cena</span><span class="mid">5 700 €</span></div>
-    <div><span class="lbl">Pod trhom</span><span class="mid good">+26.4 %</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">5 730 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+26.6 %</span></div>
   </div>
-  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:88%"></span></div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:89%"></span></div>
   <ul class="pc"><li class="pro">2006, 2.5 dCi 128 kW, 6-st. manuál, 263 tis. km</li><li class="pro">4x4 s redukciou, ťažné 3 000 kg</li><li class="pro">~26 % pod férovou cenou</li><li class="con">Vyšší nájazd</li></ul>
-<!-- history-card:start --><p class="note fv-history-card">V ponuke 10 dní (od 14. 11.)</p><!-- history-card:end --></article>
+</article>
 <article class="card">
   <div class="card-head"><span class="tag">Pathfinder 2.5 dCi manuál, 7 miest</span><span class="loc">Bratislava</span></div>
   <h3><a href="https://auto.bazar.sk/39760950-nissan-pathfinder-2-5-dci-128kw-m6-aj-na-splatky-protiucet/" target="_blank" rel="noopener">Nissan Pathfinder 2.5 dCi / 128kW / M6 / AJ NA SPLÁTKY / PROTIÚČET</a></h3>
@@ -313,12 +312,12 @@ Zoradené podľa toho, ako ich odporúčame.</p>
   <div class="facts src">zdroj: <b>bazar.sk</b> · dovezené · aj na <a href='https://auto.bazos.sk/inzerat/197490393/nissan-pathfinder-25-dci-128kw-m6-2006.php' target='_blank' rel='noopener'>bazoš</a> · aj na <a href='https://www.autobazar.eu/detail/nissan-pathfinder-25-dci-128kw-m6-aj-na-splatky-protiucet/Amzcm-SDRjG/' target='_blank' rel='noopener'>autobazar.eu</a></div>
   <div class="prices">
     <div><span class="lbl">Cena</span><span class="big">5 490 €</span></div>
-    <div><span class="lbl">Férová cena</span><span class="mid">6 160 €</span></div>
-    <div><span class="lbl">Pod trhom</span><span class="mid good">+10.9 %</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">6 570 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+16.4 %</span></div>
   </div>
-  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:36%"></span></div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:55%"></span></div>
   <ul class="pc"><li class="pro">5/2006, 2.5 dCi 128 kW, 6-st. manuál, 367 tis. km</li><li class="pro">7 miest, uvedený VIN</li><li class="pro">~11 % pod férovou cenou</li><li class="con">Vysoký nájazd</li><li class="con">Predáva autobazár</li></ul>
-<!-- history-card:start --><p class="note fv-history-card">V ponuke 18 dní (od 6. 11.)</p><!-- history-card:end --></article>
+</article>
 <article class="card">
   <div class="card-head"><span class="tag">Pathfinder 2.5 dCi manuál</span><span class="loc">Prešov</span></div>
   <h3><a href="https://auto.bazos.sk/inzerat/196207297/nissan-pathfinder-25-2006.php" target="_blank" rel="noopener">NISSAN PATHFINDER 2,5 2006</a></h3>
@@ -326,12 +325,12 @@ Zoradené podľa toho, ako ich odporúčame.</p>
   <div class="facts src">zdroj: <b>bazoš</b></div>
   <div class="prices">
     <div><span class="lbl">Cena</span><span class="big">7 000 €</span></div>
-    <div><span class="lbl">Férová cena</span><span class="mid">7 520 €</span></div>
-    <div><span class="lbl">Pod trhom</span><span class="mid good">+6.9 %</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">7 680 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+8.9 %</span></div>
   </div>
-  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:23%"></span></div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:30%"></span></div>
   <ul class="pc"><li class="pro">2006, 2.5 dCi 126 kW, 6-st. manuál, 241 tis. km</li><li class="pro">~7 % pod férovou cenou</li><li class="con">Predajca neistý</li></ul>
-<!-- history-card:start --><p class="note fv-history-card">V ponuke aspoň 50 dní</p><!-- history-card:end --></article></div>
+</article></div>
 <div class="subhead">Špeciálne prípady</div>
 <div class="cards"></div>
 
@@ -355,7 +354,7 @@ Krúžkom sú označené odporúčané ponuky. Prejdi myšou na bod a uvidíš d
   <td><b>3.0 V6 dCi 170 kW</b><div class="sub">Diesel V6 231 k (od Renaultu). Veľmi ťahavý; over vstrekovače a turbo.</div></td>
   <td><span class="stars" aria-label="4 z 5">★★★★<span class="off">★</span></span></td>
   <td class="num">6</td>
-  <td class="num"><div class="cellbar"><span style="width:62%"></span></div>9 900 €</td>
+  <td class="num"><div class="cellbar"><span style="width:61%"></span></div>9 750 €</td>
   <td class="num">2012</td>
   <td class="num">282 032 km</td>
 </tr>
@@ -388,7 +387,7 @@ Krúžkom sú označené odporúčané ponuky. Prejdi myšou na bod a uvidíš d
   <p><b>Lacné kvôli extrémnemu nájazdu</b> (viac ako 35 tis. km ročne, typicky flotila alebo taxi):</p>
   <ul><li>Žiadne výrazné prípady.</li></ul>
   <p><b>Ďalšie veci, ktoré sme v inzerátoch našli:</b></p><ul><li>Väčšina Pathfinderov má 250 – 370 tis. km. Pri R51 over stav rámu a nápravy – Nissan pri starších kusoch riešil hrdzavenie rámu.</li><li>Ponuka je malá (okolo 25 inzerátov) – férová cena je preto menej presná.</li></ul><p><b>Vyradené z porovnania</b> (poškodené autá alebo nezmyselné údaje – model ich nehodnotí):</p><ul><li><a href='https://auto.bazos.sk/inzerat/197534866/pathfinder-25-diesel-2012.php' target='_blank' rel='noopener'>Pathfinder 2.5 diesel 2012</a> (4 500 €): havarované / poškodené – cena nie je porovnateľná s trhom</li></ul><p><b>Navara, X-Trail, Murano a iné modely z vyhľadávania, inzeráty s chybným nájazdom</b> (1 inzerátov) sme z rebríčka vynechali.</p>
-  <p>Ďalších <b>10</b> inzerátov nemá v texte rok alebo kilometre, takže ich nebolo možné ohodnotiť.
+  <p>Ďalších <b>11</b> inzerátov nemá v texte rok alebo kilometre, takže ich nebolo možné ohodnotiť.
   Ak ťa niektorý zaujme, predajcu sa na tieto údaje opýtaj.</p>
 </div>
 
@@ -429,15 +428,15 @@ Krúžkom sú označené odporúčané ponuky. Prejdi myšou na bod a uvidíš d
 </ul>
 
 <footer>
-  Zdroj: auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (len ponuky zo Slovenska, to isté auto na viacerých portáloch je započítané raz), sťahované cez lokálny MCP server bazos-mcp (nástroj <code>fair_price</code>), 22. 11. 2026.
+  Zdroj: auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (len ponuky zo Slovenska, to isté auto na viacerých portáloch je započítané raz), sťahované cez lokálny MCP server bazos-mcp (nástroj <code>fair_price</code>), 24. 11. 2026.
   Model: ridge regresia log(ceny s DPH) podľa veku, veku², km, km², prevodovky, typu predajcu, motora, karosérie, pohonu 4x4, pôvodu (SR / dovoz) a portálu. Vzorka 26
-  inzerátov, R² 80 %. Parametre sú vyťažené z textu inzerátov, a preto môžu obsahovať chyby. Odporúčané ponuky sme overili
+  inzerátov, R² 72 %. Parametre sú vyťažené z textu inzerátov, a preto môžu obsahovať chyby. Odporúčané ponuky sme overili
   prečítaním celého inzerátu. Hodnotenie motorov je odborný odhad, nie výsledok modelu.
 </footer>
 </main>
 
 <script>
-const DATA = [{"id": "197649433", "url": "https://auto.bazos.sk/inzerat/197649433/nissan-pathfinder-25dci-7miest.php", "title": "Nissan Pathfinder 2.5dci 7miest", "price": 3950, "price_gross": 3950, "fair_price": 5920.0, "discount_pct": 33.3, "verdict": "výrazne pod trhom – over prečo", "year": 2008, "km": 238000, "km_per_year": 13000.0, "eg": "2.5 dCi 128–140 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Partizánske", "flags": [], "pick": "budget", "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "suv"}, {"id": "197510075", "url": "https://auto.bazos.sk/inzerat/197510075/513490048205181378.php", "title": "Nissan Pathfinder R51", "price": 4200, "price_gross": 4200, "fair_price": 5700.0, "discount_pct": 26.4, "verdict": "výrazne pod trhom – over prečo", "year": 2006, "km": 263000, "km_per_year": 12900.0, "eg": "2.5 dCi 128–140 kW", "cg": 0, "transmission": "manual", "seller_type": "private", "location": "Žilina", "flags": [], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "197716293", "url": "https://auto.bazos.sk/inzerat/197716293/nissan-pathfinder.php", "title": "Nissan Pathfinder", "price": 4300, "price_gross": 4300, "fair_price": 5740.0, "discount_pct": 25.1, "verdict": "výrazne pod trhom – over prečo", "year": 2009, "km": 240000, "km_per_year": 13800.0, "eg": "2.5 dCi 128–140 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Liptovský Mikuláš", "flags": ["prevodovka nezistená"], "pick": "top", "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "bs-39760950", "url": "https://auto.bazar.sk/39760950-nissan-pathfinder-2-5-dci-128kw-m6-aj-na-splatky-protiucet/", "title": "Nissan Pathfinder 2.5 dCi / 128kW / M6 / AJ NA SPLÁTKY / PROTIÚČET", "price": 5490, "price_gross": 5490, "fair_price": 6160.0, "discount_pct": 10.9, "verdict": "pod trhom", "year": 2006, "km": 367204, "km_per_year": 18100.0, "eg": "2.5 dCi 128–140 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": "budget", "source": "bazarsk", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "197490393", "url": "https://auto.bazos.sk/inzerat/197490393/nissan-pathfinder-25-dci-128kw-m6-2006.php", "price": 5490}, {"source": "autobazar", "id": "ab-Amzcm-SDRjG", "url": "https://www.autobazar.eu/detail/nissan-pathfinder-25-dci-128kw-m6-aj-na-splatky-protiucet/Amzcm-SDRjG/", "price": 5490}], "body": "suv"}, {"id": "196524579", "url": "https://auto.bazos.sk/inzerat/196524579/nisan-pathfinder.php", "title": "Nisan PATHFINDER", "price": 4390, "price_gross": 4390, "fair_price": 4890.0, "discount_pct": 10.3, "verdict": "pod trhom", "year": 2006, "km": 367000, "km_per_year": 18000.0, "eg": "2.5 dCi 128–140 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Nitra", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AmhMA_JsMfb", "url": "https://www.autobazar.eu/detail/nissan-pathfinder-30-dci-v6-le/AmhMA_JsMfb/", "title": "Nissan Pathfinder 3.0 dCi V6 LE", "price": 9299, "price_gross": 9299, "fair_price": 10230.0, "discount_pct": 9.1, "verdict": "pod trhom", "year": 2013, "km": 282000, "km_per_year": 21200.0, "eg": "3.0 V6 dCi 170 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava-Dúbravka", "flags": [], "pick": "top", "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "197710107", "url": "https://auto.bazos.sk/inzerat/197710107/nissan-pathfinder-30-diesel-v6-at7-4x4-top-stav.php", "price": 9299}], "body": "suv"}, {"id": "196087399", "url": "https://auto.bazos.sk/inzerat/196087399/nissan-pathfinder.php", "title": "Nissan Pathfinder", "price": 8200, "price_gross": 8200, "fair_price": 9010.0, "discount_pct": 9.0, "verdict": "pod trhom", "year": 2012, "km": 275000, "km_per_year": 19200.0, "eg": "2.5 dCi 128–140 kW", "cg": 0, "transmission": null, "seller_type": "dealer", "location": "Tvrdošín", "flags": ["prevodovka nezistená"], "pick": "top", "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "196207297", "url": "https://auto.bazos.sk/inzerat/196207297/nissan-pathfinder-25-2006.php", "title": "NISSAN PATHFINDER 2,5 2006", "price": 7000, "price_gross": 7000, "fair_price": 7520.0, "discount_pct": 6.9, "verdict": "férová cena", "year": 2006, "km": 241000, "km_per_year": 11900.0, "eg": "2.5 dCi 128–140 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Prešov", "flags": [], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AmZtIL5PECD", "url": "https://www.autobazar.eu/detail/nissan-pathfinder-30-dci-v6-le/AmZtIL5PECD/", "title": "Nissan Pathfinder 3.0 dCi V6 LE", "price": 14499, "price_gross": 14499, "fair_price": 15470.0, "discount_pct": 6.3, "verdict": "férová cena", "year": 2012, "km": 203000, "km_per_year": 14200.0, "eg": "3.0 V6 dCi 170 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava-Dúbravka", "flags": [], "pick": "top", "source": "autobazar", "origin": null, "also_listed": [{"source": "bazos", "id": "197710148", "url": "https://auto.bazos.sk/inzerat/197710148/nissan-pathfinder-30-diesel-v6-at7-4x4.php", "price": 14499}], "body": "suv"}, {"id": "196183724", "url": "https://auto.bazos.sk/inzerat/196183724/pathfinder-30-v6.php", "title": "Pathfinder 3.0 v6", "price": 7200, "price_gross": 7200, "fair_price": 7460.0, "discount_pct": 3.5, "verdict": "férová cena", "year": 2012, "km": 350000, "km_per_year": 24400.0, "eg": "3.0 V6 dCi 170 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Dunajská Streda", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "197740819", "url": "https://auto.bazos.sk/inzerat/197740819/predam-nisan-pathfinder-25-dci.php", "title": "Predam nisan pathfinder 2,5 dci automat", "price": 6500, "price_gross": 6500, "fair_price": 6590.0, "discount_pct": 1.3, "verdict": "férová cena", "year": 2007, "km": 230000, "km_per_year": 11900.0, "eg": "2.5 dCi 128–140 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Nitra", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "195999390", "url": "https://auto.bazos.sk/inzerat/195999390/nissan-pathfinder.php", "title": "Nissan Pathfinder", "price": 5500, "price_gross": 5500, "fair_price": 5500.0, "discount_pct": -0.1, "verdict": "férová cena", "year": 2005, "km": 286000, "km_per_year": 13400.0, "eg": "2.5 dCi 128–140 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Púchov", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AeCCSPPvlRx", "url": "https://www.autobazar.eu/detail/nissan-pathfinder-25-dci-le-at-126kw171hp-a5/AeCCSPPvlRx/", "price": 5500}], "body": "suv"}, {"id": "197071240", "url": "https://auto.bazos.sk/inzerat/197071240/nissan-pathfinder-2020.php", "title": "Nissan pathfinder 2020", "price": 15999, "price_gross": 15999, "fair_price": 15900.0, "discount_pct": -0.6, "verdict": "férová cena", "year": 2020, "km": 76000, "km_per_year": 12000.0, "eg": "4.0 V6 / 3.5 V6 benzín 183–198 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Považská Bystrica", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "197648034", "url": "https://auto.bazos.sk/inzerat/197648034/nissan-pathfinder-25-140kw-le-at.php", "title": "Nissan Pathfinder 2.5 140kw LE A/T", "price": 8599, "price_gross": 8599, "fair_price": 8530.0, "discount_pct": -0.8, "verdict": "férová cena", "year": 2011, "km": 291917, "km_per_year": 19000.0, "eg": "2.5 dCi 128–140 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Nové Mesto n.Váhom", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "197567242", "url": "https://auto.bazos.sk/inzerat/197567242/nissan-pathfinder-30-v6-at-12012-282064km.php", "title": "Nissan Pathfinder 3.0 V6 A/T, 1/2012, 282.064km", "price": 9000, "price_gross": 9000, "fair_price": 8830.0, "discount_pct": -1.9, "verdict": "férová cena", "year": 2012, "km": 282064, "km_per_year": 19700.0, "eg": "3.0 V6 dCi 170 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Nitra", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "197566717", "url": "https://auto.bazos.sk/inzerat/197566717/predam-nissan-pathfinder-25-dci-se-7-miestne.php", "title": "Predám  Nissan Pathfinder 2.5 dCi SE (7-miestne)", "price": 8990, "price_gross": 8990, "fair_price": 8800.0, "discount_pct": -2.2, "verdict": "férová cena", "year": 2013, "km": 207228, "km_per_year": 15500.0, "eg": "2.5 dCi 128–140 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Košice", "flags": [], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [{"source": "bazarsk", "id": "bs-39756112", "url": "https://auto.bazar.sk/39756112-nissan-pathfinder-2-5-dci-se/", "price": 8990}, {"source": "autobazar", "id": "ab-AmpWXZl1bYE", "url": "https://www.autobazar.eu/detail/nissan-pathfinder-25-dci-se/AmpWXZl1bYE/", "price": 8990}, {"source": "bazos", "id": "197337675", "url": "https://auto.bazos.sk/inzerat/197337675/nissan-pathfinder-25-dci-se.php", "price": 8990}], "body": "suv"}, {"id": "bs-23185217", "url": "https://auto.bazar.sk/23185217-nissan-pathfinder-2-5-dci-le-140kw-m6-5d/", "title": "Nissan Pathfinder 2.5 dCi LE, 140kW, M6, 5d.", "price": 14500, "price_gross": 14500, "fair_price": 14160.0, "discount_pct": -2.4, "verdict": "férová cena", "year": 2010, "km": 103000, "km_per_year": 6300.0, "eg": "2.5 dCi 128–140 kW", "cg": 0, "transmission": "manual", "seller_type": "private", "location": "Spišské Vlachy", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "197552157", "url": "https://auto.bazos.sk/inzerat/197552157/nissan-pathfinder-25dci-126kw-rv-2008-manual-7miestny.php", "title": "Nissan Pathfinder 2.5dci 126kw rv 2008 manuál 7miestny", "price": 7999, "price_gross": 7999, "fair_price": 7630.0, "discount_pct": -4.9, "verdict": "férová cena", "year": 2008, "km": 305000, "km_per_year": 16600.0, "eg": "2.5 dCi 128–140 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Banská Bystrica", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "197522183", "url": "https://auto.bazos.sk/inzerat/197522183/predam-nissan-pathfinder-25-dci.php", "title": "Predám Nissan Pathfinder 2,5 dci", "price": 7800, "price_gross": 7800, "fair_price": 7390.0, "discount_pct": -5.6, "verdict": "férová cena", "year": 2008, "km": 270000, "km_per_year": 14700.0, "eg": "2.5 dCi 128–140 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Vranov nad Topľou", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "197604547", "url": "https://auto.bazos.sk/inzerat/197604547/predam-nissan-pathfinder-r51.php", "title": "Predám Nissan Pathfinder R51", "price": 5700, "price_gross": 5700, "fair_price": 5340.0, "discount_pct": -6.8, "verdict": "férová cena", "year": 2007, "km": 362000, "km_per_year": 18700.0, "eg": "2.5 dCi 128–140 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Námestovo", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "196923653", "url": "https://auto.bazos.sk/inzerat/196923653/nissan-pathfinder-25-d-140kw.php", "title": "Nissan Pathfinder 2.5 dci 140kw 4x4", "price": 7300, "price_gross": 7300, "fair_price": 6820.0, "discount_pct": -7.0, "verdict": "férová cena", "year": 2011, "km": 290000, "km_per_year": 18900.0, "eg": "2.5 dCi 128–140 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Trenčín", "flags": [], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "suv"}, {"id": "ab-Ae3JCmNzGQH", "url": "https://www.autobazar.eu/detail/nissan-pathfinder-30-dci-v6-le-169kw231hp-a7/Ae3JCmNzGQH/", "title": "Nissan Pathfinder 3.0 dCi V6 LE 169kW231HP A7", "price": 10500, "price_gross": 10500, "fair_price": 9090.0, "discount_pct": -15.5, "verdict": "výrazne nad trhom", "year": 2013, "km": 238000, "km_per_year": 17900.0, "eg": "3.0 V6 dCi 170 kW", "cg": 0, "transmission": "automatic", "seller_type": "private", "location": "Veľká Tŕňa", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "suv"}, {"id": "bs-23450749", "url": "https://auto.bazar.sk/23450749-nissan-pathfinder-2-5-dci-se-a-t-126kw-a5-5d/", "title": "Nissan Pathfinder 2.5 dCi SE A/T, 126kW, A5, 5d.", "price": 12800, "price_gross": 12800, "fair_price": 10500.0, "discount_pct": -21.9, "verdict": "výrazne nad trhom", "year": 2005, "km": 215000, "km_per_year": 10100.0, "eg": "2.5 dCi 128–140 kW", "cg": 0, "transmission": "automatic", "seller_type": "private", "location": "Mokroluh", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "suv"}, {"id": "196071632", "url": "https://auto.bazos.sk/inzerat/196071632/nissan-pathfinder-25-dci-automat-7-miestne.php", "title": "NISSAN PATHFINDER 2,5 DCI, AUTOMAT 7-MIESTNE", "price": 9699, "price_gross": 9699, "fair_price": 7880.0, "discount_pct": -23.2, "verdict": "výrazne nad trhom", "year": 2008, "km": 209000, "km_per_year": 11400.0, "eg": "2.5 dCi 128–140 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Michalovce", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-Aen12dnqzqE", "url": "https://www.autobazar.eu/detail/nissan-pathfinder-raptor/Aen12dnqzqE/", "title": "Nissan Pathfinder Raptor", "price": 11500, "price_gross": 11500, "fair_price": 8810.0, "discount_pct": -30.6, "verdict": "výrazne nad trhom", "year": 2007, "km": 300000, "km_per_year": 15500.0, "eg": "2.5 dCi 128–140 kW", "cg": 0, "transmission": "manual", "seller_type": "private", "location": "Partizánske", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "suv"}, {"id": "197663907", "url": "https://auto.bazos.sk/inzerat/197663907/nissan-pathfinder.php", "title": "Nissan pathfinder", "price": 12999, "price_gross": 12999, "fair_price": 8120.0, "discount_pct": -60.0, "verdict": "výrazne nad trhom", "year": 2008, "km": 295000, "km_per_year": 16100.0, "eg": "3.0 V6 dCi 170 kW", "cg": 0, "transmission": null, "seller_type": "dealer", "location": "Dunajská Streda", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}];
+const DATA = [{"id": "197716293", "url": "https://auto.bazos.sk/inzerat/197716293/nissan-pathfinder.php", "title": "Nissan Pathfinder", "price": 3800, "price_gross": 3800, "fair_price": 5970.0, "discount_pct": 36.4, "verdict": "výrazne pod trhom – over prečo", "year": 2009, "km": 240000, "km_per_year": 13800.0, "eg": "2.5 dCi 128–140 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Liptovský Mikuláš", "flags": ["prevodovka nezistená"], "pick": "top", "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "197649433", "url": "https://auto.bazos.sk/inzerat/197649433/nissan-pathfinder-25dci-7miest.php", "title": "Nissan Pathfinder 2.5dci 7miest", "price": 3950, "price_gross": 3950, "fair_price": 5770.0, "discount_pct": 31.5, "verdict": "výrazne pod trhom – over prečo", "year": 2008, "km": 238000, "km_per_year": 13000.0, "eg": "2.5 dCi 128–140 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Partizánske", "flags": [], "pick": "budget", "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "suv"}, {"id": "197510075", "url": "https://auto.bazos.sk/inzerat/197510075/513490048205181378.php", "title": "Nissan Pathfinder R51", "price": 4200, "price_gross": 4200, "fair_price": 5730.0, "discount_pct": 26.6, "verdict": "výrazne pod trhom – over prečo", "year": 2006, "km": 263000, "km_per_year": 12900.0, "eg": "2.5 dCi 128–140 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Žilina", "flags": [], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "bs-39760950", "url": "https://auto.bazar.sk/39760950-nissan-pathfinder-2-5-dci-128kw-m6-aj-na-splatky-protiucet/", "title": "Nissan Pathfinder 2.5 dCi / 128kW / M6 / AJ NA SPLÁTKY / PROTIÚČET", "price": 5490, "price_gross": 5490, "fair_price": 6570.0, "discount_pct": 16.4, "verdict": "výrazne pod trhom – over prečo", "year": 2006, "km": 367204, "km_per_year": 18100.0, "eg": "2.5 dCi 128–140 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": "budget", "source": "bazarsk", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "197490393", "url": "https://auto.bazos.sk/inzerat/197490393/nissan-pathfinder-25-dci-128kw-m6-2006.php", "price": 5490}, {"source": "autobazar", "id": "ab-Amzcm-SDRjG", "url": "https://www.autobazar.eu/detail/nissan-pathfinder-25-dci-128kw-m6-aj-na-splatky-protiucet/Amzcm-SDRjG/", "price": 5490}], "body": "suv"}, {"id": "196087399", "url": "https://auto.bazos.sk/inzerat/196087399/nissan-pathfinder.php", "title": "Nissan Pathfinder", "price": 8200, "price_gross": 8200, "fair_price": 9520.0, "discount_pct": 13.9, "verdict": "pod trhom", "year": 2012, "km": 275000, "km_per_year": 19200.0, "eg": "2.5 dCi 128–140 kW", "cg": 0, "transmission": null, "seller_type": "dealer", "location": "Tvrdošín", "flags": ["prevodovka nezistená"], "pick": "top", "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AmhMA_JsMfb", "url": "https://www.autobazar.eu/detail/nissan-pathfinder-30-dci-v6-le/AmhMA_JsMfb/", "title": "Nissan Pathfinder 3.0 dCi V6 LE", "price": 8999, "price_gross": 8999, "fair_price": 10380.0, "discount_pct": 13.3, "verdict": "pod trhom", "year": 2013, "km": 282000, "km_per_year": 21200.0, "eg": "3.0 V6 dCi 170 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava-Dúbravka", "flags": [], "pick": "top", "source": "autobazar", "origin": "dovoz", "also_listed": [{"source": "bazos", "id": "197818326", "url": "https://auto.bazos.sk/inzerat/197818326/nissan-pathfinder-30-diesel-v6-at7-4x4.php", "price": 8999}], "body": "suv"}, {"id": "196524579", "url": "https://auto.bazos.sk/inzerat/196524579/nisan-pathfinder.php", "title": "Nisan PATHFINDER", "price": 4390, "price_gross": 4390, "fair_price": 4910.0, "discount_pct": 10.6, "verdict": "pod trhom", "year": 2006, "km": 367000, "km_per_year": 18000.0, "eg": "2.5 dCi 128–140 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Nitra", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "196207297", "url": "https://auto.bazos.sk/inzerat/196207297/nissan-pathfinder-25-2006.php", "title": "NISSAN PATHFINDER 2,5 2006", "price": 7000, "price_gross": 7000, "fair_price": 7680.0, "discount_pct": 8.9, "verdict": "pod trhom", "year": 2006, "km": 241000, "km_per_year": 11900.0, "eg": "2.5 dCi 128–140 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Prešov", "flags": [], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-AmZtIL5PECD", "url": "https://www.autobazar.eu/detail/nissan-pathfinder-30-dci-v6-le/AmZtIL5PECD/", "title": "Nissan Pathfinder 3.0 dCi V6 LE", "price": 14499, "price_gross": 14499, "fair_price": 15200.0, "discount_pct": 4.6, "verdict": "férová cena", "year": 2012, "km": 203000, "km_per_year": 14200.0, "eg": "3.0 V6 dCi 170 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Bratislava-Dúbravka", "flags": [], "pick": "top", "source": "autobazar", "origin": null, "also_listed": [{"source": "bazos", "id": "197818242", "url": "https://auto.bazos.sk/inzerat/197818242/nissan-pathfinder-30-diesel-v6-at7-4x4.php", "price": 14499}], "body": "suv"}, {"id": "197848018", "url": "https://auto.bazos.sk/inzerat/197848018/nissan-pathfinder-25dci-126-kw-7-miestne.php", "title": "Nissan Pathfinder 2.5dci 126 kw 7-miestne", "price": 7700, "price_gross": 7700, "fair_price": 7940.0, "discount_pct": 3.1, "verdict": "férová cena", "year": 2008, "km": 305000, "km_per_year": 16600.0, "eg": "2.5 dCi 128–140 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Banská Bystrica", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "195999390", "url": "https://auto.bazos.sk/inzerat/195999390/nissan-pathfinder.php", "title": "Nissan Pathfinder", "price": 5500, "price_gross": 5500, "fair_price": 5660.0, "discount_pct": 2.9, "verdict": "férová cena", "year": 2005, "km": 286000, "km_per_year": 13400.0, "eg": "2.5 dCi 128–140 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Púchov", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AeCCSPPvlRx", "url": "https://www.autobazar.eu/detail/nissan-pathfinder-25-dci-le-at-126kw171hp-a5/AeCCSPPvlRx/", "price": 5500}], "body": "suv"}, {"id": "197740819", "url": "https://auto.bazos.sk/inzerat/197740819/predam-nisan-pathfinder-25-dci.php", "title": "Predam nisan pathfinder 2,5 dci automat", "price": 6500, "price_gross": 6500, "fair_price": 6680.0, "discount_pct": 2.7, "verdict": "férová cena", "year": 2007, "km": 230000, "km_per_year": 11900.0, "eg": "2.5 dCi 128–140 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Nitra", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "196183724", "url": "https://auto.bazos.sk/inzerat/196183724/pathfinder-30-v6.php", "title": "Pathfinder 3.0 v6", "price": 7200, "price_gross": 7200, "fair_price": 7280.0, "discount_pct": 1.1, "verdict": "férová cena", "year": 2012, "km": 350000, "km_per_year": 24400.0, "eg": "3.0 V6 dCi 170 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Dunajská Streda", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "197648034", "url": "https://auto.bazos.sk/inzerat/197648034/nissan-pathfinder-25-140kw-le-at.php", "title": "Nissan Pathfinder 2.5 140kw LE A/T", "price": 8599, "price_gross": 8599, "fair_price": 8640.0, "discount_pct": 0.4, "verdict": "férová cena", "year": 2011, "km": 291917, "km_per_year": 19000.0, "eg": "2.5 dCi 128–140 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Nové Mesto n.Váhom", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "197071240", "url": "https://auto.bazos.sk/inzerat/197071240/nissan-pathfinder-2020.php", "title": "Nissan pathfinder 2020", "price": 15999, "price_gross": 15999, "fair_price": 15780.0, "discount_pct": -1.4, "verdict": "férová cena", "year": 2020, "km": 76000, "km_per_year": 12000.0, "eg": "4.0 V6 / 3.5 V6 benzín 183–198 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Považská Bystrica", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "197567242", "url": "https://auto.bazos.sk/inzerat/197567242/nissan-pathfinder-30-v6-at-12012-282064km.php", "title": "Nissan Pathfinder 3.0 V6 A/T, 1/2012, 282.064km", "price": 9000, "price_gross": 9000, "fair_price": 8590.0, "discount_pct": -4.8, "verdict": "férová cena", "year": 2012, "km": 282064, "km_per_year": 19700.0, "eg": "3.0 V6 dCi 170 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Nitra", "flags": [], "pick": null, "source": "bazos", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "bs-23185217", "url": "https://auto.bazar.sk/23185217-nissan-pathfinder-2-5-dci-le-140kw-m6-5d/", "title": "Nissan Pathfinder 2.5 dCi LE, 140kW, M6, 5d.", "price": 14500, "price_gross": 14500, "fair_price": 13810.0, "discount_pct": -5.0, "verdict": "férová cena", "year": 2010, "km": 103000, "km_per_year": 6300.0, "eg": "2.5 dCi 128–140 kW", "cg": 0, "transmission": "manual", "seller_type": "private", "location": "Spišské Vlachy", "flags": [], "pick": null, "source": "bazarsk", "origin": "SR", "also_listed": [], "body": "suv"}, {"id": "197566717", "url": "https://auto.bazos.sk/inzerat/197566717/predam-nissan-pathfinder-25-dci-se-7-miestne.php", "title": "Predám  Nissan Pathfinder 2.5 dCi SE (7-miestne)", "price": 8990, "price_gross": 8990, "fair_price": 8530.0, "discount_pct": -5.4, "verdict": "férová cena", "year": 2013, "km": 207228, "km_per_year": 15500.0, "eg": "2.5 dCi 128–140 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Košice", "flags": [], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [{"source": "bazarsk", "id": "bs-39756112", "url": "https://auto.bazar.sk/39756112-nissan-pathfinder-2-5-dci-se/", "price": 8990}, {"source": "autobazar", "id": "ab-AmpWXZl1bYE", "url": "https://www.autobazar.eu/detail/nissan-pathfinder-25-dci-se/AmpWXZl1bYE/", "price": 8990}, {"source": "bazos", "id": "197337675", "url": "https://auto.bazos.sk/inzerat/197337675/nissan-pathfinder-25-dci-se.php", "price": 8990}], "body": "suv"}, {"id": "196923653", "url": "https://auto.bazos.sk/inzerat/196923653/nissan-pathfinder-25-d-140kw.php", "title": "Nissan Pathfinder 2.5 dci 140kw 4x4", "price": 7300, "price_gross": 7300, "fair_price": 6910.0, "discount_pct": -5.6, "verdict": "férová cena", "year": 2011, "km": 290000, "km_per_year": 18900.0, "eg": "2.5 dCi 128–140 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Trenčín", "flags": [], "pick": null, "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "suv"}, {"id": "197604547", "url": "https://auto.bazos.sk/inzerat/197604547/predam-nissan-pathfinder-r51.php", "title": "Predám Nissan Pathfinder R51", "price": 5700, "price_gross": 5700, "fair_price": 5060.0, "discount_pct": -12.6, "verdict": "nad trhom", "year": 2007, "km": 362000, "km_per_year": 18700.0, "eg": "2.5 dCi 128–140 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Námestovo", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-Ae3JCmNzGQH", "url": "https://www.autobazar.eu/detail/nissan-pathfinder-30-dci-v6-le-169kw231hp-a7/Ae3JCmNzGQH/", "title": "Nissan Pathfinder 3.0 dCi V6 LE 169kW231HP A7", "price": 10500, "price_gross": 10500, "fair_price": 9160.0, "discount_pct": -14.6, "verdict": "nad trhom", "year": 2013, "km": 238000, "km_per_year": 17900.0, "eg": "3.0 V6 dCi 170 kW", "cg": 0, "transmission": "automatic", "seller_type": "private", "location": "Veľká Tŕňa", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "suv"}, {"id": "197522183", "url": "https://auto.bazos.sk/inzerat/197522183/predam-nissan-pathfinder-25-dci.php", "title": "Predám Nissan Pathfinder 2,5 dci", "price": 7800, "price_gross": 7800, "fair_price": 6800.0, "discount_pct": -14.7, "verdict": "nad trhom", "year": 2008, "km": 270000, "km_per_year": 14700.0, "eg": "2.5 dCi 128–140 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Vranov nad Topľou", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "bs-23450749", "url": "https://auto.bazar.sk/23450749-nissan-pathfinder-2-5-dci-se-a-t-126kw-a5-5d/", "title": "Nissan Pathfinder 2.5 dCi SE A/T, 126kW, A5, 5d.", "price": 12800, "price_gross": 12800, "fair_price": 10410.0, "discount_pct": -23.0, "verdict": "výrazne nad trhom", "year": 2005, "km": 215000, "km_per_year": 10100.0, "eg": "2.5 dCi 128–140 kW", "cg": 0, "transmission": "automatic", "seller_type": "private", "location": "Mokroluh", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "suv"}, {"id": "196071632", "url": "https://auto.bazos.sk/inzerat/196071632/nissan-pathfinder-25-dci-automat-7-miestne.php", "title": "NISSAN PATHFINDER 2,5 DCI, AUTOMAT 7-MIESTNE", "price": 9699, "price_gross": 9699, "fair_price": 7650.0, "discount_pct": -26.9, "verdict": "výrazne nad trhom", "year": 2008, "km": 209000, "km_per_year": 11400.0, "eg": "2.5 dCi 128–140 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Michalovce", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}, {"id": "ab-Aen12dnqzqE", "url": "https://www.autobazar.eu/detail/nissan-pathfinder-raptor/Aen12dnqzqE/", "title": "Nissan Pathfinder Raptor", "price": 11500, "price_gross": 11500, "fair_price": 8210.0, "discount_pct": -40.1, "verdict": "výrazne nad trhom", "year": 2007, "km": 300000, "km_per_year": 15500.0, "eg": "2.5 dCi 128–140 kW", "cg": 0, "transmission": "manual", "seller_type": "private", "location": "Partizánske", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "suv"}, {"id": "197663907", "url": "https://auto.bazos.sk/inzerat/197663907/nissan-pathfinder.php", "title": "Nissan pathfinder", "price": 12999, "price_gross": 12999, "fair_price": 7180.0, "discount_pct": -81.0, "verdict": "výrazne nad trhom", "year": 2008, "km": 295000, "km_per_year": 16100.0, "eg": "3.0 V6 dCi 170 kW", "cg": 0, "transmission": null, "seller_type": "dealer", "location": "Dunajská Streda", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "suv"}];
 const GROUPS = ["Diesel dCi", "Benzín", "LPG a nezistený"];
 const BODY = {"suv": "SUV"};
 const fmt = n => Math.round(n).toLocaleString("sk-SK");

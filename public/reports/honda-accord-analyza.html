@@ -106,45 +106,44 @@ footer { color: var(--muted); font-size: 12.5px; margin-top: 48px; border-top: 1
 .theme-btn { float: right; background: var(--surface); color: var(--text-2); border: 1px solid var(--border); border-radius: 8px; padding: 5px 10px; cursor: pointer; font: inherit; font-size: 13px; }
 @media (max-width: 640px) { h1 { font-size: 24px; } .prices { grid-template-columns: 1fr 1fr 1fr; } .big { font-size: 18px; } th, td { padding: 7px 6px; } }
 </style>
-<!-- ferovka-theme --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"><style id="ferovka-theme">/* Férovka look for the generated analyses – injected by sync-reports.mjs after each report's own <style>.
-   Same palette and type as the site; chart colours (--s1..--s3) stay the validated set. */
-:root {
-  --bg: #f5f4ef; --surface: #fdfdfb; --surface-2: #eeede6; --border: #e1dfd6;
-  --text: #0f1513; --text-2: #4f5551; --muted: #6f746f;
-  --accent: #0b8a56; --good: #0b7a4b; --grid: #e6e4dc; --win: #dff3e9;
+<!-- ferovka-theme --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap"><style id="ferovka-theme">/* OverAuto look for the generated analyses – injected by sync-reports.mjs after each report's own <style>.
+   Same palette and type as the site (design/znacka.html). The site is light only, so the dark blocks repeat the light tokens.
+   Chart colours (--s1..--s3) stay the report's validated set. */
+:root, :root[data-theme="dark"] {
+  color-scheme: light;
+  --bg: #F7F6F2; --surface: #FFFFFF; --surface-2: #EFEDE7; --border: #DEDBD3;
+  --text: #14161A; --text-2: #4A4F57; --muted: #4A4F57;
+  --accent: #1E4ED8; --good: #1E4ED8; --grid: #E7E4DC; --win: #EEF2FD;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0d110f; --surface: #151a17; --surface-2: #1d2420; --border: #2a322d;
-    --text: #eef1ec; --text-2: #b6bdb6; --muted: #8f978f;
-    --accent: #2fc583; --good: #4cd08f; --grid: #1f2622; --win: #143223;
+    color-scheme: light;
+    --bg: #F7F6F2; --surface: #FFFFFF; --surface-2: #EFEDE7; --border: #DEDBD3;
+    --text: #14161A; --text-2: #4A4F57; --muted: #4A4F57;
+    --accent: #1E4ED8; --good: #1E4ED8; --grid: #E7E4DC; --win: #EEF2FD;
   }
 }
-:root[data-theme="dark"] {
-  --bg: #0d110f; --surface: #151a17; --surface-2: #1d2420; --border: #2a322d;
-  --text: #eef1ec; --text-2: #b6bdb6; --muted: #8f978f;
-  --accent: #2fc583; --good: #4cd08f; --grid: #1f2622; --win: #143223;
-}
 
-body { font-family: "Manrope", system-ui, sans-serif; }
-h1, h2 { letter-spacing: -0.02em; font-weight: 800; }
+body { font-family: "Inter", system-ui, sans-serif; background: var(--bg); color: var(--text); }
+h1, h2, h3, .kpi .v, .price { font-family: "Space Grotesk", "Inter", sans-serif; }
+h1, h2 { letter-spacing: -0.02em; font-weight: 700; }
+a { color: var(--accent); }
 .tag { color: var(--accent); }
 
 /* photo header (removed by the site's viewer, which shows its own) */
-.fv-hero { position: relative; margin: 0 0 26px; border-radius: 20px; overflow: hidden; aspect-ratio: 21 / 8; background: #0d110f; display: flex; }
+.fv-hero { position: relative; margin: 0 0 26px; border-radius: 20px; overflow: hidden; aspect-ratio: 21 / 8; background: #14161A; display: flex; }
 .fv-hero img { flex: 1; min-width: 0; height: 100%; object-fit: cover; animation: fv-zoom 1.4s cubic-bezier(.2,.7,.2,1) both; }
-.fv-collage img + img { border-left: 3px solid #0d110f; }
+.fv-collage img + img { border-left: 3px solid #14161A; }
 .fv-hero::after { content: ""; position: absolute; inset: 0; pointer-events: none;
-  background: linear-gradient(180deg, transparent 55%, rgb(13 17 15 / .75)),
-    repeating-linear-gradient(90deg, rgb(47 197 131 / .06) 0 1px, transparent 1px 48px); }
+  background: linear-gradient(180deg, transparent 55%, rgb(20 22 26 / .75)); }
 .fv-hero figcaption { position: absolute; right: 12px; bottom: 8px; z-index: 1; font-size: 11px; color: rgb(255 255 255 / .75); }
 .fv-hero figcaption a { color: inherit; }
 
-/* cards & panels: softer, lift on hover */
+/* cards & panels: white on paper, 16px corners, lift on hover */
 .card, .kpi, .explain, .chart-wrap, .box { border-radius: 16px; }
 .card { transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease; }
-.card:hover { transform: translateY(-3px); border-color: var(--accent); box-shadow: 0 14px 30px -18px rgb(0 0 0 / .45); }
-.badge.pick { background: var(--accent); }
+.card:hover { transform: translateY(-3px); border-color: #14161A; box-shadow: 0 24px 48px -28px rgb(20 22 26 / .35); }
+.badge.pick { background: #F26A1B; color: #14161A; }
 
 /* entrance animation */
 @keyframes fv-up { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
@@ -163,38 +162,38 @@ h1, .lead, .kpis, .cards .card { animation: fv-up .6s cubic-bezier(.2,.7,.2,1) b
 @media (max-width: 640px) { .fv-hero { aspect-ratio: 16 / 9; border-radius: 14px; } }
 
 /* touch: hint under the chart tooltip (report-chart.js) */
-.fv-hint { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--border, rgba(127,127,127,.3)); font-weight: 700; color: var(--accent, #2fc583); }
+.fv-hint { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--border, rgba(127,127,127,.3)); font-weight: 700; color: var(--accent, #1E4ED8); }
 </style><!-- /ferovka-theme -->
 </head>
 <body>
 <main><!-- ferovka-theme --><!-- /ferovka-theme -->
 <button class="theme-btn" id="themeBtn" type="button">Svetlý / tmavý</button>
 <h1>Honda Accord – ktorá ponuka sa oplatí</h1>
-<p class="lead">Analýza aktuálnych inzerátov Honda Accord (2003–2015, sedan aj kombi Tourer) od 1 500 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (22. 11. 2026). Na portáloch je spolu 58 inzerátov (53 na bazoši, 0 na autobazar.eu, 5 na bazar.sk) – prezreli sme 95 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 52 rôznych áut zo Slovenska. Každé auto sme porovnali
+<p class="lead">Analýza aktuálnych inzerátov Honda Accord (2003–2015, sedan aj kombi Tourer) od 1 500 € na auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (24. 11. 2026). Na portáloch je spolu 65 inzerátov (53 na bazoši, 7 na autobazar.eu, 5 na bazar.sk) – prezreli sme 95 %. Po zlúčení áut ponúkaných na viacerých portáloch a vynechaní ponúk z Česka ostáva 53 rôznych áut zo Slovenska. Každé auto sme porovnali
 s <b>férovou cenou</b>: tú vypočítal model naučený na celom trhu podľa veku, nájazdu, motora, prevodovky a typu predajcu.</p>
 
 <div class="kpis">
-  <div class="kpi"><div class="v">52</div><div class="l">inzerátov Accordu (nad 1 500 €)</div></div>
-  <div class="kpi"><div class="v">31</div><div class="l">ohodnotených (majú rok aj km)</div></div>
-  <div class="kpi"><div class="v">4 199 €</div><div class="l">medián ceny s DPH</div></div>
-  <div class="kpi"><div class="v">81 %</div><div class="l">rozdielov v cenách vysvetlí model</div></div>
+  <div class="kpi"><div class="v">53</div><div class="l">inzerátov Accordu (nad 1 500 €)</div></div>
+  <div class="kpi"><div class="v">34</div><div class="l">ohodnotených (majú rok aj km)</div></div>
+  <div class="kpi"><div class="v">4 294 €</div><div class="l">medián ceny s DPH</div></div>
+  <div class="kpi"><div class="v">83 %</div><div class="l">rozdielov v cenách vysvetlí model</div></div>
 </div>
 
 
 <h2>Odkiaľ sú dáta: bazoš, autobazar.eu a bazar.sk</h2>
 <div class="kpis">
   <div class="kpi"><div class="v">28</div><div class="l">ohodnotených z bazoša</div></div>
-  <div class="kpi"><div class="v">0</div><div class="l">ohodnotených z autobazar.eu</div></div><div class="kpi"><div class="v">3</div><div class="l">ohodnotených z bazar.sk</div></div>
-  <div class="kpi"><div class="v">0</div><div class="l">áut bolo na viacerých portáloch – započítané raz</div></div>
-  <div class="kpi"><div class="v">0 / 2</div><div class="l">s uvedeným pôvodom SR / dovoz</div></div>
+  <div class="kpi"><div class="v">3</div><div class="l">ohodnotených z autobazar.eu</div></div><div class="kpi"><div class="v">3</div><div class="l">ohodnotených z bazar.sk</div></div>
+  <div class="kpi"><div class="v">5</div><div class="l">áut bolo na viacerých portáloch – započítané raz</div></div>
+  <div class="kpi"><div class="v">0 / 3</div><div class="l">s uvedeným pôvodom SR / dovoz</div></div>
 </div>
 <div class="explain">
   <p><b>Tri portály, jeden trh.</b> Bazoš prehľadal 50 inzerátov, autobazar.eu
-  0, bazar.sk 5. Ponuky z Česka (na autobazar.eu ich je veľa) sme vynechali. Autobazáre často dávajú
-  to isté auto na viac portálov. Takéto dvojice (0 v rebríčku) sme spojili podľa VIN alebo zhody roku, km a ceny,
+  7, bazar.sk 5. Ponuky z Česka (na autobazar.eu ich je veľa) sme vynechali. Autobazáre často dávajú
+  to isté auto na viac portálov. Takéto dvojice (2 v rebríčku) sme spojili podľa VIN alebo zhody roku, km a ceny,
   aby sa v modeli nerátali dvakrát. Pri aute nájdeš odkaz na všetky ponuky – niekedy sa líšia cenou.</p>
   <p><b>Rozdiel medzi portálmi:</b> rovnaké auto je na autobazar.eu v priemere –
-  oproti bazošu. Na autobazar.eu predávajú hlavne firmy (0 z 0 ohodnotených). Na bazar.sk je rovnaké auto v priemere -1,4 % oproti bazošu.</p>
+  oproti bazošu. Na autobazar.eu predávajú hlavne firmy (1 z 3 ohodnotených).</p>
   <p><b>Kúpené v SR vs. dovoz:</b> autá s uvedeným pôvodom zo SR sú oproti autám bez uvedeného pôvodu
   –, dovezené –
   (pri rovnakom veku, nájazde a motore). Pôvod zo SR je výhoda pri overovaní histórie, trh zaň však nepripláca – väčšina
@@ -205,18 +204,18 @@ s <b>férovou cenou</b>: tú vypočítal model naučený na celom trhu podľa ve
 <p class="section-lead">Toto sa model naučil z trhu. Keď porovnávaš dve autá, tieto čísla ti povedia, koľko má byť
 rozdiel v cene, aby to bolo fér.</p>
 <div class="kpis">
-  <div class="kpi"><div class="v">-4,1 %</div><div class="l">každých ďalších 10 000 km</div></div>
-  <div class="kpi"><div class="v">-3,4 %</div><div class="l">každý rok veku navyše</div></div>
-  <div class="kpi"><div class="v">+-3 %</div><div class="l">príplatok za automat (DSG)</div></div>
-  <div class="kpi"><div class="v">+4,2 %</div><div class="l">príplatok u predajcu / firmy</div></div>
-  <div class="kpi"><div class="v">+25,0 %</div><div class="l">Accord poslednej generácie (2008+) oproti cene podľa veku</div></div>
-  <div class="kpi"><div class="v">-3,3 %</div><div class="l">príplatok za automat</div></div>
+  <div class="kpi"><div class="v">-3,7 %</div><div class="l">každých ďalších 10 000 km</div></div>
+  <div class="kpi"><div class="v">-4,0 %</div><div class="l">každý rok veku navyše</div></div>
+  <div class="kpi"><div class="v">+6 %</div><div class="l">príplatok za automat (DSG)</div></div>
+  <div class="kpi"><div class="v">+25,6 %</div><div class="l">príplatok u predajcu / firmy</div></div>
+  <div class="kpi"><div class="v">+16,2 %</div><div class="l">Accord poslednej generácie (2008+) oproti cene podľa veku</div></div>
+  <div class="kpi"><div class="v">+6,2 %</div><div class="l">príplatok za automat</div></div>
 </div>
 <div class="explain">
   <p><b>Príklad:</b> dve rovnaké Accordy 2.2 i-DTEC z roku 2011, jedno má 60 tis. km, druhé 120 tis. km. Druhé má byť
-  približne o 25 % lacnejšie (6 × -4,1 %). Ak je lacnejšie len o 5 %, preplácaš kilometre.</p>
+  približne o 22 % lacnejšie (6 × -3,7 %). Ak je lacnejšie len o 5 %, preplácaš kilometre.</p>
   <p><b>Ako čítať „pod trhom“:</b> +15 % znamená, že auto stojí o 15 % menej, než by malo podľa trhu. Bežný rozptyl
-  cien je asi ±90 %, takže až zľava nad ~10–15 % je naozaj výnimočná. Pri takej zľave vždy zisti, prečo je auto lacné
+  cien je asi ±77 %, takže až zľava nad ~10–15 % je naozaj výnimočná. Pri takej zľave vždy zisti, prečo je auto lacné
   (stav, história, nájazd).</p>
   <p><b>DPH:</b> ceny uvedené bez DPH (napr. „10 300 € netto“) sme prepočítali na cenu s DPH, ktorú zaplatí súkromná osoba.</p>
 </div>
@@ -233,12 +232,12 @@ Zoradené podľa toho, ako ich odporúčame.</p>
   <div class="facts src">zdroj: <b>bazar.sk</b> · dovezené</div>
   <div class="prices">
     <div><span class="lbl">Cena</span><span class="big">7 499 €</span></div>
-    <div><span class="lbl">Férová cena</span><span class="mid">9 460 €</span></div>
-    <div><span class="lbl">Pod trhom</span><span class="mid good">+20.7 %</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">10 990 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+31.8 %</span></div>
   </div>
-  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:69%"></span></div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:100%"></span></div>
   <ul class="pc"><li class="pro">2011, 2.2 i-DTEC 110 kW, manuál, 180 tis. km</li><li class="pro">Najvyššia výbava Executive, kombi, uvedený VIN</li><li class="pro">~21 % pod férovou cenou</li><li class="con">Predáva autobazár</li><li class="con">Dovoz</li><li class="con">Inzerát je zverejnený dlhšie – over, či je auto ešte k dispozícii</li></ul>
-<!-- history-card:start --><p class="note fv-history-card">V ponuke 2 dni (od 22. 11.)</p><!-- history-card:end --></article>
+</article>
 <article class="card">
   <div class="card-head"><span class="tag">Accord Tourer 2.2 i-DTEC Executive so 168 tis. km</span><span class="loc">Trnava</span></div>
   <h3><a href="https://auto.bazos.sk/inzerat/197731829/honda-accord-22-i-dtec-110-kw-diesel-6-st-manual.php" target="_blank" rel="noopener">• Honda Accord 2.2 i-DTEC, 110 kW, diesel, 6-st. manuál •</a></h3>
@@ -246,12 +245,12 @@ Zoradené podľa toho, ako ich odporúčame.</p>
   <div class="facts src">zdroj: <b>bazoš</b></div>
   <div class="prices">
     <div><span class="lbl">Cena</span><span class="big">5 900 €</span></div>
-    <div><span class="lbl">Férová cena</span><span class="mid">7 250 €</span></div>
-    <div><span class="lbl">Pod trhom</span><span class="mid good">+18.6 %</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">7 850 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+24.8 %</span></div>
   </div>
-  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:62%"></span></div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:83%"></span></div>
   <ul class="pc"><li class="pro">2008, 2.2 i-DTEC 110 kW, 6-st. manuál, 168 tis. km</li><li class="pro">Executive výbava, uvedený VIN</li><li class="pro">~19 % pod férovou cenou</li><li class="con">Predáva autobazár</li></ul>
-<!-- history-card:start --><p class="note fv-history-card">V ponuke 4 dni (od 20. 11.)</p><!-- history-card:end --></article>
+</article>
 <article class="card">
   <div class="card-head"><span class="tag">Accord 2.2 i-DTEC bez DPF</span><span class="loc">Prešov</span></div>
   <h3><a href="https://auto.bazos.sk/inzerat/197363278/honda-accord-22-i-dtec-103-kw-2008-bez-dpf.php" target="_blank" rel="noopener">Honda Accord 2.2 i-DTEC (103 kW) 2008, Bez DPF</a></h3>
@@ -259,12 +258,12 @@ Zoradené podľa toho, ako ich odporúčame.</p>
   <div class="facts src">zdroj: <b>bazoš</b></div>
   <div class="prices">
     <div><span class="lbl">Cena</span><span class="big">2 900 €</span></div>
-    <div><span class="lbl">Férová cena</span><span class="mid">3 670 €</span></div>
-    <div><span class="lbl">Pod trhom</span><span class="mid good">+21.0 %</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">3 570 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+18.9 %</span></div>
   </div>
-  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:70%"></span></div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:63%"></span></div>
   <ul class="pc"><li class="pro">2008, 2.2 diesel 103 kW, manuál, 273 tis. km</li><li class="pro">Od výroby bez DPF</li><li class="pro">~21 % pod férovou cenou</li><li class="con">Vyšší nájazd</li></ul>
-<!-- history-card:start --><p class="note fv-history-card">V ponuke 2 dni (od 22. 11.)</p><!-- history-card:end --></article>
+</article>
 <article class="card">
   <div class="card-head"><span class="tag">Accord Tourer 2.2 i-DTEC s STK do 2028</span><span class="loc">Lučenec</span></div>
   <h3><a href="https://auto.bazos.sk/inzerat/196016731/honda-accord-tourer-8g-22-i-dtec.php" target="_blank" rel="noopener">Honda Accord Tourer 8g- 2,2 i-dtec</a></h3>
@@ -272,12 +271,12 @@ Zoradené podľa toho, ako ich odporúčame.</p>
   <div class="facts src">zdroj: <b>bazoš</b></div>
   <div class="prices">
     <div><span class="lbl">Cena</span><span class="big">2 800 €</span></div>
-    <div><span class="lbl">Férová cena</span><span class="mid">3 530 €</span></div>
-    <div><span class="lbl">Pod trhom</span><span class="mid good">+20.7 %</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">3 410 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+17.9 %</span></div>
   </div>
-  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:69%"></span></div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:60%"></span></div>
   <ul class="pc"><li class="pro">2009, 2.2 i-DTEC, manuál, 336 tis. km</li><li class="pro">Kombi, STK/EK do 2/2028</li><li class="pro">~21 % pod férovou cenou</li><li class="con">Vysoký nájazd</li></ul>
-<!-- history-card:start --><p class="note fv-history-card">V ponuke aspoň 56 dní</p><!-- history-card:end --></article>
+</article>
 <article class="card">
   <div class="card-head"><span class="tag">Accord 2.2 i-CTDi po facelifte s novou STK</span><span class="loc">Trenčín</span></div>
   <h3><a href="https://auto.bazos.sk/inzerat/197244671/honda-accord-22-i-ctdi.php" target="_blank" rel="noopener">Honda accord 2.2 i-ctdi</a></h3>
@@ -285,12 +284,12 @@ Zoradené podľa toho, ako ich odporúčame.</p>
   <div class="facts src">zdroj: <b>bazoš</b></div>
   <div class="prices">
     <div><span class="lbl">Cena</span><span class="big">2 500 €</span></div>
-    <div><span class="lbl">Férová cena</span><span class="mid">3 120 €</span></div>
-    <div><span class="lbl">Pod trhom</span><span class="mid good">+19.8 %</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">2 950 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+15.3 %</span></div>
   </div>
-  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:66%"></span></div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:51%"></span></div>
   <ul class="pc"><li class="pro">2008, 2.2 i-CTDi 103 kW, 6-st. manuál, 307 tis. km</li><li class="pro">Bez DPF, tempomat, dvojzónová klíma, nová STK/EK</li><li class="pro">~20 % pod férovou cenou</li><li class="con">Vysoký nájazd</li></ul>
-<!-- history-card:start --><p class="note fv-history-card">V ponuke 18 dní (od 6. 11.)</p><!-- history-card:end --></article>
+</article>
 <article class="card">
   <div class="card-head"><span class="tag">Accord 2.2 i-DTEC 8. generácie za 2 200 €</span><span class="loc">Levoča</span></div>
   <h3><a href="https://auto.bazos.sk/inzerat/197439973/honda-accord-22-8g-rv2011-m6.php" target="_blank" rel="noopener">Honda Accord 2,2 (8g) rv.2011 M6</a></h3>
@@ -298,66 +297,53 @@ Zoradené podľa toho, ako ich odporúčame.</p>
   <div class="facts src">zdroj: <b>bazoš</b></div>
   <div class="prices">
     <div><span class="lbl">Cena</span><span class="big">2 200 €</span></div>
-    <div><span class="lbl">Férová cena</span><span class="mid">3 460 €</span></div>
-    <div><span class="lbl">Pod trhom</span><span class="mid good">+36.4 %</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">3 340 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+34.2 %</span></div>
   </div>
   <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:100%"></span></div>
   <ul class="pc"><li class="pro">2011, 2.2 i-DTEC 110 kW, 6-st. manuál, 450 tis. km</li><li class="pro">Bez korózie, spoľahlivé</li><li class="pro">~36 % pod férovou cenou</li><li class="con">Veľmi vysoký nájazd (zohľadnený v cene)</li><li class="con">Stopy používania</li></ul>
-<!-- history-card:start --><p class="note fv-history-card">V ponuke 12 dní (od 12. 11.)</p><!-- history-card:end --></article>
+</article>
 <article class="card">
   <div class="card-head"><span class="tag">Accord 2.0 i-VTEC benzín so servisom</span><span class="loc">Bratislava</span></div>
   <h3><a href="https://auto.bazos.sk/inzerat/197712195/honda-accord-20-i-vtec-benzin.php" target="_blank" rel="noopener">Honda Accord 2.0 i-VTEC benzín</a></h3>
   <div class="facts">2008 · 235 000 km · 2.0 benzín 114–115 kW · manuál · sedan · predajca/firma</div>
-  <div class="facts src">zdroj: <b>bazoš</b></div>
+  <div class="facts src">zdroj: <b>bazoš</b> · aj na <a href='https://www.autobazar.eu/detail/honda-accord-20-i-vtec-comfort-115kw156hp-m6/AedRx60Vzym/' target='_blank' rel='noopener'>autobazar.eu</a></div>
   <div class="prices">
     <div><span class="lbl">Cena</span><span class="big">5 500 €</span></div>
-    <div><span class="lbl">Férová cena</span><span class="mid">6 030 €</span></div>
-    <div><span class="lbl">Pod trhom</span><span class="mid good">+8.8 %</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">6 520 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+15.7 %</span></div>
   </div>
-  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:29%"></span></div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:52%"></span></div>
   <ul class="pc"><li class="pro">12/2008, 2.0 benzín 115 kW, 6-st. manuál, 235 tis. km</li><li class="pro">Posledný servis 11/2026, 2 originálne kľúče</li><li class="pro">~9 % pod férovou cenou</li><li class="con">Predáva autobazár</li></ul>
-<!-- history-card:start --><p class="note fv-history-card">V ponuke 4 dni (od 20. 11.)</p><!-- history-card:end --></article></div>
+</article></div>
 <div class="subhead">Lacnejšie Accordy do 5 000 €</div>
 <div class="cards">
 <article class="card">
   <div class="card-head"><span class="tag">Súkromník: Accord 2.2 i-CTDi za 1 699 €</span><span class="loc">Trenčín</span></div>
   <h3><a href="https://auto.bazos.sk/inzerat/197619646/honda-accord-22-i-ctdi-103kw.php" target="_blank" rel="noopener">Honda Accord 2.2 i-CTDi 103kW</a></h3>
-  <div class="facts">2004 · 295 000 km · 2.2 i-CTDi / i-DTEC diesel 103–132 kW · prevodovka ? · sedan · súkromník</div>
+  <div class="facts">2004 · 295 000 km · 2.2 i-CTDi / i-DTEC diesel 103–132 kW · prevodovka ? · sedan · neisté</div>
   <div class="facts src">zdroj: <b>bazoš</b> · dovezené</div>
   <div class="prices">
     <div><span class="lbl">Cena</span><span class="big">1 699 €</span></div>
-    <div><span class="lbl">Férová cena</span><span class="mid">2 710 €</span></div>
-    <div><span class="lbl">Pod trhom</span><span class="mid good">+37.4 %</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">2 660 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+36.1 %</span></div>
   </div>
   <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:100%"></span></div>
   <ul class="pc"><li class="pro">2004, 2.2 i-CTDi 103 kW, 295 tis. km</li><li class="pro">STK/EK do 3/2027, spoľahlivé</li><li class="pro">~37 % pod férovou cenou</li><li class="con">Dovoz</li><li class="con">Prevodovka neuvedená</li></ul>
-<!-- history-card:start --><p class="note fv-history-card">V ponuke 2 dni (od 22. 11.)</p><!-- history-card:end --></article>
-<article class="card">
-  <div class="card-head"><span class="tag">Accord 2.2 CTDi bez DPF s novou STK</span><span class="loc">Žilina</span></div>
-  <h3><a href="https://auto.bazos.sk/inzerat/197589239/accord-22-cdti.php" target="_blank" rel="noopener">Honda Accord 2.2 cdti bez DPF</a></h3>
-  <div class="facts">2007 · 240 000 km · 2.2 i-CTDi / i-DTEC diesel 103–132 kW · prevodovka ? · sedan · neisté</div>
-  <div class="facts src">zdroj: <b>bazoš</b></div>
-  <div class="prices">
-    <div><span class="lbl">Cena</span><span class="big">2 600 €</span></div>
-    <div><span class="lbl">Férová cena</span><span class="mid">3 570 €</span></div>
-    <div><span class="lbl">Pod trhom</span><span class="mid good">+27.1 %</span></div>
-  </div>
-  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:90%"></span></div>
-  <ul class="pc"><li class="pro">2007, 2.2 diesel, 240 tis. km</li><li class="pro">Nová STK/EK, dvojzónová klíma, sezónne prezutie na diskoch</li><li class="pro">~27 % pod férovou cenou</li><li class="con">Prevodovka neuvedená</li></ul>
-<!-- history-card:start --><p class="note fv-history-card">V ponuke 8 dní (od 16. 11.)</p><!-- history-card:end --></article>
+</article>
 <article class="card">
   <div class="card-head"><span class="tag">Accord 2.2 diesel sedan s 2 sadami kolies</span><span class="loc">Trnava</span></div>
   <h3><a href="https://auto.bazos.sk/inzerat/197720917/honda-accord-22-diesel-sedan-2004-zelena-metaliza.php" target="_blank" rel="noopener">Honda Accord 2.2 diesel sedan 2004 zelena metaliza</a></h3>
   <div class="facts">2004 · 373 000 km · 2.2 i-CTDi / i-DTEC diesel 103–132 kW · manuál · sedan · neisté</div>
   <div class="facts src">zdroj: <b>bazoš</b></div>
   <div class="prices">
-    <div><span class="lbl">Cena</span><span class="big">1 700 €</span></div>
-    <div><span class="lbl">Férová cena</span><span class="mid">1 830 €</span></div>
-    <div><span class="lbl">Pod trhom</span><span class="mid good">+7.3 %</span></div>
+    <div><span class="lbl">Cena</span><span class="big">1 590 €</span></div>
+    <div><span class="lbl">Férová cena</span><span class="mid">1 850 €</span></div>
+    <div><span class="lbl">Pod trhom</span><span class="mid good">+14.1 %</span></div>
   </div>
-  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:24%"></span></div>
+  <div class="meter" title="Zľava voči férovej cene (škála 0–30 %)"><span style="width:47%"></span></div>
   <ul class="pc"><li class="pro">2004, 2.2 diesel 103 kW, 5-st. manuál, 373 tis. km</li><li class="pro">Funkčná klimatizácia, 2 sady kolies</li><li class="pro">~7 % pod férovou cenou</li><li class="con">Veľmi vysoký nájazd</li></ul>
-<!-- history-card:start --><p class="note fv-history-card">V ponuke 4 dni (od 20. 11.)</p><!-- history-card:end --></article></div>
+</article></div>
 <div class="subhead">Špeciálne prípady</div>
 <div class="cards"></div>
 
@@ -381,7 +367,7 @@ Krúžkom sú označené odporúčané ponuky. Prejdi myšou na bod a uvidíš d
   <td><b>LPG</b><div class="sub">Dodatočne montované LPG – over revíziu a zápis plynu v TP.</div></td>
   <td><span class="stars" aria-label="3 z 5">★★★<span class="off">★★</span></span></td>
   <td class="num">2</td>
-  <td class="num"><div class="cellbar"><span style="width:45%"></span></div>3 750 €</td>
+  <td class="num"><div class="cellbar"><span style="width:68%"></span></div>3 750 €</td>
   <td class="num">2004</td>
   <td class="num">329 754 km</td>
 </tr>
@@ -389,25 +375,25 @@ Krúžkom sú označené odporúčané ponuky. Prejdi myšou na bod a uvidíš d
   <td><b>2.2 i-CTDi / i-DTEC diesel 103–132 kW</b><div class="sub">Diesel 140–180 k. Ťahavý a úsporný; over DPF, dvojhmotu a pri i-CTDi reťaz rozvodov.</div></td>
   <td><span class="stars" aria-label="3 z 5">★★★<span class="off">★★</span></span></td>
   <td class="num">26</td>
-  <td class="num"><div class="cellbar"><span style="width:50%"></span></div>4 150 €</td>
-  <td class="num">2008</td>
-  <td class="num">297 500 km</td>
+  <td class="num"><div class="cellbar"><span style="width:78%"></span></div>4 294 €</td>
+  <td class="num">2009</td>
+  <td class="num">301 000 km</td>
 </tr>
 <tr>
   <td><b>2.4 benzín 140–148 kW</b><div class="sub">Atmosférický benzín 190–201 k (aj Type-S). Spoľahlivý, ale s vyššou spotrebou.</div></td>
   <td><span class="stars" aria-label="4 z 5">★★★★<span class="off">★</span></span></td>
-  <td class="num">1</td>
-  <td class="num"><div class="cellbar"><span style="width:100%"></span></div>8 250 €</td>
-  <td class="num">2009</td>
-  <td class="num">215 000 km</td>
+  <td class="num">3</td>
+  <td class="num"><div class="cellbar"><span style="width:45%"></span></div>2 500 €</td>
+  <td class="num">2004</td>
+  <td class="num">330 000 km</td>
 </tr>
 <tr>
   <td><b>2.0 benzín 114–115 kW</b><div class="sub">Atmosférický benzín 155–156 k. Veľmi spoľahlivý, vhodný na LPG.</div></td>
   <td><span class="stars" aria-label="4 z 5">★★★★<span class="off">★</span></span></td>
-  <td class="num">2</td>
-  <td class="num"><div class="cellbar"><span style="width:86%"></span></div>7 100 €</td>
+  <td class="num">3</td>
+  <td class="num"><div class="cellbar"><span style="width:100%"></span></div>5 500 €</td>
   <td class="num">2008</td>
-  <td class="num">201 500 km</td>
+  <td class="num">184 000 km</td>
 </tr></tbody>
 </table>
 </div>
@@ -421,7 +407,7 @@ Krúžkom sú označené odporúčané ponuky. Prejdi myšou na bod a uvidíš d
 <div class="warn">
   <p><b>Lacné kvôli extrémnemu nájazdu</b> (viac ako 35 tis. km ročne, typicky flotila alebo taxi):</p>
   <ul><li>Žiadne výrazné prípady.</li></ul>
-  <p><b>Ďalšie veci, ktoré sme v inzerátoch našli:</b></p><ul><li>Väčšina Accordov má 250 – 450 tis. km – Honda to zvyčajne znesie, ale over servisnú históriu.</li><li>Ponuka je takmer celá z bazoša a od súkromníkov – mnohé inzeráty neuvádzajú prevodovku.</li></ul><p><b>Vyradené z porovnania</b> (poškodené autá alebo nezmyselné údaje – model ich nehodnotí):</p><ul><li><a href='https://auto.bazos.sk/inzerat/197572983/predam-hondu-accord-benzin-plynrv2008.php' target='_blank' rel='noopener'>Predám Hondu accord, benzín +plyn,r.v.2008</a> (5 000 €): cena je o 45 % pod trhom – havarované, na diely, záloha/splátka namiesto ceny alebo podvod</li></ul><p><b>Civic, CR-V a iné modely z vyhľadávania, inzeráty s chybným nájazdom</b> (5 inzerátov) sme z rebríčka vynechali.</p>
+  <p><b>Ďalšie veci, ktoré sme v inzerátoch našli:</b></p><ul><li>Väčšina Accordov má 250 – 450 tis. km – Honda to zvyčajne znesie, ale over servisnú históriu.</li><li>Ponuka je takmer celá z bazoša a od súkromníkov – mnohé inzeráty neuvádzajú prevodovku.</li></ul><p><b>Civic, CR-V a iné modely z vyhľadávania, inzeráty s chybným nájazdom</b> (4 inzerátov) sme z rebríčka vynechali.</p>
   <p>Ďalších <b>15</b> inzerátov nemá v texte rok alebo kilometre, takže ich nebolo možné ohodnotiť.
   Ak ťa niektorý zaujme, predajcu sa na tieto údaje opýtaj.</p>
 </div>
@@ -463,15 +449,15 @@ Krúžkom sú označené odporúčané ponuky. Prejdi myšou na bod a uvidíš d
 </ul>
 
 <footer>
-  Zdroj: auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (len ponuky zo Slovenska, to isté auto na viacerých portáloch je započítané raz), sťahované cez lokálny MCP server bazos-mcp (nástroj <code>fair_price</code>), 22. 11. 2026.
-  Model: ridge regresia log(ceny s DPH) podľa veku, veku², km, km², prevodovky, typu predajcu, motora, karosérie, pohonu 4x4, pôvodu (SR / dovoz) a portálu. Vzorka 31
-  inzerátov, R² 81 %. Parametre sú vyťažené z textu inzerátov, a preto môžu obsahovať chyby. Odporúčané ponuky sme overili
+  Zdroj: auto.bazos.sk, www.autobazar.eu a auto.bazar.sk (len ponuky zo Slovenska, to isté auto na viacerých portáloch je započítané raz), sťahované cez lokálny MCP server bazos-mcp (nástroj <code>fair_price</code>), 24. 11. 2026.
+  Model: ridge regresia log(ceny s DPH) podľa veku, veku², km, km², prevodovky, typu predajcu, motora, karosérie, pohonu 4x4, pôvodu (SR / dovoz) a portálu. Vzorka 34
+  inzerátov, R² 83 %. Parametre sú vyťažené z textu inzerátov, a preto môžu obsahovať chyby. Odporúčané ponuky sme overili
   prečítaním celého inzerátu. Hodnotenie motorov je odborný odhad, nie výsledok modelu.
 </footer>
 </main>
 
 <script>
-const DATA = [{"id": "197619646", "url": "https://auto.bazos.sk/inzerat/197619646/honda-accord-22-i-ctdi-103kw.php", "title": "Honda Accord 2.2 i-CTDi 103kW", "price": 1699, "price_gross": 1699, "fair_price": 2710.0, "discount_pct": 37.4, "verdict": "výrazne pod trhom – over prečo", "year": 2004, "km": 295000, "km_per_year": 13200.0, "eg": "2.2 i-CTDi / i-DTEC diesel 103–132 kW", "cg": 1, "transmission": null, "seller_type": "private", "location": "Trenčín", "flags": ["prevodovka nezistená"], "pick": "budget", "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "sedan"}, {"id": "197439973", "url": "https://auto.bazos.sk/inzerat/197439973/honda-accord-22-8g-rv2011-m6.php", "title": "Honda Accord 2,2 (8g) rv.2011 M6", "price": 2200, "price_gross": 2200, "fair_price": 3460.0, "discount_pct": 36.4, "verdict": "výrazne pod trhom – over prečo", "year": 2011, "km": 450000, "km_per_year": 29300.0, "eg": "2.2 i-CTDi / i-DTEC diesel 103–132 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Levoča", "flags": [], "pick": "top", "source": "bazos", "origin": null, "also_listed": [], "body": "sedan"}, {"id": "197589239", "url": "https://auto.bazos.sk/inzerat/197589239/accord-22-cdti.php", "title": "Honda Accord 2.2 cdti bez DPF", "price": 2600, "price_gross": 2600, "fair_price": 3570.0, "discount_pct": 27.1, "verdict": "výrazne pod trhom – over prečo", "year": 2007, "km": 240000, "km_per_year": 12400.0, "eg": "2.2 i-CTDi / i-DTEC diesel 103–132 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Žilina", "flags": ["prevodovka nezistená"], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [], "body": "sedan"}, {"id": "197363278", "url": "https://auto.bazos.sk/inzerat/197363278/honda-accord-22-i-dtec-103-kw-2008-bez-dpf.php", "title": "Honda Accord 2.2 i-DTEC (103 kW) 2008, Bez DPF", "price": 2900, "price_gross": 2900, "fair_price": 3670.0, "discount_pct": 21.0, "verdict": "výrazne pod trhom – over prečo", "year": 2008, "km": 273000, "km_per_year": 14900.0, "eg": "2.2 i-CTDi / i-DTEC diesel 103–132 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Prešov", "flags": [], "pick": "top", "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "196016731", "url": "https://auto.bazos.sk/inzerat/196016731/honda-accord-tourer-8g-22-i-dtec.php", "title": "Honda Accord Tourer 8g- 2,2 i-dtec", "price": 2800, "price_gross": 2800, "fair_price": 3530.0, "discount_pct": 20.7, "verdict": "výrazne pod trhom – over prečo", "year": 2009, "km": 336000, "km_per_year": 19400.0, "eg": "2.2 i-CTDi / i-DTEC diesel 103–132 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Lučenec", "flags": [], "pick": "top", "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "bs-35710557", "url": "https://auto.bazar.sk/35710557-honda-accord-tourer-tourer-2-2-i-dtec-executive/", "title": "Honda Accord Tourer Tourer 2.2 i-DTEC Executive", "price": 7499, "price_gross": 7499, "fair_price": 9460.0, "discount_pct": 20.7, "verdict": "výrazne pod trhom – over prečo", "year": 2011, "km": 180268, "km_per_year": 11800.0, "eg": "2.2 i-CTDi / i-DTEC diesel 103–132 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Košice IV - Vyšné Opátske", "flags": [], "pick": "top", "source": "bazarsk", "origin": "dovoz", "also_listed": [], "body": "wagon"}, {"id": "197244671", "url": "https://auto.bazos.sk/inzerat/197244671/honda-accord-22-i-ctdi.php", "title": "Honda accord 2.2 i-ctdi", "price": 2500, "price_gross": 2500, "fair_price": 3120.0, "discount_pct": 19.8, "verdict": "výrazne pod trhom – over prečo", "year": 2008, "km": 307000, "km_per_year": 16700.0, "eg": "2.2 i-CTDi / i-DTEC diesel 103–132 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Trenčín", "flags": [], "pick": "top", "source": "bazos", "origin": null, "also_listed": [], "body": "sedan"}, {"id": "197731829", "url": "https://auto.bazos.sk/inzerat/197731829/honda-accord-22-i-dtec-110-kw-diesel-6-st-manual.php", "title": "• Honda Accord 2.2 i-DTEC, 110 kW, diesel, 6-st. manuál •", "price": 5900, "price_gross": 5900, "fair_price": 7250.0, "discount_pct": 18.6, "verdict": "výrazne pod trhom – over prečo", "year": 2008, "km": 168086, "km_per_year": 9200.0, "eg": "2.2 i-CTDi / i-DTEC diesel 103–132 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Trnava", "flags": [], "pick": "top", "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "197712195", "url": "https://auto.bazos.sk/inzerat/197712195/honda-accord-20-i-vtec-benzin.php", "title": "Honda Accord 2.0 i-VTEC benzín", "price": 5500, "price_gross": 5500, "fair_price": 6030.0, "discount_pct": 8.8, "verdict": "pod trhom", "year": 2008, "km": 235000, "km_per_year": 12800.0, "eg": "2.0 benzín 114–115 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": "top", "source": "bazos", "origin": null, "also_listed": [], "body": "sedan"}, {"id": "197720917", "url": "https://auto.bazos.sk/inzerat/197720917/honda-accord-22-diesel-sedan-2004-zelena-metaliza.php", "title": "Honda Accord 2.2 diesel sedan 2004 zelena metaliza", "price": 1700, "price_gross": 1700, "fair_price": 1830.0, "discount_pct": 7.3, "verdict": "pod trhom", "year": 2004, "km": 373000, "km_per_year": 16700.0, "eg": "2.2 i-CTDi / i-DTEC diesel 103–132 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Trnava", "flags": [], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [], "body": "sedan"}, {"id": "196866595", "url": "https://auto.bazos.sk/inzerat/196866595/honda-accord.php", "title": "Honda Accord", "price": 5299, "price_gross": 5299, "fair_price": 5540.0, "discount_pct": 4.3, "verdict": "férová cena", "year": 2004, "km": 187000, "km_per_year": 8400.0, "eg": "2.2 i-CTDi / i-DTEC diesel 103–132 kW", "cg": 1, "transmission": null, "seller_type": "dealer", "location": "Zvolen", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "196351597", "url": "https://auto.bazos.sk/inzerat/196351597/honda-accord-vlll.php", "title": "Honda Accord Vlll", "price": 3200, "price_gross": 3200, "fair_price": 3310.0, "discount_pct": 3.3, "verdict": "férová cena", "year": 2008, "km": 407000, "km_per_year": 22200.0, "eg": "2.2 i-CTDi / i-DTEC diesel 103–132 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Poltár", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "sedan"}, {"id": "bs-39750981", "url": "https://auto.bazar.sk/39750981-honda-accord-2-2-i-ctdi-2008-6-stupnovy-manual/", "title": "Honda Accord 2.2 iCTDi | 2008 | 6stupňový manuál", "price": 3500, "price_gross": 3500, "fair_price": 3560.0, "discount_pct": 1.6, "verdict": "férová cena", "year": 2008, "km": 319085, "km_per_year": 17400.0, "eg": "2.2 i-CTDi / i-DTEC diesel 103–132 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Prešov", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "sedan"}, {"id": "197210827", "url": "https://auto.bazos.sk/inzerat/197210827/predam-honda-accord-7g-24-i-vtec-lpg-nova-stkek-nadrz.php", "title": "Predám Honda Accord 7G 2.4 i-VTEC (LPG) - Nová STK/EK, nádrž", "price": 4000, "price_gross": 4000, "fair_price": 3970.0, "discount_pct": -0.8, "verdict": "férová cena", "year": 2005, "km": 299508, "km_per_year": 14000.0, "eg": "LPG", "cg": 2, "transmission": "automatic", "seller_type": "uncertain", "location": "Bardejov", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "197444069", "url": "https://auto.bazos.sk/inzerat/197444069/honda-accord-20-i-vtec.php", "title": "Honda Accord 2,0 i-VTEC", "price": 8699, "price_gross": 8699, "fair_price": 8290.0, "discount_pct": -5.0, "verdict": "férová cena", "year": 2009, "km": 168000, "km_per_year": 9700.0, "eg": "2.0 benzín 114–115 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Trenčín", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "sedan"}, {"id": "196527554", "url": "https://auto.bazos.sk/inzerat/196527554/honda-accord-tourer-2007.php", "title": "Honda Accord Tourer 2007", "price": 3350, "price_gross": 3350, "fair_price": 3090.0, "discount_pct": -8.2, "verdict": "nad trhom", "year": 2007, "km": 329439, "km_per_year": 17000.0, "eg": "2.2 i-CTDi / i-DTEC diesel 103–132 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Dunajská Streda", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "196292382", "url": "https://auto.bazos.sk/inzerat/196292382/honda-accord-22-i-ctdi-r-v-2006-stk-do-072028.php", "title": "Honda Accord 2.2 i-CTDi, r. v. 2006 – STK do 07/2028", "price": 1800, "price_gross": 1800, "fair_price": 1640.0, "discount_pct": -9.6, "verdict": "nad trhom", "year": 2006, "km": 490000, "km_per_year": 24100.0, "eg": "2.2 i-CTDi / i-DTEC diesel 103–132 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Kežmarok", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "sedan"}, {"id": "196279312", "url": "https://auto.bazos.sk/inzerat/196279312/predam-honda-accord-tourer-22-idtec.php", "title": "Predám Honda Accord Tourer 2.2 idtec", "price": 6200, "price_gross": 6200, "fair_price": 5610.0, "discount_pct": -10.5, "verdict": "nad trhom", "year": 2009, "km": 251000, "km_per_year": 14500.0, "eg": "2.2 i-CTDi / i-DTEC diesel 103–132 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Levice", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "197105530", "url": "https://auto.bazos.sk/inzerat/197105530/honda-accord-5stautomat-executive-lpg-24.php", "title": "Honda Accord 5st.automat executive LPG 2.4", "price": 3499, "price_gross": 3499, "fair_price": 3140.0, "discount_pct": -11.4, "verdict": "nad trhom", "year": 2004, "km": 360000, "km_per_year": 16100.0, "eg": "LPG", "cg": 2, "transmission": "automatic", "seller_type": "uncertain", "location": "Lučenec", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "sedan"}, {"id": "196563913", "url": "https://auto.bazos.sk/inzerat/196563913/2007-honda-accord-tourer-22ictdi.php", "title": "2007 Honda Accord Tourer 2.2ictdi", "price": 2499, "price_gross": 2499, "fair_price": 2240.0, "discount_pct": -11.7, "verdict": "nad trhom", "year": 2007, "km": 458000, "km_per_year": 23700.0, "eg": "2.2 i-CTDi / i-DTEC diesel 103–132 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Nitra", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "196967920", "url": "https://auto.bazos.sk/inzerat/196967920/accord.php", "title": "Accord", "price": 7000, "price_gross": 7000, "fair_price": 6200.0, "discount_pct": -12.9, "verdict": "nad trhom", "year": 2010, "km": 260000, "km_per_year": 15900.0, "eg": "2.2 i-CTDi / i-DTEC diesel 103–132 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Levice", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "sedan"}, {"id": "196134316", "url": "https://auto.bazos.sk/inzerat/196134316/honda-accord-22-i-ctdi-2009.php", "title": "Honda Accord 2.2 i-CTDi – 2009", "price": 4199, "price_gross": 4199, "fair_price": 3680.0, "discount_pct": -14.0, "verdict": "nad trhom", "year": 2009, "km": 350000, "km_per_year": 20200.0, "eg": "2.2 i-CTDi / i-DTEC diesel 103–132 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Bratislava", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "sedan"}, {"id": "197602106", "url": "https://auto.bazos.sk/inzerat/197602106/honda-accord-22-idtec-type-s-136-kw-2011.php", "title": "Honda Accord 2,2 idtec type S 132 kw 2011", "price": 10300, "price_gross": 10300, "fair_price": 9000.0, "discount_pct": -14.5, "verdict": "nad trhom", "year": 2011, "km": 193000, "km_per_year": 12600.0, "eg": "2.2 i-CTDi / i-DTEC diesel 103–132 kW", "cg": 1, "transmission": null, "seller_type": "dealer", "location": "Levice", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "sedan"}, {"id": "197777113", "url": "https://auto.bazos.sk/inzerat/197777113/honda-accord-22-idtec-132-kw-type-s-2011.php", "title": "Honda Accord 2,2 idtec 132 kw type S 2011", "price": 9900, "price_gross": 9900, "fair_price": 8490.0, "discount_pct": -16.7, "verdict": "výrazne nad trhom", "year": 2011, "km": 205000, "km_per_year": 13400.0, "eg": "2.2 i-CTDi / i-DTEC diesel 103–132 kW", "cg": 1, "transmission": null, "seller_type": "dealer", "location": "Levice", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "sedan"}, {"id": "197776615", "url": "https://auto.bazos.sk/inzerat/197776615/honda-accord-24-benz-148kw-at-top-executive.php", "title": "Honda Accord 2,4 benz 148kw A/T top executive", "price": 8250, "price_gross": 8250, "fair_price": 7060.0, "discount_pct": -16.8, "verdict": "výrazne nad trhom", "year": 2009, "km": 215000, "km_per_year": 12400.0, "eg": "2.4 benzín 140–148 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Levice", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "sedan"}, {"id": "197562296", "url": "https://auto.bazos.sk/inzerat/197562296/honda-accord-tourer-22-i-dtec-elegance.php", "title": "Honda Accord Tourer 2.2 i-DTEC Elegance", "price": 5290, "price_gross": 5290, "fair_price": 4490.0, "discount_pct": -17.7, "verdict": "výrazne nad trhom", "year": 2010, "km": 290000, "km_per_year": 17800.0, "eg": "2.2 i-CTDi / i-DTEC diesel 103–132 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Trenčín", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "196469413", "url": "https://auto.bazos.sk/inzerat/196469413/honda-accord-22i-dtec.php", "title": "Honda Accord 2.2i-DTEC", "price": 7500, "price_gross": 7500, "fair_price": 6260.0, "discount_pct": -19.8, "verdict": "výrazne nad trhom", "year": 2009, "km": 226000, "km_per_year": 13000.0, "eg": "2.2 i-CTDi / i-DTEC diesel 103–132 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Žilina", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "sedan"}, {"id": "197149712", "url": "https://auto.bazos.sk/inzerat/197149712/honda-accord-22-i-dtec-executive.php", "title": "Honda Accord 2.2-i-DTEC Executive", "price": 4390, "price_gross": 4390, "fair_price": 3390.0, "discount_pct": -29.5, "verdict": "výrazne nad trhom", "year": 2011, "km": 373000, "km_per_year": 24300.0, "eg": "2.2 i-CTDi / i-DTEC diesel 103–132 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Stará Ľubovňa", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "sedan"}, {"id": "bs-23254547", "url": "https://auto.bazar.sk/23254547-honda-accord-2-2-i-dtec-elegance-110kw-m6-4d/", "title": "Honda Accord 2.2 i-DTEC Elegance, 110kW, M6, 4d.", "price": 14900, "price_gross": 14900, "fair_price": 11310.0, "discount_pct": -31.7, "verdict": "výrazne nad trhom", "year": 2010, "km": 92000, "km_per_year": 5600.0, "eg": "2.2 i-CTDi / i-DTEC diesel 103–132 kW", "cg": 1, "transmission": "manual", "seller_type": "private", "location": "Dunajská Streda", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "sedan"}, {"id": "197791077", "url": "https://auto.bazos.sk/inzerat/197791077/honda-accord-tourer-22-i-dtec.php", "title": "Honda Accord Tourer 2.2 i-DTEC", "price": 6100, "price_gross": 6100, "fair_price": 4610.0, "discount_pct": -32.2, "verdict": "výrazne nad trhom", "year": 2009, "km": 300000, "km_per_year": 17300.0, "eg": "2.2 i-CTDi / i-DTEC diesel 103–132 kW", "cg": 1, "transmission": null, "seller_type": "private", "location": "Zlaté Moravce", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "196754560", "url": "https://auto.bazos.sk/inzerat/196754560/predam-honda-accord-viii-tourer-cw-22-i-dtec-executive.php", "title": "Predam Honda Accord VIII Tourer (CW) 2.2 i-DTEC – Executive", "price": 4100, "price_gross": 4100, "fair_price": 2980.0, "discount_pct": -37.8, "verdict": "výrazne nad trhom", "year": 2008, "km": 357731, "km_per_year": 19500.0, "eg": "2.2 i-CTDi / i-DTEC diesel 103–132 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Malacky", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}];
+const DATA = [{"id": "197572983", "url": "https://auto.bazos.sk/inzerat/197572983/predam-hondu-accord-benzin-plynrv2008.php", "title": "Predám Hondu accord, benzín +plyn,r.v.2008", "price": 5000, "price_gross": 5000, "fair_price": 8570.0, "discount_pct": 41.6, "verdict": "výrazne pod trhom – over prečo", "year": 2008, "km": 184000, "km_per_year": 10000.0, "eg": "2.0 benzín 114–115 kW", "cg": 0, "transmission": null, "seller_type": "uncertain", "location": "Žilina", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "sedan"}, {"id": "197619646", "url": "https://auto.bazos.sk/inzerat/197619646/honda-accord-22-i-ctdi-103kw.php", "title": "Honda Accord 2.2 i-CTDi 103kW", "price": 1699, "price_gross": 1699, "fair_price": 2660.0, "discount_pct": 36.1, "verdict": "výrazne pod trhom – over prečo", "year": 2004, "km": 295000, "km_per_year": 13200.0, "eg": "2.2 i-CTDi / i-DTEC diesel 103–132 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Trenčín", "flags": ["prevodovka nezistená"], "pick": "budget", "source": "bazos", "origin": "dovoz", "also_listed": [], "body": "sedan"}, {"id": "197439973", "url": "https://auto.bazos.sk/inzerat/197439973/honda-accord-22-8g-rv2011-m6.php", "title": "Honda Accord 2,2 (8g) rv.2011 M6", "price": 2200, "price_gross": 2200, "fair_price": 3340.0, "discount_pct": 34.2, "verdict": "výrazne pod trhom – over prečo", "year": 2011, "km": 450000, "km_per_year": 29300.0, "eg": "2.2 i-CTDi / i-DTEC diesel 103–132 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Levoča", "flags": [], "pick": "top", "source": "bazos", "origin": null, "also_listed": [], "body": "sedan"}, {"id": "bs-35710557", "url": "https://auto.bazar.sk/35710557-honda-accord-tourer-tourer-2-2-i-dtec-executive/", "title": "Honda Accord Tourer Tourer 2.2 i-DTEC Executive", "price": 7499, "price_gross": 7499, "fair_price": 10990.0, "discount_pct": 31.8, "verdict": "výrazne pod trhom – over prečo", "year": 2011, "km": 180268, "km_per_year": 11800.0, "eg": "2.2 i-CTDi / i-DTEC diesel 103–132 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Košice IV - Vyšné Opátske", "flags": [], "pick": "top", "source": "bazarsk", "origin": "dovoz", "also_listed": [], "body": "wagon"}, {"id": "197731829", "url": "https://auto.bazos.sk/inzerat/197731829/honda-accord-22-i-dtec-110-kw-diesel-6-st-manual.php", "title": "• Honda Accord 2.2 i-DTEC, 110 kW, diesel, 6-st. manuál •", "price": 5900, "price_gross": 5900, "fair_price": 7850.0, "discount_pct": 24.8, "verdict": "výrazne pod trhom – over prečo", "year": 2008, "km": 168086, "km_per_year": 9200.0, "eg": "2.2 i-CTDi / i-DTEC diesel 103–132 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Trnava", "flags": [], "pick": "top", "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "196866595", "url": "https://auto.bazos.sk/inzerat/196866595/honda-accord.php", "title": "Honda Accord", "price": 5299, "price_gross": 5299, "fair_price": 6540.0, "discount_pct": 19.0, "verdict": "výrazne pod trhom – over prečo", "year": 2004, "km": 187000, "km_per_year": 8400.0, "eg": "2.2 i-CTDi / i-DTEC diesel 103–132 kW", "cg": 1, "transmission": null, "seller_type": "dealer", "location": "Zvolen", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "197363278", "url": "https://auto.bazos.sk/inzerat/197363278/honda-accord-22-i-dtec-103-kw-2008-bez-dpf.php", "title": "Honda Accord 2.2 i-DTEC (103 kW) 2008, Bez DPF", "price": 2900, "price_gross": 2900, "fair_price": 3570.0, "discount_pct": 18.9, "verdict": "výrazne pod trhom – over prečo", "year": 2008, "km": 273000, "km_per_year": 14900.0, "eg": "2.2 i-CTDi / i-DTEC diesel 103–132 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Prešov", "flags": [], "pick": "top", "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "196016731", "url": "https://auto.bazos.sk/inzerat/196016731/honda-accord-tourer-8g-22-i-dtec.php", "title": "Honda Accord Tourer 8g- 2,2 i-dtec", "price": 2800, "price_gross": 2800, "fair_price": 3410.0, "discount_pct": 17.9, "verdict": "výrazne pod trhom – over prečo", "year": 2009, "km": 336000, "km_per_year": 19400.0, "eg": "2.2 i-CTDi / i-DTEC diesel 103–132 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Lučenec", "flags": [], "pick": "top", "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "197712195", "url": "https://auto.bazos.sk/inzerat/197712195/honda-accord-20-i-vtec-benzin.php", "title": "Honda Accord 2.0 i-VTEC benzín", "price": 5500, "price_gross": 5500, "fair_price": 6520.0, "discount_pct": 15.7, "verdict": "výrazne pod trhom – over prečo", "year": 2008, "km": 235000, "km_per_year": 12800.0, "eg": "2.0 benzín 114–115 kW", "cg": 0, "transmission": "manual", "seller_type": "dealer", "location": "Bratislava", "flags": [], "pick": "top", "source": "bazos", "origin": null, "also_listed": [{"source": "autobazar", "id": "ab-AedRx60Vzym", "url": "https://www.autobazar.eu/detail/honda-accord-20-i-vtec-comfort-115kw156hp-m6/AedRx60Vzym/", "price": 5500}], "body": "sedan"}, {"id": "197244671", "url": "https://auto.bazos.sk/inzerat/197244671/honda-accord-22-i-ctdi.php", "title": "Honda accord 2.2 i-ctdi", "price": 2500, "price_gross": 2500, "fair_price": 2950.0, "discount_pct": 15.3, "verdict": "výrazne pod trhom – over prečo", "year": 2008, "km": 307000, "km_per_year": 16700.0, "eg": "2.2 i-CTDi / i-DTEC diesel 103–132 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Trenčín", "flags": [], "pick": "top", "source": "bazos", "origin": null, "also_listed": [], "body": "sedan"}, {"id": "197720917", "url": "https://auto.bazos.sk/inzerat/197720917/honda-accord-22-diesel-sedan-2004-zelena-metaliza.php", "title": "Honda Accord 2.2 diesel sedan 2004 zelena metaliza", "price": 1590, "price_gross": 1590, "fair_price": 1850.0, "discount_pct": 14.1, "verdict": "pod trhom", "year": 2004, "km": 373000, "km_per_year": 16700.0, "eg": "2.2 i-CTDi / i-DTEC diesel 103–132 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Trnava", "flags": [], "pick": "budget", "source": "bazos", "origin": null, "also_listed": [], "body": "sedan"}, {"id": "ab-AelboW2aKwd", "url": "https://www.autobazar.eu/detail/honda-accord-24-benzin-140kw-manual-prevodovka/AelboW2aKwd/", "title": "Honda Accord 2.4 Benzín 140kW Manuál. prevodovka", "price": 2499, "price_gross": 2499, "fair_price": 2760.0, "discount_pct": 9.6, "verdict": "pod trhom", "year": 2003, "km": 330000, "km_per_year": 14100.0, "eg": "2.4 benzín 140–148 kW", "cg": 0, "transmission": "manual", "seller_type": "private", "location": "Skalica", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [], "body": "sedan"}, {"id": "197857115", "url": "https://auto.bazos.sk/inzerat/197857115/honda-accord-tourer-22-i-dtec-elegance.php", "title": "Honda Accord Tourer 2.2 i-DTEC Elegance", "price": 5290, "price_gross": 5290, "fair_price": 5340.0, "discount_pct": 1.0, "verdict": "férová cena", "year": 2010, "km": 290000, "km_per_year": 17800.0, "eg": "2.2 i-CTDi / i-DTEC diesel 103–132 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Trenčín", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "197837651", "url": "https://auto.bazos.sk/inzerat/197837651/honda-accord-24.php", "title": "Honda Accord 2.4", "price": 2500, "price_gross": 2500, "fair_price": 2510.0, "discount_pct": 0.6, "verdict": "férová cena", "year": 2004, "km": 373000, "km_per_year": 16700.0, "eg": "2.4 benzín 140–148 kW", "cg": 0, "transmission": "automatic", "seller_type": "uncertain", "location": "Považská Bystrica", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "197210827", "url": "https://auto.bazos.sk/inzerat/197210827/predam-honda-accord-7g-24-i-vtec-lpg-nova-stkek-nadrz.php", "title": "Predám Honda Accord 7G 2.4 i-VTEC (LPG) - Nová STK/EK, nádrž", "price": 4000, "price_gross": 4000, "fair_price": 3990.0, "discount_pct": -0.2, "verdict": "férová cena", "year": 2005, "km": 299508, "km_per_year": 14000.0, "eg": "LPG", "cg": 2, "transmission": "automatic", "seller_type": "uncertain", "location": "Bardejov", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "196292382", "url": "https://auto.bazos.sk/inzerat/196292382/honda-accord-22-i-ctdi-r-v-2006-stk-do-072028.php", "title": "Honda Accord 2.2 i-CTDi, r. v. 2006 – STK do 07/2028", "price": 1800, "price_gross": 1800, "fair_price": 1770.0, "discount_pct": -1.9, "verdict": "férová cena", "year": 2006, "km": 490000, "km_per_year": 24100.0, "eg": "2.2 i-CTDi / i-DTEC diesel 103–132 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Kežmarok", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "sedan"}, {"id": "bs-39750981", "url": "https://auto.bazar.sk/39750981-honda-accord-2-2-i-ctdi-2008-6-stupnovy-manual/", "title": "Honda Accord 2.2 iCTDi | 2008 | 6stupňový manuál", "price": 3500, "price_gross": 3500, "fair_price": 3410.0, "discount_pct": -2.5, "verdict": "férová cena", "year": 2008, "km": 319085, "km_per_year": 17400.0, "eg": "2.2 i-CTDi / i-DTEC diesel 103–132 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Prešov", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "sedan"}, {"id": "196351597", "url": "https://auto.bazos.sk/inzerat/196351597/honda-accord-vlll.php", "title": "Honda Accord Vlll", "price": 3200, "price_gross": 3200, "fair_price": 3090.0, "discount_pct": -3.7, "verdict": "férová cena", "year": 2008, "km": 407000, "km_per_year": 22200.0, "eg": "2.2 i-CTDi / i-DTEC diesel 103–132 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Poltár", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "sedan"}, {"id": "197776615", "url": "https://auto.bazos.sk/inzerat/197776615/honda-accord-24-benz-148kw-at-top-executive.php", "title": "Honda Accord 2,4 benz 148kw A/T top executive", "price": 8250, "price_gross": 8250, "fair_price": 7850.0, "discount_pct": -5.1, "verdict": "férová cena", "year": 2009, "km": 215000, "km_per_year": 12400.0, "eg": "2.4 benzín 140–148 kW", "cg": 0, "transmission": "automatic", "seller_type": "dealer", "location": "Levice", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "sedan"}, {"id": "197602106", "url": "https://auto.bazos.sk/inzerat/197602106/honda-accord-22-idtec-type-s-136-kw-2011.php", "title": "Honda Accord 2,2 idtec type S 132 kw 2011", "price": 10300, "price_gross": 10300, "fair_price": 9760.0, "discount_pct": -5.6, "verdict": "férová cena", "year": 2011, "km": 193000, "km_per_year": 12600.0, "eg": "2.2 i-CTDi / i-DTEC diesel 103–132 kW", "cg": 1, "transmission": null, "seller_type": "dealer", "location": "Levice", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "sedan"}, {"id": "ab-AeG33yA3fBH", "url": "https://www.autobazar.eu/detail/honda-accord-tourer-22-diesel-103kw-top-stav-top-vybava/AeG33yA3fBH/", "title": "Honda Accord Tourer 2.2 Diesel 103kW TOP Stav, TOP Výbava", "price": 3350, "price_gross": 3350, "fair_price": 3120.0, "discount_pct": -7.5, "verdict": "nad trhom", "year": 2007, "km": 329439, "km_per_year": 17000.0, "eg": "2.2 i-CTDi / i-DTEC diesel 103–132 kW", "cg": 1, "transmission": "manual", "seller_type": "private", "location": "Topoľníky", "flags": [], "pick": null, "source": "autobazar", "origin": null, "also_listed": [{"source": "bazos", "id": "196527554", "url": "https://auto.bazos.sk/inzerat/196527554/honda-accord-tourer-2007.php", "price": 3350}], "body": "wagon"}, {"id": "197777113", "url": "https://auto.bazos.sk/inzerat/197777113/honda-accord-22-idtec-132-kw-type-s-2011.php", "title": "Honda Accord 2,2 idtec 132 kw type S 2011", "price": 9900, "price_gross": 9900, "fair_price": 9180.0, "discount_pct": -7.8, "verdict": "nad trhom", "year": 2011, "km": 205000, "km_per_year": 13400.0, "eg": "2.2 i-CTDi / i-DTEC diesel 103–132 kW", "cg": 1, "transmission": null, "seller_type": "dealer", "location": "Levice", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "sedan"}, {"id": "196279312", "url": "https://auto.bazos.sk/inzerat/196279312/predam-honda-accord-tourer-22-idtec.php", "title": "Predám Honda Accord Tourer 2.2 idtec", "price": 6200, "price_gross": 6200, "fair_price": 5550.0, "discount_pct": -11.7, "verdict": "nad trhom", "year": 2009, "km": 251000, "km_per_year": 14500.0, "eg": "2.2 i-CTDi / i-DTEC diesel 103–132 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Levice", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "197105530", "url": "https://auto.bazos.sk/inzerat/197105530/honda-accord-5stautomat-executive-lpg-24.php", "title": "Honda Accord 5st.automat executive LPG 2.4", "price": 3499, "price_gross": 3499, "fair_price": 3130.0, "discount_pct": -11.9, "verdict": "nad trhom", "year": 2004, "km": 360000, "km_per_year": 16100.0, "eg": "LPG", "cg": 2, "transmission": "automatic", "seller_type": "uncertain", "location": "Lučenec", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "sedan"}, {"id": "196563913", "url": "https://auto.bazos.sk/inzerat/196563913/2007-honda-accord-tourer-22ictdi.php", "title": "2007 Honda Accord Tourer 2.2ictdi", "price": 2499, "price_gross": 2499, "fair_price": 2210.0, "discount_pct": -13.3, "verdict": "nad trhom", "year": 2007, "km": 458000, "km_per_year": 23700.0, "eg": "2.2 i-CTDi / i-DTEC diesel 103–132 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Nitra", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "197444069", "url": "https://auto.bazos.sk/inzerat/197444069/honda-accord-20-i-vtec.php", "title": "Honda Accord 2,0 i-VTEC", "price": 8699, "price_gross": 8699, "fair_price": 7570.0, "discount_pct": -14.9, "verdict": "nad trhom", "year": 2009, "km": 168000, "km_per_year": 9700.0, "eg": "2.0 benzín 114–115 kW", "cg": 0, "transmission": "manual", "seller_type": "uncertain", "location": "Trenčín", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "sedan"}, {"id": "ab-AePnAgou5cx", "url": "https://www.autobazar.eu/detail/honda-accord-tourer-22-i-dtec/AePnAgou5cx/", "title": "Honda Accord Tourer 2.2 i-DTEC", "price": 8500, "price_gross": 8500, "fair_price": 7280.0, "discount_pct": -16.8, "verdict": "výrazne nad trhom", "year": 2010, "km": 302000, "km_per_year": 18500.0, "eg": "2.2 i-CTDi / i-DTEC diesel 103–132 kW", "cg": 1, "transmission": "manual", "seller_type": "dealer", "location": "Hencovce", "flags": [], "pick": null, "source": "autobazar", "origin": "dovoz", "also_listed": [], "body": "wagon"}, {"id": "196134316", "url": "https://auto.bazos.sk/inzerat/196134316/honda-accord-22-i-ctdi-2009.php", "title": "Honda Accord 2.2 i-CTDi – 2009", "price": 4199, "price_gross": 4199, "fair_price": 3510.0, "discount_pct": -19.6, "verdict": "výrazne nad trhom", "year": 2009, "km": 350000, "km_per_year": 20200.0, "eg": "2.2 i-CTDi / i-DTEC diesel 103–132 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Bratislava", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "sedan"}, {"id": "196469413", "url": "https://auto.bazos.sk/inzerat/196469413/honda-accord-22i-dtec.php", "title": "Honda Accord 2.2i-DTEC", "price": 7500, "price_gross": 7500, "fair_price": 6220.0, "discount_pct": -20.6, "verdict": "výrazne nad trhom", "year": 2009, "km": 226000, "km_per_year": 13000.0, "eg": "2.2 i-CTDi / i-DTEC diesel 103–132 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Žilina", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "sedan"}, {"id": "196967920", "url": "https://auto.bazos.sk/inzerat/196967920/accord.php", "title": "Accord", "price": 7000, "price_gross": 7000, "fair_price": 5630.0, "discount_pct": -24.3, "verdict": "výrazne nad trhom", "year": 2010, "km": 260000, "km_per_year": 15900.0, "eg": "2.2 i-CTDi / i-DTEC diesel 103–132 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Levice", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "sedan"}, {"id": "196754560", "url": "https://auto.bazos.sk/inzerat/196754560/predam-honda-accord-viii-tourer-cw-22-i-dtec-executive.php", "title": "Predam Honda Accord VIII Tourer (CW) 2.2 i-DTEC – Executive", "price": 4100, "price_gross": 4100, "fair_price": 3280.0, "discount_pct": -24.9, "verdict": "výrazne nad trhom", "year": 2008, "km": 357731, "km_per_year": 19500.0, "eg": "2.2 i-CTDi / i-DTEC diesel 103–132 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Malacky", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "197149712", "url": "https://auto.bazos.sk/inzerat/197149712/honda-accord-22-i-dtec-executive.php", "title": "Honda Accord 2.2-i-DTEC Executive", "price": 4390, "price_gross": 4390, "fair_price": 3310.0, "discount_pct": -32.7, "verdict": "výrazne nad trhom", "year": 2011, "km": 373000, "km_per_year": 24300.0, "eg": "2.2 i-CTDi / i-DTEC diesel 103–132 kW", "cg": 1, "transmission": "manual", "seller_type": "uncertain", "location": "Stará Ľubovňa", "flags": [], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "sedan"}, {"id": "197791077", "url": "https://auto.bazos.sk/inzerat/197791077/honda-accord-tourer-22-i-dtec.php", "title": "Honda Accord Tourer 2.2 i-DTEC", "price": 6100, "price_gross": 6100, "fair_price": 4550.0, "discount_pct": -34.2, "verdict": "výrazne nad trhom", "year": 2009, "km": 300000, "km_per_year": 17300.0, "eg": "2.2 i-CTDi / i-DTEC diesel 103–132 kW", "cg": 1, "transmission": null, "seller_type": "uncertain", "location": "Zlaté Moravce", "flags": ["prevodovka nezistená"], "pick": null, "source": "bazos", "origin": null, "also_listed": [], "body": "wagon"}, {"id": "bs-23254547", "url": "https://auto.bazar.sk/23254547-honda-accord-2-2-i-dtec-elegance-110kw-m6-4d/", "title": "Honda Accord 2.2 i-DTEC Elegance, 110kW, M6, 4d.", "price": 14900, "price_gross": 14900, "fair_price": 10500.0, "discount_pct": -42.0, "verdict": "výrazne nad trhom", "year": 2010, "km": 92000, "km_per_year": 5600.0, "eg": "2.2 i-CTDi / i-DTEC diesel 103–132 kW", "cg": 1, "transmission": "manual", "seller_type": "private", "location": "Dunajská Streda", "flags": [], "pick": null, "source": "bazarsk", "origin": null, "also_listed": [], "body": "sedan"}];
 const GROUPS = ["Benzín", "Diesel i-CTDi / i-DTEC", "LPG a nezistený"];
 const BODY = {"sedan": "sedan", "wagon": "kombi Tourer"};
 const fmt = n => Math.round(n).toLocaleString("sk-SK");
