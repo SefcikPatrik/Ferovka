@@ -4,6 +4,7 @@ import LinkForm from "@/components/LinkForm";
 import ReportGrid from "@/components/ReportGrid";
 import AccountLink from "@/components/AccountLink";
 import FeedbackForm from "@/components/FeedbackForm";
+import { FREE_SLUGS } from "@/lib/access";
 import { allPhotos, reports } from "@/lib/reports";
 
 const Warn = () => (
@@ -148,34 +149,27 @@ export default function Home() {
           <h2>Cenník</h2>
           <div className="oa-prices">
             <div className="price-card">
-              <span className="name">Rýchle skóre</span>
+              <span className="name">Zadarmo</span>
               <span className="amount">0 €</span>
-              <span className="d">Verdikt k cene a počet varovných signálov.</span>
-              <a className="go" href="#start">
-                Vyskúšať zadarmo
+              <span className="d">
+                {FREE_SLUGS.length} najpredávanejších modelov: Octavia, Superb, Golf, Passat, Fabia, Tiguan, Kodiaq a ďalšie.
+                Bez registrácie.
+              </span>
+              <a className="go" href="#analyzy">
+                Pozrieť modely zadarmo
               </a>
             </div>
             <div className="price-card dark">
               <div className="head">
-                <span className="name">Plná analýza</span>
-                <span className="pill signal">Spúšťame čoskoro</span>
+                <span className="name">Všetky modely</span>
               </div>
-              <span className="amount">3,90 €</span>
-              <span className="d">Férová cena, varovné signály, otázky pre predajcu a plán vyjednávania.</span>
-              <a className="go" href="#spustenie" data-analytics-action="waitlist_full">
-                Chcem vedieť o spustení
-              </a>
-            </div>
-            <div className="price-card">
-              <div className="head">
-                <span className="name">Balík 3 analýz</span>
-                <span className="pill">Spúšťame čoskoro</span>
-              </div>
-              <span className="amount">8,90 €</span>
-              <span className="d">Na porovnanie viacerých áut, ktoré zvažuješ.</span>
-              <a className="go" href="#spustenie" data-analytics-action="waitlist_pack">
-                Chcem vedieť o spustení
-              </a>
+              <span className="amount">5 €</span>
+              <span className="d">
+                Pre ďalšie modely zaplatíš 5 € a na 30 dní máš odomknuté všetky analýzy. Jednorazovo, nič sa samo neobnovuje.
+              </span>
+              <Link className="go" href="/ucet/">
+                Odomknúť všetky modely
+              </Link>
             </div>
           </div>
         </section>
