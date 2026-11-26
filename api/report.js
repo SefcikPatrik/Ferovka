@@ -6,7 +6,10 @@ import path from "node:path";
 import { currentUser, hasAccess } from "./_auth.js";
 
 // read at runtime (bundled via includeFiles in vercel.json), so the list is shared with the site build
-const FREE = new Set(JSON.parse(fs.readFileSync(path.join(process.cwd(), "src/data/access.json"), "utf8")).free);
+const ACCESS = JSON.parse(fs.readFileSync(path.join(process.cwd(), "src/data/access.json"), "utf8"));
+const FREE = new Set(ACCESS.free);
+// time-limited promo: until allFreeUntil every analysis is served without login
+const allFree = () => Boolean(ACCESS.allFreeUntil && Date.parse(ACCESS.allFreeUntil) > Date.now());
 const FILE = /^([a-z0-9-]+?)(-analyza)?\.html$/;
 // lock-reports.mjs copies locked reports to private/reports during the Vercel build; public/reports is the fallback
 // in case the function was bundled before that step ran.
@@ -29,7 +32,7 @@ export default function handler(req, res) {
     return res.status(404).send(page("Analýza neexistuje", `<h1>Analýza neexistuje</h1><p><a href="/#analyzy">Všetky analýzy →</a></p>`));
   }
   const slug = m[1];
-  if (!FREE.has(slug) && !hasAccess(currentUser(req))) {
+  if (!FREE.has(slug) && !allFree() && !hasAccess(currentUser(req))) {
     res.setHeader("Content-Type", "text/html; charset=utf-8");
     return res
       .status(401)

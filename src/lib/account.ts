@@ -1,13 +1,19 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import access from "@/data/access.json";
 
 export type Account = { email: string; paidUntil: string | null };
 // undefined = still checking, null = logged out
 export type User = Account | null | undefined;
 
 /** Paid access to all analyses is active (5 € / 30 days). */
-export const hasAccess = (u: User) => Boolean(u?.paidUntil && Date.parse(u.paidUntil) > Date.now());
+/** Time-limited promo: until access.json "allFreeUntil" every analysis is open to everyone. */
+export const allFree = () => {
+  const until = (access as { allFreeUntil?: string }).allFreeUntil;
+  return Boolean(until && Date.parse(until) > Date.now());
+};
+export const hasAccess = (u: User) => allFree() || Boolean(u?.paidUntil && Date.parse(u.paidUntil) > Date.now());
 
 let current: User;
 let pending: Promise<User> | undefined;
